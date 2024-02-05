@@ -16,11 +16,12 @@
 </header>
 
 <nav class="shadow bg-body-tertiary ">
-    <a href="">Dashboard</a>
+    @yield('nav-links')
+    {{-- <a href="">Dashboard</a>
     <a href="">Provider Location</a>
     <a href="">My Profile</a>
     <a href="">Providers</a>
     <a href="">Partners</a>
     <a href="">Access</a>
-    <a href="">Records</a>
+    <a href="">Records</a> --}}
 </nav>
