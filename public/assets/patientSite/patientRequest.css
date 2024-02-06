@@ -1,0 +1,121 @@
+/********************* Header CSS Start***********************/
+.logout-btn {
+    display: none;
+}
+
+.welcome-msg {
+    display: none;
+}
+
+
+
+/********************* Header CSS End***********************/
+
+
+
+
+/********************************** main content CSS start *********************************/
+
+
+.container {
+    border: 2px solid black;
+    height: 1200px;
+}
+.patient-container{
+    border: 1px solid rgb(207, 205, 205);
+    padding: 25px;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+.header_part {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    /* border: 1px dashed slateblue; */
+}
+
+
+.patient-details {
+    /* border: 1px solid red; */
+
+}
+
+.area-text,
+.patient-details-row1,
+.patient-details-row2,
+.patient-contact-text,
+.patient-contact-row1,
+.patient-location-text,
+.patient-location-row1,
+.patient-location-row2,
+.patient-location-row3,
+.patient-doc-text {
+    margin-top: 20px;
+}
+
+
+.btn-back{
+    border-color: rgb(32, 181, 250);
+    color:rgb(32, 181, 250) ;
+}
+
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+#button-addon2{
+    background-color: rgb(32, 181, 250);
+    color: white;
+}
+
+.form-control {
+    /* border: 1px solid black; */
+}
+
+.btn-submit {
+    margin-right: 10px;
+    color: white;
+    background-color: rgb(32, 181, 250);
+}
+
+.btn-cancel{
+    border-color: rgb(32, 181, 250);
+    color:rgb(32, 181, 250) ;
+}
+
+@media (max-width: 550px) {
+    .menu-icon {
+        display: none;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+}
+
+@media(max-width:768px) {
+
+    .patient-details-col2,
+    .mobile-text,
+    .patient-location-city-text,
+    .patient-location-zipcode-text {
+        margin-top: 20px;
+    }
+
+    .patient-location-room-text,
+    .date-of-birth {
+        width: 100% !important;
+    }
+
+}
+
+@media (max-width:360px){
+    .floatingTextarea2{
+        
+    }
+}

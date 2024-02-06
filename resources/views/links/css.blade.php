@@ -4,4 +4,5 @@
 
 {{-- style.css for header & footer --}}
 <link rel="stylesheet" href="{{ URL::asset('assets/style.css') }}">
-<link rel="stylesheet" href="{{ URL::asset('assets/providerDashboard/providerDashboard.css') }}">
+
+@yield('css')
