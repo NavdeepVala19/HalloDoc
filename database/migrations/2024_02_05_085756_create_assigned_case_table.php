@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('assigned_case', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-    
+            $table->unsignedBigInteger('account_type_id');
+            $table->unsignedBigInteger('request_id');
+            $table->foreign('request_id')->references('id')->on('request');
+            $table->foreign('account_type_id')->references('id')->on('account_type');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('assigned_case');
     }
 };
