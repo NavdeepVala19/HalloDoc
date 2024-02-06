@@ -1,0 +1,23 @@
+/* *********************** PROVIDER DASHBOARD ************************ */
+.case {
+    width: 250px;
+    height: 70px;
+
+    border-radius: 10px;
+    color: #fff;
+}
+
+.case-new {
+    background-color: rgb(67, 67, 174);
+}
+.case-pending {
+    background-color: rgb(118, 154, 245);
+}
+
+.primary-btn {
+    border: none;
+    background-color: var(--blue);
+    padding: 8px 20px;
+    color: #fff;
+    border-radius: 5px;
+}

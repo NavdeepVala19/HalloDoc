@@ -44,7 +44,12 @@ nav {
     color: var(--blue);
     border-bottom: 2px solid var(--blue);
 }
-
+.menu-icon {
+    display: none;
+}
+.logout-btn {
+    display: none;
+}
 /* *********************** FOOTER ************************ */
 .footer {
     background-color: #343434;
@@ -59,23 +64,32 @@ nav {
     margin-left: auto;
 }
 
-/* *********************** PROVIDER DASHBOARD ************************ */
-.case {
-    width: 250px;
-    height: 70px;
+/* ********************************MEDIA QUERIES************************************* */
+@media (max-width: 550px) {
+    .navbar-section {
+        display: none;
+    }
+    .menu-icon {
+        display: block;
+        margin-right: 10px;
+    }
+    .logout-link {
+        display: none;
+    }
+    .logout-btn {
+        display: block;
+    }
+    .welcome-msg {
+        display: none;
+    }
+    .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 5px !important;
 
-    border-radius: 10px;
-    color: #fff;
-}
-
-.case-new {
-    background-color: rgb(67, 67, 174);
-}
-
-.primary-btn {
-    border: none;
-    background-color: var(--blue);
-    padding: 8px 20px;
-    color: #fff;
-    border-radius: 5px;
+        height: 100vh;
+        width: 50vw;
+        position: absolute;
+    }
 }

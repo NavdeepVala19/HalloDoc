@@ -1,12 +1,26 @@
 {{-- HEADER SECTION --}}
-<header class="d-flex align-items-center justify-content-between px-3 border-bottom">
-    <a href=""><img src="{{ URL::asset('/assets/logo.png') }}" height="80px" alt=""></a>
+<header class="header d-flex align-items-center justify-content-between px-3 border-bottom">
+    <div class="d-flex align-items-center">
+        <a href="" class="primary-link menu-icon"><svg xmlns="http://www.w3.org/2000/svg" width="25"
+                height="25" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+            </svg></a>
+        <a href=""><img src="{{ URL::asset('/assets/logo.png') }}" height="80px" alt=""></a>
+    </div>
     <div class="d-flex align-items-center  gap-3">
-        <span class="align-self-center">welcome
+        <span class="welcome-msg align-self-center">welcome
             {{-- Admin Names will be fetched and showed here --}}
             {{-- <strong> {{ admin . firstname }} {{ admin . lastname }}</strong>  --}}
         </span>
-        <a href="" class="primary-link">Logout</a>
+        <a href="" class="logout-btn primary-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                <path fill-rule="evenodd"
+                    d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg></a>
+        <a href="" class="logout-link primary-link">Logout</a>
         <a href="" class="primary-link toggle-mode"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                 height="20" fill="currentColor" class="bi bi-moon" viewBox="0 0 16 16">
                 <path
@@ -15,7 +29,7 @@
     </div>
 </header>
 
-<nav class="shadow bg-body-tertiary ">
+<nav class="navbar-section shadow bg-body-tertiary ">
     @yield('nav-links')
     {{-- <a href="">Dashboard</a>
     <a href="">Provider Location</a>
