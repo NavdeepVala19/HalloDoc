@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('patientRequest');
 });
+Route::get('/create', function(){
+    return view('providerRequest');
+})->name('provider-create-request');
