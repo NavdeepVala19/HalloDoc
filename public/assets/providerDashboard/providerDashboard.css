@@ -1,6 +1,11 @@
 /* *********************** PROVIDER DASHBOARD ************************ */
+/* .nav {
+    display: grid;
+} */
+
 .case {
     width: 250px;
+
     height: 70px;
 
     border-radius: 10px;
@@ -8,10 +13,25 @@
 }
 
 .case-new {
-    background-color: rgb(67, 67, 174);
+    border: 1px solid rgb(7, 7, 96);
+    color: rgba(67, 67, 174);
+    background-color: rgba(106, 106, 218, 0.501);
 }
 .case-pending {
-    background-color: rgb(118, 154, 245);
+    border: 1px solid rgb(6, 32, 97);
+    color: rgb(13, 49, 139);
+    background-color: rgba(50, 99, 222, 0.508);
+}
+
+.case-active {
+    border: 1px solid rgb(7, 102, 7);
+    color: rgb(12, 119, 12);
+    background-color: rgba(153, 235, 153, 0.507);
+}
+.case-conclude {
+    border: 1px solid rgb(83, 7, 79);
+    color: rgb(124, 7, 129);
+    background-color: rgba(212, 128, 221, 0.509);
 }
 
 .primary-btn {
@@ -20,4 +40,119 @@
     padding: 8px 20px;
     color: #fff;
     border-radius: 5px;
+}
+.nav-tabs {
+    border: none;
+}
+.nav-tabs .nav-link {
+    padding: 0;
+    margin: 8px 16px;
+    border: none;
+}
+
+.input-group {
+    width: 300px;
+}
+.src-category > button {
+    border: none;
+    background-color: #fff;
+    padding: 5px 15px;
+}
+.btn-all {
+    border: 1px solid grey !important;
+    border-radius: 5px;
+}
+
+.green {
+    color: green;
+}
+.yellow {
+    color: yellow;
+}
+.red {
+    color: red;
+}
+.blue {
+    color: blue;
+}
+.purple {
+    color: purple;
+}
+
+#table-header {
+    background-color: blue !important;
+}
+
+.main {
+    margin: 20px 50px;
+}
+.heading-section {
+    margin-bottom: 36px;
+}
+.search-section {
+    margin-bottom: 24px;
+}
+
+/* ********************** MEDIA QUERIES *********************** */
+@media (max-width: 1160px) {
+    .search-section {
+        flex-direction: column;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    .input-group {
+        width: 100% !important;
+        flex-wrap: nowrap;
+    }
+
+    .case {
+        width: 200px;
+    }
+}
+@media (max-width: 960px) {
+    .nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .case {
+        width: 100%;
+    }
+}
+
+@media (max-width: 750px) {
+    /* .src-category {
+        flex-wrap: wrap;
+        width: 100%;
+    } */
+    .btn-all {
+        display: none;
+    }
+    .src-category {
+        display: flex;
+        gap: 0 !important;
+    }
+
+    .src-category > button {
+        flex-direction: column;
+        align-items: center;
+    }
+    .txt {
+        display: none;
+    }
+}
+
+@media (max-width: 550px) {
+    .case {
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        border-radius: 0;
+    }
+    .src-category > button {
+        font-size: 12px;
+        padding: 5px;
+    }
+    .primary-btn {
+        padding: 4px 10px;
+    }
 }

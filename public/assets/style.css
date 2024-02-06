@@ -85,6 +85,7 @@ nav {
     .mobile-nav {
         display: flex;
         flex-direction: column;
+        z-index: 4;
         align-items: start;
         gap: 5px !important;
 
