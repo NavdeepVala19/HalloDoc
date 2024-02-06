@@ -6,21 +6,15 @@ $(document).ready(function () {
         $(this).addClass("active-link");
     });
 
-    $(".toggle-mode").click(function (e) {
-        e.preventDefault();
-        // console.log("button Clicked");
-        document.documentElement.classList.toggle("dark");
-    });
+    // $(".toggle-mode").click(function (e) {
+    //     e.preventDefault();
+    //     console.log("button Clicked");
+    //     document.documentElement.classList.toggle("dark");
+    // });
 
-    // $(".toggle-mode").onchange = (e) => {
-    //     if (modeBtn === true) {
-    //       document.documentElement.classList.remove("light")
-    //       document.documentElement.classList.add("dark")
-    //       window.localStorage.setItem('mode', 'dark');
-    //     } else {
-    //       document.documentElement.classList.remove("dark")
-    //       document.documentElement.classList.add("light")
-    //       window.localStorage.setItem('mode', 'light');
-    //     }
-    //   }
+    $(".menu-icon").click(function (e) {
+        e.preventDefault();
+        console.log("btn-clicked");
+        $(".navbar-section").toggleClass("mobile-nav");
+    });
 });

@@ -10,15 +10,39 @@
 @section('content')
     {{-- Main Content of the Page --}}
     <div class="container">
-        <div class="mb-5">
-            <div class="case active p-1 ps-3 d-flex flex-column justify-content-between">
+        <div class="mb-5 d-flex gap-3">
+            <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between">
                 <span>
                     logo NEW
                 </span>
                 <span>
                     1{{-- New Cases --}}
                 </span>
-            </div>`
+            </div>
+            <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between">
+                <span>
+                    logo PENDING
+                </span>
+                <span>
+                    1{{-- New Cases --}}
+                </span>
+            </div>
+            <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between">
+                <span>
+                    logo ACTIVE
+                </span>
+                <span>
+                    1{{-- New Cases --}}
+                </span>
+            </div>
+            <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between">
+                <span>
+                    logo CONCLUDE
+                </span>
+                <span>
+                    1{{-- New Cases --}}
+                </span>
+            </div>
         </div>
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -35,7 +59,8 @@
             </div>
         </div>
         <div>
-            <input type="search" name="search_patient" id="">
+            <label for="search_patient">Search Patients</label>
+            <input type="search" id="search_patient" name="search_patient">
         </div>
     </div>
 @endsection
