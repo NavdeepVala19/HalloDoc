@@ -78,19 +78,19 @@
                     <h3>Patients </h3> <span>(New)</span>
                 </div>
                 <div>
-                    <button class="primary-btn">
+                    <a href="" class="primary-btn me-3">
                         <i class="bi bi-send"></i>
                         <span class="txt">
                             Send Link
                         </span>
-                    </button>
-                    <button class="primary-btn" href="{{ route('provider-create-request') }}">
+                    </a>
+                    <a class="primary-btn" href="{{ route('provider-create-request') }}">
                         <i class="bi bi-pencil-square"></i>
                         <span class="txt">
                             Create Requests
                         </span>
 
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="search-section d-flex align-items-center  justify-content-between ">
