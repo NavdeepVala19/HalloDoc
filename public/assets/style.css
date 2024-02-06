@@ -1,0 +1,81 @@
+:root,
+:root.light {
+    --blue: #3c9eff;
+}
+
+:root.dark {
+    --color-bg: #263238;
+    --color-fg: #ffffff;
+    --blue: #3c9eff;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* *********************** HEADER ************************ */
+
+.primary-link {
+    border: 1px solid var(--blue);
+    padding: 8px 12px;
+    color: var(--blue);
+    border-radius: 8px;
+}
+nav {
+    padding-left: 25px;
+}
+
+nav a {
+    display: inline-block;
+    padding: 10px 15px;
+    color: #343434;
+}
+
+nav > a:hover {
+    color: var(--blue);
+    border-bottom: 2px solid var(--blue);
+}
+
+nav {
+    margin-bottom: 42px;
+}
+
+.active-link {
+    color: var(--blue);
+    border-bottom: 2px solid var(--blue);
+}
+
+/* *********************** FOOTER ************************ */
+.footer {
+    background-color: #343434;
+    position: fixed;
+    bottom: 0;
+    color: white;
+    width: 100%;
+}
+.footer div {
+    padding: 20px;
+    width: 300px;
+    margin-left: auto;
+}
+
+/* *********************** PROVIDER DASHBOARD ************************ */
+.case {
+    width: 250px;
+    height: 70px;
+
+    border-radius: 10px;
+    color: #fff;
+}
+
+.case-new {
+    background-color: rgb(67, 67, 174);
+}
+
+.primary-btn {
+    border: none;
+    background-color: var(--blue);
+    padding: 8px 20px;
+    color: #fff;
+    border-radius: 5px;
+}
