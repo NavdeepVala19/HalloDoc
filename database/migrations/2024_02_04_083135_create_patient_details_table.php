@@ -1,4 +1,4 @@
-00000000000000000000<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -9,16 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+     /**
+     * this table is used for patient details 
+     */
     public function up(): void
     {
-        Schema::create('cancel_history', function (Blueprint $table) {
+        Schema::create('patient_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('note_id');
-            $table->unsignedBigInteger('request_id');
-            $table->foreign('note_id')->references('id')->on('notes');
-            $table->foreign('request_id')->references('id')->on('request');
-            $table->string('patient_name');
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('symptoms');
             $table->string('email');
+            $table->string('password');
+            $table->integer('mobile');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cancel_history');
+        Schema::dropIfExists('patient_details');
     }
 };

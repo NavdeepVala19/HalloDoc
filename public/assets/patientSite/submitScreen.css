@@ -22,20 +22,21 @@
     justify-content: space-between;
     /* border: 1px dashed slateblue; */
     position: relative;
+    width: 100%;
 }
 
 
 
 .heading{
     /* border: 1px solid black; */
-    /* margin-left: 540px; */
+    margin-left: 42%;
     /* position: absolute; */
 }
 
 
 .container{
     height: 400px;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .main-container{
@@ -58,7 +59,35 @@
     font-size: 1.5rem;
 }
 
-
+.patient{
+    background-color: rgb(222, 225, 253);
+    border-color: rgb(76, 76, 255);
+}
+#patient{
+    color: rgb(76, 76, 255);
+}
+.family{
+    background-color: rgb(227, 255, 255);
+    border-color: rgb(0, 174, 255);
+}
+#family{
+        color: rgb(0, 174, 255);
+}
+.conceirge
+{
+    background-color: rgb(217, 248, 217);
+    border-color:green ;
+}
+#conceirge{
+    color: green;
+}
+.business{
+    background-color: rgb(247, 216, 253);
+    border-color:rgb(223, 37, 207)  ;
+}
+#business{
+    color:rgb(223, 37, 207) ;
+}
 
 @media (max-width: 550px){
         .menu-icon{
@@ -67,6 +96,23 @@
         .container{
             margin-top: 30px;
         }
+}
+
+@media(max-width:1399px){
+    .heading{
+        margin-left: 40%;
+    }
+}
+@media(max-width:1199px){
+    .heading{
+        margin-left: 38%;
+    }
+}
+
+@media(max-width:769px){
+    .heading{
+        margin-left: 34%;
+    }
 }
 
 

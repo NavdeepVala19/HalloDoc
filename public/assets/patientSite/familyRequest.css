@@ -19,7 +19,7 @@
 
 .container {
     /* border: 2px solid black; */
-    height: 1000px;
+    height: 1240px;
 }
 .patient-container{
     border: 1px solid rgb(207, 205, 205);
@@ -32,6 +32,10 @@
     flex-direction: row;
     justify-content: flex-end;
     /* border: 1px dashed slateblue; */
+}
+.btn,
+.select-file-text{
+    z-index: -2 !important;
 }
 
 
@@ -49,7 +53,13 @@
 .patient-location-row1,
 .patient-location-row2,
 .patient-location-row3,
-.patient-doc-text {
+.patient-doc-text ,
+.family-first-name-text,
+.family-last-name-text,
+.family-mobile-text,
+.family-email-text,
+.family-relation-text,
+.patient-info-text{
     margin-top: 20px;
 }
 
@@ -81,11 +91,6 @@
     color: white;
     background-color: rgb(32, 181, 250);
 }
-.btn,
-.select-file-text{
-    z-index: -2 !important;
-}
-
 
 .btn-cancel{
     border-color: rgb(32, 181, 250);
@@ -113,7 +118,8 @@
     }
 
     .patient-location-room-text,
-    .date-of-birth {
+    .date-of-birth ,
+    .family-relation-text{
         width: 100% !important;
     }
 
@@ -121,6 +127,12 @@
 
 @media (max-width:360px){
     .floatingTextarea2{
-        
+        font-size: 10px;
+    }
+}
+
+@media (max-width:276px){
+    .floatingTextarea2{
+        font-size: 8px;
     }
 }

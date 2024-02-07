@@ -11,22 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('allusers', function (Blueprint $table) {
+        Schema::create('admin', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('account_type_id');
-            $table->unsignedBigInteger('status');
-            $table->foreign('account_type_id')->references('id')->on('account_type');
-            $table->foreign('status')->references('id')->on('status');
-            $table->string('first_name');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->string('user_name');
+            $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
             $table->string('password');
-            $table->integer('phone');
-            $table->integer('zipcode');
+            $table->integer('mobile');
+            $table->string('address');
             $table->string('city');
             $table->string('state');
-            $table->string('created_by');
+            $table->string('zipcode');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -37,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('allusers');
+        Schema::dropIfExists('admin');
     }
 };

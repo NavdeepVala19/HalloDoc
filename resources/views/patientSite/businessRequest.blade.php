@@ -2,7 +2,7 @@
 
 @section('css')
 
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/businessRequest.css') }}">
 
 @endsection
 
@@ -10,19 +10,70 @@
 
 <div class="container">
 
-    <!-- this div is for heading and back button -->
+    <!-- this div is for back button -->
 
     <div class="header_part">
         <button type="button" class="btn btn-back">
             < Back</button>
     </div>
 
-    <div class="patient-container">
+    <form action="">
+        <div class="patient-container">
+
+            <!-- Business Information -->
+
+            <div class="business-inputs">
+
+                <div class="business-text">
+                    <h4> Business Information</h4>
+                </div>
+
+                <div class="row business-row1">
+                    <div class="col-md business-col1">
+
+                        <input type="text" placeholder="Your First Name" class="form-control business-first-name-text"
+                            id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                    </div>
+                    <div class="col-md business-col2">
+                        <input type="text" placeholder="Your Last Name" class="form-control business-last-name-text"
+                            id="exampleInputEmail1">
+                    </div>
+                </div>
+
+
+                <div class="row business-row2">
+                    <div class="col-md business-col1">
+                        <input type="text" placeholder="Mobile No" class="form-control business-mobile-text"
+                            id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="col-md business-col2">
+                        <input type="email" placeholder="Your Email" class="form-control business-email-text"
+                            id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                </div>
+
+
+                <div class="row business-row3">
+
+                    <div class="col-md business-col1">
+
+                        <input type="text" placeholder="Business/Property Name" class="form-control business-name-text"
+                            id="floatingInput">
+
+                    </div>
+                    <div class="col-md business-col2">
+                        <input type="text" placeholder="Case Number(optional)"
+                            class="form-control business-case-number-text" id="exampleInputEmail1">
+                    </div>
+
+                </div>
+            </div>
 
 
 
-        <div class="patient-details">
-            <form>
+            <div class="patient-details">
+
                 <!-- Symptoms Detail Field -->
 
                 <div class="symp-details">
@@ -58,9 +109,10 @@
                 <div class="row patient-details-row2">
 
                     <div class="col-md patient-details-col3 me-4">
-                    <label for="">Date of Birth</label>
-                        <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 " id="exampleInputPassword1">
-                       
+                        <label for="">Date of Birth</label>
+                        <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 "
+                            id="exampleInputPassword1">
+
                     </div>
 
                 </div>
@@ -80,7 +132,7 @@
                                 id="exampleInputEmail1" aria-describedby="emailHelp">
                         </div>
                         <div class="col-md patient-contact-col2">
-                           
+
                             <input type="tel" placeholder="Mobile No" class="form-control mobile-text"
                                 id="exampleInputEmail1" aria-describedby="emailHelp" pattern="[0-9]{10}">
                         </div>
@@ -154,11 +206,59 @@
                     <button type="button" class="btn btn-cancel">Cancel</button>
                 </div>
 
-
-
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
+
+<!-- 
+    <form>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="inputEmail4">Email</label>
+                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPassword4">Password</label>
+                <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAddress">Address</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+        </div>
+        <div class="form-group">
+            <label for="inputAddress2">Address 2</label>
+            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputCity">City</label>
+                <input type="text" class="form-control" id="inputCity">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <select id="inputState" class="form-control">
+                    <option selected>Choose...</option>
+                    <option>...</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input type="text" class="form-control" id="inputZip">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Check me out
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form> -->
+
+
 </div>
 
 @endsection
