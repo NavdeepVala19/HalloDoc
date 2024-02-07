@@ -8,3 +8,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 @yield('css')
+
+{{-- Phone Number input field with country flag and code --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.16/css/intlTelInput.css"
+    integrity="sha512-1fzvDP5eqhbc1j8H77kf7tBpz+lRlD+vTOuXz/A58/HcBUyH4BaJeo+xSyhE0Mo1V8JRSnAg5smJhkZo93EZOw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />

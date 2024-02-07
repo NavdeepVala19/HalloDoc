@@ -17,4 +17,8 @@ $(document).ready(function () {
         console.log("btn-clicked");
         $(".navbar-section").toggleClass("mobile-nav");
     });
+
+    $("#telephone").intlTelInput({
+        initialCountry: "in",
+    });
 });

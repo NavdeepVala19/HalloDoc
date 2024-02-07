@@ -15,14 +15,12 @@ a {
 
 /* *********************** HEADER ************************ */
 
-.primary-link {
-    border: 1px solid var(--blue);
-    padding: 8px 12px;
-    color: var(--blue);
-    border-radius: 8px;
-}
 nav {
     padding-left: 25px;
+}
+
+.logo {
+    width: 50%;
 }
 
 nav a {
@@ -53,7 +51,7 @@ nav {
 /* *********************** FOOTER ************************ */
 .footer {
     background-color: #343434;
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     color: white;
     width: 100%;
@@ -82,10 +80,11 @@ nav {
     .welcome-msg {
         display: none;
     }
+
     .mobile-nav {
         display: flex;
         flex-direction: column;
-        z-index: 4;
+        z-index: 500;
         align-items: start;
         gap: 5px !important;
 
@@ -93,4 +92,33 @@ nav {
         width: 50vw;
         position: absolute;
     }
+}
+
+/* ****************** COMMON STYLING **************************************** */
+.primary-empty {
+    border: 1px solid var(--blue);
+    background-color: #fff;
+    padding: 8px 12px;
+    color: var(--blue);
+    border-radius: 8px;
+}
+
+.primary-fill {
+    border: none;
+    background-color: var(--blue);
+    padding: 8px 20px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.form-container {
+    margin-top: 20px;
+}
+#telephone {
+    height: 100%;
+}
+
+#iti-0__country-listbox {
+    /* position: absolute; */
+    z-index: 20 !important;
 }

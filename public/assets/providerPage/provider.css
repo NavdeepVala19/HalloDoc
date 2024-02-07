@@ -1,13 +1,7 @@
 /* *********************** PROVIDER DASHBOARD ************************ */
-/* .nav {
-    display: grid;
-} */
-
 .case {
     width: 250px;
-
     height: 70px;
-
     border-radius: 10px;
     color: #fff;
 }
@@ -17,6 +11,7 @@
     color: rgba(67, 67, 174);
     background-color: rgba(106, 106, 218, 0.501);
 }
+
 .case-pending {
     border: 1px solid rgb(6, 32, 97);
     color: rgb(13, 49, 139);
@@ -28,6 +23,7 @@
     color: rgb(12, 119, 12);
     background-color: rgba(153, 235, 153, 0.507);
 }
+
 .case-conclude {
     border: 1px solid rgb(83, 7, 79);
     color: rgb(124, 7, 129);
@@ -41,9 +37,11 @@
     color: #fff;
     border-radius: 5px;
 }
+
 .nav-tabs {
     border: none;
 }
+
 .nav-tabs .nav-link {
     padding: 0;
     margin: 8px 16px;
@@ -52,29 +50,40 @@
 
 .input-group {
     width: 300px;
+    margin: 15px;
 }
+
 .src-category > button {
     border: none;
     background-color: #fff;
     padding: 5px 15px;
 }
+
 .btn-all {
     border: 1px solid grey !important;
     border-radius: 5px;
 }
 
+.case-type {
+    color: rgb(87, 87, 185);
+}
+
 .green {
     color: green;
 }
+
 .yellow {
     color: yellow;
 }
+
 .red {
     color: red;
 }
+
 .blue {
     color: blue;
 }
+
 .purple {
     color: purple;
 }
@@ -86,13 +95,33 @@
 .main {
     margin: 20px 50px;
 }
+
 .heading-section {
     margin-bottom: 36px;
 }
-.search-section {
-    margin-bottom: 24px;
+
+.listing {
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+        rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+.table {
+    margin: 0;
 }
 
+/* *********************** TABLE DATA ************************************ */
+.table-btn {
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 5px;
+}
+
+tr > td {
+    padding: 16px !important;
+    color: #fff !important;
+    background-color: green !important;
+}
 /* ********************** MEDIA QUERIES *********************** */
 @media (max-width: 1160px) {
     .search-section {
@@ -100,6 +129,7 @@
         justify-content: center !important;
         align-items: center !important;
     }
+
     .input-group {
         width: 100% !important;
         flex-wrap: nowrap;
@@ -109,11 +139,13 @@
         width: 200px;
     }
 }
+
 @media (max-width: 960px) {
     .nav {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
+
     .case {
         width: 100%;
     }
@@ -127,17 +159,27 @@
     .btn-all {
         display: none;
     }
+
     .src-category {
         display: flex;
         gap: 0 !important;
+        justify-content: start !important;
     }
 
     .src-category > button {
         flex-direction: column;
         align-items: center;
     }
+
     .txt {
         display: none;
+    }
+
+    .main {
+        margin: 0;
+    }
+    .listing {
+        padding: 10px;
     }
 }
 
@@ -148,11 +190,20 @@
         padding: 0 !important;
         border-radius: 0;
     }
+
     .src-category > button {
         font-size: 12px;
         padding: 5px;
     }
+
     .primary-btn {
         padding: 4px 10px;
+    }
+    nav {
+        padding: 0;
+        margin: 0;
+    }
+    .heading-section {
+        margin-bottom: 18px;
     }
 }

@@ -1,21 +1,22 @@
 {{-- HEADER SECTION --}}
-<header class="header d-flex align-items-center justify-content-between px-3 border-bottom">
+<header class="header d-flex align-items-center justify-content-between px-3 border-bottom shadow bg-body-tertiary">
     <div class="d-flex align-items-center">
-        <a href="" class="primary-link menu-icon">
+        <a href="" class="primary-empty menu-icon">
             <i class="bi bi-list"></i>
         </a>
-        <a href=""><img src="{{ URL::asset('/assets/logo.png') }}" height="80px" alt=""></a>
+        <a href=""><img class="logo img-fluid"  src="{{ URL::asset('/assets/logo.png') }}"
+                alt=""></a>
     </div>
     <div class="d-flex align-items-center  gap-3">
         <span class="welcome-msg align-self-center">welcome
             {{-- Admin Names will be fetched and showed here --}}
             {{-- <strong> {{ admin . firstname }} {{ admin . lastname }}</strong>  --}}
         </span>
-        <a href="" class="logout-btn primary-link">
+        <a href="" class="logout-btn primary-empty">
             <i class="bi bi-box-arrow-right"></i>
         </a>
-        <a href="" class="logout-link primary-link">Logout</a>
-        <a href="" class="primary-link toggle-mode">
+        <a href="" class="logout-link primary-empty">Logout</a>
+        <a href="" class="primary-empty toggle-mode">
             <i class="bi bi-moon"></i>
         </a>
     </div>
