@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('patient_details', function (Blueprint $table) {
+        Schema::create('shift_detail_region', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('password');
+            $table->unsignedBigInteger('shift_detail_id');
+            $table->foreign('shift_detail_id')->references('id')->on('shift_detail');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patient_details');
+        Schema::dropIfExists('shift_detail_region');
     }
 };

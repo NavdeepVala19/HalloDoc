@@ -23,28 +23,28 @@
 
     <div class=" main-container d-flex flex-column justify-content-evenly align-items-center ">
 
-        <div class="case active ps-3 d-flex flex-column justify-content-between">
+        <div class="case active ps-3 d-flex flex-column justify-content-between patient">
 
-            <a href="" class="submitType" type="button">PATIENT</a>
-
-        </div>
-
-        <div class="case active ps-3 d-flex flex-column justify-content-between">
-
-            <a href="" class="submitType" type="button">FAMILY/FRIEND</a>
+            <a href="" class="submitType" type="button" id="patient">PATIENT</a>
 
         </div>
 
-        <div class="case active ps-3 d-flex flex-column justify-content-between">
+        <div class="case active ps-3 d-flex flex-column justify-content-between family">
 
-            <a href="" class="submitType" type="button">CONCEIRGE</a>
+            <a href="" class="submitType" type="button" id="family">FAMILY/FRIEND</a>
 
         </div>
 
-        <div class="case active ps-3 d-flex flex-column justify-content-between">
+        <div class="case active ps-3 d-flex flex-column justify-content-between conceirge">
+
+            <a href="" class="submitType" type="button" id="conceirge">CONCEIRGE</a>
+
+        </div>
+
+        <div class="case active ps-3 d-flex flex-column justify-content-between  business">
 
 
-            <a href="" class="submitType" type="button">BUSINESS PARTNERS</a>
+            <a href="" class="submitType" type="button" id="business">BUSINESS PARTNERS</a>
         </div>
     </div>
 

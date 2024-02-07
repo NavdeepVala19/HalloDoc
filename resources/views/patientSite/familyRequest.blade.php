@@ -2,7 +2,7 @@
 
 @section('css')
 
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/familyRequest.css') }}">
 
 @endsection
 
@@ -10,7 +10,7 @@
 
 <div class="container">
 
-    <!-- this div is for heading and back button -->
+    <!-- this div is for back button -->
 
     <div class="header_part">
         <button type="button" class="btn btn-back">
@@ -18,6 +18,48 @@
     </div>
 
     <div class="patient-container">
+
+        <!-- Family/Friend Information -->
+
+        <div class="family-inputs">
+
+            <div class="family-text">
+                <h4> Family/Friend Information</h4>
+            </div>
+
+            <div class="row family-row1">
+                <div class="col-md family-col1">
+                    <input type="text" placeholder="Your First Name" class="form-control family-first-name-text"
+                        id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="col-md family-col2">
+                    <input type="text" placeholder="Your Last Name" class="form-control family-last-name-text"
+                        id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+            </div>
+
+
+            <div class="row family-row2">
+                <div class="col-md family-col1">
+                    <input type="text" placeholder="Mobile No" class="form-control family-mobile-text"
+                        id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="col-md family-col2">
+                    <input type="email" placeholder="Your Email" class="form-control family-email-text"
+                        id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+            </div>
+
+
+            <div class="row family-row3">
+
+                <div class="col-md family-col3 me-4">
+                    <input type="text" placeholder="Relation with Patient"
+                        class="form-control family-relation-text w-50" id="exampleInputPassword1">
+                </div>
+
+            </div>
+        </div>
 
 
 
@@ -34,8 +76,7 @@
                         <div class="form-floating">
                             <textarea class="form-control text-area-box" placeholder="Leave a comment here"
                                 id="floatingTextarea3" style="height: 150px"></textarea>
-                            <label for="floatingTextarea2" class="floatingTextarea2">Enter Brief Details of
-                                Symptoms(optional)</label>
+                            <label for="floatingTextarea2" class="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
                         </div>
                     </div>
 
@@ -58,9 +99,10 @@
                 <div class="row patient-details-row2">
 
                     <div class="col-md patient-details-col3 me-4">
-                    <label for="">Date of Birth</label>
-                        <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 " id="exampleInputPassword1">
-                       
+                        <label for="">Date of Birth</label>
+                        <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 "
+                            id="exampleInputPassword1">
+
                     </div>
 
                 </div>
@@ -80,7 +122,7 @@
                                 id="exampleInputEmail1" aria-describedby="emailHelp">
                         </div>
                         <div class="col-md patient-contact-col2">
-                           
+
                             <input type="tel" placeholder="Mobile No" class="form-control mobile-text"
                                 id="exampleInputEmail1" aria-describedby="emailHelp" pattern="[0-9]{10}">
                         </div>

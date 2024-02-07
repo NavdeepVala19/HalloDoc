@@ -1,8 +1,10 @@
-00000000000000000000<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
+use function Laravel\Prompts\table;
 
 return new class extends Migration
 {
@@ -11,14 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cancel_history', function (Blueprint $table) {
+        Schema::create('block_request', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('note_id');
             $table->unsignedBigInteger('request_id');
-            $table->foreign('note_id')->references('id')->on('notes');
             $table->foreign('request_id')->references('id')->on('request');
-            $table->string('patient_name');
+            $table->integer('mobile');
             $table->string('email');
+            $table->string('reason');
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cancel_history');
+        Schema::dropIfExists('block_request');
     }
 };

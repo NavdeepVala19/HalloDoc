@@ -11,25 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('family_request', function (Blueprint $table) {
+        Schema::create('request_client', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
             $table->unsignedBigInteger('request_id');
-            $table->unsignedBigInteger('document_id');
-            $table->foreign('patient_id')->references('id')->on('patient_details');
             $table->foreign('request_id')->references('id')->on('request');
-            $table->foreign('document_id')->references('id')->on('documents');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->string('first_name');
-            $table->string('last_name')->nullable();
+            $table->string('last_name');
             $table->integer('mobile');
-            $table->string('relation')->nullable();
-            $table->string('upload_file');
-            $table->string('street');
-            $table->integer('zipcode');
+            $table->string('address');
             $table->string('city');
             $table->string('state');
+            $table->string('zipcode');
+            $table->string('notif_mobile');
+            $table->string('notif_email');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -38,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('family_request');
+        Schema::dropIfExists('request_client');
     }
 };

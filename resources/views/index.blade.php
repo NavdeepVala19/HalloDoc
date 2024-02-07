@@ -21,6 +21,7 @@
     {{-- FOOTER SECTION --}}
     @include('layouts.footer')
 
+
     {{-- Include script links from links.script blade file --}}
     @include('links.script')
 </body>
