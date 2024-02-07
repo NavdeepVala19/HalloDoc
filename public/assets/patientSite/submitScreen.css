@@ -1,0 +1,73 @@
+
+/********************* Header CSS Start***********************/
+.logout-btn {
+    display: none;
+}
+
+.welcome-msg{
+    display: none;
+}
+
+
+
+/********************* Header CSS End***********************/
+
+
+
+/********************* Main Content CSS Start***********************/
+
+.header_part{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* border: 1px dashed slateblue; */
+    position: relative;
+}
+
+
+
+.heading{
+    /* border: 1px solid black; */
+    /* margin-left: 540px; */
+    /* position: absolute; */
+}
+
+
+.container{
+    height: 400px;
+    border: 1px solid red;
+}
+
+.main-container{
+    height: 300px;
+    /* border: 1px solid black; */
+}
+
+.case {
+    width: 280px;
+    height: 50px;
+
+    border-radius: 10px;
+    color: white;
+    background-color: orange;
+    border: 1px solid black;
+}
+
+
+.submitType{
+    font-size: 1.5rem;
+}
+
+
+
+@media (max-width: 550px){
+        .menu-icon{
+            display: none;
+        }
+        .container{
+            margin-top: 30px;
+        }
+}
+
+
+/********************* Main Content CSS End***********************/

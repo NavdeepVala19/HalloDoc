@@ -20,3 +20,9 @@ Route::get('/provider', [UserController::class, 'newUserCase'])->name("provider-
 Route::get('/create', function () {
     return view('providerPage/providerRequest');
 })->name('provider-create-request');
+Route::get('/', function () {
+    return view('patientRequest');
+});
+Route::get('/create', function(){
+    return view('providerRequest');
+})->name('provider-create-request');

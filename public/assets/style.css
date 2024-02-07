@@ -29,6 +29,10 @@ nav a {
     color: #343434;
 }
 
+.logout-link{
+    display: none;
+}
+
 nav > a:hover {
     color: var(--blue);
     border-bottom: 2px solid var(--blue);
