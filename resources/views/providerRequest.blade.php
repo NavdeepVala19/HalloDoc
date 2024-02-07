@@ -12,4 +12,6 @@
         <h1>Submit Information</h1>
         <button><i class="bi bi-chevron-left"></i> Back</button>
     </div>
+
+    
 @endsection
