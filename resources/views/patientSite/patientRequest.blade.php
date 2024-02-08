@@ -47,7 +47,7 @@
                 <div class="row patient-details-row1">
                     <div class="col-md patient-details-col1">
                         <input type="text" placeholder="FirstName" class="form-control first-name-text"
-                            id="exampleInputEmail1" aria-describedby="emailHelp">
+                            id="exampleInputEmail1" aria-describedby="emailHelp" name="firstname">
                     </div>
                     <div class="col-md patient-details-col2">
                         <input type="text" placeholder="LastName" class="form-control last-name-text"

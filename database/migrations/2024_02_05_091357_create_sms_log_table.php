@@ -13,22 +13,22 @@ return new class extends Migration
     {
         Schema::create('sms_log', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('role_id');
-            $table->unsignedBigInteger('request_id');
-            $table->unsignedBigInteger('admin_id');
-            $table->unsignedBigInteger('provider_id');
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->unsignedBigInteger('request_id')->nullable();
+            $table->unsignedBigInteger('admin_id')->nullable();
+            $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('request_id')->references('id')->on('request');
             $table->foreign('admin_id')->references('id')->on('roles');
             $table->foreign('provider_id')->references('id')->on('roles');
             $table->string('recepient_firstname');
-            $table->string('recepient_lastname');
-            $table->string('action');
+            $table->string('recepient_lastname')->nullable();
+            $table->string('action')->nullable();
             $table->integer('mobile');
-            $table->date('sent_date');
-            $table->boolean('sent');
-            $table->integer('tries');
-            $table->integer('confirmation_number');
+            $table->date('sent_date')->nullable();
+            $table->boolean('sent')->nullable();
+            $table->integer('tries')->nullable();
+            $table->integer('confirmation_number')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

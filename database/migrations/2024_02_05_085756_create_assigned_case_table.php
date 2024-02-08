@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('assigned_case', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('account_type_id');
-            $table->unsignedBigInteger('request_id');
-            $table->unsignedBigInteger('provider_id');
+            $table->unsignedBigInteger('account_type_id')->nullable();
+            $table->unsignedBigInteger('request_id')->nullable();
+            $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('request_id')->references('id')->on('request');
             $table->foreign('account_type_id')->references('id')->on('account_type');
             $table->foreign('provider_id')->references('id')->on('provider');
