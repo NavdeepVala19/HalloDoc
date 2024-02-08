@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('health_professional_type', function (Blueprint $table) {
             $table->id();
             $table->string('profession_name');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('health_professional', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('profession');
+            $table->unsignedBigInteger('profession')->nullable();
             $table->foreign('profession')->references('id')->on('health_professional_type');
-            $table->unsignedBigInteger('state');
+            $table->unsignedBigInteger('state')->nullable();
             $table->foreign('state')->references('id')->on('account_type');
             $table->string('vendor_name');
-            $table->string('email');
-            $table->integer('business_contact');
+            $table->string('email')->nullable();
+            $table->integer('business_contact')->nullable();
             $table->integer('fax_number');
-            $table->string('address');
-            $table->string('city');
-            $table->string('states');
-            $table->integer('zip_code');
-            $table->integer('mobile');
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('states')->nullable();
+            $table->integer('zip_code')->nullable();
+            $table->integer('mobile')->nullable()   ;
 
             $table->timestamps();
             $table->softDeletes();

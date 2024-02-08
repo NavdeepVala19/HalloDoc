@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class request extends Model
+class Request extends Model
 {
     use HasFactory;
 
     protected $table = 'request';
 
     protected $fillable = [
-        'first_name', 'last_name'
+        'first_name', 'last_name', 'date_of_birth', 'phone_number', 'email', 'symptoms'
     ];
 }

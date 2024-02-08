@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('cancel_history', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('note_id');
-            $table->unsignedBigInteger('request_id');
+            $table->unsignedBigInteger('note_id')->nullable();
+            $table->unsignedBigInteger('request_id')->nullable();
             $table->foreign('note_id')->references('id')->on('notes');
             $table->foreign('request_id')->references('id')->on('request');
             $table->string('patient_name');

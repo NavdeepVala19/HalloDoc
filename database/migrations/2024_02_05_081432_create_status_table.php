@@ -22,13 +22,24 @@ return new class extends Migration
      * 13-CancelledByProvider,
      * 14-CCUploadedByClient,
      * 15-CCApprovedByAdmin
+     * 
+     * 
+     * All Types of Cases:
+     * 1.New
+     * 2.Pending
+     * 3.Active
+     * 4.Conclude
+     * 5.ToClose
+     * 6.UnPaid
      */
+
+     
     public function up(): void
     {
         Schema::create('status', function (Blueprint $table) {
             $table->id();
             $table->string('status_type');
-            $table->timestamps();
+            // $table->timestamps();
             // $table->softDeletes();
         });
 

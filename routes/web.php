@@ -4,16 +4,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProviderController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// ******************************* SHIVESH **********************************************
+Route::get('/', function () {
+    return view('patientRequest');
+});
+
+
+
+// ******************************* NAVDEEP **********************************************
 // Providers Dashboard page with New Users case listing
 Route::get('/provider', [ProviderController::class, 'newUserCase'])->name("provider-dashboard");
 
@@ -22,7 +20,3 @@ Route::get('/create', function () {
     return view('providerPage/providerRequest');
 })->name('provider-create-request');
 
-
-Route::get('/', function () {
-    return view('patientRequest');
-});

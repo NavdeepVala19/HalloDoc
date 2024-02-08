@@ -14,21 +14,12 @@ class statusSeeder extends Seeder
     public function run(): void
     {
         DB::table('status')->insert([
-            ['status_type' => 'Unassigned'],
-            ['status_type' => 'Accepted'],
-            ['status_type' => 'Cancelled'],
-            ['status_type' => 'Reserving'],
-            ['status_type' => 'MDEnRoute'],
-            ['status_type' => 'MDOnSite'],
-            ['status_type' => 'FollowUp'],
-            ['status_type' => 'Closed'],
-            ['status_type' => 'Locked'],
-            ['status_type' => 'Declined'],
-            ['status_type' => 'Consult'],
-            ['status_type' => 'Clear'],
-            ['status_type' => 'CancelledByProvider'],
-            ['status_type' => 'CCUploadedByClient'],
-            ['status_type' => 'CCApprovedByAdmin']
+            ['case_name' => 'New'],
+            ['case_name' => 'Pending'],
+            ['case_name' => 'Active'],
+            ['case_name' => 'Conclude'],
+            ['case_name' => 'Toclose'],
+            ['case_name' => 'Unpaid']
         ]);
     }
 }

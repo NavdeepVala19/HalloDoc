@@ -13,21 +13,21 @@ return new class extends Migration
     {
         Schema::create('admin', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
-            $table->unsignedBigInteger('status');
+            $table->unsignedBigInteger('status')->nullable();
             $table->foreign('status')->references('id')->on('status');
             $table->string('first_name');
-            $table->string('last_name');
+            $table->string('last_name')->nullable();
             $table->string('email');
-            $table->string('password');
-            $table->integer('mobile');
-            $table->string('address1');
-            $table->string('address2');
-            $table->string('city');
-            $table->string('state');
-            $table->string('zip');
-            $table->integer('alt_phone');
+            $table->string('password')->nullable();
+            $table->integer('mobile')->nullable();
+            $table->string('address1')->nullable();
+            $table->string('address2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->integer('alt_phone')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

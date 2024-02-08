@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('block_history', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
-            $table->unsignedBigInteger('note_id');
+            $table->unsignedBigInteger('patient_id')->nullable();
+            $table->unsignedBigInteger('note_id')->nullable();
             $table->foreign('note_id')->references('id')->on('notes');
             $table->foreign('patient_id')->references('id')->on('patient_details');
             $table->string('patient_name');

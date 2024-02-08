@@ -13,21 +13,13 @@ return new class extends Migration
     {
         Schema::create('family_request', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
             $table->unsignedBigInteger('request_id');
-            $table->unsignedBigInteger('document_id');
-            $table->foreign('patient_id')->references('id')->on('patient_details');
             $table->foreign('request_id')->references('id')->on('request');
-            $table->foreign('document_id')->references('id')->on('documents');
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->integer('mobile');
+            $table->string('email');
             $table->string('relation')->nullable();
-            $table->string('upload_file');
-            $table->string('street');
-            $table->integer('zipcode');
-            $table->string('city');
-            $table->string('state');
             $table->timestamps();
             $table->softDeletes();
         });
