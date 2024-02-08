@@ -15,16 +15,22 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
-            $table->unsignedBigInteger('admin_id');
+            $table->unsignedBigInteger('admin_id')->nullable();
             $table->foreign('admin_id')->references('id')->on('admin');
-            $table->unsignedBigInteger('physician_id');
+            $table->unsignedBigInteger('physician_id')->nullable();
             $table->foreign('physician_id')->references('id')->on('provider');
 
             $table->string('file_name');
-            $table->enum('doc_type',['test_one','medical_report','cost_receipt']);
+            $table->enum('doc_type',['test_one','medical_report','cost_receipt'])->nullable();
 
             $table->timestamps();
             $table->softDeletes();
+
+            // $table->boolean('is_frontSide');
+            // $table->boolean('is_compensation');
+            // $table->boolean('is_finalize');
+            // $table->boolean('is_patient_records');
+
         });
     }
 

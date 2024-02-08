@@ -8,17 +8,22 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * 
+     * 
+     * this table have 4 type of request
+     * 1.patient
+     * 2.family
+     * 3.conceirege
+     * 4.business
      */
     public function up(): void
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('request_type', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id');
-            $table->unsignedBigInteger('request_id');
             $table->foreign('patient_id')->references('id')->on('patient_details');
-            $table->foreign('request_id')->references('id')->on('request');
-            $table->string('document');
-            $table->date('upload_date');
+            $table->string('request_type');
+            
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('request_type');
     }
 };

@@ -183,22 +183,6 @@
                     </div>
                 </div>
 
-                <!--  photo upload or documents -->
-
-                <div class="docs-upload">
-
-                    <div class="patient-doc-text">
-                        <h4>Upload Photo or document (optional)</h4>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control select-file-text" placeholder="Select File"
-                            aria-label="Recipient's username" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Upload</button>
-                    </div>
-                </div>
-
-
                 <!--  SUBMIT and CANCEL Buttons -->
 
                 <div class="buttons">

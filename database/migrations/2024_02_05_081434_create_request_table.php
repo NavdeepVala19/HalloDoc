@@ -14,29 +14,43 @@ return new class extends Migration
         Schema::create('request', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('request_type_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->date('date_of_birth')->nullable();
+
+            $table->integer('phone_number')->nullable();
+            $table->string('email')->nullable();
             $table->unsignedBigInteger('status');
-            $table->unsignedBigInteger('provider_id');
-            $table->unsignedBigInteger('case_tag');
+            $table->unsignedBigInteger('physician_id')->nullable();
+            $table->string('confirmation_no')->nullable();
+            // $table->string('declined_by')->nullable();
+            // $table->boolean('is_urgent_email_sent');
+            $table->date('last_wellness_date')->nullable();
+            // $table->boolean('is_mobile');
+            $table->enum('call_type',['house_call','consult'])->nullable();
+            $table->boolean('completed_by_physician')->nullable();
+            $table->date('last_reservation_date')->nullable();
+            $table->date('accepted_date')->nullable();
+            // $table->string('relation_name')->nullable();
+            // $table->string('case_number')->nullable();
+            $table->unsignedBigInteger('case_tag')->nullable();
+            // $table->string('case_tag_physician');
+            // $table->string('patient_account_id');
+            // $table->string('created_user_id');
+            $table->string("room")->nullable();
+
             $table->foreign('request_type_id')->references('id')->on('patient_request_type');
             $table->foreign('status')->references('id')->on('status');
-            $table->foreign('provider_id')->references('id')->on('provider');
+            $table->foreign('physician_id')->references('id')->on('provider');
             $table->foreign('case_tag')->references('id')->on('case_tag');
             $table->foreign('user_id')->references('id')->on('allusers');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
-            // $table->string('declined_by');
-            // $table->boolean('is_urgent_email_sent');
-            // $table->string('relation_name');
-            // $table->string('case_number');
-            $table->integer('mobile');
-            $table->string('confirmation_no');
-            $table->date('last_wellness_date');
-            $table->enum('call_type',['house_call','consult']);
-            $table->date('last_reservation_date');
-            $table->boolean('completed_by_physician');
-            $table->date('accepted_date');
+
+
+            // patient_request_details
+
+            $table->text('symptoms');
+            
 
             $table->timestamps();
             $table->softDeletes();

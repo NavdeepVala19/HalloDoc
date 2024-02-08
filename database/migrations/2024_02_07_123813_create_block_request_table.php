@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('block_request', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('request_id');
+            $table->unsignedBigInteger('request_id')->nullable();
             $table->foreign('request_id')->references('id')->on('request');
-            $table->integer('mobile');
-            $table->string('email');
-            $table->string('reason');
+            $table->integer('mobile')->nullable();
+            $table->string('email')->nullable();
+            $table->string('reason')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

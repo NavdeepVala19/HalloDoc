@@ -17,10 +17,12 @@ return new class extends Migration
             $table->foreign('shift_id')->references('id')->on('shift');
             $table->unsignedBigInteger('status');
             $table->foreign('status')->references('id')->on('status');
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->date('shift_date');
             $table->time('start_time');
             $table->time('end_time');
-            $table->dateTime('last_running_date');
+            $table->dateTime('last_running_date')->nullable();
             $table->timestamps();
         });
     }

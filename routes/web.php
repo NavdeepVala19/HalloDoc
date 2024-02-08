@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 // Providers Dashboard page with New Users case listing
 Route::get('/provider', [UserController::class, 'newUserCase'])->name("provider-dashboard");
 
+<<<<<<< HEAD
 Route::get('/create', function () {
     return view('providerPage/providerRequest');
 })->name('provider-create-request');
@@ -26,3 +27,6 @@ Route::get('/', function () {
 Route::get('/create', function(){
     return view('providerRequest');
 })->name('provider-create-request');
+=======
+route::get('/', [Controller::class,'submitRequest'])->name('submitRequest');
+>>>>>>> shivesh
