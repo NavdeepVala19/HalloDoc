@@ -14,23 +14,23 @@ return new class extends Migration
         Schema::create('allusers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('account_type_id');
-            $table->unsignedBigInteger('status');
-            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('status')->nullable();
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('account_type_id')->references('id')->on('account_type');
             $table->foreign('status')->references('id')->on('status');
             $table->foreign('region_id')->references('id')->on('regions');
             $table->string('first_name');
-            $table->string('user_name');
-            $table->string('last_name');
+            $table->string('user_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('email');
-            $table->string('password');
-            $table->integer('phone');
-            $table->integer('zipcode');
-            $table->integer('street');
-            $table->string('city');
-            $table->string('state');
+            $table->string('password')->nullable();
+            $table->integer('phone')->nullable();
+            $table->integer('zipcode')->nullable();
+            $table->integer('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->string('created_by');
-            $table->string('modified_by');
+            $table->string('modified_by')->nullable();
 
             // $table->boolean('is_mobile');
             // $table->boolean('is_request_with_email');

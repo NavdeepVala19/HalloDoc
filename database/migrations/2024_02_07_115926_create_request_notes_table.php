@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
-            $table->unsignedBigInteger('phy_notes');
+            $table->unsignedBigInteger('phy_notes')->nullable();
             $table->foreign('phy_notes')->references('id')->on('notes');
-            $table->unsignedBigInteger('admin_notes');
+            $table->unsignedBigInteger('admin_notes')->nullable();
             $table->foreign('admin_notes')->references('id')->on('notes');
 
-            $table->integer('date');
-            $table->integer('month');
-            $table->integer('year');
+            $table->integer('date')->nullable();
+            $table->integer('month')->nullable();
+            $table->integer('year')->nullable();
             
 
             $table->timestamps();

@@ -17,11 +17,11 @@ return new class extends Migration
             $table->foreign('request_id')->references('id')->on('request');
             $table->unsignedBigInteger('admin_id');
             $table->foreign('admin_id')->references('id')->on('admin');
-            $table->unsignedBigInteger('physician_id');
+            $table->unsignedBigInteger('physician_id')->nullable();
             $table->foreign('physician_id')->references('id')->on('provider');
             $table->unsignedBigInteger('status');
             $table->foreign('status')->references('id')->on('status');
-            $table->unsignedBigInteger('notes');
+            $table->unsignedBigInteger('notes')->nullable();
             $table->foreign('notes')->references('id')->on('notes');
             $table->timestamps();
             $table->softDeletes();

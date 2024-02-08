@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('allusers');
             $table->date('start_date');
             $table->boolean('is_repeat');
-            $table->char('week_days');
-            $table->integer('repeat_upto');
+            $table->char('week_days')->nullable();
+            $table->integer('repeat_upto')->nullable();
             
             $table->timestamps();
             $table->softDeletes();

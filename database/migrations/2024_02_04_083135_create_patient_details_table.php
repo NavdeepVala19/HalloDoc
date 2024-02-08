@@ -18,8 +18,7 @@ return new class extends Migration
         Schema::create('patient_details', function (Blueprint $table) {
             $table->id();
             $table->string('firstname');
-            $table->string('lastname');
-            $table->string('symptoms');
+            $table->string('lastname')->nullable();
             $table->string('email');
             $table->string('password');
             $table->integer('mobile');
