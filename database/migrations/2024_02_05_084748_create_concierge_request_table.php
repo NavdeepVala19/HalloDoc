@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('request_id');
             $table->foreign('patient_id')->references('id')->on('patient_details');
             $table->foreign('request_id')->references('id')->on('request');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('hotel_name');

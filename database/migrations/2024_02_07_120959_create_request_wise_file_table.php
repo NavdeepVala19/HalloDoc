@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('physician_id')->references('id')->on('provider');
 
             $table->string('file_name');
-            $table->tinyInteger('doc_type');
+            $table->enum('doc_type',['test_one','medical_report','cost_receipt']);
 
             $table->timestamps();
             $table->softDeletes();
