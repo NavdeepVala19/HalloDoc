@@ -21,7 +21,7 @@ Route::get('/create', function () {
     return view('providerPage/providerRequest');
 })->name('provider-create-request');
 Route::get('/', function () {
-    return view('businessRequest');
+    return view('patientRequest');
 });
 Route::get('/create', function(){
     return view('providerRequest');
