@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('health_professional_type', function (Blueprint $table) {
+        Schema::create('menu', function (Blueprint $table) {
             $table->id();
-            $table->string('profession_name');
-            $table->boolean('is_active')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            // $table->date('created_date');
-
+            $table->string('name');
+            $table->string('account_type'); // 1. Admin 2. Physician
+            $table->integer('sort_order')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('health_professional_type');
+        Schema::dropIfExists('menu');
     }
 };

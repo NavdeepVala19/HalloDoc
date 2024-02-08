@@ -13,18 +13,31 @@ return new class extends Migration
     {
         Schema::create('business', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('business_type_id');
-            $table->unsignedBigInteger('status_id')->nullable();
+            
+            $table->unsignedBigInteger('business_type_id')->nullable();
             $table->foreign('business_type_id')->references('id')->on('business_type');
+            $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status');
+            $table->integer('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions');
+            
+
             $table->string('business_name');
-            $table->string('contact')->nullable();
-            $table->string('email');
-            $table->integer('fax_number')->nullable();
-            $table->integer('zipcode')->nullable();
-            $table->string('street')->nullable();
+            
+            $table->string('address1')->nullable();
+            $table->string('address2')->nullable();
             $table->string('city')->nullable();
-            $table->string('state')->nullable();
+            $table->integer('zipcode')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('fax_number')->nullable();
+            
+            $table->boolean('is_registered')->nullable();
+
+            // $table->unsignedBigInteger('created_by');
+            // $table->foreign('created_by')->references('users');
+            // $table->unsignedBigInteger('modified_by');
+            // $table->foreign('modified_by')->references('users');
+            
             $table->timestamps();
             $table->softDeletes();
         });

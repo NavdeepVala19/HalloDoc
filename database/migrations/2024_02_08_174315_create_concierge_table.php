@@ -11,24 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('concierge_request', function (Blueprint $table) {
+        Schema::create('concierge', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('request_id');
-            $table->foreign('request_id')->references('id')->on('request');
+            
             $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
-            $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->integer('phone');
-            $table->string('email');
-            $table->string('hotel_name');
-            
+
+            $table->string('name');
+            $table->string('address')->nullable();
             $table->string('street')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->integer('zipcode')->nullable();
-            $table->timestamps();
+
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -37,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('concierge_request');
+        Schema::dropIfExists('concierge');
     }
 };

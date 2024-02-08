@@ -13,19 +13,27 @@ return new class extends Migration
     {
         Schema::create('health_professional', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('profession')->nullable();
             $table->foreign('profession')->references('id')->on('health_professional_type');
-            $table->unsignedBigInteger('state')->nullable();
-            $table->foreign('state')->references('id')->on('account_type');
+            
+            
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions');
+            
+            // $table->unsignedBigInteger('state')->nullable();
+            // $table->foreign('state')->references('id')->on('account_type');
+            
             $table->string('vendor_name');
-            $table->string('email')->nullable();
-            $table->integer('business_contact')->nullable();
             $table->integer('fax_number');
             $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->string('states')->nullable();
-            $table->integer('zip_code')->nullable();
-            $table->integer('mobile')->nullable()   ;
+            $table->string('state')->nullable();
+            $table->integer('zip')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->boolean('is_deleted')->nullable();
+            $table->string('email')->nullable();
+            $table->string('business_contact')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

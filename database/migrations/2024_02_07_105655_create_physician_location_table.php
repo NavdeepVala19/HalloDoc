@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('physician_location', function (Blueprint $table) {
             $table->id();
-            $table->string('address');
             $table->unsignedBigInteger('provider_id');
             $table->foreign('provider_id')->references('id')->on('provider');
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            
+            // $table->string('physician_name')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }

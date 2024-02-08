@@ -7,20 +7,27 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * AspNetUsers Table
+     * Stores Credentials of Users
      */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string("address");
-            $table->string('password');
-            $table->rememberToken();
-            $table->enum("status", [0, 1])->default(0);
+            $table->string('username');
+            $table->string('password_hash')->nullable();
+            $table->string('security_stamp')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->boolean('email_confirmed');
+            $table->string('phone_number')->nullable();
+            $table->boolean('phone_number_confirmed');
+            $table->boolean('two_factor_enabled');
+            $table->date('LockoutEndDateUtc')->nullable();
+            $table->boolean("lockout_enabled");
+            $table->integer("access_failed_count");
+            $table->string('core_password_hash')->nullable();
+            $table->integer('hash_version')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });
