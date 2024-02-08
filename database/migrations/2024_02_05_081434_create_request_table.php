@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->date('date_of_birth')->nullable();
-
             $table->integer('phone_number')->nullable();
             $table->string('email')->nullable();
             $table->unsignedBigInteger('status');
@@ -40,7 +39,7 @@ return new class extends Migration
             // $table->string('created_user_id');
             $table->string("room")->nullable();
 
-            $table->foreign('request_type_id')->references('id')->on('patient_request_type');
+            $table->foreign('request_type_id')->references('id')->on('request_type');
             $table->foreign('status')->references('id')->on('status');
             $table->foreign('physician_id')->references('id')->on('provider');
             $table->foreign('case_tag')->references('id')->on('case_tag');

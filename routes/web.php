@@ -15,3 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 route::get('/', [Controller::class,'submitRequest'])->name('submitRequest');
+
+route::get('/patient', function() { return view('patientSite/patientRequest');})->name('patient');
+route::get('/family', function() { return view('patientSite/familyRequest');})->name('family');
+route::get('/conceirge', function() { return view('patientSite/conciergeRequest');})->name('conceirge');
+route::get('/business', function() { return view('patientSite/businessRequest');})->name('business');
+
+
