@@ -9,6 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+      /**
+     * this table show types of account
+     * 1.admin
+     * 2.physician
+     * 3.patient
+     */
     public function up(): void
     {
         Schema::create('account_type', function (Blueprint $table) {

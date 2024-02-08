@@ -55,7 +55,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->address }}</td>
-                            <td>{{ $user->chat }}</td>
+                            <td><button class="table-btn">Admin</button></td>
                             <td><button class="table-btn">Actions</button></td>
                         </tr>
                     @endforeach

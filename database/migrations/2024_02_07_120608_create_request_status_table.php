@@ -19,8 +19,10 @@ return new class extends Migration
             $table->foreign('admin_id')->references('id')->on('admin');
             $table->unsignedBigInteger('physician_id');
             $table->foreign('physician_id')->references('id')->on('provider');
-            $table->tinyInteger('status');
-
+            $table->unsignedBigInteger('status');
+            $table->foreign('status')->references('id')->on('status');
+            $table->unsignedBigInteger('notes');
+            $table->foreign('notes')->references('id')->on('notes');
             $table->timestamps();
             $table->softDeletes();
         });

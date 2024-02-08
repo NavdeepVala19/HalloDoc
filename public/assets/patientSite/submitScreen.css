@@ -8,7 +8,10 @@
     display: none;
 }
 
-
+.footer{
+    position: fixed;
+    bottom: 0;
+}
 
 /********************* Header CSS End***********************/
 

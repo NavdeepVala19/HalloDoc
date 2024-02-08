@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProviderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,7 @@ use App\Http\Controllers\UserController;
 |
 */
 // Providers Dashboard page with New Users case listing
-Route::get('/provider', [UserController::class, 'newUserCase'])->name("provider-dashboard");
+Route::get('/provider', [ProviderController::class, 'newUserCase'])->name("provider-dashboard");
 
 // Create request page for provider
 Route::get('/create', function () {
@@ -24,5 +24,5 @@ Route::get('/create', function () {
 
 
 Route::get('/', function () {
-    return view('businessRequest');
+    return view('patientRequest');
 });

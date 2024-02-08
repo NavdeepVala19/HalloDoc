@@ -7,7 +7,21 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     *  1-Unassigned,
+     * 2-Accepted,
+     * 3-Cancelled,
+     * 4-Reserving,
+     * 5-MDEnRoute,
+     * 6-MDOnSite,
+     * 7-FollowUp,
+     * 8-Closed,
+     * 9-Locked,
+     * 10-Declined,
+     * 11-Consult,
+     * 12-Clear,
+     * 13-CancelledByProvider,
+     * 14-CCUploadedByClient,
+     * 15-CCApprovedByAdmin
      */
     public function up(): void
     {
@@ -15,8 +29,10 @@ return new class extends Migration
             $table->id();
             $table->string('status_type');
             $table->timestamps();
-            $table->softDeletes();
+            // $table->softDeletes();
         });
+
+        
     }
 
     /**

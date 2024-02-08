@@ -7,13 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     *  this table have 4 type of request
+     * 1.patient
+     * 2.family
+     * 3.conceirege
+     * 4.business
      */
     public function up(): void
     {
         Schema::create('request_type', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('request_type');
             $table->timestamps();
         });
     }
