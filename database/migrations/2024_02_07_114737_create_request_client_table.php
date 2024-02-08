@@ -9,6 +9,10 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+       /**
+     * create request page for admin/provider 
+     */
     public function up(): void
     {
         Schema::create('request_client', function (Blueprint $table) {
@@ -17,6 +21,8 @@ return new class extends Migration
             $table->foreign('request_id')->references('id')->on('request');
             $table->unsignedBigInteger('region_id');
             $table->foreign('region_id')->references('id')->on('regions');
+            $table->unsignedBigInteger('notes');
+            $table->foreign('notes')->references('id')->on('notes');
             $table->string('first_name');
             $table->string('last_name');
             $table->integer('mobile');

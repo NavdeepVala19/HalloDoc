@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('account_type_id');
             $table->unsignedBigInteger('status');
+            $table->unsignedBigInteger('region_id');
             $table->foreign('account_type_id')->references('id')->on('account_type');
             $table->foreign('status')->references('id')->on('status');
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->string('first_name');
             $table->string('user_name');
             $table->string('last_name');
@@ -24,9 +26,17 @@ return new class extends Migration
             $table->string('password');
             $table->integer('phone');
             $table->integer('zipcode');
+            $table->integer('street');
             $table->string('city');
             $table->string('state');
             $table->string('created_by');
+            $table->string('modified_by');
+
+            // $table->boolean('is_mobile');
+            // $table->boolean('is_request_with_email');
+            // $table->string('str_month');
+            // $table->integer('int_year');
+            // $table->integer('int_date');
             $table->timestamps();
             $table->softDeletes();
         });
