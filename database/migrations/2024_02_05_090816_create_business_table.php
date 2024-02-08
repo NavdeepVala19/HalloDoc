@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendor', function (Blueprint $table) {
+        Schema::create('business', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('profession_id');
-            $table->foreign('profession_id')->references('id')->on('profession');
-            $table->string('name');
+            $table->unsignedBigInteger('business_type_id');
+            $table->unsignedBigInteger('status_id');
+            $table->foreign('business_type_id')->references('id')->on('business_type');
+            $table->foreign('status_id')->references('id')->on('status');
+            $table->string('business_name');
             $table->string('contact');
             $table->string('email');
             $table->integer('fax_number');
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vendor');
+        Schema::dropIfExists('business');
     }
 };

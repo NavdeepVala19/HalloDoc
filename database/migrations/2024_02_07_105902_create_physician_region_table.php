@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assigned_case', function (Blueprint $table) {
+        Schema::create('physician_region', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('account_type_id');
-            $table->unsignedBigInteger('request_id');
             $table->unsignedBigInteger('provider_id');
-            $table->foreign('request_id')->references('id')->on('request');
-            $table->foreign('account_type_id')->references('id')->on('account_type');
             $table->foreign('provider_id')->references('id')->on('provider');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assigned_case');
+        Schema::dropIfExists('physician_region');
     }
 };
