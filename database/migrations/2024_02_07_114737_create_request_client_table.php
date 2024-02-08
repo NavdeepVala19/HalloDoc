@@ -9,10 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    //  These Table contains all the data related to request created by (Patient/family/Buisness partner/Concierge)
     public function up(): void
     {
         Schema::create('request_client', function (Blueprint $table) {
             $table->id();
+            // will store who created request
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
             $table->unsignedBigInteger('region_id');

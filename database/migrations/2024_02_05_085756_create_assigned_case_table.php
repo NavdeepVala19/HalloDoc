@@ -16,14 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('account_type_id');
             $table->unsignedBigInteger('request_id');
             $table->unsignedBigInteger('provider_id');
-            $table->foreign('request_id')->references('id')->on('request');
             $table->foreign('account_type_id')->references('id')->on('account_type');
+            $table->foreign('request_id')->references('id')->on('request');
             $table->foreign('provider_id')->references('id')->on('provider');
             $table->timestamps();
             $table->softDeletes();
         });
     }
-
     /**
      * Reverse the migrations.
      */

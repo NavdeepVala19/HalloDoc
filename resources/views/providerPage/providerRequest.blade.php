@@ -28,9 +28,9 @@
                     <input type="text" class="form-control" id="floatingInput" placeholder="Last Name">
                     <label for="floatingInput">Last Name</label>
                 </div>
-                
-                    <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number">
-                
+
+                <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number">
+
                 <div class="form-floating ">
                     <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Email address</label>
@@ -77,8 +77,8 @@
             </div>
 
             <div class="mb-4 d-flex justify-content-end gap-3 ">
-                <button class="primary-fill">Save</button>
-                <button class="primary-empty">Cancel</button>
+                <a href="" class="primary-fill">Save</a>
+                <a href="{{ route('provider-dashboard') }}" class="primary-empty">Cancel</a>
             </div>
         </div>
     </div>
