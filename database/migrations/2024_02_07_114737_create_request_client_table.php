@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
             $table->unsignedBigInteger('notes')->nullable();
-            $table->foreign('notes')->references('id')->on('notes');
+            $table->foreign('notes')->references('id')->on('request_notes');
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->integer('phone_number')->nullable();

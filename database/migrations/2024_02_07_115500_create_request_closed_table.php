@@ -18,10 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('request_status_id');
             $table->foreign('request_status_id')->references('id')->on('request_status');
 
+            // Checkout for these
             $table->unsignedBigInteger('phy_notes')->nullable();
-            $table->foreign('phy_notes')->references('id')->on('notes');
-            $table->string('client_notes')->nullable();
-            $table->foreign('client_notes')->references('id')->on('notes');
+            $table->foreign('phy_notes')->references('id')->on('request_notes');
+            $table->unsignedBigInteger('client_notes')->nullable();
+            $table->foreign('client_notes')->references('id')->on('request_notes');
             $table->timestamps();
         });
     }

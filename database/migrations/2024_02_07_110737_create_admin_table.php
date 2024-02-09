@@ -36,7 +36,7 @@ return new class extends Migration
             $table->integer('alt_phone')->nullable();
 
             $table->unsignedBigInteger('role_id');
-            $table->foreign('role_id')->references('user_roles');
+            $table->foreign('role_id')->references('id')->on('user_roles');
 
             // $table->unsignedBigInteger('created_by');
             // $table->foreign('created_by')->references('users');
