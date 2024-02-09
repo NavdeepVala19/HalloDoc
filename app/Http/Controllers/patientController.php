@@ -10,6 +10,9 @@ class patientController extends Controller
 
     // this controller is responsible for creating/storing the patient
 
+    public function landing(){
+        return view ('patientSite/submitScreen');
+    }
     public function create(){
         return view('patientSite/patientRequest');
     }
@@ -40,6 +43,7 @@ class patientController extends Controller
 
         $patientRequest->save();
 
+        return redirect('landing');
 
     }
 }
