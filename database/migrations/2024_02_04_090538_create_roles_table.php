@@ -8,15 +8,21 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * aspnetroles - patient, provider, admin
+     * this table show types of account
+     * 1.admin
+     * 2.physician
+     * 3.patient
+     * 
+     * 
+     * aspnetuserroles - which type of role given to admin/provider
      */
     public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('account_type_id');
-            $table->string('role');
-            $table->foreign('account_type_id')->references('id')->on('account_type');
-            $table->string('access_id');
+            $table->string('name');
+
             $table->timestamps();
             $table->softDeletes();
         });

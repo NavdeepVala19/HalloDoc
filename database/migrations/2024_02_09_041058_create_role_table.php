@@ -7,15 +7,20 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Role Table
      */
     public function up(): void
     {
-        Schema::create('business_type', function (Blueprint $table) {
+        Schema::create('role', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamps();
+            $table->enum('account_type', ['admin', 'physician']);
+
+            $table->string('created_by');
+            $table->string('modified_by')->nullable();
+
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('business_type');
+        Schema::dropIfExists('role');
     }
 };

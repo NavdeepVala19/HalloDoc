@@ -7,36 +7,39 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * All data related to users Patient/Admin/Physician.
+     * User Table
      */
     public function up(): void
     {
         Schema::create('allusers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('account_type_id');
-            $table->unsignedBigInteger('status')->nullable();
-            $table->unsignedBigInteger('region_id')->nullable();
-            $table->foreign('account_type_id')->references('id')->on('account_type');
-            $table->foreign('status')->references('id')->on('status');
-            $table->foreign('region_id')->references('id')->on('regions');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('first_name');
-            $table->string('user_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('email');
-            $table->string('password')->nullable();
-            $table->integer('phone')->nullable();
-            $table->integer('zipcode')->nullable();
+            $table->string('mobile')->nullable();
+            $table->boolean('is_mobile')->nullable();
             $table->integer('street')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions');
+            $table->integer('zipcode')->nullable();
+
+            $table->string('str_month')->nullable();
+            $table->integer('int_year')->nullable();
+            $table->integer('int_date')->nullable();
+
+            // Check Here
             $table->string('created_by');
             $table->string('modified_by')->nullable();
 
-            // $table->boolean('is_mobile');
-            // $table->boolean('is_request_with_email');
-            // $table->string('str_month');
-            // $table->integer('int_year');
-            // $table->integer('int_date');
+
+            $table->unsignedBigInteger('status')->nullable();
+            $table->foreign('status')->references('id')->on('status');
+            $table->boolean('is_request_with_email');
+
             $table->timestamps();
             $table->softDeletes();
         });

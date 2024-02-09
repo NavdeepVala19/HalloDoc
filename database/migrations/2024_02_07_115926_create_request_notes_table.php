@@ -15,15 +15,22 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
+
+
+            $table->string('str_month')->nullable();
+            $table->integer('int_year')->nullable();
+            $table->integer('int_date')->nullable();
+
             $table->unsignedBigInteger('phy_notes')->nullable();
             $table->foreign('phy_notes')->references('id')->on('notes');
             $table->unsignedBigInteger('admin_notes')->nullable();
             $table->foreign('admin_notes')->references('id')->on('notes');
 
-            $table->integer('date')->nullable();
-            $table->integer('month')->nullable();
-            $table->integer('year')->nullable();
-            
+            $table->string('created_by');
+            $table->string('modified_by')->nullable();
+
+            // Check These
+            $table->string('AdministrativeNotes');
 
             $table->timestamps();
             $table->softDeletes();

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('shift_detail_id')->references('id')->on('shift_detail');
             $table->unsignedBigInteger('region_id');
             $table->foreign('region_id')->references('id')->on('regions');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

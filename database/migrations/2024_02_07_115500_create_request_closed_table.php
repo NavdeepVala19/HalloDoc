@@ -15,9 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
+            $table->unsignedBigInteger('request_status_id');
+            $table->foreign('request_status_id')->references('id')->on('request_status');
+
             $table->unsignedBigInteger('phy_notes')->nullable();
             $table->foreign('phy_notes')->references('id')->on('notes');
             $table->string('client_notes')->nullable();
+            $table->foreign('client_notes')->references('id')->on('notes');
             $table->timestamps();
         });
     }

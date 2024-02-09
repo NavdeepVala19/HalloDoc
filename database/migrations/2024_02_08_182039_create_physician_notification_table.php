@@ -9,20 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-
-      /**
-     * this table show types of account
-     * 1.admin
-     * 2.physician
-     * 3.patient
-     */
     public function up(): void
     {
-        Schema::create('account_type', function (Blueprint $table) {
+        Schema::create('physician_notification', function (Blueprint $table) {
             $table->id();
-            $table->string('account_type');
+
+            $table->unsignedBigInteger('provider_id');
+            $table->foreign('provider_id')->references('id')->on('provider');
+
+            $table->boolean('IsNotificationStopped');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('account_type');
+        Schema::dropIfExists('physician_notification');
     }
 };
