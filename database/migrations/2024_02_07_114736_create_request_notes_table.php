@@ -21,10 +21,13 @@ return new class extends Migration
             $table->integer('int_year')->nullable();
             $table->integer('int_date')->nullable();
 
-            $table->unsignedBigInteger('phy_notes')->nullable();
-            $table->foreign('phy_notes')->references('id')->on('notes');
-            $table->unsignedBigInteger('admin_notes')->nullable();
-            $table->foreign('admin_notes')->references('id')->on('notes');
+            // $table->unsignedBigInteger('phy_notes')->nullable();
+            // $table->foreign('phy_notes')->references('id')->on('notes');
+            // $table->unsignedBigInteger('admin_notes')->nullable();
+            // $table->foreign('admin_notes')->references('id')->on('notes');
+
+            $table->string('physician_notes')->nullable();
+            $table->string('admin_notes')->nullable();
 
             $table->string('created_by');
             $table->string('modified_by')->nullable();

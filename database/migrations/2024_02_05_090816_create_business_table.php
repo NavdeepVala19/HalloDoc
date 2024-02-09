@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('business', function (Blueprint $table) {
             $table->id();
             
-            $table->unsignedBigInteger('business_type_id')->nullable();
-            $table->foreign('business_type_id')->references('id')->on('business_type');
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status');
-            $table->integer('region_id')->nullable();
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
             
 

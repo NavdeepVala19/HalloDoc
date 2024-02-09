@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreign('admin_id')->references('id')->on('admin');
             $table->string('TransToPhysicianId');
             $table->unsignedBigInteger('notes')->nullable();
-            $table->foreign('notes')->references('id')->on('notes');
+            $table->foreign('notes')->references('id')->on('request_notes');
             $table->boolean('TransToAdmin')->nullable();
             $table->timestamps();
             $table->softDeletes();
