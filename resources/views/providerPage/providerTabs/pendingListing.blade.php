@@ -54,16 +54,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($users as $user)
+                    @foreach ($pendingCases as $pendingCase)
                         <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->phone }}</td>
-                        <td>{{ $user->address }}</td>
-                        <td>{{ $user->address }}</td>
-                        <td>{{ $user->chat }}</td>
+                        <td>{{ $pendingCase->first_name }}</td>
+                        <td>{{ $pendingCase->phone_number }}</td>
+                        <td>{{ $pendingCase->address }}</td>
+                        <td>{{ $pendingCase->address }}</td>
+                        <td>{{ $pendingCase->chat }}</td>
                         <td><button class="table-btn">Actions</button></td>
                     </tr>
-                @endforeach --}}
+                @endforeach
                 </tbody>
             </table>
         </div>

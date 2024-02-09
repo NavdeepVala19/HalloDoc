@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class statusSeeder extends Seeder
+class StatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,12 +14,12 @@ class statusSeeder extends Seeder
     public function run(): void
     {
         DB::table('status')->insert([
-            ['case_name' => 'New'],
-            ['case_name' => 'Pending'],
-            ['case_name' => 'Active'],
-            ['case_name' => 'Conclude'],
-            ['case_name' => 'Toclose'],
-            ['case_name' => 'Unpaid']
-        ]);
+            ['status_type' => 'New'],
+            ['status_type' => 'Pending'],
+            ['status_type' => 'Active'],
+            ['status_type' => 'Conclude'],
+            ['status_type' => 'Toclose'],
+            ['status_type' => 'Unpaid']
+            ]);
     }
 }

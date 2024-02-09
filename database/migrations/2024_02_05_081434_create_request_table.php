@@ -39,11 +39,6 @@ return new class extends Migration
             $table->string('patient_account_id');
             $table->integer('created_user_id');
 
-
-
-
-
-
             $table->foreign('request_type_id')->references('id')->on('request_type');
             $table->foreign('status')->references('id')->on('status');
             $table->foreign('physician_id')->references('id')->on('provider');

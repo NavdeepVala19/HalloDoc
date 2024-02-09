@@ -51,16 +51,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($users as $user)
-                    <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->phone }}</td>
-                        <td>{{ $user->address }}</td>
-                        <td>{{ $user->address }}</td>
-                        <td>{{ $user->chat }}</td>
-                        <td><button class="table-btn">Actions</button></td>
-                    </tr>
-                    @endforeach --}}
+                    {{-- {{ dd($concludeCases) }} --}}
+
+                    {{-- Working --}}
+                    @foreach ($concludeCases as $concludeCase)
+                        @if ($concludeCases->request_type_id == 2)
+                        @endif
+                        <tr>
+                            <td style="background-color:blue;color: red;">{{ $concludeCase->first_name }}</td>
+                            <td>{{ $concludeCase->phone_number }}</td>
+                            <td>{{ $concludeCase->address }}</td>
+                            <td>{{ $concludeCase->address }}</td>
+                            <td>{{ $concludeCase->chat }}</td>
+                            <td><button class="table-btn">Actions</button></td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

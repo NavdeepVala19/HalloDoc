@@ -119,9 +119,10 @@
 
 tr > td {
     padding: 16px !important;
-    color: #fff !important;
-    background-color: green !important;
+    /* color: #fff !important; */
+    /* background-color: green !important; */
 }
+
 /* ********************** MEDIA QUERIES *********************** */
 @media (max-width: 1160px) {
     .search-section {

@@ -50,11 +50,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($newCases as $newCase)
                         <tr>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->phone }}</td>
-                            <td>{{ $user->address }}</td>
+                           
+
+                            <td>{{ $newCase->first_name }}</td>
+                            <td>{{ $newCase->phone_number }}</td>
+                            <td>{{ $newCase->address }}</td>
                             <td><button class="table-btn">Admin</button></td>
                             <td><button class="table-btn">Actions</button></td>
                         </tr>

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('email');
-            $table->integer('mobile')->nullable();
+            $table->string('mobile')->nullable();
             $table->integer('medical_license')->nullable();
             $table->string('photo')->nullable();
             $table->integer('admin_notes')->nullable();

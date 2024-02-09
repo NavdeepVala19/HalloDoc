@@ -3,15 +3,15 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
-use App\Models\Request;
+use App\Models\Provider;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Request>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Provider>
  */
-class RequestFactory extends Factory
+class ProviderFactory extends Factory
 {
-    protected $model = Request::class;
+
+    protected $model = Provider::class;
     /**
      * Define the model's default state.
      *
@@ -22,10 +22,10 @@ class RequestFactory extends Factory
         return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
-            'date_of_birth' => $this->faker->date(),
-            'phone_number' => $this->faker->phoneNumber(),
             'email' => $this->faker->email(),
-            'symptoms' => $this->faker->text()
+            'mobile' => $this->faker->phoneNumber(),
+            'address1' => $this->faker->address(),
+            'address2' => $this->faker->address(),
         ];
     }
 }
