@@ -13,7 +13,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    protected $table = 'request_client';
 
     /**
      * The attributes that are mass assignable.
@@ -21,10 +20,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        // 'name',
-        // 'email',
-        // 'password',
-
         'first_name',
         'last_name',
         'phone_number',

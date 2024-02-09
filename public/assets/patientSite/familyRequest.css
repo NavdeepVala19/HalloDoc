@@ -33,10 +33,7 @@
     justify-content: flex-end;
     /* border: 1px dashed slateblue; */
 }
-.btn,
-.select-file-text{
-    z-index: -2 !important;
-}
+
 
 
 .patient-details {
@@ -77,10 +74,7 @@
     justify-content: flex-end;
 }
 
-#button-addon2{
-    background-color: rgb(32, 181, 250);
-    color: white;
-}
+
 
 .form-control {
     /* border: 1px solid black; */
@@ -92,11 +86,19 @@
     background-color: rgb(32, 181, 250);
 }
 
+.btn-upload{
+    background-color: rgb(32, 181, 250);
+    z-index: -2 !important;
+}
+
+.select-file-text{
+    z-index: -2 !important;
+}
+
 .btn-cancel{
     border-color: rgb(32, 181, 250);
     color:rgb(32, 181, 250) ;
 }
-
 @media (max-width: 550px) {
     .menu-icon {
         display: none;

@@ -6,21 +6,17 @@ use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
 // use App\Models\User;
-
-
-class patientController extends Controller
+class familyRequestController extends Controller
 {
 
-    // this controller is responsible for creating/storing the patient
-
-    public function landing(){
-        return view ('patientSite/submitScreen');
-    }
+    // public function landing(){
+    //     return view ('patientSite/submitScreen');
+    // }
 
 
     public function create(Request $request){
 
-        dd($request->all());
+        // dd($request->all());
         $request->validate([
             'first_name'=>'required',
             'email' => 'required|email',
@@ -30,9 +26,8 @@ class patientController extends Controller
             'city' => 'required',
             'zipcode' => 'required', 
             'state' => 'required',
-            'room' => 'required',
+            // 'room' => 'required',
         ]);
-        
 
         $requestData = new RequestTable();
         
@@ -41,7 +36,7 @@ class patientController extends Controller
         $patientRequest->request_id = $requestData->id;
         $patientRequest->first_name = $request->first_name;
         $patientRequest->last_name = $request->last_name;
-        $patientRequest->notes= $request->symptoms; 
+        // $patientRequest->notes= $request->symptoms; 
         // $patientRequest->date_of_birth= $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;
@@ -55,14 +50,23 @@ class patientController extends Controller
         // dd($patientRequest->all());
 
 
+        // family request creating
+        $familyRequest = new RequestTable();
+        $familyRequest->request_type_id= $request->request_type;
+        $familyRequest->first_name = $request->family_first_name;
+        $familyRequest->last_name = $request->family_last_name;
+        $familyRequest->email = $request->family_email;
+        $familyRequest->phone_number = $request->family_phone_number;
+        $familyRequest->relation_name = $request->family_relation;
 
+        // dd($familyRequest);
 
-        
+        $familyRequest->save();
         $patientRequest->save();
 
 
-dd($patientRequest);
-        return redirect('landing');
+        return view('patientSite/submitScreen');
 
     }
 }
+
