@@ -25,26 +25,26 @@
 
         <div class="case active ps-3 d-flex flex-column justify-content-between patient">
 
-            <a href="" class="submitType" type="button" id="patient">PATIENT</a>
+            <a href="{{route('patient')}}" class="submitType" type="button" id="patient">PATIENT</a>
 
         </div>
 
         <div class="case active ps-3 d-flex flex-column justify-content-between family">
 
-            <a href="" class="submitType" type="button" id="family">FAMILY/FRIEND</a>
+            <a href="{{route('family')}}" class="submitType" type="button" id="family">FAMILY/FRIEND</a>
 
         </div>
 
         <div class="case active ps-3 d-flex flex-column justify-content-between conceirge">
 
-            <a href="" class="submitType" type="button" id="conceirge">CONCEIRGE</a>
+            <a href="{{route('conceirge')}}" class="submitType" type="button" id="conceirge">CONCEIRGE</a>
 
         </div>
 
         <div class="case active ps-3 d-flex flex-column justify-content-between  business">
 
 
-            <a href="" class="submitType" type="button" id="business">BUSINESS PARTNERS</a>
+            <a href="{{route('business')}}" class="submitType" type="button" id="business">BUSINESS PARTNERS</a>
         </div>
     </div>
 
