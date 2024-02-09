@@ -20,10 +20,10 @@ return new class extends Migration
     {
         Schema::create('request_type', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
-            $table->foreign('patient_id')->references('id')->on('patient_details');
-            $table->string('request_type');
-            
+            // $table->unsignedBigInteger('patient_id');
+            // $table->foreign('patient_id')->references('id')->on('patient_details');
+            $table->string('name');
+
             $table->timestamps();
             $table->softDeletes();
         });

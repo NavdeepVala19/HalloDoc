@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * RequestConcierge table
      */
     public function up(): void
     {
@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
             $table->unsignedBigInteger('concierge_id');
-            $table->foreign('concierge_id')->references('id')->on('concierge_request');
+            $table->foreign('concierge_id')->references('id')->on('concierge');
             $table->timestamps();
         });
     }

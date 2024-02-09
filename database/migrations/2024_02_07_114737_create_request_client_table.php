@@ -10,8 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
 
-       /**
-     * create request page for admin/provider 
+    /**
+     * Users detail will be stored here 
      */
     public function up(): void
     {
@@ -26,13 +26,30 @@ return new class extends Migration
             $table->foreign('notes')->references('id')->on('notes');
             $table->string('first_name');
             $table->string('last_name')->nullable();
-            $table->integer('mobile')->nullable();
+            $table->integer('phone_number')->nullable();
+            $table->string('location')->nullable();
             $table->string('address')->nullable();
+            $table->string('noti_mobile')->nullable();
+            $table->string('noti_email')->nullable();
+            $table->string('email')->nullable();
+            $table->string('str_month')->nullable();
+            $table->integer('int_year')->nullable();
+            $table->integer('int_date')->nullable();
+            $table->boolean('is_mobile')->nullable();
+
+            $table->string('street')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zipcode')->nullable();
-            $table->string('notif_mobile')->nullable();
-            $table->string('notif_email')->nullable();
+            
+            $table->string('CommunicationType')->nullable();
+            $table->string('RemindReservationCount')->nullable();
+            $table->string('RemindHouseCallCount')->nullable();
+            $table->string('IsSetFollowupSent')->nullable();
+            $table->string('IsReservationReminderSent')->nullable();
+            $table->string('Latitude')->nullable();
+            $table->string('Longitude')->nullable();
+            
             $table->timestamps();
         });
     }

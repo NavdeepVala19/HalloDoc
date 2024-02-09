@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('physician_id');
             $table->foreign('physician_id')->references('id')->on('provider');
-            $table->unsignedBigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('allusers');
             $table->date('start_date');
             $table->boolean('is_repeat');
             $table->char('week_days')->nullable();
             $table->integer('repeat_upto')->nullable();
-            
+
+            // check
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('role');
+
             $table->timestamps();
             $table->softDeletes();
         });

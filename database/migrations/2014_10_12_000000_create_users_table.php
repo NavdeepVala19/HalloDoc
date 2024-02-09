@@ -16,17 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->string('password_hash')->nullable();
-            $table->string('security_stamp')->nullable();
+
             $table->string('email')->unique()->nullable();
-            $table->boolean('email_confirmed');
             $table->string('phone_number')->nullable();
-            $table->boolean('phone_number_confirmed');
-            $table->boolean('two_factor_enabled');
-            $table->date('LockoutEndDateUtc')->nullable();
-            $table->boolean("lockout_enabled");
-            $table->integer("access_failed_count");
-            $table->string('core_password_hash')->nullable();
-            $table->integer('hash_version')->nullable();
+            
 
             $table->timestamps();
             $table->softDeletes();

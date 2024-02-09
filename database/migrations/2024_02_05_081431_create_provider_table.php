@@ -46,13 +46,13 @@ return new class extends Migration
             // $table->string('modified_by')->nullable();
 
             //add these 
-            // $table->unsignedBigInteger('status')->nullable();
-            // $table->foreign('status')->references('id')->on('status');
+            $table->unsignedBigInteger('status')->nullable();
+            $table->foreign('status')->references('id')->on('status');
             
             
             $table->string('business_name')->nullable();
             $table->string('business_website')->nullable();
-            $table->boolean('is_deleted')->nullable();
+        
             
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');

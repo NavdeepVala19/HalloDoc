@@ -15,14 +15,19 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('shift_id');
             $table->foreign('shift_id')->references('id')->on('shift');
-            $table->unsignedBigInteger('status');
-            $table->foreign('status')->references('id')->on('status');
+            $table->date('shift_date');
             $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
-            $table->date('shift_date');
             $table->time('start_time');
             $table->time('end_time');
+            $table->unsignedBigInteger('status');
+            $table->foreign('status')->references('id')->on('status');
+
+            //check here
+            $table->string('modified_by')->nullable();
             $table->dateTime('last_running_date')->nullable();
+            $table->string('event_id')->nullable();
+            $table->boolean('is_sync')->nullable();
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('profession_name');
             $table->boolean('is_active')->nullable();
-            $table->boolean('is_deleted')->nullable();
+
             // $table->date('created_date');
 
             $table->timestamps();

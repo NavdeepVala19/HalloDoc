@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('business_contact')->nullable();
             $table->string('prescription')->nullable();
             $table->integer('no_of_refill')->nullable();
-            $table->string('order_details')->nullable();
-            
+            // $table->string('order_details')->nullable();
+    
             // $table->string('created_by')->nullable();
             
             $table->timestamps();

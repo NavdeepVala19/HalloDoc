@@ -21,10 +21,9 @@ return new class extends Migration
             
             $table->integer('phone_number')->nullable();
             $table->string('email')->nullable();
-            $table->string('reason')->nullable();
             $table->boolean('is_active')->nullable();
             $table->string('reason')->nullable();
-
+            
             $table->timestamps();
             $table->softDeletes();
         });

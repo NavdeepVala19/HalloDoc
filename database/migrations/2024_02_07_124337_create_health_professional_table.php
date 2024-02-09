@@ -31,7 +31,6 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->integer('zip')->nullable();
             $table->string('phone_number')->nullable();
-            $table->boolean('is_deleted')->nullable();
             $table->string('email')->nullable();
             $table->string('business_contact')->nullable();
 

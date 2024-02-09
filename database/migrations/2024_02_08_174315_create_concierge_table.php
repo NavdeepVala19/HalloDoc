@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
 
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->foreign('role_id')->references('id')->on('roles');
+
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('street')->nullable();
