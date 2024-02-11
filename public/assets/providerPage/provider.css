@@ -1,4 +1,13 @@
 /* *********************** PROVIDER DASHBOARD ************************ */
+:root {
+    --patient-color: green;
+    --family-color: rgb(186, 186, 99);
+    --buisness-color: rgb(215, 116, 116);
+    --concierge-color: rgb(129, 129, 206);
+    --vip-color: purple;
+    --mobile-list-color: rgba(36, 178, 245, 0.463);
+}
+
 .case {
     width: 250px;
     height: 70px;
@@ -62,6 +71,7 @@
 .btn-all {
     border: 1px solid grey !important;
     border-radius: 5px;
+    padding: 4px 12px;
 }
 
 .case-type {
@@ -69,23 +79,23 @@
 }
 
 .green {
-    color: green;
+    color: var(--patient-color);
 }
 
 .yellow {
-    color: yellow;
+    color: var(--family-color);
 }
 
 .red {
-    color: red;
+    color: var(--buisness-color);
 }
 
 .blue {
-    color: blue;
+    color: var(--concierge-color);
 }
 
 .purple {
-    color: purple;
+    color: var(--vip-color);
 }
 
 #table-header {
@@ -119,10 +129,51 @@
 
 tr > td {
     padding: 16px !important;
-    /* color: #fff !important; */
+    color: #fff !important;
     /* background-color: green !important; */
 }
 
+.type-1 td {
+    background-color: var(--patient-color) !important;
+}
+
+.type-2 td {
+    background-color: var(--family-color) !important;
+}
+
+.type-3 td {
+    background-color: var(--concierge-color) !important;
+}
+
+.type-4 td {
+    background-color: var(--buisness-color) !important;
+}
+
+.type-5 td {
+    background-color: var(--vip-color) !important;
+}
+
+/* **************** PAGINATION ********************* */
+/* .pagination>nav {
+    width: 100% !important;
+    display: flex;
+} */
+
+/* .pagination nav>div:first-child{
+display: none;
+} */
+/* .pagination nav>div:nth-child(2){
+    width: 100%;
+    display: flex;
+} */
+
+.mobile-listing {
+    display: none;
+}
+
+.page > nav {
+    margin: 10px 20px !important;
+}
 /* ********************** MEDIA QUERIES *********************** */
 @media (max-width: 1160px) {
     .search-section {
@@ -206,5 +257,103 @@ tr > td {
     }
     .heading-section {
         margin-bottom: 18px;
+    }
+    .table {
+        display: none;
+    }
+
+    .listing {
+        margin: 0 10px;
+        padding: 0;
+    }
+
+    .d-sm-none {
+        display: none !important;
+    }
+    .d-none {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto !important;
+    }
+    .mobile-listing {
+        display: block;
+    }
+    .mobile-list {
+        background-color: var(--mobile-list-color);
+        border-top: 0.5px solid grey;
+        border-bottom: 0.5px solid grey;
+        padding: 10px 5px;
+        padding-bottom: 20px;
+    }
+
+    .map-btn {
+        background: none;
+        border: 1px solid #3c9eff;
+        color: #3c9eff;
+        border-radius: 15px;
+        font-size: 12px;
+    }
+    .more-info{
+        display: none;
+    }
+    .more-info.active {
+        display: block;
+        background-color: var(--mobile-list-color);
+        padding: 15px;
+        position: relative;
+    }
+    .grid-2 {
+        margin: 15px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .more-info-btn {
+        background: none;
+        border: 1px solid #3c9eff;
+        color: #3c9eff;
+        border-radius: 5px;
+        /* font-size: 12px; */
+    }
+
+    .secondary-btn {
+        border: none;
+        background-color: green;
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .secondary-btn-1 {
+        border: none;
+        background-color: rgb(7, 57, 17);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .secondary-btn-2 {
+        border: none;
+        background-color: rgb(238, 218, 38);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .secondary-btn-3 {
+        border: none;
+        background-color: rgb(42, 223, 244);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .view-btn {
+        position: absolute;
+        right: 20px;
+        top: -14px;
+        background-color: rgba(255, 255, 255, 0.776);
+        border: 1px solid #8044c4;
+        color: #8044c4;
+        border-radius: 15px;
+        /* font-size: 12px; */
     }
 }

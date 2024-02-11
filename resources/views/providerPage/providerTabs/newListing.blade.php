@@ -29,16 +29,15 @@
                     aria-label="Username" aria-describedby="basic-addon1">
             </div>
             <div class="src-category d-flex gap-3 align-items-center">
-                <button class="btn-all">All</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill green"></i>Patient</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill yellow"></i>Family/Frient</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill red"></i>Buisness</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill blue"></i>Concierge</button>
-                <button class="d-flex gap-2 "><i class="bi bi-circle-fill purple"></i>VIP</button>
+                <button href="" class="btn-all filter-btn">All</button>
+                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</button>
+                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</button>
+                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Buisness</button>
+                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</button>
+                {{-- <button class="d-flex gap-2 "><i class="bi bi-circle-fill purple"></i>VIP</button> --}}
             </div>
         </div>
         <div class="table-responsive">
-
             <table class="table table-hover ">
                 <thead class="table-secondary">
                     <tr>
@@ -51,20 +50,30 @@
                 </thead>
                 <tbody>
                     @foreach ($newCases as $newCase)
-                        <tr>
-                           
-
+                        <tr class="type-{{ $newCase->request_type_id }}">
                             <td>{{ $newCase->first_name }}</td>
                             <td>{{ $newCase->phone_number }}</td>
                             <td>{{ $newCase->address }}</td>
-                            <td><button class="table-btn">Admin</button></td>
+                            <td>
+                                <button class="table-btn "><i class="bi bi-person-check me-2"></i>Admin</button>
+                            </td>
                             <td><button class="table-btn">Actions</button></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+
+            
         </div>
+
+        <div class="page">
+            {{ $newCases->links('pagination::bootstrap-5') }}
+
+        </div>
+
     </div>
-
-
 </div>
+
+
+
+

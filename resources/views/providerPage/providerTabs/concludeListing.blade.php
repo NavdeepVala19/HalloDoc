@@ -30,12 +30,12 @@
                     aria-label="Username" aria-describedby="basic-addon1">
             </div>
             <div class="src-category d-flex gap-3 align-items-center">
-                <button class="btn-all">All</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill green"></i>Patient</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill yellow"></i>Family/Frient</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill red"></i>Buisness</button>
-                <button class="d-flex gap-2 "> <i class="bi bi-circle-fill blue"></i>Concierge</button>
-                <button class="d-flex gap-2 "><i class="bi bi-circle-fill purple"></i>VIP</button>
+                <button class="btn-all filter-btn">All</button>
+                <button class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</button>
+                <button class="d-flex gap-2 filter-btn "> <i class="bi bi-circle-fill yellow"></i>Family/Friend</button>
+                <button class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Buisness</button>
+                <button class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</button>
+                {{-- <button class="d-flex gap-2 "><i class="bi bi-circle-fill purple"></i>VIP</button> --}}
             </div>
         </div>
         <div class="table-responsive">
@@ -55,19 +55,25 @@
 
                     {{-- Working --}}
                     @foreach ($concludeCases as $concludeCase)
-                        @if ($concludeCases->request_type_id == 2)
+                        @if ($concludeCase->request_type_id == 2)
                         @endif
-                        <tr>
-                            <td style="background-color:blue;color: red;">{{ $concludeCase->first_name }}</td>
+                        <tr class="type-{{ $concludeCase->request_type_id }}">
+                            <td>{{ $concludeCase->first_name }}</td>
                             <td>{{ $concludeCase->phone_number }}</td>
                             <td>{{ $concludeCase->address }}</td>
-                            <td>{{ $concludeCase->address }}</td>
-                            <td>{{ $concludeCase->chat }}</td>
+                            <td>Status</td>
+                            <td>
+                                <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
+                                <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                            </td>
                             <td><button class="table-btn">Actions</button></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="page">
+            {{ $concludeCases->links('pagination::bootstrap-5') }}
         </div>
     </div>
 

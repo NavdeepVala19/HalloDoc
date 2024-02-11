@@ -16,3 +16,6 @@
 
    {{-- Jquery file for header/navigation --}}
    <script defer src="{{ URL::asset('assets/script.js') }}"></script>
+   
+   {{-- Jquery file for Provider Page (Searching & Filtering) Feature --}}
+   <script defer src="{{ URL::asset('assets/providerPage/provider.js') }}"></script>
