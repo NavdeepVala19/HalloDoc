@@ -38,9 +38,6 @@
     </table>
 </div>
 
-
-
-
 <div class="mobile-listing">
     @foreach ($cases as $case)
         <div class="mobile-list d-flex justify-content-between">

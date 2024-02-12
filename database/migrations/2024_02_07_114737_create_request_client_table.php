@@ -26,7 +26,7 @@ return new class extends Migration
             $table->foreign('notes')->references('id')->on('request_notes');
             $table->string('first_name');
             $table->string('last_name')->nullable();
-            $table->integer('phone_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('location')->nullable();
             $table->string('address')->nullable();
             $table->string('noti_mobile')->nullable();

@@ -1,22 +1,23 @@
 $(document).ready(function () {
-    let status;
-
-    $(".nav-link").on("click", function () {
+    let tabName = "new";
+    // dynamically change the status type()
+    $(".nav-link").on("click", function (e) {
+        // e.preventDefault();
         let index = $(this).index();
 
-        let tabNames = ["New", "Pending", "Active", "Conclude"];
-        let tabName = tabNames[index];
+        let tabNames = ["new", "pending", "active", "conclude"];
+        tabName = tabNames[index];
         $("#selectedTab").text("(" + tabName + ")");
+        console.log(tabName);
 
-        status = index + 1;
-        console.log(updateRoute);
     });
 
-    $("#allLink").on("click", function (e) {
-        e.preventDefault();
-        let newRoute =  $(this).attr("href");
-        newRoute = newRoute.replace(/status=[^&]*/, 'status=' + status);
-        console.log(newRoute);
+    // for filtering list based on the status and request-type (button functionality - all,patient,family,business,concierge)
+    $(".status-link").on("click", function (e) {
+        // e.preventDefault();
+        let newRoute = $(this).attr("href").replace(/new*/, tabName);
+        $(this).attr("href", newRoute);
+        console.log($(this).attr("href"));
     });
 
     // Mobile Listing view

@@ -30,14 +30,29 @@ route::get('/business', function () {
 // ******************************* NAVDEEP **********************************************
 // Providers Dashboard page with New Users case listing
 Route::get('/provider', [ProviderController::class, 'listing'])->name("provider-dashboard");
-// Route::get('/provider/{category?}', [ProviderController::class, 'listing'])->name("provider-listing");
-Route::get('/provider/{status?}/{category?}', [ProviderController::class, 'listing'])->name("provider-listing");
+Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider-status");
+
+// Route::get('/provider/{status?}', [ProviderController::class, 'status'])->name("provider-status");
+Route::get('/provider/{status?}/{category?}', [ProviderController::class, 'filter'])->name("provider-listing");
 
 // For Filtering Request
 // Route::get('filter/{category?}', [ProviderController::class, 'filter'])->name('filter');
+// For Filtering Request
+Route::get('provider/{search?}', [ProviderController::class, 'filter'])->name('searching');
 
 
 // Create request page for provider
 Route::get('/create', function () {
     return view('providerPage/providerRequest');
 })->name('provider-create-request');
+
+// Data from Create request page for Provider
+Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name("provider-request-data");
+
+// Encounter Form provider
+Route::get(
+    '/encounter-form',
+    function () {
+        return view('providerPage.encounterForm');
+    }
+)->name('encounter-form');

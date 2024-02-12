@@ -1,8 +1,9 @@
 /* *********************** PROVIDER DASHBOARD ************************ */
 :root {
+    --primary-color: #3c9eff;
     --patient-color: green;
     --family-color: rgb(186, 186, 99);
-    --buisness-color: rgb(215, 116, 116);
+    --business-color: rgb(215, 116, 116);
     --concierge-color: rgb(129, 129, 206);
     --vip-color: purple;
     --mobile-list-color: rgba(36, 178, 245, 0.463);
@@ -87,7 +88,7 @@
 }
 
 .red {
-    color: var(--buisness-color);
+    color: var(--business-color);
 }
 
 .blue {
@@ -142,30 +143,16 @@ tr > td {
 }
 
 .type-3 td {
-    background-color: var(--concierge-color) !important;
+    background-color: var(--business-color) !important;
 }
 
 .type-4 td {
-    background-color: var(--buisness-color) !important;
+    background-color: var(--concierge-color) !important;
 }
 
 .type-5 td {
     background-color: var(--vip-color) !important;
 }
-
-/* **************** PAGINATION ********************* */
-/* .pagination>nav {
-    width: 100% !important;
-    display: flex;
-} */
-
-/* .pagination nav>div:first-child{
-display: none;
-} */
-/* .pagination nav>div:nth-child(2){
-    width: 100%;
-    display: flex;
-} */
 
 .mobile-listing {
     display: none;
@@ -295,7 +282,7 @@ display: none;
         border-radius: 15px;
         font-size: 12px;
     }
-    .more-info{
+    .more-info {
         display: none;
     }
     .more-info.active {
@@ -356,4 +343,10 @@ display: none;
         border-radius: 15px;
         /* font-size: 12px; */
     }
+}
+
+/******************************* Encounter Form **************************************/
+.main-heading {
+    color: var(--primary-color);
+    text-align: center;
 }
