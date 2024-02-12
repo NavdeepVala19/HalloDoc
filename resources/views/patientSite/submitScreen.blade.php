@@ -37,7 +37,7 @@
 
         <div class="case active ps-3 d-flex flex-column justify-content-between conceirge">
 
-            <a href="{{route('conceirge')}}" class="submitType" type="button" id="conceirge">CONCEIRGE</a>
+            <a href="{{route('concierge')}}" class="submitType" type="button" id="conceirge">CONCEIRGE</a>
 
         </div>
 
