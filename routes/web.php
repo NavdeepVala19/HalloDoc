@@ -30,6 +30,12 @@ route::get('/business', function () {
 // ******************************* NAVDEEP **********************************************
 // Providers Dashboard page with New Users case listing
 Route::get('/provider', [ProviderController::class, 'listing'])->name("provider-dashboard");
+// Route::get('/provider/{category?}', [ProviderController::class, 'listing'])->name("provider-listing");
+Route::get('/provider/{status?}/{category?}', [ProviderController::class, 'listing'])->name("provider-listing");
+
+// For Filtering Request
+// Route::get('filter/{category?}', [ProviderController::class, 'filter'])->name('filter');
+
 
 // Create request page for provider
 Route::get('/create', function () {
