@@ -5,6 +5,7 @@ use App\Http\Controllers\patientController;
 use App\Http\Controllers\familyRequestController;
 use App\Http\Controllers\conciergeRequestController;
 use App\Http\Controllers\businessRequestController;
+use App\Http\Controllers\patientLoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProviderController;
 
@@ -28,6 +29,10 @@ Route::post('/concierge_create', [conciergeRequestController::class, 'create'])-
 
 route::get('/business', function() { return view('patientSite/businessRequest');})->name('business');
 Route::post('/business_create', [businessRequestController::class, 'create'])->name('businessRequests');
+
+
+// route::get('/', [patientLoginController::class,'loginScreen'])->name('loginScreen');
+
 
 
 

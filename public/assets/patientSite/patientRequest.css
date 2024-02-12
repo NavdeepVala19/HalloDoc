@@ -8,7 +8,10 @@
 }
 
 
-
+.footer{
+    position: relative;
+    bottom: 0;
+}
 
 /********************* Header CSS End***********************/
 
@@ -18,10 +21,6 @@
 /********************************** main content CSS start *********************************/
 
 
-.container {
-    /* border: 2px solid black; */
-    height: 1000px;
-}
 .patient-container{
     border: 1px solid rgb(207, 205, 205);
     padding: 25px;
@@ -54,6 +53,10 @@
     margin-top: 20px;
 }
 
+#telephone{
+    height: 100%;
+    width: 100%;
+}
 
 .btn-back{
     border-color: rgb(32, 181, 250);
