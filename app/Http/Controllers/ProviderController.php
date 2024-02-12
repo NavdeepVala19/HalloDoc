@@ -10,7 +10,6 @@ use App\Models\request_Client;
 
 class ProviderController extends Controller
 {
-
     public function listing(Request $request)
     {
         // $query = requestTable::with(['requestClient']);
@@ -20,9 +19,11 @@ class ProviderController extends Controller
         $concludeCases = requestTable::with(['requestClient'])->where('status', 4)->paginate(10);
 
         // Search Functionality
-        $search = requestTable::with(['requestClient'])->where('status', 1)->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
 
-        $cases = '';
+        $search = '';
+        if(!empty($request->search)){
+            $search = requestTable::with(['requestClient'])->where('status', 1)->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
+        }
         return view('providerPage/provider', compact('newCases', 'pendingCases', 'activeCases', 'concludeCases', 'search'));
     }
 
@@ -34,35 +35,35 @@ class ProviderController extends Controller
         $activeCases = requestTable::with(['requestClient'])->where('status', 3)->paginate(10);
         $concludeCases = requestTable::with(['requestClient'])->where('status', 4)->paginate(10);
 
-        $cases = '';
+        // $cases = '';
         if ($category == 'all') {
             $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->paginate(10);
         } else {
             $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->where('request_type_id', $this->getCategoryId($category))->paginate(10);
         }
-        // dd($status, $category);
+
         // dd($cases);
         $search = '';
         if (!empty($request->search)) {
             $search = requestTable::with(['requestClient'])->where('status', 1)->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
         }
 
-
         return view('providerPage/provider', compact('cases', 'search', 'newCases', 'pendingCases', 'activeCases', 'concludeCases'));
     }
 
     public function status(Request $request, $status = '1', $category = 'all')
     {
-        $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->paginate(10);
-
+        if ($category == 'all') {
+            $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->paginate(10);
+        } else {
+            $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->where('request_type_id', $this->getCategoryId($category))->paginate(10);
+        }
 
         // for total count only
         $newCases = requestTable::with(['requestClient'])->where('status', 1)->paginate(10);
         $pendingCases = requestTable::with(['requestClient'])->where('status', 2)->paginate(10);
         $activeCases = requestTable::with(['requestClient'])->where('status', 3)->paginate(10);
         $concludeCases = requestTable::with(['requestClient'])->where('status', 4)->paginate(10);
-
-
 
         $search = '';
         if (!empty($request->search)) {

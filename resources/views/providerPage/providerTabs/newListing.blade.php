@@ -1,5 +1,5 @@
 <div class="main">
-    <div class="heading-section d-flex align-items-center justify-content-between">
+    {{-- <div class="heading-section d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
             <h3>Patients </h3> <strong class="case-type ps-2 ">(New)</strong>
         </div>
@@ -17,24 +17,27 @@
                 </span>
             </a>
         </div>
-    </div>
+    </div> --}}
 
     <div class="listing">
         <div class="search-section d-flex align-items-center  justify-content-between ">
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" class="form-control search-patient" placeholder="Search Patients"
-                    aria-label="Username" aria-describedby="basic-addon1">
-            </div>
+            <form action="{{ route('searching') }}" method="GET">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-search"></i>
+                    </span>
+
+                    <input type="text" class="form-control search-patient" placeholder="Search Patients"
+                        aria-label="Username" aria-describedby="basic-addon1" name="search">
+                    <input type="submit" class="primary-fill">
+                </div>
+            </form>
             <div class="src-category d-flex gap-3 align-items-center">
-                <button href="" class="btn-all filter-btn">All</button>
-                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</button>
-                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</button>
-                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Buisness</button>
-                <button href="" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</button>
-                {{-- <button class="d-flex gap-2 "><i class="bi bi-circle-fill purple"></i>VIP</button> --}}
+                <a href="{{ route('provider-listing', ['category' => 'all', 'status' => 'new']) }}" class="btn-all filter-btn">All</button>
+                <a href="{{ route('provider-listing', ['category' => 'patient', 'status' => 'new']) }}" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                <a href="{{ route('provider-listing', ['category' => 'family', 'status' => 'new']) }}" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                <a href="{{ route('provider-listing', ['category' => 'business', 'status' => 'new']) }}" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                <a href="{{ route('provider-listing', ['category' => 'concierge', 'status' => 'new']) }}" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
             </div>
         </div>
         <div class="table-responsive">
@@ -49,11 +52,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($newCases as $newCase)
-                        <tr class="type-{{ $newCase->request_type_id }}">
-                            <td>{{ $newCase->first_name }}</td>
-                            <td>{{ $newCase->phone_number }}</td>
-                            <td>{{ $newCase->address }}</td>
+                    @foreach ($cases as $case)
+                        <tr class="type-{{ $case->request_type_id }}">
+                            <td>{{ $case->first_name }}</td>
+                            <td>{{ $case->phone_number }}</td>
+                            <td>{{ $case->address }}</td>
                             <td>
                                 <button class="table-btn "><i class="bi bi-person-check me-2"></i>Admin</button>
                             </td>
@@ -62,13 +65,79 @@
                     @endforeach
                 </tbody>
             </table>
-
-            
         </div>
 
-        <div class="page">
-            {{ $newCases->links('pagination::bootstrap-5') }}
 
+<div class="mobile-listing">
+    @foreach ($cases as $case)
+        <div class="mobile-list d-flex justify-content-between">
+            <div class="d-flex flex-column">
+                <p>{{ $case->first_name }} </p>
+                <span>
+                    @if ($case->requestClient)
+                        {{ $case->requestClient->address }}
+                    @endif Address
+                </span>
+            </div>
+            <div class="d-flex flex-column align-items-center justify-content-around">
+                @if ($case->request_type_id == 1)
+                    <span>
+                        Patient
+                        <i class="bi bi-circle-fill ms-1 green"></i>
+                    </span>
+                @elseif ($case->request_type_id == 2)
+                    <span>
+                        Family/Friend
+                        <i class="bi bi-circle-fill ms-1 yellow"></i>
+                    </span>
+                @elseif ($case->request_type_id == 3)
+                    <span>
+                        Business
+                        <i class="bi bi-circle-fill ms-1 red"></i>
+                    </span>
+                @elseif ($case->request_type_id == 4)
+                    <span>
+                        Concierge
+                        <i class="bi bi-circle-fill ms-1 blue"></i>
+                    </span>
+                @endif
+                <button class="map-btn">Map Location</button>
+            </div>
+        </div>
+        <div class="more-info ">
+            <button class="view-btn">View Case</button>
+            <div>
+                <span>
+                    <i class="bi bi-envelope"></i> Email : example@xyz.com
+                    {{-- {{$case->requestClient->email}} --}}
+                </span>
+                <br>
+                <span>
+                    <i class="bi bi-telephone"></i> Patient : +91 123456789
+                    {{-- {{$case->requestClient->phone_number}} --}}
+                </span>
+                <div class="grid-2 ">
+                    <button class="secondary-btn">View Notes</button>
+                    <button class="secondary-btn-1">Doctors Notes</button>
+                    <button class="secondary-btn">View Uploads</button>
+                    <button class="secondary-btn">Encouter</button>
+                    <button class="secondary-btn-2">orders</button>
+                    <button class="secondary-btn-3">House Call</button>
+                    <button class="secondary-btn">Email</button>
+                </div>
+            </div>
+            <div >
+                    Chat With:
+                    <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
+                    <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+
+            </div>
+        </div>
+    @endforeach
+</div>
+
+        <div class="page">
+            {{ $cases->links('pagination::bootstrap-5') }}
         </div>
 
     </div>

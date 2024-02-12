@@ -12,15 +12,28 @@
 @endsection
 
 @section('content')
+
+<div class="encounter">
+    <div class="encounter-heading-section d-flex align-items-center justify-content-between">
+        <span>Select Type Of Care</span>
+        <button><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+        <button class="primary-empty">Housecall</button>
+        <button class="primary-empty">Consult</button>
+    </div>
+    <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+        <button class="primary-fill">Save</button>
+        <button class="primary-empty">Cancel</button>
+    </div>
+</div>
+
     {{-- Main Content of the Page --}}
-    <div class="">
         {{-- Tabs Section --}}
         <nav>
             <div class=" nav nav-tabs " id="nav-tab" role="tablist">
 
-                <a href="
-                {{ route('provider-status', ['status' => 'new']) }}
-                "
+                <a href="{{ route('provider-status', ['status' => 'new']) }}"
                     class="nav-link active" id="nav-new-tab" data-bs-toggle="tab" data-bs-target="#nav-new" type="button"
                     role="tab" aria-controls="nav-new" aria-selected="true">
                     <div
@@ -74,157 +87,49 @@
                 </a>
             </div>
         </nav>
-        <div class="main">
-            <div class="heading-section d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <h3>Patients </h3> <strong class="case-type ps-2 " id="selectedTab">(New)</strong>
-                </div>
-                <div>
-                    <a href="" class="primary-btn me-3">
-                        <i class="bi bi-send"></i>
-                        <span class="txt">
-                            Send Link
-                        </span>
-                    </a>
-                    <a class="primary-btn" href="{{ route('provider-create-request') }}">
-                        <i class="bi bi-pencil-square"></i>
-                        <span class="txt">
-                            Create Requests
-                        </span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="listing">
-                <div class="search-section d-flex align-items-center  justify-content-between ">
-                    <form action="{{ route('searching') }}" method="GET">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-search"></i>
-                            </span>
-
-                            <input type="text" class="form-control search-patient" placeholder="Search Patients"
-                                aria-label="Username" aria-describedby="basic-addon1" name="search">
-                            <input type="submit" class="primary-fill">
-                        </div>
-                    </form>
-                    <div class="src-category d-flex gap-3 align-items-center">
-
-                        {{-- Working on filtering --}}
-                        <a href="{{ route('provider-listing', ['category' => 'all', 'status' => 'new']) }}"
-                            class="btn-all status-link status-all">All</a>
-
-                        <a class="status-link status-patient"
-                            href="{{ route('provider-listing', ['category' => 'patient', 'status' => 'new']) }}"
-                            class="d-flex gap-2 green-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-
-                        <a class="status-link status-family"
-                            href="{{ route('provider-listing', ['category' => 'family', 'status' => 'new']) }}"
-                            class="d-flex gap-2 "> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-
-                        <a class="status-link status-business"
-                            href="{{ route('provider-listing', ['category' => 'business', 'status' => 'new']) }}"
-                            class="d-flex gap-2 "> <i class="bi bi-circle-fill red"></i>Business</a>
-
-                        <a class="status-link status-concierge"
-                            href="{{ route('provider-listing', ['category' => 'concierge', 'status' => 'new']) }}"
-                            class="d-flex gap-2 "> <i class="bi bi-circle-fill blue"></i>Concierge</a>
-
-                    </div>
-                </div>
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab"
                         tabindex="0">
-
-                        {{-- @if (!$cases && !$search)
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $newCases,
-                                'tabName' => 'New',
-                            ])
-                        @endif --}}
-
-                        @if (!empty($cases))
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $cases,
-                                'tabName' => 'New',
-                            ])
-                        @endif
-
-                        @if ($search)
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $search,
-                                'tabName' => 'New',
-                            ])
+                        @if (!empty($search))
+                            @include('providerPage.providerTabs.newListing', [ 'cases' => $search  ] )
+                        @elseif(!empty($cases))
+                            @include('providerPage.providerTabs.newListing', [ 'cases' => $cases  ] )
+                            @else
+                            @include('providerPage.providerTabs.newListing', ['cases' => $newCases]);
                         @endif
                     </div>
                     <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab"
                         tabindex="0">
-
-                        {{-- @include('providerPage.providerTabs.tab', [
-                            'cases' => $pendingCases,
-                            'tabName' => 'Pending',
-                        ]) --}}
-
-                        @if (!empty($cases))
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $cases,
-                                'tabName' => 'Pending',
-                            ])
-                        @endif
-
-                        @if ($search)
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $search,
-                                'tabName' => 'Pending',
-                            ])
+                        @if (!empty($search))
+                            @include('providerPage.providerTabs.pendingListing', [ 'cases' => $search  ] )
+                            @elseif(!empty($cases))
+                            @include('providerPage.providerTabs.pendingListing', [ 'cases' => $cases  ] )
+                            @else
+                            @include('providerPage.providerTabs.pendingListing', ['cases' => $pendingCases]);
                         @endif
                     </div>
                     <div class="tab-pane fade" id="nav-active" role="tabpanel" aria-labelledby="nav-active-tab"
                         tabindex="0">
-
-                        {{-- @include('providerPage.providerTabs.tab', [
-                            'cases' => $activeCases,
-                            'tabName' => 'Active',
-                        ]) --}}
-
-                        @if (!empty($cases))
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $cases,
-                                'tabName' => 'Active',
-                            ])
-                        @endif
-
-                        @if ($search)
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $search,
-                                'tabName' => 'Active',
-                            ])
+                        @if (!empty($search))
+                            @include('providerPage.providerTabs.activeListing', [ 'cases' => $search  ] )
+                            @elseif(!empty($cases))
+                            @include('providerPage.providerTabs.activeListing', [ 'cases' => $cases  ] )
+                            @else
+                            @include('providerPage.providerTabs.activeListing', ['cases' => $activeCases]);
                         @endif
                     </div>
                     <div class="tab-pane fade" id="nav-conclude" role="tabpanel" aria-labelledby="nav-conclude-tab"
                         tabindex="0">
-                        {{-- @include('providerPage.providerTabs.tab', [
-                            'cases' => $pendingCases,
-                            'tabName' => 'Conclude',
-                        ]) --}}
-
-
-                        @if (!empty($cases))
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $cases,
-                                'tabName' => 'Conclude',
-                            ])
+                        
+                        @if (!empty($search))
+                            @include('providerPage.providerTabs.concludeListing', [ 'cases' => $search  ] )
+                        @elseif(!empty($cases))
+                            @include('providerPage.providerTabs.concludeListing', [ 'cases' => $cases  ] )
+                            @else
+                            @include('providerPage.providerTabs.concludeListing', ['cases' => $concludeCases]);
                         @endif
-
-                        @if ($search)
-                            @include('providerPage.providerTabs.tab', [
-                                'cases' => $search,
-                                'tabName' => 'Conclude',
-                            ])
-                        @endif
+                        
                     </div>
                 </div>
-            </div>
-        </div>
     @endsection
