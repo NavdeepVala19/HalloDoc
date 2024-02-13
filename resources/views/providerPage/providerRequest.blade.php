@@ -1,6 +1,6 @@
 @extends('index')
 @section('css')
-    <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/createRequest.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/providerRequest.css') }}">
 @endsection
 
 @section('nav-links')
@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <div class="container form-container ">
+    <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Submit Information</h1>
             <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>

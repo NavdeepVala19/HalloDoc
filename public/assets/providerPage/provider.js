@@ -1,34 +1,25 @@
 $(document).ready(function () {
+    // for showing Encounter pop-up on active listing page (Add filter property in background)
+    $(".encounter-btn").on("click", function () {
+        $(".encounter").show();
+    });
+    
+    // for showing transfer-request pop-up on pending listing page (Add filter property in background)
+    $('.transfer-request-btn').click(function(){
+        $(".transfer-request").show();
+    })
+    
+    // for showing send-link pop-up on every listing page (Add filter property in background)
+    $('.send-link-btn').click(function(){
+        $(".send-link").show();
+    })
 
-    // $('#nav-tab a').on('click', function (e) {
-    //     e.preventDefault();
-    //     // Get the selected tab's href
-    //     var selectedTab = $(this).attr('href');
-    //     // Update the URL without page reload
-    //     history.replaceState({}, '', selectedTab);
-    //     // Show the selected tab
-    //     $(this).tab('show');
-    // });
+    // for Hiding Encounter pop-up on active listing page
+    $(".hide-popup-btn").on("click", function () {
+        $(".pop-up").hide();
+    });
 
-    // let tabName = "new";
-    // dynamically change the status type()
-    // $(".nav-link").on("click", function (e) {
-    //     let index = $(this).index();
-    //     let tabNames = ["new", "pending", "active", "conclude"];
-    //     tabName = tabNames[index];
-    //     $("#selectedTab").text("(" + tabName + ")");
-    //     console.log(tabName);
-    // });
-
-    // for filtering list based on the status and request-type (button functionality - all,patient,family,business,concierge)
-    // $(".filter-btn").on("click", function (e) {
-    //     // e.preventDefault();
-    //     // let newRoute = $(this).attr("href").replace(/new*/, tabName);
-    //     let newRoute = $(this).attr("href");
-    //     // $(this).attr("href", newRoute);
-    //     console.log(newRoute);
-    //     history.pushState({}, '', newRoute);
-    // });
+    // for Provider Transfer Request pop-up - Pending Page
 
     // Mobile Listing view
     $(".mobile-list").on("click", function () {

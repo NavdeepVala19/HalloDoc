@@ -29,16 +29,21 @@ route::get('/business', function () {
 
 // ******************************* NAVDEEP **********************************************
 // Providers Dashboard page with New Users case listing
-Route::get('/provider', [ProviderController::class, 'listing'])->name("provider-dashboard");
+Route::get('/provider', function () {
+    return redirect('/provider/new');
+})->name('provider-dashboard');
+
+// Different status routing
 Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider-status");
 
-// Route::get('/provider/{status?}', [ProviderController::class, 'status'])->name("provider-status");
-Route::get('/provider/{status?}/{category?}', [ProviderController::class, 'filter'])->name("provider-listing");
+// For Filtering the request
+Route::get('/provider/{status}/{category}', [ProviderController::class, 'filter'])->name("provider-listing");
 
-// For Filtering Request
-// Route::get('filter/{category?}', [ProviderController::class, 'filter'])->name('filter');
-// For Filtering Request
-Route::get('provider/{search?}', [ProviderController::class, 'filter'])->name('searching');
+// For Searching Request
+// Route::get('provider/{status}/{category?}', [ProviderController::class, 'filter'])->name('searching');
+Route::get('/provider/{status?}', [ProviderController::class, 'filter'])->name('searching');
+// Route::get('provider/{status}/src', [ProviderController::class, 'search'])->name('searching');
+
 
 
 // Create request page for provider
@@ -56,3 +61,8 @@ Route::get(
         return view('providerPage.encounterForm');
     }
 )->name('encounter-form');
+
+// Provider Profile page
+Route::get('/profile', function () {
+    return view("providerPage.providerProfile");
+})->name('provider-profile');

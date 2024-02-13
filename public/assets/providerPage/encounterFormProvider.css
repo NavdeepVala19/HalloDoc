@@ -1,11 +1,25 @@
+:root {
+    --primary-color: #3c9eff;
+}
+
+.main-heading {
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Text area height */
 .note {
-    height: 150px !important;
+    height: 100px !important;
 }
 
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
+}
+
+.blood-pressure input {
+    overflow: hidden;
 }
 
 .section {
@@ -30,10 +44,39 @@
     border-radius: 8px;
 }
 
-@media (max-width: 360px) {
-    .form-grid {
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin: 25px 0;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 25px;
+    margin: 25px 0;
+}
+
+.blood-pressure {
+    margin: 0;
+}
+
+.button-section {
+    margin: 25px 0;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .grid-2 {
         grid-template-columns: 1fr;
     }
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 360px) {
     .heading {
         font-size: 18px;
     }

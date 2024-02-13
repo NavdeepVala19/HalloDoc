@@ -29,7 +29,7 @@ nav a {
     color: #343434;
 }
 
-.logout-link{
+.logout-link {
     display: none;
 }
 
@@ -118,10 +118,19 @@ nav {
 .form-container {
     margin-top: 20px;
 }
-#telephone {
-    height: 100%;
-}
 
+/* ****************** Telephone library styling ***************************** */
+.iti--inline-dropdown .iti__dropdown-content {
+    z-index: 20 !important;
+}
+#telephone {
+    width: 100% !important;
+    height: 100% !important;
+}
+.iti {
+    height: 100% !important;
+    width: 100% !important;
+}
 #iti-0__country-listbox {
     /* position: absolute; */
     z-index: 20 !important;

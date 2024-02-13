@@ -345,31 +345,73 @@ tr > td {
     }
 }
 
-
-/******************************* Encounter **************************************/
-.encounter{
-    background-color: antiquewhite;
+/******************************* COMMON STYLING FOR POP-UPs **************************************/
+.pop-up {
+    /* display: none; */
+    background-color: #fff;
     border-radius: 10px;
-    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-.encounter-heading-section {
+
+.popup-heading-section {
     padding: 8px;
-border-top-left-radius: 10px;
-border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     background-color: var(--primary-color);
 }
 
-.encounter-heading-section span {
+.popup-heading-section span {
     color: #fff;
 }
-.encounter-heading-section button {
+.popup-heading-section button {
     color: #fff;
     background: none;
     border: none;
 }
 
-/******************************* Encounter Form **************************************/
-.main-heading {
-    color: var(--primary-color);
-    text-align: center;
+/******************************* Encounter - Active listing Page **************************************/
+.encounter {
+    display: none;
+    width: 500px;
+}
+
+/******************************* Transfer Request Provider - Pending listing Page **************************************/
+.transfer-request {
+    display: none;
+    width: 500px;
+}
+
+.transfer-request .form-floating {
+    width: 100%;
+}
+.transfer-description {
+    height: 150px !important;
+}
+/******************************* Send Link PopUp - All listing Pages **************************************/
+.send-link {
+    display: none;
+    width: 500px;
+}
+
+.send-link .form-floating {
+    width: 100%;
+    margin: 15px 0;
+}
+
+.iti {
+    width: 100% !important;
+}
+
+/******************************* Encounter Form Finalized PopUp - conclude listing Pages **************************************/
+.encounter-finalized {
+    width: 500px;
+}
+.encounter-finalized-container {
+    padding: 15px;
+}
+.download-btn {
+    margin: 15px auto;
 }

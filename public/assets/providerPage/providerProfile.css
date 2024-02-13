@@ -17,11 +17,6 @@
         rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
         rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 }
-
-.iti--inline-dropdown .iti__dropdown-content {
-    z-index: 20 !important;
-}
-
 @media (max-width: 360px) {
     .form-grid {
         grid-template-columns: 1fr;
