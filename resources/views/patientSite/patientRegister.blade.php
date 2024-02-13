@@ -2,7 +2,7 @@
 
 @section('css')
 
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientLogin.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRegister.css') }}">
 
 @endsection
 
@@ -18,10 +18,7 @@
     <div class="main-container">
 
         <div class="details">
-            <div class="main-content">
-                <a href=""><i class="bi bi-chevron-left"></i> Back</a>
-            </div>
-            <h1>Login To Your Account</h1>
+            <h1>Create Account</h1>
         </div>
 
 
@@ -36,15 +33,19 @@
 
 
                 </div>
-                <div class="mb-3 password">
+                <div class="mb-4 password">
                     <i class="bi bi-eye-fill person-eye"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="password">
+                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="Password">
+                </div>
+
+                <div class="mb-3 confirm-password">
+                    <i class="bi bi-eye-fill person-eye-two"></i>
+                    <input type="password" class="form-control " id="exampleInputPassword2" placeholder="Confrim Password">
                 </div>
 
                 <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Log In</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
 
-                    <div class="forgot-pass"> <a href="">Forgot Password?</a> </div>
                 </div>
             </form>
         </div>

@@ -12,7 +12,7 @@ use App\Http\Controllers\ProviderController;
 
 
 // ******************************* SHIVESH **********************************************
-route::get('/', [Controller::class,'submitRequest'])->name('submitRequest');
+// route::get('/', [Controller::class,'submitRequest'])->name('submitRequest');
 
 route::get('/patient', function() { return view('patientSite/patientRequest');})->name('patient');
 Route::post('/patient_create', [patientController::class, 'create'])->name('patientRequests');
@@ -31,7 +31,7 @@ route::get('/business', function() { return view('patientSite/businessRequest');
 Route::post('/business_create', [businessRequestController::class, 'create'])->name('businessRequests');
 
 
-// route::get('/', [patientLoginController::class,'loginScreen'])->name('loginScreen');
+route::get('/', [patientLoginController::class,'loginScreen'])->name('loginScreen');
 
 
 

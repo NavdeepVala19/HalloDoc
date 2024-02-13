@@ -137,7 +137,9 @@
 }
 
 .details{
-    margin-left: 3%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 
@@ -151,12 +153,14 @@
 }
 
 .email,
-.password{
+.password,
+.confirm-password{
     position: relative;
 }
 
 .person-logo,
-.person-eye{
+.person-eye,
+.person-eye-two{
     right: 20px;
     top: 8px;
    position: absolute;
@@ -196,7 +200,7 @@
         font-size: 1.5rem;
     }
     .main-container{
-        width: auto !important;
+        width: 500px !important;
     }
 }
 
@@ -282,9 +286,14 @@
         margin-left: 21%;
     }
 }
-@media(max-width:330px){
+@media(max-width:350px){
     .footer-section{
-        margin-left: 19%;
+        margin-left: 16%;
+    }
+}
+@media(max-width:300px){
+    .footer-section{
+        margin-left: 10%;
     }
 }
 /********************* Footer CSS End***********************/
