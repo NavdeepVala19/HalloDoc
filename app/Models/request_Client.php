@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\RequestTable;
+
 class request_Client extends Model
 {
     use HasFactory;
 
+    // request_client table is use to create only the patient records
     protected $table ='request_client';
 
     protected $fillable = [
@@ -39,7 +42,7 @@ class request_Client extends Model
         'Longitude',
     ];
 
-    // public function request(){
-    //     return $this->belongsTo(request::class);
-    // }
+    public function request(){
+        return $this->belongsTo(RequestTable::class);
+    }
 }
