@@ -44,6 +44,7 @@ class RequestTable extends Model
         return $this->belongsTo(allusers::class);
     }
 
+    // Making relationship with requestClient table
     public function requestClient(){
         return $this->belongsTo(request_Client::class);
     }
