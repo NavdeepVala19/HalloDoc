@@ -122,14 +122,16 @@
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'new']) }}" method="GET">
+                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
+                    method="GET">
+                    {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="bi bi-search"></i>
                         </span>
 
                         <input type="text" class="form-control search-patient" placeholder="Search Patients"
-                            aria-label="Username" aria-describedby="basic-addon1" name="search">
+                            aria-describedby="basic-addon1" name="search">
                         <input type="submit" class="primary-fill">
                     </div>
                 </form>

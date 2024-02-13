@@ -33,17 +33,20 @@ Route::get('/provider', function () {
     return redirect('/provider/new');
 })->name('provider-dashboard');
 
-// Different status routing
-Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider-status");
-
 // For Filtering the request
 Route::get('/provider/{status}/{category}', [ProviderController::class, 'filter'])->name("provider-listing");
 
-// For Searching Request
-// Route::get('provider/{status}/{category?}', [ProviderController::class, 'filter'])->name('searching');
-Route::get('/provider/{status?}', [ProviderController::class, 'filter'])->name('searching');
-// Route::get('provider/{status}/src', [ProviderController::class, 'search'])->name('searching');
+// Different status routing
+Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider-status");
 
+// For Searching Request
+// Route::get('/provider/search/{status?}', [ProviderController::class, 'search'])->name('searching');
+
+Route::get('/search/{status?}/{category?}', [ProviderController::class, 'search'])->name('searching');
+
+// Route::get('provider/{status}/{category?}', [ProviderController::class, 'filter'])->name('searching');
+// Route::get('/provider/{status?}', [ProviderController::class, 'filter'])->name('searching');
+// Route::get('provider/{status}/src', [ProviderController::class, 'search'])->name('searching');
 
 
 // Create request page for provider
