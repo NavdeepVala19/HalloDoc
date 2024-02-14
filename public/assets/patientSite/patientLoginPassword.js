@@ -4,6 +4,8 @@ const togglePassword = document.querySelector('.person-eye');
 const confirmpasswordField = document.getElementById('exampleInputPassword2');
 const togglePasswordTwo = document.querySelector('.person-eye-two');
 
+const uploadedFile = document.getElementById('fileInput');
+
 togglePassword.addEventListener('click', () => {
     if (passwordField.type === 'password') {
         passwordField.type = 'text';
@@ -29,3 +31,17 @@ togglePasswordTwo.addEventListener('click', () => {
         togglePasswordTwo.classList.add('bi-eye-fill');
     }
 });
+
+
+function openFileSelection() {
+    document.getElementById('fileInput').click();
+
+  }
+  
+  function myFunction() {
+    var x = uploadedFile.name;
+    document.getElementById("demo").innerHTML = x;
+  }
+
+
+
