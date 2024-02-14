@@ -58,10 +58,6 @@
     width: 100%;
 }
 
-.btn-back{
-    border-color: rgb(32, 181, 250);
-    color:rgb(32, 181, 250) ;
-}
 
 
 .buttons {
@@ -80,12 +76,6 @@
     /* border: 1px solid black; */
 }
 
-.btn-submit {
-    margin-right: 10px;
-    color: white;
-    background-color: rgb(32, 181, 250);
-}
-
 .btn-upload{
     background-color: rgb(32, 181, 250);
     z-index: -2 !important;
@@ -95,12 +85,6 @@
     z-index: -2 !important;
 
 }
-
-.btn-cancel{
-    border-color: rgb(32, 181, 250);
-    color:rgb(32, 181, 250) ;
-}
-
 
 .input-file{
     background: none;

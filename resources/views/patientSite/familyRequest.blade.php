@@ -30,7 +30,8 @@
                 <div class="family-text">
                     <h4> Family/Friend Information</h4>
                 </div>
-
+                
+                <input type="hidden" name="request_type" value="2">     
                 <input type="hidden" name="request_type" value="2">
 
 
@@ -261,7 +262,7 @@
 
                 <!--  photo upload or documents -->
 
-                <div class="docs-upload">
+                <!-- <div class="docs-upload">
 
                     <div class="patient-doc-text">
                         <h4>Upload Photo or document (optional)</h4>
@@ -276,7 +277,7 @@
                     </div>
 
 
-                </div>
+                </div> -->
 
 
 

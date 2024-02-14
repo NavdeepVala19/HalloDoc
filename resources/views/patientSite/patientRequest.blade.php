@@ -13,7 +13,7 @@
     <!-- this div is for heading and back button -->
 
     <div class="header_part">
-        <button type="button" class="btn btn-back">
+        <button type="button" class="primary-empty">
             < Back</button>
     </div>
 
@@ -196,7 +196,7 @@
                 </div>
 
                 <!--  photo upload or documents -->
-
+<!-- 
                 <div class="docs-upload">
 
                     <div class="patient-doc-text">
@@ -212,14 +212,14 @@
                     </div>
 
 
-                </div>
+                </div> -->
 
 
                 <!--  SUBMIT and CANCEL Buttons -->
 
                 <div class="buttons">
-                    <button class="primary-fill btn-submit" type="submit">Submit</button>
-                    <button class="primary-empty btn-cancel" type="cancel">Cancel</button>
+                    <button class="primary-fill me-2" type="submit">Submit</button>
+                    <button class="primary-empty " type="cancel">Cancel</button>
                 </div>
 
             </div>
