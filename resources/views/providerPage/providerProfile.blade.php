@@ -1,16 +1,35 @@
 @extends('index')
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/providerProfile.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
 @section('nav-links')
-    <a href="">Dashboard</a>
+    <a href="{{ route('provider-dashboard') }}">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
     <a href="" class="active-link">My Profile</a>
 @endsection
 
 @section('content')
+    {{-- Request To Admin --}}
+    <div class="pop-up request-to-admin">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Request To Administrator</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <p class="m-3">Need to send message to edit</p>
+        <div class="p-3 d-flex align-items-center justify-content-center ">
+            <div class="form-floating">
+                <textarea class="form-control request-message" placeholder="injury" id="floatingTextarea2"></textarea>
+                <label for="floatingTextarea2">Message</label>
+            </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <button class="primary-fill">Send</button>
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </div>
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">My Profile</h1>
@@ -19,12 +38,12 @@
 
         <div class="section">
             <div class="text-end">
-                <button class="primary-empty">Request To Admin</button>
+                <button class="primary-empty request-admin-btn">Request To Admin</button>
             </div>
             <form action="" method="POST">
                 @csrf
                 <h3>Account Information</h3>
-                <div>
+                <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="user_name" class="form-control" id="floatingInput"
                             placeholder="User Name">
@@ -46,7 +65,7 @@
                     <button class="primary-empty">Reset Password</button>
                 </div>
                 <h3>Physician Information</h3>
-                <div>
+                <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="first_name" class="form-control" id="floatingInput"
                             placeholder="First Name">
@@ -85,7 +104,7 @@
                             placeholder="NPI Number">
                         <label for="floatingInput">NPI Number</label>
                     </div>
-                    <div>
+                    <div class="d-flex gap-4 ">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">
@@ -101,7 +120,7 @@
                     </div>
                 </div>
                 <h3>Mailing & Billing Information</h3>
-                <div>
+                <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="address1" class="form-control" id="floatingInput"
                             placeholder="Address 1">
@@ -133,14 +152,14 @@
                         <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip">
                         <label for="floatingInput">Zip</label>
                     </div>
-                    <input type="tel" name="phone_number" class="form-control phone" id="telephone"
-                        placeholder="Phone Number">
-                    @error('phone_number')
+                    <input type="tel" name="mobile" class="form-control phone" id="telephone"
+                        placeholder="mobile">
+                    @error('mobile')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <h3>Provider Profile</h3>
-                <div>
+                <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="business_name" class="form-control" id="floatingInput"
                             placeholder="Business Name">
@@ -153,24 +172,37 @@
                     </div>
                     <div>
                         {{-- Select Photo --}}
+                        <div class="custom-file-input">
+                            <input type="text" placeholder="Select Photo" readonly>
+                            <label for="file "><i class="bi bi-cloud-arrow-up me-2 "></i> <span
+                                    class="upload-txt">Upload</span> </label>
+                            <input type="file" id="file" hidden>
+                        </div>
                     </div>
-                    <div>
+                    <div class="d-flex align-items-center gap-1 ">
                         {{-- Select Signature --}}
+                        <div class="custom-file-input">
+                            <input type="text" placeholder="Select Signature" readonly>
+                            <label for="signature"><i class="bi bi-cloud-arrow-up me-2"></i><span
+                                    class="upload-txt">Upload</span></label>
+                            <input type="file" id="signature" hidden>
+                        </div>
+                        <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
                     </div>
                 </div>
             </form>
             <hr>
             <div>
-                <div>
-                    <p>
+                <div class="d-flex gap-2 align-items-center mb-3 ">
+                    <span>
                         Provider Agreement
-                    </p>
+                    </span>
                     <button class="primary-fill">View</button>
                 </div>
-                <div>
-                    <p>
+                <div class="d-flex gap-2 align-items-center">
+                    <span>
                         HIPPA Compliance
-                    </p>
+                    </span>
                     <button class="primary-fill">View</button>
                 </div>
             </div>

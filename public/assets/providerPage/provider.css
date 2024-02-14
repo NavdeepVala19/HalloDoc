@@ -40,14 +40,6 @@
     background-color: rgba(212, 128, 221, 0.509);
 }
 
-.primary-btn {
-    border: none;
-    background-color: var(--blue);
-    padding: 8px 20px;
-    color: #fff;
-    border-radius: 5px;
-}
-
 .nav-tabs {
     border: none;
 }
@@ -131,7 +123,6 @@
 tr > td {
     padding: 16px !important;
     color: #fff !important;
-    /* background-color: green !important; */
 }
 
 .type-1 td {
@@ -191,10 +182,6 @@ tr > td {
 }
 
 @media (max-width: 750px) {
-    /* .src-category {
-        flex-wrap: wrap;
-        width: 100%;
-    } */
     .btn-all {
         display: none;
     }
@@ -345,33 +332,7 @@ tr > td {
     }
 }
 
-/******************************* COMMON STYLING FOR POP-UPs **************************************/
-.pop-up {
-    /* display: none; */
-    background-color: #fff;
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.popup-heading-section {
-    padding: 8px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    background-color: var(--primary-color);
-}
-
-.popup-heading-section span {
-    color: #fff;
-}
-.popup-heading-section button {
-    color: #fff;
-    background: none;
-    border: none;
-}
-
+/******************************* All Pop-ups Styling**************************************/
 /******************************* Encounter - Active listing Page **************************************/
 .encounter {
     display: none;
@@ -401,12 +362,9 @@ tr > td {
     margin: 15px 0;
 }
 
-.iti {
-    width: 100% !important;
-}
-
 /******************************* Encounter Form Finalized PopUp - conclude listing Pages **************************************/
 .encounter-finalized {
+    display: none;
     width: 500px;
 }
 .encounter-finalized-container {
@@ -414,4 +372,18 @@ tr > td {
 }
 .download-btn {
     margin: 15px auto;
+}
+
+/******************************* Request To Admin PopUp - providerProfile **************************************/
+.request-to-admin {
+    display: none;
+    width: 500px;
+    z-index: 20;
+}
+
+.request-to-admin .form-floating {
+    width: 100%;
+}
+.request-message {
+    height: 150px !important;
 }

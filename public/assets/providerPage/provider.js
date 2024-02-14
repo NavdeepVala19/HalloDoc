@@ -3,16 +3,21 @@ $(document).ready(function () {
     $(".encounter-btn").on("click", function () {
         $(".encounter").show();
     });
-    
+
     // for showing transfer-request pop-up on pending listing page (Add filter property in background)
-    $('.transfer-request-btn').click(function(){
+    $(".transfer-request-btn").click(function () {
         $(".transfer-request").show();
-    })
-    
+    });
+
     // for showing send-link pop-up on every listing page (Add filter property in background)
-    $('.send-link-btn').click(function(){
+    $(".send-link-btn").click(function () {
         $(".send-link").show();
-    })
+    });
+
+    // for showing request-to-admin pop-up on providerProfile Page
+    $(".request-admin-btn").click(function () {
+        $(".request-to-admin").show();
+    });
 
     // for Hiding Encounter pop-up on active listing page
     $(".hide-popup-btn").on("click", function () {

@@ -1,9 +1,5 @@
-:root {
-    --primary-color: #3c9eff;
-}
-
 .main-heading {
-    color: var(--primary-color);
+    color: var(--blue);
     text-align: center;
 }
 
@@ -12,28 +8,9 @@
     height: 100px !important;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
+/* Make the text not to overflow */
 .blood-pressure input {
     overflow: hidden;
-}
-
-.section {
-    /* border: 1px solid grey; */
-    border-radius: 8px;
-    padding: 18px;
-    margin-bottom: 24px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
-        rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
-        rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
-}
-
-.iti--inline-dropdown .iti__dropdown-content {
-    z-index: 20 !important;
 }
 
 .finalize-btn {
@@ -42,20 +19,6 @@
     padding: 8px 12px;
     color: #fff;
     border-radius: 8px;
-}
-
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin: 25px 0;
-}
-
-.grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 25px;
-    margin: 25px 0;
 }
 
 .blood-pressure {

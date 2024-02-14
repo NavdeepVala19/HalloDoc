@@ -105,13 +105,13 @@
                 <h3>Patients </h3> <strong class="case-type ps-2 ">(New)</strong>
             </div>
             <div>
-                <button class="primary-btn me-3 send-link-btn">
+                <button class="primary-fill me-3 send-link-btn">
                     <i class="bi bi-send"></i>
                     <span class="txt">
                         Send Link
                     </span>
                 </button>
-                <a href="{{ route('provider-create-request') }}" class="primary-btn">
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
@@ -122,14 +122,16 @@
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'new']) }}" method="GET">
+                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
+                    method="GET">
+                    {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="bi bi-search"></i>
                         </span>
 
                         <input type="text" class="form-control search-patient" placeholder="Search Patients"
-                            aria-label="Username" aria-describedby="basic-addon1" name="search">
+                            aria-describedby="basic-addon1" name="search">
                         <input type="submit" class="primary-fill">
                     </div>
                 </form>

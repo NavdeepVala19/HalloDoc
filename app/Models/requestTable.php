@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\request_Client;
 
 class RequestTable extends Model
 {
@@ -43,7 +44,8 @@ class RequestTable extends Model
         return $this->belongsTo(allusers::class);
     }
 
-    public function request_client(){
-        return $this->hasMany(request_client::class);
+    // Making relationship with requestClient table
+    public function requestClient(){
+        return $this->belongsTo(request_Client::class);
     }
 }

@@ -40,6 +40,21 @@
     border-radius: 5px;
 }
 
+.patient-name {
+    color: var(--blue);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.confirmation-number{
+    font-size: 18px;
+    color: grey;
+}
+.doc-symbol{
+    color: var(--blue);
+    font-size: 25px;
+}
+
 @media (max-width: 550px) {
     .upload-txt {
         display: none;
