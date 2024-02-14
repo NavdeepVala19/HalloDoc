@@ -1,7 +1,18 @@
 $(document).ready(function () {
+    $(document).click(function(){
+        $('.action-menu').hide();
+        // $('.pop-up').hide();  also do event.stopPropagation in particular button clicked
+    })
+// for showing action menu in new listing page 
+$(".action-btn").click(function(event){
+    $(this).siblings('.action-menu').toggle();
+    event.stopPropagation();
+})
+
     // for showing Encounter pop-up on active listing page (Add filter property in background)
     $(".encounter-btn").on("click", function () {
         $(".encounter").show();
+        $(".overlay").show();
     });
 
     // for showing transfer-request pop-up on pending listing page (Add filter property in background)
@@ -22,6 +33,7 @@ $(document).ready(function () {
     // for Hiding Encounter pop-up on active listing page
     $(".hide-popup-btn").on("click", function () {
         $(".pop-up").hide();
+        $(".overlay").hide();
     });
 
     // for Provider Transfer Request pop-up - Pending Page

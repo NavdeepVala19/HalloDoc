@@ -152,6 +152,31 @@ tr > td {
 .page > nav {
     margin: 10px 20px !important;
 }
+/* ********************** ACTION MENU *********************** */
+.action-container {
+    position: relative;
+}
+.action-menu{
+    display: flex;
+    display: none;
+    flex-direction: column;
+    position:absolute;
+    top: 30px;
+    right: 20px;
+    padding: 10px 0;
+    z-index: 50;
+}
+.action-menu>button{
+    width: 150px !important;
+    border: none;
+background-color: #fff;
+    padding: 5px 0;
+    text-align: left;
+}
+.action-menu>button:hover{
+    background-color: rgba(128, 128, 128);
+}
+
 /* ********************** MEDIA QUERIES *********************** */
 @media (max-width: 1160px) {
     .search-section {
@@ -207,9 +232,6 @@ tr > td {
     .listing {
         padding: 10px;
     }
-}
-
-@media (max-width: 550px) {
     .case {
         align-items: center !important;
         justify-content: center !important;
@@ -278,11 +300,33 @@ tr > td {
         padding: 15px;
         position: relative;
     }
-    .grid-2 {
+    .grid-2-listing {
         margin: 15px 0;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
+    }
+
+    .conclude-care-btn{
+        border: none;
+        background-color: red;
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .accept-btn{
+        border: none;
+        background-color: rgb(158, 57, 188);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .agreement-btn{
+        border: none;
+        background-color: rgb(238, 218, 38);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
     }
     .more-info-btn {
         background: none;

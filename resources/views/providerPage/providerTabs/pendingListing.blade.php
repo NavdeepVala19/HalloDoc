@@ -243,16 +243,18 @@
                             </span>
                             <br>
                             <span>
+                                <i class="bi bi-geo-alt"></i> Address : 
+                                {{-- {{$case->requestClient->email}} --}}
+                            </span>
+                            <br>
+                            <span>
                                 <i class="bi bi-telephone"></i> Patient : +91 123456789
                                 {{-- {{$case->requestClient->phone_number}} --}}
                             </span>
-                            <div class="grid-2 ">
+                            <div class="grid-2-listing ">
+                                <button class="agreement-btn">Send Agreement</button>
                                 <button class="secondary-btn">View Notes</button>
-                                <button class="secondary-btn-1">Doctors Notes</button>
                                 <button class="secondary-btn">View Uploads</button>
-                                <button class="secondary-btn">Encouter</button>
-                                <button class="secondary-btn-2">orders</button>
-                                <button class="secondary-btn-3">House Call</button>
                                 <button class="secondary-btn">Email</button>
                             </div>
                         </div>

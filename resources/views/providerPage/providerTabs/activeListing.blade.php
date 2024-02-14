@@ -12,6 +12,7 @@
 @endsection
 
 @section('content')
+<div class="overlay"></div>
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -242,7 +243,7 @@
                                     <i class="bi bi-telephone"></i> Patient : +91 123456789
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
-                                <div class="grid-2 ">
+                                <div class="grid-2-listing ">
                                     <button class="secondary-btn">View Notes</button>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>

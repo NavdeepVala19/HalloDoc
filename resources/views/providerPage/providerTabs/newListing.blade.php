@@ -168,13 +168,21 @@
                                 <td>
                                     <button class="table-btn "><i class="bi bi-person-check me-2"></i>Admin</button>
                                 </td>
-                                <td><button class="table-btn">Actions</button></td>
+                                <td>
+                                    <div class="action-container">
+                                        <button class="table-btn action-btn">Actions</button>
+                                        <div class="action-menu">
+                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Accept</button>
+                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
+                                            <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-
 
             <div class="mobile-listing">
                 @foreach ($cases as $case)
@@ -216,29 +224,28 @@
                         <button class="view-btn">View Case</button>
                         <div>
                             <span>
-                                <i class="bi bi-envelope"></i> Email : example@xyz.com
-                                {{-- {{$case->requestClient->email}} --}}
+                                <i class="bi bi-calendar3"></i> Date of birth :
+                                {{ $case->date }}
                             </span>
                             <br>
                             <span>
-                                <i class="bi bi-telephone"></i> Patient : +91 123456789
-                                {{-- {{$case->requestClient->phone_number}} --}}
+                                <i class="bi bi-envelope"></i> Email :
+                                {{ $case->email }}
                             </span>
-                            <div class="grid-2 ">
+                            <br>
+                            <span>
+                                <i class="bi bi-telephone"></i> Patient :
+                                {{ $case->phone_number }}
+                            </span>
+                            <div class="grid-2-listing">
+                                <button class="accept-btn">Accept</button>
                                 <button class="secondary-btn">View Notes</button>
-                                <button class="secondary-btn-1">Doctors Notes</button>
-                                <button class="secondary-btn">View Uploads</button>
-                                <button class="secondary-btn">Encouter</button>
-                                <button class="secondary-btn-2">orders</button>
-                                <button class="secondary-btn-3">House Call</button>
                                 <button class="secondary-btn">Email</button>
                             </div>
                         </div>
                         <div>
                             Chat With:
-                            <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
                             <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-
                         </div>
                     </div>
                 @endforeach
