@@ -8,6 +8,11 @@
 }
 
 
+.footer{
+    position: relative;
+    bottom: 0;
+}
+
 
 /********************* Header CSS End***********************/
 
@@ -16,11 +21,6 @@
 
 /********************************** main content CSS start *********************************/
 
-
-.container {
-    /* border: 2px solid black; */
-    /* height: 1250px; */
-}
 .patient-container{
     border: 1px solid rgb(207, 205, 205);
     padding: 25px;
