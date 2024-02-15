@@ -26,14 +26,14 @@ return new class extends Migration
             // $table->unsignedBigInteger('admin_notes')->nullable();
             // $table->foreign('admin_notes')->references('id')->on('notes');
 
-            $table->string('physician_notes')->nullable();
-            $table->string('admin_notes')->nullable();
+            $table->text('physician_notes')->nullable();
+            $table->text('admin_notes')->nullable();
 
             $table->string('created_by');
             $table->string('modified_by')->nullable();
 
             // Check These
-            $table->string('AdministrativeNotes');
+            $table->string('AdministrativeNotes')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

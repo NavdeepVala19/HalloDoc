@@ -10,7 +10,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function submitRequest(){
-            return view('patientSite/submitScreen');
+    public function patientSite(){
+            return view('patientSite/patientSite');
     }
 }

@@ -22,7 +22,7 @@
     <div class="content">
 
         <div class="button">
-            <a href="" type="button" class="btn primary-empty create-btn">Create a new Request</a>
+            <button class="btn primary-empty create-btn">Create a new Request</button>
 
             <a href="" type="button" class="btn primary-empty plus"><i class="bi bi-plus"></i></a>
 
@@ -44,7 +44,7 @@
                     <tr>
                         <td> 27 sept 2024</td>
                         <td>Accepted</td>
-                        <td><a href="" type="button" class="primary-empty btn ">Docs</a></td>
+                        <td><a href="{{route('patientViewDocs')}}" type="button" class="primary-empty btn ">Docs</a></td>
                     </tr>
 
                 </tbody>
@@ -57,8 +57,6 @@
 
             <div class="accordions">
 
-          
-
             <button class="accordion"> <i class="bi bi-clock"></i> Created-Date:27 sept 2024</button>
             <div class="panel">
                 <div>
@@ -66,6 +64,9 @@
                 </div>
                 <div>
                 <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
+                </div>
+                <div>
+                <a type="button" class="primary-empty btn" href="{{route('patientViewDocs')}}">Docs</a>
                 </div>
             </div>
 
@@ -77,6 +78,9 @@
                 <div>
                 <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
                 </div>
+                <div>
+                <a type="button" class="primary-empty btn" href="{{route('patientViewDocs')}}">Docs</a>
+                </div>
             </div>
 
             <button class="accordion"> <i class="bi bi-clock"></i> Created-Date:27 sept 2024</button>
@@ -86,10 +90,34 @@
                 </div>
                 <div>
                 <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
+                </div>
+                <div>
+                <a  type="button" class="primary-empty btn" href="{{route('patientViewDocs')}}">Docs</a>
                 </div>
             </div> 
             </div> 
         </div>
+
+        <div class="pop-up new-request">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Create new Request</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <p class="m-2">Here I want to create new request</p>
+        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+           <button class="primary-fill">
+            me
+           </button>
+           <button class="primary-empty">
+            someone else
+           </button>
+
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <button class="primary-fill">Continue</button>
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </div>
 
         <script>
 
@@ -107,6 +135,9 @@
                     }
                 });
             }
+
+            
+
         </script>
 
     </div>

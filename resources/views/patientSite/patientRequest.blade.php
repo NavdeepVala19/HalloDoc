@@ -6,6 +6,8 @@
 
 @endsection
 
+
+
 @section('content')
 
 <div class="container">
@@ -17,6 +19,7 @@
             < Back</button>
     </div>
 
+
     <div class="patient-container">
 
 
@@ -24,7 +27,7 @@
             @csrf
 
             <div class="patient-details">
-
+                
                 <!-- Symptoms Detail Field -->
 
                 <div class="symp-details">
@@ -38,9 +41,8 @@
 
                     <div class="area-text">
                         <div class="form-floating">
-                            <textarea class="form-control text-area-box" placeholder="Leave a comment here"
-                                name="symptoms" id="floatingTextarea3" style="height: 150px"></textarea>
-                            <label for="floatingTextarea2" class="floatingTextarea2">Enter Brief Details of
+                            <textarea class="form-control text-area-box" name="symptoms" id="floatingTextarea3" style="height: 150px"></textarea>
+                            <label >Enter Brief Details of
                                 Symptoms(optional)</label>
                         </div>
                     </div>
@@ -52,10 +54,12 @@
                 <div class="row patient-details-row1">
                     <div class="col-md patient-details-col1">
                         <input type="text" placeholder="FirstName"
-                            class="form-control first-name-text @error('first_name') is-invalid @enderror" id=""
-                            aria-describedby="helpId" name="first_name">
+                            class="form-control first-name-text " id=""
+                            aria-describedby="helpId" name="first_name" value="{{ old('first_name') }}">
+                            @error('first_name') @enderror
                         @error('first_name')
                         <div class="text-danger">{{ $message }}</div>
+                        
                         @enderror
 
                     </div>
@@ -63,8 +67,9 @@
 
                     <div class="col-md patient-details-col2">
                         <input type="text" placeholder="LastName"
-                            class="form-control last-name-text @error('last_name') is-invalid @enderror" id=""
-                            aria-describedby="helpId" name="last_name">
+                            class="form-control last-name-text " id=""
+                            aria-describedby="helpId" name="last_name" value="{{ old('last_name') }}">
+                            @error('last_name') @enderror
                         @error('last_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -78,7 +83,7 @@
                     <div class="col-md patient-details-col3 me-4">
                         <label for="">Date of Birth</label>
                         <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 " id=""
-                            name="date_of_birth">
+                            name="date_of_birth" value="{{ old('date_of_birth') }}">
 
                     </div>
 
@@ -96,8 +101,9 @@
                     <div class="row patient-contact-row1">
                         <div class="col-md patient-contact-col1">
                             <input type="email" placeholder="Email"
-                                class="form-control email-text @error('email') is-invalid @enderror" id=""
-                                aria-describedby="helpId" name="email">
+                                class="form-control email-text " id="" value="{{ old('email') }}"
+                                name="email">
+                                @error('email') @enderror
                             @error('email')
                             <div class="text-danger" role="alert">{{ $message }}</div>
                             @enderror
@@ -106,19 +112,16 @@
 
                         <div class="col-md patient-contact-col2">
 
-                            <input type="tel" placeholder="Mobile Number"
-                                class="form-control mobile-text mobile @error('mobile') is-invalid @enderror" id=""
-                                aria-describedby="helpId"  name="phone_number">
+                            <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}"
+                             class="form-control mobile-text mobile @error('mobile') @enderror" id="" name="phone_number">
 
-                                <!-- <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number"> -->
-                               
+                            <!-- <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number"> -->
+
                             @error('mobile')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
-                 
-                        
                     </div>
 
                 </div>
@@ -134,9 +137,9 @@
 
                     <div class="row patient-location-row1">
                         <div class="col-md patient-location-col1">
-                            <input type="text" placeholder="Street"
+                            <input type="text" placeholder="Street" value="{{ old('street') }}"
                                 class="form-control patient-location-street-text @error('street') is-invalid @enderror"
-                                id="street" aria-describedby="helpId" name="street">
+                                id="street"  name="street">
                             @error('street')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -144,9 +147,9 @@
 
 
                         <div class="col-md patient-location-col2">
-                            <input type="text" placeholder="City"
+                            <input type="text" placeholder="City" value="{{ old('city') }}"
                                 class="form-control patient-location-city-text @error('city') is-invalid @enderror"
-                                id="city" aria-describedby="helpId" name="city">
+                                id="city" name="city">
                             @error('city')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -158,9 +161,9 @@
 
                     <div class="row patient-location-row2">
                         <div class="col-md patient-location-col1">
-                            <input type="text" placeholder="State"
+                            <input type="text" placeholder="State" value="{{ old('state') }}"
                                 class="form-control patient-location-state-text @error('state') is-invalid @enderror"
-                                id="state" aria-describedby="helpId" name="state">
+                                id="state" name="state">
                             @error('state')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -168,9 +171,9 @@
 
 
                         <div class="col-md patient-location-col2">
-                            <input type="text" placeholder="Zip Code"
+                            <input type="text" placeholder="Zip Code" value="{{ old('zipcode') }}"
                                 class="form-control patient-location-zipcode-text @error('zipcode') is-invalid @enderror"
-                                id="zipcode" aria-describedby="helpId" name="zipcode">
+                                id="zipcode" name="zipcode">
                             @error('zipcode')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -183,7 +186,7 @@
                     <div class="row patient-location-row3">
 
                         <div class="col-md patient-location-col3 me-4">
-                            <input type="number" placeholder="Room/Suite(optional)" name="room"
+                            <input type="number" placeholder="Room/Suite(optional)" name="room" value="{{ old('room') }}"
                                 class="form-control patient-location-room-text w-50  @error('room') is-invalid @enderror"
                                 id="room" name="room">
                             @error('room')
@@ -196,23 +199,23 @@
                 </div>
 
                 <!--  photo upload or documents -->
-<!-- 
+
                 <div class="docs-upload">
 
                     <div class="patient-doc-text">
                         <h4>Upload Photo or document (optional)</h4>
                     </div>
-
+                    
                     <div class="input-group mb-3">
-
-                        <input type="file" class="form-control input-file" name="docs" id="" placeholder="select file"
-                            aria-describedby="fileHelpId" />
-                        <button class="primary-fill btn-upload">Upload</button>
-
+                        
+                    <label for="">Select File</label>
+                        <div class="file-selection-container" onclick="openFileSelection()">
+                            <input type="file" id="fileInput" class="file-input" name="docs"/>
+                            <div class="file-button">Upload</div>
+                        </div>
+                        <p></p>
                     </div>
-
-
-                </div> -->
+                </div>
 
 
                 <!--  SUBMIT and CANCEL Buttons -->
@@ -226,5 +229,8 @@
         </form>
     </div>
 </div>
+
+
+
 
 @endsection

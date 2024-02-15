@@ -37,9 +37,10 @@
                 <div class="row business-row1">
                     <div class="col-md business-col1">
 
-                        <input type="text" placeholder="Your First Name" class="form-control business-first-name-text  @error('business_first_name') is-invalid @enderror"
+                        <input type="text" placeholder="Your First Name"
+                            class="form-control business-first-name-text  @error('business_first_name') is-invalid @enderror"
                             name="business_first_name" id="" aria-describedby="emailHelp">
-                            @error('business_first_name')
+                        @error('business_first_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
 
@@ -56,17 +57,19 @@
 
                 <div class="row business-row2">
                     <div class="col-md business-col1">
-                        <input type="tel" placeholder="Mobile Number" class="form-control business-mobile-text @error('business_mobile') is-invalid @enderror"
+                        <input type="tel" placeholder="Mobile Number"
+                            class="form-control business-mobile-text @error('business_mobile') is-invalid @enderror"
                             name="business_mobile" id="business_mobile">
-                            @error('business_mobile')
+                        @error('business_mobile')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
 
                     </div>
                     <div class="col-md business-col2">
-                        <input type="email" placeholder="Your Email" class="form-control business-email-text @error('business_email') is-invalid @enderror"
+                        <input type="email" placeholder="Your Email"
+                            class="form-control business-email-text @error('business_email') is-invalid @enderror"
                             name="business_email" id="" aria-describedby="emailHelp">
-                            @error('business_email')
+                        @error('business_email')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
 
@@ -78,17 +81,18 @@
 
                     <div class="col-md business-col1">
 
-                        <input type="text" placeholder="Business/Property Name" class="form-control business-name-text @error('business_property_name') is-invalid @enderror"
+                        <input type="text" placeholder="Business/Property Name"
+                            class="form-control business-name-text @error('business_property_name') is-invalid @enderror"
                             name="business_property_name" id="floatingInput">
-                            @error('business_property_name')
+                        @error('business_property_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
 
                     </div>
                     <div class="col-md business-col2">
-                        <input type="text" placeholder="Case Number(optional)" name="business_case_number "
+                        <input type="text" placeholder="Case Number(optional)" name="case_number"
                             class="form-control business-case-number-text ">
-                
+
                     </div>
 
                 </div>
@@ -236,7 +240,7 @@
                         <div class="col-md patient-location-col2">
                             <input type="number" placeholder="Zip Code"
                                 class="form-control patient-location-zipcode-text @error('zipcode') is-invalid @enderror"
-                                id="zipcode"  name="zipcode">
+                                id="zipcode" name="zipcode">
                             @error('zipcode')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror

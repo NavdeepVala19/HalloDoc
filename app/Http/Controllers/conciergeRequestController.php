@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Concierge;
 use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -16,28 +17,40 @@ class conciergeRequestController extends Controller
     public function create(Request $request){
 
         
-        $request->validate([
-            'first_name'=>'required|min:2|max:30',
-            'last_name'=>'string|min:2|max:30',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number'=>'required',
-            'street'=>'min:2|max:30',
-            'city' => 'string|min:2|max:30',
-            'zipcode' => 'numeric', 
-            'state' => 'string|min:2|max:30',
-            'room' => 'numeric',
-            'concierge_first_name'=>'required|min:2|max:30',
-            'concierge_last_name'=>'min:2|max:30',
-            'concierge_email' =>'required|email|min:2|max:30',
-            'concierge_mobile'=>'required',
-            'concierge_hotel_name'=>'required|min:2|max:30',
-            'concierge_street'=>'min:2|max:30',
-            'concierge_state'=>'min:2|max:30',
-            'concierge_city' =>'min:2|max:30',
-            'concierge_zip_code' =>'numeric',
-        ]);
+        // $request->validate([
+        //     'first_name'=>'required|min:2|max:30',
+        //     'last_name'=>'string|min:2|max:30',
+        //     'email' => 'required|email|min:2|max:30',
+        //     'phone_number'=>'required|numeric|digits:10',
+        //     'street'=>'min:2|max:30',
+        //     'city' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'zipcode' => 'numeric', 
+        //     'state' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'room' => 'numeric',
+        //     'concierge_first_name'=>'required|min:2|max:30',
+        //     'concierge_last_name'=>'min:2|max:30',
+        //     'concierge_email' =>'required|email|min:2|max:30',
+        //     'concierge_mobile'=>'required',
+        //     'concierge_hotel_name'=>'required|min:2|max:30',
+        //     'concierge_street'=>'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'concierge_state'=>'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'concierge_city' =>'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'concierge_zip_code' =>'numeric',
+        // ]);
 
-        // concierge request creating
+        // concierge request into request table
+
+        $concierge = new Concierge();
+        $concierge->name = $request->concierge_first_name;
+        $concierge->address = $request->concierge_hotel_name;
+        $concierge->street = $request->concierge_street;
+        $concierge->city = $request->concierge_city;
+        $concierge->state = $request->concierge_state;
+        $concierge->zipcode = $request->concierge_zip_code;
+        
+        $concierge->save();
+        
+        // concierge request into request table
 
         $requestConcierge = new RequestTable();
 
@@ -55,7 +68,7 @@ class conciergeRequestController extends Controller
         $patientRequest->request_id = $requestConcierge->id;
         $patientRequest->first_name = $request->first_name;
         $patientRequest->last_name = $request->last_name;
-        $patientRequest->notes= $request->symptoms; 
+        // $patientRequest->notes= $request->symptoms; 
         $patientRequest->date_of_birth= $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;

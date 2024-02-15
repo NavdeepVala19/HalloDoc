@@ -19,7 +19,7 @@
 
         <div class="details">
             <div class="main-content">
-                <a href=""><i class="bi bi-chevron-left"></i> Back</a>
+                <a href="{{route('patientSite')}}"><i class="bi bi-chevron-left"></i> Back</a>
             </div>
             <h1>Login To Your Account</h1>
         </div>
@@ -27,18 +27,18 @@
 
         <div class="form">
 
-            <form>
-
+            <form  action="{{route('patient_logged_in')}}" method="post">
+            @csrf
                 </div>
                 <div class="mb-4 email">
                     <i class="bi bi-person-circle person-logo"></i>
-                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
 
 
                 </div>
                 <div class="mb-3 password">
                     <i class="bi bi-eye-fill person-eye"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="password">
+                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="password" name="password">
                 </div>
 
                 <div class="buttons">

@@ -1,10 +1,28 @@
+
+// this code is for create a new request in patient dashboard page
+$(document).ready(function(){
+    $('.create-btn').click( function(){
+        $('.new-request').show();
+    })
+
+    $('.file-input').change(function (e) {
+        const filename = e.target.files[0].name;
+        $("p").text(filename);
+    });
+})
+
+// **********************************************************************
+
+
+
+// this is for password showing and hiding password in input field
+
 const passwordField = document.getElementById('exampleInputPassword1');
 const togglePassword = document.querySelector('.person-eye');
 
 const confirmpasswordField = document.getElementById('exampleInputPassword2');
 const togglePasswordTwo = document.querySelector('.person-eye-two');
 
-const uploadedFile = document.getElementById('fileInput');
 
 togglePassword.addEventListener('click', () => {
     if (passwordField.type === 'password') {
@@ -33,15 +51,18 @@ togglePasswordTwo.addEventListener('click', () => {
 });
 
 
+// *********************************************************************************************
+
+
+
+// this code is for file uploading in view document and requests pages
+
 function openFileSelection() {
     document.getElementById('fileInput').click();
 
   }
-  
-  function myFunction() {
-    var x = uploadedFile.name;
-    document.getElementById("demo").innerHTML = x;
-  }
+
+//   ***************************************************************************************
 
 
-
+// This code is for showing the uploaded filename 

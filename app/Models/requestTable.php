@@ -45,7 +45,9 @@ class RequestTable extends Model
     }
 
     // Making relationship with requestClient table
-    public function requestClient(){
-        return $this->belongsTo(request_Client::class);
-    }
+
+    
+    // public function requestClient(){
+    //     return $this->belongsTo(request_Client::class);
+    // }
 }

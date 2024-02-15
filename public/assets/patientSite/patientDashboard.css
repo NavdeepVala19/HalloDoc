@@ -74,6 +74,10 @@ td{
     background-color: white;
   }
 
+  .new-request{
+    display: none;
+    }
+
 @media(max-width:550px){
         .table{
             display: none;

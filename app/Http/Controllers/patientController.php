@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\request_Client;
 use App\Models\RequestTable;
+use App\Models\RequestWise;
+use App\Models\RequestNotes;
 use Cron\MonthField;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -18,10 +20,9 @@ class patientController extends Controller
 
     public function create(Request $request){
 
-      
-
+        
         // $request->validate([
-        //     'first_name'=>['required','min:2','max:30'],
+            //     'first_name'=>['required','min:2','max:30'],
         //     'last_name'=>['string','min:2','max:30'],
         //     'email' => ['required','email','min:2','max:30'],
         //     'phone_number'=>['required','numeric',],
@@ -36,16 +37,16 @@ class patientController extends Controller
             'first_name'=>'required|min:2|max:30',
             'last_name'=>'string|min:2|max:30',
             'email' => 'required|email|min:2|max:30',
-            'phone_number'=>'required',
+            'phone_number'=>'required|numeric|digits:10',
             'street'=>'min:2|max:30',
-            'city' => 'string|min:2|max:30',
+            'city' => 'alpha|min:2|max:30',
             'zipcode' => 'numeric', 
-            'state' => 'string|min:2|max:30',
+            'state' => 'alpha|min:2|max:30',
             'room' => 'numeric',
         ]);
-        dd("Ss");
-        dd($request->all());
         
+        
+   
 
         // $myDate = ($request->date_of_birth);
 
@@ -57,10 +58,15 @@ class patientController extends Controller
 
 
         $requestData = new RequestTable();
-        $requestData->
-
+            $requestData->request_type_id = $request->request_type;
+            $requestData->first_name = $request->first_name;
+            $requestData->last_name = $request->last_name;
+            $requestData->email = $request->email;
+            $requestData->phone_number = $request->phone_number;
         $requestData->save();
-                
+
+        
+                 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestData->id;
         $patientRequest->first_name = $request->first_name;
@@ -73,10 +79,32 @@ class patientController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-        // $patientRequest->docs = $request->file('docs')->store('public');
-        
-    
+
         $patientRequest->save();
+
+        // store documents in request_wise_file table
+
+        $request_file = new RequestWise();
+        $request_file->request_id = $requestData->id;
+        $request_file->file_name = $request->file('docs')->store('public');
+        $request_file->save();
+
+        // this code is for getting original name of document
+
+        // $filename = $request->file('docs')->getClientOriginalName(); 
+        // dd($filename);
+
+
+
+        // store symptoms in request_notes table
+
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $requestData->id;    
+        $request_notes->patient_notes = $request->symptoms;
+        
+        $request_notes->save();
+    
+
 
         return view('patientSite/submitScreen');
 

@@ -24,23 +24,23 @@
 
         <div class="form">
 
-            <form>
-
+            <form action="{{route('patientRegistered')}}" method="post">
+                @csrf
                 </div>
                 <div class="mb-4 email">
                     <i class="bi bi-person-circle person-logo"></i>
-                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
 
 
                 </div>
                 <div class="mb-4 password">
                     <i class="bi bi-eye-fill person-eye"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="Password">
+                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="Password" name="password">
                 </div>
 
                 <div class="mb-3 confirm-password">
                     <i class="bi bi-eye-fill person-eye-two"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword2" placeholder="Confrim Password">
+                    <input type="password" class="form-control " id="exampleInputPassword2" placeholder="Confirm Password" name="confirm_password">
                 </div>
 
                 <div class="buttons">
