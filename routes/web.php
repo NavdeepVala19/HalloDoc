@@ -57,8 +57,9 @@ Route::get('/encounter', [ProviderController::class, 'encounter'])->name("encoun
 // Encounter Form provider
 Route::get(
     '/encounter-form/{id?}',
-    [ProviderController::class, 'encounterForm']
+    [ProviderController::class, 'encounterFormView']
 )->name('encounter-form');
+Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name('encounter-form-data');
 
 // Provider Profile page
 Route::get('/profile', function () {

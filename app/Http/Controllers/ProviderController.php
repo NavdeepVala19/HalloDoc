@@ -143,17 +143,26 @@ class ProviderController extends Controller
         return redirect()->route('provider-status', ['status' => 'conclude']);
     }
 
-    public function encounterForm(Request $request, $id = "null")
+    public function encounterFormView(Request $request, $id = "null")
     {
         $data = requestTable::where('id', $id)->first();
 
-        // $values = $request->validate([
-        //     'first_name' => 'required',
-        //     'email' => 'required|email|unique:medical_report'
-        // ]);
+        // dd($data);
+        return view('providerPage.encounterForm', compact('data'));
+    }
+    public function encounterForm(Request $request)
+    {
+
+        $request->validate([
+            'first_name' => 'required',
+            'email' => 'required|email|unique:medical_report'
+        ]);
+
+        // dd($request);
 
         $medicalReport = new MedicalReport();
 
+        $medicalReport->request_id = $request->request_id;
         $medicalReport->first_name = $request->first_name;
         $medicalReport->last_name = $request->last_name;
         $medicalReport->email = $request->email;
@@ -187,12 +196,6 @@ class ProviderController extends Controller
         $medicalReport->followUp = $request->followUp;
 
         $medicalReport->save();
-
-
-
-
-
-        // dd($data);
-        return view('providerPage.encounterForm', compact('data'));
+        return redirect()->route('provider-status', ['status' => 'conclude'])->compact('');
     }
 }
