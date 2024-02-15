@@ -25,8 +25,9 @@
             <div>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="first_name" class="form-control" id="floatingInput"
-                            placeholder="First Name">
+                        <input type="text" name="first_name"
+                            class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
+                            placeholder="First Name" value={{ $data->first_name }}>
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -34,40 +35,41 @@
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="last_name" class="form-control" id="floatingInput"
-                            placeholder="Last Name">
+                            placeholder="Last Name" value={{ $data->last_name }}>
                         <label for="floatingInput">Last Name</label>
-                        @error('last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
+
                     </div>
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="location" class="form-control" id="floatingInput" placeholder="location">
+                    <input type="text" name="location" class="form-control" id="floatingInput" placeholder="location"
+                        {{-- value={{ $data->requestClient->location }} --}}>
                     <label for="floatingInput">Location</label>
-                    @error('location')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+
                 </div>
 
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="date of birth">
+                        <input type="date" class="form-control" id="floatingInput" placeholder="date of birth"
+                            {{-- value={{ $data->requestClient->dob }} --}} {{-- value="{{\Illuminate\Support\Carbon::parse($data->requestClient->dob)->format("Y-m-d")}}"  --}} {{-- value="{{ $shipment->date->format('Y-m-d') }}" --}}>
                         <label for="floatingInput">Date Of Birth</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="date">
+                        <input type="date" class="form-control" id="floatingInput" placeholder="date"
+                            {{-- Displays current Date --}} value={{ date('Y-m-d') }}>
                         <label for="floatingInput">Date</label>
                     </div>
 
                     <input type="tel" name="phone_number" class="form-control phone" id="telephone"
-                        placeholder="Phone Number">
-                    @error('phone_number')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                        placeholder="Phone Number" {{-- value="{{ $data->phone_number }}" --}}>
+
 
                     <div class="form-floating ">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="floatingInput"
+                            placeholder="name@example.com" {{-- value="{{ $data->requestClient->email }}" --}}>
                         <label for="floatingInput">Email</label>
+                        @error('email')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 

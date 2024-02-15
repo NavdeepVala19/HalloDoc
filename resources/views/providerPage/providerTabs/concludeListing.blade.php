@@ -12,6 +12,8 @@
 @endsection
 
 @section('content')
+    <div class="overlay"></div>
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -181,13 +183,31 @@
                                 <td>{{ $case->first_name }}</td>
                                 <td>{{ $case->phone_number }}</td>
                                 <td>{{ $case->address }}</td>
-                                <td>Status</td>
+                                <td>
+                                    @if ($case->call_type)
+                                        <span class="primary-fill"> {{ $case->call_type }} </span>
+                                    @else
+                                        Call Type
+                                    @endif
+                                </td>
                                 <td>
                                     <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
                                     <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                                 </td>
-                                <td><a href="{{ route('encounter-form') }}"
-                                        class="table-btn encounter-form-btn">Actions</a></td>
+                                <td>
+                                    <div class="action-container">
+                                        <button class="table-btn action-btn conclude-action-btn">Actions</button>
+                                        <div class="action-menu">
+                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Conclude Case</button>
+                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
+                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>Doctor Notes</button>
+                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Uploads</button>
+                                            <a href="{{ route('encounter-form', $case->id) }} class="encounter-form-btn"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>Encounter</a>
+                                            <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

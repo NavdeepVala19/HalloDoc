@@ -12,6 +12,8 @@
 @endsection
 
 @section('content')
+    <div class="overlay"></div>
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">

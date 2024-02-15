@@ -156,25 +156,53 @@ tr > td {
 .action-container {
     position: relative;
 }
-.action-menu{
+.action-menu {
     display: flex;
     display: none;
     flex-direction: column;
-    position:absolute;
+    position: absolute;
     top: 30px;
     right: 20px;
     padding: 10px 0;
-    z-index: 50;
+    z-index: 500;
 }
-.action-menu>button{
-    width: 150px !important;
+.action-menu > button {
+    width: 170px !important;
     border: none;
-background-color: #fff;
+    background-color: #fff;
     padding: 5px 0;
     text-align: left;
 }
-.action-menu>button:hover{
+
+.action-menu > a {
+    display: block;
+    width: 170px !important;
+    border: none;
+    background-color: #fff;
+    color: black;
+    padding: 5px 0;
+    text-align: left;
+}
+.action-menu > button:hover,
+.action-menu > a:hover {
     background-color: rgba(128, 128, 128);
+}
+
+/* Active Listing Encounter Pop-Up */
+
+/* When house call is selected these dropdown select menu will be shown */
+.time-dropdown {
+    display: none;
+}
+.housecall-btn:hover,
+.consult-btn:hover {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.btn-active {
+    background-color: var(--blue);
+    color: #fff;
 }
 
 /* ********************** MEDIA QUERIES *********************** */
@@ -307,21 +335,21 @@ background-color: #fff;
         gap: 10px;
     }
 
-    .conclude-care-btn{
+    .conclude-care-btn {
         border: none;
         background-color: red;
         color: #fff;
         padding: 5px 0;
         border-radius: 25px;
     }
-    .accept-btn{
+    .accept-btn {
         border: none;
         background-color: rgb(158, 57, 188);
         color: #fff;
         padding: 5px 0;
         border-radius: 25px;
     }
-    .agreement-btn{
+    .agreement-btn {
         border: none;
         background-color: rgb(238, 218, 38);
         color: #fff;

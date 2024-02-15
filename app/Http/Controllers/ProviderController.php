@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\requestTable;
 use App\Models\request_Client;
+use App\Models\MedicalReport;
 
 class ProviderController extends Controller
 {
@@ -68,14 +69,14 @@ class ProviderController extends Controller
         $concludeCasesCount = requestTable::with(['requestClient'])->where('status', 4)->count();
 
         // dd($this->getCategoryId($category));
-        if($category == 'all'){
+        if ($category == 'all') {
             $cases = requestTable::with(['requestClient'])
-            ->where('status', $this->getStatusId($status))
-            ->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
+                ->where('status', $this->getStatusId($status))
+                ->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
         } else {
             $cases = requestTable::with(['requestClient'])
-        ->where('status', $this->getStatusId($status))->where('request_type_id', $this->getCategoryId($category))
-        ->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
+                ->where('status', $this->getStatusId($status))->where('request_type_id', $this->getCategoryId($category))
+                ->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
         }
 
         if ($this->getStatusId($status) == '1') {
@@ -133,5 +134,65 @@ class ProviderController extends Controller
             'room' => 'optional',
             'notes' => 'optional',
         ]);
+    }
+
+    // Encounter pop-up consult selected, perform these operation
+    public function encounter(Request $request)
+    {
+        requestTable::where('id', $request->caseId)->update(['status' => 4], ['call_type' => 'consult']);
+        return redirect()->route('provider-status', ['status' => 'conclude']);
+    }
+
+    public function encounterForm(Request $request, $id = "null")
+    {
+        $data = requestTable::where('id', $id)->first();
+
+        // $values = $request->validate([
+        //     'first_name' => 'required',
+        //     'email' => 'required|email|unique:medical_report'
+        // ]);
+
+        $medicalReport = new MedicalReport();
+
+        $medicalReport->first_name = $request->first_name;
+        $medicalReport->last_name = $request->last_name;
+        $medicalReport->email = $request->email;
+        $medicalReport->location = $request->location;
+        $medicalReport->service_date = $request->service_date;
+        $medicalReport->date_of_birth = $request->date_of_birth;
+        $medicalReport->mobile = $request->mobile;
+        $medicalReport->present_illness_history = $request->present_illness_history;
+        $medicalReport->medical_history = $request->medical_history;
+        $medicalReport->medications = $request->medications;
+        $medicalReport->allergies = $request->allergies;
+        $medicalReport->temperature = $request->temperature;
+        $medicalReport->heart_rate = $request->heart_rate;
+        $medicalReport->repository_rate = $request->repository_rate;
+        $medicalReport->sis_BP = $request->sis_BP;
+        $medicalReport->dia_BP = $request->dia_BP;
+        $medicalReport->oxygen = $request->oxygen;
+        $medicalReport->pain = $request->pain;
+        $medicalReport->heent = $request->heent;
+        $medicalReport->cv = $request->cv;
+        $medicalReport->chest = $request->chest;
+        $medicalReport->abd = $request->abd;
+        $medicalReport->extr = $request->extr;
+        $medicalReport->skin = $request->skin;
+        $medicalReport->neuro = $request->neuro;
+        $medicalReport->other = $request->other;
+        $medicalReport->diagnosis = $request->diagnosis;
+        $medicalReport->treatment_plan = $request->treatment_plan;
+        $medicalReport->medication_dispensed = $request->medication_dispensed;
+        $medicalReport->procedure = $request->procedure;
+        $medicalReport->followUp = $request->followUp;
+
+        $medicalReport->save();
+
+
+
+
+
+        // dd($data);
+        return view('providerPage.encounterForm', compact('data'));
     }
 }

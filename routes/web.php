@@ -50,12 +50,14 @@ Route::get('/create', function () {
 // Data from Create request page for Provider
 Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name("provider-request-data");
 
+
+// when consult is selected from the encounter of active listing perform operation
+Route::get('/encounter', [ProviderController::class, 'encounter'])->name("encounter");
+
 // Encounter Form provider
 Route::get(
-    '/encounter-form',
-    function () {
-        return view('providerPage.encounterForm');
-    }
+    '/encounter-form/{id?}',
+    [ProviderController::class, 'encounterForm']
 )->name('encounter-form');
 
 // Provider Profile page
