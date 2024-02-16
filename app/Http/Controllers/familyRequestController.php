@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\request_Client;
 use App\Models\RequestTable;
+use App\Models\RequestWiseFile;
 use Illuminate\Http\Request;
 use App\Models\RequestNotes;
 use App\Models\RequestWise;
@@ -64,7 +65,7 @@ class familyRequestController extends Controller
 
         // store documents in request_wise_file table
 
-        $request_file = new RequestWise();
+        $request_file = new RequestWiseFile();
         $request_file->request_id = $familyRequest->id;
         $request_file->file_name = $request->file('docs')->store('public');
         $request_file->save();

@@ -50,6 +50,23 @@ td{
     border: 1px solid black;
 }
 
+.btn-someone:hover{
+        background-color: #3c9eff;
+        border-color:#3c9eff;
+        color: white;
+}
+
+.btn-me:hover{
+        background-color: #3c9eff;
+        border-color:#3c9eff;
+        color: white;
+}
+
+.btn-active{
+    background-color: #3c9eff;
+        border-color:#3c9eff;
+        color: white;
+}
 
 .accordion {
     background-color: #eee;

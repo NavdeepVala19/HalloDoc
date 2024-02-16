@@ -19,25 +19,30 @@
 
         <div class="details">
             <div class="main-content">
-                <a href=""><i class="bi bi-chevron-left"></i> Back</a>
+                <a href="{{route('loginScreen')}}"><i class="bi bi-chevron-left"></i> Back</a>
             </div>
             <h1>Reset Your Password</h1>
         </div>
 
+        @if (Session::has('message'))
+        <div class="alert alert-success" role="alert">
+            {{ Session::get('message') }}
+        </div>
+        @endif
 
         <div class="form">
-
-            <form>
-
-                </div>
+            <form action="{{route('forgot.password')}}" method="post">
+                @csrf
                 <div class="mb-4 username">
                     <i class="bi bi-person-circle person-logo"></i>
-                    <input type="text" class="form-control " placeholder=" Username">
+                    <input type="text" class="form-control " placeholder=" email" name="email">
                 </div>
 
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Reset Password</button>
-                    <div class="back-login"> <a href=""> <i class="bi bi-chevron-left"></i> Back To Login</a> </div>
+                    <div class="back-login"> <a href="{{route('loginScreen')}}"> <i class="bi bi-chevron-left"></i> Back
+                            To
+                            Login</a> </div>
                 </div>
             </form>
         </div>

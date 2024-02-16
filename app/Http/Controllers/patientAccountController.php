@@ -29,6 +29,8 @@ class patientAccountController extends Controller
 
         return view ("patientSite/patientDashboard");
     }
+
+
 }
 
 

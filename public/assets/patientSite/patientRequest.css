@@ -49,7 +49,8 @@
 .patient-location-row1,
 .patient-location-row2,
 .patient-location-row3,
-.patient-doc-text {
+.patient-doc-text,
+.patient-relation-text {
     margin-top: 20px;
 }
 
@@ -72,9 +73,6 @@
     color: white;
 }
 
-.form-control {
-    /* border: 1px solid black; */
-}
 
 .btn-upload{
     background-color: rgb(32, 181, 250);
@@ -89,6 +87,11 @@
 .input-file{
     background: none;
 }
+
+.patient-location-room-text {
+    width: 100%;
+}
+
 
 
 
@@ -142,6 +145,13 @@
     .patient-location-city-text,
     .patient-location-zipcode-text {
         margin-top: 20px;
+    }
+    
+    .patient-location-col4{
+        margin-top: 20px;
+    }
+    #maps{
+        width: 100%;
     }
 
     .patient-location-room-text,

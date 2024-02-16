@@ -32,7 +32,7 @@
                 </div>
                 
                 <input type="hidden" name="request_type" value="2">     
-                <input type="hidden" name="request_type" value="2">
+
 
 
 

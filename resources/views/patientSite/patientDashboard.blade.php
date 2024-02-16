@@ -42,9 +42,9 @@
 
                 <tbody>
                     <tr>
-                        <td> 27 sept 2024</td>
+                        <td> {{date('d-m-Y')}}</td>
                         <td>Accepted</td>
-                        <td><a href="{{route('patientViewDocs')}}" type="button" class="primary-empty btn ">Docs</a></td>
+                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a></td>
                     </tr>
 
                 </tbody>
@@ -66,7 +66,7 @@
                 <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
                 </div>
                 <div>
-                <a type="button" class="primary-empty btn" href="{{route('patientViewDocs')}}">Docs</a>
+                <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
                 </div>
             </div>
 
@@ -79,7 +79,7 @@
                 <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
                 </div>
                 <div>
-                <a type="button" class="primary-empty btn" href="{{route('patientViewDocs')}}">Docs</a>
+                <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
                 </div>
             </div>
 
@@ -92,12 +92,14 @@
                 <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
                 </div>
                 <div>
-                <a  type="button" class="primary-empty btn" href="{{route('patientViewDocs')}}">Docs</a>
+                <a  type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
                 </div>
             </div> 
             </div> 
         </div>
 
+        <!-- create a new request pop-up -->
+        
         <div class="pop-up new-request">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Create new Request</span>
@@ -105,19 +107,21 @@
         </div>
         <p class="m-2">Here I want to create new request</p>
         <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-           <button class="primary-fill">
+           <button class="primary-empty btn-me btn-active">
             me
            </button>
-           <button class="primary-empty">
+           <button class="primary-empty btn-someone">
             someone else
            </button>
 
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Continue</button>
+            <button class="primary-fill continue-btn">Continue</button>
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
+
+    
 
         <script>
 

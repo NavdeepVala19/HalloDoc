@@ -6,6 +6,7 @@ use App\Models\request_Client;
 use App\Models\RequestTable;
 use App\Models\RequestWise;
 use App\Models\RequestNotes;
+use App\Models\RequestWiseFile;
 use Cron\MonthField;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -84,7 +85,7 @@ class patientController extends Controller
 
         // store documents in request_wise_file table
 
-        $request_file = new RequestWise();
+        $request_file = new RequestWiseFile();
         $request_file->request_id = $requestData->id;
         $request_file->file_name = $request->file('docs')->store('public');
         $request_file->save();

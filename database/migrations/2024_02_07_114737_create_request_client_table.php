@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('phone_number')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->integer('room')->nullable();
             $table->string('location')->nullable();
             $table->string('address')->nullable();
             $table->string('noti_mobile')->nullable();

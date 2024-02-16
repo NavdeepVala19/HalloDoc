@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('physician_id')->nullable();
             $table->string('confirmation_no')->nullable();
             $table->string('declined_by')->nullable();
-            $table->boolean('is_urgent_email_sent');
+            $table->boolean('is_urgent_email_sent')->nullable();
             $table->date('last_wellness_date')->nullable();
             $table->boolean('is_mobile');
             $table->enum('call_type', ['house_call', 'consult'])->nullable();

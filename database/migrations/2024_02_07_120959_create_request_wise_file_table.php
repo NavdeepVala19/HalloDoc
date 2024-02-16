@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
 
-            $table->string('file_name');
+            $table->string('file_name')->nullable();
             $table->unsignedBigInteger('physician_id')->nullable();
             $table->foreign('physician_id')->references('id')->on('provider');
             $table->unsignedBigInteger('admin_id')->nullable();
@@ -26,7 +26,6 @@ return new class extends Migration
             $table->boolean('is_compensation');
             $table->boolean('is_finalize');
             $table->boolean('is_patient_records');
-
 
             $table->timestamps();
             $table->softDeletes();
