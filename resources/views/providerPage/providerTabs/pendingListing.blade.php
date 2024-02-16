@@ -12,6 +12,9 @@
 @endsection
 
 @section('content')
+    {{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement by patients. --}}
+    {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the "Pending" state to the "Active" state. --}}
+
     <div class="overlay"></div>
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
@@ -197,7 +200,10 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
+                                            <button class="send-agreement-btn"><i
+                                                    class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
+                                            <button class="transfer-btn"><i
+                                                    class="bi bi-check-square me-2 ms-3"></i>Transfer</button>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>View Uploads</button>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>

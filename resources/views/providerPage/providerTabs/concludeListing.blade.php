@@ -12,6 +12,7 @@
 @endsection
 
 @section('content')
+    {{-- This page will display patient requests for which medical is completed by the provider. Once the request is transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
@@ -202,7 +203,8 @@
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>Doctor Notes</button>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>View Uploads</button>
-                                            <a href="{{ route('encounter-form', $case->id) }} class="encounter-form-btn"><i
+                                            <a href="{{ route('encounter-form', $case->id) }}"
+                                                class="encounter-form-btn"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>Encounter</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
@@ -275,17 +277,13 @@
                             Chat With:
                             <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
                             <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-
                         </div>
                     </div>
                 @endforeach
             </div>
-
             <div class="page">
                 {{ $cases->links('pagination::bootstrap-5') }}
             </div>
         </div>
-
-
     </div>
 @endsection

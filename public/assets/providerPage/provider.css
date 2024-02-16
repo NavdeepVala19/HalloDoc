@@ -162,7 +162,7 @@ tr > td {
     flex-direction: column;
     position: absolute;
     top: 30px;
-    right: 20px;
+    /* right: 20px; */
     padding: 10px 0;
     z-index: 500;
 }

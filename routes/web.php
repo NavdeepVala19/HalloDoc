@@ -47,6 +47,12 @@ Route::get('/create', function () {
     return view('providerPage/providerRequest');
 })->name('provider-create-request');
 
+// show view notes section
+Route::get('/view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('view-notes');
+
+// show view case section
+Route::get('/view-case/{id?}', [ProviderController::class, 'viewCase'])->name('view-case');
+
 // Data from Create request page for Provider
 Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name("provider-request-data");
 

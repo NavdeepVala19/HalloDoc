@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class requestClient extends Model
+class RequestNotes extends Model
 {
     use HasFactory;
 
-    protected $table = 'request_client';
+    protected $table = 'request_notes';
 }

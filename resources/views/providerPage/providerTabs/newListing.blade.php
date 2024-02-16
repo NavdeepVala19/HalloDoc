@@ -175,7 +175,10 @@
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
                                             <button><i class="bi bi-check-square me-2 ms-3"></i>Accept</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
+                                            <a href="/view-case/{{ $case->id }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                            <a href="/view-notes/{{ $case->id }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Notes</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
                                     </div>

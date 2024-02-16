@@ -14,7 +14,7 @@ $(document).ready(function () {
         event.stopPropagation();
     });
 
-    // for showing Encounter pop-up on active listing page (Add filter property in background)
+    // for showing Encounter pop-up on active listing page
     $(".encounter-btn").on("click", function () {
         $(".encounter").show();
         $(".overlay").show();
@@ -27,7 +27,6 @@ $(document).ready(function () {
     });
 
     $(".consult-btn").click(function () {
-        // $(this).css({ "background-color": "var(--blue)", color: "#fff" });
         $(this).toggleClass("btn-active");
         $(".housecall-btn").removeClass("btn-active");
         $(".time-dropdown").hide();
@@ -41,17 +40,31 @@ $(document).ready(function () {
     });
 
     // Conclude Case Encounter Form - Medical Report
-    // $(".conclude-action-btn").click(function () {
-    //     console.log($(this).data("case"));
-    // });
+    $(".finalize-btn").click(function () {
+        // let id = $(this).data("id");
+        window.print();
+        // $(window).attr("location", "/provider/conclude");
 
-    // for showing transfer-request pop-up on pending listing page (Add filter property in background)
-    $(".transfer-request-btn").click(function () {
+        $(window).on("afterprint", function () {
+            $(window).attr("location", "/provider/conclude");
+        });
+
+        // window.addEventListener("afterprint", function (event) {
+        //     // Redirect to specific URL after printing only if the print button was clicked
+
+        //     window.location.href = "/provider/conclude"; // Replace with your redirect URL
+        // });
+
+        // console.log("clicked");
+    });
+
+    // for showing transfer-request pop-up on pending listing page
+    $(".transfer-btn").click(function () {
         $(".transfer-request").show();
         $(".overlay").show();
     });
 
-    // for showing send-link pop-up on every listing page (Add filter property in background)
+    // for showing send-link pop-up on every listing page
     $(".send-link-btn").click(function (event) {
         $(".send-link").show();
         $(".overlay").show();

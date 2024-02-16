@@ -47,7 +47,7 @@
                     <div class="form-floating ">
                         <input type="text" name="user_name" class="form-control" id="floatingInput"
                             placeholder="User Name">
-                        <label for="floatingInput">First Name</label>
+                        <label for="floatingInput">User Name</label>
                         @error('first_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror

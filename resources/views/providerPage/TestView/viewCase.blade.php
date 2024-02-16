@@ -36,41 +36,44 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="first_name" class="form-control" id="floatingInput"
-                            placeholder="First Name">
+                            placeholder="First Name" value="{{ $data->first_name }}">
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="last_name" class="form-control" id="floatingInput"
-                            placeholder="Last Name">
+                        <input type="text" name="last_name" value="{{ $data->last_name }}" class="form-control"
+                            id="floatingInput" placeholder="Last Name">
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="date of birth">
+                        <input type="date" class="form-control" value="{{ $data->date_of_birth }}" id="floatingInput"
+                            placeholder="date of birth">
                         <label for="floatingInput">Date Of Birth</label>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <input type="tel" name="phone_number" class="form-control phone" id="telephone"
-                            placeholder="Phone Number">
+                        <input type="tel" name="phone_number" value="{{ $data->phone_number }}"
+                            class="form-control phone" id="telephone" placeholder="Phone Number">
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <button class="primary-empty"><i class="bi bi-telephone"></i></button>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="email" class="form-control" value="{{ $data->email }}" id="floatingInput"
+                            placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
                 </div>
                 <h3>Location Information</h3>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="region" class="form-control" id="floatingInput" placeholder="region">
+                        <input type="text" name="region" value="{{ $data->region_id }}" class="form-control"
+                            id="floatingInput" placeholder="region">
                         <label for="floatingInput">Region</label>
                         @error('region')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -85,7 +88,7 @@
                         <button class="primary-empty"><i class="bi bi-geo-alt"></i></button>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="room" class="form-control" id="floatingInput" placeholder="room">
+                        <input type="text" name="room" value="{{ $data->room }}" class="form-control" id="floatingInput" placeholder="room">
                         <label for="floatingInput">Room #</label>
                     </div>
                 </div>
