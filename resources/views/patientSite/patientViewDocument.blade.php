@@ -22,7 +22,7 @@
 
     <div class="head-btn">
         <h2>Documents</h2>
-        <a type="button" class="primary-empty btn" href="{{route('patientDashboard')}}"> <i
+        <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}"> <i
                 class="bi bi-chevron-left"></i> Back</a>
     </div>
 
@@ -51,7 +51,7 @@
             <div class="docs-download">
                 <h3>Documents</h3>
                 <a href="" type="button" class="primary-empty btn down-button">Download All</a>
-                <a href="" type="button" class="primary-empty btn-down"><i class="bi bi-cloud-download"></i></a>
+                <a href="{{ route('download', ['filename'=>'34ISri400xgbC90ZVPGbY3CaUQuPc4BiSgOe2Wlz.png'] ) }}" type="button" class="primary-empty btn-down"><i class="bi bi-cloud-download"></i></a>
 
 
             </div>
@@ -69,13 +69,16 @@
 
                 <tbody>
                     <tr>
+                 
                         <td><input class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
                         <td>dummy.pdf</td>
                         <td>Testing test</td>
-                        <td>Aug 4 2023</td>
-                        <td> <a href="" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a>
+                        <td></td>
+                       
+                        <!-- <td> <a href="" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> -->
                         </td>
                     </tr>
+                  
                 </tbody>
 
             </table>
@@ -86,17 +89,12 @@
                     <input class="form-check-input" type="checkbox" id="flexCheckDefault">
                     <p>dummy.pdf</p>
                 </div>
-
-
                 <p>Aug 4 2023</p>
-                <a href="" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a>
-
-
-
+                <a href="" class="primary-empty cloud-down" type="button"> <i class="bi bi-cloud-download "></i> </a>
             </div>
 
         </div>
     </form>
 </div>
 
-@endsection
+@endsection 

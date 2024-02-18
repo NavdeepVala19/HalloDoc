@@ -38,6 +38,7 @@ class RequestTable extends Model
         'case_tag_physician',
         'patient_account_id',
         'created_user_id',
+        'created_at'
     ];
 
     public function allusers(){

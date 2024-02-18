@@ -33,5 +33,19 @@ class PatientViewDocumentsController extends Controller
          // dd($filename);
  
     }
+
+    public function docsRead(){
+
+        $users = RequestTable::all();
+        return view('patientSite/patientDashboard')->with('users', $users);
+     
+    }
+
+
+    public function download($filename)
+    {
+        $filePath = storage_path('app/public/' . $filename);
+        return response()->download($filePath);
+    }
 }
 

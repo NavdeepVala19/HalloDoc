@@ -15,7 +15,7 @@
         <a href="" class="logout-btn primary-empty">
             <i class="bi bi-box-arrow-right"></i>
         </a>
-        <a href="" class="logout-link primary-empty">Logout</a>
+        <a href="{{route('logout')}}" class="logout-link primary-empty">Logout</a>
         <a href="" class="primary-empty toggle-mode">
             <i class="bi bi-moon"></i>
         </a>

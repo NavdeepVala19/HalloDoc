@@ -42,9 +42,16 @@
 
                 <tbody>
                     <tr>
-                        <td> {{date('d-m-Y')}}</td>
-                        <td>Accepted</td>
-                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a></td>
+                        @foreach($date as $date)
+                        <td> {{$date->created_at}}</td>
+                        @endforeach
+
+
+                        @foreach($status as $status)
+                        <td>{{$status}}</td>
+                        @endforeach
+
+                        <!-- <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a></td> -->
                     </tr>
 
                 </tbody>
@@ -83,18 +90,6 @@
                 </div>
             </div>
 
-            <button class="accordion"> <i class="bi bi-clock"></i> Created-Date:27 sept 2024</button>
-            <div class="panel">
-                <div>
-                <i class="bi bi-person"></i>  Provider :- Dr.xyz
-                </div>
-                <div>
-                <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
-                </div>
-                <div>
-                <a  type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
-                </div>
-            </div> 
             </div> 
         </div>
 

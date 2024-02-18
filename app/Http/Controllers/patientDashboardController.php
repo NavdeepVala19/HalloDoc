@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\view;
 use App\Models\request_Client;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\RequestNotes;
-
+use App\Models\users;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 
 class patientDashboardController extends Controller
 {
@@ -98,4 +100,29 @@ class patientDashboardController extends Controller
         return view("patientSite/patientDashboard");
     }
 
-}
+
+
+    public function read()
+    {
+        
+        // $timestamp = RequestTable::select('created_at')->get();
+        
+        // $carbonDate = Carbon::parse($timestamp);
+        // $dateOnly = $carbonDate->toDateString();
+        // dd($dateOnly);
+        
+    
+        $date = RequestTable::select('created_at','status')->get();
+        // return view('patientSite/patientDashboard')->with('date', $date);
+     
+        // $status = RequestTable::select('status')->get();
+
+        // return view('patientSite/patientDashboard')->with('status', $status);
+        
+        dd($date);
+        
+        // return view::make('patientSite/patientDashboard')->with('date',$date);
+            
+    }
+
+}   

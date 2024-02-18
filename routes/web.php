@@ -66,6 +66,8 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 // patient login page
 route::get('/patient_login', [patientLoginController::class,'loginScreen'])->name('loginScreen');
 route::post('/patient_logged_in', [patientLoginController::class,'userLogin'])->name('patient_logged_in');
+
+route::post('/patient_login', [patientLoginController::class,'logout'])->name('logout');
 //  ***************************************************************************************************************************************
 
 
@@ -87,7 +89,8 @@ Route::post('reset-password', [patientLoginController::class, 'submitResetPasswo
 // patient dashboard
 
 // ->middleware('auth')      attach this code with below route code 
-route::get('/patientDashboard', [patientDashboardController::class,'patientDashboard'])->name('patientDashboard');   
+// route::get('/patientDashboard', [patientDashboardController::class,'patientDashboard'])->name('patientDashboard');   
+route::get('/patientDashboard', [patientDashboardController::class,'read'])->name('patientDashboardData');   
 //  ***************************************************************************************************************************************
 
 
@@ -116,6 +119,9 @@ route::post('/createdSomeoneRequests', [patientDashboardController::class,'creat
 // to view documents 
 route::get('/patientViewDocsFile', [PatientViewDocumentsController::class,'patientViewDocument'])->name('patientViewDocsFile');
 route::post('/patientViewDocuments', [PatientViewDocumentsController::class,'uploadDocs'])->name('patientViewDocuments');
+
+Route::get('/download/{filename}', [PatientViewDocumentsController::class,'download'])->name('download');
+
 //  ***************************************************************************************************************************************
 
 

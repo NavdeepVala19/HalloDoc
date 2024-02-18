@@ -13,8 +13,8 @@
     <!-- this div is for back button -->
 
     <div class="header_part">
-        <button type="button" class="btn btn-back">
-            < Back</button>
+        <a type="button" class="btn btn-back" href="{{route('submitRequest')}}">
+            < Back</a>
     </div>
 
     <div class="patient-container">

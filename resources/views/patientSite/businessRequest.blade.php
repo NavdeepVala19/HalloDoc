@@ -13,8 +13,8 @@
     <!-- this div is for back button -->
 
     <div class="header_part">
-        <button type="button" class="btn btn-back">
-            < Back</button>
+        <a href="{{route('submitRequest')}}" type="button" class="btn btn-back">
+            < Back</a>
     </div>
 
     <form action="{{route('businessRequests')}}" method="post">

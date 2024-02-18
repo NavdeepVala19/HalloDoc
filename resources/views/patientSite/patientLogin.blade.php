@@ -20,7 +20,7 @@
         <div class="details">
             <div class="main-content">
                 <a href="{{route('patientSite')}}"><i class="bi bi-chevron-left"></i> Back</a>
-            </div>
+            </div>  
             <h1>Login To Your Account</h1>
         </div>
 
