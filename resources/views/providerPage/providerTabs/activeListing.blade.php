@@ -12,6 +12,8 @@
 @endsection
 
 @section('content')
+    {{-- This page will display patient requests for which patients have accepted the service agreement and provider is giving service to the patient.  --}}
+    <div class="overlay"></div>
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -49,21 +51,46 @@
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
+
     {{-- Encounter --}}
-    <div class="pop-up encounter ">
+    <div class="pop-up encounter">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Select Type Of Care</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-            <button class="primary-empty">Housecall</button>
-            <button class="primary-empty">Consult</button>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Save</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
+        <form action="{{ route('encounter') }}" method="GET">
+            <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+                <button type="button" class="primary-empty housecall-btn">Housecall</button>
+                {{-- If the provider will select house-call, then another dropdown will be visible to select the approximate arrival time of the provider to that patient’s house. That dropdown contains options from 0.5 hour to 6 hour with a 30-minute gap. --}}
+                <button type="button" class="primary-empty consult-btn">Consult</button>
+                <input type="text" name="caseId" class="case-id" value="" hidden>
+                {{--  If the provider selects the consult, then that request will move into Conclude state. --}}
+            </div>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <div class="form-floating time-dropdown">
+                    <select class="form-select" id="floatingSelect">
+                        <option selected value="30min">30 Minutes</option>
+                        <option value="1hour">1 Hour </option>
+                        <option value="1hour 30Minutes">1 Hour 30 Minutes</option>
+                        <option value="2Hour">2 Hour</option>
+                        <option value="2Hour 30Minutes">2 Hour 30 Minutes</option>
+                        <option value="3Hour">3 Hour</option>
+                        <option value="3Hour 30Minutes">3 Hour 30 Minutes</option>
+                        <option value="4Hour ">4 Hour</option>
+                        <option value="4Hour 30Minutes">4 Hour 30 Minutes</option>
+                        <option value="5Hour">5 Hour</option>
+                        <option value="5Hour 30Minutes">5 Hour 30 Minutes</option>
+                        <option value="6Hour">6 Hour</option>
+                    </select>
+                    <label for="floatingSelect">Select Approximate Arrival Time</label>
+                </div>
+                {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
+                <input type="submit" class="primary-fill encounter-save-btn" id="save-btn" value="Save">
+                <button class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </form>
     </div>
+
 
     <div class="bg-blur">
         <nav>
@@ -103,7 +130,8 @@
                     </div>
                 </a>
 
-                <a href="{{ route('provider-status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
+                <a href="{{ route('provider-status', ['status' => 'conclude']) }}" class="nav-link"
+                    id="nav-conclude-tab">
                     <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
                             <i class="bi bi-clock-history"></i> CONCLUDE
@@ -137,14 +165,15 @@
             </div>
             <div class="listing">
                 <div class="search-section d-flex align-items-center  justify-content-between ">
-                    <form action="{{ route('searching', ['status' => 'active', 'category' => request('category', 'all')]) }}"
+                    <form
+                        action="{{ route('searching', ['status' => 'active', 'category' => request('category', 'all')]) }}"
                         method="GET">
                         {{-- @csrf --}}
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">
                                 <i class="bi bi-search"></i>
                             </span>
-    
+
                             <input type="text" class="form-control search-patient" placeholder="Search Patients"
                                 aria-describedby="basic-addon1" name="search">
                             <input type="submit" class="primary-fill">
@@ -178,7 +207,7 @@
                         <tbody>
                             @foreach ($cases as $case)
                                 <tr class="type-{{ $case->request_type_id }}">
-                                    <td>{{ $case->first_name }}</td>
+                                    <td>{{ $case->first_name }} {{ $case->id }}</td>
                                     <td>{{ $case->phone_number }}</td>
                                     <td>{{ $case->address }}</td>
                                     <td>Status</td>
@@ -186,8 +215,24 @@
                                         <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
                                         <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                                     </td>
-                                    <td><button class="table-btn encounter-btn">Actions</button></td>
-                                    {{-- Add encounter here --}}
+                                    <td>
+                                        <div class="action-container">
+                                            <button class="table-btn action-btn"
+                                                data-id={{ $case->id }}>Actions</button>
+                                            <div class="action-menu">
+                                                <a href="/view-case/{{ $case->id }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                                <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
+                                                <button><i class="bi bi-check-square me-2 ms-3"></i>Doctors Note</button>
+                                                <button><i class="bi bi-check-square me-2 ms-3"></i>View Uploads</button>
+                                                <button class="encounter-btn"><i
+                                                        class="bi bi-check-square me-2 ms-3"></i>Encounter</button>
+                                                <button><i class="bi bi-check-square me-2 ms-3"></i>Orders</button>
+                                                <button><i class="bi bi-check-square me-2 ms-3"></i>House Call</button>
+                                                <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -231,7 +276,7 @@
                             </div>
                         </div>
                         <div class="more-info ">
-                            <button class="view-btn">View Case</button>
+                            <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -242,8 +287,8 @@
                                     <i class="bi bi-telephone"></i> Patient : +91 123456789
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
-                                <div class="grid-2 ">
-                                    <button class="secondary-btn">View Notes</button>
+                                <div class="grid-2-listing ">
+                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>
                                     <button class="secondary-btn">Encouter</button>

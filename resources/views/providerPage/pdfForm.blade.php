@@ -25,7 +25,6 @@
 
                 <div>
                     <div class="grid-2">
-                        <input type="text" name="request_type_id" value="{{ $id }}" hidden>
                         <div class="form-floating ">
                             <input type="text" name="first_name"
                                 class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
@@ -272,13 +271,6 @@
                         <label for="floatingTextarea2">Followup</label>
                     </div>
 
-
-                    {{-- Three buttons at last --}}
-                    <div class="button-section">
-                        <input type="submit" value="Save Changes" class="primary-fill">
-                        <a href="{{ route('generate-pdf', ['id' => $id]) }}" type="button" class="finalize-btn">Finalize</a>
-                        <button class="primary-empty">Cancel</button>
-                    </div>
                 </div>
             </div>
         </form>
