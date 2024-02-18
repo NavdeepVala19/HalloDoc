@@ -42,12 +42,12 @@ $(document).ready(function () {
     // Conclude Case Encounter Form - Medical Report
     $(".finalize-btn").click(function () {
         // let id = $(this).data("id");
-        window.print();
+        // window.print();
         // $(window).attr("location", "/provider/conclude");
 
-        $(window).on("afterprint", function () {
-            $(window).attr("location", "/provider/conclude");
-        });
+        // $(window).on("afterprint", function () {
+        //     $(window).attr("location", "/provider/conclude");
+        // });
 
         // window.addEventListener("afterprint", function (event) {
         //     // Redirect to specific URL after printing only if the print button was clicked

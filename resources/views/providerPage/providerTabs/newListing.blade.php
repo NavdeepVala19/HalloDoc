@@ -20,36 +20,38 @@
             <span>Send mail to patient for submitting request</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
+        <form action="{{route("send-mail")}}" method="POST">
+            @csrf
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
+                <div class="form-floating ">
+                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
                 <label for="floatingInput">First Name</label>
                 @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-floating ">
                 <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
                 <label for="floatingInput">Last Name</label>
                 @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
-
+            
             <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
             @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
+            <div class="alert alert-danger">{{ $message }}</div>
             @enderror
             <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Email</label>
             </div>
-
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
+            <input type="submit" value="Send" class="primary-fill">
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
+    </form>
     </div>
 
     <nav>
@@ -174,9 +176,9 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Accept</button>
                                             <a href="/view-case/{{ $case->id }}"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Accept</button>
                                             <a href="/view-notes/{{ $case->id }}"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>View Notes</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
@@ -225,8 +227,8 @@
                             <button class="map-btn">Map Location</button>
                         </div>
                     </div>
-                    <div class="more-info ">
-                        <button class="view-btn">View Case</button>
+                    <div class="more-info">
+                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of birth :
@@ -244,7 +246,7 @@
                             </span>
                             <div class="grid-2-listing">
                                 <button class="accept-btn">Accept</button>
-                                <button class="secondary-btn">View Notes</button>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
                                 <button class="secondary-btn">Email</button>
                             </div>
                         </div>

@@ -220,6 +220,8 @@
                                             <button class="table-btn action-btn"
                                                 data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
+                                                <a href="/view-case/{{ $case->id }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
                                                 <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>Doctors Note</button>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>View Uploads</button>
@@ -274,7 +276,7 @@
                             </div>
                         </div>
                         <div class="more-info ">
-                            <button class="view-btn">View Case</button>
+                            <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -286,7 +288,7 @@
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <button class="secondary-btn">View Notes</button>
+                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>
                                     <button class="secondary-btn">Encouter</button>

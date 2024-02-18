@@ -10,6 +10,11 @@ use App\Models\request_Client;
 use App\Models\MedicalReport;
 use App\Models\RequestNotes;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
+
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class ProviderController extends Controller
 {
     public function status(Request $request, $status = 'new')
@@ -235,6 +240,21 @@ class ProviderController extends Controller
         return redirect()->route('provider-status', ['status' => 'conclude']);
     }
 
+    // Generate pdf on click
+    public function generatePDF(Request $request, $id = null)
+    {
+        try {
+            $data = MedicalReport::where('request_id', $id)->first();
+
+            // dd($data);
+            $pdf = PDF::loadView('providerPage.pdfForm', ['data' => $data]);
+
+            return $pdf->download($data->first_name . "-medical.pdf");
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
     // Provider My Profile Data request for edit on submit
     public function providerData(Request $request)
     {
@@ -252,5 +272,13 @@ class ProviderController extends Controller
     public function viewNote($id = null)
     {
         return view('providerPage.TestView.viewNotes');
+    }
+
+    // Send Mail
+    public function sendMail(Request $request)
+    {
+        // dd($request->email);
+        Mail::to($request->email)->send(new SendMail($request->all()));
+        return redirect()->back();
     }
 }

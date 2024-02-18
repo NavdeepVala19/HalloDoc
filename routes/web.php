@@ -60,12 +60,20 @@ Route::post('/provider-request', [ProviderController::class, 'createRequest'])->
 // when consult is selected from the encounter of active listing perform operation
 Route::get('/encounter', [ProviderController::class, 'encounter'])->name("encounter");
 
+
+
 // Encounter Form provider
 Route::get(
     '/encounter-form/{id?}',
     [ProviderController::class, 'encounterFormView']
 )->name('encounter-form');
 Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name('encounter-form-data');
+
+// Generater Pdf on click
+Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate-pdf');
+
+// Send Email
+Route::post('/send-mail', [ProviderController::class, 'sendMail'])->name('send-mail');
 
 // Provider Profile page
 Route::get('/profile', function () {
