@@ -10,10 +10,12 @@ use App\Models\request_Client;
 use App\Models\MedicalReport;
 use App\Models\RequestNotes;
 
+
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
-
+use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class ProviderController extends Controller
 {
@@ -280,5 +282,53 @@ class ProviderController extends Controller
         // dd($request->email);
         Mail::to($request->email)->send(new SendMail($request->all()));
         return redirect()->back();
+    }
+
+    // View Uploads as per the id 
+    public function viewUpload(Request $request, $id = null)
+    {
+        $data  = requestTable::where('id', $id)->first();
+        $documents = RequestWiseFile::get();
+
+        return view('providerPage.TestView.viewUploads', compact('data', 'documents'));
+    }
+    public function uploadDocument(Request $request, $id = null)
+    {
+        $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+        RequestWiseFile::insert(['request_id' => $id, 'file_name' => $request->file('document')->getClientOriginalName()]);
+
+        return redirect()->back();
+    }
+    public function download(Request $requet, $id = null)
+    {
+        $file = RequestWiseFile::where('id', $id)->first();
+        $path = (public_path() . '/storage/' . $file->file_name);
+
+        return response()->download($path);
+    }
+    public function downloadAll(Request $request){
+
+    }
+
+    public function deleteDoc(Request $request, $id = null)
+    {
+        RequestWiseFile::where('id', $id)->delete();
+
+        return redirect()->back();
+    }
+
+    public function operations(Request $request)
+    {
+        if($request->input('operation') == 'delete_all'){
+            $ids = $request->input('selected');
+            RequestWiseFile::whereIn('id', $ids)->delete();
+
+            return redirect()->back();
+        } else if($request->input('operation') == 'download_all'){
+            $ids = $request->input('selected');
+            
+        }
+
+
     }
 }

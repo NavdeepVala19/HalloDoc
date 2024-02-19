@@ -151,6 +151,19 @@ Route::get('/create', function () {
 // show view notes section
 Route::get('/view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('view-notes');
 
+// View Uploads 
+Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('view-upload');
+Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument'])->name('view-upload');
+
+// download document uploaded in view Uploads
+Route::get('/download/{id?}', [ProviderController::class, 'download'])->name('download');
+
+// Delete document
+Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->name('document.delete');
+
+// Operations on ViewUploads page (Download All, Delete All)
+Route::post('/operations', [ProviderController::class, 'operations'])->name('operations');
+
 // show view case section
 Route::get('/view-case/{id?}', [ProviderController::class, 'viewCase'])->name('view-case');
 
@@ -183,5 +196,5 @@ Route::get('/profile', function () {
 
 // Testing Purpose
 Route::get('/test', function () {
-    return view('providerPage.TestView.viewUploads');
+    return view('providerPage.TestView.closeCase');
 });
