@@ -201,13 +201,14 @@
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
                                             <a href="/view-case/{{ $case->id }}"><i
-                                                class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
                                             <button class="send-agreement-btn"><i
                                                     class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
                                             <button class="transfer-btn"><i
                                                     class="bi bi-check-square me-2 ms-3"></i>Transfer</button>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Uploads</button>
+                                            <a href="{{ route('view-upload', ['id' => $case->id]) }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Uploads</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
                                     </div>
@@ -273,7 +274,8 @@
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                    Notes</a>
                                 <button class="secondary-btn">View Uploads</button>
                                 <button class="secondary-btn">Email</button>
                             </div>

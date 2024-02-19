@@ -44,17 +44,13 @@ $(document).ready(function () {
         // let id = $(this).data("id");
         // window.print();
         // $(window).attr("location", "/provider/conclude");
-
         // $(window).on("afterprint", function () {
         //     $(window).attr("location", "/provider/conclude");
         // });
-
         // window.addEventListener("afterprint", function (event) {
         //     // Redirect to specific URL after printing only if the print button was clicked
-
         //     window.location.href = "/provider/conclude"; // Replace with your redirect URL
         // });
-
         // console.log("clicked");
     });
 
@@ -91,5 +87,14 @@ $(document).ready(function () {
 
         // Close any other open .more-info sections
         $(".more-info").not($(this).next(".more-info")).removeClass("active");
+    });
+
+    // For selection of all checkbox when master checkbox is clicked in viewUploads page
+    $(".master-checkbox").on("click", function () {
+        if ($(this).is(":checked", true)) {
+            $(".child-checkbox").prop("checked", true);
+        } else {
+            $(".child-checkbox").prop("checked", false);
+        }
     });
 });
