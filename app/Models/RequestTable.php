@@ -38,6 +38,7 @@ class RequestTable extends Model
         'case_tag_physician',
         'patient_account_id',
         'created_user_id',
+        'created_at'
     ];
 
     public function allusers(){
@@ -45,6 +46,8 @@ class RequestTable extends Model
     }
 
     // Making relationship with requestClient table
+
+    
     public function requestClient(){
         return $this->belongsTo(request_Client::class);
     }
