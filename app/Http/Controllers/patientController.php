@@ -34,17 +34,17 @@ class patientController extends Controller
         //     'room' =>['numeric']
         // ]);
 
-        $request->validate([
-            'first_name'=>'required|min:2|max:30',
-            'last_name'=>'string|min:2|max:30',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number'=>'required|numeric|digits:10',
-            'street'=>'min:2|max:30',
-            'city' => 'alpha|min:2|max:30',
-            'zipcode' => 'numeric', 
-            'state' => 'alpha|min:2|max:30',
-            'room' => 'numeric',
-        ]);
+        // $request->validate([
+        //     'first_name'=>'required|min:2|max:30',
+        //     'last_name'=>'string|min:2|max:30',
+        //     'email' => 'required|email|min:2|max:30',
+        //     'phone_number'=>'required|numeric|digits:10',
+        //     'street'=>'min:2|max:30',
+        //     'city' => 'alpha|min:2|max:30',
+        //     'zipcode' => 'numeric', 
+        //     'state' => 'alpha|min:2|max:30',
+        //     'room' => 'numeric',
+        // ]);
         
         
    
@@ -80,20 +80,20 @@ class patientController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-
         $patientRequest->save();
+
+
+
+
 
         // store documents in request_wise_file table
 
         $request_file = new RequestWiseFile();
         $request_file->request_id = $requestData->id;
-        $request_file->file_name = $request->file('docs')->store('public');
+        $request_file->file_name = $request->file('docs')->getClientOriginalName();
+        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
         $request_file->save();
 
-        // this code is for getting original name of document
-
-        // $filename = $request->file('docs')->getClientOriginalName(); 
-        // dd($filename);
 
 
 

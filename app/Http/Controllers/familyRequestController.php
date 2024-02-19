@@ -17,22 +17,22 @@ class familyRequestController extends Controller
 
     public function create(Request $request){
 
-        $request->validate([
-            'first_name'=>'required|min:2|max:30',
-            'last_name'=>'string|min:2|max:30',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number'=>'required|numeric|digits:10',
-            'street'=>'min:2|max:30',
-            'city' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
-            'zipcode' => 'numeric', 
-            'state' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
-            'room' => 'numeric',
-            'family_first_name'=>'required|min:2|max:30',
-            'family-last-name'=>'min:2|max:30',
-            'family_email'=>'required|email|min:2|max:30',
-            'family_phone_number'=>'required',
-            'family_relation'=>'required',
-        ]);
+        // $request->validate([
+        //     'first_name'=>'required|min:2|max:30',
+        //     'last_name'=>'string|min:2|max:30',
+        //     'email' => 'required|email|min:2|max:30',
+        //     'phone_number'=>'required|numeric|digits:10',
+        //     'street'=>'min:2|max:30',
+        //     'city' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'zipcode' => 'numeric', 
+        //     'state' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'room' => 'numeric',
+        //     'family_first_name'=>'required|min:2|max:30',
+        //     'family-last-name'=>'min:2|max:30',
+        //     'family_email'=>'required|email|min:2|max:30',
+        //     'family_phone_number'=>'required',
+        //     'family_relation'=>'required',
+        // ]);
 
     
         // family request creating
@@ -67,14 +67,9 @@ class familyRequestController extends Controller
 
         $request_file = new RequestWiseFile();
         $request_file->request_id = $familyRequest->id;
-        $request_file->file_name = $request->file('docs')->store('public');
+        $request_file->file_name = $request->file('docs')->getClientOriginalName();
+        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
         $request_file->save();
-
-        // this code is for getting original name of document
-
-        // $filename = $request->file('docs')->getClientOriginalName(); 
-        // dd($filename);
-
 
 
         // store symptoms in request_notes table

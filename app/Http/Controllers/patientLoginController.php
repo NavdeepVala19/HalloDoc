@@ -60,58 +60,58 @@ class patientLoginController extends Controller
         return view("patientSite/patientResetPassword");
     }
 
-    // public function submitForgetPasswordForm(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email|exists:users',
-    //     ]);
+    public function submitForgetPasswordForm(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users',
+        ]);
 
-    //     $token = Str::random(64);
+        $token = Str::random(64);
 
-    //     $user = users::where('email', $request->email)->first();
-    //     $user->token = $token;
-    //     $user->save();
+        $user = users::where('email', $request->email)->first();
+        $user->token = $token;
+        $user->save();
 
-    //     Mail::send('email.forgetPassword', ['token' => $token], function ($message) use ($request) {
-    //         $message->to($request->email);
-    //         $message->subject('Reset Password');
-    //     });
+        Mail::send('email.forgetPassword', ['token' => $token], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Reset Password');
+        });
 
-    //     return back()->with('message', 'We have e-mailed your password reset link!');
-    // }
-
-
-
-    // public function showResetPasswordForm($token)
-    // {
-    //     return view('patientSite/patientPasswordReset', ['token' => $token]);
-    // }
+        return back()->with('message', 'We have e-mailed your password reset link!');
+    }
 
 
-    // public function submitResetPasswordForm(Request $request)
-    // {
 
-        // $request->validate([
-        //     'email' => 'required|email|exists:users',
-        //     'password' => 'required|string|min:6|confirmed',
-        //     'password_confirmation' => 'required'
-        // ]);
-
-    //     $updatePassword = users::where('token', $request->token)->first();
-
-    //     if (!$updatePassword) {
-    //         return back()->withInput()->with('error', 'Invalid token!');
-    //     }
-
-    //     users::where([
-    //         'token' => $request->token
-    //     ])->update(['password_hash' => Hash::make($request->new_password)]);
+    public function showResetPasswordForm($token)
+    {
+        return view('patientSite/patientPasswordReset', ['token' => $token]);
+    }
 
 
-    //     users::where(['email' => $request->email])->delete();
+    public function submitResetPasswordForm(Request $request)
+    {
 
-    //     return redirect('/patient_login')->with('message', 'Your password has been changed!');
-    // }
+        $request->validate([
+            'email' => 'required|email|exists:users',
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        $updatePassword = users::where('token', $request->token)->first();
+
+        if (!$updatePassword) {
+            return back()->withInput()->with('error', 'Invalid token!');
+        }
+
+        users::where([
+            'token' => $request->token
+        ])->update(['password_hash' => Hash::make($request->new_password)]);
+
+
+        users::where(['email' => $request->email])->delete();
+
+        return redirect('/patient_login')->with('message', 'Your password has been changed!');
+    }
 
     public function logout()
     {

@@ -8,7 +8,7 @@
 
 @section('nav-links')
 
-<a href="">Dashboard</a>
+<a href="" class="active-link">Dashboard</a>
 <a href="">Profile</a>
 
 @endsection
@@ -42,17 +42,13 @@
 
                 <tbody>
                     <tr>
-                        @foreach($date as $date)
-                        <td> {{$date->created_at}}</td>
-                        @endforeach
-
-
-                        @foreach($status as $status)
-                        <td>{{$status}}</td>
-                        @endforeach
-
-                        <!-- <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a></td> -->
+                        @foreach($data as $patientData)
+                        <td style="width: 33%;"> {{$patientData->created_at}}</td>
+                        <td> {{$patientData->status_type}}</td>
+                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a>
+                        </td>
                     </tr>
+                    @endforeach
 
                 </tbody>
 
@@ -64,59 +60,47 @@
 
             <div class="accordions">
 
-            <button class="accordion"> <i class="bi bi-clock"></i> Created-Date:27 sept 2024</button>
-            <div class="panel">
-                <div>
-                <i class="bi bi-person"></i>  Provider :- Dr.xyz
-                </div>
-                <div>
-                <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
-                </div>
-                <div>
-                <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
-                </div>
-            </div>
+                @foreach($data as $patientData)
+                <button class="accordion"> <i class="bi bi-clock"></i>
+                    Created-Date:{{$patientData->created_at}}</button>
+                <div class="panel">
 
-            <button class="accordion"> <i class="bi bi-clock"></i> Created-Date:27 sept 2024</button>
-            <div class="panel">
-                <div>
-                <i class="bi bi-person"></i>  Provider :- Dr.xyz
+                    <div>
+                        <i class="bi bi-check-circle"></i> Current Status:{{$patientData->status_type}}
+                    </div>
+                    <div>
+                        <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
+                    </div>
                 </div>
-                <div>
-                <i class="bi bi-check-circle"></i>  Current Status:Cancelled By Admin
-                </div>
-                <div>
-                <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
-                </div>
-            </div>
+                @endforeach
 
-            </div> 
+            </div>
         </div>
 
         <!-- create a new request pop-up -->
-        
+
         <div class="pop-up new-request">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Create new Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <p class="m-2">Here I want to create new request</p>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-           <button class="primary-empty btn-me btn-active">
-            me
-           </button>
-           <button class="primary-empty btn-someone">
-            someone else
-           </button>
+            <div class="popup-heading-section d-flex align-items-center justify-content-between">
+                <span>Create new Request</span>
+                <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <p class="m-2">Here I want to create new request</p>
+            <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+                <button class="primary-empty btn-me btn-active">
+                    me
+                </button>
+                <button class="primary-empty btn-someone">
+                    someone else
+                </button>
 
+            </div>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <button class="primary-fill continue-btn">Continue</button>
+                <button class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
         </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill continue-btn">Continue</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
 
-    
+
 
         <script>
 
@@ -135,7 +119,7 @@
                 });
             }
 
-            
+
 
         </script>
 
