@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\request_Client;
+use App\Models\Status;
 
 class RequestTable extends Model
 {
@@ -38,6 +39,7 @@ class RequestTable extends Model
         'case_tag_physician',
         'patient_account_id',
         'created_user_id',
+        'created_at'
     ];
 
     public function allusers(){
@@ -45,7 +47,14 @@ class RequestTable extends Model
     }
 
     // Making relationship with requestClient table
-    public function requestClient(){
-        return $this->belongsTo(request_Client::class);
+
+    
+    // public function requestClient(){
+    //     return $this->belongsTo(request_Client::class);
+    // }
+
+
+    public function status(){
+        return $this->belongsTo(Status::class);
     }
 }
