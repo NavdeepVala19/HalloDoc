@@ -55,12 +55,6 @@
     margin: 15px;
 }
 
-.src-category > button {
-    border: none;
-    background-color: #fff;
-    padding: 5px 15px;
-}
-
 .btn-all {
     border: 1px solid grey !important;
     border-radius: 5px;
@@ -162,7 +156,6 @@ tr > td {
     flex-direction: column;
     position: absolute;
     top: 30px;
-    /* right: 20px; */
     padding: 10px 0;
     z-index: 500;
 }
@@ -246,13 +239,14 @@ tr > td {
 
     .src-category {
         display: flex;
-        gap: 0 !important;
+        gap: 8px !important;
         justify-content: start !important;
     }
 
-    .src-category > button {
+    .src-category > a {
         flex-direction: column;
         align-items: center;
+        font-size: 12px;
     }
 
     .txt {
