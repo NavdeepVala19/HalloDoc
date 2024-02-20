@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\patientController;
 use App\Http\Controllers\familyRequestController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\patientLoginController;
 use App\Http\Controllers\patientDashboardController;
 use App\Http\Controllers\patientAccountController;
 use App\Http\Controllers\PatientViewDocumentsController;
+use App\Http\Controllers\patientProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProviderController;
 
@@ -98,9 +100,14 @@ Route::post('reset-password', [patientLoginController::class, 'submitResetPasswo
 //  ***************************************************************************************************************************************
 // patient dashboard
 
-// ->middleware('auth')      attach this code with below route code 
-// route::get('/patientDashboard', [patientDashboardController::class,'patientDashboard'])->name('patientDashboard');   
+// ->middleware('auth')      attach this code with below route code   
 route::get('/patientDashboard', [patientDashboardController::class, 'read'])->name('patientDashboardData');
+//  ***************************************************************************************************************************************
+
+//  ***************************************************************************************************************************************
+// to edit profile of patient
+Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
+
 //  ***************************************************************************************************************************************
 
 
@@ -133,9 +140,29 @@ route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'up
 
 
 Route::get('/download/{id?}', [PatientViewDocumentsController::class, 'download'])->name('download');
-Route::post('/download-selected-files',[PatientViewDocumentsController::class,'downloadSelectedFiles'])->name('download-selected-files');
+Route::post('/download-selected-files', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('download-selected-files');
 
 //  ***************************************************************************************************************************************
+
+
+
+//  ***************************************************************************************************************************************
+// it will show agreement page
+route::get('/patientAgreement', [patientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
+//  ***************************************************************************************************************************************
+
+
+
+
+
+// **********************************************************ADMIN***************************************************************
+
+route::get('/adminLogin', [AdminLoginController::class, 'adminLogin']);
+
+
+// ****************************************************************************************************************************
+
+
 
 
 

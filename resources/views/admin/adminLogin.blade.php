@@ -1,26 +1,23 @@
-@extends('patientIndex')
+@extends('adminIndex')
 
 @section('css')
 
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientLogin.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/admin/adminLogin.css') }}">
 
 @endsection
 
-@section('patientContent')
 
-
+@section('adminContent')
 
 <!-- main content -->
+<!-- login credentials input -->
 
-<div class="container-fluid main-section">
+<div class=" main-section mt-5">
 
     <div class="main-container">
 
         <div class="details">
-            <div class="main-content">
-                <a href="{{route('patientSite')}}"><i class="bi bi-chevron-left"></i> Back</a>
-            </div>  
-            <h1>Login To Your Account</h1>
+            <h2>Login To Your Account</h2>
         </div>
 
         @if (Session::has('message'))
@@ -51,12 +48,12 @@
         <div class="buttons">
             <button type="submit" class="btn btn-primary">Log In</button>
 
-            <div class="forgot-pass"> <a href="{{route('forgot_password')}}">Forgot Password?</a> </div>
+            <div class="forgot-pass"> <a href="">Forgot Password?</a> </div>
         </div>
         </form>
     </div>
 </div>
-</div>
+
 
 
 @endsection
