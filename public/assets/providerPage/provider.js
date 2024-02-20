@@ -1,10 +1,8 @@
 $(document).ready(function () {
     $(document).click(function () {
         $(".action-menu").hide();
-        // $(".pop-up").hide(); //  also do event.stopPropagation in particular button clicked
-        // $(".send-link").hide(); //  also do event.stopPropagation in particular button clicked
-        // $(".overlay").hide();
     });
+
     // for showing action menu in new listing page
     $(".action-btn").click(function (event) {
         $(this).siblings(".action-menu").toggle();
@@ -95,6 +93,32 @@ $(document).ready(function () {
             $(".child-checkbox").prop("checked", true);
         } else {
             $(".child-checkbox").prop("checked", false);
+        }
+    });
+
+    // For Send Aggrement Pop-up in pending listing page
+    $(".send-agreement-btn").on("click", function () {
+        $(".send-agreement").show();
+        $(".overlay").show();
+        $(".send-agreement-id").val($(this).data("id"));
+
+        // console.log($(this).data("request_type_id"));
+        if ($(this).data("request_type_id") == 1) {
+            $(".request-detail").html(
+                '<i class="bi bi-circle-fill green me-2"></i>Patient'
+            );
+        } else if ($(this).data("request_type_id") == 2) {
+            $(".request-detail").html(
+                '<i class="bi bi-circle-fill yellow me-2"></i>Family/Friend'
+            );
+        } else if ($(this).data("request_type_id") == 3) {
+            $(".request-detail").html(
+                '<i class="bi bi-circle-fill red me-2"></i>Business'
+            );
+        } else if ($(this).data("request_type_id") == 4) {
+            $(".request-detail").html(
+                '<i class="bi bi-circle-fill blue me-2"></i>Concierge'
+            );
         }
     });
 });

@@ -17,6 +17,47 @@
 
     <div class="overlay"></div>
 
+    {{-- Send Agreement Pop-up --}}
+    {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
+pending state, providers need to send an agreement link to patients. --}}
+    <div class="pop-up send-agreement">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Send Agreement</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="p-3">
+            <div>
+                <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
+                    concierge)</span>
+                <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
+                    for
+                    the
+                    responsible party.
+                </p>
+            </div>
+            <form action="{{ route('send-agreement') }}" method="POST">
+                @csrf
+                <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
+                <div>
+                    <div class="form-floating ">
+                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
+                            placeholder="Phone Number">
+                        <label for="floatingInput">Phone Number</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="email" name="email" class="form-control" id="floatingInput"
+                            placeholder="name@example.com">
+                        <label for="floatingInput">Email</label>
+                    </div>
+                </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <input type="submit" value="Send" class="primary-fill send-case">
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+        </form>
+    </div>
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -202,7 +243,7 @@
                                         <div class="action-menu">
                                             <a href="/view-case/{{ $case->id }}"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                            <button class="send-agreement-btn"><i
+                                            <button class="send-agreement-btn" data-id="{{ $case->id }}" data-request_type_id={{ $case->request_type_id }}><i
                                                     class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
                                             <button class="transfer-btn"><i
                                                     class="bi bi-check-square me-2 ms-3"></i>Transfer</button>

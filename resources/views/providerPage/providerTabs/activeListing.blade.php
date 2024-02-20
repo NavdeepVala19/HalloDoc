@@ -86,7 +86,7 @@
                 </div>
                 {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
                 <input type="submit" class="primary-fill encounter-save-btn" id="save-btn" value="Save">
-                <button class="primary-empty hide-popup-btn">Cancel</button>
+                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
             </div>
         </form>
     </div>
@@ -221,13 +221,14 @@
                                                 data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
                                                 <a href="/view-case/{{ $case->id }}"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                                        class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
                                                 <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>Doctors Note</button>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>View Uploads</button>
                                                 <button class="encounter-btn"><i
                                                         class="bi bi-check-square me-2 ms-3"></i>Encounter</button>
-                                                <button><i class="bi bi-check-square me-2 ms-3"></i>Orders</button>
+                                                <a href="{{ route('view-order', ['id' => $case->id]) }}"><i
+                                                        class="bi bi-check-square me-2 ms-3"></i>Orders</a>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>House Call</button>
                                                 <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                             </div>
@@ -288,7 +289,8 @@
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
+                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                        Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>
                                     <button class="secondary-btn">Encouter</button>

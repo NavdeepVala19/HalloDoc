@@ -21,6 +21,8 @@
         </div>
 
         <form action="" method="POST">
+            @csrf
+            <input type="hidden" name="request_id" value="{{ $id }}">
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">

@@ -12,7 +12,7 @@ class RequestTable extends Model
 
     protected $table = 'request';
 
-    protected $primaryKey ='id';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'request_type_id',
@@ -40,12 +40,14 @@ class RequestTable extends Model
         'created_user_id',
     ];
 
-    public function allusers(){
+    public function allusers()
+    {
         return $this->belongsTo(allusers::class);
     }
 
     // Making relationship with requestClient table
-    public function requestClient(){
+    public function requestClient()
+    {
         return $this->belongsTo(request_Client::class);
     }
 }

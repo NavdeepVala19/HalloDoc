@@ -167,7 +167,7 @@ tr > td {
     z-index: 500;
 }
 .action-menu > button {
-    width: 170px !important;
+    width: 200px !important;
     border: none;
     background-color: #fff;
     padding: 5px 0;
@@ -176,7 +176,7 @@ tr > td {
 
 .action-menu > a {
     display: block;
-    width: 170px !important;
+    width: 200px !important;
     border: none;
     background-color: #fff;
     color: black;
@@ -203,6 +203,11 @@ tr > td {
 .btn-active {
     background-color: var(--blue);
     color: #fff;
+}
+
+/* Pending Listing send agreement */
+.send-agreement {
+    display: none;
 }
 
 /* ********************** MEDIA QUERIES *********************** */
