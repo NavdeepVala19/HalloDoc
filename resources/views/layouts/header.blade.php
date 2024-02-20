@@ -16,9 +16,9 @@
             <i class="bi bi-box-arrow-right"></i>
         </a>
         <a href="{{route('logout')}}" class="logout-link primary-empty">Logout</a>
-        <a href="" class="primary-empty toggle-mode">
+        <button class="primary-empty toggle-mode" id="toggle-mode">
             <i class="bi bi-moon"></i>
-        </a>
+        </button>
     </div>
 </header>
 
