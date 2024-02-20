@@ -55,12 +55,6 @@
     margin: 15px;
 }
 
-.src-category > button {
-    border: none;
-    background-color: #fff;
-    padding: 5px 15px;
-}
-
 .btn-all {
     border: 1px solid grey !important;
     border-radius: 5px;
@@ -162,12 +156,11 @@ tr > td {
     flex-direction: column;
     position: absolute;
     top: 30px;
-    /* right: 20px; */
     padding: 10px 0;
     z-index: 500;
 }
 .action-menu > button {
-    width: 170px !important;
+    width: 200px !important;
     border: none;
     background-color: #fff;
     padding: 5px 0;
@@ -176,7 +169,7 @@ tr > td {
 
 .action-menu > a {
     display: block;
-    width: 170px !important;
+    width: 200px !important;
     border: none;
     background-color: #fff;
     color: black;
@@ -203,6 +196,11 @@ tr > td {
 .btn-active {
     background-color: var(--blue);
     color: #fff;
+}
+
+/* Pending Listing send agreement */
+.send-agreement {
+    display: none;
 }
 
 /* ********************** MEDIA QUERIES *********************** */
@@ -241,13 +239,14 @@ tr > td {
 
     .src-category {
         display: flex;
-        gap: 0 !important;
+        gap: 8px !important;
         justify-content: start !important;
     }
 
-    .src-category > button {
+    .src-category > a {
         flex-direction: column;
         align-items: center;
+        font-size: 12px;
     }
 
     .txt {
