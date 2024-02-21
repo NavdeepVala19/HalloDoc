@@ -26,14 +26,14 @@ h2{
 .content{
     border: 1px solid rgb(183, 183, 196);
     width: 97%;
-    margin-left: 20px;
+    margin-left: 20px; 
+    border-radius: 7px; 
 }
 
 .btn:hover{
     background-color: #3c9eff;
     color: white;
 }
-
 
 
 .button{
@@ -46,9 +46,7 @@ h2{
     background-color: rebeccapurple !important;
 }
 
-td{
-    border: 1px solid black;
-}
+
 
 .btn-someone:hover{
         background-color: #3c9eff;
