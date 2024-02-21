@@ -1,6 +1,7 @@
 @extends('index')
 
 @section('css')
+    <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
@@ -189,12 +190,8 @@ pending state, providers need to send an agreement link to patients. --}}
                     method="GET">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="bi bi-search"></i>
-                        </span>
-
-                        <input type="text" class="form-control search-patient" placeholder="Search Patients"
-                            aria-describedby="basic-addon1" name="search">
+                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                         <input type="submit" class="primary-fill">
                     </div>
                 </form>
@@ -243,7 +240,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                         <div class="action-menu">
                                             <a href="/view-case/{{ $case->id }}"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                            <button class="send-agreement-btn" data-id="{{ $case->id }}" data-request_type_id={{ $case->request_type_id }}><i
+                                            <button class="send-agreement-btn" data-id="{{ $case->id }}"
+                                                data-request_type_id={{ $case->request_type_id }}><i
                                                     class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
                                             <button class="transfer-btn"><i
                                                     class="bi bi-check-square me-2 ms-3"></i>Transfer</button>

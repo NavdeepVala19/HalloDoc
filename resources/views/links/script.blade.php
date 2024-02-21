@@ -23,3 +23,4 @@
    {{-- Javascript for patient login password field --}}
    <script defer src="{{ URL::asset('assets/patientSite/patientLoginPassword.js') }}"></script>
 
+<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>

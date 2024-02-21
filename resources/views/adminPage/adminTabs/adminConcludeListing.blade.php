@@ -2,14 +2,17 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="{{ route('provider-profile') }}">My Profile</a>
+    <a href="">Provider Location</a>
+    <a href="">My Profile</a>
+    <a href="">Providers</a>
+    <a href="">Partners</a>
+    <a href="">Access</a>
+    <a href="">Records</a>
 @endsection
 
 @section('content')
@@ -71,7 +74,7 @@
 
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
-            <a href="{{ route('provider-status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
+            <a href="{{ route('admin-status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
                 <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
@@ -82,7 +85,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
+            <a href="{{ route('admin-status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
                 <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-square"></i> PENDING
@@ -93,7 +96,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
+            <a href="{{ route('admin-status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
                 <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-check2-circle"></i> ACTIVE
@@ -104,14 +107,35 @@
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'conclude']) }}" class="nav-link active"
-                id="nav-conclude-tab">
+            <a href="{{ route('admin-status', ['status' => 'conclude']) }}" class="nav-link active" id="nav-conclude-tab">
                 <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>
                     <span>
                         {{ $concludeCasesCount }}
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin-status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
+                <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-person-fill-x"></i> TO CLOSE
+                    </span>
+                    <span>
+                        {{ $tocloseCasesCount }}
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin-status', ['status' => 'unpaid']) }}" class="nav-link" id="nav-conclude-tab">
+                <div class="case case-unpaid p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-cash-coin"></i> UNPAID
+                    </span>
+                    <span>
+                        {{ $unpaidCasesCount }}
                     </span>
                 </div>
             </a>
@@ -122,17 +146,35 @@
             <div class="d-flex align-items-center">
                 <h3>Patients </h3> <strong class="case-type ps-2 ">(Conclude)</strong>
             </div>
-            <div>
-                <button class="primary-fill me-3 send-link-btn">
+            <div class=" d-flex gap-2">
+                <button class="primary-fill send-link-btn">
                     <i class="bi bi-send"></i>
                     <span class="txt">
                         Send Link
                     </span>
                 </button>
-                <a class="primary-fill" href="{{ route('provider-create-request') }}">
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
+                    </span>
+                </a>
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
+                    <i class="bi bi-send-arrow-down"></i>
+                    <span class="txt">
+                        Export
+                    </span>
+                </a>
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
+                    <i class="bi bi-send-arrow-down-fill"></i>
+                    <span class="txt">
+                        Export All
+                    </span>
+                </a>
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="txt">
+                        Request DTY Support
                     </span>
                 </a>
             </div>
@@ -141,14 +183,20 @@
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
-                    method="GET">
+                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
+                    method="GET" class="d-flex align-items-center">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        <input type="submit" class="primary-fill">
+                        {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
+                    <select class="form-select">
+                        <option selected>All Regions</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
                     <a href="{{ route('provider-listing', ['category' => 'all', 'status' => 'conclude']) }}"
@@ -168,9 +216,11 @@
                     <thead class="table-secondary">
                         <tr>
                             <th>Name</th>
+                            <th>Date Of Birth</th>
+                            <th>Physician Name</th>
+                            <th>Date Of Service</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Status</th>
                             <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
@@ -179,33 +229,30 @@
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request_type_id }}">
                                 <td>{{ $case->first_name }}</td>
+                                <td>Patient DOB</td>
+                                <td>Physician Name</td>
+                                <td>{{ $case->created_at }}</td>
                                 <td>{{ $case->phone_number }}</td>
                                 <td>{{ $case->address }}</td>
                                 <td>
-                                    @if ($case->call_type)
-                                        <span class="primary-fill"> {{ $case->call_type }} </span>
-                                    @else
-                                        Call Type
-                                    @endif
-                                </td>
-                                <td>
                                     <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                    <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                                    <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
                                 </td>
                                 <td>
                                     <div class="action-container">
-                                        <button class="table-btn action-btn conclude-action-btn">Actions</button>
+                                        <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>
                                         <div class="action-menu">
                                             <a href="/view-case/{{ $case->id }}"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Conclude Case</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>Doctor Notes</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Uploads</button>
-                                            <a href="{{ route('encounter-form', $case->id) }}"
-                                                class="encounter-form-btn"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>Encounter</a>
-                                            <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                                    class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                                            <button><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
+                                                Uploads</button>
+                                            <button><i class="bi bi-journal-text me-2 ms-3"></i>View
+                                                Notes</button>
+                                            <a href="{{ route('view-order', ['id' => $case->id]) }}"><i
+                                                    class="bi bi-card-list me-2 ms-3"></i>Orders</a>
+                                            <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors Note</button>
+                                            <button class="encounter-btn"><i
+                                                    class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                         </div>
                                     </div>
                                 </td>

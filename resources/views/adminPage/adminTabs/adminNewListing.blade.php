@@ -2,18 +2,119 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="{{ route('provider-profile') }}">My Profile</a>
+    <a href="">Provider Location</a>
+    <a href="">My Profile</a>
+    <a href="">Providers</a>
+    <a href="">Partners</a>
+    <a href="">Access</a>
+    <a href="">Records</a>
 @endsection
 
 @section('content')
     <div class="overlay"></div>
+
+    {{-- Cancel Case Pop-up --}}
+    {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}
+    <div class="pop-up cancel-case">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Confirm Cancellation</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="m-3">
+            <span>Patient Name: </span> <span>
+                It should display patient name
+                test test</span>
+        </div>
+        <div class="m-3">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option selected>Reasons</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <label for="floatingSelect">Reasons for Cancellation</label>
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="injury" id="floatingTextarea2"></textarea>
+                <label for="floatingTextarea2">Provide Additional Notes</label>
+            </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <button class="primary-fill cancel-case">Confirm</button>
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </div>
+
+
+    {{-- Assign Case Pop-up --}}
+    {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
+to providers based on patient’s region using this pop-up. --}}
+    <div class="pop-up assign-case">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Assign Request</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <p class="m-2">To assign this request, search and select another Physician</p>
+        <div class="m-3">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option selected>Regions</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <label for="floatingSelect">Narrow Search by Region</label>
+            </div>
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option selected>Select Physician</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <label for="floatingSelect">Select Physician</label>
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Description" id="floatingTextarea2"></textarea>
+                <label for="floatingTextarea2">Description</label>
+            </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <button class="primary-fill cancel-case">Confirm</button>
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </div>
+
+
+    {{-- Block Case Pop-up --}}
+    {{-- This pop-up will open when admin clicks on “Block Case” link from Actions menu. From the new state, admin
+can block any case. All blocked cases can be seen in Block history page. --}}
+    <div class="pop-up block-case">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Assign Request</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="m-3">
+            <span>Patient Name: </span>
+            <span>It should display patient name test test</span>
+        </div>
+        <div class="m-3">
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Reason for block request" id="floatingTextarea2"></textarea>
+                <label for="floatingTextarea2">Reason for Block Request</label>
+            </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <button class="primary-fill">Confirm</button>
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </div>
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
@@ -53,15 +154,14 @@
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
                 <input type="submit" value="Send" class="primary-fill">
-                <button class="primary-empty hide-popup-btn">Cancel</button>
+                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
             </div>
         </form>
     </div>
 
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
-            {{-- {{ route('provider-status', ['status' => 'new']) }} --}}
-            <a href="{{ route('provider-status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
+            <a href="{{ route('admin-status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
                 <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
@@ -72,7 +172,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
+            <a href="{{ route('admin-status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
                 <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-square"></i> PENDING
@@ -83,7 +183,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
+            <a href="{{ route('admin-status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
                 <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-check2-circle"></i> ACTIVE
@@ -94,13 +194,35 @@
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
+            <a href="{{ route('admin-status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
                 <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>
                     <span>
                         {{ $concludeCasesCount }}
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin-status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
+                <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-person-fill-x"></i> TO CLOSE
+                    </span>
+                    <span>
+                        {{ $tocloseCasesCount }}
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin-status', ['status' => 'unpaid']) }}" class="nav-link" id="nav-conclude-tab">
+                <div class="case case-unpaid p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-cash-coin"></i> UNPAID
+                    </span>
+                    <span>
+                        {{ $unpaidCasesCount }}
                     </span>
                 </div>
             </a>
@@ -112,8 +234,8 @@
             <div class="d-flex align-items-center">
                 <h3>Patients </h3> <strong class="case-type ps-2 ">(New)</strong>
             </div>
-            <div>
-                <button class="primary-fill me-3 send-link-btn">
+            <div class=" d-flex gap-2">
+                <button class="primary-fill send-link-btn">
                     <i class="bi bi-send"></i>
                     <span class="txt">
                         Send Link
@@ -125,32 +247,55 @@
                         Create Requests
                     </span>
                 </a>
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
+                    <i class="bi bi-send-arrow-down"></i>
+                    <span class="txt">
+                        Export
+                    </span>
+                </a>
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
+                    <i class="bi bi-send-arrow-down-fill"></i>
+                    <span class="txt">
+                        Export All
+                    </span>
+                </a>
+                <a href="{{ route('provider-create-request') }}" class="primary-fill">
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="txt">
+                        Request DTY Support
+                    </span>
+                </a>
             </div>
         </div>
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form
-                    action="{{ route('provider-searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
-                    method="GET">
+                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
+                    method="GET" class="d-flex align-items-center">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        <input type="submit" class="primary-fill">
+                        {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
+                    <select class="form-select">
+                        <option selected>All Regions</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
                     <a href="{{ route('provider-listing', ['category' => 'all', 'status' => 'new']) }}"
-                        class="btn-all filter-btn">All</button>
-                        <a href="{{ route('provider-listing', ['category' => 'patient', 'status' => 'new']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                        <a href="{{ route('provider-listing', ['category' => 'family', 'status' => 'new']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                        <a href="{{ route('provider-listing', ['category' => 'business', 'status' => 'new']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                        <a href="{{ route('provider-listing', ['category' => 'concierge', 'status' => 'new']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                        class="btn-all filter-btn">All</a>
+                    <a href="{{ route('provider-listing', ['category' => 'patient', 'status' => 'new']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                    <a href="{{ route('provider-listing', ['category' => 'family', 'status' => 'new']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                    <a href="{{ route('provider-listing', ['category' => 'business', 'status' => 'new']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                    <a href="{{ route('provider-listing', ['category' => 'concierge', 'status' => 'new']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
             <div class="table-responsive">
@@ -158,8 +303,12 @@
                     <thead class="table-secondary">
                         <tr>
                             <th>Name</th>
+                            <th>Date Of Birth</th>
+                            <th>Requestor</th>
+                            <th>Requested Date</th>
                             <th>Phone</th>
                             <th>Address</th>
+                            <th>Notes</th>
                             <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
@@ -168,28 +317,29 @@
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request_type_id }}">
                                 <td>{{ $case->first_name }}</td>
+                                <td>Patient DOB</td>
+                                <td>Requestor Name</td>
+                                <td>{{ $case->created_at }}</td>
                                 <td>{{ $case->phone_number }}</td>
                                 <td>{{ $case->address }}</td>
+                                <td>Notes</td>
                                 <td>
-                                    <button class="table-btn "><i class="bi bi-person-check me-2"></i>Admin</button>
+                                    <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
                                 </td>
                                 <td>
                                     <div class="action-container">
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a
-                                                href=" {{ route('provider-view-case', $case->id) }}
-                                            {{-- /provider-view-case/{{ $case->id }} --}}
-                                            "><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Accept</button>
-                                            <a
-                                                href="
-                                            {{-- {{ route('provider-view-notes', ['id', $case->id]) }} --}}
-                                            provider-view-notes/{{ $case->id }}
-                                            "><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Notes</a>
-                                            <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                            <button class="assign-case-btn"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
+                                            <button class="cancel-case-btn"><i class="bi bi-x-circle me-2 ms-3"></i>Cancel
+                                                Case</button>
+                                            <button><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</button>
+                                            <a href="/view-notes/{{ $case->id }}"><i
+                                                    class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
+                                            <button class="block-case-btn">
+                                                <i class="bi bi-ban me-2 ms-3"></i>
+                                                Block Patient</button>
                                         </div>
                                     </div>
                                 </td>

@@ -267,8 +267,6 @@ class ProviderController extends Controller
     {
         try {
             $data = MedicalReport::where('request_id', $id)->first();
-
-            // dd($data);
             $pdf = PDF::loadView('providerPage.pdfForm', ['data' => $data]);
 
             return $pdf->download($data->first_name . "-medical.pdf");
@@ -289,23 +287,20 @@ class ProviderController extends Controller
     }
 
     // show a particular case page as required
-    public function viewCase($id = null)
+    public function viewCase($id)
     {
         $data = request_Client::where('id', $id)->first();
-
-        // dd($data);
-        return view('providerPage.TestView.viewCase', compact('data'));
+        return view('providerPage.pages.viewCase', compact('data'));
     }
     // show notes page for particular request
     public function viewNote($id = null)
     {
-        return view('providerPage.TestView.viewNotes');
+        return view('providerPage.pages.viewNotes');
     }
 
     // Send Mail
     public function sendMail(Request $request)
     {
-        // dd($request->email);
         Mail::to($request->email)->send(new SendMail($request->all()));
         return redirect()->back();
     }
@@ -316,7 +311,7 @@ class ProviderController extends Controller
         $data  = requestTable::where('id', $id)->first();
         $documents = RequestWiseFile::get();
 
-        return view('providerPage.TestView.viewUploads', compact('data', 'documents'));
+        return view('providerPage.pages.viewUploads', compact('data', 'documents'));
     }
     public function uploadDocument(Request $request, $id = null)
     {
@@ -358,30 +353,22 @@ class ProviderController extends Controller
                     $file = RequestWiseFile::where('id', $id)->first();
                     $path = (public_path() . '/storage/' . $file->file_name);
 
-
                     $zip->addFile($path, $file->file_name);
-                    // dd($zip);
                 }
                 $zip->close();
             }
-
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
-
-            // response()->download($path);
-            // return redirect()->back();
         }
     }
 
     public function viewOrder(Request $request, $id = null)
     {
-        return view('providerPage.TestView.sendOrder', compact('id'));
+        return view('providerPage.pages.sendOrder', compact('id'));
     }
 
 
     public function sendAgreementLink(Request $request)
     {
-
-        // dd($request->request_id);
         Mail::to($request->email)->send(new SendAgreement($request->all()));
         return redirect()->back();
     }
