@@ -15,8 +15,9 @@
     <!-- this div is for heading and back button -->
 
     <div class="header_part">
-        <button type="button" class="primary-empty">
-            < Back</button>
+        <a href="{{route('submitRequest')}}" type="button" class="primary-empty" >
+            < Back</a>
+          
     </div>
 
 

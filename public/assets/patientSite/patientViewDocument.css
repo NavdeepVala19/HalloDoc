@@ -1,13 +1,11 @@
-
-
 /******************************** Header CSS Start ************************************** */
 
 .logout-link {
     display: block;
 }
 
-@media(max-width:550px){
-    .logout-link{
+@media(max-width:550px) {
+    .logout-link {
         display: none;
     }
 }
@@ -18,7 +16,7 @@
 
 /******************************** Main Content CSS Start ************************************** */
 
-.content{
+.content {
     margin-top: 100px;
     /* border: 1px solid blue; */
 }
@@ -27,77 +25,82 @@
     /* border: 1px solid green; */
     margin-top: 20px;
 }
-.head-btn{
+
+.head-btn {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.btn:hover{
+.btn:hover {
     background-color: #3c9eff;
     color: white;
 }
 
-.user-name{
+.user-name {
     color: #3c9eff;
     font-weight: bold;
 }
 
-.confirmation-no{
+.confirmation-no {
     color: black;
     font-weight: initial;
 }
 
-.docs-download{
+.docs-download {
     margin-top: 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.table{
+.table {
     margin-top: 20px;
 }
 
-.cloud-down{
+.cloud-down {
     display: inline-block;
 }
 
-.cloud-down:hover{
+.cloud-down:hover {
     color: white;
-    background-color:#3c9eff;
+    background-color: #3c9eff;
 }
 
-@media(min-width:550px){
-    .btn-down{
+@media(min-width:550px) {
+    .btn-down {
         display: none;
     }
 }
 
-@media(max-width:550px){
-    .down-button{
+@media(max-width:550px) {
+    .down-button {
         display: none;
     }
-  .upload-text{
-    display: none;
-  }
-  .table-content{
-    margin-top: 20px;
-  }
-  .check-docs{
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-  }
-  .table{
-    display: none;
-  }
+
+    .upload-text {
+        display: none;
+    }
+
+    .table-content {
+        margin-top: 20px;
+    }
+
+    .check-docs {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+    }
+
+    .table {
+        display: none;
+    }
 }
 
-@media(min-width:550px){
-        .table-content{
-            display: none;
-        }
+@media(min-width:550px) {
+    .table-content {
+        display: none;
+    }
 }
 
 
@@ -147,8 +150,6 @@
     border-radius: 5px;
 }
 
-
-
 .file-selection-container {
     position: relative;
     width: 100%;
@@ -159,30 +160,30 @@
     align-items: right;
     justify-content: right;
     cursor: pointer;
-  }
-  
-  .file-input {
+}
+
+.file-input {
     position: absolute;
     left: 0;
     top: 0;
     opacity: 0;
     width: 0px;
-  }
-  
-  .file-button {
+}
+
+.file-button {
     padding: 8px 16px;
     background-color: #007bff;
     color: white;
-  }
-  
-  .file-button:hover {
+}
+
+.file-button:hover {
     background-color: #0056b3;
-  }
+}
 
 
 
 
-  
+
 @media (max-width: 550px) {
     .upload-txt {
         display: none;
@@ -193,6 +194,7 @@
     .heading {
         font-size: 18px;
     }
+
     .primary-empty {
         padding: 4px 6px;
     }
@@ -202,12 +204,9 @@
 
 /******************************** Footer CSS Start ************************************** */
 
-.footer{
+.footer {
     bottom: 0;
-    position: fixed;
+    /* position: fixed; */
 }
 
 /********************************  Footer CSS End ************************************** */
-
-
-

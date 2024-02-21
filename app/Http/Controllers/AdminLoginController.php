@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\sendResetPasswordMail;
 use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -15,12 +16,18 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 
-class patientLoginController extends Controller
+class AdminLoginController extends Controller
 {
-    public function loginScreen()
+
+
+    // **************
+// this code is for login input credentials
+
+    public function adminLogin()
     {
-        return view("patientSite/patientLogin");
+        return view("admin/adminLogin");
     }
+
 
     public function userLogin(Request $request)
     {
@@ -28,6 +35,7 @@ class patientLoginController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
+
 
         // Assuming $inputPassword is the password the user submitted via a form
         $inputPassword = $request->password;
@@ -37,27 +45,36 @@ class patientLoginController extends Controller
         $hashedPassword = $user->password_hash; // or $user->password, depending on your column name
 
 
-        
         // Now, you can check if the input password matches the hash
         if (Hash::check($inputPassword, $hashedPassword)) {
             // The passwords match...
             // Log the user in or perform the next steps
 
-            // return redirect()->intended('loginScreen');
+            return redirect('/adminResetPassword');
         } else {
             // The passwords don't match...
             // Handle the failed login attempt
+
+            return redirect('/adminLogin')->with('message', 'Your password is not appropriate!');
+
         }
 
-
-
     }
 
+    // ***********
 
-    public function resetpassword()
+
+
+
+
+    // *********
+    // this code is for entering email for reset password
+
+    public function adminResetPassword()
     {
-        return view("patientSite/patientResetPassword");
+        return view("admin/adminResetPassword");
     }
+
 
     public function submitForgetPasswordForm(Request $request)
     {
@@ -71,7 +88,9 @@ class patientLoginController extends Controller
         $user->token = $token;
         $user->save();
 
-        Mail::send('email.forgetPassword', ['token' => $token], function ($message) use ($request) {
+
+
+        Mail::send('email.adminforgetPassword', ['token' => $token], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Reset Password');
         });
@@ -79,21 +98,33 @@ class patientLoginController extends Controller
         return back()->with('message', 'We have e-mailed your password reset link!');
     }
 
+    // **********
 
 
-    public function showResetPasswordForm($token)
+
+    // ************
+// this code is to update/reset password
+
+    public function showUpdatePasswordForm($token)
     {
-        return view('patientSite/patientPasswordReset', ['token' => $token]);
+        return view('admin/adminPasswordUpdate', ['token' => $token]);
     }
 
 
-    public function submitResetPasswordForm(Request $request)
+    public function submitUpdatePasswordForm(Request $request)
     {
+        try {
+            // dd($request);
+            $request->validate([
+                'confirm_password' => 'required',
+                'new_password' => 'required|same:confirm_password',
+                
+            ]);
 
-        $request->validate([
-            'confirm_password' => 'required',
-            'new_password' => 'required|same:confirm_password',
-        ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+        }
 
         $updatePassword = users::where('token', $request->token)->first();
 
@@ -108,13 +139,8 @@ class patientLoginController extends Controller
 
         users::where(['email' => $request->email])->delete();
 
-        return redirect('/patient_login')->with('message', 'Your password has been changed!');
+        return redirect('/adminLogin')->with('message', 'Your password has been changed!');
     }
 
-    public function logout()
-    {
-        Auth::logout();
-        return redirect("loginScreen");
-    }
+
 }
-

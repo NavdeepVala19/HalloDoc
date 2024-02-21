@@ -1,44 +1,70 @@
 
 // this code is for create a new request in patient dashboard page
-$(document).ready(function(){
-    $('.create-btn').click( function(){
+$(document).ready(function () {
+    $('.create-btn').click(function () {
         $('.new-request').show();
     })
-    
 
 
-// *********************************************************
-    // this code is for show file name
-    $('.file-input').change(function (e) {
-        const filename = e.target.files[0].name;
-        $("#demo").text(filename);
-    });
+    // *********************************************************
+    // this code is for create new request pop-up 
 
-// *********************************************************
+    $('.btn-someone').click(function () {
+        $(this).toggleClass('btn-active');
+        $('.btn-me').removeClass('btn-active');
+    })
+    $('.btn-me').click(function () {
+        $(this).toggleClass('btn-active');
+        $('.btn-someone').removeClass('btn-active');
+    })
 
+    $('.continue-btn').click(function () {
+        if ($('.btn-me').hasClass('btn-active')) {
+            $(window).attr('location', '/createPatientRequests');
+        } else {
+            $(window).attr('location', '/createSomeoneRequests');
 
-
-// *********************************************************
-// this code is for create new request pop-up 
-
-$('.btn-someone').click(function(){
-    $(this).toggleClass('btn-active');
-    $('.btn-me').removeClass('btn-active');
+        }
+    })
 })
-$('.btn-me').click(function(){
-    $(this).toggleClass('btn-active');
-    $('.btn-someone').removeClass('btn-active');
-})
+// *********************************************************
 
-$('.continue-btn').click(function(){
-    if($('.btn-me').hasClass('btn-active')){
-        $(window).attr('location','/createPatientRequests');
-    }else{
-        $(window).attr('location','/createSomeoneRequests');
 
+// *********************************************************
+$(".master-checkbox").on("click", function () {
+    if ($(this).is(":checked", true)) {
+        $(".child-checkbox").prop("checked", true);
+    } else {
+        $(".child-checkbox").prop("checked", false);
     }
+});
+
+// *********************************************************
+
+
+// *********************************************************
+// this code is for show file name
+$('.file-input').change(function (e) {
+    const filename = e.target.files[0].name;
+    $("#demo").text(filename);
+});
+
+// *********************************************************
+
+
+
+
+
+// *********************************************************
+// this is use for showing agreement cancel pop-up
+
+$(document).ready(function () {
+     $('.cancel').click(function () {
+            $('.cancel-pop-up').show();
+        })
+
 })
-})
+
 // *********************************************************
 
 
@@ -91,9 +117,8 @@ togglePasswordTwo.addEventListener('click', () => {
 function openFileSelection() {
     document.getElementById('fileInput').click();
 
-  }
+}
 
 //   ***************************************************************************************
 
 
-// This code is for showing the uploaded filename 

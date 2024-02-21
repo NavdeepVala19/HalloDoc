@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\view;
 use App\Models\request_Client;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\RequestNotes;
-
+use App\Models\Status;
+use App\Models\users;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 
 class patientDashboardController extends Controller
 {
@@ -27,6 +32,9 @@ class patientDashboardController extends Controller
         return view("patientSite/patientSomeoneRequest");
     }
 
+    public function viewAgreement(){
+        return view("patientSite/patientAgreement");
+    }
 
     public function createNewPatient(Request $request)
     {
@@ -76,7 +84,7 @@ class patientDashboardController extends Controller
         $request_file = new RequestWiseFile();
 
         $request_file->request_id = $newPatient->id;
-        $fileName = isset($request->docs)?$request->file('docs')->store('public'):'';
+        $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';
         $request_file->file_name = $fileName;
         $request_file->save();
 
@@ -96,6 +104,62 @@ class patientDashboardController extends Controller
         $request_notes->save();
 
         return view("patientSite/patientDashboard");
+    }
+
+
+
+    public function read()
+    {
+
+        $timestamp = RequestTable::select('created_at')->get();
+        // return view('patientSite/patientDashboard')->with('date', $timestamp);
+
+
+        // $newDate = $timestamp->implode('', $timestamp);
+
+        // $carbonDate = Carbon::parse($newDate);
+
+        // $dateOnly = $carbonDate->toDateString();
+
+
+        // $date = RequestTable::select('created_at')->get();
+
+        // dd($date);
+
+        // $items = array();
+        // foreach ($timestamp as $key) {
+        //     $items[] = $key;
+        // }
+        // print_r($items);
+
+
+        // $jsonString = '{"created_at":"2024-02-16T05:23:20.000000Z"}';
+
+        // Decode the JSON string to an object
+        // $jsonObject = json_decode($jsonString);
+
+        // Extract the 'created_at' value
+        // $createdAtString = $jsonObject->created_at;
+
+        // Now, parse the 'created_at' string with Carbon
+        // $createdAt = Carbon::parse($createdAtString);
+
+        // If you need it in a specific format or just the date part
+        // Outputs: 2024-02-16
+
+        // $dateString = $createdAt->toDateString();
+
+
+        $data = DB::table('request')
+            ->join('status', 'request.status', '=', 'status.id')
+            ->select('request.created_at', 'status.status_type')
+            ->get();
+
+        // dd($data);
+
+        return view('patientSite/patientDashboard',compact('data'));
+
+
     }
 
 }
