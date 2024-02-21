@@ -32,6 +32,9 @@ class patientDashboardController extends Controller
         return view("patientSite/patientSomeoneRequest");
     }
 
+    public function viewAgreement(){
+        return view("patientSite/patientAgreement");
+    }
 
     public function createNewPatient(Request $request)
     {

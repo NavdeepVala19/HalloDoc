@@ -4,8 +4,7 @@
         <a href="" class="primary-empty menu-icon">
             <i class="bi bi-list"></i>
         </a>
-        <a href=""><img class="logo img-fluid"  src="{{ URL::asset('/assets/logo.png') }}"
-                alt=""></a>
+        <a href=""><img class="logo img-fluid"  src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
     </div>
     <div class="d-flex align-items-center  gap-3">
         <span class="welcome-msg align-self-center">welcome

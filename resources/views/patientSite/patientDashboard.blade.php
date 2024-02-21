@@ -9,7 +9,7 @@
 @section('nav-links')
 
 <a href="" class="active-link">Dashboard</a>
-<a href="">Profile</a>
+<a href="{{route("patientProfile")}}">Profile</a>
 
 @endsection
 

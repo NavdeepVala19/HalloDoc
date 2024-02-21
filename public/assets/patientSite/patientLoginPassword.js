@@ -5,31 +5,6 @@ $(document).ready(function () {
         $('.new-request').show();
     })
 
-// *********************************************************
-    $(".master-checkbox").on("click", function () {
-        if ($(this).is(":checked", true)) {
-            $(".child-checkbox").prop("checked", true);
-        } else {
-            $(".child-checkbox").prop("checked", false);
-        }
-    });
-    
-// *********************************************************
-
-
-    // *********************************************************
-    // this code is for show file name
-    $('.file-input').change(function (e) {
-        const filename = e.target.files[0].name;
-        $("#demo").text(filename);
-    });
-    $('#demo').setTimeout(() => {
-            $('#demo').css("display", "none");
-        }, 3000);
-
-    // *********************************************************
-
-
 
     // *********************************************************
     // this code is for create new request pop-up 
@@ -52,6 +27,44 @@ $(document).ready(function () {
         }
     })
 })
+// *********************************************************
+
+
+// *********************************************************
+$(".master-checkbox").on("click", function () {
+    if ($(this).is(":checked", true)) {
+        $(".child-checkbox").prop("checked", true);
+    } else {
+        $(".child-checkbox").prop("checked", false);
+    }
+});
+
+// *********************************************************
+
+
+// *********************************************************
+// this code is for show file name
+$('.file-input').change(function (e) {
+    const filename = e.target.files[0].name;
+    $("#demo").text(filename);
+});
+
+// *********************************************************
+
+
+
+
+
+// *********************************************************
+// this is use for showing agreement cancel pop-up
+
+$(document).ready(function () {
+     $('.cancel').click(function () {
+            $('.cancel-pop-up').show();
+        })
+
+})
+
 // *********************************************************
 
 
