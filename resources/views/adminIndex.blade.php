@@ -32,7 +32,6 @@
 
             @yield('adminContent')
 
-
             <div class="admin-footer">
                 <div class="foot">
                     <span>Terms of Conditions</span> | <span>Privacy Policy</span>
@@ -45,6 +44,9 @@
     </div>
 
     </div>
+
+    {{-- Include script links from links.script blade file --}}
+    @include('links.script')
 
     </body>
 

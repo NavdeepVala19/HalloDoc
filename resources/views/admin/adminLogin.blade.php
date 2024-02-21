@@ -29,7 +29,7 @@
 
         <div class="form">
 
-            <form action="{{route('patient_logged_in')}}" method="post">
+            <form action="{{route('adminLoggedIn')}}" method="post">
                 @csrf
         </div>
         <div class="mb-4 email">
@@ -48,7 +48,7 @@
         <div class="buttons">
             <button type="submit" class="btn btn-primary">Log In</button>
 
-            <div class="forgot-pass"> <a href="">Forgot Password?</a> </div>
+            <div class="forgot-pass"> <a href="{{route('adminresetpassword')}}">Forgot Password?</a> </div>
         </div>
         </form>
     </div>

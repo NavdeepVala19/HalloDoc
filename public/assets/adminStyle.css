@@ -39,18 +39,12 @@
 
 .admin-footer {
     position: absolute;
-    /* width: 100%; */
+    width: 100%;
     /* border: 1px solid blue; */
     bottom: 50px;
+    text-align: center;
 }
 
-.foot {
-    /* border: 1px solid red; */
-    width: 84%;
-    display: flex;
-    justify-content: end;
-    flex-direction: row;
-}
 
 
 @media(max-width:991px) {
@@ -132,12 +126,6 @@
     margin-top: 15px;
 }
 
-.admin-footer {
-    border: 1px solid black;
-    width: 96%;
-    display: flex;
-    justify-content: center;
-}
 
 
 

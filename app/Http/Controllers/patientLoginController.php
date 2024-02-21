@@ -29,8 +29,6 @@ class patientLoginController extends Controller
             'password' => 'required',
         ]);
 
-
-
         // Assuming $inputPassword is the password the user submitted via a form
         $inputPassword = $request->password;
         // And assuming you've retrieved the user's hashed password from the database
@@ -39,8 +37,7 @@ class patientLoginController extends Controller
         $hashedPassword = $user->password_hash; // or $user->password, depending on your column name
 
 
-
-
+        
         // Now, you can check if the input password matches the hash
         if (Hash::check($inputPassword, $hashedPassword)) {
             // The passwords match...
@@ -94,9 +91,8 @@ class patientLoginController extends Controller
     {
 
         $request->validate([
-            'email' => 'required|email|exists:users',
-            'password' => 'required|string|min:6|confirmed',
-            'password_confirmation' => 'required'
+            'confirm_password' => 'required',
+            'new_password' => 'required|same:confirm_password',
         ]);
 
         $updatePassword = users::where('token', $request->token)->first();

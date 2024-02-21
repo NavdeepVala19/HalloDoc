@@ -157,7 +157,19 @@ route::get('/patientAgreement', [patientDashboardController::class, 'viewAgreeme
 
 // **********************************************************ADMIN***************************************************************
 
-route::get('/adminLogin', [AdminLoginController::class, 'adminLogin']);
+// admin LogIn
+route::get('/adminLogin', [AdminLoginController::class, 'adminLogin'])->name('adminLogin');
+route::post('/adminLoggedIn', [AdminLoginController::class, 'userLogin'])->name('adminLoggedIn');
+
+
+// admin ResetPassword
+route::get('/adminResetPassword', [AdminLoginController::class, 'adminResetPassword'])->name('adminresetpassword');
+route::post('/resetPasswordlink', [AdminLoginController::class, 'submitForgetPasswordForm'])->name('adminForgotPassword');
+
+
+// admin Update Password
+Route::get('updatePassword/{token}', [AdminLoginController::class, 'showUpdatePasswordForm'])->name('updatePassword');
+Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswordForm'])->name('updatePasswordPost');
 
 
 // ****************************************************************************************************************************
