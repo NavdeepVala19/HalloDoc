@@ -12,6 +12,52 @@
 @endsection
 
 @section('content')
+    {{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement by patients. --}}
+    {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the "Pending" state to the "Active" state. --}}
+
+    <div class="overlay"></div>
+
+    {{-- Send Agreement Pop-up --}}
+    {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
+pending state, providers need to send an agreement link to patients. --}}
+    <div class="pop-up send-agreement">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Send Agreement</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="p-3">
+            <div>
+                <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
+                    concierge)</span>
+                <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
+                    for
+                    the
+                    responsible party.
+                </p>
+            </div>
+            <form action="{{ route('send-agreement') }}" method="POST">
+                @csrf
+                <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
+                <div>
+                    <div class="form-floating ">
+                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
+                            placeholder="Phone Number">
+                        <label for="floatingInput">Phone Number</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="email" name="email" class="form-control" id="floatingInput"
+                            placeholder="name@example.com">
+                        <label for="floatingInput">Email</label>
+                    </div>
+                </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <input type="submit" value="Send" class="primary-fill send-case">
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+        </form>
+    </div>
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -191,7 +237,23 @@
                                     <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
                                     <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                                 </td>
-                                <td><button class="table-btn transfer-request-btn">Actions</button></td>
+                                <td>
+                                    <div class="action-container">
+                                        <button class="table-btn action-btn">Actions</button>
+                                        <div class="action-menu">
+                                            <a href="/view-case/{{ $case->id }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                            <button class="send-agreement-btn" data-id="{{ $case->id }}" data-request_type_id={{ $case->request_type_id }}><i
+                                                    class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
+                                            <button class="transfer-btn"><i
+                                                    class="bi bi-check-square me-2 ms-3"></i>Transfer</button>
+                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
+                                            <a href="{{ route('view-upload', ['id' => $case->id]) }}"><i
+                                                    class="bi bi-journal-check me-2 ms-3"></i>View Uploads</a>
+                                            <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -235,7 +297,7 @@
                         </div>
                     </div>
                     <div class="more-info ">
-                        <button class="view-btn">View Case</button>
+                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -243,16 +305,19 @@
                             </span>
                             <br>
                             <span>
+                                <i class="bi bi-geo-alt"></i> Address :
+                                {{-- {{$case->requestClient->email}} --}}
+                            </span>
+                            <br>
+                            <span>
                                 <i class="bi bi-telephone"></i> Patient : +91 123456789
                                 {{-- {{$case->requestClient->phone_number}} --}}
                             </span>
-                            <div class="grid-2 ">
-                                <button class="secondary-btn">View Notes</button>
-                                <button class="secondary-btn-1">Doctors Notes</button>
+                            <div class="grid-2-listing ">
+                                <button class="agreement-btn">Send Agreement</button>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                    Notes</a>
                                 <button class="secondary-btn">View Uploads</button>
-                                <button class="secondary-btn">Encouter</button>
-                                <button class="secondary-btn-2">orders</button>
-                                <button class="secondary-btn-3">House Call</button>
                                 <button class="secondary-btn">Email</button>
                             </div>
                         </div>

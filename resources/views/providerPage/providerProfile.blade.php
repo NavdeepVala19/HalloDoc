@@ -47,7 +47,7 @@
                     <div class="form-floating ">
                         <input type="text" name="user_name" class="form-control" id="floatingInput"
                             placeholder="User Name">
-                        <label for="floatingInput">First Name</label>
+                        <label for="floatingInput">User Name</label>
                         @error('first_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
@@ -174,20 +174,21 @@
                         {{-- Select Photo --}}
                         <div class="custom-file-input">
                             <input type="text" placeholder="Select Photo" readonly>
-                            <label for="file "><i class="bi bi-cloud-arrow-up me-2 "></i> <span
+                            <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span
                                     class="upload-txt">Upload</span> </label>
-                            <input type="file" id="file" hidden>
+                            <input type="file" id="file-input" hidden>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-1 ">
                         {{-- Select Signature --}}
                         <div class="custom-file-input">
                             <input type="text" placeholder="Select Signature" readonly>
-                            <label for="signature"><i class="bi bi-cloud-arrow-up me-2"></i><span
+                            <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span
                                     class="upload-txt">Upload</span></label>
-                            <input type="file" id="signature" hidden>
+                            <input type="file" id="signature-input" hidden>
                         </div>
                         <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
+                        {{-- <canvas id="signatureCanvas" width="300" height="150"></canvas> --}}
                     </div>
                 </div>
             </form>

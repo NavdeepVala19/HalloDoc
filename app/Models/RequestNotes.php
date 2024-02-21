@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RequestNotes extends Model
 {
-    protected $table  = "request_notes";
+    use HasFactory;
+
+    protected $table = 'request_notes';
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->date('service_date')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->integer('mobile')->nullable();
+            $table->string('mobile')->nullable();
             $table->string('present_illness_history')->nullable();
             $table->string('medical_history')->nullable();
             $table->string('medications')->nullable();

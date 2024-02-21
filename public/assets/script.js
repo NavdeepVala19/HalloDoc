@@ -6,11 +6,10 @@ $(document).ready(function () {
         $(this).addClass("active-link");
     });
 
-    // $(".toggle-mode").click(function (e) {
-    //     e.preventDefault();
-    //     console.log("button Clicked");
-    //     document.documentElement.classList.toggle("dark");
-    // });
+    $("#toggle-mode").click(function() {
+        console.log('btn clicked');
+        $("html").toggleClass("dark");
+    });
 
     $(".menu-icon").click(function (e) {
         e.preventDefault();

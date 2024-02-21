@@ -43,7 +43,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zipcode')->nullable();
-            
+
             $table->string('CommunicationType')->nullable();
             $table->string('RemindReservationCount')->nullable();
             $table->string('RemindHouseCallCount')->nullable();
@@ -51,7 +51,7 @@ return new class extends Migration
             $table->string('IsReservationReminderSent')->nullable();
             $table->string('Latitude')->nullable();
             $table->string('Longitude')->nullable();
-            
+
             $table->timestamps();
         });
     }

@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class requestClient extends Model
+class HealthProfessionalType extends Model
 {
     use HasFactory;
-
-    protected $table = 'request_client';
+    protected $table = 'health_professional_type';
 }

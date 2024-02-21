@@ -55,12 +55,6 @@
     margin: 15px;
 }
 
-.src-category > button {
-    border: none;
-    background-color: #fff;
-    padding: 5px 15px;
-}
-
 .btn-all {
     border: 1px solid grey !important;
     border-radius: 5px;
@@ -152,6 +146,63 @@ tr > td {
 .page > nav {
     margin: 10px 20px !important;
 }
+/* ********************** ACTION MENU *********************** */
+.action-container {
+    position: relative;
+}
+.action-menu {
+    display: flex;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    padding: 10px 0;
+    z-index: 500;
+}
+.action-menu > button {
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.action-menu > a {
+    display: block;
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    color: black;
+    padding: 5px 0;
+    text-align: left;
+}
+.action-menu > button:hover,
+.action-menu > a:hover {
+    background-color: rgba(128, 128, 128);
+}
+
+/* Active Listing Encounter Pop-Up */
+
+/* When house call is selected these dropdown select menu will be shown */
+.time-dropdown {
+    display: none;
+}
+.housecall-btn:hover,
+.consult-btn:hover {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.btn-active {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+/* Pending Listing send agreement */
+.send-agreement {
+    display: none;
+}
+
 /* ********************** MEDIA QUERIES *********************** */
 @media (max-width: 1160px) {
     .search-section {
@@ -188,13 +239,14 @@ tr > td {
 
     .src-category {
         display: flex;
-        gap: 0 !important;
+        gap: 8px !important;
         justify-content: start !important;
     }
 
-    .src-category > button {
+    .src-category > a {
         flex-direction: column;
         align-items: center;
+        font-size: 12px;
     }
 
     .txt {
@@ -207,9 +259,6 @@ tr > td {
     .listing {
         padding: 10px;
     }
-}
-
-@media (max-width: 550px) {
     .case {
         align-items: center !important;
         justify-content: center !important;
@@ -278,11 +327,33 @@ tr > td {
         padding: 15px;
         position: relative;
     }
-    .grid-2 {
+    .grid-2-listing {
         margin: 15px 0;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
+    }
+
+    .conclude-care-btn {
+        border: none;
+        background-color: red;
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .accept-btn {
+        border: none;
+        background-color: rgb(158, 57, 188);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .agreement-btn {
+        border: none;
+        background-color: rgb(238, 218, 38);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
     }
     .more-info-btn {
         background: none;

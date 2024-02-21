@@ -30,14 +30,14 @@ class allusers extends Model
     ];
 
 
-    public function users(){
+    public function users()
+    {
         return $this->belongsTo(users::class);
     }
 
-    public function request(){
+    public function request()
+    {
         // return $this->hasMany(request::class);
-        return $this->hasMany('App\Model\request','user_id','user_id');
+        return $this->hasMany('App\Model\request', 'user_id', 'user_id');
     }
-
-
 }
