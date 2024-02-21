@@ -49,3 +49,4 @@ class RequestTable extends Model
         return $this->belongsTo(request_Client::class);
     }
 }
+
