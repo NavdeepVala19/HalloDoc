@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
     <a href="">My Profile</a>
@@ -17,7 +17,7 @@
             <h1 class="heading">
                 Send Order
             </h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         <form action="" method="POST">

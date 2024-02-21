@@ -9,7 +9,7 @@
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
-    <a href="{{ route('provider-profile') }}">My Profile</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
@@ -96,7 +96,7 @@
     <div class="bg-blur">
         <nav>
             <div class="nav nav-tabs " id="nav-tab">
-                <a href="{{ route('provider-status', ['status' => 'new']) }}" class="nav-link " id="nav-new-tab">
+                <a href="{{ route('provider.status', ['status' => 'new']) }}" class="nav-link " id="nav-new-tab">
                     <div
                         class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                         <span>
@@ -108,7 +108,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('provider-status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
+                <a href="{{ route('provider.status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
                     <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
                             <i class="bi bi-person-square"></i> PENDING
@@ -119,7 +119,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('provider-status', ['status' => 'active']) }}" class="nav-link active"
+                <a href="{{ route('provider.status', ['status' => 'active']) }}" class="nav-link active"
                     id="nav-active-tab">
                     <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
@@ -131,7 +131,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('provider-status', ['status' => 'conclude']) }}" class="nav-link"
+                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link"
                     id="nav-conclude-tab">
                     <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
@@ -156,7 +156,7 @@
                             Send Link
                         </span>
                     </button>
-                    <a class="primary-fill" href="{{ route('provider-create-request') }}">
+                    <a class="primary-fill" href="{{ route('provider.create.request') }}">
                         <i class="bi bi-pencil-square"></i>
                         <span class="txt">
                             Create Requests
@@ -179,15 +179,15 @@
                         </div>
                     </form>
                     <div class="src-category d-flex gap-3 align-items-center">
-                        <a href="{{ route('provider-listing', ['category' => 'all', 'status' => 'active']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'active']) }}"
                             class="btn-all filter-btn">All</a>
-                        <a href="{{ route('provider-listing', ['category' => 'patient', 'status' => 'active']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'active']) }}"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                        <a href="{{ route('provider-listing', ['category' => 'family', 'status' => 'active']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'active']) }}"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                        <a href="{{ route('provider-listing', ['category' => 'business', 'status' => 'active']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'active']) }}"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                        <a href="{{ route('provider-listing', ['category' => 'concierge', 'status' => 'active']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'active']) }}"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                     </div>
                 </div>
@@ -219,14 +219,14 @@
                                             <button class="table-btn action-btn"
                                                 data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
-                                                <a href="/view-case/{{ $case->id }}"><i
+                                                <a href="{{ route('provider.view.case', $case->id) }}"><i
                                                         class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                                <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
+                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</a>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>Doctors Note</button>
-                                                <button><i class="bi bi-check-square me-2 ms-3"></i>View Uploads</button>
+                                                <a href="{{ route('provider.view.upload', $case->id) }}"><i class="bi bi-check-square me-2 ms-3"></i>View Uploads</a>
                                                 <button class="encounter-btn"><i
                                                         class="bi bi-check-square me-2 ms-3"></i>Encounter</button>
-                                                <a href="{{ route('view-order', ['id' => $case->id]) }}"><i
+                                                <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                         class="bi bi-check-square me-2 ms-3"></i>Orders</a>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>House Call</button>
                                                 <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
@@ -276,7 +276,7 @@
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -288,7 +288,7 @@
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                    <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>

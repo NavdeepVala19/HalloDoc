@@ -1,7 +1,7 @@
 @extends('index')
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
     <a href="" class="active-link">My Profile</a>
@@ -14,7 +14,7 @@
                 New Request
                 {{-- Show the name as per request_type_id and with proper color --}}
             </h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 

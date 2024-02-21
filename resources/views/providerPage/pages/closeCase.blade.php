@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
     <a href="">My Profile</a>
@@ -17,10 +17,8 @@
             <h1 class="heading">
                 Close Case
             </h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
-
-
 
         <form action="" method="POST">
             <div class="section">
@@ -104,9 +102,7 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                 </div>
-
                 <div class="text-end">
                     <input type="submit" value="Edit" class="primary-fill">
                     <button class="primary-empty">Close Case</button>

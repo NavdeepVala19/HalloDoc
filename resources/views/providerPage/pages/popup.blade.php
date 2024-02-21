@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
     <a href="">My Profile</a>
