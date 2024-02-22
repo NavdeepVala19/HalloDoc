@@ -110,10 +110,10 @@ route::get('/patientDashboard', [patientDashboardController::class, 'read'])->na
 
 //  ***************************************************************************************************************************************
 // to edit profile of patient
-Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
+// Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
 
-// route::get('/patientProfile{email}', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
-// route::post('/patientProfileUpdate', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdit');
+route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
+route::post('/patientProfileUpdate', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
 
 //  ***************************************************************************************************************************************
 

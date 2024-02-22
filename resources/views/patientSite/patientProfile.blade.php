@@ -30,7 +30,7 @@
 
                 <div class="form-floating ">
                     <input type="text" name="first_name" class="form-control" id="floatingInput"
-                        placeholder="First Name">
+                        placeholder="First Name" value="{{getEmailData->first_name}}">
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-floating ">
                     <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                    <label for="floatingInput">Last Name</label>
+                    <label for="floatingInput" >Last Name</label>
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror

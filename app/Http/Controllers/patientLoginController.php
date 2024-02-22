@@ -27,9 +27,9 @@ class patientLoginController extends Controller
     public function userLogin(Request $request)
     {
 
-        $encryptedEmail = Crypt::encryptString($request->email);
+        // $encryptedEmail = Crypt::encryptString($request->email);
 
-        Session::put('email', $encryptedEmail);
+        // Session::put('email', $encryptedEmail);
 
 
         $request->validate([
@@ -37,17 +37,22 @@ class patientLoginController extends Controller
             'password' => 'required',
         ]);
 
-
+        
         $credentials = [
             'email' => $request->email,
-            'password_hash' => $request->password,
+            'password' => $request->password,
         ];
 
-
+    
+            
         if (Auth::attempt($credentials)) {
-            dd('here');
-            return redirect()->route('dashboard');
+
+            $userData = Auth::user();
+            dd($userData); 
+
+        //    return redirect()->route('patientDashboardData');
         }
+
 
     }
 
@@ -105,8 +110,11 @@ class patientLoginController extends Controller
         ])->update(['password_hash' => Hash::make($request->new_password)]);
 
 
-        users::where(['email' => $request->email])->delete();
+        // users::where(['email' => $request->email])->delete();
 
+        users::where(['email' => $request->email])->update(['token' => null]);
+
+            
         return redirect('/patient_login')->with('message', 'Your password has been changed!');
     }
 

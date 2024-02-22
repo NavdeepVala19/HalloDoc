@@ -16,9 +16,16 @@ class patientProfileController extends Controller
         return view("patientSite/patientProfile");
     }
 
-    public function patientEdit($email)
+    public function patientEdit()
     {
-       
+        $userData = Auth::user();
+        if($userData){
+            $userData->email;
+            $userData->password;
+           $getEmailData = request_Client::where('email','=',$userData->email)->get();
+
+           return view("patientSite/patientProfile",compact('getEmailData'));
+        }
     }
 
     public function patientUpdate(Request $request)
