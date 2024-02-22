@@ -13,9 +13,6 @@ return new class extends Migration
      * 1.admin
      * 2.physician
      * 3.patient
-     * 
-     * 
-     * aspnetuserroles - which type of role given to admin/provider
      */
     public function up(): void
     {

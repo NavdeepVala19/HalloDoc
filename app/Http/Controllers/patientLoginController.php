@@ -43,10 +43,18 @@ class patientLoginController extends Controller
             // The passwords match...
             // Log the user in or perform the next steps
 
-            // return redirect()->intended('loginScreen');
+            $timestamp = RequestTable::select('created_at')->get();
+            $data = DB::table('request')
+                ->join('status', 'request.status', '=', 'status.id')
+                ->select('request.created_at', 'status.status_type')
+                ->get();
+
+            return view('patientSite/patientDashboard', compact('data'));
         } else {
             // The passwords don't match...
             // Handle the failed login attempt
+
+            return redirect()->back()->withErrors(['email'=> 'enter appropriate login credentials']);
         }
 
 
