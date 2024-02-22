@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
+use App\Models\request_Client;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 
 class patientProfileController extends Controller
 {
@@ -11,14 +16,14 @@ class patientProfileController extends Controller
         return view("patientSite/patientProfile");
     }
 
-    public function patientEdit()
+    public function patientEdit($email)
     {
-
+       
     }
 
     public function patientUpdate(Request $request)
     {
-        
+
     }
 
 

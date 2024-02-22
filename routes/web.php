@@ -76,9 +76,11 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 //  ***************************************************************************************************************************************
 // patient login page
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
-route::post('/patientDashboard', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
+route::post('/patientloggedIn', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
 
-route::post('/patient_login', [patientLoginController::class, 'logout'])->name('logout');
+// route::get('/pat')
+
+route::post('/patient_logout', [patientLoginController::class, 'logout'])->name('logout');
 //  ***************************************************************************************************************************************
 
 
@@ -103,17 +105,26 @@ Route::post('reset-password', [patientLoginController::class, 'submitResetPasswo
 route::get('/patientDashboard', [patientDashboardController::class, 'read'])->name('patientDashboardData');
 //  ***************************************************************************************************************************************
 
+
+
+
 //  ***************************************************************************************************************************************
 // to edit profile of patient
 Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
 
+// route::get('/patientProfile{email}', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
+// route::post('/patientProfileUpdate', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdit');
+
 //  ***************************************************************************************************************************************
+
+
+
 
 
 //  ***************************************************************************************************************************************
 // to create account of patient
 route::get('/patient_register', [patientAccountController::class, 'patientRegister'])->name('patientRegister');
-route::post('/patientRegistered', [patientAccountController::class, 'createAccount'])->name('patientRegistered');
+route::post('/patientDashboard', [patientAccountController::class, 'createAccount'])->name('patientRegistered');
 //  ***************************************************************************************************************************************
 
 
@@ -212,7 +223,7 @@ Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote']
 // VIEW UPLOADS PAGE
 // View Uploads (currently showing all the documents in requestWiseFile table)
 Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('provider.view.upload');
-Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument'])->name('provider.view.upload');
+Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument']);
 
 // download document uploaded in view Uploads
 Route::get('/download/{id?}', [ProviderController::class, 'download'])->name('download');

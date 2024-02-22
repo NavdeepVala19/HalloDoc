@@ -9,7 +9,8 @@
 @section('nav-links')
 
 <a href="" class="active-link">Dashboard</a>
-<a href="{{route("patientProfile")}}">Profile</a>
+<a href="{{route('patientProfile')}}" class="">Profile</a>
+
 
 @endsection
 
@@ -35,26 +36,28 @@
                     <tr>
                         <td style="width: 25%;">Created At</td>
                         <td style="width: 50%;">Current Status</td>
-                        <td style="width: 25%;" >Document</td>
+                        <td style="width: 25%;">Document</td>
                     </tr>
                 </thead>
 
 
                 <tbody>
+                    @foreach($data as $patientData)
                     <tr>
-                        @foreach($data as $patientData)
                         <td> {{$patientData->created_at}}</td>
                         <td> {{$patientData->status_type}}</td>
-                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Documents</a>
+                        <td><a href="{{route('patientViewDocsFile')}}" type="button"
+                                class="primary-empty btn ">Documents</a>
                         </td>
+                        @endforeach
                     </tr>
-                    @endforeach
-
                 </tbody>
-
             </table>
- 
-            
+
+            {{$data->links('pagination::bootstrap-5')}}
+
+
+
             <div class="accordions">
 
                 @foreach($data as $patientData)
@@ -70,7 +73,6 @@
                     </div>
                 </div>
                 @endforeach
-
             </div>
         </div>
 

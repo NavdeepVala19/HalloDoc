@@ -15,8 +15,6 @@ class familyRequestController extends Controller
 {
 
   
-
-
     public function create(Request $request){
 
         // $request->validate([
@@ -36,11 +34,21 @@ class familyRequestController extends Controller
         //     'family_relation'=>'required',
         // ]);
 
+
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
+
     
         // family request creating
 
         $familyRequest = new RequestTable();
         $familyRequest->status = 1;
+        $familyRequest->user_id = $requestEmail->id;
         $familyRequest->request_type_id= $request->request_type;
         $familyRequest->first_name = $request->family_first_name;
         $familyRequest->last_name = $request->family_last_name;
@@ -64,15 +72,18 @@ class familyRequestController extends Controller
         
 
         $patientRequest->save();
-    
+
 
         // store documents in request_wise_file table
 
-        $request_file = new RequestWiseFile();
-        $request_file->request_id = $familyRequest->id;
-        $request_file->file_name = $request->file('docs')->getClientOriginalName();
-        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();
+        if (isset($request->docs)) {
+            $request_file = new RequestWiseFile();
+            $request_file->request_id = $familyRequest->id;
+            $request_file->file_name = $request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->save();
+
+        }
 
 
         // store symptoms in request_notes table
@@ -82,13 +93,6 @@ class familyRequestController extends Controller
         $request_notes->patient_notes = $request->symptoms;
         
         $request_notes->save();
-
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
-
-        $requestEmail->save();
 
 
         // store all details of patient in allUsers table

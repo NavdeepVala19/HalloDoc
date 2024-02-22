@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\users;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 
 class patientLoginController extends Controller
 {
+
     public function loginScreen()
     {
         return view("patientSite/patientLogin");
@@ -24,37 +26,27 @@ class patientLoginController extends Controller
 
     public function userLogin(Request $request)
     {
+
+        $encryptedEmail = Crypt::encryptString($request->email);
+
+        Session::put('email', $encryptedEmail);
+
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Assuming $inputPassword is the password the user submitted via a form
-        $inputPassword = $request->password;
-        // And assuming you've retrieved the user's hashed password from the database
 
-        $user = users::where('email', $request->email)->first();
-        $hashedPassword = $user->password_hash; // or $user->password, depending on your column name
+        $credentials = [
+            'email' => $request->email,
+            'password_hash' => $request->password,
+        ];
 
 
-        
-        // Now, you can check if the input password matches the hash
-        if (Hash::check($inputPassword, $hashedPassword)) {
-            // The passwords match...
-            // Log the user in or perform the next steps
-
-            $timestamp = RequestTable::select('created_at')->get();
-            $data = DB::table('request')
-                ->join('status', 'request.status', '=', 'status.id')
-                ->select('request.created_at', 'status.status_type')
-                ->get();
-
-            return view('patientSite/patientDashboard', compact('data'));
-
-        } else {
-            // The passwords don't match...
-            // Handle the failed login attempt
-            return redirect()->back()->withErrors(['email'=> 'enter appropriate login credentials']);
+        if (Auth::attempt($credentials)) {
+            dd('here');
+            return redirect()->route('dashboard');
         }
 
     }
@@ -65,7 +57,7 @@ class patientLoginController extends Controller
         return view("patientSite/patientResetPassword");
     }
 
-    
+
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([

@@ -16,27 +16,28 @@ class users extends Model
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'users';
-    
+
     protected $fillable = [
         'username',
         'password_hash',
         'email',
-        'phone_number'        
+        'phone_number'
     ];
 
-    public function allusers(){
+    public function allusers()
+    {
         return $this->hasMany(allusers::class);
     }
 
 
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
     ];
 
@@ -47,6 +48,6 @@ class users extends Model
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password_hash' => 'hashed',
     ];
 }

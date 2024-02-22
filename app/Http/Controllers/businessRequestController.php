@@ -34,6 +34,15 @@ class businessRequestController extends Controller
 
         ]);
 
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
+
+
         // business data store in business field
 
         $business = new Business(); 
@@ -46,6 +55,7 @@ class businessRequestController extends Controller
         
           $requestBusiness = new RequestTable();
           $requestBusiness->status = 1;
+          $requestBusiness->user_id = $requestEmail->id;
           $requestBusiness->request_type_id= $request->request_type;
           $requestBusiness->first_name = $request->business_first_name;
           $requestBusiness->last_name = $request->business_last_name;
@@ -81,12 +91,7 @@ class businessRequestController extends Controller
         $request_notes->save();
 
 
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
-
-        $requestEmail->save();
+    
 
 
         // store all details of patient in allUsers table

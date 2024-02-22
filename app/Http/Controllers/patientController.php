@@ -29,6 +29,8 @@ class patientController extends Controller
     {
 
 
+
+
         // $request->validate([
         //     'first_name'=>['required','min:2','max:30'],
         //     'last_name'=>['string','min:2','max:30'],
@@ -65,10 +67,18 @@ class patientController extends Controller
         // dd($monthName);
 
 
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
 
 
         $requestData = new RequestTable();
         $requestData->status = 1;
+        $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
         $requestData->last_name = $request->last_name;
@@ -98,11 +108,16 @@ class patientController extends Controller
 
         // store documents in request_wise_file table
 
-        // $request_file = new RequestWiseFile();
-        // $request_file->request_id = $requestData->id;
-        // $request_file->file_name = $request->file('docs')->getClientOriginalName();
-        // $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        // $request_file->save();
+        if (isset($request->docs)){
+         $request_file = new RequestWiseFile();
+        $request_file->request_id = $requestData->id;
+        $request_file->file_name = $request->file('docs')->getClientOriginalName();
+        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+        $request_file->save();
+
+        }
+
+
 
 
 
@@ -116,12 +131,6 @@ class patientController extends Controller
         $request_notes->save();
 
 
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
-
-        $requestEmail->save();
 
 
         // store all details of patient in allUsers table

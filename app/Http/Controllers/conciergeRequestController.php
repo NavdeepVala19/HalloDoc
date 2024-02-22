@@ -16,11 +16,12 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class conciergeRequestController extends Controller
 {
-  
 
-    public function create(Request $request){
 
-        
+    public function create(Request $request)
+    {
+
+
         // $request->validate([
         //     'first_name'=>'required|min:2|max:30',
         //     'last_name'=>'string|min:2|max:30',
@@ -42,6 +43,17 @@ class conciergeRequestController extends Controller
         //     'concierge_zip_code' =>'numeric',
         // ]);
 
+
+
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
+
+
         // concierge request into request table
 
         $concierge = new Concierge();
@@ -51,14 +63,15 @@ class conciergeRequestController extends Controller
         $concierge->city = $request->concierge_city;
         $concierge->state = $request->concierge_state;
         $concierge->zipcode = $request->concierge_zip_code;
-        
+
         $concierge->save();
-        
+
         // concierge request into request table
 
         $requestConcierge = new RequestTable();
-        $requestConcierge->status = 1;   
-        $requestConcierge->request_type_id= $request->request_type;
+        $requestConcierge->status = 1;
+        $requestConcierge->user_id = $requestEmail->id;
+        $requestConcierge->request_type_id = $request->request_type;
         $requestConcierge->first_name = $request->concierge_first_name;
         $requestConcierge->last_name = $request->concierge_last_name;
         $requestConcierge->email = $request->concierge_email;
@@ -67,12 +80,12 @@ class conciergeRequestController extends Controller
 
         $requestConcierge->save();
 
-        
+
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestConcierge->id;
         $patientRequest->first_name = $request->first_name;
         $patientRequest->last_name = $request->last_name;
-        $patientRequest->date_of_birth= $request->date_of_birth;
+        $patientRequest->date_of_birth = $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;
         $patientRequest->street = $request->street;
@@ -86,19 +99,12 @@ class conciergeRequestController extends Controller
         // store symptoms in request_notes table
 
         $request_notes = new RequestNotes();
-        $request_notes->request_id = $request_notes->id;
+        $request_notes->request_id = $requestConcierge->id;
         $request_notes->patient_notes = $request->symptoms;
 
         $request_notes->save();
 
 
-
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
-
-        $requestEmail->save();
 
 
         // store all details of patient in allUsers table

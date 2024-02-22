@@ -32,7 +32,8 @@ class patientDashboardController extends Controller
         return view("patientSite/patientSomeoneRequest");
     }
 
-    public function viewAgreement(){
+    public function viewAgreement()
+    {
         return view("patientSite/patientAgreement");
     }
 
@@ -153,9 +154,11 @@ class patientDashboardController extends Controller
         $data = DB::table('request')
             ->join('status', 'request.status', '=', 'status.id')
             ->select('request.created_at', 'status.status_type')
-            ->get();
+            ->paginate(10);
 
-        return view('patientSite/patientDashboard',compact('data'));
+            // dd($data);
+     
+        return view('patientSite/patientDashboard', compact('data'));
 
 
     }

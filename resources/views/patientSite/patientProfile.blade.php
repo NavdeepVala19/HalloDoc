@@ -22,8 +22,9 @@
         <form action="" method="post">
             
             @csrf
-            <h3>General Information</h3>
+            <h3>General Information </h3>
 
+            <input type="hidden" name="email" value="{{Session::get('email')}}">
 
             <div class="grid-2">
 
