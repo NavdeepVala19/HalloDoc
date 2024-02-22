@@ -33,11 +33,11 @@
             <input type="text" class="requestId" name="requestId" value="" hidden>
             <div class="m-3">
                 <div class="form-floating">
-                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <select class="form-select" class="cancel-options" id="floatingSelect" aria-label="Floating label select example">
                         <option selected>Reasons</option>
-                        <option value="1">One</option>
+                        {{-- <option value="1">One</option>
                         <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option value="3">Three</option> --}}
                     </select>
                     <label for="floatingSelect">Reasons for Cancellation</label>
                 </div>
@@ -324,8 +324,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                 <td>Requestor Name</td>
                                 <td>{{ $case->created_at }}</td>
                                 <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->requestClient->street }}, {{ $case->requestClient->city }},
-                                    {{ $case->requestClient->state }}</td>
+                                <td>
+                                    {{-- {{ $case->requestClient->street }}, {{ $case->requestClient->city }},{{ $case->requestClient->state }} --}}
+                                </td>
                                 <td>Notes</td>
                                 <td>
                                     <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>

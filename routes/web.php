@@ -287,4 +287,5 @@ Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.s
 Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
 
 // Cancel Case by admin
-Route::post('cancel-case', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');
+Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
+Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');

@@ -90,7 +90,8 @@ class AdminController extends Controller
 
     public function cancelCaseOptions()
     {
-        $reasons = caseTag::get();
+        $reasons = caseTag::all();
+        return response()->json($reasons);
     }
     // Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog
     public function cancelCase(Request $request)
