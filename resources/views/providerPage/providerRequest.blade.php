@@ -14,11 +14,11 @@
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Submit Information</h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         <div class="section">
-            <form action="{{ route('provider-request-data') }}" method="POST">
+            <form action="{{ route('provider.request.data') }}" method="POST">
                 @csrf
                 <h3>Patient</h3>
                 <div class="mb-4 form-grid">
@@ -112,7 +112,7 @@
 
                 <div class="mb-4 d-flex justify-content-end gap-3 ">
                     <input type="submit" value='Save' class="primary-fill">
-                    <a href="{{ route('provider-dashboard') }}" class="primary-empty">Cancel</a>
+                    <a href="{{ route('provider.dashboard') }}" class="primary-empty">Cancel</a>
                 </div>
             </form>
         </div>

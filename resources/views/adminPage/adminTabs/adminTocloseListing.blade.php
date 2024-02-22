@@ -352,7 +352,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -370,7 +370,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn">View Uploads</button>
                                 <button class="secondary-btn">Email</button>

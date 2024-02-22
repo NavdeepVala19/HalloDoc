@@ -289,7 +289,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <div class="action-container">
                                         <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>
                                         <div class="action-menu">
-                                            <a href="/view-case/{{ $case->id }}"><i
+                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <button><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                 Uploads</button>
@@ -341,7 +341,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -359,7 +359,8 @@ pending state, providers need to send an agreement link to patients. --}}
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.notes', $case->id) }}"
+                                    class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn">View Uploads</button>
                                 <button class="secondary-btn">Email</button>

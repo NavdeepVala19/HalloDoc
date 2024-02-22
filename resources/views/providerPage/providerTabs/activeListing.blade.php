@@ -174,7 +174,6 @@
                             <input type="text" style="font-family:'Bootstrap-icons';"
                                 class="form-control search-patient" placeholder='&#xF52A;  Search Patients'
                                 aria-describedby="basic-addon1" name="search">
-                                
                             <input type="submit" class="primary-fill">
                         </div>
                     </form>
@@ -220,14 +219,17 @@
                                                 data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
                                                 <a href="{{ route('provider.view.case', $case->id) }}"><i
-                                                        class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</a>
+                                                        class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>Doctors Note</button>
-                                                <a href="{{ route('provider.view.upload', $case->id) }}"><i class="bi bi-check-square me-2 ms-3"></i>View Uploads</a>
+                                                <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                                        class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
+                                                    Uploads</a>
                                                 <button class="encounter-btn"><i
-                                                        class="bi bi-check-square me-2 ms-3"></i>Encounter</button>
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                                 <a href="{{ route('provider.view.order', $case->id) }}"><i
-                                                        class="bi bi-check-square me-2 ms-3"></i>Orders</a>
+                                                        class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 <button><i class="bi bi-check-square me-2 ms-3"></i>House Call</button>
                                                 <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                             </div>
@@ -288,7 +290,8 @@
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
+                                    <a href="{{ route('provider.view.notes', $case->id) }}"
+                                        class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>

@@ -39,8 +39,6 @@
 
             <form action="{{ route('operations') }}" method="POST">
                 @csrf
-
-
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h3>
                         Documents

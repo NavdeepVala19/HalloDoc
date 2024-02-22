@@ -197,14 +197,16 @@
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
                                             <a href="{{ route('provider.view.case', $case->id) }}"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
+                                                    class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <button><i class="bi bi-check-square me-2 ms-3"></i>Conclude Case</button>
-                                            <a href="{{ route('provider.view.notes', $case->id) }}"><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</a>
+                                            <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                                    class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>Doctor Notes</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Uploads</button>
+                                            <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                                    class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
                                             <a href="{{ route('provider.encounter.form', $case->id) }}"
                                                 class="encounter-form-btn"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>Encounter</a>
+                                                    class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
                                     </div>
@@ -265,10 +267,12 @@
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="conclude-care-btn">Conclude Care</button>
-                                <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.notes', $case->id) }}"
+                                    class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>
-                                <a href="{{ route('provider.view.upload', $case->id) }}" class="secondary-btn">View Uploads</a>
+                                <a href="{{ route('provider.view.upload', $case->id) }}" class="secondary-btn">View
+                                    Uploads</a>
                                 <button class="secondary-btn">Encouter</button>
                                 <button class="secondary-btn">Email</button>
                             </div>

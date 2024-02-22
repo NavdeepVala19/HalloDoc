@@ -242,13 +242,13 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>
                                         <div class="action-menu">
-                                            <a href="/view-case/{{ $case->id }}"><i
+                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <button><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                 Uploads</button>
                                             <button><i class="bi bi-journal-text me-2 ms-3"></i>View
                                                 Notes</button>
-                                            <a href="{{ route('view-order', ['id' => $case->id]) }}"><i
+                                            <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                     class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                             <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors Note</button>
                                             <button class="encounter-btn"><i
@@ -299,7 +299,7 @@
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -312,7 +312,7 @@
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="conclude-care-btn">Conclude Care</button>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>
                                 <button class="secondary-btn">View Uploads</button>

@@ -279,7 +279,7 @@
                                                     Uploads</button>
                                                 <button><i class="bi bi-journal-text me-2 ms-3"></i>View
                                                     Notes</button>
-                                                <a href="{{ route('view-order', ['id' => $case->id]) }}"><i
+                                                <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors Note</button>
                                                 <button class="encounter-btn"><i
@@ -330,7 +330,7 @@
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -342,7 +342,7 @@
                                     {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                    <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
                                     <button class="secondary-btn">View Uploads</button>
