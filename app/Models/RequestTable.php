@@ -51,12 +51,14 @@ class RequestTable extends Model
 
     // Making relationship with requestClient table
 
-    public function requestClient(){
-        return $this->belongsTo(request_Client::class);
+    public function requestClient()
+    {
+        // return $this->belongsTo(request_Client::class);
+        return $this->hasOne(request_Client::class, 'request_id');
     }
 
 
-   
+
     public function status()
     {
         return $this->belongsTo(Status::class);

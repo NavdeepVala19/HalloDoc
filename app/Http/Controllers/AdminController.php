@@ -11,6 +11,7 @@ use App\Models\MedicalReport;
 use App\Models\RequestNotes;
 use App\Models\RequestWiseFile;
 
+use App\Models\caseTag;
 
 // For sending Mails
 use App\Mail\SendMail;
@@ -83,5 +84,20 @@ class AdminController extends Controller
             'unpaid' => 6,
         ];
         return $statusMapping[$status] ?? null;
+    }
+
+
+
+    public function cancelCaseOptions()
+    {
+        $reasons = caseTag::get();
+    }
+    // Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog
+    public function cancelCase(Request $request)
+    {
+        // Got request_id and reason(note)
+       dd($request->requestId, $request->reason);
+
+       // change status for these case
     }
 }

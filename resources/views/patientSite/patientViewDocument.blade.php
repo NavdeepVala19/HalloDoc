@@ -11,7 +11,7 @@
 
 @section('nav-links')
 
-<a href="" class="active-link">Dashboard</a>
+<a href="{{route('patientDashboardData')}}" class="active-link">Dashboard</a>
 <a href="">Profile</a>
 
 @endsection
@@ -51,66 +51,70 @@
                 <p id="demo"></p>
 
             </div>
+    </form>
 
-            <div class="docs-download">
-                <h3>Documents</h3>
-                <a href="{{route('download-selected-files')}}" type="button"
-                    class="primary-empty btn down-button">Download</a>
+    <form action="{{route('download')}}" method="post">
+        @csrf
 
+        <div class="docs-download">
+            <h3>Documents</h3>
+            <input type="submit" value="Download" class="primary-empty btn down-button">
 
-            </div>
-
-            <table class="table">
-                <thead class="table-secondary">
-                    <tr>
-                        <td><input class="form-check-input master-checkbox" type="checkbox" id="flexCheckDefault"></td>
-                        <td></td>
-                        <td>Uploader</td>
-                        <td>Upload Date</td>
-                        <td>Actions</td>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        @foreach ($documents as $document)
-                        <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault"
-                                name="selected_files[]"></td>
-                        <td><i class="bi bi-filetype-doc"></i> {{$document->file_name}}</td>
-                        <td>Testing test</td>
-                        <td>{{$document->created_at}}</td>
-                        <td> <a href="{{route('download',['id'=>$document->id])}}" class="primary-empty cloud-down"> <i
-                                    class="bi bi-cloud-download "></i> </a> </td>
-                    </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-            {{$documents->links('pagination::bootstrap-5')}}
-
-            <div class="table-content">
-
-                @foreach ($documents as $document)
-                <div class=" patient-content mt-4">
-
-                    <div class="check-docs">
-                        <input class="form-check-input" type="checkbox" id="flexCheckDefault">
-                        <p>{{$document->file_name}}</p>
-                    </div>
-                    <div class="mb-3">Testing test</div>
-                    <p>{{$document->created_at}}</p>
-                    <a href="{{route('download',['id'=>$document->id])}}" class="primary-empty cloud-down"
-                        type="button"> <i class="bi bi-cloud-download "></i>
-                    </a>
-
-                </div>
-                @endforeach
-
-                {{$documents->links('pagination::bootstrap-5')}}
-            </div>
 
         </div>
+
+        <table class="table">
+            <thead class="table-secondary">
+                <tr>
+                    <td><input class="form-check-input master-checkbox" type="checkbox" id="flexCheckDefault" name=""
+                            value="">
+                    </td>
+                    <td></td>
+                    <td>Uploader</td>
+                    <td>Upload Date</td>
+                    <td>Actions</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    @foreach ($documents as $document)
+                    <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault"
+                            name="selected_files[]" value="{{$document->id}}"></td>
+                    <td><i class="bi bi-filetype-doc"></i> {{$document->file_name}}</td>
+                    <td>Testing test</td>
+                    <td>{{$document->created_at}}</td>
+                    <td> <a href="{{route('downloadOne', $document->id)}}" class="primary-empty cloud-down"> <i
+                                class="bi bi-cloud-download "></i> </a> </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+        {{$documents->links('pagination::bootstrap-5')}}
+
+        <div class="table-content">
+
+            @foreach ($documents as $document)
+            <div class=" patient-content mt-4">
+
+                <div class="check-docs">
+                    <input class="form-check-input" type="checkbox" id="flexCheckDefault">
+                    <p>{{$document->file_name}}</p>
+                </div>
+                <div class="mb-3">Testing test</div>
+                <p>{{$document->created_at}}</p>
+                <a href="{{route('downloadOne', $document->id)}}" class="primary-empty cloud-down" type="button"> <i class="bi bi-cloud-download "></i>
+                </a>
+
+            </div>
+            @endforeach
+
+            {{$documents->links('pagination::bootstrap-5')}}
+        </div>
+
     </form>
 </div>
+
 
 @endsection

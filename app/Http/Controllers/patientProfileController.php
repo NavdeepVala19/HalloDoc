@@ -6,8 +6,20 @@ use Illuminate\Http\Request;
 
 class patientProfileController extends Controller
 {
-    public function profile(){
+    public function profile()
+    {
         return view("patientSite/patientProfile");
     }
+
+    public function patientEdit()
+    {
+
+    }
+
+    public function patientUpdate(Request $request)
+    {
+        
+    }
+
 
 }

@@ -76,7 +76,7 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 //  ***************************************************************************************************************************************
 // patient login page
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
-route::post('/patient_logged_in', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
+route::post('/patientDashboard', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
 
 route::post('/patient_login', [patientLoginController::class, 'logout'])->name('logout');
 //  ***************************************************************************************************************************************
@@ -136,7 +136,11 @@ route::post('/createdSomeoneRequests', [patientDashboardController::class, 'crea
 route::get('/patientViewDocsFile', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
 route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'uploadDocs'])->name('patientViewDocuments');
 
-Route::get('/download/{filename}', [PatientViewDocumentsController::class, 'download'])->name('download');
+route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');
+
+
+route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('download');
+
 
 //  ***************************************************************************************************************************************
 
@@ -208,7 +212,7 @@ Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote']
 // VIEW UPLOADS PAGE
 // View Uploads (currently showing all the documents in requestWiseFile table)
 Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('provider.view.upload');
-Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument'])->name('provider.view.upload');
+Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument']);
 
 // download document uploaded in view Uploads
 Route::get('/download/{id?}', [ProviderController::class, 'download'])->name('download');
@@ -281,3 +285,6 @@ Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.s
 
 // For Searching Request
 Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
+
+// Cancel Case by admin
+Route::post('cancel-case', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');

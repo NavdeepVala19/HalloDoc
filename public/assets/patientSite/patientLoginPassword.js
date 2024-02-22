@@ -29,6 +29,13 @@ $(document).ready(function () {
 })
 // *********************************************************
 
+$(".master-checkbox").on("click", function () {
+    if ($(this).is(":checked", true)) {
+        $(".child-checkbox").prop("checked", true);
+    } else {
+        $(".child-checkbox").prop("checked", false);
+    }
+});
 
 // *********************************************************
 $(".master-checkbox").on("click", function () {

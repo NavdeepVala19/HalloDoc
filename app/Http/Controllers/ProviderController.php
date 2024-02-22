@@ -30,6 +30,7 @@ class ProviderController extends Controller
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+
         // Total count of cases as per the status (displayed in all listing pages)
         $newCasesCount = requestTable::with(['requestClient'])->where('status', 1)->count();
         $pendingCasesCount = requestTable::with(['requestClient'])->where('status', 2)->count();

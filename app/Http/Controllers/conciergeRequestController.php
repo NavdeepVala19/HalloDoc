@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Concierge;
+use App\Models\users;
+use App\Models\allusers;
+use App\Models\RequestNotes;
 use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
+
 use PhpParser\Node\Stmt\TryCatch;
 
 // use App\Models\User;
@@ -53,7 +57,7 @@ class conciergeRequestController extends Controller
         // concierge request into request table
 
         $requestConcierge = new RequestTable();
-
+        $requestConcierge->status = 1;   
         $requestConcierge->request_type_id= $request->request_type;
         $requestConcierge->first_name = $request->concierge_first_name;
         $requestConcierge->last_name = $request->concierge_last_name;
@@ -68,7 +72,6 @@ class conciergeRequestController extends Controller
         $patientRequest->request_id = $requestConcierge->id;
         $patientRequest->first_name = $request->first_name;
         $patientRequest->last_name = $request->last_name;
-        // $patientRequest->notes= $request->symptoms; 
         $patientRequest->date_of_birth= $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;
@@ -77,12 +80,39 @@ class conciergeRequestController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-        // $patientRequest->docs = $request->file('docs')->store('public');
-
-
-
         $patientRequest->save();
 
+
+        // store symptoms in request_notes table
+
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $requestConcierge->id;
+        $request_notes->patient_notes = $request->symptoms;
+
+        $request_notes->save();
+
+
+
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
+
+        // store all details of patient in allUsers table
+
+        $requestUsers = new allusers();
+        $requestUsers->first_name = $request->first_name;
+        $requestUsers->last_name = $request->last_name;
+        $requestUsers->email = $request->email;
+        $requestUsers->mobile = $request->phone_number;
+        $requestUsers->street = $request->street;
+        $requestUsers->city = $request->city;
+        $requestUsers->state = $request->state;
+        $requestUsers->zipcode = $request->zipcode;
+        $requestUsers->save();
 
 
         return view('patientSite/submitScreen');

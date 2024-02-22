@@ -12,7 +12,7 @@ class request_Client extends Model
     use HasFactory;
 
     // request_client table is use to create only the patient records
-    protected $table ='request_client';
+    protected $table = 'request_client';
 
     protected $fillable = [
         'request_id',
@@ -42,7 +42,8 @@ class request_Client extends Model
         'Longitude',
     ];
 
-    public function request(){
+    public function request()
+    {
         return $this->belongsTo(RequestTable::class);
     }
 }

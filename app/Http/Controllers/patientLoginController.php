@@ -50,14 +50,12 @@ class patientLoginController extends Controller
                 ->get();
 
             return view('patientSite/patientDashboard', compact('data'));
+
         } else {
             // The passwords don't match...
             // Handle the failed login attempt
-
             return redirect()->back()->withErrors(['email'=> 'enter appropriate login credentials']);
         }
-
-
 
     }
 
@@ -67,6 +65,7 @@ class patientLoginController extends Controller
         return view("patientSite/patientResetPassword");
     }
 
+    
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([

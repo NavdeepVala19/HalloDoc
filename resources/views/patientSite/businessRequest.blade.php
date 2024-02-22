@@ -31,7 +31,7 @@
                 </div>
 
 
-                <input type="hidden" name="request_type" value="4">
+                <input type="hidden" name="request_type" value="3">
 
 
                 <div class="row business-row1">
@@ -206,7 +206,7 @@
                         <div class="col-md patient-location-col1">
                             <input type="text" placeholder="Street"
                                 class="form-control patient-location-street-text @error('street') is-invalid @enderror"
-                                id="exampleInputEmail1" aria-describedby="helpId" name="street">
+                                id="street" aria-describedby="helpId" name="street">
                             @error('street')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -216,7 +216,7 @@
                         <div class="col-md patient-location-col2">
                             <input type="text" placeholder="City"
                                 class="form-control patient-location-city-text @error('city') is-invalid @enderror"
-                                id="exampleInputEmail1" aria-describedby="helpId" name="city">
+                                id="city" aria-describedby="helpId" name="city">
                             @error('city')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -230,7 +230,7 @@
                         <div class="col-md patient-location-col1">
                             <input type="text" placeholder="State"
                                 class="form-control patient-location-state-text @error('state') is-invalid @enderror"
-                                id="exampleInputEmail1" name="state">
+                                id="state" name="state">
                             @error('state')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror

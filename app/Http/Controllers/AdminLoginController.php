@@ -19,9 +19,8 @@ use Illuminate\Support\Str;
 class AdminLoginController extends Controller
 {
 
-
-    // **************
-    // this code is for login input credentials
+   
+// this code is for login input credentials
 
     public function adminLogin()
     {
@@ -58,13 +57,7 @@ class AdminLoginController extends Controller
         }
     }
 
-    // ***********
-
-
-
-
-
-    // *********
+  
     // this code is for entering email for reset password
 
     public function adminResetPassword()
@@ -95,12 +88,7 @@ class AdminLoginController extends Controller
         return back()->with('message', 'We have e-mailed your password reset link!');
     }
 
-    // **********
-
-
-
-    // ************
-    // this code is to update/reset password
+// this code is to update/reset password
 
     public function showUpdatePasswordForm($token)
     {
