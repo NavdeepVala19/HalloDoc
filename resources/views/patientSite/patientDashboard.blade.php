@@ -19,10 +19,10 @@
 
     <h2>Medical History</h2>
 
-    <div class="content">
+    <div class="content shadow">
 
         <div class="button">
-            <button class="btn primary-empty create-btn">Create a new Request</button>
+            <button class="btn primary-empty create-btn mt-2 me-2 mb-2">Create new Request</button>
 
             <a href="" type="button" class="btn primary-empty plus"><i class="bi bi-plus"></i></a>
 
@@ -33,9 +33,9 @@
             <table class="table ">
                 <thead class="table-secondary">
                     <tr>
-                        <td>Created At</td>
-                        <td>Current Status</td>
-                        <td>Document</td>
+                        <td style="width: 25%;">Created At</td>
+                        <td style="width: 50%;">Current Status</td>
+                        <td style="width: 25%;" >Document</td>
                     </tr>
                 </thead>
 
@@ -43,9 +43,9 @@
                 <tbody>
                     <tr>
                         @foreach($data as $patientData)
-                        <td style="width: 33%;"> {{$patientData->created_at}}</td>
+                        <td> {{$patientData->created_at}}</td>
                         <td> {{$patientData->status_type}}</td>
-                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a>
+                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Documents</a>
                         </td>
                     </tr>
                     @endforeach
@@ -53,11 +53,8 @@
                 </tbody>
 
             </table>
-            <!-- 
-            <div class="row">
-               {{-- {{$patientData->links()}} --}}
-            </div> -->
-
+ 
+            
             <div class="accordions">
 
                 @foreach($data as $patientData)

@@ -6,6 +6,9 @@ use App\Models\Business;
 use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
+use App\Models\allusers;
+use App\Models\RequestNotes;
+use App\Models\users;
 // use App\Models\User;
 
 class businessRequestController extends Controller
@@ -42,6 +45,7 @@ class businessRequestController extends Controller
           //business request store in request table
         
           $requestBusiness = new RequestTable();
+          $requestBusiness->status = 1;
           $requestBusiness->request_type_id= $request->request_type;
           $requestBusiness->first_name = $request->business_first_name;
           $requestBusiness->last_name = $request->business_last_name;
@@ -56,8 +60,7 @@ class businessRequestController extends Controller
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestBusiness->id;
         $patientRequest->first_name = $request->first_name;
-        $patientRequest->last_name = $request->last_name;
-        // $patientRequest->notes= $request->symptoms; 
+        $patientRequest->last_name = $request->last_name; 
         $patientRequest->date_of_birth= $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;
@@ -66,16 +69,42 @@ class businessRequestController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-        // $patientRequest->docs = $request->file('docs')->store('public');
-
-        // dd($patientRequest->all());
-
-
-      
         $patientRequest->save();
 
 
-return view('patientSite/submitScreen');
+        // store symptoms in request_notes table
+
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $requestBusiness->id;
+        $request_notes->patient_notes = $request->symptoms;
+
+        $request_notes->save();
+
+
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
+
+        // store all details of patient in allUsers table
+
+        $requestUsers = new allusers();
+        $requestUsers->first_name = $request->first_name;
+        $requestUsers->last_name = $request->last_name;
+        $requestUsers->email = $request->email;
+        $requestUsers->mobile = $request->phone_number;
+        $requestUsers->street = $request->street;
+        $requestUsers->city = $request->city;
+        $requestUsers->state = $request->state;
+        $requestUsers->zipcode = $request->zipcode;
+        $requestUsers->save();
+
+
+
+        return view('patientSite/submitScreen');
 
     }
 }

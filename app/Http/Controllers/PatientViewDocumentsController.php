@@ -42,7 +42,7 @@ class PatientViewDocumentsController extends Controller
     }
 
 
-    public function download($id = null)
+    public function downloadOne($id = null)
     {
 
         $file = RequestWiseFile::where('id', $id)->first();
@@ -53,39 +53,24 @@ class PatientViewDocumentsController extends Controller
 
 
 
-    public function downloadSelectedFiles(RequestWiseFile $request)
+    public function downloadSelectedFiles(Request $request)
     {
-        $selectedFiles = $request->input('selected_files', []);
+    
+        $ids = $request->input('selected_files');
 
-        if (empty($selectedFiles)) {
-            return redirect()->back()->with('error', 'No files selected for download.');
-        }
+        $zip = new ZipArchive;
+        $zipFile = 'documents.zip';
 
-        $files = [];
-        foreach ($selectedFiles as $filename) {
-            $filePath = public_path('files/' . $filename);
+        if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+            foreach ($ids as $id) {
+                $file = RequestWiseFile::where('id', $id)->first();
+                $path = (public_path() . '/storage/' . $file->file_name);
 
-            if (file_exists($filePath)) {
-                $files[] = $filePath;
+                $zip->addFile($path, $file->file_name);
             }
+            $zip->close();
         }
-
-        if (empty($files)) {
-            return redirect()->back()->with('error', 'No valid files selected for download.');
-        }
-
-        $zipFile = public_path('download/selected_files.zip');
-
-        $zip = new ZipArchive();
-        $zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-        foreach ($files as $file) {
-            $zip->addFile($file, basename($file));
-        }
-
-        $zip->close();
-
-        return response()->download($zipFile)->deleteFileAfterSend(true);
+        return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
     }
 
 

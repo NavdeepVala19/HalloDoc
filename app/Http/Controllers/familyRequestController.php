@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\request_Client;
+use App\Models\allusers;
+use App\Models\RequestNotes;
+use App\Models\users;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use Illuminate\Http\Request;
-use App\Models\RequestNotes;
 use App\Models\RequestWise;
 // use App\Models\User;
 class familyRequestController extends Controller
@@ -38,6 +40,7 @@ class familyRequestController extends Controller
         // family request creating
 
         $familyRequest = new RequestTable();
+        $familyRequest->status = 1;
         $familyRequest->request_type_id= $request->request_type;
         $familyRequest->first_name = $request->family_first_name;
         $familyRequest->last_name = $request->family_last_name;
@@ -79,6 +82,28 @@ class familyRequestController extends Controller
         $request_notes->patient_notes = $request->symptoms;
         
         $request_notes->save();
+
+        // store email and phoneNumber in users table
+        $requestEmail = new users();
+        $requestEmail->email = $request->email;
+        $requestEmail->phone_number = $request->phone_number;
+
+        $requestEmail->save();
+
+
+        // store all details of patient in allUsers table
+
+        $requestUsers = new allusers();
+        $requestUsers->first_name = $request->first_name;
+        $requestUsers->last_name = $request->last_name;
+        $requestUsers->email = $request->email;
+        $requestUsers->mobile = $request->phone_number;
+        $requestUsers->street = $request->street;
+        $requestUsers->city = $request->city;
+        $requestUsers->state = $request->state;
+        $requestUsers->zipcode = $request->zipcode;
+        $requestUsers->save();
+
 
         return view('patientSite/submitScreen');
 

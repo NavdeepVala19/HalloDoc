@@ -76,7 +76,7 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 //  ***************************************************************************************************************************************
 // patient login page
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
-route::post('/patient_logged_in', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
+route::post('/patientDashboard', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
 
 route::post('/patient_login', [patientLoginController::class, 'logout'])->name('logout');
 //  ***************************************************************************************************************************************
@@ -136,7 +136,11 @@ route::post('/createdSomeoneRequests', [patientDashboardController::class, 'crea
 route::get('/patientViewDocsFile', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
 route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'uploadDocs'])->name('patientViewDocuments');
 
-Route::get('/download/{filename}', [PatientViewDocumentsController::class, 'download'])->name('download');
+route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');
+
+
+route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('download');
+
 
 //  ***************************************************************************************************************************************
 

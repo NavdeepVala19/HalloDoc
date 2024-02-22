@@ -62,3 +62,4 @@ class RequestTable extends Model
         return $this->belongsTo(Status::class);
     }
 }
+
