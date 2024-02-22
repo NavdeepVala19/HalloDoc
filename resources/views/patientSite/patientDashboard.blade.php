@@ -43,9 +43,9 @@
                 <tbody>
                     <tr>
                         @foreach($data as $patientData)
-                        <td style="width: 33%;"> {{$patientData->created_at}}</td>
+                        <td> {{$patientData->created_at}}</td>
                         <td> {{$patientData->status_type}}</td>
-                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Docs</a>
+                        <td><a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Documents</a>
                         </td>
                     </tr>
                     @endforeach
@@ -53,11 +53,8 @@
                 </tbody>
 
             </table>
-            <!-- 
-            <div class="row">
-               {{-- {{$patientData->links()}} --}}
-            </div> -->
-
+ 
+            
             <div class="accordions">
 
                 @foreach($data as $patientData)

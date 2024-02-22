@@ -155,8 +155,6 @@ class patientDashboardController extends Controller
             ->select('request.created_at', 'status.status_type')
             ->get();
 
-        // dd($data);
-
         return view('patientSite/patientDashboard',compact('data'));
 
 
