@@ -14,11 +14,11 @@
     <div class="container form-container">
         <div class="heading-container d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Encounter Form</h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         {{-- Form Starts From Here --}}
-        <form action="{{ route('encounter-form-data') }}" method="POST">
+        <form action="{{ route('encounter.form.data') }}" method="POST">
             @csrf
             <div class="section">
                 <h1 class="main-heading">Medical Report-Confidential</h1>

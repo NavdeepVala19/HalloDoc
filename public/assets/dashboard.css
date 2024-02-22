@@ -1,0 +1,457 @@
+/* *********************** COMMON STYLING FOR ADMIN/PROVIDER DASHBOARD ************************ */
+:root {
+    --primary-color: #3c9eff;
+    --patient-color: green;
+    --family-color: rgb(186, 186, 99);
+    --business-color: rgb(215, 116, 116);
+    --concierge-color: rgb(129, 129, 206);
+    --vip-color: purple;
+    --mobile-list-color: rgba(36, 178, 245, 0.463);
+}
+
+.case {
+    width: 250px;
+    height: 70px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.case-new {
+    border: 1px solid rgb(7, 7, 96);
+    color: rgba(67, 67, 174);
+    background-color: rgba(106, 106, 218, 0.501);
+}
+
+.case-pending {
+    border: 1px solid rgb(6, 32, 97);
+    color: rgb(13, 49, 139);
+    background-color: rgba(50, 99, 222, 0.508);
+}
+
+.case-active {
+    border: 1px solid rgb(7, 102, 7);
+    color: rgb(12, 119, 12);
+    background-color: rgba(153, 235, 153, 0.507);
+}
+
+.case-conclude {
+    border: 1px solid rgb(83, 7, 79);
+    color: rgb(124, 7, 129);
+    background-color: rgba(212, 128, 221, 0.509);
+}
+
+.nav-tabs {
+    border: none;
+}
+
+.nav-tabs .nav-link {
+    padding: 0;
+    margin: 8px 16px;
+    border: none;
+}
+
+.input-group {
+    width: 300px;
+    margin: 15px;
+}
+
+.btn-all {
+    border: 1px solid grey !important;
+    border-radius: 5px;
+    padding: 4px 12px;
+}
+
+.case-type {
+    color: rgb(87, 87, 185);
+}
+
+.green {
+    color: var(--patient-color);
+}
+
+.yellow {
+    color: var(--family-color);
+}
+
+.red {
+    color: var(--business-color);
+}
+
+.blue {
+    color: var(--concierge-color);
+}
+
+.purple {
+    color: var(--vip-color);
+}
+
+.main {
+    margin: 20px 50px;
+}
+
+.heading-section {
+    margin-bottom: 36px;
+}
+
+.listing {
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+        rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+.table {
+    margin: 0;
+}
+
+/* *********************** TABLE DATA ************************************ */
+.table-btn {
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 5px;
+}
+
+tr > td {
+    padding: 16px !important;
+    color: #fff !important;
+}
+
+.type-1 td {
+    background-color: var(--patient-color) !important;
+}
+
+.type-2 td {
+    background-color: var(--family-color) !important;
+}
+
+.type-3 td {
+    background-color: var(--business-color) !important;
+}
+
+.type-4 td {
+    background-color: var(--concierge-color) !important;
+}
+
+.type-5 td {
+    background-color: var(--vip-color) !important;
+}
+
+.mobile-listing {
+    display: none;
+}
+
+.page > nav {
+    margin: 10px 20px !important;
+}
+/* ********************** ACTION MENU *********************** */
+.action-container {
+    position: relative;
+}
+.action-menu {
+    display: flex;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    left: -70px;
+    padding: 10px 0;
+    z-index: 999;
+}
+.action-menu > button {
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.action-menu > a {
+    display: block;
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    color: black;
+    padding: 5px 0;
+    text-align: left;
+}
+.action-menu > button:hover,
+.action-menu > a:hover {
+    background-color: rgba(128, 128, 128);
+}
+
+/* Active Listing Encounter Pop-Up */
+
+/* When house call is selected these dropdown select menu will be shown */
+.time-dropdown {
+    display: none;
+}
+.housecall-btn:hover,
+.consult-btn:hover {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.btn-active {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+/* Pending Listing send agreement */
+.send-agreement {
+    display: none;
+}
+
+/* ********************** MEDIA QUERIES *********************** */
+@media (max-width: 1160px) {
+    .search-section {
+        flex-direction: column;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .input-group {
+        width: 100% !important;
+        flex-wrap: nowrap;
+    }
+
+    .case {
+        width: 200px;
+    }
+}
+
+@media (max-width: 960px) {
+    .nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .case {
+        width: 100%;
+    }
+}
+
+@media (max-width: 750px) {
+    .btn-all {
+        display: none;
+    }
+
+    .src-category {
+        display: flex;
+        gap: 8px !important;
+        justify-content: start !important;
+    }
+
+    .src-category > a {
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+    }
+
+    .txt {
+        display: none;
+    }
+
+    .main {
+        margin: 0;
+    }
+    .listing {
+        padding: 10px;
+    }
+    .case {
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        border-radius: 0;
+    }
+
+    .src-category > button {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .primary-btn {
+        padding: 4px 10px;
+    }
+    nav {
+        padding: 0;
+        margin: 0;
+    }
+    .heading-section {
+        margin-bottom: 18px;
+    }
+    .table {
+        display: none;
+    }
+
+    .listing {
+        margin: 0 10px;
+        padding: 0;
+    }
+
+    .d-sm-none {
+        display: none !important;
+    }
+    .d-none {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto !important;
+    }
+    .mobile-listing {
+        display: block;
+    }
+    .mobile-list {
+        background-color: var(--mobile-list-color);
+        border-top: 0.5px solid grey;
+        border-bottom: 0.5px solid grey;
+        padding: 10px 5px;
+        padding-bottom: 20px;
+    }
+
+    .map-btn {
+        background: none;
+        border: 1px solid #3c9eff;
+        color: #3c9eff;
+        border-radius: 15px;
+        font-size: 12px;
+    }
+    .more-info {
+        display: none;
+    }
+    .more-info.active {
+        display: block;
+        background-color: var(--mobile-list-color);
+        padding: 15px;
+        position: relative;
+    }
+    .grid-2-listing {
+        margin: 15px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .conclude-care-btn {
+        border: none;
+        background-color: red;
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .accept-btn {
+        border: none;
+        background-color: rgb(158, 57, 188);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .agreement-btn {
+        border: none;
+        background-color: rgb(238, 218, 38);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .more-info-btn {
+        background: none;
+        border: 1px solid #3c9eff;
+        color: #3c9eff;
+        border-radius: 5px;
+        /* font-size: 12px; */
+    }
+
+    .secondary-btn {
+        border: none;
+        background-color: green;
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .secondary-btn-1 {
+        border: none;
+        background-color: rgb(7, 57, 17);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .secondary-btn-2 {
+        border: none;
+        background-color: rgb(238, 218, 38);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .secondary-btn-3 {
+        border: none;
+        background-color: rgb(42, 223, 244);
+        color: #fff;
+        padding: 5px 0;
+        border-radius: 25px;
+    }
+    .view-btn {
+        position: absolute;
+        right: 20px;
+        top: -14px;
+        background-color: rgba(255, 255, 255, 0.776);
+        border: 1px solid #8044c4;
+        color: #8044c4;
+        border-radius: 15px;
+        /* font-size: 12px; */
+    }
+}
+
+/******************************* All Pop-ups Styling**************************************/
+/******************************* Encounter - Active listing Page **************************************/
+.encounter {
+    display: none;
+    width: 500px;
+}
+
+/******************************* Transfer Request Provider - Pending listing Page **************************************/
+.transfer-request {
+    display: none;
+    width: 500px;
+}
+
+.transfer-request .form-floating {
+    width: 100%;
+}
+.transfer-description {
+    height: 150px !important;
+}
+/******************************* Send Link PopUp - All listing Pages **************************************/
+.send-link {
+    display: none;
+    width: 500px;
+}
+
+.send-link .form-floating {
+    width: 100%;
+    margin: 15px 0;
+}
+
+/******************************* Encounter Form Finalized PopUp - conclude listing Pages **************************************/
+.encounter-finalized {
+    display: none;
+    width: 500px;
+}
+.encounter-finalized-container {
+    padding: 15px;
+}
+.download-btn {
+    margin: 15px auto;
+}
+
+/******************************* Request To Admin PopUp - providerProfile **************************************/
+.request-to-admin {
+    display: none;
+    width: 500px;
+    z-index: 20;
+}
+
+.request-to-admin .form-floating {
+    width: 100%;
+}
+.request-message {
+    height: 150px !important;
+}

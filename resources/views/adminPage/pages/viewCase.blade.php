@@ -1,10 +1,13 @@
 @extends('index')
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}">Dashboard</a>
-    <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="" class="active-link">My Profile</a>
+    <a href="" class="active-link">Dashboard</a>
+    <a href="">Provider Location</a>
+    <a href="">My Profile</a>
+    <a href="">Providers</a>
+    <a href="">Partners</a>
+    <a href="">Access</a>
+    <a href="">Records</a>
 @endsection
 
 @section('content')
@@ -88,7 +91,8 @@
                         <button class="primary-empty"><i class="bi bi-geo-alt"></i></button>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="room" value="{{ $data->room }}" class="form-control" id="floatingInput" placeholder="room">
+                        <input type="text" name="room" value="{{ $data->room }}" class="form-control"
+                            id="floatingInput" placeholder="room">
                         <label for="floatingInput">Room #</label>
                     </div>
                 </div>

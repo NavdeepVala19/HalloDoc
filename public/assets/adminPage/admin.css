@@ -1,0 +1,26 @@
+.logout-link {
+    display: block;
+}
+
+.case-toclose {
+    border: 1px solid rgb(83, 7, 79);
+    color: rgb(0, 29, 50);
+    background-color: rgba(18, 137, 241, 0.509);
+}
+
+.case-unpaid {
+    border: 1px solid rgb(83, 7, 79);
+    color: rgb(57, 28, 137);
+    background-color: rgb(225, 222, 236);
+}
+
+.cancel-case {
+    display: none;
+}
+.assign-case {
+    display: none;
+}
+
+.block-case {
+    display: none;
+}

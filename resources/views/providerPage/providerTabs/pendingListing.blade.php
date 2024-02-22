@@ -1,6 +1,7 @@
 @extends('index')
 
 @section('css')
+    <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
@@ -8,7 +9,7 @@
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
-    <a href="{{ route('provider-profile') }}">My Profile</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
@@ -35,7 +36,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     responsible party.
                 </p>
             </div>
-            <form action="{{ route('send-agreement') }}" method="POST">
+            <form action="{{ route('send.agreement') }}" method="POST">
                 @csrf
                 <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
                 <div>
@@ -53,7 +54,7 @@ pending state, providers need to send an agreement link to patients. --}}
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
             <input type="submit" value="Send" class="primary-fill send-case">
-            <button class="primary-empty hide-popup-btn">Cancel</button>
+            <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
         </div>
         </form>
     </div>
@@ -115,7 +116,7 @@ pending state, providers need to send an agreement link to patients. --}}
 
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
-            <a href="{{ route('provider-status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
+            <a href="{{ route('provider.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
                 <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
@@ -126,7 +127,8 @@ pending state, providers need to send an agreement link to patients. --}}
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'pending']) }}" class="nav-link active" id="nav-pending-tab">
+            <a href="{{ route('provider.status', ['status' => 'pending']) }}" class="nav-link active"
+                id="nav-pending-tab">
                 <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-square"></i> PENDING
@@ -137,7 +139,7 @@ pending state, providers need to send an agreement link to patients. --}}
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
+            <a href="{{ route('provider.status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
                 <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-check2-circle"></i> ACTIVE
@@ -148,7 +150,7 @@ pending state, providers need to send an agreement link to patients. --}}
                 </div>
             </a>
 
-            <a href="{{ route('provider-status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
+            <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
                 <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-clock-history"></i> CONCLUDE
@@ -173,7 +175,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         Send Link
                     </span>
                 </button>
-                <a class="primary-fill" href="{{ route('provider-create-request') }}">
+                <a class="primary-fill" href="{{ route('provider.create.request') }}">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
@@ -189,25 +191,21 @@ pending state, providers need to send an agreement link to patients. --}}
                     method="GET">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="bi bi-search"></i>
-                        </span>
-
-                        <input type="text" class="form-control search-patient" placeholder="Search Patients"
-                            aria-describedby="basic-addon1" name="search">
+                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                         <input type="submit" class="primary-fill">
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('provider-listing', ['category' => 'all', 'status' => 'pending']) }}"
+                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'pending']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('provider-listing', ['category' => 'patient', 'status' => 'pending']) }}"
+                    <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'pending']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('provider-listing', ['category' => 'family', 'status' => 'pending']) }}"
+                    <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'pending']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('provider-listing', ['category' => 'business', 'status' => 'pending']) }}"
+                    <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'pending']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('provider-listing', ['category' => 'concierge', 'status' => 'pending']) }}"
+                    <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
@@ -241,15 +239,17 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <div class="action-container">
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="/view-case/{{ $case->id }}"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Case</a>
-                                            <button class="send-agreement-btn" data-id="{{ $case->id }}" data-request_type_id={{ $case->request_type_id }}><i
-                                                    class="bi bi-check-square me-2 ms-3"></i>Send Agreement</button>
+                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                                    class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                                            <button class="send-agreement-btn" data-id="{{ $case->id }}"
+                                                data-request_type_id={{ $case->request_type_id }}><i
+                                                    class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
                                             <button class="transfer-btn"><i
-                                                    class="bi bi-check-square me-2 ms-3"></i>Transfer</button>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>View Notes</button>
-                                            <a href="{{ route('view-upload', ['id' => $case->id]) }}"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>View Uploads</a>
+                                                    class="bi bi-send me-2 ms-3"></i>Transfer</button>
+                                            <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                                    class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
+                                            <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                                    class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
                                     </div>
@@ -297,7 +297,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -315,7 +315,8 @@ pending state, providers need to send an agreement link to patients. --}}
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.notes', $case->id) }}"
+                                    class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn">View Uploads</button>
                                 <button class="secondary-btn">Email</button>
