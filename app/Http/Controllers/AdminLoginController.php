@@ -48,16 +48,13 @@ class AdminLoginController extends Controller
         if (Hash::check($inputPassword, $hashedPassword)) {
             // The passwords match...
             // Log the user in or perform the next steps
-
-            return redirect('/adminResetPassword');
+            return redirect()->route('admin.dashboard');
         } else {
             // The passwords don't match...
             // Handle the failed login attempt
 
             return redirect('/adminLogin')->with('message', 'Your password is not appropriate!');
-
         }
-
     }
 
   
@@ -106,9 +103,8 @@ class AdminLoginController extends Controller
             $request->validate([
                 'confirm_password' => 'required',
                 'new_password' => 'required|same:confirm_password',
-                
-            ]);
 
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             dd($th);
@@ -129,6 +125,4 @@ class AdminLoginController extends Controller
 
         return redirect('/adminLogin')->with('message', 'Your password has been changed!');
     }
-
-
 }

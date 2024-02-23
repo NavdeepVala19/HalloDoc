@@ -24,3 +24,7 @@
 .block-case {
     display: none;
 }
+
+.displayPatientName {
+    color: var(--blue);
+}

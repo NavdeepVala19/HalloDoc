@@ -8,6 +8,12 @@ return new class extends Migration
 {
     /**
      *  used for cancellation reason
+     * 
+     * Select option values (prefilled)
+     * 1. Cost Issue
+     * 2. Inappropriate for service
+     * 3. Provider not available
+     * 4. Location problem
      */
     public function up(): void
     {

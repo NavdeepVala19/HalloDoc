@@ -66,7 +66,7 @@
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
                     <span>
-                        {{ $newCasesCount }}
+                        {{ $count['newCase'] }}
                     </span>
                 </div>
             </a>
@@ -77,7 +77,7 @@
                         <i class="bi bi-person-square"></i> PENDING
                     </span>
                     <span>
-                        {{ $pendingCasesCount }}
+                        {{ $count['pendingCase'] }}
                     </span>
                 </div>
             </a>
@@ -88,7 +88,7 @@
                         <i class="bi bi-check2-circle"></i> ACTIVE
                     </span>
                     <span>
-                        {{ $activeCasesCount }}
+                        {{ $count['activeCase'] }}
                     </span>
                 </div>
             </a>
@@ -99,7 +99,7 @@
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>
                     <span>
-                        {{ $concludeCasesCount }}
+                        {{ $count['concludeCase'] }}
                     </span>
                 </div>
             </a>
@@ -166,9 +166,11 @@
                     <tbody>
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->first_name }}</td>
-                                <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->address }}</td>
+                                <td>{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}</td>
+                                <td>{{ $case->requestClient->phone_number }}</td>
+                                <td>{{ $case->requestClient->street }}, {{ $case->requestClient->city }},
+                                    {{ $case->requestClient->state }}
+                                </td>
                                 <td>
                                     <button class="table-btn "><i class="bi bi-person-check me-2"></i>Admin</button>
                                 </td>
@@ -246,7 +248,8 @@
                             </span>
                             <div class="grid-2-listing">
                                 <button class="accept-btn">Accept</button>
-                                <a href="{{ route('provider.view.case', $case->id) }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.case', $case->id) }}"
+                                    class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn">Email</button>
                             </div>
@@ -261,6 +264,7 @@
 
             <div class="page">
                 {{ $cases->links('pagination::bootstrap-5') }}
+                {{-- {{ $users->withQueryString()->links() }} --}}
             </div>
 
         </div>

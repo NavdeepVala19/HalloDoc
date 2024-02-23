@@ -62,14 +62,14 @@ class familyRequestController extends Controller
         $patientRequest->request_id = $familyRequest->id;
         $patientRequest->first_name = $request->first_name;
         $patientRequest->last_name = $request->last_name;
-        $patientRequest->date_of_birth= $request->date_of_birth;
+        $patientRequest->date_of_birth = $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;
         $patientRequest->street = $request->street;
         $patientRequest->city = $request->city;
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
-        
+
 
         $patientRequest->save();
 
@@ -89,9 +89,9 @@ class familyRequestController extends Controller
         // store symptoms in request_notes table
 
         $request_notes = new RequestNotes();
-        $request_notes->request_id = $familyRequest->id;    
+        $request_notes->request_id = $familyRequest->id;
         $request_notes->patient_notes = $request->symptoms;
-        
+
         $request_notes->save();
 
 
@@ -110,7 +110,5 @@ class familyRequestController extends Controller
 
 
         return view('patientSite/submitScreen');
-
     }
 }
-

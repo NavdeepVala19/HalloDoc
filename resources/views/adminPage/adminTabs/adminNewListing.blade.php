@@ -26,29 +26,31 @@
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="m-3">
-            <span>Patient Name: </span> <span>
-                It should display patient name
-                test test</span>
+            <span>Patient Name: </span> <span class="displayPatientName">patient name</span>
         </div>
-        <div class="m-3">
-            <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                    <option selected>Reasons</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <label for="floatingSelect">Reasons for Cancellation</label>
+        <form action="{{ route('admin.cancel.case') }}" method="POST">
+            @csrf
+            <input type="text" class="requestId" name="requestId" value="" hidden>
+            <div class="m-3">
+                <div class="form-floating">
+                    <select class="form-select" class="cancel-options" id="floatingSelect" aria-label="Floating label select example">
+                        <option selected>Reasons</option>
+                        {{-- <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option> --}}
+                    </select>
+                    <label for="floatingSelect">Reasons for Cancellation</label>
+                </div>
+                <div class="form-floating">
+                    <textarea class="form-control" name="reason" placeholder="notes" id="floatingTextarea2"></textarea>
+                    <label for="floatingTextarea2">Provide Additional Notes</label>
+                </div>
             </div>
-            <div class="form-floating">
-                <textarea class="form-control" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Provide Additional Notes</label>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <input type="submit" value="Confirm" class="primary-fill cancel-case">
+                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
             </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill cancel-case">Confirm</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
+        </form>
     </div>
 
 
@@ -134,7 +136,8 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
+                    <input type="text" name="last_name" class="form-control" id="floatingInput"
+                        placeholder="Last Name">
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -321,7 +324,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                 <td>Requestor Name</td>
                                 <td>{{ $case->created_at }}</td>
                                 <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->address }}</td>
+                                <td>
+                                    {{-- {{ $case->requestClient->street }}, {{ $case->requestClient->city }},{{ $case->requestClient->state }} --}}
+                                </td>
                                 <td>Notes</td>
                                 <td>
                                     <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
@@ -332,7 +337,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                         <div class="action-menu">
                                             <button class="assign-case-btn"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
-                                            <button class="cancel-case-btn"><i class="bi bi-x-circle me-2 ms-3"></i>Cancel
+                                            <button class="cancel-case-btn" data-id="{{ $case->id }}"
+                                                data-patient_name="{{ $case->first_name }} {{ $case->last_name }}"><i
+                                                    class="bi bi-x-circle me-2 ms-3"></i>Cancel
                                                 Case</button>
                                             <button><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</button>
                                             <a href="/view-notes/{{ $case->id }}"><i

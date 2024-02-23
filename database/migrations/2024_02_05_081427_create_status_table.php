@@ -7,30 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     *  1-Unassigned,
-     * 2-Accepted,
-     * 3-Cancelled,
-     * 4-Reserving,
-     * 5-MDEnRoute,
-     * 6-MDOnSite,
-     * 7-FollowUp,
-     * 8-Closed,
-     * 9-Locked,
-     * 10-Declined,
-     * 11-Consult,
-     * 12-Clear,
-     * 13-CancelledByProvider,
-     * 14-CCUploadedByClient,
-     * 15-CCApprovedByAdmin
-     * 
-     * 
-     * All Types of Cases:
-     * 1.New
-     * 2.Pending
-     * 3.Active
-     * 4.Conclude
-     * 5.ToClose
-     * 6.UnPaid
+     * statusSeeder - all details
      */
 
      

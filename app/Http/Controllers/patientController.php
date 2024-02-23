@@ -148,6 +148,5 @@ class patientController extends Controller
 
 
         return view('patientSite/submitScreen');
-
     }
 }

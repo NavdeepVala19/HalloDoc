@@ -17,22 +17,21 @@ class businessRequestController extends Controller
     public function create(Request $request){
 
        
-        $request->validate([
-            'first_name'=>'required|min:2|max:30',
-            'last_name'=>'string|min:2|max:30',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number'=>'required|numeric|digits:10',
-            'street'=>'min:2|max:30',
-            'city' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
-            'zipcode' => 'numeric', 
-            'state' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
-            'room' => 'numeric',
-            'business_first_name'=>'required|min:2|max:30',
-            'business_email' =>'required|email|min:2|max:30',
-            'business_mobile'=>'required',
-            'business_property_name'=>'required|min:2|max:30',
-
-        ]);
+        // $request->validate([
+        //     'first_name'=>'required|min:2|max:30',
+        //     'last_name'=>'string|min:2|max:30',
+        //     'email' => 'required|email|min:2|max:30',
+        //     'phone_number'=>'required|numeric|digits:10',
+        //     'street'=>'min:2|max:30',
+        //     'city' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'zipcode' => 'numeric', 
+        //     'state' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
+        //     'room' => 'numeric',
+        //     'business_first_name'=>'required|min:2|max:30',
+        //     'business_email' =>'required|email|min:2|max:30',
+        //     'business_mobile'=>'required',
+        //     'business_property_name'=>'required|min:2|max:30',
+        // ]);
 
         // store email and phoneNumber in users table
         $requestEmail = new users();

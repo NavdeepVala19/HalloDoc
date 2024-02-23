@@ -21,9 +21,10 @@ return new class extends Migration
             $table->foreign('physician_id')->references('id')->on('provider');
             $table->unsignedBigInteger('admin_id');
             $table->foreign('admin_id')->references('id')->on('admin');
-            $table->string('TransToPhysicianId');
-            $table->unsignedBigInteger('notes')->nullable();
-            $table->foreign('notes')->references('id')->on('request_notes');
+            // $table->string('TransToPhysicianId');
+            $table->unsignedBigInteger('TransToPhysicianId')->nullable();
+            $table->foreign('TransToPhysicianId')->references('id')->on('provider');
+            $table->text('notes')->nullable();
             $table->boolean('TransToAdmin')->nullable();
             $table->timestamps();
             $table->softDeletes();
