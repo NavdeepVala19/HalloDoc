@@ -30,4 +30,12 @@ $(document).ready(function () {
         $(".block-case").show();
         $(".overlay").show();
     });
+
+
+    // changes start from here
+    
+    
+
+
+
 });

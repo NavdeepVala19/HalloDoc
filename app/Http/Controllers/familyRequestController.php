@@ -53,7 +53,7 @@ class familyRequestController extends Controller
 
 
 
-        // $familyRequest->status = $requestStatus->id;
+        $familyRequest->status = $requestStatus->id;
         $familyRequest->user_id = $requestEmail->id;
         $familyRequest->request_type_id = $request->request_type;
         $familyRequest->first_name = $request->family_first_name;

@@ -17,6 +17,7 @@
 .cancel-case {
     display: none;
 }
+
 .assign-case {
     display: none;
 }
@@ -27,4 +28,21 @@
 
 .displayPatientName {
     color: var(--blue);
+}
+
+
+/* changes start from here */
+
+
+@media (max-width: 750px) {
+
+    .admin-btn>button,
+    .admin-btn>a {
+        padding: 8px;
+    }
+}
+
+.heading-section {
+    margin-left: 10px;
+    margin-right: 10px;
 }

@@ -162,6 +162,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         </form>
     </div>
 
+    
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
@@ -235,9 +236,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
     <div class="main">
         <div class="heading-section d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                <h3>Patients </h3> <strong class="case-type ps-2 ">(New)</strong>
+                <h3>Patients </h3> <strong class="case-type ps-2">(New)</strong>
             </div>
-            <div class=" d-flex gap-2">
+            <div class="admin-btn d-flex gap-2">
                 <button class="primary-fill send-link-btn">
                     <i class="bi bi-send"></i>
                     <span class="txt">
@@ -409,11 +410,34 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                 <i class="bi bi-telephone"></i> Patient :
                                 {{ $case->phone_number }}
                             </span>
+                            <br>
+                             <span>
+                                <i class="bi bi-cash"></i> Transfer :
+                                {{ $case->phone_number }}
+                            </span>
+                            <br>
+                             <span>
+                                <i class="bi bi-calendar3"></i> Date of services :
+                                {{ $case->phone_number }}
+                            </span>
+                            <br>
+                             <span>
+                                <i class="bi bi-person-circle"></i> Physician :
+                                {{ $case->phone_number }}
+                            </span>
+                            <br>
+                             <span>
+                                <i class="bi bi-person-plus-fill"></i> Requestor:
+                                {{ $case->phone_number }}
+                            </span>
+
                             <div class="grid-2-listing">
-                                <button class="accept-btn">Accept</button>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
-                                    Notes</a>
-                                <button class="secondary-btn">Email</button>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-1 text-center">Doctors Notes</a>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Uploads</a>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">Encounter</a>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-2 text-center">Orders</a>
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">Email</a>
                             </div>
                         </div>
                         <div>

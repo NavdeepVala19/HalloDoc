@@ -183,6 +183,9 @@ Route::get('updatePassword/{token}', [AdminLoginController::class, 'showUpdatePa
 Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswordForm'])->name('updatePasswordPost');
 
 
+
+
+
 // ****************************************************************************************************************************
 
 
@@ -270,6 +273,8 @@ Route::post('/send-mail', [ProviderController::class, 'sendMail'])->name('send.m
 
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
+
+
 
 
 
