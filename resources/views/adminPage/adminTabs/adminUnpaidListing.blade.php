@@ -189,10 +189,10 @@ pending state, providers need to send an agreement link to patients. --}}
 
     <div class="main">
         <div class="heading-section d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
+            <div class=" d-flex align-items-center">
                 <h3>Patients </h3> <strong class="case-type ps-2 ">(Unpaid)</strong>
             </div>
-            <div class=" d-flex gap-2">
+            <div class="admin-btn  d-flex gap-2">
                 <button class="primary-fill send-link-btn">
                     <i class="bi bi-send"></i>
                     <span class="txt">

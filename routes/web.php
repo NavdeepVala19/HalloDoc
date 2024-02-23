@@ -150,7 +150,7 @@ route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'up
 route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');
 
 
-route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('download');
+route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('downloadAllFiles');
 
 
 //  ***************************************************************************************************************************************
@@ -181,6 +181,9 @@ route::post('/resetPasswordlink', [AdminLoginController::class, 'submitForgetPas
 // admin Update Password
 Route::get('updatePassword/{token}', [AdminLoginController::class, 'showUpdatePasswordForm'])->name('updatePassword');
 Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswordForm'])->name('updatePasswordPost');
+
+
+
 
 
 // ****************************************************************************************************************************
@@ -270,6 +273,8 @@ Route::post('/send-mail', [ProviderController::class, 'sendMail'])->name('send.m
 
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
+
+
 
 
 

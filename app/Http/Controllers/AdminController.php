@@ -42,6 +42,7 @@ class AdminController extends Controller
 
         $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->paginate(10);
 
+        
         // As per the selected Tab, different view (listing pages) are rendered
         if ($this->getStatusId($status) == '1') {
             return view('adminPage.adminTabs.adminNewListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount', 'tocloseCasesCount', 'unpaidCasesCount'));

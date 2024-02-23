@@ -73,7 +73,7 @@ class conciergeRequestController extends Controller
 
         $requestStatus = new RequestStatus();
 
-        $requestConcierge->status = 1;
+        $requestConcierge->status = $requestStatus->id;
         $requestConcierge->user_id = $requestEmail->id;
         $requestConcierge->request_type_id = $request->request_type;
         $requestConcierge->first_name = $request->concierge_first_name;
