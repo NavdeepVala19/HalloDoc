@@ -113,7 +113,7 @@ route::get('/patientDashboard', [patientDashboardController::class, 'read'])->na
 // Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
 
 route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
-route::post('/patientProfileUpdate', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
+route::post('/patientProfileUpdated', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
 
 //  ***************************************************************************************************************************************
 

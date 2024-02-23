@@ -29,14 +29,12 @@ class patientAccountController extends Controller
         if (isset($request->email)) {
             $user = users::where("email", $request->email)->first();
             if ($user) {
-                // $user->password_hash = Hash::make($request->password);
-                $user->password_hash = $request->password;
+                $user->password = Hash::make($request->password);
                 $user->save();
             } else {
                 $create_account = new users();
                 $create_account->email = $request->email;
-                $create_account->password_hash = $request->password; // Use Hash facade to hash the password
-
+                $create_account->password = Hash::make($request->password); // Use Hash facade to hash the password
                 $create_account->save();
             }
         }

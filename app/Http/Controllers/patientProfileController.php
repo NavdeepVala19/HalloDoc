@@ -16,22 +16,47 @@ class patientProfileController extends Controller
         return view("patientSite/patientProfile");
     }
 
-    public function patientEdit()
+    public function patientEdit(Request $request)
     {
+
         $userData = Auth::user();
-        if($userData){
-            $userData->email;
-            $userData->password;
-           $getEmailData = request_Client::where('email','=',$userData->email)->get();
+        $email = $userData["email"];
 
-           return view("patientSite/patientProfile",compact('getEmailData'));
-        }
-    }
+        $getEmailData = request_client::where('email', '=', $email)->first();
 
-    public function patientUpdate(Request $request)
-    {
+        return view("patientSite/patientProfile", compact('getEmailData'));
 
     }
+
+
+    // public function patientUpdate(Request $request)
+    // {
+
+    //     $userData = Auth::user();
+    //     $email = $userData["email"];
+
+    //     $getEmailData = request_client::where('email', '=', $email)->first();
+
+
+    //     $updatedData = [
+    //         'first_name' => $request->input('first_name'),
+    //         'last_name' => $request->input('last_name'),
+    //         'email' => $request->input('email'),
+    //         'phone_number' => $request->input('phone_number'),
+    //         'city' => $request->input('city'),
+    //         'state' => $request->input('state'),
+    //         'street' => $request->input('street'),
+    //         'zipcode' => $request->input('zipcode')
+    //     ];
+
+
+    //     request_Client::where('email', $userData['email'])->update($updatedData);
+
+
+    //     return redirect()->route('patientProfile');
+
+
+    // }
 
 
 }

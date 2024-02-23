@@ -37,23 +37,20 @@ class patientLoginController extends Controller
             'password' => 'required',
         ]);
 
-        
+
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
         ];
 
-    
-            
+
+
         if (Auth::attempt($credentials)) {
 
             $userData = Auth::user();
-            dd($userData); 
 
-        //    return redirect()->route('patientDashboardData');
+            return redirect()->route('patientDashboardData');
         }
-
-
     }
 
 
@@ -114,7 +111,7 @@ class patientLoginController extends Controller
 
         users::where(['email' => $request->email])->update(['token' => null]);
 
-            
+
         return redirect('/patient_login')->with('message', 'Your password has been changed!');
     }
 
