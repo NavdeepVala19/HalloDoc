@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\allusers;
+use App\Models\RequestStatus;
 use App\Models\Status;
 use App\Models\RequestNotes;
 use App\Models\users;
@@ -74,10 +75,13 @@ class patientController extends Controller
 
         $requestEmail->save();
 
-
-
         $requestData = new RequestTable();
-        $requestData->status = 1;
+        
+        $requestStatus = new RequestStatus();
+
+
+
+        $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
@@ -85,6 +89,15 @@ class patientController extends Controller
         $requestData->email = $request->email;
         $requestData->phone_number = $request->phone_number;
         $requestData->save();
+
+        $requestStatus->request_id = $requestData->id;
+        $requestStatus->status = 1;
+        $requestStatus->save();
+
+        if(!empty($requestStatus)){
+                $requestData->update(["status"=> $requestStatus->id]);
+        }
+
 
 
 
@@ -108,17 +121,14 @@ class patientController extends Controller
 
         // store documents in request_wise_file table
 
-        if (isset($request->docs)){
-         $request_file = new RequestWiseFile();
-        $request_file->request_id = $requestData->id;
-        $request_file->file_name = $request->file('docs')->getClientOriginalName();
-        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();
+        if (isset($request->docs)) {
+            $request_file = new RequestWiseFile();
+            $request_file->request_id = $requestData->id;
+            $request_file->file_name = $request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->save();
 
         }
-
-
-
 
 
 

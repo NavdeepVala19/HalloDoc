@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-
+<a href="{{route('patientDashboardData')}}" class="">Dashboard</a>
 <a href="" class="active-link">Profile</a>
 @endsection
 
@@ -66,7 +66,7 @@
 
                 <div class="form-floating ">
                     <input type="email" class="form-control" id="floatingInput" value="{{$getEmailData->email}}"
-                        placeholder="name@example.com">
+                        placeholder="name@example.com" name="email">
                     <label for="floatingInput">Email</label>
                 </div>
 

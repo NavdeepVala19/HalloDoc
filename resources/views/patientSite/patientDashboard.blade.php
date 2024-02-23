@@ -28,7 +28,6 @@
 
             <div class="listing-table">
 
-<<<<<<< HEAD
         <div class="listing-table">
 
             <table class="table ">
@@ -73,50 +72,6 @@
                     </div>
                 </div>
                 @endforeach
-=======
-                <table class="table ">
-                    <thead class="table-secondary">
-                        <tr>
-                            <td style="width: 25%;">Created At</td>
-                            <td style="width: 50%;">Current Status</td>
-                            <td style="width: 25%;">Document</td>
-                        </tr>
-                    </thead>
-
-
-                    <tbody>
-                        <tr>
-                            @foreach ($data as $patientData)
-                                <td> {{ $patientData->created_at }}</td>
-                                <td> {{ $patientData->status_type }}</td>
-                                <td><a href="{{ route('patientViewDocsFile') }}" type="button"
-                                        class="primary-empty btn ">Documents</a>
-                                </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-
-                <div class="accordions">
-
-                    @foreach ($data as $patientData)
-                        <button class="accordion"> <i class="bi bi-clock"></i>
-                            Created-Date:{{ $patientData->created_at }}</button>
-                        <div class="panel">
-
-                            <div>
-                                <i class="bi bi-check-circle"></i> Current Status:{{ $patientData->status_type }}
-                            </div>
-                            <div>
-                                <a type="button" class="primary-empty btn"
-                                    href="{{ route('patientViewDocsFile') }}">Docs</a>
-                            </div>
-                        </div>
-                    @endforeach
-
-                </div>
->>>>>>> d04260753b6f49fdce1042b9300af4747d4d6d3f
             </div>
 
             <!-- create a new request pop-up -->

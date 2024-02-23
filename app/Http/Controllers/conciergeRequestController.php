@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Concierge;
 use App\Models\users;
 use App\Models\allusers;
+use App\Models\RequestStatus;
 use App\Models\RequestNotes;
 use App\Models\request_Client;
 use App\Models\RequestTable;
@@ -69,6 +70,9 @@ class conciergeRequestController extends Controller
         // concierge request into request table
 
         $requestConcierge = new RequestTable();
+
+        $requestStatus = new RequestStatus();
+
         $requestConcierge->status = 1;
         $requestConcierge->user_id = $requestEmail->id;
         $requestConcierge->request_type_id = $request->request_type;
@@ -77,8 +81,17 @@ class conciergeRequestController extends Controller
         $requestConcierge->email = $request->concierge_email;
         $requestConcierge->phone_number = $request->concierge_mobile;
         $requestConcierge->relation_name = $request->concierge_hotel_name;
-
         $requestConcierge->save();
+
+
+        $requestStatus->request_id = $requestConcierge->id;
+        $requestStatus->status = 1;
+        $requestStatus->save();
+
+        if (!empty($requestStatus)) {
+            $requestConcierge->update(["status" => $requestStatus->id]);
+        }
+
 
 
         $patientRequest = new request_Client();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\request_Client;
 use App\Models\allusers;
 use App\Models\RequestNotes;
+use App\Models\RequestStatus;
 use App\Models\users;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
@@ -47,6 +48,10 @@ class familyRequestController extends Controller
         // family request creating
 
         $familyRequest = new RequestTable();
+        $requestStatus = new RequestStatus();
+
+
+
         $familyRequest->status = 1;
         $familyRequest->user_id = $requestEmail->id;
         $familyRequest->request_type_id= $request->request_type;
@@ -55,8 +60,17 @@ class familyRequestController extends Controller
         $familyRequest->email = $request->family_email;
         $familyRequest->phone_number = $request->family_phone_number;
         $familyRequest->relation_name = $request->family_relation;
-
         $familyRequest->save();
+        
+
+        $requestStatus->request_id = $familyRequest->id;
+        $requestStatus->status = 1;
+        $requestStatus->save();
+
+        if (!empty($requestStatus)) {
+            $familyRequest->update(["status" => $requestStatus->id]);
+        }
+
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $familyRequest->id;
