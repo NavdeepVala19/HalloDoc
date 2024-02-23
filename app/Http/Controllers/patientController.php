@@ -76,10 +76,7 @@ class patientController extends Controller
         $requestEmail->save();
 
         $requestData = new RequestTable();
-        
         $requestStatus = new RequestStatus();
-
-
 
         $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
@@ -95,7 +92,7 @@ class patientController extends Controller
         $requestStatus->save();
 
         if(!empty($requestStatus)){
-                $requestData->update(["status"=> $requestStatus->id]);
+                $requestData->update(["status" => $requestStatus->id]);
         }
 
 

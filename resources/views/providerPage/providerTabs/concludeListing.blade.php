@@ -177,13 +177,13 @@
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                            <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->first_name }}</td>
-                                <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->address }}</td>
+                            <tr class="type-{{ $case->request->request_type_id }}">
+                                <td>{{ $case->request->requestClient->first_name }}</td>
+                                <td>{{ $case->request->requestClient->phone_number }}</td>
+                                <td>{{ $case->request->requestClient->address }}</td>
                                 <td>
-                                    @if ($case->call_type)
-                                        <span class="primary-fill"> {{ $case->call_type }} </span>
+                                    @if ($case->request->call_type)
+                                        <span class="primary-fill"> {{ $case->request->call_type }} </span>
                                     @else
                                         Call Type
                                     @endif
@@ -196,15 +196,15 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <button><i class="bi bi-check-square me-2 ms-3"></i>Conclude Case</button>
-                                            <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
                                                     class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                             <button><i class="bi bi-journal-check me-2 ms-3"></i>Doctor Notes</button>
-                                            <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
-                                            <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                            <a href="{{ route('provider.encounter.form', $case->request->id) }}"
                                                 class="encounter-form-btn"><i
                                                     class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
@@ -221,30 +221,30 @@
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->first_name }} </p>
+                            <p>{{ $case->request->requestClient->first_name }} </p>
                             <span>
-                                @if ($case->requestClient)
+                                @if ($case->request->requestClient)
                                     {{ $case->requestClient->address }}
                                 @endif Address
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
-                            @if ($case->request_type_id == 1)
+                            @if ($case->request->request_type_id == 1)
                                 <span>
                                     Patient
                                     <i class="bi bi-circle-fill ms-1 green"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 2)
+                            @elseif ($case->request->request_type_id == 2)
                                 <span>
                                     Family/Friend
                                     <i class="bi bi-circle-fill ms-1 yellow"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 3)
+                            @elseif ($case->request->request_type_id == 3)
                                 <span>
                                     Business
                                     <i class="bi bi-circle-fill ms-1 red"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 4)
+                            @elseif ($case->request->request_type_id == 4)
                                 <span>
                                     Concierge
                                     <i class="bi bi-circle-fill ms-1 blue"></i>
@@ -254,7 +254,7 @@
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -267,11 +267,11 @@
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="conclude-care-btn">Conclude Care</button>
-                                <a href="{{ route('provider.view.notes', $case->id) }}"
+                                <a href="{{ route('provider.view.notes', $case->request->id) }}"
                                     class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>
-                                <a href="{{ route('provider.view.upload', $case->id) }}" class="secondary-btn">View
+                                <a href="{{ route('provider.view.upload', $case->request->id) }}" class="secondary-btn">View
                                     Uploads</a>
                                 <button class="secondary-btn">Encouter</button>
                                 <button class="secondary-btn">Email</button>

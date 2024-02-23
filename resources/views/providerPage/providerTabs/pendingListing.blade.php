@@ -226,10 +226,10 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                            <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->first_name }}</td>
-                                <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->address }}</td>
+                            <tr class="type-{{ $case->request->request_type_id }}">
+                                <td>{{ $case->request->requestClient->first_name }}</td>
+                                <td>{{ $case->request->requestClient->phone_number }}</td>
+                                <td>{{ $case->request->requestClient->address }}</td>
                                 <td>Status</td>
                                 <td>
                                     <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
@@ -239,16 +239,16 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <div class="action-container">
                                         <button class="table-btn action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                            <button class="send-agreement-btn" data-id="{{ $case->id }}"
+                                            <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
                                                 data-request_type_id={{ $case->request_type_id }}><i
                                                     class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
                                             <button class="transfer-btn"><i
                                                     class="bi bi-send me-2 ms-3"></i>Transfer</button>
-                                            <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
                                                     class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                            <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
                                             <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
@@ -264,30 +264,30 @@ pending state, providers need to send an agreement link to patients. --}}
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->first_name }} </p>
+                            <p>{{ $case->request->requestClient->first_name }} </p>
                             <span>
-                                @if ($case->requestClient)
-                                    {{ $case->requestClient->address }}
+                                @if ($case->request->requestClient)
+                                    {{ $case->request->requestClient->address }}
                                 @endif Address
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
-                            @if ($case->request_type_id == 1)
+                            @if ($case->request->request_type_id == 1)
                                 <span>
                                     Patient
                                     <i class="bi bi-circle-fill ms-1 green"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 2)
+                            @elseif ($case->request->request_type_id == 2)
                                 <span>
                                     Family/Friend
                                     <i class="bi bi-circle-fill ms-1 yellow"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 3)
+                            @elseif ($case->request->request_type_id == 3)
                                 <span>
                                     Business
                                     <i class="bi bi-circle-fill ms-1 red"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 4)
+                            @elseif ($case->request->request_type_id == 4)
                                 <span>
                                     Concierge
                                     <i class="bi bi-circle-fill ms-1 blue"></i>
@@ -297,7 +297,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email : example@xyz.com
@@ -315,7 +315,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>
-                                <a href="{{ route('provider.view.notes', $case->id) }}"
+                                <a href="{{ route('provider.view.notes', $case->request->id) }}"
                                     class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn">View Uploads</button>

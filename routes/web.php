@@ -150,7 +150,7 @@ route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'up
 route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');
 
 
-route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('download');
+route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('downloadAllFiles');
 
 
 //  ***************************************************************************************************************************************

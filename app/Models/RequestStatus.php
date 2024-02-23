@@ -10,4 +10,9 @@ class RequestStatus extends Model
     use HasFactory;
 
     protected $table = 'request_status';
+
+    public function request()
+    {
+        return $this->belongsTo(RequestTable::class,'request_id');
+    }
 }

@@ -60,7 +60,7 @@ class businessRequestController extends Controller
     $requestStatus = new RequestStatus();
 
 
-    $requestBusiness->status = 1;
+    $requestBusiness->status = $requestStatus->id;
     $requestBusiness->user_id = $requestEmail->id;
     $requestBusiness->request_type_id = $request->request_type;
     $requestBusiness->first_name = $request->business_first_name;
