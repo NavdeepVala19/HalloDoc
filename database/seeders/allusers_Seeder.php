@@ -14,6 +14,6 @@ class allusers_Seeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('allusers')->insert([[]]);
+        // DB::table('allusers')->insert([[]]);
     }
 }

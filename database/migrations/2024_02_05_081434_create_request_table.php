@@ -40,7 +40,7 @@ return new class extends Migration
             $table->integer('created_user_id');
 
             $table->foreign('request_type_id')->references('id')->on('request_type');
-            $table->foreign('status')->references('id')->on('status');
+            $table->foreign('status')->references('id')->on('request_status');
             $table->foreign('physician_id')->references('id')->on('provider');
             $table->foreign('case_tag')->references('id')->on('case_tag');
             $table->foreign('user_id')->references('id')->on('users');
