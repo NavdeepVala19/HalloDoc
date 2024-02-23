@@ -103,7 +103,7 @@
                             <i class="bi bi-plus-circle"></i> NEW
                         </span>
                         <span>
-                            {{ $newCasesCount }}
+                            {{ $count['newCase'] }}
                         </span>
                     </div>
                 </a>
@@ -114,7 +114,7 @@
                             <i class="bi bi-person-square"></i> PENDING
                         </span>
                         <span>
-                            {{ $pendingCasesCount }}
+                            {{ $count['pendingCase'] }}
                         </span>
                     </div>
                 </a>
@@ -126,7 +126,7 @@
                             <i class="bi bi-check2-circle"></i> ACTIVE
                         </span>
                         <span>
-                            {{ $activeCasesCount }}
+                            {{ $count['activeCase'] }}
                         </span>
                     </div>
                 </a>
@@ -138,7 +138,7 @@
                             <i class="bi bi-clock-history"></i> CONCLUDE
                         </span>
                         <span>
-                            {{ $concludeCasesCount }}
+                            {{ $count['concludeCase'] }}
                         </span>
                     </div>
                 </a>

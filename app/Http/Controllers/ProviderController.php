@@ -27,88 +27,131 @@ use ZipArchive;
 
 class ProviderController extends Controller
 {
+    public function totalCasesCount()
+    {
+        // Total count of cases as per the status (displayed in all listing pages)
+        // $newCasesCount = requestTable::with(['requestClient'])->where('status', 1)->count();
+        $newCasesCount = requestTable::with(['requestClient'])->where('status', 1)->count(); // unassigned case, assigned to provider but not accepted
+        // $pendingCasesCount = requestTable::with(['requestClient'])->where('status', 2)->count();
+        $pendingCasesCount = requestTable::with(['requestClient'])->where('status', 3)->count(); //accepted by provider, pending state
+        // $activeCasesCount = requestTable::with(['requestClient'])->where('status', 3)->count();
+        $activeCasesCount = requestTable::with(['requestClient'])->where('status', 4)->orWhere('status', 5)->count(); //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
+        // $concludeCasesCount = requestTable::with(['requestClient'])->where('status', 4)->count();
+        $concludeCasesCount = requestTable::with(['requestClient'])->where('status', 6)->count();
+
+        return [
+            'newCase' => $newCasesCount,
+            'pendingCase' => $pendingCasesCount,
+            'activeCase' => $activeCasesCount,
+            'concludeCase' => $concludeCasesCount
+        ];
+    }
+
+    // provides all cases data as per status
+    public function cases($status, $count)
+    {
+        if ($status == 'new') {
+            $cases = requestTable::with(['requestClient'])->where('status', 1)->paginate(10);
+            return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
+        } else if ($status == 'pending') {
+            $cases = requestTable::with(['requestClient'])->where('status', 3)->paginate(10);
+            return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
+        } else if ($status == 'active') {
+            $cases = requestTable::with(['requestClient'])->where('status', 4)->orWhere('status', 5)->paginate(10);
+            return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
+        } else if ($status == 'conclude') {
+            $cases = requestTable::with(['requestClient'])->where('status', 6)->paginate(10);
+            return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
+        }
+    }
+
+
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
-
-        // Total count of cases as per the status (displayed in all listing pages)
-        $newCasesCount = requestTable::with(['requestClient'])->where('status', 1)->count();
-        $pendingCasesCount = requestTable::with(['requestClient'])->where('status', 2)->count();
-        $activeCasesCount = requestTable::with(['requestClient'])->where('status', 3)->count();
-        $concludeCasesCount = requestTable::with(['requestClient'])->where('status', 4)->count();
-
-        $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->paginate(10);
-
-        // As per the selected Tab, different view (listing pages) are rendered
-        if ($this->getStatusId($status) == '1') {
-            return view('providerPage.providerTabs.newListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '2') {
-            return view('providerPage.providerTabs.pendingListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '3') {
-            return view('providerPage.providerTabs.activeListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '4') {
-            return view('providerPage.providerTabs.concludeListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        }
+        $count = $this->totalCasesCount();
+        return $this->cases($status, $count);
     }
+
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
     public function filter(Request $request, $status = 'new', $category = 'all')
     {
-        // Total count of cases as per the status (displayed in all listing pages)
-        $newCasesCount = requestTable::with(['requestClient'])->where('status', 1)->count();
-        $pendingCasesCount = requestTable::with(['requestClient'])->where('status', 2)->count();
-        $activeCasesCount = requestTable::with(['requestClient'])->where('status', 3)->count();
-        $concludeCasesCount = requestTable::with(['requestClient'])->where('status', 4)->count();
+        $count = $this->totalCasesCount();
 
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
             // Retrieve data for all request type
-            $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->paginate(10);
+            return $this->cases($status, $count);
         } else {
             // Retrieve data for specific request type using request_type_id
-            $cases = requestTable::with(['requestClient'])->where('status', $this->getStatusId($status))->where('request_type_id', $this->getCategoryId($category))->paginate(10);
-        }
-
-        if ($this->getStatusId($status) == '1') {
-            return view('providerPage.providerTabs.newListing', compact('cases',  'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '2') {
-            return view('providerPage.providerTabs.pendingListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '3') {
-            return view('providerPage.providerTabs.activeListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '4') {
-            return view('providerPage.providerTabs.concludeListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
+            // Provides data as per the status and required category
+            if ($status == 'new') {
+                $cases = requestTable::with(['requestClient'])->where('status', 1)->where('request_type_id', $this->getCategoryId($category))->paginate(10);
+                return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
+            } else if ($status == 'pending') {
+                $cases = requestTable::with(['requestClient'])->where('status', 3)->where('request_type_id', $this->getCategoryId($category))->paginate(10);
+                return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
+            } else if ($status == 'active') {
+                $cases = requestTable::with(['requestClient'])->where('status', 4)->orWhere('status', 5)->where('request_type_id', $this->getCategoryId($category))->paginate(10);
+                return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
+            } else if ($status == 'conclude') {
+                $cases = requestTable::with(['requestClient'])->where('status', 6)->where('request_type_id', $this->getCategoryId($category))->paginate(10);
+                return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
+            }
         }
     }
 
     // Search for specific keyword in first_name of requestTable 
     public function search(Request $request, $status = 'new', $category = 'all')
     {
-        // Total count of cases as per the status (displayed in all listing pages)
-        $newCasesCount = requestTable::with(['requestClient'])->where('status', 1)->count();
-        $pendingCasesCount = requestTable::with(['requestClient'])->where('status', 2)->count();
-        $activeCasesCount = requestTable::with(['requestClient'])->where('status', 3)->count();
-        $concludeCasesCount = requestTable::with(['requestClient'])->where('status', 4)->count();
-
+        $count = $this->totalCasesCount();
 
         // check for both status & category and fetch data for only the searched term  
         if ($category == 'all') {
-            $cases = requestTable::with(['requestClient'])
-                ->where('status', $this->getStatusId($status))
-                ->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
+            if ($status == 'new') {
+                $cases = requestTable::where('status', 1)->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
+            } else if ($status == 'pending') {
+                $cases = requestTable::where('status', 3)->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
+            } else if ($status == 'active') {
+                $cases = requestTable::where('status', 4)->orWhere('status', 5)->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
+            } else if ($status == 'conclude') {
+                $cases = requestTable::where('status', 6)->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
+            }
         } else {
-            $cases = requestTable::with(['requestClient'])
-                ->where('status', $this->getStatusId($status))->where('request_type_id', $this->getCategoryId($category))
-                ->where('first_name', 'like', '%' . $request->search . '%')->paginate(10);
-        }
-
-        if ($this->getStatusId($status) == '1') {
-            return view('providerPage.providerTabs.newListing', compact('cases',  'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '2') {
-            return view('providerPage.providerTabs.pendingListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '3') {
-            return view('providerPage.providerTabs.activeListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
-        } else if ($this->getStatusId($status) == '4') {
-            return view('providerPage.providerTabs.concludeListing', compact('cases', 'newCasesCount', 'pendingCasesCount', 'activeCasesCount', 'concludeCasesCount'));
+            if ($status == 'new') {
+                $cases = requestTable::where('status', 1)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
+            } else if ($status == 'pending') {
+                $cases = requestTable::where('status', 3)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
+            } else if ($status == 'active') {
+                $cases = requestTable::where('status', 4)->orWhere('status', 5)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
+            } else if ($status == 'conclude') {
+                $cases = requestTable::where('status', 6)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%');
+                })->paginate(10);
+                return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
+            }
         }
     }
 
@@ -123,19 +166,6 @@ class ProviderController extends Controller
             'concierge' => 4,
         ];
         return $categoryMapping[$category] ?? null;
-    }
-
-    //Get status id from the name of status
-    private function getStatusId($status)
-    {
-        // mapping of status names to status
-        $statusMapping = [
-            'new' => 1,
-            'pending' => 2,
-            'active' => 3,
-            'conclude' => 4,
-        ];
-        return $statusMapping[$status] ?? null;
     }
 
     public function viewCreateRequest()

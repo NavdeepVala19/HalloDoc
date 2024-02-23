@@ -22,8 +22,7 @@ return new class extends Migration
             $table->foreign('request_id')->references('id')->on('request');
             $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
-            $table->unsignedBigInteger('notes')->nullable();
-            $table->foreign('notes')->references('id')->on('request_notes');
+            $table->text('notes')->nullable();
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('phone_number')->nullable();

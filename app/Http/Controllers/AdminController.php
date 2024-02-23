@@ -12,6 +12,7 @@ use App\Models\RequestNotes;
 use App\Models\RequestWiseFile;
 
 use App\Models\caseTag;
+use App\Models\RequestStatus;
 
 // For sending Mails
 use App\Mail\SendMail;
@@ -98,6 +99,8 @@ class AdminController extends Controller
     {
         // Got request_id and reason(note)
        dd($request->requestId, $request->reason);
+
+       
 
        // change status for these case
     }

@@ -14,44 +14,28 @@ class StatusSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('status')->insert([
-            ['status_type' => 'New'],
-            ['status_type' => 'Pending'],
-            ['status_type' => 'Active'],
-            ['status_type' => 'Conclude'],
-            ['status_type' => 'Toclose'],
-            ['status_type' => 'Unpaid']
-        ]);
+        // DB::table('status')->insert([
+        //     ['status_type' => 'New'],
+        //     ['status_type' => 'Pending'],
+        //     ['status_type' => 'Active'],
+        //     ['status_type' => 'Conclude'],
+        //     ['status_type' => 'Toclose'],
+        //     ['status_type' => 'Unpaid']
+        // ]);
 
         Status::insert([
-            ['id' => 1, 'status_type' => 'Unassigned'],
-            ['id' => 2, 'status_type' => 'Pending'],
-            ['id' => 3, 'status_type' => 'Cancelled'],
-            ['id' => 4, 'status_type' => 'Accepted'],
-            ['id' => 6, 'status_type' => 'MDEnRoute'], 
-            ['id' => 7, 'status_type' => 'MDOnSite'],
-            ['id' => 9, 'status_type' => 'close'],
-            ['id' => 10, 'status_type' => 'clear'],
-            ['id' => 11, 'status_type' => 'unpaid'],
-            ['id' => 11, 'status_type' => 'conclude'],
-            ['id' => 15, 'status_type' => 'CancelledByProvider'],
+            ['id' => 1, 'status_type' => 'Unassigned'], // New state for both provider and admin
+            ['id' => 2, 'status_type' => 'Cancelled'], // to close state
+            ['id' => 3, 'status_type' => 'Accepted'], // when accepted by provider, the case will be in pending state
+            ['id' => 4, 'status_type' => 'MDEnRoute'], // agreement sent and accepted by patient - active state
+            ['id' => 5, 'status_type' => 'MDOnSite'], // call type selected by physician(provider) - active state
+            ['id' => 6, 'status_type' => 'conclude'],
+            ['id' => 7, 'status_type' => 'closed'], // request send from conclude -> toclose state
+            ['id' => 8, 'status_type' => 'clear'], // admin clear case
+            ['id' => 9, 'status_type' => 'unpaid'],
+            // ['id' => 2, 'status_type' => 'Pending'],
+            // ['id' => 11, 'status_type' => 'CancelledByProvider'],
         ]);
-
-
-
-        // 1. Unassigned
-        // 2. Pending
-        // 3. Cancelled
-        // 4. Accepted
-        // 5. MDEnRoute - service agreement sent by admin // 6. MDOnSite - Call type accepted by physician - both used in active stage
-        // 7. close - conclude -> to close state
-        // 8. clear - admin clear case
-        // 9. unpaid
-
-        // 11-Consult 
-        // 13-CancelledByProvider 
-        // 14-CCUploadedByClient 
-        // 15-CCApprovedByAdmin
 
         // to close case -> cancelled and closed
     }
