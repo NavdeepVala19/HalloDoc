@@ -106,16 +106,17 @@ class conciergeRequestController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
 
         // store symptoms in request_notes table
 
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $requestConcierge->id;
-        $request_notes->patient_notes = $request->symptoms;
+        // $request_notes = new RequestNotes();
+        // $request_notes->request_id = $requestConcierge->id;
+        // $request_notes->patient_notes = $request->symptoms;
 
-        $request_notes->save();
+        // $request_notes->save();
 
 
 

@@ -85,8 +85,7 @@ class familyRequestController extends Controller
         $patientRequest->city = $request->city;
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
-
-
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
 
@@ -103,11 +102,11 @@ class familyRequestController extends Controller
 
         // store symptoms in request_notes table
 
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $familyRequest->id;
-        $request_notes->patient_notes = $request->symptoms;
+        // $request_notes = new RequestNotes();
+        // $request_notes->request_id = $familyRequest->id;
+        // $request_notes->patient_notes = $request->symptoms;
 
-        $request_notes->save();
+        // $request_notes->save();
 
 
         // store all details of patient in allUsers table

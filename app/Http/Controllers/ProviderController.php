@@ -138,9 +138,13 @@ class ProviderController extends Controller
             }
         } else {
             if ($status == 'new') {
-                $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($request, $category) {
-                    $q->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', '%' . $request->search . '%');
-                })->paginate(10);
+                $cases = RequestStatus::where('status', 1)
+                ->whereHas('request', function ($q) use ($request, $category) {
+                    $q->where('request_type_id', $this->getCategoryId($category))
+                        ->whereHas('requestClient', function($query) use ($request)  {
+                            $query->where('first_name', 'like', '%' . $request->search . '%');
+                });
+            })->paginate(10);
 
 
                 // $cases = requestTable::where('status', 1)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
@@ -148,19 +152,47 @@ class ProviderController extends Controller
                 // })->paginate(10);
                 return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
             } else if ($status == 'pending') {
-                $cases = requestTable::where('status', 3)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
-                    $q->where('first_name', 'like', '%' . $request->search . '%');
-                })->paginate(10);
+
+                $cases = RequestStatus::where('status', 3)
+                ->whereHas('request', function ($q) use ($request, $category) {
+                    $q->where('request_type_id', $this->getCategoryId($category))
+                        ->whereHas('requestClient', function($query) use ($request)  {
+                            $query->where('first_name', 'like', '%' . $request->search . '%');
+                });
+            })->paginate(10);
+
+
+                // $cases = requestTable::where('status', 3)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                //     $q->where('first_name', 'like', '%' . $request->search . '%');
+                // })->paginate(10);
                 return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
             } else if ($status == 'active') {
-                $cases = requestTable::where('status', 4)->orWhere('status', 5)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
-                    $q->where('first_name', 'like', '%' . $request->search . '%');
-                })->paginate(10);
+
+                $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
+                ->whereHas('request', function ($q) use ($request, $category) {
+                    $q->where('request_type_id', $this->getCategoryId($category))
+                        ->whereHas('requestClient', function($query) use ($request)  {
+                            $query->where('first_name', 'like', '%' . $request->search . '%');
+                });
+            })->paginate(10);
+
+                // $cases = requestTable::where('status', 4)->orWhere('status', 5)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                //     $q->where('first_name', 'like', '%' . $request->search . '%');
+                // })->paginate(10);
                 return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
             } else if ($status == 'conclude') {
-                $cases = requestTable::where('status', 6)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
-                    $q->where('first_name', 'like', '%' . $request->search . '%');
-                })->paginate(10);
+
+                $cases = RequestStatus::where('status', 6)
+                ->whereHas('request', function ($q) use ($request, $category) {
+                    $q->where('request_type_id', $this->getCategoryId($category))
+                        ->whereHas('requestClient', function($query) use ($request)  {
+                            $query->where('first_name', 'like', '%' . $request->search . '%');
+                });
+            })->paginate(10);
+                
+                // $cases = requestTable::where('status', 6)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
+                //     $q->where('first_name', 'like', '%' . $request->search . '%');
+                // })->paginate(10);
                 return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
             }
         }
