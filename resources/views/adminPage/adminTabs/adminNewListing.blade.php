@@ -290,19 +290,19 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'new']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
-            <div class="table-responsive">
+            <div class="a">
                 <table class="table table-hover ">
                     <thead class="table-secondary">
                         <tr>
@@ -319,15 +319,13 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                            <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->first_name }}</td>
-                                <td>Patient DOB</td>
-                                <td>Requestor Name</td>
+                            <tr .class="type-{{ $case->request_type_id }}">
+                                <td>{{ $case ->client_first_name}}</td>
+                                <td>{{ $case->date_of_birth}}</td>
+                                <td>{{$case ->request_first_name}}</td>
                                 <td>{{ $case->created_at }}</td>
-                                <td>{{ $case->phone_number }}</td>
-                                <td>
-                                    {{-- {{ $case->requestClient->street }}, {{ $case->requestClient->city }},{{ $case->requestClient->state }} --}}
-                                </td>
+                                <td>{{ $case->mobile }}</td>
+                                <td> {{ $case->street}}</td>
                                 <td>Notes</td>
                                 <td>
                                     <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
@@ -339,7 +337,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                             <button class="assign-case-btn"><i
                                                     class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
                                             <button class="cancel-case-btn" data-id="{{ $case->id }}"
-                                                data-patient_name="{{ $case->first_name }} {{ $case->last_name }}"><i
+                                                data-patient_name="{{ $case->request_first_name }} {{ $case->request_last_name }}"><i
                                                     class="bi bi-x-circle me-2 ms-3"></i>Cancel
                                                 Case</button>
                                             <button><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</button>
@@ -361,11 +359,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->first_name }} </p>
-                            <span>
-                                @if ($case->requestClient)
-                                    {{ $case->requestClient->address }}
-                                @endif Address
+                            <p>{{ $case->request_first_name }} </p>
+                           <span>
+                                    {{ $case->street }}
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
@@ -398,7 +394,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <div>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of birth :
-                                {{ $case->date }}
+                                {{ $case->date_of_birth }}
                             </span>
                             <br>
                             <span>
@@ -408,27 +404,27 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                             <br>
                             <span>
                                 <i class="bi bi-telephone"></i> Patient :
-                                {{ $case->phone_number }}
+                                {{ $case->mobile }}
                             </span>
                             <br>
                              <span>
                                 <i class="bi bi-cash"></i> Transfer :
-                                {{ $case->phone_number }}
+                                {{ $case->client_first_name }}
                             </span>
                             <br>
                              <span>
                                 <i class="bi bi-calendar3"></i> Date of services :
-                                {{ $case->phone_number }}
+                                {{ $case->created_at }}
                             </span>
                             <br>
                              <span>
                                 <i class="bi bi-person-circle"></i> Physician :
-                                {{ $case->phone_number }}
+                                {{ $case->request_last_name }}
                             </span>
                             <br>
                              <span>
                                 <i class="bi bi-person-plus-fill"></i> Requestor:
-                                {{ $case->phone_number }}
+                                {{ $case->request_first_name }}
                             </span>
 
                             <div class="grid-2-listing">

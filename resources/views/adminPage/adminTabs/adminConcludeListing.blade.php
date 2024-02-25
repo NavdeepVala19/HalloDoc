@@ -199,15 +199,15 @@
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'conclude']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'conclude']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'conclude']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'conclude']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'conclude']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'conclude']) }}"
                         class="d-flex gap-2 filter-btn "> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'conclude']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'conclude']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'conclude']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'conclude']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
@@ -228,12 +228,12 @@
                     <tbody>
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->first_name }}</td>
-                                <td>Patient DOB</td>
+                                <td>{{ $case->request_first_name }}</td>
+                                <td>{{ $case->date_of_birth }}</td>
                                 <td>Physician Name</td>
                                 <td>{{ $case->created_at }}</td>
-                                <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->address }}</td>
+                                <td>{{ $case->mobile }}</td>
+                                <td>{{ $case->street }}</td>
                                 <td>
                                     <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
                                     <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
@@ -266,11 +266,11 @@
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->first_name }} </p>
+                            <p>{{ $case->request_first_name }} </p>
                             <span>
-                                @if ($case->requestClient)
-                                    {{ $case->requestClient->address }}
-                                @endif Address
+                              
+                                    {{ $case->street }}
+                           
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
@@ -302,13 +302,13 @@
                         <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
-                                <i class="bi bi-envelope"></i> Email : example@xyz.com
-                                {{-- {{$case->requestClient->email}} --}}
+                                <i class="bi bi-envelope"></i> Email :
+                                 {{$case->email}}
                             </span>
                             <br>
                             <span>
-                                <i class="bi bi-telephone"></i> Patient : +91 123456789
-                                {{-- {{$case->requestClient->phone_number}} --}}
+                                <i class="bi bi-telephone"></i> Patient : 
+                                {{$case->mobile}} 
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="conclude-care-btn">Conclude Care</button>

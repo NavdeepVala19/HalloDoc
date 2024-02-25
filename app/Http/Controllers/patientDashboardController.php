@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\view;
 use App\Models\request_Client;
 use App\Models\RequestTable;
@@ -148,15 +148,16 @@ class patientDashboardController extends Controller
         // If you need it in a specific format or just the date part
         // Outputs: 2024-02-16
 
-        // $dateString = $createdAt->toDateString();
+        // $dateString = $createdAt->toDateString()
 
+        $userData = Auth::user();
+        $email = $userData["email"];
+        
 
         $data = DB::table('request')
             ->join('status', 'request.status', '=', 'status.id')
             ->select('request.created_at', 'status.status_type')
             ->paginate(10);
-
-            // dd($data);
      
         return view('patientSite/patientDashboard', compact('data'));
 
