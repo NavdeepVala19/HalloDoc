@@ -125,7 +125,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
                     <span>
-                        {{ $newCasesCount }}
+                        {{ $count['newCase'] }}
                     </span>
                 </div>
             </a>
@@ -136,7 +136,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <i class="bi bi-person-square"></i> PENDING
                     </span>
                     <span>
-                        {{ $pendingCasesCount }}
+                        {{ $count['pendingCase'] }}
                     </span>
                 </div>
             </a>
@@ -147,7 +147,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <i class="bi bi-check2-circle"></i> ACTIVE
                     </span>
                     <span>
-                        {{ $activeCasesCount }}
+                        {{ $count['activeCase'] }}
                     </span>
                 </div>
             </a>
@@ -158,7 +158,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>
                     <span>
-                        {{ $concludeCasesCount }}
+                        {{ $count['concludeCase'] }}
                     </span>
                 </div>
             </a>
@@ -169,7 +169,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <i class="bi bi-person-fill-x"></i> TO CLOSE
                     </span>
                     <span>
-                        {{ $tocloseCasesCount }}
+                        {{ $count['tocloseCase'] }}
                     </span>
                 </div>
             </a>
@@ -180,7 +180,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <i class="bi bi-cash-coin"></i> UNPAID
                     </span>
                     <span>
-                        {{ $unpaidCasesCount }}
+                        {{ $count['unpaidCase'] }}
                     </span>
                 </div>
             </a>
@@ -275,21 +275,23 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                            <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->first_name }}</td>
+                            <tr class="type-{{ $case->request->request_type_id }}">
+                                <td>{{ $case->request->requestClient->first_name }}</td>
                                 <td>Physician Name</td>
-                                <td>{{ $case->created_at }}</td>
-                                <td>{{ $case->phone_number }}</td>
-                                <td>{{ $case->address }}</td>
+                                <td>{{ $case->request->created_at }}</td>
+                                <td>{{ $case->request->phone_number }}</td>
+                                <td>
+                                    {{ $case->request->requestClient->street }}, {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                </td>
                                 <td>
                                     <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
                                     <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
                                 </td>
                                 <td>
                                     <div class="action-container">
-                                        <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>
+                                        <button class="table-btn action-btn" data-id={{ $case->request->id }}>Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <button><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                 Uploads</button>

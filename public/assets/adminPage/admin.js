@@ -29,6 +29,9 @@ $(document).ready(function () {
     $(".block-case-btn").click(function () {
         $(".block-case").show();
         $(".overlay").show();
+
+        $(".requestId").val($(this).data("id"));
+        $(".displayPatientName").html($(this).data("patient_name"));
     });
 
 

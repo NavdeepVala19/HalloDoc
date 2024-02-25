@@ -305,3 +305,6 @@ Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])-
 // Cancel Case by admin
 Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
 Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');
+
+// Block Case by admin
+Route::post('/block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
