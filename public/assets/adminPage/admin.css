@@ -3,15 +3,68 @@
 }
 
 .case-toclose {
-    border: 1px solid rgb(83, 7, 79);
-    color: rgb(0, 29, 50);
-    background-color: rgba(18, 137, 241, 0.509);
+    position: relative;
+    border: 1px solid rgb(173, 199, 229);
+    color: rgb(0, 68, 124);
+    background-color: rgb(230, 237, 245);
+}
+
+.case-toclose::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0;
+
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+}
+
+.case-toclose.active::after,
+.case-toclose:hover::after {
+    border-top: 20px solid rgb(2, 112, 214);
+    opacity: 1;
+}
+
+.case-toclose:hover,
+.case-toclose.active {
+    border: 1px solid rgb(173, 199, 229);
+    color: white;
+    background-color: rgb(2, 112, 214);
 }
 
 .case-unpaid {
-    border: 1px solid rgb(83, 7, 79);
-    color: rgb(57, 28, 137);
-    background-color: rgb(225, 222, 236);
+    position: relative;
+    border: 1px solid rgb(160, 148, 216);
+    color: rgb(86, 25, 133);
+    background-color: rgb(238, 237, 242);
+}
+
+.case-unpaid::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0;
+
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+}
+
+.case-unpaid.active::after,
+.case-unpaid:hover::after {
+    border-top: 20px solid rgb(153, 102, 204);
+    opacity: 1;
+}
+
+.case-unpaid:hover,
+.case-unpaid.active {
+    color: white;
+    background-color: rgb(153, 102, 204);
 }
 
 .cancel-case {

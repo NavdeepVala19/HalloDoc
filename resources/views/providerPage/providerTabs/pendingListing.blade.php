@@ -117,7 +117,7 @@ pending state, providers need to send an agreement link to patients. --}}
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('provider.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
-                <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
+                <div class="case case-new  p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
@@ -129,7 +129,7 @@ pending state, providers need to send an agreement link to patients. --}}
 
             <a href="{{ route('provider.status', ['status' => 'pending']) }}" class="nav-link active"
                 id="nav-pending-tab">
-                <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div class="case case-pending active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-square"></i> PENDING
                     </span>

@@ -120,7 +120,7 @@ pending state, providers need to send an agreement link to patients. --}}
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
-                <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
+                <div class="case case-new  p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
@@ -164,7 +164,7 @@ pending state, providers need to send an agreement link to patients. --}}
             </a>
 
             <a href="{{ route('admin.status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
-                <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div class="case case-toclose active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-fill-x"></i> TO CLOSE
                     </span>
@@ -245,15 +245,15 @@ pending state, providers need to send an agreement link to patients. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'toclose']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
@@ -325,11 +325,11 @@ pending state, providers need to send an agreement link to patients. --}}
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->first_name }} </p>
+                            <p>{{ $case->request_first_name }} </p>
                             <span>
-                                @if ($case->requestClient)
-                                    {{ $case->requestClient->address }}
-                                @endif Address
+                     
+                                    {{ $case->street }}
+                               
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
@@ -361,18 +361,18 @@ pending state, providers need to send an agreement link to patients. --}}
                         <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
-                                <i class="bi bi-envelope"></i> Email : example@xyz.com
-                                {{-- {{$case->requestClient->email}} --}}
+                                <i class="bi bi-envelope"></i> Email : 
+                                 {{$case->email}} 
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-geo-alt"></i> Address :
-                                {{-- {{$case->requestClient->email}} --}}
+                                {{$case->street}}
                             </span>
                             <br>
                             <span>
-                                <i class="bi bi-telephone"></i> Patient : +91 123456789
-                                {{-- {{$case->requestClient->phone_number}} --}}
+                                <i class="bi bi-telephone"></i> Patient : 
+                               {{$case->mobile}} 
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>

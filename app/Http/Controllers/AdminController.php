@@ -10,7 +10,7 @@ use App\Models\request_Client;
 use App\Models\MedicalReport;
 use App\Models\RequestNotes;
 use App\Models\RequestWiseFile;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\caseTag;
 use App\Models\RequestStatus;
 
@@ -65,11 +65,12 @@ class AdminController extends Controller
             $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
             return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
         } else if ($status == 'toclose') {
-            $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 7)->orWhere('status', 7)->paginate(10);
             return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
         } else if ($status == 'unpaid') {
             $cases = RequestStatus::with('request')->where('status', 9)->paginate(10);
             return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
+
         }
     }
 
@@ -83,9 +84,11 @@ class AdminController extends Controller
 
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
-    public function filter(Request $request, $status = 'new', $category = 'all')
+
+    public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
         $count = $this->totalCasesCount();
+
 
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
@@ -98,22 +101,32 @@ class AdminController extends Controller
                 $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
+            } else if ($status == 'toclose') {
+                $cases = RequestStatus::where('status', 7)->whereHas('request', function ($q) use ($category) {
+                    $q->where('request_type_id', $this->getCategoryId($category));
+                })->paginate(10);
+                return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+            } else if ($status == 'unpaid') {
+                $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($category) {
+                    $q->where('request_type_id', $this->getCategoryId($category));
+                })->paginate(10);
+                return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
             }
         }
     }
@@ -189,6 +202,7 @@ class AdminController extends Controller
             }
         }
     }
+
 
     //Get category id from the name of category
     private function getCategoryId($category)

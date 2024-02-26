@@ -301,19 +301,19 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'new']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'new']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
-            <div class="table-responsive">
+            <div class="a">
                 <table class="table table-hover ">
                     <thead class="table-secondary">
                         <tr>
@@ -330,11 +330,12 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
+
                             @if (!empty($case->request) && !empty($case->request->requestClient))
                                 <tr class="type-{{ $case->request->request_type_id }}">
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>Requestor Name</td>
+                                    <td>{{$case->request->first_name}}</td>
                                     <td>{{ $case->request->created_at }}</td>
                                     <td>{{ $case->request->phone_number }}</td>
                                     <td>

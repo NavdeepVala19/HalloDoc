@@ -294,7 +294,9 @@ Route::get('/admin', function () {
 })->name('admin.dashboard');
 
 // For Filtering the request for admin dashboard
-Route::get('/admin/{status}/{category}', [AdminController::class, 'filter'])->name("admin.listing");
+Route::get('/admin/{status}/{category}', [AdminController::class, 'adminFilter'])->name("admin.listing");
+
+
 
 // Different status routing
 Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.status");
