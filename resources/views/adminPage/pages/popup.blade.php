@@ -13,44 +13,6 @@
 
 @section('content')
   
-    {{-- Transfer Request Pop-up --}}
-    {{-- This pop-up will open when admin clicks on “Transfer” link from Actions menu. From the pending state, admin
-can transfer assigned request to another physician. --}}
-    {{-- <div class="pop-up transfer-case">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Transfer Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <p class="m-2">To transfer this request, search and select another Physician</p>
-        <div>
-            <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                    <option selected>Regions</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <label for="floatingSelect">Narrow Search by Region</label>
-            </div>
-            <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                    <option selected>Select Physician</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <label for="floatingSelect">Select Physician</label>
-            </div>
-            <div class="form-floating">
-                <textarea class="form-control" placeholder="Description" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Description</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill cancel-case">Confirm</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div> --}}
 
 
     {{-- Clear Case Pop-up --}}

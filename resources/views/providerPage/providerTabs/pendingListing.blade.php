@@ -226,6 +226,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
+                    
                             <tr class="type-{{ $case->request->request_type_id }}">
                                 <td>{{ $case->request->requestClient->first_name }}</td>
                                 <td>{{ $case->request->requestClient->phone_number }}</td>

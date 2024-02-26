@@ -13,6 +13,6 @@ class RequestStatus extends Model
 
     public function request()
     {
-        return $this->belongsTo(RequestTable::class,'request_id');
+        return $this->hasOne(RequestTable::class,'id');
     }
 }

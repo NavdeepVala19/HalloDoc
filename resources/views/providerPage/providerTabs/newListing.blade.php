@@ -201,72 +201,74 @@
 
             <div class="mobile-listing">
                 @foreach ($cases as $case)
-                    <div class="mobile-list d-flex justify-content-between">
-                        <div class="d-flex flex-column">
-                            <p>{{ $case->request->requestClient->first_name }} </p>
-                            <span>
-                                @if ($case->request->requestClient)
-                                    {{ $case->request->requestClient->street }},
-                                    {{ $case->request->requestClient->city }},
-                                    {{ $case->request->requestClient->state }}
+                    @if (!empty($case->request) && !empty($case->request->requestClient))
+                        <div class="mobile-list d-flex justify-content-between">
+                            <div class="d-flex flex-column">
+                                <p>{{ $case->request->requestClient->first_name }} </p>
+                                <span>
+                                    @if ($case->request->requestClient)
+                                        {{ $case->request->requestClient->street }},
+                                        {{ $case->request->requestClient->city }},
+                                        {{ $case->request->requestClient->state }}
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="d-flex flex-column align-items-center justify-content-around">
+                                @if ($case->request->request_type_id == 1)
+                                    <span>
+                                        Patient
+                                        <i class="bi bi-circle-fill ms-1 green"></i>
+                                    </span>
+                                @elseif ($case->request->request_type_id == 2)
+                                    <span>
+                                        Family/Friend
+                                        <i class="bi bi-circle-fill ms-1 yellow"></i>
+                                    </span>
+                                @elseif ($case->request->request_type_id == 3)
+                                    <span>
+                                        Business
+                                        <i class="bi bi-circle-fill ms-1 red"></i>
+                                    </span>
+                                @elseif ($case->request->request_type_id == 4)
+                                    <span>
+                                        Concierge
+                                        <i class="bi bi-circle-fill ms-1 blue"></i>
+                                    </span>
                                 @endif
-                            </span>
-                        </div>
-                        <div class="d-flex flex-column align-items-center justify-content-around">
-                            @if ($case->request->request_type_id == 1)
-                                <span>
-                                    Patient
-                                    <i class="bi bi-circle-fill ms-1 green"></i>
-                                </span>
-                            @elseif ($case->request->request_type_id == 2)
-                                <span>
-                                    Family/Friend
-                                    <i class="bi bi-circle-fill ms-1 yellow"></i>
-                                </span>
-                            @elseif ($case->request->request_type_id == 3)
-                                <span>
-                                    Business
-                                    <i class="bi bi-circle-fill ms-1 red"></i>
-                                </span>
-                            @elseif ($case->request->request_type_id == 4)
-                                <span>
-                                    Concierge
-                                    <i class="bi bi-circle-fill ms-1 blue"></i>
-                                </span>
-                            @endif
-                            <button class="map-btn">Map Location</button>
-                        </div>
-                    </div>
-                    <div class="more-info">
-                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
-                        <div>
-                            <span>
-                                <i class="bi bi-calendar3"></i> Date of birth :
-                                {{ $case->date }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-envelope"></i> Email :
-                                {{ $case->email }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-telephone"></i> Patient :
-                                {{ $case->phone_number }}
-                            </span>
-                            <div class="grid-2-listing">
-                                <button class="accept-btn">Accept</button>
-                                <a href="{{ route('provider.view.case', $case->id) }}"
-                                    class="secondary-btn text-center">View
-                                    Notes</a>
-                                <button class="secondary-btn">Email</button>
+                                <button class="map-btn">Map Location</button>
                             </div>
                         </div>
-                        <div>
-                            Chat With:
-                            <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                        <div class="more-info">
+                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <div>
+                                <span>
+                                    <i class="bi bi-calendar3"></i> Date of birth :
+                                    {{ $case->date }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-envelope"></i> Email :
+                                    {{ $case->email }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-telephone"></i> Patient :
+                                    {{ $case->phone_number }}
+                                </span>
+                                <div class="grid-2-listing">
+                                    <button class="accept-btn">Accept</button>
+                                    <a href="{{ route('provider.view.case', $case->id) }}"
+                                        class="secondary-btn text-center">View
+                                        Notes</a>
+                                    <button class="secondary-btn">Email</button>
+                                </div>
+                            </div>
+                            <div>
+                                Chat With:
+                                <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
             </div>
 

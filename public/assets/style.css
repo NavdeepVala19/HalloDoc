@@ -2,8 +2,6 @@
 :root.light {
     --blue: #3c9eff;
     --red: red;
-    --color-bg: #ffffff;
-    --color-fg: #000000;
 }
 
 :root.dark {
@@ -15,9 +13,6 @@
 body {
     font-family: "Poppins", sans-serif;
     font-style: normal;
-    background-color: var(--color-bg);
-    color: var(--color-fg);
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {

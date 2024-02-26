@@ -10,4 +10,11 @@ class BlockRequest extends Model
     use HasFactory;
 
     protected $table = 'block_request';
+
+    protected $fillable = [
+        'request_id',
+        'reason',
+        'email',
+        'phone_number'
+    ];
 }

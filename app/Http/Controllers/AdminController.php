@@ -230,9 +230,20 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    // Admin Blocks patient
     public function blockCase(Request $request)
     {
-        BlockRequest::insert(['request_id' => $request->requestId, 'reason' => $request->block_reason]);
+        // Block patient phone number, email, requestId and reason given by admin stored in block_request table
+        $client = request_Client::where('request_id', $request->requestId)->first();
+        BlockRequest::create([
+            'request_id' => $request->requestId,
+            'reason' => $request->block_reason,
+            'phone_number' => $client->phone_number,
+            'email' => $client->email
+        ]);
+        // After that case is deleted from both, request_table and request_client table
+        RequestTable::where('id', $request->requestId)->delete();
+        request_Client::where('request_id', $request->requestId)->delete();
         return redirect()->back();
     }
 }

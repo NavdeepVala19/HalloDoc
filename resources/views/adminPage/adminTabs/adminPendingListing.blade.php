@@ -21,6 +21,46 @@
 
     <div class="overlay"></div>
 
+
+    {{-- Transfer Request Pop-up --}}
+    {{-- This pop-up will open when admin clicks on “Transfer” link from Actions menu. From the pending state, admin
+can transfer assigned request to another physician. --}}
+    <div class="pop-up transfer-case">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Transfer Request</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <p class="m-2">To transfer this request, search and select another Physician</p>
+        <div class="m-3">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option selected>Regions</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <label for="floatingSelect">Narrow Search by Region</label>
+            </div>
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option selected>Select Physician</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <label for="floatingSelect">Select Physician</label>
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Description" id="floatingTextarea2"></textarea>
+                <label for="floatingTextarea2">Description</label>
+            </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <button class="primary-fill cancel-case">Confirm</button>
+            <button class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </div>
+
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
 pending state, providers need to send an agreement link to patients. --}}
@@ -99,23 +139,7 @@ pending state, providers need to send an agreement link to patients. --}}
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
-    {{-- Transfer Request --}}
-    <div class="pop-up transfer-request">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Transfer Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-            <div class="form-floating">
-                <textarea class="form-control transfer-description" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Description</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Submit</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
+   
 
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
@@ -278,39 +302,43 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                        @if (!empty($case->request) && !empty($case->request->requestClient))
-                            <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->request->requestClient->first_name }}</td>
-                                <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                <td>Requestor Name</td>
-                                <td>Physician Name</td>
-                                <td>{{ $case->request->created_at }}</td>
-                                <td>{{ $case->request->phone_number }}</td>
-                                <td>{{ $case->request->requestClient->street }}, {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}</td>
-                                <td>{{$case->request->requestClient->notes}}</td>
-                                <td>
-                                    <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                    <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
-                                </td>
-                                <td>
-                                    <div class="action-container">
-                                        <button class="table-btn action-btn">Actions</button>
-                                        <div class="action-menu">
-                                            <a href="{{route('provider.view.case', $case->request->id)}}"><i
-                                                    class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                            <a href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}"><i
-                                                    class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
-                                            <button><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</button>
-                                            <button class="transfer-btn"><i
-                                                    class="bi bi-send me-2 ms-3"></i>Transfer</button>
-                                            <button><i class="bi bi-x-circle me-2 ms-3"></i>Clear Case</button>
-                                            <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
-                                                data-request_type_id={{ $case->request->request_type_id }}><i
-                                                    class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
+                            @if (!empty($case->request) && !empty($case->request->requestClient))
+                                <tr class="type-{{ $case->request->request_type_id }}">
+                                    <td>{{ $case->request->requestClient->first_name }}</td>
+                                    <td>{{ $case->request->requestClient->date_of_birth }}</td>
+                                    <td>Requestor Name</td>
+                                    <td>Physician Name</td>
+                                    <td>{{ $case->request->created_at }}</td>
+                                    <td>{{ $case->request->phone_number }}</td>
+                                    <td>{{ $case->request->requestClient->street }},
+                                        {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                    </td>
+                                    <td>{{ $case->request->requestClient->notes }}</td>
+                                    <td>
+                                        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
+                                        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
+                                    </td>
+                                    <td>
+                                        <div class="action-container">
+                                            <button class="table-btn action-btn">Actions</button>
+                                            <div class="action-menu">
+                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
+                                                        class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                                                <a
+                                                    href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}"><i
+                                                        class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
+                                                    Uploads</a>
+                                                <button><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</button>
+                                                <button class="transfer-btn"><i
+                                                        class="bi bi-send me-2 ms-3"></i>Transfer</button>
+                                                <button><i class="bi bi-x-circle me-2 ms-3"></i>Clear Case</button>
+                                                <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
+                                                    data-request_type_id={{ $case->request->request_type_id }}><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             @endif
                         @endforeach
                     </tbody>

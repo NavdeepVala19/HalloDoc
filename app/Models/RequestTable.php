@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\request_Client;
 use App\Models\Status;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RequestTable extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'request';
 
@@ -55,6 +57,11 @@ class RequestTable extends Model
     {
         // return $this->belongsTo(request_Client::class);
         return $this->hasOne(request_Client::class, 'request_id');
+    }
+
+    public function requestStatus()
+    {
+        return $this->belongsTo(RequestStatus::class);
     }
 
 

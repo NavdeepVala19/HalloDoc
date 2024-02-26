@@ -42,18 +42,18 @@ class familyRequestController extends Controller
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
 
-        $requestEmail->save();
+        // $requestEmail->save();
 
 
 
         // family request creating
 
         $familyRequest = new RequestTable();
-        $requestStatus = new RequestStatus();
 
 
 
-        $familyRequest->status = $requestStatus->id;
+
+        // $familyRequest->status = $requestStatus->id;
         $familyRequest->user_id = $requestEmail->id;
         $familyRequest->request_type_id = $request->request_type;
         $familyRequest->first_name = $request->family_first_name;
@@ -63,14 +63,18 @@ class familyRequestController extends Controller
         $familyRequest->relation_name = $request->family_relation;
         $familyRequest->save();
 
-
+        $requestStatus = new RequestStatus();
         $requestStatus->request_id = $familyRequest->id;
         $requestStatus->status = 1;
         $requestStatus->save();
 
 
+
+
         if (!empty($requestStatus)) {
-            $familyRequest->update(["status" => $requestStatus->id]);
+            // dd($requestStatus->id);
+            // $familyRequest->update(['request.status' => $requestStatus->id]);
+            $familyRequest->update(['status' => $requestStatus->id]);
         }
 
 

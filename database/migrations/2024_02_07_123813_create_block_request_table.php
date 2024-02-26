@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('request_id')->nullable();
             $table->foreign('request_id')->references('id')->on('request');
             
-            $table->integer('phone_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('email')->nullable();
             $table->boolean('is_active')->nullable();
             $table->string('reason')->nullable();

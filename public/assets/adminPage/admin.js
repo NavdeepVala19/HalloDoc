@@ -34,6 +34,10 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
     });
 
+$('.transfer-btn').click(function(){
+    $('.transfer-case').show();
+    $('.overlay').show();
+})
 
     // changes start from here
     
