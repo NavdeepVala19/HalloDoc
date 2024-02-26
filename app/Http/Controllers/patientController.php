@@ -76,10 +76,7 @@ class patientController extends Controller
         $requestEmail->save();
 
         $requestData = new RequestTable();
-        
         $requestStatus = new RequestStatus();
-
-
 
         $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
@@ -95,7 +92,7 @@ class patientController extends Controller
         $requestStatus->save();
 
         if(!empty($requestStatus)){
-                $requestData->update(["status"=> $requestStatus->id]);
+                $requestData->update(["status" => $requestStatus->id]);
         }
 
 
@@ -113,6 +110,8 @@ class patientController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
+
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
 
@@ -134,11 +133,11 @@ class patientController extends Controller
 
         // store symptoms in request_notes table
 
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $requestData->id;
-        $request_notes->patient_notes = $request->symptoms;
+        // $request_notes = new RequestNotes();
+        // $request_notes->request_id = $requestData->id;
+        // $request_notes->patient_notes = $request->symptoms;
 
-        $request_notes->save();
+        // $request_notes->save();
 
 
 

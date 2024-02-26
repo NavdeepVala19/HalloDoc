@@ -33,7 +33,8 @@
             <input type="text" class="requestId" name="requestId" value="" hidden>
             <div class="m-3">
                 <div class="form-floating">
-                    <select class="form-select" class="cancel-options" id="floatingSelect" aria-label="Floating label select example">
+                    <select class="form-select" name="case_tag" class="cancel-options" id="floatingSelect"
+                        aria-label="Floating label select example">
                         <option selected>Reasons</option>
                         {{-- <option value="1">One</option>
                         <option value="2">Two</option>
@@ -104,16 +105,20 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         </div>
         <div class="m-3">
             <span>Patient Name: </span>
-            <span>It should display patient name test test</span>
+            <span class="displayPatientName"></span>
         </div>
         <div class="m-3">
-            <div class="form-floating">
-                <textarea class="form-control" placeholder="Reason for block request" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Reason for Block Request</label>
-            </div>
+            <form action="route{{'admin.block.case'}}" method="POST">
+                @csrf
+                <input type="text" class="requestId" name="requestId" value="" hidden>
+                <div class="form-floating">
+                    <textarea class="form-control" name="block_reason" placeholder="Reason for block request" id="floatingTextarea2"></textarea>
+                    <label for="floatingTextarea2">Reason for Block Request</label>
+                </div>
+            </form>
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Confirm</button>
+            <input type="submit" value="Confirm" class="primary-fill">
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
@@ -162,7 +167,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         </form>
     </div>
 
-    
+
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
@@ -171,7 +176,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
                     <span>
-                        {{ $newCasesCount }}
+                        {{ $count['newCase'] }}
                     </span>
                 </div>
             </a>
@@ -182,7 +187,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <i class="bi bi-person-square"></i> PENDING
                     </span>
                     <span>
-                        {{ $pendingCasesCount }}
+                        {{ $count['pendingCase'] }}
                     </span>
                 </div>
             </a>
@@ -193,7 +198,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <i class="bi bi-check2-circle"></i> ACTIVE
                     </span>
                     <span>
-                        {{ $activeCasesCount }}
+                        {{ $count['activeCase'] }}
                     </span>
                 </div>
             </a>
@@ -204,7 +209,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>
                     <span>
-                        {{ $concludeCasesCount }}
+                        {{ $count['concludeCase'] }}
                     </span>
                 </div>
             </a>
@@ -215,7 +220,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <i class="bi bi-person-fill-x"></i> TO CLOSE
                     </span>
                     <span>
-                        {{ $tocloseCasesCount }}
+                        {{ $count['tocloseCase'] }}
                     </span>
                 </div>
             </a>
@@ -226,7 +231,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <i class="bi bi-cash-coin"></i> UNPAID
                     </span>
                     <span>
-                        {{ $unpaidCasesCount }}
+                        {{ $count['unpaidCase'] }}
                     </span>
                 </div>
             </a>
@@ -319,37 +324,44 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                            <tr .class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case ->client_first_name}}</td>
-                                <td>{{ $case->date_of_birth}}</td>
-                                <td>{{$case ->request_first_name}}</td>
-                                <td>{{ $case->created_at }}</td>
-                                <td>{{ $case->mobile }}</td>
-                                <td> {{ $case->street}}</td>
-                                <td>Notes</td>
-                                <td>
-                                    <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
-                                </td>
-                                <td>
-                                    <div class="action-container">
-                                        <button class="table-btn action-btn">Actions</button>
-                                        <div class="action-menu">
-                                            <button class="assign-case-btn"><i
-                                                    class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
-                                            <button class="cancel-case-btn" data-id="{{ $case->id }}"
-                                                data-patient_name="{{ $case->request_first_name }} {{ $case->request_last_name }}"><i
-                                                    class="bi bi-x-circle me-2 ms-3"></i>Cancel
-                                                Case</button>
-                                            <button><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</button>
-                                            <a href="/view-notes/{{ $case->id }}"><i
-                                                    class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                            <button class="block-case-btn">
-                                                <i class="bi bi-ban me-2 ms-3"></i>
-                                                Block Patient</button>
+                            @if (!empty($case->request) && !empty($case->request->requestClient))
+                                <tr class="type-{{ $case->request->request_type_id }}">
+                                    <td>{{ $case->request->requestClient->first_name }}</td>
+                                    <td>{{ $case->request->requestClient->date_of_birth }}</td>
+                                    <td>Requestor Name</td>
+                                    <td>{{ $case->request->created_at }}</td>
+                                    <td>{{ $case->request->phone_number }}</td>
+                                    <td>
+                                        {{ $case->request->requestClient->street }},
+                                        {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                    </td>
+                                    <td>{{ $case->request->requestClient->notes }}</td>
+                                    <td>
+                                        <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
+                                    </td>
+                                    <td>
+                                        <div class="action-container">
+                                            <button class="table-btn action-btn">Actions</button>
+                                            <div class="action-menu">
+                                                <button class="assign-case-btn"><i
+                                                        class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
+                                                <button class="cancel-case-btn" data-id="{{ $case->request->id }}"
+                                                    data-patient_name="{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}"><i
+                                                        class="bi bi-x-circle me-2 ms-3"></i>Cancel
+                                                    Case</button>
+                                                <button><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View
+                                                    Case</button>
+                                                <a href="/view-notes/{{ $case->request->id }}"><i
+                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
+                                                <button class="block-case-btn" data-id="{{ $case->request->id }}"
+                                                    data-patient_name="{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}">
+                                                    <i class="bi bi-ban me-2 ms-3"></i>
+                                                    Block Patient</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -359,28 +371,30 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->request_first_name }} </p>
-                           <span>
-                                    {{ $case->street }}
+                            <p>{{ $case->request->first_name }} </p>
+                            <span>
+                                @if ($case->requestClient)
+                                    {{ $case->request->requestClient->address }}
+                                @endif Address
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
-                            @if ($case->request_type_id == 1)
+                            @if ($case->request->request_type_id == 1)
                                 <span>
                                     Patient
                                     <i class="bi bi-circle-fill ms-1 green"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 2)
+                            @elseif ($case->request->request_type_id == 2)
                                 <span>
                                     Family/Friend
                                     <i class="bi bi-circle-fill ms-1 yellow"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 3)
+                            @elseif ($case->request->request_type_id == 3)
                                 <span>
                                     Business
                                     <i class="bi bi-circle-fill ms-1 red"></i>
                                 </span>
-                            @elseif ($case->request_type_id == 4)
+                            @elseif ($case->request->request_type_id == 4)
                                 <span>
                                     Concierge
                                     <i class="bi bi-circle-fill ms-1 blue"></i>
@@ -390,50 +404,57 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         </div>
                     </div>
                     <div class="more-info">
-                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                        <a href="/view-case/{{ $case->request->id }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of birth :
-                                {{ $case->date_of_birth }}
+                                {{ $case->request->date }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-envelope"></i> Email :
-                                {{ $case->email }}
+                                {{ $case->request->email }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-telephone"></i> Patient :
-                                {{ $case->mobile }}
+                                {{ $case->request->phone_number }}
                             </span>
                             <br>
-                             <span>
+                            <span>
                                 <i class="bi bi-cash"></i> Transfer :
-                                {{ $case->client_first_name }}
+                                {{ $case->request->phone_number }}
                             </span>
                             <br>
-                             <span>
+                            <span>
                                 <i class="bi bi-calendar3"></i> Date of services :
-                                {{ $case->created_at }}
+                                {{ $case->request->phone_number }}
                             </span>
                             <br>
-                             <span>
+                            <span>
                                 <i class="bi bi-person-circle"></i> Physician :
-                                {{ $case->request_last_name }}
+                                {{ $case->request->phone_number }}
                             </span>
                             <br>
-                             <span>
+                            <span>
                                 <i class="bi bi-person-plus-fill"></i> Requestor:
-                                {{ $case->request_first_name }}
+                                {{ $case->request->phone_number }}
                             </span>
 
                             <div class="grid-2-listing">
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Notes</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-1 text-center">Doctors Notes</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View Uploads</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">Encounter</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-2 text-center">Orders</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">Email</a>
+                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View
+                                    Notes</a>
+                                <a href="/view-notes/{{ $case->request->id }}"
+                                    class="secondary-btn-1 text-center">Doctors
+                                    Notes</a>
+                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View
+                                    Uploads</a>
+                                <a href="/view-notes/{{ $case->request->id }}"
+                                    class="secondary-btn text-center">Encounter</a>
+                                <a href="/view-notes/{{ $case->request->id }}"
+                                    class="secondary-btn-2 text-center">Orders</a>
+                                <a href="/view-notes/{{ $case->request->id }}"
+                                    class="secondary-btn text-center">Email</a>
                             </div>
                         </div>
                         <div>

@@ -15,8 +15,9 @@ use App\Models\RequestWise;
 class familyRequestController extends Controller
 {
 
-  
-    public function create(Request $request){
+
+    public function create(Request $request)
+    {
 
         // $request->validate([
         //     'first_name'=>'required|min:2|max:30',
@@ -44,7 +45,7 @@ class familyRequestController extends Controller
         $requestEmail->save();
 
 
-    
+
         // family request creating
 
         $familyRequest = new RequestTable();
@@ -54,18 +55,19 @@ class familyRequestController extends Controller
 
         $familyRequest->status = $requestStatus->id;
         $familyRequest->user_id = $requestEmail->id;
-        $familyRequest->request_type_id= $request->request_type;
+        $familyRequest->request_type_id = $request->request_type;
         $familyRequest->first_name = $request->family_first_name;
         $familyRequest->last_name = $request->family_last_name;
         $familyRequest->email = $request->family_email;
         $familyRequest->phone_number = $request->family_phone_number;
         $familyRequest->relation_name = $request->family_relation;
         $familyRequest->save();
-        
+
 
         $requestStatus->request_id = $familyRequest->id;
         $requestStatus->status = 1;
         $requestStatus->save();
+
 
         if (!empty($requestStatus)) {
             $familyRequest->update(["status" => $requestStatus->id]);
@@ -83,8 +85,7 @@ class familyRequestController extends Controller
         $patientRequest->city = $request->city;
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
-
-
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
 
@@ -96,17 +97,16 @@ class familyRequestController extends Controller
             $request_file->file_name = $request->file('docs')->getClientOriginalName();
             $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
             $request_file->save();
-
         }
 
 
         // store symptoms in request_notes table
 
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $familyRequest->id;
-        $request_notes->patient_notes = $request->symptoms;
+        // $request_notes = new RequestNotes();
+        // $request_notes->request_id = $familyRequest->id;
+        // $request_notes->patient_notes = $request->symptoms;
 
-        $request_notes->save();
+        // $request_notes->save();
 
 
         // store all details of patient in allUsers table
