@@ -72,7 +72,7 @@
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('provider.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
-                <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
+                <div class="case case-new  p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
@@ -106,7 +106,7 @@
 
             <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link active"
                 id="nav-conclude-tab">
-                <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div class="case case-conclude active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>

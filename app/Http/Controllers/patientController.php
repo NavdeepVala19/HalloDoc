@@ -72,13 +72,14 @@ class patientController extends Controller
         $requestEmail = new users();
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
+        // $requestEmail->save();
 
-        $requestEmail->save();
+
 
         $requestData = new RequestTable();
         $requestStatus = new RequestStatus();
 
-        $requestData->status = $requestStatus->id;
+        // $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
@@ -90,12 +91,14 @@ class patientController extends Controller
         $requestStatus->request_id = $requestData->id;
         $requestStatus->status = 1;
         $requestStatus->save();
+        // dd($requestStatus);
 
-        if(!empty($requestStatus)){
-                $requestData->update(["status" => $requestStatus->id]);
+        // $requestData->status = $requestStatus->id;
+        // $requestData->save();
+
+        if (!empty($requestStatus)) {
+            $requestData->update(['status' => $requestStatus->id]);
         }
-
-
 
 
         $patientRequest = new request_Client();

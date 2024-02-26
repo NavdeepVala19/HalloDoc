@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email')->nullable();
-            $table->unsignedBigInteger('status')->nullable();
+            $table->integer('status')->nullable();
             $table->unsignedBigInteger('physician_id')->nullable();
             $table->string('confirmation_no')->nullable();
             $table->string('declined_by')->nullable();
@@ -40,7 +40,6 @@ return new class extends Migration
             $table->integer('created_user_id');
 
             $table->foreign('request_type_id')->references('id')->on('request_type');
-            $table->foreign('status')->references('id')->on('request_status');
             $table->foreign('physician_id')->references('id')->on('provider');
             $table->foreign('case_tag')->references('id')->on('case_tag');
             $table->foreign('user_id')->references('id')->on('users');

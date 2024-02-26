@@ -120,7 +120,7 @@ pending state, providers need to send an agreement link to patients. --}}
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
-                <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
+                <div class="case case-new  p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
@@ -164,7 +164,7 @@ pending state, providers need to send an agreement link to patients. --}}
             </a>
 
             <a href="{{ route('admin.status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
-                <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div class="case case-toclose active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-fill-x"></i> TO CLOSE
                     </span>
@@ -245,15 +245,15 @@ pending state, providers need to send an agreement link to patients. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'toclose']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'toclose']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
@@ -293,7 +293,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                 </td>
                                 <td>
                                     <div class="action-container">
-                                        <button class="table-btn action-btn" data-id={{ $case->request->id }}>Actions</button>
+                                        <button class="table-btn action-btn" data-id="{{ $case->request->id }}">Actions</button>
                                         <div class="action-menu">
                                             <a href="{{route('provider.view.case', $case->request->id)}}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>

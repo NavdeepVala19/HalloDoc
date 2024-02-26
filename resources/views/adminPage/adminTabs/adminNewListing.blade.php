@@ -324,11 +324,12 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
+
                             @if (!empty($case->request) && !empty($case->request->requestClient))
                                 <tr class="type-{{ $case->request->request_type_id }}">
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>Requestor Name</td>
+                                    <td>{{$case->request->first_name}}</td>
                                     <td>{{ $case->request->created_at }}</td>
                                     <td>{{ $case->request->phone_number }}</td>
                                     <td>

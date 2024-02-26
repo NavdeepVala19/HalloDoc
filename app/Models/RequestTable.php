@@ -57,10 +57,15 @@ class RequestTable extends Model
         return $this->hasOne(request_Client::class, 'request_id');
     }
 
-
-
-    public function status()
+    public function requestStatus()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(RequestStatus::class);
     }
+
+
+
+    // public function status()
+    // {
+    //     return $this->belongsTo(Status::class);
+    // }
 }

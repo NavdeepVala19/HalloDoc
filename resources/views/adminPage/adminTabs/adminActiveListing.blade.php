@@ -103,8 +103,7 @@ giving service to the patient. --}}
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link " id="nav-new-tab">
-                <div
-                    class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
+                <div class="case case-new p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
                         <i class="bi bi-plus-circle"></i> NEW
                     </span>
@@ -126,7 +125,8 @@ giving service to the patient. --}}
             </a>
 
             <a href="{{ route('admin.status', ['status' => 'active']) }}" class="nav-link active" id="nav-active-tab">
-                <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div
+                    class="case case-active active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-check2-circle"></i> ACTIVE
                     </span>
@@ -261,13 +261,13 @@ giving service to the patient. --}}
                         <tr class="type-{{ $case->request->request_type_id }}">
                             <td>{{ $case->request->requestClient->first_name }}</td>
                             <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                            <td>Requestor Name</td>
+                            <td>{{$case->request->first_name}}</td>
                             <td>Physician Name</td>
                             <td>{{ $case->request->created_at }}</td>
                             <td>{{ $case->request->phone_number }}</td>
                             <td>{{ $case->request->requestClient->street }}, {{ $case->request->requestClient->city
                                 }},{{ $case->request->requestClient->state }}</td>
-                           
+
                             <td>Notes</td>
                             <td>
                                 <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
@@ -275,7 +275,8 @@ giving service to the patient. --}}
                             </td>
                             <td>
                                 <div class="action-container">
-                                    <button class="table-btn action-btn" data-id={{ $case->request->id }}>Actions</button>
+                                    <button class="table-btn action-btn" data-id={{ $case->request->id
+                                        }}>Actions</button>
                                     <div class="action-menu">
                                         <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                 class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
