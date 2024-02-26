@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
     <a href="">My Profile</a>
@@ -17,7 +17,7 @@
             <h1 class="heading">
                 Close Case
             </h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 
@@ -28,8 +28,11 @@
 
                     <div>
                         <p>Patient Name</p>
-                        <span class="patient-name">PatientName Bold with Blue color</span>
-                        <span class="confirmation-number">(Confirmation Number)</span>
+                        <span class="patient-name">{{ $data->requestClient->first_name }}
+                            {{ $data->requestClient->last_name }}</span>
+                        <span class="confirmation-number">(Confirmation Number)
+                            {{-- {{ $data->confirmation_no }} --}}
+                        </span>
                     </div>
 
                     <div>
@@ -45,16 +48,23 @@
                     <table class="table table-hover ">
                         <thead class="table-secondary">
                             <tr>
-                                <th></th>
-                                <th>Upload Date <i class="bi bi-arrow-up"></i></th>
-                                <th>Actions</th>
+                                <th class="w-50"></th>
+                                <th class="w-25">Upload Date <i class="bi bi-arrow-up"></i></th>
+                                <th class="w-25">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><i class="bi bi-filetype-doc doc-symbol"></i></td>
-                                <td>Date</td>
-                                <td> <button class="primary-empty"><i class="bi bi-cloud-download"></i></button></td>
+                                @foreach ($files as $file)
+                                    <td>
+                                        <i class="bi bi-filetype-doc doc-symbol"></i> {{ $file->file_name }}
+                                    </td>
+                                    <td>{{ $file->created_at }}</td>
+                                    <td>
+                                        <a href="{{ route('download') }}" class="primary-empty"><i
+                                                class="bi bi-cloud-download"></i></a>
+                                    </td>
+                                @endforeach
                             </tr>
                         </tbody>
                     </table>
@@ -64,17 +74,18 @@
                 <div class="mb-4 grid-2">
                     <input type="text" name="request_type_id" value="1" hidden>
                     <div class="form-floating ">
-                        <input type="text" name="first_name"
+                        <input type="text" name="first_name" value="{{ $data->requestClient->first_name }}"
                             class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
-                            placeholder="First Name">
+                            placeholder="First Name" disabled>
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
-                            id="floatingInput" placeholder="Last Name">
+                        <input type="text" name="last_name" value="{{ $data->requestClient->last_name }}"
+                            class="form-control @error('last_name') is-invalid @enderror" id="floatingInput"
+                            placeholder="Last Name" disabled>
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -82,23 +93,25 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="date of birth">
+                        <input type="date" class="form-control" value="{{ $data->requestClient->date_of_birth }}"
+                            id="floatingInput" placeholder="date of birth" disabled>
                         <label for="floatingInput">Date Of Birth</label>
                     </div>
 
                     <div class="d-flex gap-2 align-items-center">
 
-                        <input type="tel" name="phone_number"
+                        <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
                             class="form-control phone @error('last_name') is-invalid @enderror" id="telephone"
-                            placeholder="Phone Number">
+                            placeholder="Phone Number" disabled>
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <button class="primary-empty"><i class="bi bi-telephone"></i></button>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                            id="floatingInput" placeholder="name@example.com">
+                        <input type="email" name="email" value="{{ $data->requestClient->email }}"
+                            class="form-control email @error('email') is-invalid @enderror" id="floatingInput"
+                            placeholder="name@example.com" disabled>
                         <label for="floatingInput">Email address</label>
                         @error('email')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -108,7 +121,7 @@
                 </div>
 
                 <div class="text-end">
-                    <input type="submit" value="Edit" class="primary-fill">
+                    <button type="button" value="Edit" class="primary-fill edit-btn">Edit</button>
                     <button class="primary-empty">Close Case</button>
                 </div>
             </div>

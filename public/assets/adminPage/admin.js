@@ -7,17 +7,23 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
 
         $.ajax({
-            url: '/cancel-case', // Update this to your Laravel route
-            type: 'GET',
-            success: function(data) {
+            url: "/cancel-case", // Update this to your Laravel route
+            type: "GET",
+            success: function (data) {
                 // Assuming data is an array of reasons
-                data.forEach(function(reason) {
-                    $('#floatingSelect').append('<option value="' + reason.id + '">' + reason.case_name + '</option>');
+                data.forEach(function (reason) {
+                    $("#floatingSelect").append(
+                        '<option value="' +
+                            reason.id +
+                            '">' +
+                            reason.case_name +
+                            "</option>"
+                    );
                 });
             },
-            error: function(error) {
+            error: function (error) {
                 console.error(error);
-            }
+            },
         });
     });
 
@@ -34,15 +40,21 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
     });
 
-$('.transfer-btn').click(function(){
-    $('.transfer-case').show();
-    $('.overlay').show();
-})
+    $(".transfer-btn").click(function () {
+        $(".transfer-case").show();
+        $(".overlay").show();
+    });
 
+    $(".clear-btn").click(function () {
+        $(".clear-case").show();
+        $(".overlay").show();
+
+        $(".request_id").val($(this).data("id"));
+    });
+
+    $(".edit-btn").click(function () {
+        $(".phone").removeAttr("disabled");
+        $(".email").removeAttr("disabled");
+    });
     // changes start from here
-    
-    
-
-
-
 });

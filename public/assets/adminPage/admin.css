@@ -87,6 +87,15 @@
     display: none;
 }
 
+.clear-case {
+    display: none;
+}
+
+.warning-icon {
+    font-size: 100px;
+    color: rgb(255, 204, 0);
+}
+
 /* changes start from here */
 
 @media (max-width: 750px) {

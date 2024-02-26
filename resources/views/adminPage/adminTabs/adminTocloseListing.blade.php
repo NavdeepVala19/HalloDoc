@@ -21,6 +21,27 @@
 
     <div class="overlay"></div>
 
+    {{-- Clear Case Pop-up --}}
+    {{-- This pop-up will open when admin clicks on “Clear case” link from Actions menu. From the pending and close
+state, admin can clear the case from the action grid. --}}
+    <div class="pop-up clear-case ">
+        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+
+            <i class="bi bi-exclamation-circle-fill warning-icon"></i>
+            <div>
+                <h3 class="text-center">Confirmation for clear case</h3>
+                <p class="text-center">Are you sure, you want to clear this request? Once clear, you are not able to see
+                    this
+                    request!
+                </p>
+            </div>
+            <div>
+                <button class="primary-fill">Clear</button>
+                <button class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
 pending state, providers need to send an agreement link to patients. --}}
@@ -164,7 +185,8 @@ pending state, providers need to send an agreement link to patients. --}}
             </a>
 
             <a href="{{ route('admin.status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
-                <div class="case case-toclose active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div
+                    class="case case-toclose active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-fill-x"></i> TO CLOSE
                     </span>
@@ -258,9 +280,6 @@ pending state, providers need to send an agreement link to patients. --}}
                 </div>
             </div>
             <div class="table-responsive">
-
-
-
                 <table class="table table-hover ">
                     <thead class="table-secondary">
                         <tr>
@@ -306,9 +325,11 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     Notes</button>
                                                 <a href="{{ route('provider.view.order', $case->request->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button><i class="bi bi-x-circle me-2 ms-3"></i>Close Case</button>
+                                                <a href="{{ route('admin.close.case', $case->request->id) }}">
+                                                    <i class="bi bi-x-circle me-2 ms-3"></i>Close Case</a>
                                                 <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors Note</button>
-                                                <button><i class="bi bi-x-circle me-2 ms-3"></i>Clear Case</button>
+                                                <button class="clear-btn"><i class="bi bi-x-circle me-2 ms-3"></i>Clear
+                                                    Case</button>
                                                 <button class="encounter-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>
@@ -327,9 +348,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <div class="d-flex flex-column">
                             <p>{{ $case->request_first_name }} </p>
                             <span>
-                     
-                                    {{ $case->street }}
-                               
+                                {{ $case->street }}
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
@@ -361,18 +380,18 @@ pending state, providers need to send an agreement link to patients. --}}
                         <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
-                                <i class="bi bi-envelope"></i> Email : 
-                                 {{$case->email}} 
+                                <i class="bi bi-envelope"></i> Email :
+                                {{ $case->email }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-geo-alt"></i> Address :
-                                {{$case->street}}
+                                {{ $case->street }}
                             </span>
                             <br>
                             <span>
-                                <i class="bi bi-telephone"></i> Patient : 
-                               {{$case->mobile}} 
+                                <i class="bi bi-telephone"></i> Patient :
+                                {{ $case->mobile }}
                             </span>
                             <div class="grid-2-listing ">
                                 <button class="agreement-btn">Send Agreement</button>

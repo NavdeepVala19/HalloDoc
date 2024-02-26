@@ -65,12 +65,11 @@ class AdminController extends Controller
             $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
             return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
         } else if ($status == 'toclose') {
-            $cases = RequestStatus::with('request')->where('status', 7)->orWhere('status', 7)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->paginate(10);
             return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
         } else if ($status == 'unpaid') {
             $cases = RequestStatus::with('request')->where('status', 9)->paginate(10);
             return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
-
         }
     }
 
@@ -259,5 +258,18 @@ class AdminController extends Controller
         RequestTable::where('id', $request->requestId)->delete();
         request_Client::where('request_id', $request->requestId)->delete();
         return redirect()->back();
+    }
+
+    public function clearCase(Request $request)
+    {
+        RequestStatus::where('request_id', $request->requestId)->update(['status' => 8]);
+        return redirect()->back();
+    }
+
+    public function closeCase(Request $request, $id = null)
+    {
+        $data = RequestTable::where('id', $id)->first();
+        $files = RequestWiseFile::where('id', $id)->get();
+        return view('adminPage.pages.closeCase', compact('data', 'files'));
     }
 }

@@ -310,3 +310,10 @@ Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('a
 
 // Block Case by admin
 Route::post('block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
+
+
+// Clear Case by admin pending and close state
+Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');
+
+// close case admin
+Route::get('/close-case/{id}', [AdminController::class, 'closeCase'])->name('admin.close.case');
