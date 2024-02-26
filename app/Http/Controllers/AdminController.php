@@ -65,7 +65,7 @@ class AdminController extends Controller
             $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
             return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
         } else if ($status == 'toclose') {
-            $cases = RequestStatus::with('request')->where('status', 7)->orWhere('status', 7)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->paginate(10);
             return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
         } else if ($status == 'unpaid') {
             $cases = RequestStatus::with('request')->where('status', 9)->paginate(10);

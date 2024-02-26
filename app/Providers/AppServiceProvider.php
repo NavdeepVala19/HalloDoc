@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\TwilioService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -10,9 +11,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
-        //
+        $this->app->bind(TwilioService::class, function ($app) {
+            return new TwilioService();
+        });
     }
 
     /**
@@ -21,4 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
     }
+
+
 }

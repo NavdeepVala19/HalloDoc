@@ -93,6 +93,14 @@
     .admin-btn>a {
         padding: 8px;
     }
+
+    .case-toclose::after {
+        display: none;
+    }
+
+    .case-unpaid::after {
+        display: none;
+    }
 }
 
 .heading-section {

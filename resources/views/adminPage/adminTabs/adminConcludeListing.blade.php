@@ -271,11 +271,12 @@ transferred into conclude state providers can finally conclude care for the pati
             @foreach ($cases as $case)
             <div class="mobile-list d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                    <p>{{ $case->request_first_name }} </p>
-                    <span>
-
-                        {{ $case->street }}
-
+                    <p>{{ $case->request->first_name }} </p>
+                    <span>Address:
+                        @if ($case->request->requestClient)
+                        {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
+                        $case->request->requestClient->state }}
+                        @endif
                     </span>
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-around">
@@ -307,21 +308,37 @@ transferred into conclude state providers can finally conclude care for the pati
                 <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                 <div>
                     <span>
+                        <i class="bi bi-calendar3"></i> Date of birth :
+                        {{ $case->request->requestClient->date_of_birth }}
+                    </span>
+                    <br>
+                    <span>
                         <i class="bi bi-envelope"></i> Email :
-                        {{$case->email}}
+                        {{ $case->request->requestClient->email }}
                     </span>
                     <br>
                     <span>
                         <i class="bi bi-telephone"></i> Patient :
-                        {{$case->mobile}}
+                        {{ $case->request->requestClient->phone_number }}
                     </span>
+                    <br>
+                    <span>
+                        <i class="bi bi-calendar3"></i> Date of services :
+                        {{ $case->request->created_at}}
+                    </span>
+                    <br>
+                    <span>
+                        <i class="bi bi-person-circle"></i> Physician :
+                        {{ $case->request->last_name }}
+                    </span>
+
                     <div class="grid-2-listing ">
-                        <button class="conclude-care-btn">Conclude Care</button>
                         <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
                             Notes</a>
                         <button class="secondary-btn-1">Doctors Notes</button>
                         <button class="secondary-btn">View Uploads</button>
                         <button class="secondary-btn">Encouter</button>
+                        <button class="secondary-btn-2">Order</button>
                         <button class="secondary-btn">Email</button>
                     </div>
                 </div>

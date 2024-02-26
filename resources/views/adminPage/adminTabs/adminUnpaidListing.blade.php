@@ -314,11 +314,12 @@ pending state, providers need to send an agreement link to patients. --}}
             @foreach ($cases as $case)
             <div class="mobile-list d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                    <p>{{ $case->request_first_name }} </p>
-                    <span>
-
-                        {{ $case->street }}
-
+                    <p>{{ $case->request->first_name }} </p>
+                    <span>Address:
+                        @if ($case->request->requestClient)
+                        {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
+                        $case->request->requestClient->state }}
+                        @endif
                     </span>
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-around">
@@ -350,21 +351,35 @@ pending state, providers need to send an agreement link to patients. --}}
                 <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                 <div>
                     <span>
+                        <i class="bi bi-calendar3"></i> Date of birth :
+                        {{ $case->request->requestClient->date_of_birth }}
+                    </span>
+                    <br>
+                    <span>
                         <i class="bi bi-envelope"></i> Email :
-                        {{$case->email}}
+                        {{ $case->request->requestClient->email }}
                     </span>
                     <br>
                     <span>
-                        <i class="bi bi-geo-alt"></i> Address :
-                        {{$case->street}}
+                        <i class="bi bi-cash"></i> Transfer :Admin transferred to
+                        {{ $case->request->requestClient->last_name }}
                     </span>
                     <br>
                     <span>
-                        <i class="bi bi-telephone"></i> Patient :
-                        {{$case->mobile}}
+                        <i class="bi bi-calendar3"></i> Date of services :
+                        {{ $case->request->created_at}}
+                    </span>
+                    <br>
+                    <span>
+                        <i class="bi bi-person-circle"></i> Physician :
+                        {{ $case->request->last_name }}
+                    </span>
+                    <br>
+                    <span>
+                        <i class="bi bi-person-plus-fill"></i> Requestor:
+                        {{ $case->request->first_name }}
                     </span>
                     <div class="grid-2-listing ">
-                        <button class="agreement-btn">Send Agreement</button>
                         <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn text-center">View
                             Notes</a>
                         <button class="secondary-btn">View Uploads</button>
