@@ -36,8 +36,8 @@ class AdminController extends Controller
         $pendingCasesCount = RequestStatus::where('status', 3)->count(); //accepted by provider, pending state
         $activeCasesCount = RequestStatus::where('status', 4)->orWhere('status', 5)->count(); //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
         $concludeCasesCount = RequestStatus::where('status', 6)->count();
-        $tocloseCasesCount = RequestStatus::where('status', 6)->count();
-        $unpaidCasesCount = RequestStatus::where('status', 6)->count();
+        $tocloseCasesCount = RequestStatus::where('status', 2)->orWhere('status', 7)->count();
+        $unpaidCasesCount = RequestStatus::where('status', 9)->count();
 
         return [
             'newCase' => $newCasesCount,
@@ -223,14 +223,15 @@ class AdminController extends Controller
                 ->update(['AdministrativeNotes' => $request->reason]);
         } else {
             // Entry doesn't exist or 'notes' is not null, perform insert in RequestNotes
-           $newNoteId = RequestNotes::insertGetId(['request_id' => $request->requestId, 'AdministrativeNotes' => $request->reason, 'created_by' => "admin"]);
+            $newNoteId = RequestNotes::insertGetId(['request_id' => $request->requestId, 'AdministrativeNotes' => $request->reason, 'created_by' => "admin"]);
             RequestStatus::where('request_id', $request->requestId)->update(['notes' => $newNoteId]);
             // RequestNotes::updateOrInsert(['request_id' => $request->requestId], ['AdministrativeNotes' => $request->reason]);
         }
         return redirect()->back();
     }
-    
-    public function blockCase(Request $request){
+
+    public function blockCase(Request $request)
+    {
         BlockRequest::insert(['request_id' => $request->requestId, 'reason' => $request->block_reason]);
         return redirect()->back();
     }
