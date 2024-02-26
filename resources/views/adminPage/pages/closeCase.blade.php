@@ -2,6 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/commonpage/viewUploads.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
 @section('nav-links')
@@ -22,10 +23,11 @@
 
 
 
-        <form action="" method="POST">
+        <form action="{{route('admin.close.case.save')}}" method="POST" id="closeCase">
+            @csrf
+            <input type="text" value="{{$data->id}}" name="requestId" hidden>
             <div class="section">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-
                     <div>
                         <p>Patient Name</p>
                         <span class="patient-name">{{ $data->requestClient->first_name }}
@@ -120,9 +122,15 @@
 
                 </div>
 
-                <div class="text-end">
+                <div class="text-end default-buttons">
                     <button type="button" value="Edit" class="primary-fill edit-btn">Edit</button>
-                    <button class="primary-empty">Close Case</button>
+                    <button type="button" class="primary-empty close-edit-btn">Close Case</button>
+                    {{-- Clicking on this button, admin can close the case and that request will be moved into "Unpaid" --}}
+                </div>
+                
+                <div class="text-end new-buttons">
+                    <button type="button" class="primary-fill save-edit-btn">Save</button>
+                    <button type="button" class="primary-empty cancel-edit-btn">Cancel</button>
                 </div>
             </div>
         </form>

@@ -55,6 +55,29 @@ $(document).ready(function () {
     $(".edit-btn").click(function () {
         $(".phone").removeAttr("disabled");
         $(".email").removeAttr("disabled");
+
+        $('.new-buttons').show();
+        $('.default-buttons').hide();
+    });
+
+    $('.save-edit-btn').click(function (){
+        $('.phone, .email').attr('disabled', false);
+
+        $('.new-buttons').hide();
+        $('.default-buttons').show();
+        
+        $('#closeCase').submit();
+    });
+    
+    $('.cancel-edit-btn').click(function() {
+        $('.phone, .email').attr('disabled', true);
+    
+        $('.new-buttons').hide();
+        $('.default-buttons').show();
+        
+    });
+    $('.close-edit-btn').click(function (){
+        window.location.href = "{{route('admin.close.case.submit', $data->id)}}";
     });
     // changes start from here
 });

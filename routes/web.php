@@ -317,3 +317,5 @@ Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.cl
 
 // close case admin
 Route::get('/close-case/{id}', [AdminController::class, 'closeCase'])->name('admin.close.case');
+Route::post('/close-case', [AdminController::class, 'closeCaseData'])->name('admin.close.case.save');
+Route::get('/close-case-submit/{id}', [AdminController::class, 'closeCaseSubmit'])->name('admin.close.case.submit');

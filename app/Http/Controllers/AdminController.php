@@ -272,4 +272,17 @@ class AdminController extends Controller
         $files = RequestWiseFile::where('id', $id)->get();
         return view('adminPage.pages.closeCase', compact('data', 'files'));
     }
+    public function closeCaseData(Request $request){
+
+        request_Client::where('request_id', $request->requestId)->update([
+            'phone_number' => $request->phone_number, 
+            'email' => $request->email
+            ]);
+
+        return redirect()->back();
+    }
+    public function closeCaseSubmit(Request $request, $id=null){
+        RequestStatus::where('request_id', $id)->update(['status' => 9]);
+        return redirect()->route('admin.status', 'unpaid');
+    }
 }
