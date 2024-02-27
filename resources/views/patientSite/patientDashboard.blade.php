@@ -26,7 +26,7 @@
 
             </div>
 
-            <div class="listing-table">
+        </div>
 
         <div class="listing-table">
 
@@ -116,5 +116,5 @@
                 }
             </script>
 
-        </div>
+    </div>
     @endsection

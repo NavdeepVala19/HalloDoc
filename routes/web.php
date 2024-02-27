@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\patientController;
 use App\Http\Controllers\familyRequestController;
@@ -183,8 +185,9 @@ Route::get('updatePassword/{token}', [AdminLoginController::class, 'showUpdatePa
 Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswordForm'])->name('updatePasswordPost');
 
 
+// route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 
-
+route::get('/admin/providers', [AdminProviderController::class,'providersInfo'])->name('adminProvidersInfo');
 
 // ****************************************************************************************************************************
 
@@ -292,6 +295,8 @@ Route::get('/test', function () {
 Route::get('/admin', function () {
     return redirect('/admin/new');
 })->name('admin.dashboard');
+
+
 
 // For Filtering the request for admin dashboard
 Route::get('/admin/{status}/{category}', [AdminController::class, 'adminFilter'])->name("admin.listing");

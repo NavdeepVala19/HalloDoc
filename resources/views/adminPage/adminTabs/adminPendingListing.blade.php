@@ -101,7 +101,8 @@ pending state, providers need to send an agreement link to patients. --}}
             <div>
                 <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
                     concierge)</span>
-                <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
+                <p class="m-2">To send Agreement please make sure you are updating the correct contact information
+                    below
                     for
                     the
                     responsible party.
@@ -161,13 +162,13 @@ pending state, providers need to send an agreement link to patients. --}}
                 <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Email</label>
             </div>
-
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
             <button class="primary-fill">Send</button>
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
+    
     {{-- Transfer Request --}}
     <div class="pop-up transfer-request">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -380,7 +381,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     Case</button>
                                                 <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
                                                     data-request_type_id={{ $case->request->request_type_id }}><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Send
+                                                    Agreement</button>
                                             </div>
                                         </div>
                                     </td>

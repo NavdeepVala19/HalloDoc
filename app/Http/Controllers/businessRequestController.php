@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Orders;
+use App\Models\RequestBusiness;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
 use App\Models\RequestTable;
@@ -126,6 +128,22 @@ class businessRequestController extends Controller
     $requestUsers->save();
 
 
+    // store data in request business table 
+
+    $businessRequest = new RequestBusiness();
+    $businessRequest->request_id = $requestBusiness->id;
+    $businessRequest->business_id = $business->id;
+    $businessRequest->save();
+    
+
+    // store data in orders table
+
+    $orders = new Orders();
+    $orders->vendor_id = $business->id;
+    $orders->request_id = $requestBusiness->id;
+    $orders->save();
+
+    
 
     return view('patientSite/submitScreen');
 
