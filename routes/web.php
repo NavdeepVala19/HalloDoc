@@ -189,6 +189,10 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 route::get('/admin/providers', [AdminProviderController::class,'providersInfo'])->name('adminProvidersInfo');
 
+route::get('/admin/edit-provider', [AdminProviderController::class,'editProvider'])->name('admineditProvider');
+
+route::get('/admin/new-provider', [AdminProviderController::class,'newProvider'])->name('adminNewProvider');
+
 // ****************************************************************************************************************************
 
 

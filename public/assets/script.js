@@ -6,7 +6,7 @@ $(document).ready(function () {
         $(this).addClass("active-link");
     });
 
-    $("#toggle-mode").click(function() {
+    $("#toggle-mode").click(function () {
         console.log('btn clicked');
         $("html").toggleClass("dark");
     });
@@ -20,6 +20,7 @@ $(document).ready(function () {
     $("#telephone").intlTelInput({
         initialCountry: "in",
     });
+
 });
 
 

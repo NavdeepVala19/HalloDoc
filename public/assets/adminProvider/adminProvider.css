@@ -1,14 +1,7 @@
-.container {
-    border: 1px solid orangered;
-}
-
 .create-provider-btn {
     height: 40px;
 }
 
-td {
-    border: 1px solid black;
-}
 
 .create-provider-btn:hover {
     background-color: white;
@@ -37,4 +30,8 @@ input[type="checkbox"] {
 
 #flexRadioDefault1 {
     border: 1px solid black;
+}
+
+.new-provider-pop-up {
+    display: none;
 }

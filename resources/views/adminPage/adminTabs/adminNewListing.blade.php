@@ -311,8 +311,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
             </div>
         </div>
-        <div class="a">
-            <table class="table table-hover ">
+        
+        <div>
+            <table class="table table-hover">
                 <thead class="table-secondary">
                     <tr>
                         <th>Name</th>

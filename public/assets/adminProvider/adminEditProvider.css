@@ -1,0 +1,120 @@
+.main-content-container {
+    border: 1px solid rgb(165, 165, 165);
+}
+
+.status-select {
+    padding-top: 0 !important;
+}
+
+.role-select {
+    padding-top: 0 !important;
+}
+
+
+.form-floating>.form-select {
+    padding-top: 5px !important;
+}
+
+.row {
+    border: 1px solid navy;
+}
+
+.col-4 {
+    border: 1px solid red;
+}
+
+.col-8 {
+    border: 1px solid green;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+tr {
+    border-bottom: 1px solid rgb(199, 191, 191) !important;
+}
+
+input[type="checkbox"] {
+    border: 1px solid rgb(126, 122, 122);
+    width: 17px;
+    height: 17px;
+    border-radius: 0px;
+}
+
+.custom-file-input {
+    position: relative;
+    width: 100%;
+    height: 40px;
+}
+
+/* .custom-file-input input[type="file"] {
+    display: none;
+    position: absolute;
+} */
+
+.custom-file-input input[type="text"] {
+    width: 100%;
+    height: 100%;
+}
+
+.custom-file-input label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    height: 100%;
+    background-color: var(--blue);
+    color: white;
+    cursor: pointer;
+}
+
+.custom-file-input label:hover {
+    background-color: #4560a0;
+}
+
+.create-signature-btn {
+    border: none;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    background-color: var(--blue);
+    padding: 0 15px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.responsive-btns {
+    display: none;
+}
+
+@media (max-width: 550px) {
+    .upload-txt {
+        display: none;
+    }
+}
+
+@media (max-width: 360px) {
+    .heading {
+        font-size: 18px;
+    }
+
+    .primary-empty {
+        padding: 4px 6px;
+    }
+}
+
+@media(max-width:768px) {
+    .btns {
+        display: none;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    .responsive-btns {
+        display: block;
+    }
+}

@@ -26,6 +26,12 @@ $(document).ready(function () {
 
         }
     })
+
+    $('.contact-btn').click(function () {
+        $('.new-provider-pop-up').show();
+        $('.overlay').show();
+    })
+
 })
 // *********************************************************
 
@@ -66,9 +72,9 @@ $('.file-input').change(function (e) {
 // this is use for showing agreement cancel pop-up
 
 $(document).ready(function () {
-     $('.cancel').click(function () {
-            $('.cancel-pop-up').show();
-        })
+    $('.cancel').click(function () {
+        $('.cancel-pop-up').show();
+    })
 
 })
 

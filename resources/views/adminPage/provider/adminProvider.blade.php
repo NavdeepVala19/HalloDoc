@@ -10,8 +10,8 @@
 
 <a href="">Dashboard</a>
 <a href="">Provider Location</a>
-<a href="" class="active-link">My Profile</a>
-<a href="">Providers</a>
+<a href="" >My Profile</a>
+<a href="" class="active-link">Providers</a>
 <a href="">Partners</a>
 <a href="">Access</a>
 <a href="">Records</a>
@@ -20,6 +20,10 @@
 @endsection
 
 @section('content')
+
+<div class="overlay">
+
+</div>
 
 <div class="container">
 
@@ -66,7 +70,7 @@
                         <td> Un available</td>
                         <td> Pending </td>
                         <td class="gap-1">
-                            <a href="" type="button" class="primary-empty btn mt-2 mb-2">Contact</a>
+                            <button type="button" class="primary-empty contact-btn mt-2 mb-2">Contact</button>
                             <a href="" type="button" class="primary-empty btn mt-2 mb-2">Edit</a>
                         </td>
 
@@ -78,19 +82,45 @@
 
             <!-- contact your provider pop-up -->
 
-            <div class="pop-up new-provider">
+            <div class="pop-up new-provider-pop-up">
                 <div class="popup-heading-section d-flex align-items-center justify-content-between">
                     <span class="ms-3">Contact Your Provider</span>
                     <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
                 </div>
                 <p class="mt-4 ms-3">Choose communication to send message</p>
-                <div class="ms-3">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <div class="ms-3 ">
+
+                    <div class="radio-sms">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label ms-1" for="flexRadioSMS">
+                            SMS
+                        </label>
+                    </div>
+
+                    <div class="radio-email">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label ms-1" for="flexRadioEmail">
+                            Email
+                        </label>
+                    </div>
+
+                    <div class="radio-both">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label ms-1" for="flexRadioBoth">
+                            Both
+                        </label>
+                    </div>
+
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                            style="height: 120px"></textarea>
+                        <label for="floatingTextarea2">Message</label>
+                    </div>
+
                 </div>
+
                 <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                    <button class="primary-fill continue-btn">Continue</button>
+                    <button class="primary-fill sen-btn">Send</button>
                     <button class="primary-empty hide-popup-btn">Cancel</button>
                 </div>
             </div>
