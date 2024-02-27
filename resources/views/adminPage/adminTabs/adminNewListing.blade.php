@@ -19,9 +19,9 @@
 <div class="overlay"></div>
 
 @if(session('message'))
-    <h6 class="alert alert-success">
-        {{ session('message') }}
-    </h6>
+<h6 class="alert alert-success">
+    {{ session('message') }}
+</h6>
 @endif
 
 {{-- Cancel Case Pop-up --}}
@@ -137,7 +137,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         <span>Send mail to patient for submitting request</span>
         <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
     </div>
-    <form action="{{ route('sendingSMS') }}" method="POST">
+    <form action="{{ route('send.mail') }}" method="POST">
         @csrf
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
             <div class="form-floating ">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Concierge;
+use App\Models\RequestConcierge;
 use App\Models\users;
 use App\Models\allusers;
 use App\Models\RequestStatus;
@@ -55,7 +56,7 @@ class conciergeRequestController extends Controller
 
 
 
-        // concierge request into request table
+        // concierge request into concierge table
 
         $concierge = new Concierge();
         $concierge->name = $request->concierge_first_name;
@@ -133,6 +134,15 @@ class conciergeRequestController extends Controller
         $requestUsers->state = $request->state;
         $requestUsers->zipcode = $request->zipcode;
         $requestUsers->save();
+
+        
+
+        // store data in request_concierge table
+
+        $conciergeRequest = new RequestConcierge();
+        $conciergeRequest->request_id = $request->id;
+        $conciergeRequest->concierge_id = $concierge->id;
+        $conciergeRequest->save();
 
 
         return view('patientSite/submitScreen');

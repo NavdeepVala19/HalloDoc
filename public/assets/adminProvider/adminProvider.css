@@ -1,0 +1,40 @@
+.container {
+    border: 1px solid orangered;
+}
+
+.create-provider-btn {
+    height: 40px;
+}
+
+td {
+    border: 1px solid black;
+}
+
+.create-provider-btn:hover {
+    background-color: white;
+    color: #3c9eff;
+    border: 1px solid #3c9eff;
+}
+
+.form-select {
+    width: 25%;
+}
+
+.checks {
+    text-align: center;
+}
+
+.theader {
+    text-align: center;
+    vertical-align: middle;
+}
+
+input[type="checkbox"] {
+    border: 1px solid rgb(126, 122, 122);
+    width: 25px;
+    height: 25px;
+}
+
+#flexRadioDefault1 {
+    border: 1px solid black;
+}
