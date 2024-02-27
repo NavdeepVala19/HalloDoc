@@ -134,19 +134,10 @@ class businessRequestController extends Controller
     $businessRequest->request_id = $requestBusiness->id;
     $businessRequest->business_id = $business->id;
     $businessRequest->save();
-    
 
-    // store data in orders table
 
-    $orders = new Orders();
-    $orders->vendor_id = $business->id;
-    $orders->request_id = $requestBusiness->id;
-    $orders->save();
 
-    
 
     return view('patientSite/submitScreen');
-
   }
 }
-

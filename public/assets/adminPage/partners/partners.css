@@ -2,3 +2,7 @@
 .search-vendor {
     width: 250px;
 }
+
+tr > td {
+    padding: 18px !important;
+}

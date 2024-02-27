@@ -291,7 +291,7 @@ giving service to the patient. --}}
                                                         Uploads</a>
                                                     <button><i class="bi bi-journal-text me-2 ms-3"></i>View
                                                         Notes</button>
-                                                    <a href="{{ route('provider.view.order', $case->request->id) }}"><i
+                                                    <a href="{{ route('admin.view.order', $case->request->id) }}"><i
                                                             class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                     <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors
                                                         Note</button>

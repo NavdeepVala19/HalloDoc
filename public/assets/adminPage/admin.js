@@ -7,7 +7,7 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
 
         $.ajax({
-            url: "/cancel-case", // Update this to your Laravel route
+            url: "/cancel-case",
             type: "GET",
             success: function (data) {
                 // Assuming data is an array of reasons
@@ -75,10 +75,33 @@ $(document).ready(function () {
         $(".new-buttons").hide();
         $(".default-buttons").show();
     });
-    // $(".close-edit-btn").click(function () {
-    //     $(".request_id").val($(this).data("id"));
-    //     // console.log($(".request_id").val());
-    //     // window.location.href = "/close-case-submit";
+
+    // $(".profession-menu").on("change", function () {
+    //     let profession = $(this).val();
+    //     console.log(profession);
+    //     $.ajax({
+    //         url: "{{route('fetch.business')}}",
+    //         type: "GET",
+    //         data: {
+    //             professionId: profession,
+    //         },
+    //         success: function (data) {
+    //             console.log(data);
+    //             // data -> array of all business with given profession
+    //             data.forEach(function (entry) {
+    //                 // entry -> single business
+    //                 $(".business-menu").append(
+    //                     '<option value="' +
+    //                         entry.id +
+    //                         '">' +
+    //                         entry.vendor_name +
+    //                         "</option>"
+    //                 );
+    //             });
+    //         },
+    //         error: function (error) {
+    //             console.error(error);
+    //         },
+    //     });
     // });
-    // changes start from here
 });

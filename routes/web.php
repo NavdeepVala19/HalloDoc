@@ -187,7 +187,7 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 // route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 
-route::get('/admin/providers', [AdminProviderController::class,'providersInfo'])->name('adminProvidersInfo');
+route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
 
 // ****************************************************************************************************************************
 
@@ -332,4 +332,10 @@ Route::get('/partners', [AdminController::class, 'viewPartners'])->name('admin.p
 Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
 Route::post('/add-business', [AdminController::class, 'addBusiness'])->name('add.business');
 // Update Business Page
-Route::get('/update-business', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
+Route::get('/update-business/{id}', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
+Route::get('/delete-business/{id}', [AdminController::class, 'deleteBusiness'])->name('delete.business');
+
+// send orders admin page 
+Route::get('/admin-view-order/{id}', [AdminController::class, 'viewOrder'])->name('admin.view.order');
+Route::post('/admin-send-order', [AdminController::class, 'sendOrder'])->name('admin.send.order');
+Route::get('/fetch-business', [AdminController::class, 'fetchBusiness'])->name('fetch.business');

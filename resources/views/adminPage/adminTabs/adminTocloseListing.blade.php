@@ -212,6 +212,8 @@ pending state, providers need to send an agreement link to patients. --}}
         </div>
     </nav>
 
+
+
     <div class="main">
         <div class="heading-section d-flex align-items-center justify-content-between">
             <div class=" d-flex align-items-center">
@@ -250,6 +252,7 @@ pending state, providers need to send an agreement link to patients. --}}
                 </a>
             </div>
         </div>
+
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
@@ -317,7 +320,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn"
-                                                data-id="{{ $case->request->id }}">Actions</button>
+                                                data-id={{ $case->request->id }}>Actions</button>
                                             <div class="action-menu">
                                                 <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
@@ -327,9 +330,11 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     Notes</button>
                                                 <a href="{{ route('provider.view.order', $case->request->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button><i class="bi bi-x-circle me-2 ms-3"></i>Close Case</button>
+                                                <a href="{{ route('admin.close.case', $case->request->id) }}">
+                                                    <i class="bi bi-x-circle me-2 ms-3"></i>Close Case</a>
                                                 <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors Note</button>
-                                                <button><i class="bi bi-x-circle me-2 ms-3"></i>Clear Case</button>
+                                                <button class="clear-btn"><i class="bi bi-x-circle me-2 ms-3"></i>Clear
+                                                    Case</button>
                                                 <button class="encounter-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>
@@ -341,6 +346,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     </tbody>
                 </table>
             </div>
+
 
             <div class="mobile-listing">
                 @foreach ($cases as $case)

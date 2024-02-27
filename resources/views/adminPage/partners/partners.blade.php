@@ -30,7 +30,8 @@
                         <option value="3">Three</option>
                     </select>
                 </div>
-                <a href="{{ route('add.business.view') }}" class="primary-empty"><i class="bi bi-plus-lg"></i> Add Business</a>
+                <a href="{{ route('add.business.view') }}" class="primary-empty"><i class="bi bi-plus-lg"></i> Add
+                    Business</a>
             </div>
             <div>
                 <table class="table ">
@@ -44,20 +45,21 @@
                         <td>Actions</td>
                     </thead>
                     <tbody>
-                        {{-- @foreach ( as ) --}}
-                        <tr>
-                            <td>Test</td>
-                            <td>Spaces</td>
-                            <td>new@mail.com</td>
-                            <td>123212342</td>
-                            <td>+21 123212342</td>
-                            <td>Tester</td>
-                            <td>
-                                <a href="{{ route('update.business.view') }}" class="primary-empty">Edit</a>
-                                <button class="primary-empty">Delete</button>
-                            </td>
-                        </tr>
-                        {{-- @endforeach --}}
+                        @foreach ($vendors as $vendor)
+                            <tr>
+                                <td>{{ $vendor->profession }}</td>
+                                <td>{{ $vendor->vendor_name }}</td>
+                                <td>{{ $vendor->email }}</td>
+                                <td>{{ $vendor->fax_number }}</td>
+                                <td>{{ $vendor->phone_number }}</td>
+                                <td>{{ $vendor->business_contact }}</td>
+                                <td>
+                                    <a href="{{ route('update.business.view', $vendor->id) }}"
+                                        class="primary-empty">Edit</a>
+                                    <a href="{{ route('delete.business', $vendor->id) }}" class="primary-empty">Delete</a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

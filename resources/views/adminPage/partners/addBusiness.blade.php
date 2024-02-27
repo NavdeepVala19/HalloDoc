@@ -28,6 +28,7 @@
             {{-- Health Professional Type Table -> for profession names --}}
 
             <form action="{{ route('add.business') }}" method="POST">
+                @csrf
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="buisness_name" class="form-control" id="floatingInput"
@@ -35,11 +36,11 @@
                         <label for="floatingInput">Business Name</label>
                     </div>
                     <div class="form-floating">
-                        <select id="floatingSelect" value="profession" class="form-select">
+                        <select id="floatingSelect" name="profession" class="form-select ">
                             <option selected>Select Profession</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
+                            @endforeach
                         </select>
                         <label for="floatingSelect">Profession</label>
                     </div>

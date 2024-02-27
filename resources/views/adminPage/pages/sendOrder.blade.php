@@ -5,10 +5,13 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('provider-dashboard') }}" class="active-link">Dashboard</a>
-    <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="">Provider Location</a>
     <a href="">My Profile</a>
+    <a href="">Providers</a>
+    <a href="{{ route('admin.partners') }}">Partners</a>
+    <a href="">Access</a>
+    <a href="">Records</a>
 @endsection
 
 @section('content')
@@ -17,29 +20,37 @@
             <h1 class="heading">
                 Send Order
             </h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
-        <form action="" method="POST">
+        <form action="{{ route('admin.send.order') }}" method="POST">
             @csrf
-            <input type="hidden" name="request_id" value="{{ $id }}">
+            <input type="text" name="requestId" value="{{ $id }}" hidden>
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                        <select class="form-select profession-menu" id="floatingSelect"
+                            aria-label="Floating label select example">
                             <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="4">Four</option>
-                            <option value="5">Five</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
+                            @endforeach
                         </select>
                         <label for="floatingSelect">Select Profession</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="business" class="form-control" id="floatingInput"
+                        {{-- <input type="text" name="business" class="form-control" id="floatingInput"
                             placeholder="Business">
-                        <label for="floatingInput">Business</label>
+                        <label for="floatingInput">Business</label> --}}
+
+                        <select class="form-select buisness-menu" id="floatingSelect"
+                            aria-label="Floating label select example">
+                            <option selected>Buisness</option>
+                            {{-- @foreach ($types as $type)
+                                <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
+                            @endforeach --}}
+                        </select>
+                        <label for="floatingSelect">Select Business</label>
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="business_contact" class="form-control" id="floatingInput"
@@ -64,11 +75,14 @@
                 <div class="grid-2">
 
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                        <select class="form-select" name="refills" id="floatingSelect"
+                            aria-label="Floating label select example">
                             <option selected>Not Required</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>
                             <option value="3">Three</option>
+                            <option value="4">Four</option>
+                            <option value="5">Five</option>
                         </select>
                         <label for="floatingSelect">Number of Refil</label>
                     </div>

@@ -12,12 +12,16 @@ use App\Models\RequestNotes;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\DB;
 use App\Models\caseTag;
+use App\Models\Orders;
 use App\Models\RequestStatus;
+
+use App\Models\HealthProfessionalType;
+use App\Models\BlockRequest;
 
 // For sending Mails
 use App\Mail\SendMail;
 use App\Mail\SendAgreement;
-use App\Models\BlockRequest;
+use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\Mail;
 
 // DomPDF package used for the creation of pdf from the form
@@ -289,28 +293,34 @@ class AdminController extends Controller
     // Show Partners page in Admin
     public function viewPartners()
     {
-        return view('adminPage.partners.partners');
+        $vendors = HealthProfessional::get();
+        return view('adminPage.partners.partners', compact('vendors'));
     }
 
     // Add Business page
     public function addBusinessView()
     {
-        return view('adminPage.partners.addBusiness');
+
+        $types = HealthProfessionalType::get();
+        return view('adminPage.partners.addBusiness', compact('types'));
     }
 
     // Add Business Logic
-    public function addBusiness(Request $request){
-// dd($request->)
-// buisness_name
-// profession
-// fax_number
-// mobile
-// email
-// business_contact
-// street
-// city
-// state
-// zip
+    public function addBusiness(Request $request)
+    {
+        HealthProfessional::insert([
+            'vendor_name' => $request->buisness_name,
+            'profession' => $request->profession,
+            'fax_number' => $request->fax_number,
+            'phone_number' => $request->mobile,
+            'email' => $request->email,
+            'business_contact' => $request->business_contact,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'address' => $request->street,
+        ]);
+
         return redirect()->route('admin.partners');
     }
 
@@ -318,5 +328,37 @@ class AdminController extends Controller
     public function updateBusinessView()
     {
         return view('adminPage.partners.updateBusiness');
+    }
+
+    public function viewOrder($id = null)
+    {
+        $types = HealthProfessionalType::get();
+        // $data = HealthProfessional::where('profession', $professionId)->first();
+        return view('adminPage.pages.sendOrder', compact('id', 'types'));
+    }
+
+    // Send orders from action menu 
+    public function sendOrder(Request $request)
+    {
+        Orders::where('request_id', $request->requestId)->update([
+            'fax_number' => $request->fax_number,
+            'business_contact' => $request->business_contact,
+            'email' => $request->email,
+            'prescription' => $request->prescription,
+            'no_of_refill' => $request->refills,
+        ]);
+    }
+    public function deleteBusiness($id = null)
+    {
+        HealthProfessional::where('id', $id)->delete();
+        return redirect()->back();
+    }
+
+    // Fetch business values (health_professional values) as per the profession selected in Send Orders page
+    public function fetchBusiness($professionId)
+    {
+        $business = HealthProfessional::where('profession', $professionId)->get();
+
+        return response()->json($business);
     }
 }
