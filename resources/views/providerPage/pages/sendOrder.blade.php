@@ -12,6 +12,7 @@
 @endsection
 
 @section('content')
+    {{-- Uses Orders table --}}
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">

@@ -1,13 +1,13 @@
 :root,
 :root.light {
-    --blue: #3c9eff;
+    --blue: rgb(0, 190, 232);
     --red: red;
 }
 
 :root.dark {
     --color-bg: #263238;
     --color-fg: #ffffff;
-    --blue: #3c9eff;
+    --blue: rgb(0, 190, 232);
 }
 
 body {

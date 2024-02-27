@@ -56,28 +56,29 @@ $(document).ready(function () {
         $(".phone").removeAttr("disabled");
         $(".email").removeAttr("disabled");
 
-        $('.new-buttons').show();
-        $('.default-buttons').hide();
+        $(".new-buttons").show();
+        $(".default-buttons").hide();
     });
 
-    $('.save-edit-btn').click(function (){
-        $('.phone, .email').attr('disabled', false);
+    $(".save-edit-btn").click(function () {
+        $(".phone, .email").attr("disabled", false);
 
-        $('.new-buttons').hide();
-        $('.default-buttons').show();
-        
-        $('#closeCase').submit();
+        $(".new-buttons").hide();
+        $(".default-buttons").show();
+
+        // $("#closeCase").submit();
     });
-    
-    $('.cancel-edit-btn').click(function() {
-        $('.phone, .email').attr('disabled', true);
-    
-        $('.new-buttons').hide();
-        $('.default-buttons').show();
-        
+
+    $(".cancel-edit-btn").click(function () {
+        $(".phone, .email").attr("disabled", true);
+
+        $(".new-buttons").hide();
+        $(".default-buttons").show();
     });
-    $('.close-edit-btn').click(function (){
-        window.location.href = "{{route('admin.close.case.submit', $data->id)}}";
-    });
+    // $(".close-edit-btn").click(function () {
+    //     $(".request_id").val($(this).data("id"));
+    //     // console.log($(".request_id").val());
+    //     // window.location.href = "/close-case-submit";
+    // });
     // changes start from here
 });

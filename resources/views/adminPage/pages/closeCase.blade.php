@@ -23,9 +23,9 @@
 
 
 
-        <form action="{{route('admin.close.case.save')}}" method="POST" id="closeCase">
+        <form action="{{ route('admin.close.case.save') }}" method="POST" id="closeCase">
             @csrf
-            <input type="text" value="{{$data->id}}" name="requestId" hidden>
+            <input type="text" class="request_id" value="{{ $data->id }}" name="requestId" hidden>
             <div class="section">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <div>
@@ -123,13 +123,13 @@
                 </div>
 
                 <div class="text-end default-buttons">
-                    <button type="button" value="Edit" class="primary-fill edit-btn">Edit</button>
-                    <button type="button" class="primary-empty close-edit-btn">Close Case</button>
+                    <button type="button" class="primary-fill edit-btn">Edit</button>
+                    <input type="submit" value="Close Case" name="closeCaseBtn" class="primary-empty close-edit-btn">
                     {{-- Clicking on this button, admin can close the case and that request will be moved into "Unpaid" --}}
                 </div>
-                
+
                 <div class="text-end new-buttons">
-                    <button type="button" class="primary-fill save-edit-btn">Save</button>
+                    <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn">
                     <button type="button" class="primary-empty cancel-edit-btn">Cancel</button>
                 </div>
             </div>

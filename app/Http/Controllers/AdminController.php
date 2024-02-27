@@ -272,17 +272,51 @@ class AdminController extends Controller
         $files = RequestWiseFile::where('id', $id)->get();
         return view('adminPage.pages.closeCase', compact('data', 'files'));
     }
-    public function closeCaseData(Request $request){
-
-        request_Client::where('request_id', $request->requestId)->update([
-            'phone_number' => $request->phone_number, 
-            'email' => $request->email
+    public function closeCaseData(Request $request)
+    {
+        if ($request->input('closeCaseBtn') == 'Save') {
+            request_Client::where('request_id', $request->requestId)->update([
+                'phone_number' => $request->phone_number,
+                'email' => $request->email
             ]);
-
+        } else if ($request->input('closeCaseBtn') == 'Close Case') {
+            RequestStatus::where('request_id', $request->requestId)->update(['status' => 9]);
+            return redirect()->route('admin.status', 'unpaid');
+        }
         return redirect()->back();
     }
-    public function closeCaseSubmit(Request $request, $id=null){
-        RequestStatus::where('request_id', $id)->update(['status' => 9]);
-        return redirect()->route('admin.status', 'unpaid');
+
+    // Show Partners page in Admin
+    public function viewPartners()
+    {
+        return view('adminPage.partners.partners');
+    }
+
+    // Add Business page
+    public function addBusinessView()
+    {
+        return view('adminPage.partners.addBusiness');
+    }
+
+    // Add Business Logic
+    public function addBusiness(Request $request){
+// dd($request->)
+// buisness_name
+// profession
+// fax_number
+// mobile
+// email
+// business_contact
+// street
+// city
+// state
+// zip
+        return redirect()->route('admin.partners');
+    }
+
+    // update Business Page
+    public function updateBusinessView()
+    {
+        return view('adminPage.partners.updateBusiness');
     }
 }

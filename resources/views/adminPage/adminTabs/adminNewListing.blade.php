@@ -10,7 +10,7 @@
     <a href="">Provider Location</a>
     <a href="">My Profile</a>
     <a href="">Providers</a>
-    <a href="">Partners</a>
+    <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="">Access</a>
     <a href="">Records</a>
 @endsection

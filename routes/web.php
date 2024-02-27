@@ -318,4 +318,13 @@ Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.cl
 // close case admin
 Route::get('/close-case/{id}', [AdminController::class, 'closeCase'])->name('admin.close.case');
 Route::post('/close-case', [AdminController::class, 'closeCaseData'])->name('admin.close.case.save');
-Route::get('/close-case-submit/{id}', [AdminController::class, 'closeCaseSubmit'])->name('admin.close.case.submit');
+
+
+// Partners Page in Admin
+Route::get('/partners', [AdminController::class, 'viewPartners'])->name('admin.partners');
+
+// Add Business Page
+Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
+Route::post('/add-business', [AdminController::class, 'addBusiness'])->name('add.business');
+// Update Business Page
+Route::get('/update-business', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
