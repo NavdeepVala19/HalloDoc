@@ -338,4 +338,4 @@ Route::get('/delete-business/{id}', [AdminController::class, 'deleteBusiness'])-
 // send orders admin page 
 Route::get('/admin-view-order/{id}', [AdminController::class, 'viewOrder'])->name('admin.view.order');
 Route::post('/admin-send-order', [AdminController::class, 'sendOrder'])->name('admin.send.order');
-Route::get('/fetch-business', [AdminController::class, 'fetchBusiness'])->name('fetch.business');
+Route::get('/fetch-business/{id}', [AdminController::class, 'fetchBusiness'])->name('fetch.business');

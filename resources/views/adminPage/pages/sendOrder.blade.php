@@ -43,7 +43,7 @@
                             placeholder="Business">
                         <label for="floatingInput">Business</label> --}}
 
-                        <select class="form-select buisness-menu" id="floatingSelect"
+                        <select class="form-select business-menu" id="floatingSelect"
                             aria-label="Floating label select example">
                             <option selected>Buisness</option>
                             {{-- @foreach ($types as $type)

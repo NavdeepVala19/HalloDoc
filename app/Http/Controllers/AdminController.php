@@ -355,9 +355,12 @@ class AdminController extends Controller
     }
 
     // Fetch business values (health_professional values) as per the profession selected in Send Orders page
-    public function fetchBusiness($professionId)
+    public function fetchBusiness(Request $request, $id)
     {
-        $business = HealthProfessional::where('profession', $professionId)->get();
+        // dd($id);
+        // dd($request->input('professionId'));
+        $professionId = $request->input('professionId');
+        $business = HealthProfessional::where('profession', $id)->get();
 
         return response()->json($business);
     }

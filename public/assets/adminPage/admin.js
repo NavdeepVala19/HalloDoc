@@ -76,32 +76,35 @@ $(document).ready(function () {
         $(".default-buttons").show();
     });
 
-    // $(".profession-menu").on("change", function () {
-    //     let profession = $(this).val();
-    //     console.log(profession);
-    //     $.ajax({
-    //         url: "{{route('fetch.business')}}",
-    //         type: "GET",
-    //         data: {
-    //             professionId: profession,
-    //         },
-    //         success: function (data) {
-    //             console.log(data);
-    //             // data -> array of all business with given profession
-    //             data.forEach(function (entry) {
-    //                 // entry -> single business
-    //                 $(".business-menu").append(
-    //                     '<option value="' +
-    //                         entry.id +
-    //                         '">' +
-    //                         entry.vendor_name +
-    //                         "</option>"
-    //                 );
-    //             });
-    //         },
-    //         error: function (error) {
-    //             console.error(error);
-    //         },
-    //     });
-    // });
+    $(".profession-menu").on("change", function () {
+        let profession = $(this).val();
+        console.log(profession);
+        $.ajax({
+            url: "/fetch-business/" + profession,
+            type: "GET",
+            // data: {
+            //     professionId: profession,
+            //     // _token: "{{ csrf_token() }}",
+            // },
+            success: function (data) {
+                // data -> array of all business with given profession
+                data.forEach(function (entry) {
+                    // entry -> single business
+                    $(".business-menu").append(
+                        '<option value="' +
+                            entry.id +
+                            '">' +
+                            entry.vendor_name +
+                            "</option>"
+                    );
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
+    $('.business-menu').on('change', function(){
+        
+    });
 });
