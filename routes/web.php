@@ -187,11 +187,12 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 // route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 
-route::get('/admin/providers', [AdminProviderController::class,'providersInfo'])->name('adminProvidersInfo');
+route::get('/admin/providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
-route::get('/admin/edit-provider', [AdminProviderController::class,'editProvider'])->name('admineditProvider');
+route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'updateAdminProviderProfile'])->name('admineditProvider');
 
-route::get('/admin/new-provider', [AdminProviderController::class,'newProvider'])->name('adminNewProvider');
+route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
+route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
 // ****************************************************************************************************************************
 

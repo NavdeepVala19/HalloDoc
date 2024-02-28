@@ -31,15 +31,16 @@
 
             <div class="grid-2">
                 <div class="form-floating ">
-                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name"
-                        disabled>
+                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name"  
+                     value="{{ $getProviderData->users->username}}"
+                        >
                     <label for="floatingInput">User Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="password" name="password" class="form-control" id="floatingInput"
+                    <input type="password" name="password" class="form-control" id="floatingInput" 
                         placeholder="password">
                     <label for="floatingInput">Password</label>
                     @error('first_name')
@@ -84,7 +85,7 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control" id="floatingInput"
+                    <input type="text" name="first_name" class="form-control" id="floatingInput" value="{{ $getProviderData->first_name}}"
                         placeholder="First Name">
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
@@ -93,7 +94,7 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
+                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name" value="{{ $getProviderData->last_name}}">
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -101,30 +102,31 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->email}}" name="email">
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->mobile}}"
                     placeholder="Phone Number">
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
 
-                <div class="form-floating ">
-                    <input type="text" name="medical_license" class="form-control" id="floatingInput"
+                <div class="form-floating "> 
+                    <input type="text" name="medical_license" class="form-control" id="floatingInput" value="{{ $getProviderData->medical_license}}"
                         placeholder="Medical License">
                     <label for="floatingInput">Medical license # </label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="npi_number" class="form-control" id="floatingInput"
+                    <input type="text" name="npi_number" class="form-control" id="floatingInput" value="{{ $getProviderData->npi_number}}"
                         placeholder="NPI Number">
                     <label for="floatingInput">NPI Number</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->syncEmailAddress}}" 
+                    name="alt_email">
                     <label for="floatingInput">Email</label>
                 </div>
 
@@ -158,17 +160,17 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1">
+                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1" value="{{ $getProviderData->address1}}">
                     <label for="floatingInput">Address 1</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2">
+                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2" value="{{ $getProviderData->address2}}">
                     <label for="floatingInput">Address 2</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city">
+                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city" value="{{ $getProviderData->city}}">
                     <label for="floatingInput">City</label>
                 </div>
 
@@ -186,11 +188,11 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip">
+                    <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip}}">
                     <label for="floatingInput">Zip</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                <input type="tel" name="alt_phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->alt_phone}}"
                     placeholder="Phone Number">
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
@@ -210,13 +212,13 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="business_name" class="form-control" id="floatingInput"
+                    <input type="text" name="business_name" class="form-control" id="floatingInput" value="{{ $getProviderData->business_name}}"
                         placeholder="Business Name">
                     <label for="floatingInput">Business Name</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="business_website" class="form-control" id="floatingInput"
+                    <input type="text" name="business_website" class="form-control" id="floatingInput" value="{{ $getProviderData->business_website}}"
                         placeholder="Business Website">
                     <label for="floatingInput">Business Website</label>
                 </div>
@@ -247,7 +249,7 @@
 
             </div>
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Admin Notes" id="floatingTextarea2"
+                <textarea class="form-control" placeholder="Admin Notes" id="floatingTextarea2" value="{{ $getProviderData->admin_notes}}"`
                     style="height: 120px"></textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
             </div>

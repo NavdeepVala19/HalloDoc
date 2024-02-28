@@ -13,6 +13,7 @@
     width: 25%;
 }
 
+.data,
 .checks {
     text-align: center;
 }
@@ -35,3 +36,9 @@ input[type="checkbox"] {
 .new-provider-pop-up {
     display: none;
 }
+
+.edit-btn:hover {
+    border: 1px solid #3c9eff;
+    color: #3c9eff;
+}
+

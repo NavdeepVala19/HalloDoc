@@ -10,7 +10,7 @@
 
 <a href="">Dashboard</a>
 <a href="">Provider Location</a>
-<a href="" >My Profile</a>
+<a href="">My Profile</a>
 <a href="" class="active-link">Providers</a>
 <a href="">Partners</a>
 <a href="">Access</a>
@@ -62,22 +62,25 @@
 
                 <tbody>
 
+                    @foreach ($providersData as $data)
                     <tr>
                         <td class="checks"> <input class="form-check-input" type="checkbox" value="" id="checkbox">
                         </td>
-                        <td> Provider Name</td>
-                        <td> Physician</td>
-                        <td> Un available</td>
-                        <td> Pending </td>
-                        <td class="gap-1">
+                        <td class="data"> {{$data->first_name}}</td>
+                        <td class="data"> Physician</td>
+                        <td class="data"> Available</td>
+                        <td class="data"> Active </td>
+                        <td class="data gap-1">
                             <button type="button" class="primary-empty contact-btn mt-2 mb-2">Contact</button>
-                            <a href="" type="button" class="primary-empty btn mt-2 mb-2">Edit</a>
+                            <a href="{{route('admineditProvider', $data->id) }}" type="button"
+                                class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                         </td>
-
                     </tr>
+                    @endforeach
                 </tbody>
 
             </table>
+            {{$providersData->links('pagination::bootstrap-5')}}
 
 
             <!-- contact your provider pop-up -->

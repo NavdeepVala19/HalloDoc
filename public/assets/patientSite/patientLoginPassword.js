@@ -27,12 +27,102 @@ $(document).ready(function () {
         }
     })
 
+    // this code is for new provider account page
     $('.contact-btn').click(function () {
         $('.new-provider-pop-up').show();
         $('.overlay').show();
     })
+  
+    
+    
+    // *************************** This code is for show provider photo name ******************************
+    
+    $('.file-input-provider_photo').change(function (e) {
+        const filename = e.target.files[0].name;
+        $("#provider_photo").text(filename);
+    });
+    
+    // *********************************************************
+    
+    
+    
+    // *************************** This code is for show provider signature photo name ******************************
+    // 
+    $('.file-input-provider_signature').change(function (e) {
+        const filename = e.target.files[0].name;
+        $("#provider_signature").text(filename);
+    });
+    
+    // *********************************************************
+    
+
+
+
+    // *************************** This code is for show independent contractor agreement ******************************
+ 
+    $('.independent-contractor-input').change(function (e) {
+        const filename = e.target.files[0].name;
+        $("#Contractor").text(filename);
+    });
+
+    // *********************************************************
+    
+
+
+    // *************************** This code is for show provider background photo name ******************************
+
+    $('#background-input').change(function (e) {
+        const filename = e.target.files[0].name;
+        $("#Background").text(filename);
+    });
+
+    // *********************************************************
+
+
+
+
+    // ************************ This code is for show provider HIPAA Compliance photo name *********************************
+
+    $('#hipaa-input').change(function (e) {
+        const filename = e.target.files[0].name;
+        $("#HIPAA").text(filename);
+    });
+
+    // *********************************************************
+
+
+
+
+
+    // *************************** This code is for show provider Non-disclosure Agreement photo name ******************************
+
+    $('#non-disclosure-input').change(function (e) {
+        const filename = e.target.files[0].name;
+        $(".non-disclosure").text(filename);
+    });
+
+    // *********************************************************
+
+
+
+
+
+
+    // *************************** This code is for show provider License  Agreement photo name ******************************
+
+    $('#license-input').change(function (e) {
+        const filename = e.target.files[0].name;
+        $(".license").text(filename);
+    });
+
+    // *********************************************************
+
+
 
 })
+
+
+
 // *********************************************************
 
 $(".master-checkbox").on("click", function () {
@@ -53,6 +143,7 @@ $(".master-checkbox").on("click", function () {
 });
 
 // *********************************************************
+
 
 
 // *********************************************************
@@ -63,6 +154,7 @@ $('.file-input').change(function (e) {
 });
 
 // *********************************************************
+
 
 
 
@@ -129,7 +221,6 @@ togglePasswordTwo.addEventListener('click', () => {
 
 function openFileSelection() {
     document.getElementById('fileInput').click();
-
 }
 
 //   ***************************************************************************************

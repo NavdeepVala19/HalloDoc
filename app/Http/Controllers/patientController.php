@@ -129,7 +129,6 @@ class patientController extends Controller
             $request_file->file_name = $request->file('docs')->getClientOriginalName();
             $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
             $request_file->save();
-
         }
 
 

@@ -150,6 +150,7 @@ class patientDashboardController extends Controller
 
         // $dateString = $createdAt->toDateString()
 
+        
         $userData = Auth::user();
         $email = $userData["email"];
         

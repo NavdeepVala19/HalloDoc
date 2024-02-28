@@ -24,7 +24,7 @@
 
     <div class="section">
 
-        <form action="" method="POST">
+        <form action="{{route('adminCreateNewProvider')}}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <h3>Account Information</h3>
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="form-floating status-select">
-                    <select class="form-select">
+                    <select class="form-select" name="status">
                         <option selected>Status</option>
                         <option value="1">Pending</option>
                         <option value="2">Active</option>
@@ -66,14 +66,7 @@
                     </input>
                 </div>
 
-                <div>
 
-                </div>
-
-                <div class="d-flex flex-row justify-content-end gap-3">
-                    <button class="primary-fill">Edit</button>
-                    <button class="primary-empty">Reset Password</button>
-                </div>
             </div>
 
 
@@ -100,7 +93,8 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        name="email">
                     <label for="floatingInput">Email</label>
                 </div>
 
@@ -111,20 +105,21 @@
                 @enderror
 
                 <div class="form-floating ">
-                    <input type="text" name="medical_license" class="form-control" id="floatingInput"
+                    <input type="number" name="medical_license" class="form-control" id="floatingInput"
                         placeholder="Medical License">
                     <label for="floatingInput">Medical license # </label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="npi_number" class="form-control" id="floatingInput"
+                    <input type="number" name="npi_number" class="form-control" id="floatingInput"
                         placeholder="NPI Number">
                     <label for="floatingInput">NPI Number</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email</label>
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        name="email_alt">
+                    <label for="floatingInput">Alternate Email</label>
                 </div>
 
                 <div class="d-flex gap-4 ">
@@ -143,14 +138,7 @@
                     </div>
                 </div>
 
-                <div>
 
-                </div>
-
-                <div class="d-flex flex-row justify-content-end gap-3">
-                    <button class="primary-fill">Enter Payrate</button>
-                    <button class="primary-fill">Edit</button>
-                </div>
 
             </div>
             <h3>Mailing & Billing Information</h3>
@@ -185,23 +173,17 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip">
+                    <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip">
                     <label for="floatingInput">Zip</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                <input type="tel" name="phone_number_alt" class="form-control phone" id="telephone"
                     placeholder="Phone Number">
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
 
-                <div>
 
-                </div>
-
-                <div class="d-flex flex-row justify-content-end">
-                    <button class="primary-fill">Edit</button>
-                </div>
 
 
             </div>
@@ -222,21 +204,25 @@
 
                 <div>
                     {{-- Select Photo --}}
-                    <div class="custom-file-input">
+                    <div class="custom-file-input" onclick="openFileSelection()">
                         <input type="text" placeholder="Select Photo" readonly>
                         <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span
                                 class="upload-txt">Upload</span> </label>
-                        <input type="file" id="file-input" hidden>
+                        <input type="file" id="file-input" class="file-input-provider_photo" hidden
+                            name="provider_photo">
+                        <p id="provider_photo"></p>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center gap-1 ">
                     {{-- Select Signature --}}
-                    <div class="custom-file-input">
+                    <div class="custom-file-input" onclick="openFileSelection()">
                         <input type="text" placeholder="Select Signature" readonly>
                         <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span
                                 class="upload-txt">Upload</span></label>
-                        <input type="file" id="signature-input" hidden>
+                        <input type="file" id="signature-input" class="file-input-provider_signature"
+                            name="provider_signature" hidden>
+                        <p id="provider_signature"></p>
                     </div>
 
                     <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
@@ -246,142 +232,178 @@
 
             </div>
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Admin Notes" id="floatingTextarea2"
+                <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes"
                     style="height: 120px"></textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
             </div>
 
-            <div class="d-flex flex-row justify-content-end mt-4">
-                <button class="primary-fill">Edit</button>
+
+
+
+            <hr>
+            <div>
+                <h3>Onboarding</h3>
+
+                <div class="table mt-4">
+                    <table>
+                        <tbody>
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="independent_contract_check">
+                                        <span class="ms-2">
+                                            Independent Contractor Agreement
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns" onclick="openFileSelection()">
+                                        <label for="independent_contractor" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+
+                                        <input type="file" id="independent_contractor"
+                                            class="independent-contractor-input" name="independent_contractor" hidden>
+
+                                        <button class="primary-fill ms-4">View</button>
+                                        <p id="Contractor"></p>
+                                    </div>
+
+                                    <div class="ms-4 responsive-btns">
+                                        <label for="independent_contractor" class="upload primary-fill"> <i
+                                                class="bi bi-cloud-arrow-up"></i> </label>
+                                        <input type="file" id="fileInput-independent_contractor-agreement"
+                                            class="independent-contractor-input" name="independent_contractor-btn" hidden>
+
+                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <p id="Contractor"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="background_check">
+                                        <span class="ms-2">
+                                            Background Check
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="background-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="background-input" name="background_doc" hidden>
+                                        <button class="primary-fill ms-4">View</button>
+                                        <p id="Background"></p>
+                                    </div>
+
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <p id="Background"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="HIPAA_check">
+                                        <span class="ms-2">
+                                            HIPAA Compliance
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="hipaa-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="hipaa-input" hidden name="hipaa_docs">
+                                        <button class="primary-fill ms-4">View</button>
+                                        <p id="HIPAA"></p>
+                                    </div>
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <p id="HIPAA"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="non_disclosure_doc">
+                                        <span class="ms-2">
+                                            Non-disclosure Agreement
+                                        </span>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="non-disclosure-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc">
+                                        <p class="non-disclosure"></p>
+                                    </div>
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mb-2 mt-2" name="non_disclosure_doc-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <p class="non-disclosure"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="license_check">
+                                        <span class="ms-2">
+                                            License Agreement
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="license-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="license-input" hidden name="license_doc">
+                                        <p class="license"></p>
+                                    </div>
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mt-2 mb-2" name="license_doc-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <p class="license"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-        </form>
-        <hr>
-        <div>
-            <h3>Onboarding</h3>
+            <hr>
 
-            <div class="table mt-4">
-                <table>
-                    <tbody>
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        Independent Contractor Agreement
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill">Upload</button>
-                                    <button class="primary-fill ms-4">View</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mb-3"><i class="bi bi-cloud-arrow-up"></i></button>
-                                    <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        Background Check
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill ">Upload</button>
-                                    <button class="primary-fill ms-4">View</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mt-2 mb-3"><i class="bi bi-cloud-arrow-up"></i></button>
-                                    <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        HIPAA Compliance
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill">Upload</button>
-                                    <button class="primary-fill ms-4">View</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mt-2 mb-3"><i class="bi bi-cloud-arrow-up"></i></button>
-                                    <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        Non-disclosure Agreement
-                                    </span>
-                                </div>
-
-                            </td>
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill ">Upload</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mb-2 mt-2"><i class="bi bi-cloud-arrow-up"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        License Agreement
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill ">Upload</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mt-2 mb-2"><i class="bi bi-cloud-arrow-up"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+            <div class="d-flex flex-row justify-content-end gap-3">
+                <button class="primary-fill" type="submit">Save</button>
+                <button class="btn btn-danger" type="cancel">Delete Account</button>
             </div>
-        </div>
-
-        <hr>
-
-        <div class="d-flex flex-row justify-content-end gap-3">
-            <button class="primary-fill">Save</button>
-            <button class="btn btn-danger">Delete Account</button>
-        </div>
     </div>
-
+    </form>
 </div>
 </div>
 
