@@ -2,7 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/partners/partners.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/partners.css') }}">
 @endsection
 
 @section('nav-links')

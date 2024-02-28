@@ -11,8 +11,8 @@
     <a href="">My Profile</a>
     <a href="">Providers</a>
     <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="">Access</a>
-    <a href="">Records</a>
+    <a href="{{ route('admin.access.view') }}">Access</a>
+    <a href="{{ route('admin.records.view') }}">Records</a>
 @endsection
 
 @section('content')
@@ -36,9 +36,6 @@
                     <select class="form-select" name="case_tag" class="cancel-options" id="floatingSelect"
                         aria-label="Floating label select example">
                         <option selected>Reasons</option>
-                        {{-- <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option> --}}
                     </select>
                     <label for="floatingSelect">Reasons for Cancellation</label>
                 </div>

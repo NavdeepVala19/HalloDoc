@@ -291,10 +291,25 @@ class AdminController extends Controller
     }
 
     // Show Partners page in Admin
-    public function viewPartners()
+    public function viewPartners($id = null)
     {
-        $vendors = HealthProfessional::get();
-        return view('adminPage.partners.partners', compact('vendors'));
+        if (empty($id) || $id == '0') {
+            $vendors = HealthProfessional::with('healthProfessionalType')->get();
+            // dd($vendors);
+        } else if ($id) {
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->get();
+        }
+        $professions = HealthProfessionalType::get();
+
+        // dd($id);
+        return view('adminPage.partners.partners', compact('vendors', 'professions'));
+    }
+    // Search Partner as per the input 
+    public function searchPartners(Request $request)
+    {
+        $vendors = HealthProfessional::where('vendor_name', 'LIKE', "%{$request->search}%")->get();
+        $professions = HealthProfessionalType::get();
+        return view('adminPage.partners.partners', compact('vendors', 'professions'));
     }
 
     // Add Business page
@@ -325,28 +340,50 @@ class AdminController extends Controller
     }
 
     // update Business Page
-    public function updateBusinessView()
+    public function updateBusinessView($id)
     {
-        return view('adminPage.partners.updateBusiness');
+        // HealthProfessional Id whose value need to be updated
+        $vendor = HealthProfessional::where('id', $id)->first();
+        $professions = HealthProfessionalType::get();
+        return view('adminPage.partners.updateBusiness', compact("vendor", 'professions'));
+    }
+    public function updateBusiness(Request $request)
+    {
+        HealthProfessional::where('id', $request->vendor_id)->update([
+            'vendor_name' => $request->buisness_name,
+            'profession' => $request->profession,
+            'fax_number' => $request->fax_number,
+            'phone_number' => $request->mobile,
+            'email' => $request->email,
+            'business_contact' => $request->business_contact,
+            'address' => $request->street,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip
+        ]);
+        return redirect()->back();
     }
 
     public function viewOrder($id = null)
     {
         $types = HealthProfessionalType::get();
-        // $data = HealthProfessional::where('profession', $professionId)->first();
         return view('adminPage.pages.sendOrder', compact('id', 'types'));
     }
 
     // Send orders from action menu 
     public function sendOrder(Request $request)
     {
-        Orders::where('request_id', $request->requestId)->update([
+        Orders::insert([
+            'vendor_id' => $request->vendor_id,
+            'request_id' => $request->requestId,
             'fax_number' => $request->fax_number,
             'business_contact' => $request->business_contact,
             'email' => $request->email,
             'prescription' => $request->prescription,
             'no_of_refill' => $request->refills,
         ]);
+
+        return redirect()->route('admin.status', 'active');
     }
     public function deleteBusiness($id = null)
     {
@@ -357,11 +394,35 @@ class AdminController extends Controller
     // Fetch business values (health_professional values) as per the profession selected in Send Orders page
     public function fetchBusiness(Request $request, $id)
     {
-        // dd($id);
-        // dd($request->input('professionId'));
-        $professionId = $request->input('professionId');
         $business = HealthProfessional::where('profession', $id)->get();
 
         return response()->json($business);
+    }
+    public function fetchBusinessData($id)
+    {
+        $businessData = HealthProfessional::where('id', $id)->first();
+
+        return response()->json($businessData);
+    }
+
+    // Access Page
+    public function accessView()
+    {
+        return view('adminPage.access.access');
+    }
+    public function createRoleView()
+    {
+        return view('adminPage.access.createRole');
+    }
+
+    // Records Page
+    public function searchRecordsView()
+    {
+        return view('adminPage.records.searchRecords');
+    }
+
+    public function emailLogsView()
+    {
+        return view('adminPage.records.emailLogs');
     }
 }

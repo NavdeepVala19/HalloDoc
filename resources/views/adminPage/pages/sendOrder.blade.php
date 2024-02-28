@@ -39,30 +39,23 @@
                         <label for="floatingSelect">Select Profession</label>
                     </div>
                     <div class="form-floating ">
-                        {{-- <input type="text" name="business" class="form-control" id="floatingInput"
-                            placeholder="Business">
-                        <label for="floatingInput">Business</label> --}}
-
-                        <select class="form-select business-menu" id="floatingSelect"
+                        <select name="vendor_id" class="form-select business-menu" id="floatingSelect"
                             aria-label="Floating label select example">
                             <option selected>Buisness</option>
-                            {{-- @foreach ($types as $type)
-                                <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
-                            @endforeach --}}
                         </select>
                         <label for="floatingSelect">Select Business</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="business_contact" class="form-control" id="floatingInput"
+                        <input type="text" name="business_contact" class="form-control business_contact" id="floatingInput"
                             placeholder="Business Contact">
                         <label for="floatingInput">Business Contact</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control" id="floatingInput" placeholder="email">
+                        <input type="email" name="email" class="form-control email" id="floatingInput" placeholder="email">
                         <label for="floatingInput">Email</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="fax_number" class="form-control" id="floatingInput"
+                        <input type="text" name="fax_number" class="form-control fax_number" id="floatingInput"
                             placeholder="Fax Number">
                         <label for="floatingInput">Fax Number</label>
                     </div>

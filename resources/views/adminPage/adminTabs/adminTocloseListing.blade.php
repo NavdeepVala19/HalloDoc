@@ -328,7 +328,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     Uploads</button>
                                                 <button><i class="bi bi-journal-text me-2 ms-3"></i>View
                                                     Notes</button>
-                                                <a href="{{ route('provider.view.order', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.order', $case->request->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 <a href="{{ route('admin.close.case', $case->request->id) }}">
                                                     <i class="bi bi-x-circle me-2 ms-3"></i>Close Case</a>

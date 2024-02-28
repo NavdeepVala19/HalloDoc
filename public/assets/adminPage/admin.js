@@ -76,16 +76,13 @@ $(document).ready(function () {
         $(".default-buttons").show();
     });
 
+    // Send Orders Page dynamic data fetching
     $(".profession-menu").on("change", function () {
         let profession = $(this).val();
-        console.log(profession);
+        $(".business-menu").html("<option selected>Buisness</option>");
         $.ajax({
             url: "/fetch-business/" + profession,
             type: "GET",
-            // data: {
-            //     professionId: profession,
-            //     // _token: "{{ csrf_token() }}",
-            // },
             success: function (data) {
                 // data -> array of all business with given profession
                 data.forEach(function (entry) {
@@ -104,7 +101,33 @@ $(document).ready(function () {
             },
         });
     });
-    $('.business-menu').on('change', function(){
-        
+    $(".business-menu").on("change", function () {
+        let business = $(this).val();
+        $.ajax({
+            url: "/fetch-business-data/" + business,
+            type: "GET",
+            success: function (data) {
+                $(".business_contact").val(data.business_contact);
+                $(".email").val(data.email);
+                $(".fax_number").val(data.fax_number);
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
+
+    // Partners page filter partners based on profession selected
+    $(".select-profession").on("change", function () {
+        let profession = $(this).val();
+        console.log(profession);
+        window.location.href = "/partners/" + profession;
+    });
+
+    // Search Vendor based on name
+    $(".search-vendor").on("keypress", function (e) {
+        if (e.which == 13) {
+            $(".vendorSearchForm").submit();
+        }
     });
 });

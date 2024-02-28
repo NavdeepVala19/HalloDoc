@@ -48,6 +48,27 @@ nav {
     margin-bottom: 42px;
 }
 
+.record-navigation {
+    display: inline-block;
+}
+
+.record-btn {
+    padding: 10px 15px;
+    color: #343434;
+    background: none;
+    border: none;
+}
+
+.records-menu a:hover {
+    background-color: rgb(95, 223, 255);
+    color: var(--blue) !important;
+}
+
+.record-btn:hover {
+    color: var(--blue);
+    border-bottom: 2px solid var(--blue);
+}
+
 .active-link {
     color: var(--blue);
     border-bottom: 2px solid var(--blue);

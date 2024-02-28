@@ -2,7 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/partners/partners.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/partners.css') }}">
 @endsection
 
 @section('nav-links')
@@ -25,58 +25,67 @@
         <div class="section">
             <h4>Submit Information</h4>
 
-            <form action="" method="POST">
+            <form action="{{ route('update.business') }}" method="POST">
+                @csrf
+                <input type="text" value="{{ $vendor->id }}" name="vendor_id" hidden>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="buisness_name" class="form-control" id="floatingInput"
-                            placeholder="Business Name">
+                        <input type="text" name="buisness_name" value="{{ $vendor->vendor_name }}" class="form-control"
+                            id="floatingInput" placeholder="Business Name">
                         <label for="floatingInput">Business Name</label>
                     </div>
                     <div class="form-floating">
-                        <select id="floatingSelect" class="form-select">
+                        <select id="floatingSelect" name="profession" class="form-select">
                             <option selected>Select Profession</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            @foreach ($professions as $profession)
+                                <option value="{{ $profession->id }}"
+                                    {{ $vendor->profession == $profession->id ? 'selected="selected"' : '' }}>
+                                    {{ $profession->profession_name }}</option>
+                            @endforeach
                         </select>
                         <label for="floatingSelect">Profession</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="fax_number" class="form-control" id="floatingInput"
-                            placeholder="Fax Number">
+                        <input type="text" name="fax_number" value="{{ $vendor->fax_number }}" class="form-control"
+                            id="floatingInput" placeholder="Fax Number">
                         <label for="floatingInput">Fax Number</label>
                     </div>
-                    <input type="tel" name="mobile" class="form-control phone" id="telephone" placeholder="mobile">
+                    <input type="tel" name="mobile" class="form-control phone" value="{{ $vendor->phone_number }}"
+                        id="telephone" placeholder="mobile">
 
                     <div class="form-floating ">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="email" name="email" class="form-control" id="floatingInput"
+                            value="{{ $vendor->email }}" placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="business_contact" class="form-control" id="floatingInput"
-                            placeholder="Business Contact">
+                        <input type="text" name="business_contact" value="{{ $vendor->business_contact }}"
+                            class="form-control" id="floatingInput" placeholder="Business Contact">
                         <label for="floatingInput">Business Contact</label>
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="Street" class="form-control" id="floatingInput" placeholder="Street">
+                        <input type="text" name="street" class="form-control" value="{{ $vendor->address }}"
+                            id="floatingInput" placeholder="Street">
                         <label for="floatingInput">Street</label>
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="City" class="form-control" id="floatingInput" placeholder="City">
+                        <input type="text" name="city" class="form-control" value="{{ $vendor->city }}"
+                            id="floatingInput" placeholder="City">
                         <label for="floatingInput">City</label>
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="State" class="form-control" id="floatingInput" placeholder="State">
+                        <input type="text" name="state" class="form-control" value="{{ $vendor->state }}"
+                            id="floatingInput" placeholder="State">
                         <label for="floatingInput">State</label>
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="zip" class="form-control" id="floatingInput"
-                            placeholder="Zip/postal">
+                        <input type="text" name="zip" class="form-control" value="{{ $vendor->zip }}"
+                            id="floatingInput" placeholder="Zip/postal">
                         <label for="floatingInput">Zip/postal</label>
                     </div>
                 </div>
