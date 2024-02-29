@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\RequestTable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class request_Client extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     // request_client table is use to create only the patient records
     protected $table = 'request_client';

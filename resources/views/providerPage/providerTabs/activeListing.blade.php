@@ -46,7 +46,6 @@ giving service to the patient. --}}
             <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Email</label>
         </div>
-
     </div>
     <div class="p-2 d-flex align-items-center justify-content-end gap-2">
         <button class="primary-fill">Send</button>

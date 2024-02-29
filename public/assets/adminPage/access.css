@@ -1,0 +1,13 @@
+.actions {
+    width: 250px;
+    text-align: center;
+}
+
+table td {
+    padding: 15px !important;
+}
+
+.box-container {
+    width: 60%;
+    margin: auto !important;
+}

@@ -83,14 +83,27 @@
     color: var(--blue);
 }
 
+.transfer-case {
+    display: none;
+}
 
+.clear-case {
+    display: none;
+}
+
+.warning-icon {
+    font-size: 100px;
+    color: rgb(255, 204, 0);
+}
+/* Close Case  */
+.new-buttons{
+    display: none;
+}
 /* changes start from here */
 
-
 @media (max-width: 750px) {
-
-    .admin-btn>button,
-    .admin-btn>a {
+    .admin-btn > button,
+    .admin-btn > a {
         padding: 8px;
     }
 

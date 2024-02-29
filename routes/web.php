@@ -200,6 +200,7 @@ route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'up
 
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
+route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
 
 // ****************************************************************************************************************************
 
@@ -297,12 +298,6 @@ Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('pr
 
 
 // ************** ADMIN DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
-
-// For Testing Purpose only
-Route::get('/test', function () {
-    return view('adminPage.adminTabs.adminNewListing');
-});
-
 // Admin Dashboard page with New Users case listing
 Route::get('/admin', function () {
     return redirect('/admin/new');
@@ -326,4 +321,56 @@ Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
 Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');
 
 // Block Case by admin
-Route::post('/block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
+Route::post('block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
+
+
+// Clear Case by admin pending and close state
+Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');
+
+// close case admin
+Route::get('/close-case/{id}', [AdminController::class, 'closeCase'])->name('admin.close.case');
+Route::post('/close-case', [AdminController::class, 'closeCaseData'])->name('admin.close.case.save');
+
+
+// Partners Page in Admin
+Route::get('/partners/{id?}', [AdminController::class, 'viewPartners'])->name('admin.partners');
+// Search Vendors/Partners
+Route::post('/search-partners', [AdminController::class, 'searchPartners'])->name('search.partners');
+
+// Add Business Page
+Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
+Route::post('/add-business', [AdminController::class, 'addBusiness'])->name('add.business');
+// Update Business Page
+Route::get('/update-business/{id}', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
+Route::post('/update-business', [AdminController::class, 'updateBusiness'])->name('update.business');
+Route::get('/delete-business/{id}', [AdminController::class, 'deleteBusiness'])->name('delete.business');
+
+// send orders admin page 
+Route::get('/admin-view-order/{id}', [AdminController::class, 'viewOrder'])->name('admin.view.order');
+Route::post('/admin-send-order', [AdminController::class, 'sendOrder'])->name('admin.send.order');
+// Dynamically update data of business dropdown based on selection of profession
+Route::get('/fetch-business/{id}', [AdminController::class, 'fetchBusiness'])->name('fetch.business');
+// Dynamically fetch data of business based on selection in dropdown
+Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessData'])->name('fetch.business.data');
+
+// Account Roles Access Page
+Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
+Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('admin.create.role.view');
+
+// Records Page 
+Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
+Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
+Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
+Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
+Route::get('/patient-history', [AdminController::class, 'patientRecordsView'])->name('admin.patient.records.view');
+Route::get('/patient-records', [AdminController::class, 'patientViews'])->name('patient.records');
+
+
+// For Testing Purpose only
+Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
+Route::post('/cancel-history',[AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+
+// For Testing Purpose only
+Route::get('/test', function () {
+    return view('adminPage.records.cancelHistory');
+});

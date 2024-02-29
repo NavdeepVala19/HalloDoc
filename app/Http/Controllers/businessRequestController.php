@@ -138,9 +138,6 @@ class businessRequestController extends Controller
 
 
 
-
     return view('patientSite/submitScreen');
-
   }
 }
-

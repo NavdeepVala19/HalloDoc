@@ -16,6 +16,7 @@ use App\Models\RequestStatus;
 // For sending Mails
 use App\Mail\SendMail;
 use App\Mail\SendAgreement;
+use App\Models\EmailLog;
 use Illuminate\Support\Facades\Mail;
 
 // DomPDF package used for the creation of pdf from the form
@@ -139,12 +140,12 @@ class ProviderController extends Controller
         } else {
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)
-                ->whereHas('request', function ($q) use ($request, $category) {
-                    $q->where('request_type_id', $this->getCategoryId($category))
-                        ->whereHas('requestClient', function($query) use ($request)  {
-                            $query->where('first_name', 'like', '%' . $request->search . '%');
-                });
-            })->paginate(10);
+                    ->whereHas('request', function ($q) use ($request, $category) {
+                        $q->where('request_type_id', $this->getCategoryId($category))
+                            ->whereHas('requestClient', function ($query) use ($request) {
+                                $query->where('first_name', 'like', '%' . $request->search . '%');
+                            });
+                    })->paginate(10);
 
 
                 // $cases = requestTable::where('status', 1)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
@@ -154,12 +155,12 @@ class ProviderController extends Controller
             } else if ($status == 'pending') {
 
                 $cases = RequestStatus::where('status', 3)
-                ->whereHas('request', function ($q) use ($request, $category) {
-                    $q->where('request_type_id', $this->getCategoryId($category))
-                        ->whereHas('requestClient', function($query) use ($request)  {
-                            $query->where('first_name', 'like', '%' . $request->search . '%');
-                });
-            })->paginate(10);
+                    ->whereHas('request', function ($q) use ($request, $category) {
+                        $q->where('request_type_id', $this->getCategoryId($category))
+                            ->whereHas('requestClient', function ($query) use ($request) {
+                                $query->where('first_name', 'like', '%' . $request->search . '%');
+                            });
+                    })->paginate(10);
 
 
                 // $cases = requestTable::where('status', 3)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
@@ -169,12 +170,12 @@ class ProviderController extends Controller
             } else if ($status == 'active') {
 
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
-                ->whereHas('request', function ($q) use ($request, $category) {
-                    $q->where('request_type_id', $this->getCategoryId($category))
-                        ->whereHas('requestClient', function($query) use ($request)  {
-                            $query->where('first_name', 'like', '%' . $request->search . '%');
-                });
-            })->paginate(10);
+                    ->whereHas('request', function ($q) use ($request, $category) {
+                        $q->where('request_type_id', $this->getCategoryId($category))
+                            ->whereHas('requestClient', function ($query) use ($request) {
+                                $query->where('first_name', 'like', '%' . $request->search . '%');
+                            });
+                    })->paginate(10);
 
                 // $cases = requestTable::where('status', 4)->orWhere('status', 5)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
                 //     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -183,13 +184,13 @@ class ProviderController extends Controller
             } else if ($status == 'conclude') {
 
                 $cases = RequestStatus::where('status', 6)
-                ->whereHas('request', function ($q) use ($request, $category) {
-                    $q->where('request_type_id', $this->getCategoryId($category))
-                        ->whereHas('requestClient', function($query) use ($request)  {
-                            $query->where('first_name', 'like', '%' . $request->search . '%');
-                });
-            })->paginate(10);
-                
+                    ->whereHas('request', function ($q) use ($request, $category) {
+                        $q->where('request_type_id', $this->getCategoryId($category))
+                            ->whereHas('requestClient', function ($query) use ($request) {
+                                $query->where('first_name', 'like', '%' . $request->search . '%');
+                            });
+                    })->paginate(10);
+
                 // $cases = requestTable::where('status', 6)->where('request_type_id', $this->getCategoryId($category))->whereHas('requestClient', function ($q) use ($request) {
                 //     $q->where('first_name', 'like', '%' . $request->search . '%');
                 // })->paginate(10);
@@ -358,6 +359,8 @@ class ProviderController extends Controller
     // Provider My Profile Data request for edit on submit
     public function providerData(Request $request)
     {
+        // Fetch Provider data as per the provider logged in 
+        // Provider::where('user_id', $id)->first();
     }
 
     // show a particular case page as required
@@ -376,6 +379,14 @@ class ProviderController extends Controller
     public function sendMail(Request $request)
     {
         Mail::to($request->email)->send(new SendMail($request->all()));
+        EmailLog::insert([
+            // 'provider_id' => specify provider id
+            // 'email_template' =>,
+            // 'subject_name' =>,
+            'email' => $request->email,
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+        ]);
         return redirect()->back();
     }
 

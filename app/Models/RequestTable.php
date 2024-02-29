@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\request_Client;
 use App\Models\Status;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RequestTable extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'request';
 
@@ -47,8 +49,6 @@ class RequestTable extends Model
         return $this->belongsTo(allusers::class);
     }
 
-
-
     // Making relationship with requestClient table
 
     public function requestClient()
@@ -62,10 +62,9 @@ class RequestTable extends Model
         return $this->belongsTo(RequestStatus::class);
     }
 
-
-
-    // public function status()
-    // {
-    //     return $this->belongsTo(Status::class);
-    // }
+    public function status()
+    {
+        return $this->belongsTo(RequestStatus::class);
+    }
+    
 }

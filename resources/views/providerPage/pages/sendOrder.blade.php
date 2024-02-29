@@ -12,6 +12,7 @@
 @endsection
 
 @section('content')
+    {{-- Uses Orders table --}}
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">
@@ -67,6 +68,8 @@
                             <option value="1">One</option>
                             <option value="2">Two</option>
                             <option value="3">Three</option>
+                            <option value="4">Four</option>
+                            <option value="5">Five</option>
                         </select>
                         <label for="floatingSelect">Number of Refil</label>
                     </div>

@@ -1,6 +1,6 @@
 /* *********************** COMMON STYLING FOR ADMIN/PROVIDER DASHBOARD ************************ */
 :root {
-    --primary-color: #3c9eff;
+    --primary-color: rgb(0, 190, 232);
     --patient-color: green;
     --family-color: rgb(186, 186, 99);
     --business-color: rgb(215, 116, 116);
@@ -79,7 +79,6 @@
 .case-pending.active {
     background-color: rgb(0, 172, 240);
     color: white;
-
 }
 
 .case-active {
@@ -110,11 +109,9 @@
 
 .case-active:hover,
 .case-active.active {
-
     color: white;
     background-color: rgb(34, 140, 32);
 }
-
 
 .case-conclude {
     position: relative;
@@ -219,7 +216,7 @@
     border-radius: 5px;
 }
 
-tr>td {
+tr > td {
     padding: 16px !important;
     color: #fff !important;
 }
@@ -248,7 +245,7 @@ tr>td {
     display: none;
 }
 
-.page>nav {
+.page > nav {
     margin: 10px 20px !important;
 }
 
@@ -268,7 +265,7 @@ tr>td {
     z-index: 999;
 }
 
-.action-menu>button {
+.action-menu > button {
     width: 200px !important;
     border: none;
     background-color: #fff;
@@ -276,7 +273,7 @@ tr>td {
     text-align: left;
 }
 
-.action-menu>a {
+.action-menu > a {
     display: block;
     width: 200px !important;
     border: none;
@@ -286,8 +283,8 @@ tr>td {
     text-align: left;
 }
 
-.action-menu>button:hover,
-.action-menu>a:hover {
+.action-menu > button:hover,
+.action-menu > a:hover {
     background-color: rgba(128, 128, 128);
 }
 
@@ -360,7 +357,6 @@ tr>td {
         display: none;
     }
 
-
     .btn-all {
         display: none;
     }
@@ -371,7 +367,7 @@ tr>td {
         justify-content: start !important;
     }
 
-    .src-category>a {
+    .src-category > a {
         flex-direction: column;
         align-items: center;
         font-size: 12px;
@@ -396,7 +392,7 @@ tr>td {
         border-radius: 0;
     }
 
-    .src-category>button {
+    .src-category > button {
         font-size: 12px;
         padding: 5px;
     }
@@ -580,7 +576,10 @@ tr>td {
 
 .transfer-request .form-floating {
     width: 100%;
+<<<<<<< HEAD
 
+=======
+>>>>>>> navdeep
 }
 
 .transfer-description {
@@ -626,6 +625,7 @@ tr>td {
 .request-message {
     height: 150px !important;
 }
+<<<<<<< HEAD
 
 
 /******************************* Request DTY PopUp - AdminListingPages **************************************/
@@ -636,3 +636,5 @@ tr>td {
     width: 500px;
     z-index: 20;
 }
+=======
+>>>>>>> navdeep

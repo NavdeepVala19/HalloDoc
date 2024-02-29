@@ -2,8 +2,6 @@
 :root.light {
     --blue: rgb(0, 190, 232);
     --red: red;
-    --color-bg: #ffffff;
-    --color-fg: #000000;
 }
 
 :root.dark {
@@ -15,9 +13,6 @@
 body {
     font-family: "Poppins", sans-serif;
     font-style: normal;
-    background-color: var(--color-bg);
-    color: var(--color-fg);
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -51,6 +46,27 @@ nav > a:hover {
 
 nav {
     margin-bottom: 42px;
+}
+
+.record-navigation {
+    display: inline-block;
+}
+
+.record-btn {
+    padding: 10px 15px;
+    color: #343434;
+    background: none;
+    border: none;
+}
+
+.records-menu a:hover {
+    background-color: rgb(95, 223, 255);
+    color: var(--blue) !important;
+}
+
+.record-btn:hover {
+    color: var(--blue);
+    border-bottom: 2px solid var(--blue);
 }
 
 .active-link {
@@ -194,12 +210,23 @@ form > h3 {
     margin: 25px 0;
 }
 
+.grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+    /* margin: 25px 0; */
+}
+
 @media (max-width: 550px) {
     .grid-2 {
         grid-template-columns: 1fr !important;
     }
 
     .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+    .grid-4 {
         grid-template-columns: 1fr !important;
     }
 }
