@@ -481,4 +481,7 @@ class AdminController extends Controller
 
         return view('adminPage.records.cancelHistory', compact('cancelCases'));
     }
+    public function patientViews(){
+        return view('adminPage.records.patientRecords');
+    }
 }

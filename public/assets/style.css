@@ -214,8 +214,8 @@ form > h3 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 20px;
-    /* margin-bottom: 24px; */
-    margin: 25px 0;
+    margin-bottom: 16px;
+    /* margin: 25px 0; */
 }
 
 @media (max-width: 550px) {

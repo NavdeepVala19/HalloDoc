@@ -349,7 +349,8 @@ Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->na
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
-Route::get('/patient-records', [AdminController::class, 'patientRecordsView'])->name('admin.patient.records.view');
+Route::get('/patient-history', [AdminController::class, 'patientRecordsView'])->name('admin.patient.records.view');
+Route::get('/patient-records', [AdminController::class, 'patientViews'])->name('patient.records');
 
 
 // For Testing Purpose only

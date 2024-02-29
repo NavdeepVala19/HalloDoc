@@ -31,7 +31,6 @@
 giving service to the patient. --}}
     <div class="overlay"></div>
 
-
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -320,71 +319,109 @@ giving service to the patient. --}}
 
                 <div class="mobile-listing">
                     @foreach ($cases as $case)
-                        <div class="mobile-list d-flex justify-content-between">
-                            <div class="d-flex flex-column">
-                                <p>{{ $case->request_first_name }} </p>
-                                <span>
-
-                                    {{ $case->street }}
-
-                                </span>
-                            </div>
-                            <div class="d-flex flex-column align-items-center justify-content-around">
-                                @if ($case->request->request_type_id == 1)
-                                    <span>
-                                        Patient
-                                        <i class="bi bi-circle-fill ms-1 green"></i>
-                                    </span>
-                                @elseif ($case->request->request_type_id == 2)
-                                    <span>
-                                        Family/Friend
-                                        <i class="bi bi-circle-fill ms-1 yellow"></i>
-                                    </span>
-                                @elseif ($case->request->request_type_id == 3)
-                                    <span>
-                                        Business
-                                        <i class="bi bi-circle-fill ms-1 red"></i>
-                                    </span>
-                                @elseif ($case->request->request_type_id == 4)
-                                    <span>
-                                        Concierge
-                                        <i class="bi bi-circle-fill ms-1 blue"></i>
-                                    </span>
+                    <div class="mobile-list d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            <p>{{ $case->request->first_name }} </p>
+                            <span>Address:
+                                @if ($case->request->requestClient)
+                                {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
+                                $case->request->requestClient->state }}
                                 @endif
-                                <button class="map-btn">Map Location</button>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column align-items-center justify-content-around">
+                            @if ($case->request->request_type_id == 1)
+                            <span>
+                                Patient
+                                <i class="bi bi-circle-fill ms-1 green"></i>
+                            </span>
+                            @elseif ($case->request->request_type_id == 2)
+                            <span>
+                                Family/Friend
+                                <i class="bi bi-circle-fill ms-1 yellow"></i>
+                            </span>
+                            @elseif ($case->request->request_type_id == 3)
+                            <span>
+                                Business
+                                <i class="bi bi-circle-fill ms-1 red"></i>
+                            </span>
+                            @elseif ($case->request->request_type_id == 4)
+                            <span>
+                                Concierge
+                                <i class="bi bi-circle-fill ms-1 blue"></i>
+                            </span>
+                            @endif
+                            <button class="map-btn">Map Location</button>
+                        </div>
+                    </div>
+                    <div class="more-info ">
+                        <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View Case</a>
+                        <div>
+                            <span>
+                                <i class="bi bi-calendar3"></i> Date of birth :
+                                @isset($case->request->requestClient)
+                                {{ $case->request->requestClient->date_of_birth }}
+                                @endisset
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-envelope"></i> Email :
+                                @isset($case->request->requestClient)
+                                {{ $case->request->requestClient->email }}
+                                @endisset
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-telephone"></i> Patient :
+                                @isset($case->request->requestClient)
+                                {{ $case->request->phone_number }}
+                                @endisset
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-cash"></i> Transfer :Admin transferred to
+                                @isset($case->request->requestClient)
+                                {{ $case->request->requestClient->last_name}}
+                                @endisset
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-calendar3"></i> Date of services :
+                                @isset($case->request->requestClient)
+                                {{ $case->request->created_at }}
+                                @endisset
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-person-circle"></i> Physician :
+                                @isset($case->request->requestClient)
+                                {{ $case->request->last_name}}
+                                @endisset
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-person-plus-fill"></i> Requestor:
+                                @isset($case->request->requestClient)
+                                {{ $case->request->first_name }}
+                                @endisset
+                            </span>
+                            <div class="grid-2-listing ">
+                                <a href="{{ route('provider.view.notes', $case->request->id) }}"
+                                    class="secondary-btn text-center">View
+                                    Notes</a>
+                                <button class="secondary-btn-1">Doctors Notes</button>
+                                <button class="secondary-btn">View Uploads</button>
+                                <button class="secondary-btn">Encouter</button>
+                                <button class="secondary-btn-2">orders</button>
+                                <button class="secondary-btn">Email</button>
                             </div>
                         </div>
-                        <div class="more-info ">
-                            <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View
-                                Case</a>
-                            <div>
-                                <span>
-                                    <i class="bi bi-envelope"></i> Email : example@xyz.com
-                                    {{ $case->email }}
-                                </span>
-                                <br>
-                                <span>
-                                    <i class="bi bi-telephone"></i> Patient :
-                                    {{ $case->mobile }}
-                                </span>
-                                <div class="grid-2-listing ">
-                                    <a href="{{ route('provider.view.notes', $case->request->id) }}"
-                                        class="secondary-btn text-center">View
-                                        Notes</a>
-                                    <button class="secondary-btn-1">Doctors Notes</button>
-                                    <button class="secondary-btn">View Uploads</button>
-                                    <button class="secondary-btn">Encouter</button>
-                                    <button class="secondary-btn-2">orders</button>
-                                    <button class="secondary-btn-3">House Call</button>
-                                    <button class="secondary-btn">Email</button>
-                                </div>
-                            </div>
-                            <div>
-                                Chat With:
-                                <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-                            </div>
+                        <div>
+                            Chat With:
+                            <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
+                            <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                         </div>
+                    </div>
                     @endforeach
                 </div>
                 <div class="page">
