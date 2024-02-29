@@ -12,7 +12,18 @@
     <a href="">Providers</a>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="{{ route('admin.access.view') }}">Access</a>
-    <a href="{{ route('admin.records.view') }}">Records</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Records
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+        </ul>
+    </div>
 @endsection
 
 @section('content')
@@ -327,12 +338,11 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-
                             @if (!empty($case->request) && !empty($case->request->requestClient))
                                 <tr class="type-{{ $case->request->request_type_id }}">
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>{{$case->request->first_name}}</td>
+                                    <td>{{ $case->request->first_name }}</td>
                                     <td>{{ $case->request->created_at }}</td>
                                     <td>{{ $case->request->phone_number }}</td>
                                     <td>

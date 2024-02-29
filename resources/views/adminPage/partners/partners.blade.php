@@ -20,20 +20,20 @@
         <h3>Vendor(s)</h3>
         <div class="section">
             <div class="mb-3 option-section">
-                <div class="gap-3 filter-section">
-                    <form action="{{ route('search.partners') }}" method="POST" class="vendorSearchForm">
-                        @csrf
+                <form action="{{ route('search.partners') }}" method="POST" class="vendorSearchForm">
+                    @csrf
+                    <div class="gap-3 filter-section">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-vendor"
                             placeholder='&#xF52A;  Search Vendors' aria-describedby="basic-addon1" name="search">
-                    </form>
-                    <select class="form-select select-profession">
-                        <option value="0">All Profession</option>
-                        @foreach ($professions as $profession)
-                            <option value="{{ $profession->id }}">
-                                {{ $profession->profession_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                        <select name="profession" class="form-select select-profession">
+                            <option value="0">All Profession</option>
+                            @foreach ($professions as $profession)
+                                <option value="{{ $profession->id }}" {{ $id == $profession->id ? 'selected' : '' }}>
+                                    {{ $profession->profession_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
                 <div class="btn-box">
                     <a href="{{ route('add.business.view') }}" class="primary-empty add-btn">
                         <i class="bi bi-plus-lg"></i>

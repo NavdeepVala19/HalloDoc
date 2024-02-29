@@ -11,17 +11,17 @@
     <a href="">My Profile</a>
     <a href="">Providers</a>
     <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="">Access</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a href="{{ route('admin.access.view') }}">Access</a>
+    <div class="dropdown record-navigation ">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Records
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="#">Search Records</a></li>
-            <li><a class="dropdown-item" href="#">Email Logs</a></li>
-            <li><a class="dropdown-item" href="#">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="#">Patient Records</a></li>
-            <li><a class="dropdown-item" href="#">Blocked History</a></li>
+            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
         </ul>
     </div>
 @endsection

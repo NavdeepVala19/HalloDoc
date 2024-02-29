@@ -16,6 +16,7 @@ use App\Models\RequestStatus;
 // For sending Mails
 use App\Mail\SendMail;
 use App\Mail\SendAgreement;
+use App\Models\EmailLog;
 use Illuminate\Support\Facades\Mail;
 
 // DomPDF package used for the creation of pdf from the form
@@ -378,6 +379,14 @@ class ProviderController extends Controller
     public function sendMail(Request $request)
     {
         Mail::to($request->email)->send(new SendMail($request->all()));
+        EmailLog::insert([
+            // 'provider_id' => specify provider id
+            // 'email_template' =>,
+            // 'subject_name' =>,
+            'email' => $request->email,
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+        ]);
         return redirect()->back();
     }
 

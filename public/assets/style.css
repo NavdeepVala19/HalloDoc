@@ -210,12 +210,23 @@ form > h3 {
     margin: 25px 0;
 }
 
+.grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    /* margin-bottom: 24px; */
+    margin: 25px 0;
+}
+
 @media (max-width: 550px) {
     .grid-2 {
         grid-template-columns: 1fr !important;
     }
 
     .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+    .grid-4 {
         grid-template-columns: 1fr !important;
     }
 }

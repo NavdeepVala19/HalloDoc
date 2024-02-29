@@ -10,9 +10,20 @@
     <a href="">Provider Location</a>
     <a href="">My Profile</a>
     <a href="">Providers</a>
-    <a href="">Partners</a>
-    <a href="">Access</a>
-    <a href="">Records</a>
+    <a href="{{ route('admin.partners') }}">Partners</a>
+    <a href="{{ route('admin.access.view') }}">Access</a>
+    <div class="dropdown record-navigation ">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Records
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+        </ul>
+    </div>
 @endsection
 
 @section('content')
@@ -139,7 +150,8 @@ pending state, providers need to send an agreement link to patients. --}}
         </div>
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
             <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
+                <input type="text" name="first_name" class="form-control" id="floatingInput"
+                    placeholder="First Name">
                 <label for="floatingInput">First Name</label>
                 @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -168,7 +180,7 @@ pending state, providers need to send an agreement link to patients. --}}
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
-    
+
     {{-- Transfer Request --}}
     <div class="pop-up transfer-request">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">

@@ -121,7 +121,16 @@ $(document).ready(function () {
     $(".select-profession").on("change", function () {
         let profession = $(this).val();
         console.log(profession);
-        window.location.href = "/partners/" + profession;
+
+        $(this).val(profession);
+
+        if (profession === "0") {
+            // Redirect to all professions URL
+            window.location.href = "/partners";
+        } else {
+            // Redirect based on selected profession
+            window.location.href = "/partners/" + profession;
+        }
     });
 
     // Search Vendor based on name
@@ -129,5 +138,22 @@ $(document).ready(function () {
         if (e.which == 13) {
             $(".vendorSearchForm").submit();
         }
+    });
+
+    // Email logs mobile listing
+    $(".main-section").click(function () {
+        // $(".details").toggle();
+
+        // Target the next sibling .more-info element specifically
+        $(this).next(".details").toggleClass("active");
+
+        // Close any other open .more-info sections
+        $(".details").not($(this).next(".details")).removeClass("active");
+    });
+
+    // Cancel History Page
+    // Clear all input fields
+    $(".clearButton").click(function () {
+        $(".empty-fields").val("");
     });
 });

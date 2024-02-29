@@ -285,12 +285,6 @@ Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('pr
 
 
 // ************** ADMIN DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
-
-// For Testing Purpose only
-Route::get('/test', function () {
-    return view('adminPage.adminTabs.adminNewListing');
-});
-
 // Admin Dashboard page with New Users case listing
 Route::get('/admin', function () {
     return redirect('/admin/new');
@@ -352,7 +346,17 @@ Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('ad
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
-// Route::get('/email-logs', [AdminController::class, 'searchRecordsView'])->name('admin.email.Logs.view');
-// Route::get('/sms-logs', [AdminController::class, 'searchRecordsView'])->name('admin.sms.records.view');
-// Route::get('/patient-records', [AdminController::class, 'searchRecordsView'])->name('admin.searchRecords.view');
-// Route::get('/block-history', [AdminController::class, 'searchRecordsView'])->name('admin.searchRecords.view');
+Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
+Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
+Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
+Route::get('/patient-records', [AdminController::class, 'patientRecordsView'])->name('admin.patient.records.view');
+
+
+// For Testing Purpose only
+Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
+Route::post('/cancel-history',[AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+
+// For Testing Purpose only
+Route::get('/test', function () {
+    return view('adminPage.records.cancelHistory');
+});

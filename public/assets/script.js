@@ -1,19 +1,17 @@
 $(document).ready(function () {
     $("nav > a").click(function (e) {
         // e.preventDefault();
-        // console.log("Clicked");
         $("nav > a").removeClass("active-link");
         $(this).addClass("active-link");
     });
 
-    $("#toggle-mode").click(function() {
-        console.log('btn clicked');
+    $("#toggle-mode").click(function () {
+        console.log("btn clicked");
         $("html").toggleClass("dark");
     });
 
     $(".menu-icon").click(function (e) {
         e.preventDefault();
-        // console.log("btn-clicked");
         $(".navbar-section").toggleClass("mobile-nav");
     });
 
@@ -21,5 +19,3 @@ $(document).ready(function () {
         initialCountry: "in",
     });
 });
-
-

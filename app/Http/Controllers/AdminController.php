@@ -21,6 +21,7 @@ use App\Models\BlockRequest;
 // For sending Mails
 use App\Mail\SendMail;
 use App\Mail\SendAgreement;
+use App\Models\EmailLog;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\Mail;
 
@@ -235,14 +236,12 @@ class AdminController extends Controller
         $statusEntry = RequestStatus::where('request_id', $request->requestId)->first();
 
         if (!empty($statusEntry->notes)) {
-            // Entry exists with 'notes' as null, update in RequestNotes
-            RequestNotes::where('request_id', $request->requestId)
-                ->update(['AdministrativeNotes' => $request->reason]);
+            // Entry exists with 'notes' as null, update in RequestStatus
+            RequestStatus::where('request_id', $request->requestId)
+                ->update(['notes' => $request->reason]);
         } else {
-            // Entry doesn't exist or 'notes' is not null, perform insert in RequestNotes
-            $newNoteId = RequestNotes::insertGetId(['request_id' => $request->requestId, 'AdministrativeNotes' => $request->reason, 'created_by' => "admin"]);
-            RequestStatus::where('request_id', $request->requestId)->update(['notes' => $newNoteId]);
-            // RequestNotes::updateOrInsert(['request_id' => $request->requestId], ['AdministrativeNotes' => $request->reason]);
+            // Entry doesn't exist or 'notes' is not null, perform insert in RequestStatus
+            RequestStatus::where('request_id', $request->requestId)->update(['notes' => $request->reason]);
         }
         return redirect()->back();
     }
@@ -293,23 +292,29 @@ class AdminController extends Controller
     // Show Partners page in Admin
     public function viewPartners($id = null)
     {
-        if (empty($id) || $id == '0') {
+        if ($id == null || $id == '0') {
             $vendors = HealthProfessional::with('healthProfessionalType')->get();
-            // dd($vendors);
         } else if ($id) {
             $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->get();
         }
         $professions = HealthProfessionalType::get();
 
         // dd($id);
-        return view('adminPage.partners.partners', compact('vendors', 'professions'));
+        return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
     }
     // Search Partner as per the input 
     public function searchPartners(Request $request)
     {
-        $vendors = HealthProfessional::where('vendor_name', 'LIKE', "%{$request->search}%")->get();
+        $id = $request->profession;
+        // dd($id);
+        if ($id == null || $id == '0') {
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('vendor_name', 'LIKE', "%{$request->search}%")->get();
+        } else if ($id) {
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->where('vendor_name', 'LIKE', "%{$request->search}%")->get();
+            // dd($vendors);
+        }
         $professions = HealthProfessionalType::get();
-        return view('adminPage.partners.partners', compact('vendors', 'professions'));
+        return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
     }
 
     // Add Business page
@@ -421,8 +426,59 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords');
     }
 
-    public function emailLogsView()
+    public function emailRecordsView()
     {
-        return view('adminPage.records.emailLogs');
+        $emails = EmailLog::get();
+        return view('adminPage.records.emailLogs', compact('emails'));
+    }
+    public function smsRecordsView()
+    {
+        return view('adminPage.records.smsLogs');
+    }
+    public function blockHistoryView()
+    {
+        return view('adminPage.records.blockHistory');
+    }
+    public function patientRecordsView()
+    {
+        return view('adminPage.records.patientHistory');
+    }
+
+    // Cancel History Page
+    public function viewCancelHistory()
+    {
+        $cancelCases = RequestStatus::with('request')->where('status', 2)->get();
+        // dd($cancelCases);
+        return view('adminPage.records.cancelHistory', compact('cancelCases'));
+    }
+    // search cancel case in Cancel History Page
+    public function searchCancelCase(Request $request)
+    {
+        $name = $request->name;
+        $email = $request->email;
+        $date = $request->date;
+        $phone_number = $request->phone_number;
+        dd($date);
+        // dd($request->name);
+        $query = RequestStatus::where('status', 2);
+
+        $query->whereHas('request', function ($query) use ($request) {
+            $query->whereHas('requestClient', function ($clientQuery) use ($request) {
+                $clientQuery->where(function ($subQuery) use ($request) {
+                    $subQuery->where('first_name', 'LIKE', "%$request->name%")->orWhere('last_name', 'LIKE', "%$request->name%");
+                })->when($request->email, function ($query) use ($request) {
+                    return $query->where('email', 'LIKE', "%$request->email%");
+                })->when($request->phone_number, function ($query) use ($request) {
+                    return $query->where('phone_number', 'LIKE', "%$request->phone_number%");
+                })->when($request->date, function ($query) use ($request) {
+                    return $query->where('request.updated_at', $request->date);
+                });
+            });
+        });
+
+        $cancelCases = $query->get();
+        // dd($cancelCases);
+
+        return view('adminPage.records.cancelHistory', compact('cancelCases'));
     }
 }
