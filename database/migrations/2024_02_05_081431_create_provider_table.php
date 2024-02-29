@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('mobile')->nullable();
             $table->integer('medical_license')->nullable();
             $table->string('photo')->nullable();
-            $table->integer('admin_notes')->nullable();
+            $table->text('admin_notes')->nullable();
 
             $table->boolean('IsAgreementDoc')->nullable();
             $table->boolean('IsBackgroundDoc')->nullable();

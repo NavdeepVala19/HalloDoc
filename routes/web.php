@@ -200,7 +200,7 @@ route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'up
 
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
-route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
+// route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
 
 // ****************************************************************************************************************************
 
