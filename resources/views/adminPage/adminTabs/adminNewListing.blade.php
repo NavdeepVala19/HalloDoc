@@ -213,38 +213,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
     </form>
 </div>
 
-
-<<<<<<< HEAD
-{{-- Request DTY Support pop-up ->  --}}
-
-
-<div class="pop-up request-support">
-    <div class="popup-heading-section d-flex align-items-center justify-content-between">
-        <span>Request Support</span>
-        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <form action="" method="POST">
-        @csrf
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-        <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to Requests</p>
-
-            <div class="form-floating ">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                    style="height: 120px"></textarea>
-                <label for="floatingTextarea2">Message</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <input type="submit" value="Send" class="primary-fill"> 
-            <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </form>
-</div>
-
-
-
-
 <nav>
     <div class="nav nav-tabs " id="nav-tab">
         <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
@@ -314,128 +282,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         </a>
     </div>
 </nav>
-
-<div class="main">
-    <div class="heading-section d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <h3>Patients </h3> <strong class="case-type ps-2">(New)</strong>
-        </div>
-        <div class="admin-btn d-flex gap-2">
-            <button class="primary-fill send-link-btn">
-                <i class="bi bi-send"></i>
-                <span class="txt">
-                    Send Link
-                </span>
-            </button>
-            <a href="{{ route('provider.create.request') }}" class="primary-fill">
-                <i class="bi bi-pencil-square"></i>
-                <span class="txt">
-                    Create Requests
-                </span>
-            </a>
-            <a href="{{ route('provider.create.request') }}" class="primary-fill">
-                <i class="bi bi-send-arrow-down"></i>
-                <span class="txt">
-                    Export
-                </span>
-            </a>
-            <a href="{{ route('provider.create.request') }}" class="primary-fill">
-                <i class="bi bi-send-arrow-down-fill"></i>
-                <span class="txt">
-                    Export All
-                </span>
-            </a>
-            <a href="" class="primary-fill request-support-btn">
-                <i class="bi bi-pencil-square"></i>
-                <span class="txt">
-                    Request DTY Support
-                </span>
-            </a>
-        </div>
-    </div>
-
-    <div class="listing">
-        <div class="search-section d-flex align-items-center  justify-content-between ">
-            <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
-                method="GET" class="d-flex align-items-center">
-                {{-- @csrf --}}
-                <div class="input-group mb-3">
-                    <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                        placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                    {{-- <input type="submit" class="primary-fill"> --}}
-=======
-
-    <nav>
-        <div class="nav nav-tabs " id="nav-tab">
-            <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
-                <div class="case case-new active p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
-                    <span>
-                        <i class="bi bi-plus-circle"></i> NEW
-                    </span>
-                    <span>
-                        {{ $count['newCase'] }}
-                    </span>
->>>>>>> navdeep
-                </div>
-            </a>
-
-            <a href="{{ route('admin.status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
-                <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                    <span>
-                        <i class="bi bi-person-square"></i> PENDING
-                    </span>
-                    <span>
-                        {{ $count['pendingCase'] }}
-                    </span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.status', ['status' => 'active']) }}" class="nav-link" id="nav-active-tab">
-                <div class="case case-active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                    <span>
-                        <i class="bi bi-check2-circle"></i> ACTIVE
-                    </span>
-                    <span>
-                        {{ $count['activeCase'] }}
-                    </span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
-                <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                    <span>
-                        <i class="bi bi-clock-history"></i> CONCLUDE
-                    </span>
-                    <span>
-                        {{ $count['concludeCase'] }}
-                    </span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
-                <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                    <span>
-                        <i class="bi bi-person-fill-x"></i> TO CLOSE
-                    </span>
-                    <span>
-                        {{ $count['tocloseCase'] }}
-                    </span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.status', ['status' => 'unpaid']) }}" class="nav-link" id="nav-conclude-tab">
-                <div class="case case-unpaid p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                    <span>
-                        <i class="bi bi-cash-coin"></i> UNPAID
-                    </span>
-                    <span>
-                        {{ $count['unpaidCase'] }}
-                    </span>
-                </div>
-            </a>
-        </div>
-    </nav>
-
     <div class="main">
         <div class="heading-section d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -474,58 +320,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 </a>
             </div>
         </div>
-<<<<<<< HEAD
-        
-        <div>
-            <table class="table table-hover">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Name</th>
-                        <th>Date Of Birth</th>
-                        <th>Requestor</th>
-                        <th>Requested Date</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Notes</th>
-                        <th>Chat With</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cases as $case)
-=======
->>>>>>> navdeep
-
-        <div class="listing">
-            <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
-                    method="GET" class="d-flex align-items-center">
-                    {{-- @csrf --}}
-                    <div class="input-group mb-3">
-                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        {{-- <input type="submit" class="primary-fill"> --}}
-                    </div>
-                    <select class="form-select">
-                        <option selected>All Regions</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </form>
-                <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'new']) }}"
-                        class="btn-all filter-btn">All</a>
-                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'new']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'new']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'new']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'new']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
-                </div>
-            </div>
             <div>
                 <table class="table table-hover ">
                     <thead class="table-secondary">
@@ -586,7 +380,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 </table>
             </div>
 
-<<<<<<< HEAD
         <div class="mobile-listing">
             @foreach ($cases as $case)
             <div class="mobile-list d-flex justify-content-between">
@@ -596,41 +389,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         @if ($case->request->requestClient)
                         {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
             $case->request->requestClient->state }}
-=======
-            <div class="mobile-listing">
-                @foreach ($cases as $case)
-                <div class="mobile-list d-flex justify-content-between">
-                    <div class="d-flex flex-column">
-                        <p>{{ $case->request->first_name }} </p>
-                        <span>Address:
-                            @if ($case->request->requestClient)
-                            {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
-                $case->request->requestClient->state }}
-                            @endif
-                        </span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center justify-content-around">
-                        @if ($case->request->request_type_id == 1)
-                        <span>
-                            Patient
-                            <i class="bi bi-circle-fill ms-1 green"></i>
-                        </span>
-                        @elseif ($case->request->request_type_id == 2)
-                        <span>
-                            Family/Friend
-                            <i class="bi bi-circle-fill ms-1 yellow"></i>
-                        </span>
-                        @elseif ($case->request->request_type_id == 3)
-                        <span>
-                            Business
-                            <i class="bi bi-circle-fill ms-1 red"></i>
-                        </span>
-                        @elseif ($case->request->request_type_id == 4)
-                        <span>
-                            Concierge
-                            <i class="bi bi-circle-fill ms-1 blue"></i>
-                        </span>
->>>>>>> navdeep
                         @endif
                         <button class="map-btn">Map Location</button>
                     </div>

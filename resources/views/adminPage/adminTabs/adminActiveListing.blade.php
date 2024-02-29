@@ -85,56 +85,6 @@ giving service to the patient. --}}
                 <input type="text" name="caseId" class="case-id" value="" hidden>
                 {{-- If the provider selects the consult, then that request will move into Conclude state. --}}
             </div>
-<<<<<<< HEAD
-            <div class="admin-btn  d-flex gap-2">
-                <button class="primary-fill send-link-btn">
-                    <i class="bi bi-send"></i>
-                    <span class="txt">
-                        Send Link
-                    </span>
-                </button>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
-                    <i class="bi bi-pencil-square"></i>
-                    <span class="txt">
-                        Create Requests
-                    </span>
-                </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
-                    <i class="bi bi-send-arrow-down"></i>
-                    <span class="txt">
-                        Export
-                    </span>
-                </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
-                    <i class="bi bi-send-arrow-down-fill"></i>
-                    <span class="txt">
-                        Export All
-                    </span>
-                </a>
-                <a href="" class="primary-fill">
-                    <i class="bi bi-pencil-square"></i>
-                    <span class="txt">
-                        Request DTY Support
-                    </span>
-                </a>
-            </div>
-        </div>
-        <div class="listing">
-            <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
-                    method="GET" class="d-flex align-items-center">
-                    {{-- @csrf --}}
-                    <div class="input-group mb-3">
-                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        {{-- <input type="submit" class="primary-fill"> --}}
-                    </div>
-                    <select class="form-select">
-                        <option selected>All Regions</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-=======
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
                 <div class="form-floating time-dropdown">
                     <select class="form-select" id="floatingSelect">
@@ -150,7 +100,6 @@ giving service to the patient. --}}
                         <option value="5Hour">5 Hour</option>
                         <option value="5Hour 30Minutes">5 Hour 30 Minutes</option>
                         <option value="6Hour">6 Hour</option>
->>>>>>> navdeep
                     </select>
                     <label for="floatingSelect">Select Approximate Arrival Time</label>
                 </div>
