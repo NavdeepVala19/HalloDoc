@@ -189,10 +189,17 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 route::get('/admin/providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
-route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'updateAdminProviderProfile'])->name('admineditProvider');
+route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 
 route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
 route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
+
+
+route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('admineditProvider');
+route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'updateAdminProviderProfile'])->name('adminUpdatedProvider');
+
+
+route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
 // ****************************************************************************************************************************
 

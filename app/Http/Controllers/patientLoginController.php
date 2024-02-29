@@ -46,9 +46,7 @@ class patientLoginController extends Controller
 
 
         if (Auth::attempt($credentials)) {
-
             $userData = Auth::user();
-
             return redirect()->route('patientDashboardData');
         }
     }

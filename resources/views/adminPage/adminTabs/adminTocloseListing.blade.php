@@ -220,7 +220,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     Export All
                 </span>
             </a>
-            <a href="{{ route('provider.create.request') }}" class="primary-fill">
+            <a href="" class="primary-fill">
                 <i class="bi bi-pencil-square"></i>
                 <span class="txt">
                     Request DTY Support

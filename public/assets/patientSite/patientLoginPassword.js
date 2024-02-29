@@ -32,41 +32,41 @@ $(document).ready(function () {
         $('.new-provider-pop-up').show();
         $('.overlay').show();
     })
-  
-    
-    
+
+
+
     // *************************** This code is for show provider photo name ******************************
-    
+
     $('.file-input-provider_photo').change(function (e) {
         const filename = e.target.files[0].name;
         $("#provider_photo").text(filename);
     });
-    
+
     // *********************************************************
-    
-    
-    
+
+
+
     // *************************** This code is for show provider signature photo name ******************************
     // 
     $('.file-input-provider_signature').change(function (e) {
         const filename = e.target.files[0].name;
         $("#provider_signature").text(filename);
     });
-    
+
     // *********************************************************
-    
+
 
 
 
     // *************************** This code is for show independent contractor agreement ******************************
- 
+
     $('.independent-contractor-input').change(function (e) {
         const filename = e.target.files[0].name;
         $("#Contractor").text(filename);
     });
 
     // *********************************************************
-    
+
 
 
     // *************************** This code is for show provider background photo name ******************************
@@ -105,9 +105,6 @@ $(document).ready(function () {
 
 
 
-
-
-
     // *************************** This code is for show provider License  Agreement photo name ******************************
 
     $('#license-input').change(function (e) {
@@ -118,6 +115,14 @@ $(document).ready(function () {
     // *********************************************************
 
 
+    $('.contact-btn').on("click", function () {
+        let id = $(this).data('id');
+
+        const url = `/admin/provider/${id}`;
+        $('#ContactProviderForm').attr('action', url);
+
+        $('.provider_id').val(id);
+    })
 
 })
 
@@ -226,3 +231,11 @@ function openFileSelection() {
 //   ***************************************************************************************
 
 
+
+
+$(document).ready(function () {
+    $('.request-support-btn').click(function () {
+        $('.request-support').show();
+    })
+
+})

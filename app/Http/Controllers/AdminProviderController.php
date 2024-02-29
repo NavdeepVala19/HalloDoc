@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserRoles;
 use App\Models\users;
+use App\Mail\ContactProvider;
 use App\Models\Provider;
 use App\Models\RequestWiseFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash; // Import the Hash facade
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Mail\Mailable;
 
 class AdminProviderController extends Controller
 {
 
+    // ****************** This code is for listing Providers Details ************************
 
     public function readProvidersInfo()
     {
@@ -19,7 +25,24 @@ class AdminProviderController extends Controller
     }
 
 
+    // ****************** This code is for Sending Mail ************************
+
+    public function sendMailToContactProvider(Request $request, $id)
+    {
+        $providerData = Provider::get()->where('id', $request->provider_id);
+
+        Mail::send('email.contactYourProvider', ['id' => $request->provider_id], function ($message) use ($providerData) {
+            $message->to($providerData->first()->email);
+        });
+
+        return redirect()->route('adminProvidersInfo')->with('message', 'Your mail has been sent successfully.');
+
+    }
+
+
+
     // ****************** This code is for creating a new provider ************************
+
     public function newProvider()
     {
         return view('/adminPage/provider/adminNewProvider');
@@ -27,6 +50,7 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
+
 
 
 
@@ -54,10 +78,10 @@ class AdminProviderController extends Controller
 
         $userProvider = new users();
         $userProvider->username = $request->user_name;
-        $userProvider->password = $request->password;
+        $userProvider->password = Hash::make($request->password);
         $userProvider->email = $request->email;
         $userProvider->phone_number = $request->phone_number;
-        // $userProvider->save();
+        $userProvider->save();
 
 
         // store data of providers in providers table
@@ -80,9 +104,15 @@ class AdminProviderController extends Controller
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
 
-        // $providerData->save();
+        $providerData->save();
 
 
+        // make entry in user_roles table to identify the user(whether it is admin or physician)
+
+        $user_roles = new UserRoles();
+        $user_roles->user_id = $userProvider->id;
+        $user_roles->role_id = 2;
+        $user_roles->save();
 
 
 
@@ -125,6 +155,7 @@ class AdminProviderController extends Controller
             $request_file->file_name = $request->file('independent_contractor')->getClientOriginalName();
 
             $providerData->IsAgreementDoc = 1;
+
 
             $path = $request->file('independent_contractor')->storeAs('public', $request->file('independent_contractor')->getClientOriginalName());
             $request_file->save();
@@ -197,40 +228,75 @@ class AdminProviderController extends Controller
 
     // **************** This code is for edit provider profile *********************
 
-    public function editProvider()
+    public function editProvider($id)
     {
-        return view('/adminPage/provider/adminEditProvider');
+        $getProviderData = Provider::with('users')->where('id', $id)->first();
+        return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
+
 
     public function updateAdminProviderProfile(Request $request, $id)
     {
 
-        $getProviderData = Provider::with('users')->where('id', $id)->first();
-        // dd($getProviderData);
+
+        // $request->validate([
+        //     'user_name' => 'required',
+        //     'password' => 'required',
+        //     'first_name' => 'required',
+        //     'last_name' => 'required',
+        //     'email' => 'required|email',
+        //     'phone_number' => 'required',
+        //     'medical_license' => 'required',
+        //     'npi_number' => 'required',
+        //     'email_alt' => 'required|email',
+        //     'address1' => 'required',
+        //     'address2' => 'required',
+        //     'city' => 'required',
+        //     'zip' => 'required',
+        //     'phone_number_alt' => 'required',
+        //     'business_name' => 'required',
+        //     'business_website' => 'required',
+        //     'admin_notes' => 'required',
+        // ]);
+
+
+        $getProviderInformation = Provider::with('users')->where('id', $id)->first();
+
+
+        $getProviderInformation->users->username = $request->user_name;
+        $getProviderInformation->users->password = $request->password;
+        $getProviderInformation->first_name = $request->first_name;
+        $getProviderInformation->last_name = $request->last_name;
+        $getProviderInformation->email = $request->email;
+        $getProviderInformation->syncEmailAddress = $request->alt_email;
+        $getProviderInformation->mobile = $request->phone_number;
+        $getProviderInformation->medical_license = $request->medical_license;
+        $getProviderInformation->npi_number = $request->npi_number;
+        $getProviderInformation->city = $request->city;
+        $getProviderInformation->address1 = $request->address1;
+        $getProviderInformation->address2 = $request->address2;
+        $getProviderInformation->zip = $request->zip;
+        $getProviderInformation->alt_phone = $request->alt_phone_number;
+        $getProviderInformation->business_name = $request->business_name;
+        $getProviderInformation->business_website = $request->business_website;
+        $getProviderInformation->admin_notes = $request->admin_notes;
 
 
 
-        $updateProviderData = [
-            'username' => $request->input('user_name'),
-            'password' => $request->input('password'),
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'syncEmailAddress' => $request->input('alt_email'),
-            'mobile' => $request->input('phone_number'),
-            'medical_license' => $request->input('medical_license'),
-            'npi_number' => $request->input('npi_number'),
-            'city' => $request->input('city'),
-            'address1' => $request->input('address1'),
-            'address2' => $request->input('address2'),
-            'zip' => $request->input('zip'),
-            'alt_phone' => $request->input('alt_phone_number'),
-            'business_name' => $request->input('business_name'),
-            'business_website' => $request->input('business_website'),
-        ];
+        $getProviderInformation->save();
 
+        return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');
 
-
-        return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
+
+
+    public function deleteProviderAccount($id)
+    {
+        $ProviderInfo = Provider::with('users')->where('id', $id)->first();
+        $ProviderInfo->delete();
+
+        return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
+
+    }
+
 }

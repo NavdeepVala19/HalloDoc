@@ -24,14 +24,14 @@
 
     <div class="section">
 
-        <form action="" method="POST">
+        <form action="{{route('adminUpdatedProvider', $getProviderData->id)}}" method="POST">
             @csrf
 
             <h3>Account Information</h3>
 
             <div class="grid-2">
                 <div class="form-floating ">
-                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name"  
+                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name"   disabled
                      value="{{ $getProviderData->users->username}}"
                         >
                     <label for="floatingInput">User Name</label>
@@ -40,7 +40,7 @@
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="password" name="password" class="form-control" id="floatingInput" 
+                    <input type="password" name="password" class="form-control" id="floatingInput"  value="{{$getProviderData->users->password}}"
                         placeholder="password">
                     <label for="floatingInput">Password</label>
                     @error('first_name')
@@ -150,8 +150,7 @@
 
                 </div>
 
-                <div class="d-flex flex-row justify-content-end gap-3">
-                    <button class="primary-fill">Enter Payrate</button>
+                <div class="d-flex flex-row justify-content-end">
                     <button class="primary-fill">Edit</button>
                 </div>
 
@@ -248,142 +247,184 @@
 
 
             </div>
+
+
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Admin Notes" id="floatingTextarea2" value="{{ $getProviderData->admin_notes}}"`
-                    style="height: 120px"></textarea>
+                <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" 
+                    style="height: 120px"> {{$getProviderData->admin_notes}} </textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
             </div>
 
-            <div class="d-flex flex-row justify-content-end mt-4">
-                <button class="primary-fill">Edit</button>
+
+            <hr>
+            <div>
+                <h3>Onboarding</h3>
+
+                <div class="table mt-4">
+                    <table>
+                        <tbody>
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="independent_contract_check"
+                                            {{$getProviderData->IsAgreementDoc ? 'checked' : 'unchecked'}} >
+                                        <span class="ms-2">
+                                            Independent Contractor Agreement
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns" onclick="openFileSelection()">
+                                        <label for="independent_contractor" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+
+                                        <input type="file" id="independent_contractor"
+                                            class="independent-contractor-input" name="independent_contractor" hidden>
+
+                                        <button class="primary-fill ms-4">View</button>
+                                        <p id="Contractor"></p>
+                                    </div>
+
+                                    <div class="ms-4 responsive-btns">
+                                        <label for="independent_contractor" class="upload primary-fill"> <i
+                                                class="bi bi-cloud-arrow-up"></i> </label>
+                                        <input type="file" id="fileInput-independent_contractor-agreement"
+                                            class="independent-contractor-input" name="independent_contractor-btn" hidden>
+
+                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <p id="Contractor"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="background_check" 
+                                            {{$getProviderData->IsBackgroundDoc ? 'checked' : 'unchecked'}} >
+                                        <span class="ms-2">
+                                            Background Check
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="background-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="background-input" name="background_doc" hidden>
+                                        <button class="primary-fill ms-4">View</button>
+                                        <p id="Background"></p>
+                                    </div>
+
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <p id="Background"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="HIPAA_check"
+                                            {{$getProviderData->IsTrainingDoc ? 'checked' : 'unchecked'}} >
+                                        <span class="ms-2">
+                                            HIPAA Compliance
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="hipaa-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="hipaa-input" hidden name="hipaa_docs">
+                                        <button class="primary-fill ms-4">View</button>
+                                        <p id="HIPAA"></p>
+                                    </div>
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <p id="HIPAA"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="non_disclosure_doc"
+                                            {{$getProviderData->IsNonDisclosureDoc ? 'checked' : 'unchecked'}} >
+                                        <span class="ms-2">
+                                            Non-disclosure Agreement
+                                        </span>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="non-disclosure-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc">
+                                        <p class="non-disclosure"></p>
+                                    </div>
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mb-2 mt-2" name="non_disclosure_doc-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <p class="non-disclosure"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-bottom-table">
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            name="license_check"
+                                            {{$getProviderData->IsLicenseDoc ? 'checked' : 'unchecked'}} >
+                                        <span class="ms-2">
+                                            License Agreement
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="ms-4 btns">
+                                        <label for="license-input" class="upload primary-fill"> <span
+                                                class="upload-txt">Upload</span> </label>
+                                        <input type="file" id="license-input" hidden name="license_doc">
+                                        <p class="license"></p>
+                                    </div>
+                                    <div class="ms-4 responsive-btns">
+                                        <button class="primary-fill mt-2 mb-2" name="license_doc-btn"><i
+                                                class="bi bi-cloud-arrow-up"></i></button>
+                                        <p class="license"></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-        </form>
-        <hr>
-        <div>
-            <h3>Onboarding</h3>
+            <hr>
 
-            <div class="table mt-4">
-                <table>
-                    <tbody>
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        Independent Contractor Agreement
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill">Upload</button>
-                                    <button class="primary-fill ms-4">View</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mb-3"><i class="bi bi-cloud-arrow-up"></i></button>
-                                    <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        Background Check
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill ">Upload</button>
-                                    <button class="primary-fill ms-4">View</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mt-2 mb-3"><i class="bi bi-cloud-arrow-up"></i></button>
-                                    <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        HIPAA Compliance
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill">Upload</button>
-                                    <button class="primary-fill ms-4">View</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mt-2 mb-3"><i class="bi bi-cloud-arrow-up"></i></button>
-                                    <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        Non-disclosure Agreement
-                                    </span>
-                                </div>
-
-                            </td>
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill ">Upload</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mb-2 mt-2"><i class="bi bi-cloud-arrow-up"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom-table">
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <span class="ms-2">
-                                        License Agreement
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="ms-4 btns">
-                                    <button class="primary-fill ">Upload</button>
-                                </div>
-                                <div class="ms-4 responsive-btns">
-                                    <button class="primary-fill mt-2 mb-2"><i class="bi bi-cloud-arrow-up"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+            <div class="d-flex flex-row justify-content-end gap-3">
+                <button class="primary-fill" type="submit">Save</button>
+                <a href="{{route('deleteProviderAccount', $getProviderData->id)}}"  class="btn btn-danger" >Delete Account</a>
             </div>
-        </div>
-
-        <hr>
-
-        <div class="d-flex flex-row justify-content-end gap-3">
-            <button class="primary-fill">Save</button>
-            <button class="btn btn-danger">Delete Account</button>
-        </div>
     </div>
+    </form>
 
 </div>
 </div>

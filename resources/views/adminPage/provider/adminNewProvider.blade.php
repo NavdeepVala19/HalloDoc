@@ -231,6 +231,7 @@
 
 
             </div>
+            
             <div class="form-floating">
                 <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes"
                     style="height: 120px"></textarea>
@@ -400,7 +401,7 @@
 
             <div class="d-flex flex-row justify-content-end gap-3">
                 <button class="primary-fill" type="submit">Save</button>
-                <button class="btn btn-danger" type="cancel">Delete Account</button>
+                <button class="btn btn-danger" type="cancel">Cancel</button>
             </div>
     </div>
     </form>

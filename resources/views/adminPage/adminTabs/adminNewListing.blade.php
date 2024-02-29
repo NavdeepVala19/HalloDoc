@@ -172,6 +172,36 @@ can block any case. All blocked cases can be seen in Block history page. --}}
 </div>
 
 
+{{-- Request DTY Support pop-up ->  --}}
+
+
+<div class="pop-up request-support">
+    <div class="popup-heading-section d-flex align-items-center justify-content-between">
+        <span>Request Support</span>
+        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <form action="" method="POST">
+        @csrf
+        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
+
+        <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to Requests</p>
+
+            <div class="form-floating ">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
+                    style="height: 120px"></textarea>
+                <label for="floatingTextarea2">Message</label>
+            </div>
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <input type="submit" value="Send" class="primary-fill"> 
+            <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+
+
+
 <nav>
     <div class="nav nav-tabs " id="nav-tab">
         <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link active" id="nav-new-tab">
@@ -272,7 +302,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     Export All
                 </span>
             </a>
-            <a href="{{ route('provider.create.request') }}" class="primary-fill">
+            <a href="" class="primary-fill request-support-btn">
                 <i class="bi bi-pencil-square"></i>
                 <span class="txt">
                     Request DTY Support
@@ -381,7 +411,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     <span>Address:
                         @if ($case->request->requestClient)
                         {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
-                        $case->request->requestClient->state }}
+            $case->request->requestClient->state }}
                         @endif
                     </span>
                 </div>

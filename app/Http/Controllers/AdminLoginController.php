@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\sendResetPasswordMail;
 use App\Models\request_Client;
 use App\Models\RequestTable;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,8 +20,8 @@ use Illuminate\Support\Str;
 class AdminLoginController extends Controller
 {
 
-   
-// this code is for login input credentials
+
+    // this code is for login input credentials
 
     public function adminLogin()
     {
@@ -35,29 +36,34 @@ class AdminLoginController extends Controller
             'password' => 'required',
         ]);
 
-
-        // Assuming $inputPassword is the password the user submitted via a form
-        $inputPassword = $request->password;
-        // And assuming you've retrieved the user's hashed password from the database
-
-        $user = users::where('email', $request->email)->first();
-        $hashedPassword = $user->password_hash; // or $user->password, depending on your column name
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
 
 
-        // Now, you can check if the input password matches the hash
-        if (Hash::check($inputPassword, $hashedPassword)) {
-            // The passwords match...
-            // Log the user in or perform the next steps
-            return redirect()->route('admin.dashboard');
-        } else {
-            // The passwords don't match...
-            // Handle the failed login attempt
+        if (Auth::attempt($credentials)) {
 
-            return redirect('/adminLogin')->with('message', 'Your password is not appropriate!');
+            $userData = Auth::user();
+            dd($userData);
+            $userRolesData = UserRoles::where('user_id', $userData->id)->first();
+            dd($userRolesData);
+
+            if($userRolesData->role_id==2){
+                // return redirect()->route('');
+            }
+            else{
+                // return redirect()->route('admin.dashboard',compact($userData));
+            }
+
+
+            // return redirect()->route('patientDashboardData');
         }
+
+
     }
 
-  
+
     // this code is for entering email for reset password
 
     public function adminResetPassword()
@@ -88,7 +94,7 @@ class AdminLoginController extends Controller
         return back()->with('message', 'We have e-mailed your password reset link!');
     }
 
-// this code is to update/reset password
+    // this code is to update/reset password
 
     public function showUpdatePasswordForm($token)
     {

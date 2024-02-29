@@ -17,6 +17,8 @@ class users extends Model
 
     protected $table = 'users';
 
+    use SoftDeletes;
+
     protected $fillable = [
         'username',
         'password',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendLink;
 use Illuminate\Http\Request;
 
 // Different Models used in these Controller
@@ -18,6 +19,7 @@ use App\Models\RequestStatus;
 use App\Mail\SendMail;
 use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
+use App\Models\Provider;
 use Illuminate\Support\Facades\Mail;
 
 // DomPDF package used for the creation of pdf from the form
@@ -249,4 +251,15 @@ class AdminController extends Controller
         BlockRequest::insert(['request_id' => $request->requestId, 'reason' => $request->block_reason]);
         return redirect()->back();
     }
+
+
+    // ****************** This code is for Sending Mail ************************
+
+    public function sendMail(Request $request)
+    {
+        Mail::to($request->email)->send(new SendLink($request->all()));
+        return redirect()->back();
+    }
+
+    
 }

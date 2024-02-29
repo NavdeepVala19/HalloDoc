@@ -580,7 +580,7 @@ tr>td {
 
 .transfer-request .form-floating {
     width: 100%;
-    
+
 }
 
 .transfer-description {
@@ -625,4 +625,14 @@ tr>td {
 
 .request-message {
     height: 150px !important;
+}
+
+
+/******************************* Request DTY PopUp - AdminListingPages **************************************/
+
+
+.request-support {
+    display: none;
+    width: 500px;
+    z-index: 20;
 }
