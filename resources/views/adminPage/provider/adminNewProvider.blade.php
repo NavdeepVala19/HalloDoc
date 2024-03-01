@@ -8,7 +8,16 @@
 <a href="">Dashboard</a>
 <a href="">Provider Location</a>
 <a href="">My Profile</a>
-<a href="" class="active-link">Providers</a>
+<div class="dropdown record-navigation">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="">Provider</a></li>
+            <li><a class="dropdown-item" href="">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+</div>
 <a href="">Partners</a>
 <a href="">Access</a>
 <a href="">Records</a>
@@ -19,7 +28,7 @@
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">Create New Physician Account</h2>
-        <a href="" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+        <a href="{{route('adminProvidersInfo')}}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
     <div class="section">
@@ -122,6 +131,23 @@
                     <label for="floatingInput">Alternate Email</label>
                 </div>
 
+                <div class="d-flex gap-4">
+                        @foreach ($regions as $region)
+                     <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="region_id[]" id="region_{{ $region->id }}"
+                        value="{{ $region->id }}"
+                    @if (in_array($region->id, $selectedRegionIds ?? []))
+                    checked
+                    @endif
+                    >
+                    <label class="form-check-label" for="region_{{ $region->id }}">
+                        {{ $region->region_name }}
+                        </label>
+                        </div>
+                     @endforeach
+                </div>
+                
+<!-- 
                 <div class="d-flex gap-4 ">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -136,7 +162,7 @@
                             New York
                         </label>
                     </div>
-                </div>
+                </div> -->
 
 
 
@@ -231,7 +257,7 @@
 
 
             </div>
-            
+
             <div class="form-floating">
                 <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes"
                     style="height: 120px"></textarea>

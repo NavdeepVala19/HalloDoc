@@ -576,10 +576,6 @@ tr > td {
 
 .transfer-request .form-floating {
     width: 100%;
-<<<<<<< HEAD
-
-=======
->>>>>>> navdeep
 }
 
 .transfer-description {
@@ -625,7 +621,6 @@ tr > td {
 .request-message {
     height: 150px !important;
 }
-<<<<<<< HEAD
 
 
 /******************************* Request DTY PopUp - AdminListingPages **************************************/
@@ -636,5 +631,3 @@ tr > td {
     width: 500px;
     z-index: 20;
 }
-=======
->>>>>>> navdeep

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PhysicianRegion;
+use App\Models\Regions;
 use App\Models\UserRoles;
 use App\Models\users;
 use App\Mail\ContactProvider;
@@ -45,14 +47,13 @@ class AdminProviderController extends Controller
 
     public function newProvider()
     {
-        return view('/adminPage/provider/adminNewProvider');
+        $regions = Regions::get();
+
+        return view('/adminPage/provider/adminNewProvider', compact('regions'));
     }
 
     public function adminCreateNewProvider(Request $request)
     {
-
-
-
 
         $request->validate([
             'user_name' => 'required',
@@ -74,6 +75,9 @@ class AdminProviderController extends Controller
             'admin_notes' => 'required',
         ]);
 
+
+
+
         // store data of providers in users table
 
         $userProvider = new users();
@@ -84,9 +88,17 @@ class AdminProviderController extends Controller
         $userProvider->save();
 
 
-        // store data of providers in providers table
+        // store data in physician region
 
         $providerData = new Provider();
+        $physicianRegion = new PhysicianRegion();
+
+
+
+
+
+        // store data of providers in providers table
+
         $providerData->user_id = $userProvider->id;
         $providerData->first_name = $request->first_name;
         $providerData->last_name = $request->last_name;
@@ -107,12 +119,29 @@ class AdminProviderController extends Controller
         $providerData->save();
 
 
+
+        foreach ($request->region_id as $region) {
+            PhysicianRegion::insert([
+                [
+                    'provider_id' => $providerData->id,
+                    'region_id' => $region
+                ]
+            ]);
+        }
+        $data = PhysicianRegion::where('provider_id', $providerData->id)->pluck('id')->toArray();
+        $ids = implode(',', $data);
+
+        Provider::where('id', $providerData->id)->update(['regions_id' => $ids]);
+
+
+
         // make entry in user_roles table to identify the user(whether it is admin or physician)
 
         $user_roles = new UserRoles();
         $user_roles->user_id = $userProvider->id;
         $user_roles->role_id = 2;
         $user_roles->save();
+
 
 
 

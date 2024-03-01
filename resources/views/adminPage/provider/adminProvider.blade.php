@@ -11,7 +11,16 @@
 <a href="">Dashboard</a>
 <a href="">Provider Location</a>
 <a href="">My Profile</a>
-<a href="" class="active-link">Providers</a>
+<div class="dropdown record-navigation">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="">Provider</a></li>
+            <li><a class="dropdown-item" href="">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+</div>
 <a href="">Partners</a>
 <a href="">Access</a>
 <a href="">Records</a>
@@ -45,7 +54,7 @@
             </select>
 
             <div class="provider-btn">
-                <button class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</button>
+                <a href="{{route('adminNewProvider')}}" type="button" class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
             </div>
 
         </div>

@@ -213,25 +213,25 @@ pending state, providers need to send an agreement link to patients. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-send-arrow-down-fill"></i>
                     <span class="txt">
                         Export All
                     </span>
                 </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Request DTY Support
@@ -289,6 +289,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
+                        @if (!empty($case->request) && !empty($case->request->requestClient))
                             <tr class="type-{{ $case->request->request_type_id }}">
                                 <td>{{ $case->request->requestClient->first_name }}</td>
                                 <td>Physician Name</td>
@@ -317,6 +318,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                     </div>
                                 </td>
                             </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -324,13 +326,14 @@ pending state, providers need to send an agreement link to patients. --}}
 
             <div class="mobile-listing">
                 @foreach ($cases as $case)
+                 @if (!empty($case->request) && !empty($case->request->requestClient))
                 <div class="mobile-list d-flex justify-content-between">
                     <div class="d-flex flex-column">
                         <p>{{ $case->request->first_name }} </p>
                         <span>Address:
                             @if ($case->request->requestClient)
                             {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
-                            $case->request->requestClient->state }}
+                $case->request->requestClient->state }}
                             @endif
                         </span>
                     </div>
@@ -404,6 +407,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                     </div>
                 </div>
+                @endif
                 @endforeach
             </div>
                 <div class="page">

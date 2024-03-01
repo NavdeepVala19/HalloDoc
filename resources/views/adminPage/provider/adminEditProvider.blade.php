@@ -8,7 +8,16 @@
 <a href="">Dashboard</a>
 <a href="">Provider Location</a>
 <a href="">My Profile</a>
-<a href="" class="active-link">Providers</a>
+<div class="dropdown record-navigation">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="">Provider</a></li>
+            <li><a class="dropdown-item" href="">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+</div>
 <a href="">Partners</a>
 <a href="">Access</a>
 <a href="">Records</a>
@@ -19,7 +28,7 @@
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">Edit Physician Account</h2>
-        <a href="" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+        <a href="{{route('adminProvidersInfo')}}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
     <div class="section">

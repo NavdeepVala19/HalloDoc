@@ -294,25 +294,25 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-send-arrow-down-fill"></i>
                     <span class="txt">
                         Export All
                     </span>
                 </a>
-                <a href="{{ route('provider.create.request') }}" class="primary-fill">
+                <a href="" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Request DTY Support
@@ -320,7 +320,39 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 </a>
             </div>
         </div>
-            <div>
+
+
+        <div class="listing">
+            <div class="search-section d-flex align-items-center  justify-content-between ">
+                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
+                    method="GET" class="d-flex align-items-center">
+                    {{-- @csrf --}}
+                    <div class="input-group mb-3">
+                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                        {{-- <input type="submit" class="primary-fill"> --}}
+                    </div>
+                    <select class="form-select">
+                        <option selected>All Regions</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </form>
+                <div class="src-category d-flex gap-3 align-items-center">
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}"
+                        class="btn-all filter-btn">All</a>
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
+                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                </div>
+            </div>
+            <div class="table-responsive"> 
                 <table class="table table-hover ">
                     <thead class="table-secondary">
                         <tr>
@@ -379,16 +411,18 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </tbody>
                 </table>
             </div>
+        </div>
 
         <div class="mobile-listing">
             @foreach ($cases as $case)
+             @if (!empty($case->request) && !empty($case->request->requestClient))
             <div class="mobile-list d-flex justify-content-between">
                 <div class="d-flex flex-column">
                     <p>{{ $case->request->first_name }} </p>
                     <span>Address:
                         @if ($case->request->requestClient)
                         {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
-            $case->request->requestClient->state }}
+                $case->request->requestClient->state }}
                         @endif
                         <button class="map-btn">Map Location</button>
                     </div>
@@ -447,7 +481,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                     </div>
                 </div>
+                @endif
                 @endforeach
+
             </div>
 
             <div class="page">
