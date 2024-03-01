@@ -214,9 +214,7 @@ route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'de
 
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
 // Providers Dashboard page with New Users case listing
-Route::get('/provider', function () {
-    return redirect('/provider/new');
-})->name('provider.dashboard');
+Route::get('/provider', [ProviderController::class, 'providerDashboard'])->name('provider.dashboard');
 
 // For Filtering the request
 Route::get('/provider/{status}/{category}', [ProviderController::class, 'filter'])->name("provider.listing");
@@ -315,6 +313,9 @@ Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.s
 
 // For Searching Request
 Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
+
+// Assign Case pop-up, populate select menu with all physician regions (AJAX)
+Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->name('physician.regions');
 
 // Cancel Case by admin
 Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);

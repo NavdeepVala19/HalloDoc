@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendLink;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Different Models used in these Controller
 use App\Models\requestTable;
@@ -25,6 +26,7 @@ use App\Mail\SendAgreement;
 use App\Models\Provider;
 use App\Models\EmailLog;
 use App\Models\HealthProfessional;
+use App\Models\PhysicianRegion;
 use Illuminate\Support\Facades\Mail;
 
 // DomPDF package used for the creation of pdf from the form
@@ -57,49 +59,58 @@ class AdminController extends Controller
     }
 
     // provides all cases data as per status
-    public function cases($status, $count)
+    public function cases($status, $count, $userData)
     {
         if ($status == 'new') {
             $cases = RequestStatus::with('request')->where('status', 1)->paginate(10);
-            return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'pending') {
             $cases = RequestStatus::with('request')->where('status', 3)->paginate(10);
-            return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'active') {
             $cases = RequestStatus::with('request')->where('status', 4)->orWhere('status', 5)->paginate(10);
-            return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'conclude') {
             $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
-            return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'toclose') {
             $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->paginate(10);
-            return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'unpaid') {
             $cases = RequestStatus::with('request')->where('status', 9)->paginate(10);
-            return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
         }
     }
 
+    // Admin dashboard
+    public function adminDashboard()
+    {
+        return redirect('/admin/new');
+    }
 
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+        $userData = Auth::user();
+        // dd($userData);
         $count = $this->totalCasesCount();
-        return $this->cases($status, $count);
+        return $this->cases($status, $count, $userData);
     }
+
 
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
 
     public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
+        $userData = Auth::user();
         $count = $this->totalCasesCount();
 
 
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
             // Retrieve data for all request type
-            return $this->cases($status, $count);
+            return $this->cases($status, $count, $userData);
         } else {
             // Retrieve data for specific request type using request_type_id
             // Provides data as per the status and required category
@@ -223,6 +234,14 @@ class AdminController extends Controller
         return $categoryMapping[$category] ?? null;
     }
 
+    // Assign case - All physician Regions
+    public function physicianRegions()
+    {
+        $regions = PhysicianRegion::get();
+        return response()->json($regions);
+    }
+
+    // fetch all caseTag data from its table and show in cancelCase PopUp
     public function cancelCaseOptions()
     {
         $reasons = caseTag::all();
@@ -274,7 +293,7 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
-    
+
     public function clearCase(Request $request)
     {
         RequestStatus::where('request_id', $request->requestId)->update(['status' => 8]);
@@ -493,7 +512,8 @@ class AdminController extends Controller
 
         return view('adminPage.records.cancelHistory', compact('cancelCases'));
     }
-    public function patientViews(){
+    public function patientViews()
+    {
         return view('adminPage.records.patientRecords');
     }
 }

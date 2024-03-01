@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('city')->nullable();
 
             $table->unsignedBigInteger('regions_id')->nullable();
-            $table->foreign('regions_id')->references('id')->on('regions');
+            $table->foreign('regions_id')->references('id')->on('physician_region');
 
             $table->integer('zip')->nullable();
             $table->string('alt_phone')->nullable();
@@ -48,15 +48,15 @@ return new class extends Migration
             //add these 
             $table->unsignedBigInteger('status')->nullable();
             $table->foreign('status')->references('id')->on('status');
-            
-            
+
+
             $table->string('business_name')->nullable();
             $table->string('business_website')->nullable();
-        
-            
+
+
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');
-            
+
             $table->string('npi_number')->nullable();
             $table->boolean('IsLicenseDoc')->nullable();
             $table->string('signature')->nullable();

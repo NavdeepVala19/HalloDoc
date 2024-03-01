@@ -30,6 +30,19 @@ $(document).ready(function () {
     $(".assign-case-btn").click(function () {
         $(".assign-case").show();
         $(".overlay").show();
+
+        // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
+        $.ajax({
+            url: "/physician-regions",
+            type: "GET",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+        $(".physicianRegions");
     });
 
     $(".block-case-btn").click(function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Different Models used in these Controller
 use App\Models\requestTable;
@@ -12,6 +13,7 @@ use App\Models\MedicalReport;
 use App\Models\RequestNotes;
 use App\Models\RequestWiseFile;
 use App\Models\RequestStatus;
+use App\Models\Provider;
 
 // For sending Mails
 use App\Mail\SendMail;
@@ -46,29 +48,35 @@ class ProviderController extends Controller
     }
 
     // provides all cases data as per status
-    public function cases($status, $count)
+    public function cases($status, $count, $userData)
     {
         if ($status == 'new') {
             $cases = RequestStatus::with('request')->where('status', 1)->paginate(10);
-            return view('providerPage.providerTabs.newListing', compact('cases', 'count'));
+            return view('providerPage.providerTabs.newListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'pending') {
             $cases = RequestStatus::with('request')->where('status', 3)->paginate(10);
-            return view('providerPage.providerTabs.pendingListing', compact('cases', 'count'));
+            return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'active') {
             $cases = RequestStatus::with('request')->where('status', 4)->orWhere('status', 5)->paginate(10);
-            return view('providerPage.providerTabs.activeListing', compact('cases', 'count'));
+            return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'conclude') {
             $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
-            return view('providerPage.providerTabs.concludeListing', compact('cases', 'count'));
+            return view('providerPage.providerTabs.concludeListing', compact('cases', 'count', 'userData'));
         }
     }
 
+    public function providerDashboard()
+    {
+        return redirect('/provider/new');
+    }
 
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+        $userData = Auth::user();
+        // dd($userData);
         $count = $this->totalCasesCount();
-        return $this->cases($status, $count);
+        return $this->cases($status, $count, $userData);
     }
 
 
@@ -76,11 +84,12 @@ class ProviderController extends Controller
     public function filter(Request $request, $status = 'new', $category = 'all')
     {
         $count = $this->totalCasesCount();
+        $userData = Auth::user();
 
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
             // Retrieve data for all request type
-            return $this->cases($status, $count);
+            return $this->cases($status, $count, $userData);
         } else {
             // Retrieve data for specific request type using request_type_id
             // Provides data as per the status and required category
@@ -353,14 +362,18 @@ class ProviderController extends Controller
     // Show MyProfile Provider
     public function providerProfile()
     {
-        return view('providerPage.providerProfile');
+        $userData = Auth::user();
+        $provider = Provider::where('user_id', $userData->id)->first();
+        return view('providerPage.providerProfile', compact('provider', 'userData'));
     }
 
     // Provider My Profile Data request for edit on submit
     public function providerData(Request $request)
     {
+        $userData = Auth::user();
         // Fetch Provider data as per the provider logged in 
-        // Provider::where('user_id', $id)->first();
+        Provider::where('user_id', $userData->id)->first();
+        dd($userData);
     }
 
     // show a particular case page as required

@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
+@section('username')
+    {{ $userData->username }}
+@endsection
+
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Provider Location</a>
@@ -407,96 +411,98 @@ pending state, providers need to send an agreement link to patients. --}}
 
             <div class="mobile-listing">
                 @foreach ($cases as $case)
-                <div class="mobile-list d-flex justify-content-between">
-                    <div class="d-flex flex-column">
-                        <p>{{ $case->request->first_name }} </p>
-                        <span>Address:
-                            @if ($case->request->requestClient)
-                            {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{
-                            $case->request->requestClient->state }}
+                    <div class="mobile-list d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            <p>{{ $case->request->first_name }} </p>
+                            <span>Address:
+                                @if ($case->request->requestClient)
+                                    {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                @endif
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column align-items-center justify-content-around">
+                            @if ($case->request_type_id == 1)
+                                <span>
+                                    Patient
+                                    <i class="bi bi-circle-fill ms-1 green"></i>
+                                </span>
+                            @elseif ($case->request_type_id == 2)
+                                <span>
+                                    Family/Friend
+                                    <i class="bi bi-circle-fill ms-1 yellow"></i>
+                                </span>
+                            @elseif ($case->request_type_id == 3)
+                                <span>
+                                    Business
+                                    <i class="bi bi-circle-fill ms-1 red"></i>
+                                </span>
+                            @elseif ($case->request_type_id == 4)
+                                <span>
+                                    Concierge
+                                    <i class="bi bi-circle-fill ms-1 blue"></i>
+                                </span>
                             @endif
-                        </span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center justify-content-around">
-                        @if ($case->request_type_id == 1)
-                        <span>
-                            Patient
-                            <i class="bi bi-circle-fill ms-1 green"></i>
-                        </span>
-                        @elseif ($case->request_type_id == 2)
-                        <span>
-                            Family/Friend
-                            <i class="bi bi-circle-fill ms-1 yellow"></i>
-                        </span>
-                        @elseif ($case->request_type_id == 3)
-                        <span>
-                            Business
-                            <i class="bi bi-circle-fill ms-1 red"></i>
-                        </span>
-                        @elseif ($case->request_type_id == 4)
-                        <span>
-                            Concierge
-                            <i class="bi bi-circle-fill ms-1 blue"></i>
-                        </span>
-                        @endif
-                        <button class="map-btn">Map Location</button>
-                    </div>
-                </div>
-                <div class="more-info ">
-                    <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
-                    <div>
-                        <span>
-                            <i class="bi bi-calendar3"></i> Date of birth :
-                            {{ $case->request->requestClient->date_of_birth }}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-envelope"></i> Email :
-                            {{ $case->request->requestClient->email }}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-telephone"></i> Patient :
-                            {{ $case->request->requestClient->phone_number }}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-cash"></i> Transfer :Admin transferred to
-                            {{ $case->request->requestClient->last_name }}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-calendar3"></i> Date of services :
-                            {{ $case->request->created_at}}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-person-circle"></i> Physician :
-                            {{ $case->request->last_name }}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-person-plus-fill"></i> Requestor:
-                            {{ $case->request->first_name }}
-                        </span>
-                        <div class="grid-2-listing ">
-                            <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-2 text-center">Send
-                                Agreement</a>
-                            <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View Notes</a>
-                            <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-3 text-center">Transfer</a>
-                            <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View
-                                Uploads</a>
-                            <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-2 text-center">Clear
-                                Case</a>
-                            <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">Email</a>
+                            <button class="map-btn">Map Location</button>
                         </div>
                     </div>
-                    <div>
-                        Chat With:
-                        <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                        <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                    <div class="more-info ">
+                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
+                        <div>
+                            <span>
+                                <i class="bi bi-calendar3"></i> Date of birth :
+                                {{ $case->request->requestClient->date_of_birth }}
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-envelope"></i> Email :
+                                {{ $case->request->requestClient->email }}
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-telephone"></i> Patient :
+                                {{ $case->request->requestClient->phone_number }}
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-cash"></i> Transfer :Admin transferred to
+                                {{ $case->request->requestClient->last_name }}
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-calendar3"></i> Date of services :
+                                {{ $case->request->created_at }}
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-person-circle"></i> Physician :
+                                {{ $case->request->last_name }}
+                            </span>
+                            <br>
+                            <span>
+                                <i class="bi bi-person-plus-fill"></i> Requestor:
+                                {{ $case->request->first_name }}
+                            </span>
+                            <div class="grid-2-listing ">
+                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-2 text-center">Send
+                                    Agreement</a>
+                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View
+                                    Notes</a>
+                                <a href="/view-notes/{{ $case->request->id }}"
+                                    class="secondary-btn-3 text-center">Transfer</a>
+                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View
+                                    Uploads</a>
+                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-2 text-center">Clear
+                                    Case</a>
+                                <a href="/view-notes/{{ $case->request->id }}"
+                                    class="secondary-btn text-center">Email</a>
+                            </div>
+                        </div>
+                        <div>
+                            Chat With:
+                            <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
+                            <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                        </div>
                     </div>
-                </div>
                 @endforeach
             </div>
             <div class="page">
