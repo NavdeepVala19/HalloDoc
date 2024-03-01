@@ -36,8 +36,10 @@ return new class extends Migration
 
             $table->string('city')->nullable();
 
-            $table->unsignedBigInteger('regions_id')->nullable();
-            $table->foreign('regions_id')->references('id')->on('physician_region');
+            $table->text('regions_id')->nullable();
+
+            // $table->unsignedBigInteger('regions_id')->nullable();
+            // $table->foreign('regions_id')->references('id')->on('regions');
 
             $table->integer('zip')->nullable();
             $table->string('alt_phone')->nullable();

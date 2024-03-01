@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminLoginController;
@@ -13,9 +14,9 @@ use App\Http\Controllers\patientDashboardController;
 use App\Http\Controllers\patientAccountController;
 use App\Http\Controllers\PatientViewDocumentsController;
 use App\Http\Controllers\patientProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ExcelController;
 
 // ******************************* SHIVESH **********************************************
 
@@ -202,6 +203,10 @@ route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'up
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 // route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
 
+
+
+route::get('/export-excel', [ExcelController::class, 'exportAll']);
+
 // ****************************************************************************************************************************
 
 
@@ -369,7 +374,7 @@ Route::get('/patient-records', [AdminController::class, 'patientViews'])->name('
 
 // For Testing Purpose only
 Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
-Route::post('/cancel-history',[AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
 
 // For Testing Purpose only
 Route::get('/test', function () {
