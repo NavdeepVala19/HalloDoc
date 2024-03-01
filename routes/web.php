@@ -205,7 +205,17 @@ route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'de
 
 
 
-route::get('/export-excel', [ExcelController::class, 'exportAll']);
+route::get('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
+route::get('/admin/new/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
+route::get('/admin/new/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
+route::get('/admin/new/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
+route::get('/admin/new/exportToClose', [ExcelController::class, 'toCloseDataExport'])->name('exportToClose');
+route::get('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport'])->name('exportUnPaid');
+route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
+
+
+route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
+route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
 
 // ****************************************************************************************************************************
 

@@ -10,9 +10,8 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
 
-class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
+class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -22,15 +21,17 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
     {
         return ['PatientName', 'DOB', 'RequestorName', 'RequestedDate', 'Mobile', 'Address'];
     }
+
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
     {
-  
-        $data = request_Client::select('request_client.first_name', 'request_client.date_of_birth', 'request.first_name as request_first_name', 'request_client.created_at', 'request_client.phone_number', DB::raw("CONCAT(request_client.street,',',request_client.city,',',request_client.state) AS address"))
-            ->leftJoin('request', 'request.id', '=', 'request_client.request_id')->get();
-       
+        $data = request_Client::distinct()->select('request_client.first_name', 'request_client.date_of_birth', 'request.first_name as request_first_name', 'request_client.created_at', 'request_client.phone_number', DB::raw("CONCAT(request_client.street,',',request_client.city,',',request_client.state) AS address"))
+            ->leftJoin('request', 'request.id', '=', 'request_client.request_id')
+            ->leftJoin('request_status', 'request.id', '=', 'request_status.request_id')
+            ->where('request_status.status', 1)
+            ->get();
         return $data;
     }
 }

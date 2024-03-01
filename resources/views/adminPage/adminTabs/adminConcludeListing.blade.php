@@ -166,13 +166,13 @@ transferred into conclude state providers can finally conclude care for the pati
                         Send Link
                     </span>
                 </button>
-                <a href="" class="primary-fill">
+                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="" class="primary-fill">
+                <a href="{{route('exportConclude')}}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
@@ -195,7 +195,7 @@ transferred into conclude state providers can finally conclude care for the pati
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}"
+                <form action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
                     method="GET" class="d-flex align-items-center">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">

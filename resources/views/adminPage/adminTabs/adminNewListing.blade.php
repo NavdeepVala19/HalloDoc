@@ -9,7 +9,16 @@
     <a href="" class="active-link">Dashboard</a>
     <a href="">Provider Location</a>
     <a href="">My Profile</a>
-    <a href="">Providers</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{route('adminProvidersInfo')}}">Provider</a></li>
+            <li><a class="dropdown-item" href="">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+</div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="{{ route('admin.access.view') }}">Access</a>
     <div class="dropdown record-navigation">
@@ -294,25 +303,25 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="" class="primary-fill">
+                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="" class="primary-fill">
+                <a href="{{route('exportNewData')}}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <a href="" class="primary-fill">
+                <a href="{{route('exportAll')}}" class="primary-fill">
                     <i class="bi bi-send-arrow-down-fill"></i>
                     <span class="txt">
                         Export All
                     </span>
                 </a>
-                <a href="" class="primary-fill">
+                <a href="#" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Request DTY Support
@@ -340,15 +349,15 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'new']) }}"
                         class="btn-all filter-btn">All</a>
-                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'new']) }}"
                         class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
