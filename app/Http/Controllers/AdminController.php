@@ -2,38 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use ZipArchive;
 use App\Mail\SendLink;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\SendMail;
 
 // Different Models used in these Controller
-use App\Models\requestTable;
-use App\Models\request_Client;
-use App\Models\MedicalReport;
-use App\Models\RequestNotes;
-use App\Models\RequestWiseFile;
-use Illuminate\Support\Facades\DB;
-use App\Models\caseTag;
 use App\Models\Orders;
-use App\Models\RequestStatus;
-
-use App\Models\HealthProfessionalType;
+use App\Models\caseTag;
+use App\Models\Regions;
+use App\Models\EmailLog;
+use App\Models\Provider;
+use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
+use App\Models\RequestNotes;
+use App\Models\requestTable;
+
+use Illuminate\Http\Request;
+use App\Models\MedicalReport;
 
 // For sending Mails
-use App\Mail\SendMail;
-use App\Mail\SendAgreement;
-use App\Models\Provider;
-use App\Models\EmailLog;
-use App\Models\HealthProfessional;
+use App\Models\RequestStatus;
+use App\Models\request_Client;
 use App\Models\PhysicianRegion;
-use Illuminate\Support\Facades\Mail;
+use App\Models\RequestWiseFile;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\HealthProfessional;
+use Illuminate\Support\Facades\DB;
 
 // DomPDF package used for the creation of pdf from the form
-use Barryvdh\DomPDF\Facade\Pdf;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 // To create zip, used to download multiple documents at once
-use ZipArchive;
+use App\Models\HealthProfessionalType;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 
 class AdminController extends Controller
@@ -118,32 +119,32 @@ class AdminController extends Controller
                 $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 7)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
             }
         }
     }
@@ -237,8 +238,23 @@ class AdminController extends Controller
     // Assign case - All physician Regions
     public function physicianRegions()
     {
-        $regions = PhysicianRegion::get();
+        $regions = Regions::get();
         return response()->json($regions);
+    }
+
+    public function getPhysicians($id = null)
+    {
+        $physiciansId = PhysicianRegion::where('region_id', $id)->pluck('provider_id')->toArray();
+        $physicians = Provider::whereIn('id', $physiciansId)->get()->toArray();
+        // dd($physicians);
+        return response()->json($physicians);
+    }
+    // assign Case login 
+    public function assignCase(Request $request)
+    {
+        // dd($request->physician);
+        RequestStatus::where('request_id', $request->requestId)->update(['TransToPhysicianId' => $request->physician]);
+        return redirect()->back();
     }
 
     // fetch all caseTag data from its table and show in cancelCase PopUp

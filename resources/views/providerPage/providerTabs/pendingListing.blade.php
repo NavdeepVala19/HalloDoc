@@ -100,13 +100,15 @@ pending state, providers need to send an agreement link to patients. --}}
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
+
     {{-- Transfer Request --}}
     <div class="pop-up transfer-request">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Transfer Request</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+        <span class="p-2">This request will be transferred to admin.</span>
+        <div class="d-flex align-items-center justify-content-center gap-2">
             <div class="form-floating">
                 <textarea class="form-control transfer-description" placeholder="injury" id="floatingTextarea2"></textarea>
                 <label for="floatingTextarea2">Description</label>
@@ -192,7 +194,8 @@ pending state, providers need to send an agreement link to patients. --}}
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
+                <form
+                    action="{{ route('provider.searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
                     method="GET">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">

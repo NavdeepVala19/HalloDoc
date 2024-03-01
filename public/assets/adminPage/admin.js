@@ -31,18 +31,53 @@ $(document).ready(function () {
         $(".assign-case").show();
         $(".overlay").show();
 
+        $(".physicianRegions").empty();
+        $(".requestId").val($(this).data("id"));
+
         // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
             url: "/physician-regions",
             type: "GET",
             success: function (data) {
-                console.log(data);
+                data.forEach(function (region) {
+                    $(".physicianRegions").append(
+                        '<option value="' +
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
+                    );
+                });
             },
             error: function (error) {
                 console.log(error);
             },
         });
-        $(".physicianRegions");
+    });
+
+    $(".physicianRegions").on("change", function () {
+        $physician = $(this).val();
+        $(".selectPhysician").empty();
+        $.ajax({
+            url: "/physician/" + $physician,
+            type: "GET",
+            success: function (data) {
+                data.forEach(function (physician) {
+                    $(".selectPhysician").append(
+                        $("<option>", {
+                            value: physician.id,
+                            text:
+                                physician.first_name +
+                                " " +
+                                physician.last_name,
+                        })
+                    );
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
     });
 
     $(".block-case-btn").click(function () {

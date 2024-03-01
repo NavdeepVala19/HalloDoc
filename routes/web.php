@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AdminDashboardController;
@@ -238,6 +239,9 @@ Route::get('/create-request-provider', [ProviderController::class, 'viewCreateRe
 Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name("provider.request.data");
 
 // ************** DIFFERENT ACTIONS FROM ACTION MENU ***************
+// Accept Case by provider
+Route::get('/accept-case/{id}', [ProviderController::class, 'acceptCase'])->name('provider.accept.case');
+
 // VIEW NOTES PAGE
 // show view notes page as per the id
 Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
@@ -306,12 +310,8 @@ Route::get('/admin', function () {
     return redirect('/admin/new');
 })->name('admin.dashboard');
 
-
-
 // For Filtering the request for admin dashboard
 Route::get('/admin/{status}/{category}', [AdminController::class, 'adminFilter'])->name("admin.listing");
-
-
 
 // Different status routing
 Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.status");
@@ -321,6 +321,9 @@ Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])-
 
 // Assign Case pop-up, populate select menu with all physician regions (AJAX)
 Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->name('physician.regions');
+Route::get('/physician/{id}', [AdminController::class, 'getPhysicians'])->name('get.physician');
+
+Route::post('/assign-case', [AdminController::class, 'assignCase'])->name('admin.assign.case');
 
 // Cancel Case by admin
 Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
