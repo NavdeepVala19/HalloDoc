@@ -135,12 +135,11 @@ class conciergeRequestController extends Controller
         $requestUsers->zipcode = $request->zipcode;
         $requestUsers->save();
 
-        
-        
-        // store data in request_concierge table
 
+
+        // store data in request_concierge table
         $conciergeRequest = new RequestConcierge();
-        $conciergeRequest->request_id = $request->id;
+        $conciergeRequest->request_id = $requestConcierge->id;
         $conciergeRequest->concierge_id = $concierge->id;
         $conciergeRequest->save();
 

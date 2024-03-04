@@ -17,37 +17,41 @@ class ExcelController extends Controller
 {
     public function exportAll()
     {
-        return Excel::download(new UsersExport, 'AllData.csv');
+        return Excel::download(new UsersExport, 'AllData.xls');
     }
 
     public function exportNewData()
     {
-        return Excel::download(new NewStatusExport, 'NewData.csv');
+        return Excel::download(new NewStatusExport, 'NewData.xls');
     }
 
 
 
     public function pendingDataExport()
     {
-        return Excel::download(new PendingStatusExport, 'PendingData.csv');
+        return Excel::download(new PendingStatusExport, 'PendingData.xls');
     }
 
 
-    public function activeDataExport(){
-        return Excel::download(new ActiveStatusExport, 'ActiveData.csv');
+    public function activeDataExport()
+    {
+        return Excel::download(new ActiveStatusExport, 'ActiveData.xls');
     }
 
 
-    public function concludeDataExport(){
-        return Excel::download(new ConcludeStatusExport, 'ConcludeData.csv');
+    public function concludeDataExport()
+    {
+        return Excel::download(new ConcludeStatusExport, 'ConcludeData.xls');
     }
 
-    public function toCloseDataExport(){
-        return Excel::download(new ToCloseStatusExport, 'ToCloseData.csv');
+    public function toCloseDataExport()
+    {
+        return Excel::download(new ToCloseStatusExport, 'ToCloseData.xls');
     }
 
-    public function unPaidDataExport(){
-        return Excel::download(new UnPaidStatusExport, 'UnPaidData.csv');
+    public function unPaidDataExport()
+    {
+        return Excel::download(new UnPaidStatusExport, 'UnPaidData.xls');
     }
 
 }

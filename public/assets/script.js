@@ -6,11 +6,6 @@ $(document).ready(function () {
     });
 
     $("#toggle-mode").click(function () {
-<<<<<<< HEAD
-        console.log('btn clicked');
-=======
-        console.log("btn clicked");
->>>>>>> navdeep
         $("html").toggleClass("dark");
     });
 

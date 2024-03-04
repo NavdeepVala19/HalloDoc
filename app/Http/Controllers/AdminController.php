@@ -9,28 +9,29 @@ use App\Mail\SendLink;
 use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
+use App\Models\Regions;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
 use App\Models\RequestNotes;
-use App\Models\requestTable;
 
+use App\Models\requestTable;
 use Illuminate\Http\Request;
-use App\Models\MedicalReport;
 
 // For sending Mails
+use App\Models\MedicalReport;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
-use Illuminate\Support\Facades\DB;
 
 // DomPDF package used for the creation of pdf from the form
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 // To create zip, used to download multiple documents at once
+use Illuminate\Support\Facades\Mail;
 use App\Models\HealthProfessionalType;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -144,7 +145,6 @@ class AdminController extends Controller
         $userData = Auth::user();
         $count = $this->totalCasesCount();
 
-     
 
         // check for both status & category and fetch data for only the searched term  
         if ($category == 'all') {
@@ -174,7 +174,6 @@ class AdminController extends Controller
                             $query->where('first_name', 'like', "%$request->search%");
                         });
                     })->paginate(10);
-
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
@@ -185,7 +184,7 @@ class AdminController extends Controller
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
-                $cases = RequestStatus::where('status', 2)->orWhere('status',7)->whereHas('request', function ($q) use ($request) {
+                $cases = RequestStatus::where('status', 2)->orWhere('status', 7)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
                     $q->orWhereHas('requestClient', function ($query) use ($request) {
                         $query->where('first_name', 'like', "%$request->search%");
@@ -211,7 +210,7 @@ class AdminController extends Controller
                             });
                     })->paginate(10);
 
-                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));  
+                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
 
                 $cases = RequestStatus::where('status', 3)
@@ -560,4 +559,47 @@ class AdminController extends Controller
     {
         return view('adminPage.records.patientRecords');
     }
+
+
+
+
+    // fetching regions from regions table and show in All Regions drop-down button
+    public function fetchRegions()
+    {
+        $fetchedRegions = Regions::get();
+        return response()->json($fetchedRegions);
+    }
+
+    // fetching only that data which is filter-by All-Regions drop-down button
+
+    public function filterPatientByRegion(Request $request, $selectedId)
+    {
+        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
+
+        $patientData = request_Client::with('request')->where('state', $regionName)->get();
+
+        // return response()->json($patientData);
+
+        // Format the data as needed (optional)
+        $formattedData = [];
+        foreach ($patientData as $patient) {
+            $formattedData[] = [
+                'request_id' => $patient->request->id,
+                'request_type_id' => $patient->request->request_type_id,
+                'first_name' => $patient->first_name,
+                'last_name' => $patient->last_name,
+                'date_of_birth' => $patient->date_of_birth,
+                'requestor' => $patient->request->first_name,
+                'created_at' => $patient->created_at,
+                'phone_number' => $patient->phone_number,
+                'street' => $patient->street,
+                'city' => $patient->city,
+                'state' => $patient->state,
+            ];
+        }
+        $data = view('adminPage.adminTabs.dropdown-data-row')->with('cases', $formattedData)->render();
+        return response()->json(['html' => $data]);
+    }
+
+
 }

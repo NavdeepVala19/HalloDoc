@@ -234,9 +234,6 @@ giving service to the patient. --}}
                         </div>
                         <select class="form-select">
                             <option selected>All Regions</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
                         </select>
                     </form>
                     <div class="src-category d-flex gap-3 align-items-center">

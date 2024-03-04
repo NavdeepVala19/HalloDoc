@@ -14,10 +14,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                            reason.id +
-                            '">' +
-                            reason.case_name +
-                            "</option>"
+                        reason.id +
+                        '">' +
+                        reason.case_name +
+                        "</option>"
                     );
                 });
             },
@@ -89,10 +89,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                            entry.id +
-                            '">' +
-                            entry.vendor_name +
-                            "</option>"
+                        entry.id +
+                        '">' +
+                        entry.vendor_name +
+                        "</option>"
                     );
                 });
             },
@@ -156,4 +156,60 @@ $(document).ready(function () {
     $(".clearButton").click(function () {
         $(".empty-fields").val("");
     });
+
+    $(document).on('click', '.action-btn', function () {
+
+        var sibling = $(this).siblings(".action-menu:visible").length;
+
+        if (sibling > 0) {
+            $(this).siblings(".action-menu").hide();
+        } else {
+            $(this).siblings(".action-menu").show();
+        }
+    })
+
+    // ************************************* Shivesh ******************************
+
+    // ***************** Fetching regions from regions table ******************
+    $.ajax({
+        url: "/admin-new",
+        type: "GET",
+        success: function (data) {
+            // Assuming data is an array of reasons
+            data.forEach(function (region) {
+                $(".listing-region").append(
+                    '<option value="' + region.id + '">' + region.region_name + "</option>"
+                );
+            });
+
+        },
+        error: function (error) {
+            console.error(error);
+        },
+
+    });
+
+
+
+    $('.listing-region').on('change', function () {
+        // Store the selected option's ID
+        var selectedId = $(this).val();
+        $.ajax({
+            url: "/dropdown-data/" + selectedId,
+            type: "GET",
+            dataType: 'json',
+            success: function (data) {
+                $("#dropdown-data-body").html(data.html);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    })
+
+
+
 });
+
+
+

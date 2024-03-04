@@ -341,12 +341,11 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
-                    <select class="form-select">
-                        <option selected>All Regions</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+
+                    <select class="form-select listing-region">
+                        <option name="regions" selected>All Regions</option>
                     </select>
+
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
                     <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'new']) }}"
@@ -376,10 +375,10 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="dropdown-data-body">
                         @foreach ($cases as $case)
                             @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}">
+                                <tr class="type-{{ $case->request->request_type_id }}" >
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
                                     <td>{{ $case->request->first_name }}</td>

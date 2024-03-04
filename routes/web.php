@@ -217,6 +217,11 @@ route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name(
 route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
 route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
 
+
+route::get('/admin-new', [AdminController::class, 'fetchRegions']);
+
+route::get('/dropdown-data/{selectedId}', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
+
 // ****************************************************************************************************************************
 
 
