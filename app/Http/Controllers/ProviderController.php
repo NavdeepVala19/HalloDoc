@@ -431,6 +431,7 @@ class ProviderController extends Controller
             'email' => $request->email,
             'is_email_sent' => true,
             'sent_tries' => 1,
+            // 'sent_date' => ,
         ]);
         return redirect()->back();
     }

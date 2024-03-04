@@ -204,4 +204,28 @@ $(document).ready(function () {
     $(".clearButton").click(function () {
         $(".empty-fields").val("");
     });
+
+    // Display different roles checkboxes as per the roles selected
+    $(".role-selected").on("change", function () {
+        let role = $(this).val();
+        $.ajax({
+            url: "/fetch-roles/" + role,
+            type: "GET",
+            success: function (data) {
+                $(".menu-section").empty();
+                data.forEach(function (menu) {
+                    let checkBox = `<div class="form-check">
+                    <input class="form-check-input" name="menu_checkbox[]" value=${menu.id} type="checkbox"
+                        id="menu_check_${menu.id}">
+                        ${menu.name}
+                    </label>
+                </div>`;
+                    $(".menu-section").append(checkBox);
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
 });

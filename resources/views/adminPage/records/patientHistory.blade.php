@@ -43,12 +43,10 @@
                             placeholder="Last Name">
                         <label for="floatingInput">Last Name</label>
                     </div>
-
                     <div class="form-floating ">
                         <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
-
                     <input type="tel" name="phone_number" class="form-control phone" id="telephone"
                         placeholder="Phone Number">
                 </div>
@@ -68,14 +66,16 @@
                         <td class="actions">Actions</td>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Name1</td>
-                            <td>Name2</td>
-                            <td>new@mail.com</td>
-                            <td>41234123421</td>
-                            <td>Address</td>
-                            <td><a href="{{ route('patient.records') }}" class="primary-empty">Explore</a></td>
-                        </tr>
+                        @foreach ($patients as $patient)
+                            <tr>
+                                <td>{{ $patient->first_name }}</td>
+                                <td>{{ $patient->last_name }}</td>
+                                <td>{{ $patient->email }}</td>
+                                <td>{{ $patient->phone_number }}</td>
+                                <td>{{ $patient->street }}, {{ $patient->city }}, {{ $patient->state }}</td>
+                                <td><a href="{{ route('patient.records') }}" class="primary-empty">Explore</a></td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

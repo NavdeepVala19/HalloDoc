@@ -17,22 +17,31 @@
 
 @section('content')
     <div class="m-5 spacing">
-        <h3 class="main-heading">Account Access</h3>
+        <h3 class="main-heading">User Access</h3>
         <div class="section">
-            <div class="text-end m-3 mb-4">
-                <a href="{{ route('admin.create.role.view') }}" class="primary-empty role-text-btn">Create Access</a>
-                <a href="{{ route('admin.create.role.view') }}" class="primary-empty role-add-btn"><i
-                        class="bi bi-plus-lg"></i></a>
+            <div>
+                <div class="form-floating w-25 m-3">
+                    <select class="form-select role-selected" name="role_name" id="floatingSelect">
+                        <option value="0">All</option>
+                        <option value="1">Admin</option>
+                        <option value="2">Physician</option>
+                        <option value="3">Patient</option>
+                    </select>
+                    <label for="floatingSelect">Account Type</label>
+                </div>
             </div>
             <div>
-                <table class="table table-view">
+                <table class="table">
                     <thead class="table-secondary">
-                        <td class="nameField">Name</td>
-                        <td class="accountField">Account Type</td>
-                        <td class="actions">Actions</td>
+                        <td>Account Type <i class="bi bi-arrow-up"></i></td>
+                        <td>Account POC</td=>
+                        <td>Phone</td>
+                        <td>Status</td>
+                        <td>Open Requests</td>
+                        <td>Actions</td>
                     </thead>
                     <tbody>
-                        @foreach ($roles as $role)
+                        {{-- @foreach ($roles as $role)
                             <tr>
                                 <td>{{ $role->name }}</td>
                                 <td>{{ $role->account_type }}</td>
@@ -41,21 +50,9 @@
                                     <a href="{{ route('admin.access.delete', $role->id) }}" class="primary-empty">Delete</a>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
-                <div class="mobile-listing">
-                    @foreach ($roles as $role)
-                        <div class="mobile-list">
-                            <div class="m-2">Name: {{ $role->name }} </div>
-                            <div class="m-2 mb-2">Account Type: {{ $role->account_type }}</div>
-                            <div class="m-3">
-                                <a href="{{ route('admin.edit.access', $role->id) }}" class="primary-empty">Edit</a>
-                                <a href="{{ route('admin.access.delete', $role->id) }}" class="primary-empty">Delete</a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
             </div>
         </div>
     </div>

@@ -368,14 +368,18 @@ Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessD
 // Account Roles Access Page
 Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
 Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('admin.create.role.view');
+Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('fetch.roles');
+Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
+Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
+Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
-Route::get('/patient-history', [AdminController::class, 'patientRecordsView'])->name('admin.patient.records.view');
-Route::get('/patient-records', [AdminController::class, 'patientViews'])->name('patient.records');
+Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
+Route::get('/patient-records', [AdminController::class, 'patientRecordsView'])->name('patient.records');
 
 
 // For Testing Purpose only
@@ -384,5 +388,5 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('adminPage.records.cancelHistory');
+    return view('adminPage.access.userAccess');
 });

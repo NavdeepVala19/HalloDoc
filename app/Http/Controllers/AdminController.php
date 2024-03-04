@@ -34,6 +34,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 // To create zip, used to download multiple documents at once
 use App\Models\HealthProfessionalType;
+use App\Models\Menu;
+use App\Models\Role;
+use App\Models\RoleMenu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 
@@ -261,12 +264,12 @@ class AdminController extends Controller
     {
         // dd($request->physician);
         RequestStatus::where('request_id', $request->requestId)->where('TransToAdmin', true)
-        ->update([
-            'TransToPhysicianId' => $request->physician,
-            'TransToAdmin' => null,
-            'notes' => $request->notes,
-            'status' => 1
-        ]);
+            ->update([
+                'TransToPhysicianId' => $request->physician,
+                'TransToAdmin' => null,
+                'notes' => $request->notes,
+                'status' => 1
+            ]);
         return redirect()->back();
     }
 
@@ -473,11 +476,67 @@ class AdminController extends Controller
     // Access Page
     public function accessView()
     {
-        return view('adminPage.access.access');
+        $roles = Role::get();
+        return view('adminPage.access.access', compact('roles'));
     }
     public function createRoleView()
     {
-        return view('adminPage.access.createRole');
+        $menus = Menu::get();
+        return view('adminPage.access.createRole', compact('menus'));
+    }
+
+    public function fetchRoles($id = null)
+    {
+        if ($id == 0) {
+            $menus = Menu::get();
+            return response()->json($menus);
+        } else if ($id == 1) {
+            $menus = Menu::where('account_type', 'Admin')->get();
+            return response()->json($menus);
+        } else if ($id == 2) {
+            $menus = Menu::where('account_type', 'Physician')->get();
+            return response()->json($menus);
+        }
+    }
+
+    public function createAccess(Request $request)
+    {
+        $this->validate($request, [
+            'role_name' => 'required|in:1,2,3', [
+                'role_name.required' => 'Please select a menu from the dropdown list.',
+                'role_name.in' => 'Invalid menu selection. Please choose a valid role option.'
+            ],
+            'role' => 'required'
+        ]);
+        // dd(->all());
+        if ($request->role_name == 1) {
+            $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
+        } else if ($request->role_name == 2) {
+            $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'physician']);
+        }
+
+        foreach ($request->input('menu_checkbox') as $key => $value) {
+            RoleMenu::insert([
+                'role_id' => $roleId,
+                'menu_id' => $value
+            ]);
+        }
+        return redirect()->route('admin.access.view');
+    }
+
+    public function deleteAccess($id = null)
+    {
+        Role::where('id', $id)->delete();
+        return redirect()->back();
+    }
+
+    public function editAccess($id = null)
+    {
+        $role = Role::where('id', $id)->first();
+        $roleMenus = RoleMenu::where('role_id', $id)->get();
+        $menus = Menu::get();
+        // dd($role, $menus);
+        return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
     }
 
     // Records Page
@@ -499,9 +558,14 @@ class AdminController extends Controller
     {
         return view('adminPage.records.blockHistory');
     }
+    public function patientHistoryView()
+    {
+        $patients = request_Client::get();
+        return view('adminPage.records.patientHistory', compact('patients'));
+    }
     public function patientRecordsView()
     {
-        return view('adminPage.records.patientHistory');
+        return view('adminPage.records.patientRecords');
     }
 
     // Cancel History Page
@@ -539,9 +603,5 @@ class AdminController extends Controller
         // dd($cancelCases);
 
         return view('adminPage.records.cancelHistory', compact('cancelCases'));
-    }
-    public function patientViews()
-    {
-        return view('adminPage.records.patientRecords');
     }
 }

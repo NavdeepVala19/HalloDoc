@@ -11,3 +11,33 @@ table td {
     width: 60%;
     margin: auto !important;
 }
+
+.form-check {
+    display: inline-block;
+    margin: 8px;
+}
+
+.role-add-btn {
+    display: none;
+}
+
+@media (max-width: 550px) {
+    .spacing {
+        margin: 0 !important;
+    }
+    .main-heading {
+        margin: 10px;
+    }
+    .role-add-btn {
+        display: inline-block;
+    }
+    .role-text-btn {
+        display: none;
+    }
+    .table-view {
+        display: none;
+    }
+    .mobile-list {
+        border-bottom: 1px solid grey;
+    }
+}
