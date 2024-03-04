@@ -257,6 +257,19 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    public function transferCase(Request $request)
+    {
+        // dd($request->physician);
+        RequestStatus::where('request_id', $request->requestId)->where('TransToAdmin', true)
+        ->update([
+            'TransToPhysicianId' => $request->physician,
+            'TransToAdmin' => null,
+            'notes' => $request->notes,
+            'status' => 1
+        ]);
+        return redirect()->back();
+    }
+
     // fetch all caseTag data from its table and show in cancelCase PopUp
     public function cancelCaseOptions()
     {
@@ -505,7 +518,6 @@ class AdminController extends Controller
         $email = $request->email;
         $date = $request->date;
         $phone_number = $request->phone_number;
-        dd($date);
         // dd($request->name);
         $query = RequestStatus::where('status', 2);
 

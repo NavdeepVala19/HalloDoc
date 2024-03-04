@@ -242,6 +242,8 @@ Route::post('/provider-request', [ProviderController::class, 'createRequest'])->
 // Accept Case by provider
 Route::get('/accept-case/{id}', [ProviderController::class, 'acceptCase'])->name('provider.accept.case');
 
+Route::post('/transfer-case', [ProviderController::class, 'assignCase'])->name('provider.transfer.case');
+
 // VIEW NOTES PAGE
 // show view notes page as per the id
 Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
@@ -324,6 +326,7 @@ Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->
 Route::get('/physician/{id}', [AdminController::class, 'getPhysicians'])->name('get.physician');
 
 Route::post('/assign-case', [AdminController::class, 'assignCase'])->name('admin.assign.case');
+Route::post('/transfer-case-admin', [AdminController::class, 'transferCase'])->name('admin.transfer.case');
 
 // Cancel Case by admin
 Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);

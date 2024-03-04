@@ -74,7 +74,7 @@ can transfer assigned request to another physician. --}}
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
         <p class="m-2">To transfer this request, search and select another Physician</p>
-        <form action="{{ route('admin.assign.case') }}" method="POST">
+        <form action="{{ route('admin.transfer.case') }}" method="POST">
             @csrf
             <div class="m-3">
                 <input type="text" class="requestId" name="requestId" value="" hidden>
@@ -93,7 +93,7 @@ can transfer assigned request to another physician. --}}
                     <label for="floatingSelect">Select Physician</label>
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="Description" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control" name="notes" placeholder="Description" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Description</label>
                 </div>
             </div>

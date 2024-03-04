@@ -229,6 +229,18 @@ class ProviderController extends Controller
         return $categoryMapping[$category] ?? null;
     }
 
+    // Assign Case
+    public function assignCase(Request $request)
+    {
+        // dd($request->physician);
+        RequestStatus::where('request_id', $request->requestId)->update([
+            'TransToAdmin' => true,
+            'physician_id' => null,
+            'notes' => $request->notes
+        ]);
+        return redirect()->back();
+    }
+
     public function viewCreateRequest()
     {
         return view('providerPage/providerRequest');

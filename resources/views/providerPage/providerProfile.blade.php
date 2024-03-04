@@ -46,7 +46,7 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="user_name" value="{{ $userData->username }}" class="form-control"
-                            id="floatingInput" placeholder="User Name">
+                            id="floatingInput" placeholder="User Name" disabled>
                         <label for="floatingInput">User Name</label>
                     </div>
                     <div class="form-floating ">
@@ -65,7 +65,7 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="first_name" value="{{ $provider->first_name }}" class="form-control"
-                            id="floatingInput" placeholder="First Name">
+                            id="floatingInput" placeholder="First Name" disabled>
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -73,7 +73,7 @@
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="last_name" value="{{ $provider->last_name }}" class="form-control"
-                            id="floatingInput" placeholder="Last Name">
+                            id="floatingInput" placeholder="Last Name" disabled>
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -82,24 +82,24 @@
 
                     <div class="form-floating ">
                         <input type="email" class="form-control" value="{{ $provider->email }}" id="floatingInput"
-                            placeholder="name@example.com">
+                            placeholder="name@example.com" disabled>
                         <label for="floatingInput">Email</label>
                     </div>
 
                     <input type="tel" name="phone_number" value="{{ $provider->mobile }}" class="form-control phone"
-                        id="telephone" placeholder="Phone Number">
+                        id="telephone" placeholder="Phone Number" disabled>
                     @error('phone_number')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
 
                     <div class="form-floating ">
                         <input type="text" name="medical_license" value="{{ $provider->medical_license }}"
-                            class="form-control" id="floatingInput" placeholder="Medical License">
+                            class="form-control" id="floatingInput" placeholder="Medical License" disabled>
                         <label for="floatingInput">Medical license # </label>
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="npi_number" value="{{ $provider->npi_number }}" class="form-control"
-                            id="floatingInput" placeholder="NPI Number">
+                            id="floatingInput" placeholder="NPI Number" disabled>
                         <label for="floatingInput">NPI Number</label>
                     </div>
                     <div class="d-flex gap-4 ">
@@ -121,23 +121,23 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="address1" value="{{ $provider->address1 }}" class="form-control"
-                            id="floatingInput" placeholder="Address 1">
+                            id="floatingInput" placeholder="Address 1" disabled>
                         <label for="floatingInput">Address 1</label>
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="address2" value="{{ $provider->address2 }}" class="form-control"
-                            id="floatingInput" placeholder="Address 2">
+                            id="floatingInput" placeholder="Address 2" disabled>
                         <label for="floatingInput">Address 2</label>
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="city" value="{{ $provider->city }}" class="form-control"
-                            id="floatingInput" placeholder="city">
+                            id="floatingInput" placeholder="city" disabled>
                         <label for="floatingInput">City</label>
                     </div>
                     <div>
                         {{-- Dropdown State Selection --}}
                         <div class="form-floating">
-                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example" disabled>
                                 <option selected>Open this select menu</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -148,11 +148,11 @@
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="zip" value="{{ $provider->zip }}" class="form-control"
-                            id="floatingInput" placeholder="zip">
+                            id="floatingInput" placeholder="zip" disabled>
                         <label for="floatingInput">Zip</label>
                     </div>
                     <input type="tel" name="mobile" value="{{ $provider->alt_phone }}" class="form-control phone" id="telephone"
-                        placeholder="mobile">
+                        placeholder="mobile" disabled>
                     @error('mobile')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -161,18 +161,18 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="business_name" value="{{ $provider->business_name }}" class="form-control" id="floatingInput"
-                            placeholder="Business Name">
+                            placeholder="Business Name" disabled>
                         <label for="floatingInput">Business Name</label>
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="business_website" value="{{ $provider->business_website }}" class="form-control" id="floatingInput"
-                            placeholder="Business Website">
+                            placeholder="Business Website" disabled>
                         <label for="floatingInput">Business Website</label>
                     </div>
                     <div>
                         {{-- Select Photo --}}
                         <div class="custom-file-input">
-                            <input type="text" placeholder="Select Photo" readonly>
+                            <input type="text" placeholder="Select Photo" readonly disabled>
                             <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span
                                     class="upload-txt">Upload</span> </label>
                             <input type="file" id="file-input" hidden>
@@ -181,7 +181,7 @@
                     <div class="d-flex align-items-center gap-1 ">
                         {{-- Select Signature --}}
                         <div class="custom-file-input">
-                            <input type="text" placeholder="Select Signature" readonly>
+                            <input type="text" placeholder="Select Signature" readonly disabled>
                             <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span
                                     class="upload-txt">Upload</span></label>
                             <input type="file" id="signature-input" hidden>
