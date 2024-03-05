@@ -424,14 +424,17 @@ class ProviderController extends Controller
     public function sendMail(Request $request)
     {
         Mail::to($request->email)->send(new SendMail($request->all()));
-        EmailLog::insert([
-            // 'provider_id' => specify provider id
+        EmailLog::create([
+            'role_id' => 2,
+            'provider_id' => Auth::user()->id,
             // 'email_template' =>,
             // 'subject_name' =>,
-            'email' => $request->email,
             'is_email_sent' => true,
             'sent_tries' => 1,
-            // 'sent_date' => ,
+            'sent_date' => now(),
+            'email_template' => 'mail.blade.php',
+            'subject_name' => 'Create Request Link',
+            'email' => $request->email,
         ]);
         return redirect()->back();
     }

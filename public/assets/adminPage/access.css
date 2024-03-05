@@ -21,6 +21,10 @@ table td {
     display: none;
 }
 
+.mobile-listing {
+    display: none;
+}
+
 @media (max-width: 550px) {
     .spacing {
         margin: 0 !important;

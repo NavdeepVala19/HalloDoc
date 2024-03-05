@@ -47,7 +47,6 @@ state, admin can clear the case from the action grid. --}}
             @csrf
             <input type="text" class="request_id" value="" name="requestId" hidden>
             <div class="d-flex flex-column align-items-center justify-content-center p-4">
-
                 <i class="bi bi-exclamation-circle-fill warning-icon"></i>
                 <div>
                     <h3 class="text-center">Confirmation for clear case</h3>
@@ -364,7 +363,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                                 <a
                                                     href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}">

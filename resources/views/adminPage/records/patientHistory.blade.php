@@ -30,31 +30,32 @@
     <div class="m-5 spacing">
         <h3>Patient History</h3>
         <div class="section">
-            <form action="" method="POST">
+            <form action="{{ route('admin.search.patient') }}" method="POST">
                 @csrf
                 <div class="grid-4">
                     <div class="form-floating ">
-                        <input type="text" name="first_name" class="form-control" id="floatingInput"
+                        <input type="text" name="first_name" class="form-control empty-fields" id="floatingInput"
                             placeholder="First Name">
                         <label for="floatingInput">First Name</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="last_name" class="form-control" id="floatingInput"
+                        <input type="text" name="last_name" class="form-control empty-fields" id="floatingInput"
                             placeholder="Last Name">
                         <label for="floatingInput">Last Name</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="email" name="email" class="form-control empty-fields" id="floatingInput"
+                            placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
-                    <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                    <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone"
                         placeholder="Phone Number">
                 </div>
+                <div class="text-end mb-3">
+                    <button type="button" class="primary-empty clearButton">Clear</button>
+                    <button type="submit" class="primary-fill">Search</button>
+                </div>
             </form>
-            <div class="text-end mb-3">
-                <button class="primary-empty">Clear</button>
-                <button class="primary-fill">Search</button>
-            </div>
             <div class="table-responsive">
                 <table class="table">
                     <thead class="table-secondary">
@@ -73,11 +74,12 @@
                                 <td>{{ $patient->email }}</td>
                                 <td>{{ $patient->phone_number }}</td>
                                 <td>{{ $patient->street }}, {{ $patient->city }}, {{ $patient->state }}</td>
-                                <td><a href="{{ route('patient.records') }}" class="primary-empty">Explore</a></td>
+                                <td><a href="{{ route('patient.records', $patient->id) }}" class="primary-empty">Explore</a></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                {{ $patients->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

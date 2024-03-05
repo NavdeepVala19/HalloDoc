@@ -13,6 +13,14 @@ class RequestStatus extends Model
 
     public function request()
     {
-        return $this->hasOne(RequestTable::class,'id');
+        return $this->hasOne(RequestTable::class, 'id');
+    }
+    public function statusTable()
+    {
+        return $this->hasOne(Status::class, 'id', 'status');
+    }
+    public function provider()
+    {
+        return $this->hasOne(Provider::class, 'id', 'physician_id');
     }
 }

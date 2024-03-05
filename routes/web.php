@@ -294,7 +294,7 @@ Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name
 Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
 
 // Send Email for creating request through provider
-Route::post('/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
+Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
 
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
@@ -328,12 +328,19 @@ Route::get('/physician/{id}', [AdminController::class, 'getPhysicians'])->name('
 Route::post('/assign-case', [AdminController::class, 'assignCase'])->name('admin.assign.case');
 Route::post('/transfer-case-admin', [AdminController::class, 'transferCase'])->name('admin.transfer.case');
 
+// Send Link
+Route::post('/admin/send-mail', [AdminController::class, 'sendMail'])->name('admin.send.mail');
+
+
 // Cancel Case by admin
 Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
 Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');
 
 // Block Case by admin
 Route::post('block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
+
+// Admin View Case
+Route::get('admin/view/case/{id?}', [AdminController::class, 'viewCase'])->name('admin.view.case');
 
 
 // Clear Case by admin pending and close state
@@ -376,10 +383,13 @@ Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('a
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
+Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
 Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
-Route::get('/patient-records', [AdminController::class, 'patientRecordsView'])->name('patient.records');
+Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
+Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
 
 
 // For Testing Purpose only
@@ -388,5 +398,5 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('adminPage.access.userAccess');
+    return view('adminPage.scheduling.scheduling');
 });

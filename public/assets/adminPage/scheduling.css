@@ -1,0 +1,46 @@
+.region-dropdown {
+    width: 250px;
+}
+.pending-shift {
+    display: inline-block;
+    width: 55px;
+    height: 35px;
+    background-color: rgb(240, 173, 212);
+    border-radius: 5px;
+    border: 2px solid rgb(210, 133, 190);
+}
+.approved-shift {
+    display: inline-block;
+    width: 55px;
+    height: 35px;
+    background-color: rgb(167, 204, 163);
+    border-radius: 5px;
+    border: 2px solid rgb(136, 168, 141);
+}
+
+/* Calendar Styling */
+#calendar {
+    width: 70%;
+    margin: 25px auto;
+}
+.fc-prev-button,
+.fc-next-button {
+    background-color: var(--blue) !important;
+    border-radius: 100% !important;
+}
+.fc-timeGridDay-button,
+.fc-timeGridWeek-button,
+.fc-dayGridMonth-button {
+    border: 1px solid var(--blue) !important;
+    background-color: #fff !important;
+    padding: 10px 18px !important;
+    color: var(--blue) !important;
+    border-radius: 8px !important;
+}
+.fc-button-active {
+    /* border: none; */
+    background-color: var(--blue) !important;
+    /* padding: 8px 20px; */
+    color: #fff !important;
+    /* border-radius: 5px; */
+}

@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Mail;
 // To create zip, used to download multiple documents at once
 use App\Models\HealthProfessionalType;
 use App\Models\Menu;
+use App\Models\RequestClosed;
 use App\Models\Role;
 use App\Models\RoleMenu;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -316,12 +317,33 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    // View case
+    public function viewCase($id)
+    {
+        $data = request_Client::where('id', $id)->first();
+        return view('adminPage.pages.viewCase', compact('data'));
+    }
 
-    // ****************** This code is for Sending Mail ************************
+
+    // ****************** This code is for Sending Link ************************
 
     public function sendMail(Request $request)
     {
         Mail::to($request->email)->send(new SendLink($request->all()));
+
+        EmailLog::create([
+            'role_id' => 1,
+            // 'provider_id' => specify provider id
+            // 'email_template' =>,
+            // 'subject_name' =>,
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+            'sent_date' => now(),
+            'email_template' => 'mail.blade.php',
+            'subject_name' => 'Create Request Link',
+            'email' => $request->email,
+        ]);
+
         return redirect()->back();
     }
 
@@ -347,6 +369,11 @@ class AdminController extends Controller
             ]);
         } else if ($request->input('closeCaseBtn') == 'Close Case') {
             RequestStatus::where('request_id', $request->requestId)->update(['status' => 9]);
+            $statusId = RequestStatus::where('request_id', $request->requestId)->pluck('id')->first();
+            RequestClosed::insert([
+                'request_id' => $request->requestId,
+                'request_status_id' => $statusId
+            ]);
             return redirect()->route('admin.status', 'unpaid');
         }
         return redirect()->back();
@@ -547,7 +574,34 @@ class AdminController extends Controller
 
     public function emailRecordsView()
     {
-        $emails = EmailLog::get();
+        $emails = EmailLog::with(['roles'])->get();
+        return view('adminPage.records.emailLogs', compact('emails'));
+    }
+    public function searchEmail(Request $request)
+    {
+        // if ($request->role_id == 0) {
+        //     return redirect()->route('admin.email.records.view');
+        // }
+
+        $emails = EmailLog::when($request->role_id, function ($query) use ($request) {
+            $query->where('role_id', $request->role_id);
+        })
+            ->when($request->email, function ($query) use ($request) {
+                $query->where('email', 'LIKE',  "%$request->email%");
+            })
+            ->when($request->created_date, function ($query) use ($request) {
+                $query->where('created_at', "LIKE", "%$request->created_date%");
+                // Carbon::parse($request->created_at)->format('Y-m-d')
+            })->when($request->sent_date, function ($query) use ($request) {
+                $query->where('sent_date', $request->sent_date);
+            })->get();
+
+        // dd($emails);
+        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get(   ));
+        // ->when($request->receiver_name, function ($query) use ($request) {
+        //     $query->where('last_name', 'LIKE', "%$request->last_name%");
+        // })
+
         return view('adminPage.records.emailLogs', compact('emails'));
     }
     public function smsRecordsView()
@@ -560,12 +614,32 @@ class AdminController extends Controller
     }
     public function patientHistoryView()
     {
-        $patients = request_Client::get();
+        $patients = request_Client::paginate(10);
         return view('adminPage.records.patientHistory', compact('patients'));
     }
-    public function patientRecordsView()
+    public function searchPatientData(Request $request)
     {
-        return view('adminPage.records.patientRecords');
+        $patients = request_Client::where('first_name', 'LIKE',  "%$request->first_name%")
+            ->when($request->last_name, function ($query) use ($request) {
+                $query->where('last_name', 'LIKE', "%$request->last_name%");
+            })
+            ->when($request->email, function ($query) use ($request) {
+                $query->where('email', 'LIKE',  "%$request->email%");
+            })
+            ->when($request->phone_number, function ($query) use ($request) {
+                $query->where('phone_number', 'LIKE', "%$request->phone_number%");
+            })->paginate(10);
+
+        return view('adminPage.records.patientHistory', compact('patients'));
+    }
+    public function patientRecordsView($id = null)
+    {
+
+        $email = request_Client::where('id', $id)->pluck('email')->first();
+        $data = request_Client::where('email', $email)->get();
+        $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
+        // dd($status);
+        return view('adminPage.records.patientRecords', compact('data', 'status'));
     }
 
     // Cancel History Page
