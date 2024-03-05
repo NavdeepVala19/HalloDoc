@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Concierge;
-use App\Models\RequestConcierge;
+use Carbon\Carbon;
 use App\Models\users;
 use App\Models\allusers;
-use App\Models\RequestStatus;
+use App\Models\Concierge;
 use App\Models\RequestNotes;
-use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
+use App\Models\RequestStatus;
+use App\Models\request_Client;
 
+use App\Models\RequestConcierge;
 use PhpParser\Node\Stmt\TryCatch;
 
 // use App\Models\User;
@@ -22,7 +23,6 @@ class conciergeRequestController extends Controller
 
     public function create(Request $request)
     {
-
 
         // $request->validate([
         //     'first_name'=>'required|min:2|max:30',
@@ -144,6 +144,22 @@ class conciergeRequestController extends Controller
         $conciergeRequest->save();
 
 
-        return view('patientSite/submitScreen');
+
+
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+
+        $confirmationNumber = substr($request->concierge_state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
+        // dd($confirmationNumber);
+
+        if (!empty($requestConcierge->id)) {
+            $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
+        }
+
+        return redirect()->route('submitRequest');
     }
 }

@@ -11,6 +11,7 @@ use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use Illuminate\Http\Request;
 use App\Models\RequestWise;
+use Carbon\Carbon;
 // use App\Models\User;
 class familyRequestController extends Controller
 {
@@ -127,6 +128,21 @@ class familyRequestController extends Controller
         $requestUsers->save();
 
 
-        return view('patientSite/submitScreen');
+
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+
+        $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
+        // dd($confirmationNumber);
+
+        if (!empty($familyRequest->id)) {
+            $familyRequest->update(['confirmation_no' => $confirmationNumber]);
+        }
+
+        return redirect()->route('submitRequest');
     }
 }

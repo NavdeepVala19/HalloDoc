@@ -159,16 +159,19 @@ $(document).ready(function () {
 
     $(document).on('click', '.action-btn', function () {
 
-        var sibling = $(this).siblings(".action-menu:visible").length;
+        var sibling = $(this).siblings(".actions-menubar:visible").length;
 
         if (sibling > 0) {
-            $(this).siblings(".action-menu").hide();
+            $(this).siblings(".actions-menubar").hide();
         } else {
-            $(this).siblings(".action-menu").show();
+            $(this).siblings(".actions-menubar").show();
         }
     })
 
-    // ************************************* Shivesh ******************************
+
+
+
+    // ************************************* Shivesh *************************************
 
     // ***************** Fetching regions from regions table ******************
     $.ajax({

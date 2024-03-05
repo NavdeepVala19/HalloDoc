@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Business;
+use Carbon\Carbon;
+use App\Models\users;
 use App\Models\Orders;
-use App\Models\RequestBusiness;
-use App\Models\RequestStatus;
-use App\Models\request_Client;
+use App\Models\allusers;
+use App\Models\Business;
+use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
-use App\Models\allusers;
-use App\Models\RequestNotes;
-use App\Models\users;
+use App\Models\RequestStatus;
+use App\Models\request_Client;
+use App\Models\RequestBusiness;
 
 // use App\Models\User;
 
@@ -136,8 +137,20 @@ class businessRequestController extends Controller
     $businessRequest->save();
 
 
+    $currentTime = Carbon::now();
+    $currentDate = $currentTime->format('Y');
+
+    $todayDate = $currentTime->format('Y-m-d');
+    $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
 
 
-    return view('patientSite/submitScreen');
+    $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
+    // dd($confirmationNumber);
+
+    if (!empty($requestBusiness->id)) {
+      $requestBusiness->update(['confirmation_no' => $confirmationNumber]);
+    }
+
+    return redirect()->route('submitRequest');
   }
 }

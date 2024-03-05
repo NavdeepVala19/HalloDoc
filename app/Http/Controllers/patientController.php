@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\allusers;
-use App\Models\RequestStatus;
-use App\Models\Status;
-use App\Models\RequestNotes;
-use App\Models\users;
-use App\Models\User;
-use App\Models\request_Client;
-use App\Models\RequestTable;
-use App\Models\RequestWise;
-use App\Models\RequestWiseFile;
-
-use Cron\MonthField;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\User;
+use Cron\MonthField;
+use App\Models\users;
+use App\Models\Status;
+use App\Models\allusers;
+use App\Models\RequestWise;
+use App\Models\RequestNotes;
+use App\Models\RequestTable;
+use Illuminate\Http\Request;
+
+use App\Models\RequestStatus;
+use App\Models\request_Client;
+use App\Models\RequestWiseFile;
+use Illuminate\Support\Facades\DB;
 
 // use App\Models\User;
 
@@ -28,9 +29,7 @@ class patientController extends Controller
 
     public function create(Request $request)
     {
-
-
-
+        
 
         // $request->validate([
         //     'first_name'=>['required','min:2','max:30'],
@@ -72,7 +71,7 @@ class patientController extends Controller
         $requestEmail = new users();
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
-        // $requestEmail->save();
+        $requestEmail->save();
 
 
 
@@ -91,11 +90,8 @@ class patientController extends Controller
         $requestStatus->request_id = $requestData->id;
         $requestStatus->status = 1;
         $requestStatus->save();
-        // dd($requestStatus);
 
-        // $requestData->status = $requestStatus->id;
-        // $requestData->save();
-
+        
         if (!empty($requestStatus)) {
             $requestData->update(['status' => $requestStatus->id]);
         }
@@ -158,6 +154,23 @@ class patientController extends Controller
         $requestUsers->save();
 
 
-        return view('patientSite/submitScreen');
+
+
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+
+        $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
+        // dd($confirmationNumber);
+
+        if (!empty($requestData->id)) {
+            $requestData->update(['confirmation_no' => $confirmationNumber]);
+        }
+
+
+        return redirect()->route('submitRequest');
     }
 }

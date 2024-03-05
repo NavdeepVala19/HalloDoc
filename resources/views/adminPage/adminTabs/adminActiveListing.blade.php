@@ -232,9 +232,9 @@ giving service to the patient. --}}
                                 aria-describedby="basic-addon1" name="search">
                             {{-- <input type="submit" class="primary-fill"> --}}
                         </div>
-                        <select class="form-select">
-                            <option selected>All Regions</option>
-                        </select>
+                       <select class="form-select listing-region">
+                        <option name="regions" selected>All Regions</option>
+                    </select>
                     </form>
                     <div class="src-category d-flex gap-3 align-items-center">
                         <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'active']) }}"
@@ -265,7 +265,7 @@ giving service to the patient. --}}
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="dropdown-data-body">
                             @foreach ($cases as $case)
                                 @if (!empty($case->request) && !empty($case->request->requestClient))
                                     <tr class="type-{{ $case->request->request_type_id }}">

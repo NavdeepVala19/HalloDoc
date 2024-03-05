@@ -631,3 +631,48 @@ tr > td {
     width: 500px;
     z-index: 20;
 }
+
+
+
+
+
+
+
+
+
+
+/* ******************************* CSS of ActionMenu button of Regions filter blade file ****************************** */
+
+.actions-menubar {
+    display: flex;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    left: -70px;
+    padding: 10px 0;
+    z-index: 999;
+}
+
+.actions-menubar>button {
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.actions-menubar>a {
+    display: block;
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    color: black;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.actions-menubar>button:hover,
+.actions-menubar>a:hover {
+    background-color: rgba(128, 128, 128);
+}

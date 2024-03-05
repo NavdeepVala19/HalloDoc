@@ -16,7 +16,7 @@
     <td>
         <div class="action-container">
             <button class="table-btn action-btn">Actions</button>
-            <div class="action-menu">
+            <div class="actions-menubar">
                 <button class="assign-case-btn"><i class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
                 <button class="cancel-case-btn" data-id="{{ $case['request_id']}}" data-patient_name="{{ $case['first_name'] }} {{ $case['last_name'] }}">
                     <i class="bi bi-x-circle me-2 ms-3"></i>

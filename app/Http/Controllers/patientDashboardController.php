@@ -150,6 +150,9 @@ class patientDashboardController extends Controller
 
         // $dateString = $createdAt->toDateString()
 
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y-m-d');
+        dd($currentDate);
         
         $userData = Auth::user();
         $email = $userData["email"];
