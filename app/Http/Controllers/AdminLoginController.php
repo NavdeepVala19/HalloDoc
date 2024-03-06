@@ -45,15 +45,15 @@ class AdminLoginController extends Controller
         if (Auth::attempt($credentials)) {
 
             $userData = Auth::user();
-            dd($userData);
+            // dd($userData);
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
-            dd($userRolesData);
+            // dd($userRolesData);
 
             if($userRolesData->role_id==2){
-                // return redirect()->route('');
+                return redirect()->route('provider.dashboard');
             }
             else{
-                // return redirect()->route('admin.dashboard',compact($userData));
+                return redirect()->route('admin.dashboard');
             }
 
 

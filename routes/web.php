@@ -1,22 +1,24 @@
 <?php
-use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminLoginController;
-use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\patientController;
-use App\Http\Controllers\familyRequestController;
-use App\Http\Controllers\conciergeRequestController;
-use App\Http\Controllers\businessRequestController;
-use App\Http\Controllers\patientLoginController;
-use App\Http\Controllers\patientDashboardController;
-use App\Http\Controllers\patientAccountController;
-use App\Http\Controllers\PatientViewDocumentsController;
-use App\Http\Controllers\patientProfileController;
-use App\Http\Controllers\ProviderController;
+
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\patientController;
+use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\SchedulingController;
+use App\Http\Controllers\patientLoginController;
+use App\Http\Controllers\AdminProviderController;
+use App\Http\Controllers\familyRequestController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\patientAccountController;
+use App\Http\Controllers\patientProfileController;
+use App\Http\Controllers\businessRequestController;
+use App\Http\Controllers\conciergeRequestController;
+use App\Http\Controllers\patientDashboardController;
+use App\Http\Controllers\PatientViewDocumentsController;
 
 // ******************************* SHIVESH **********************************************
 
@@ -238,9 +240,7 @@ route::get('/admin/providerLocation', [AdminProviderController::class, 'provider
 
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
 // Providers Dashboard page with New Users case listing
-Route::get('/provider', function () {
-    return redirect('/provider/new');
-})->name('provider.dashboard');
+Route::get('/provider', [ProviderController::class, 'providerDashboard'])->name('provider.dashboard');
 
 // For Filtering the request
 Route::get('/provider/{status}/{category}', [ProviderController::class, 'filter'])->name("provider.listing");
@@ -259,6 +259,11 @@ Route::get('/create-request-provider', [ProviderController::class, 'viewCreateRe
 Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name("provider.request.data");
 
 // ************** DIFFERENT ACTIONS FROM ACTION MENU ***************
+// Accept Case by provider
+Route::get('/accept-case/{id}', [ProviderController::class, 'acceptCase'])->name('provider.accept.case');
+
+Route::post('/transfer-case', [ProviderController::class, 'assignCase'])->name('provider.transfer.case');
+
 // VIEW NOTES PAGE
 // show view notes page as per the id
 Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
@@ -309,7 +314,7 @@ Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name
 Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
 
 // Send Email for creating request through provider
-Route::post('/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
+Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
 
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
@@ -327,12 +332,8 @@ Route::get('/admin', function () {
     return redirect('/admin/new');
 })->name('admin.dashboard');
 
-
-
 // For Filtering the request for admin dashboard
 Route::get('/admin/{status}/{category}', [AdminController::class, 'adminFilter'])->name("admin.listing");
-
-
 
 // Different status routing
 Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.status");
@@ -340,12 +341,26 @@ Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.s
 // For Searching Request
 Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
 
+// Assign Case pop-up, populate select menu with all physician regions (AJAX)
+Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->name('physician.regions');
+Route::get('/physician/{id}', [AdminController::class, 'getPhysicians'])->name('get.physician');
+
+Route::post('/assign-case', [AdminController::class, 'assignCase'])->name('admin.assign.case');
+Route::post('/transfer-case-admin', [AdminController::class, 'transferCase'])->name('admin.transfer.case');
+
+// Send Link
+Route::post('/admin/send-mail', [AdminController::class, 'sendMail'])->name('admin.send.mail');
+
+
 // Cancel Case by admin
 Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
 Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');
 
 // Block Case by admin
 Route::post('block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
+
+// Admin View Case
+Route::get('admin/view/case/{id?}', [AdminController::class, 'viewCase'])->name('admin.view.case');
 
 
 // Clear Case by admin pending and close state
@@ -380,21 +395,37 @@ Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessD
 // Account Roles Access Page
 Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
 Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('admin.create.role.view');
+Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('fetch.roles');
+Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
+Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
+Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
+Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
-Route::get('/patient-history', [AdminController::class, 'patientRecordsView'])->name('admin.patient.records.view');
-Route::get('/patient-records', [AdminController::class, 'patientViews'])->name('patient.records');
+Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
+Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
+Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
 
 
-// For Testing Purpose only
+// Cancel History Page
 Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
 Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
 
+// Scheduling
+// Scheduling Calendar view 
+Route::get('/scheduling', [SchedulingController::class, 'schedulingCalendarView'])->name('scheduling');
+Route::get('/provider-data', [SchedulingController::class, 'providerData'])->name('provider.data');
+// Providers on call view
+Route::get('/providers-on-call', [SchedulingController::class, 'providersOnCall'])->name('providers.on.call');
+// Shifts for Review view
+Route::get('/shifts-review', [SchedulingController::class, 'shiftsReviewView'])->name('shifts.review');
+
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('adminPage.records.cancelHistory');
+    return view('adminPage.scheduling.scheduling');
 });

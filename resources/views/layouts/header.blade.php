@@ -7,9 +7,9 @@
         <a href=""><img class="logo img-fluid" src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
     </div>
     <div class="d-flex align-items-center  gap-3">
-        <span class="welcome-msg align-self-center">welcome
-            {{-- Admin Names will be fetched and showed here --}}
-            {{-- <strong> {{ admin . firstname }} {{ admin . lastname }}</strong> --}}
+        <span class="welcome-msg align-self-center">welcome, 
+            {{-- Admin UserName or Provider UserName will be fetched and showed here --}}
+            <strong> @yield('username') </strong>
         </span>
         <a href="" class="logout-btn primary-empty">
             <i class="bi bi-box-arrow-right"></i>
