@@ -1,23 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminLoginController;
-use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\patientController;
-use App\Http\Controllers\familyRequestController;
-use App\Http\Controllers\conciergeRequestController;
-use App\Http\Controllers\businessRequestController;
-use App\Http\Controllers\patientLoginController;
-use App\Http\Controllers\patientDashboardController;
-use App\Http\Controllers\patientAccountController;
-use App\Http\Controllers\PatientViewDocumentsController;
-use App\Http\Controllers\patientProfileController;
-use App\Http\Controllers\ProviderController;
+
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\patientController;
+use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\SchedulingController;
+use App\Http\Controllers\patientLoginController;
+use App\Http\Controllers\AdminProviderController;
+use App\Http\Controllers\familyRequestController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\patientAccountController;
+use App\Http\Controllers\patientProfileController;
+use App\Http\Controllers\businessRequestController;
+use App\Http\Controllers\conciergeRequestController;
+use App\Http\Controllers\patientDashboardController;
+use App\Http\Controllers\PatientViewDocumentsController;
 
 // ******************************* SHIVESH **********************************************
 
@@ -392,9 +393,18 @@ Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'
 Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
 
 
-// For Testing Purpose only
+// Cancel History Page
 Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
 Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+
+// Scheduling
+// Scheduling Calendar view 
+Route::get('/scheduling', [SchedulingController::class, 'schedulingCalendarView'])->name('scheduling');
+Route::get('/provider-data', [SchedulingController::class, 'providerData'])->name('provider.data');
+// Providers on call view
+Route::get('/providers-on-call', [SchedulingController::class, 'providersOnCall'])->name('providers.on.call');
+// Shifts for Review view
+Route::get('/shifts-review', [SchedulingController::class, 'shiftsReviewView'])->name('shifts.review');
 
 // For Testing Purpose only
 Route::get('/test', function () {
