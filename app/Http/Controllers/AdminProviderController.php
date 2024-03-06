@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PhysicianRegion;
-use App\Models\Regions;
-use App\Models\UserRoles;
 use App\Models\users;
-use App\Mail\ContactProvider;
+use App\Models\Regions;
 use App\Models\Provider;
-use App\Models\RequestWiseFile;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash; // Import the Hash facade
+use App\Mail\ContactProvider;
+use App\Models\PhysicianRegion;
+use App\Models\RequestWiseFile;
+use App\Models\PhysicianLocation;
+use Geocoder\Exception\Exception;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Contracts\Mail\Mailable;
+use Geocoder\Exception\GeocodingException;
+use Geocoder\Provider\GoogleMaps\GoogleMaps;
+
 
 class AdminProviderController extends Controller
 {
@@ -23,7 +29,6 @@ class AdminProviderController extends Controller
     {
         $providersData = Provider::paginate(10);
         return view('/adminPage/provider/adminProvider', compact('providersData'));
-
     }
 
 
@@ -38,7 +43,6 @@ class AdminProviderController extends Controller
         });
 
         return redirect()->route('adminProvidersInfo')->with('message', 'Your mail has been sent successfully.');
-
     }
 
 
@@ -159,7 +163,6 @@ class AdminProviderController extends Controller
             $path = $request->file('provider_photo')->storeAs('public', $request->file('provider_photo')->getClientOriginalName());
             $request_file->save();
             $providerData->save();
-
         }
 
 
@@ -174,7 +177,6 @@ class AdminProviderController extends Controller
             $path = $request->file('provider_signature')->storeAs('public', $request->file('provider_signature')->getClientOriginalName());
             $request_file->save();
             $providerData->save();
-
         }
 
         if (isset($request->independent_contractor)) {
@@ -248,10 +250,7 @@ class AdminProviderController extends Controller
             $providerData->save();
         }
 
-
-
         return redirect()->route('adminProvidersInfo');
-
     }
 
 
@@ -315,7 +314,6 @@ class AdminProviderController extends Controller
         $getProviderInformation->save();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');
-
     }
 
 
@@ -325,7 +323,20 @@ class AdminProviderController extends Controller
         $ProviderInfo->delete();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
-
     }
 
+
+
+
+    // **************** Show Provider Location *************
+
+    public function providerLocation()
+    {
+
+        $address = Provider::where('id', '>', '38')->get();
+        dd($address);
+
+
+        return view('adminPage/provider/providerLocation');
+    }
 }

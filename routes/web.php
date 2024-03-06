@@ -223,6 +223,9 @@ route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 route::get('/dropdown-data/{selectedId}', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
 
 
+
+route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
+
 // ****************************************************************************************************************************
 
 
