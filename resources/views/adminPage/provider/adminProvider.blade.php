@@ -9,33 +9,33 @@
 @section('nav-links')
 
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
-<a href="">Provider Location</a>
+<a href="{{route('providerLocation')}}">Provider Location</a>
 <a href="">My Profile</a>
 <div class="dropdown record-navigation">
-        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="">Provider</a></li>
-            <li><a class="dropdown-item" href="">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
-        </ul>
+    <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Providers
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item active-link" href="">Provider</a></li>
+        <li><a class="dropdown-item" href="">Scheduling</a></li>
+        <li><a class="dropdown-item" href="">Invoicing</a></li>
+    </ul>
 </div>
 </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
+<a href="{{ route('admin.partners') }}">Partners</a>
+<a href="{{ route('admin.access.view') }}">Access</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Records
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+    </ul>
+</div>
 
 
 
@@ -97,8 +97,7 @@
                         <td class="data"> Active </td>
                         <td class="data gap-1">
                             <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
-                            <a href="{{route('admineditProvider', $data->id) }}" type="button"
-                                class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
+                            <a href="{{route('admineditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                         </td>
                     </tr>
                     @endforeach
@@ -118,37 +117,36 @@
                 <p class="mt-4 ms-3">Choose communication to send message</p>
                 <div class="ms-3 ">
 
-                <form action="#" method="post" id="ContactProviderForm">
-                @csrf
+                    <form action="#" method="post" id="ContactProviderForm">
+                        @csrf
 
-                    <input type="text" name="provider_id" class="provider_id" hidden>
+                        <input type="text" name="provider_id" class="provider_id" hidden>
 
-                    <div class="radio-sms">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label ms-1" for="flexRadioSMS">
-                            SMS
-                        </label>
-                    </div>
+                        <div class="radio-sms">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label ms-1" for="flexRadioSMS">
+                                SMS
+                            </label>
+                        </div>
 
-                    <div class="radio-email">
-                        <input class="form-check-input" type="radio" value="email" name="emailContact" id="flexRadioDefault2" checked>
-                        <label class="form-check-label ms-1" for="flexRadioEmail">
-                            Email
-                        </label>
-                    </div>
+                        <div class="radio-email">
+                            <input class="form-check-input" type="radio" value="email" name="emailContact" id="flexRadioDefault2" checked>
+                            <label class="form-check-label ms-1" for="flexRadioEmail">
+                                Email
+                            </label>
+                        </div>
 
-                    <div class="radio-both">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-                        <label class="form-check-label ms-1" for="flexRadioBoth">
-                            Both
-                        </label>
-                    </div>
+                        <div class="radio-both">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                            <label class="form-check-label ms-1" for="flexRadioBoth">
+                                Both
+                            </label>
+                        </div>
 
-                    <div class="form-floating">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                            style="height: 120px"></textarea>
-                        <label for="floatingTextarea2">Message</label>
-                    </div>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
+                            <label for="floatingTextarea2">Message</label>
+                        </div>
 
                 </div>
 
