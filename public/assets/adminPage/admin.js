@@ -191,6 +191,7 @@ $(document).ready(function () {
     // Email logs mobile listing
     $(".main-section").click(function () {
         // $(".details").toggle();
+        console.log('here')
 
         // Target the next sibling .more-info element specifically
         $(this).next(".details").toggleClass("active");
@@ -205,7 +206,7 @@ $(document).ready(function () {
         $(".empty-fields").val("");
     });
 
-<<<<<<< HEAD
+
     $(document).on('click', '.action-btn', function () {
 
         var sibling = $(this).siblings(".actions-menubar:visible").length;
@@ -265,7 +266,7 @@ $(document).ready(function () {
 
 
 
-=======
+
     // Display different roles checkboxes as per the roles selected
     $(".role-selected").on("change", function () {
         let role = $(this).val();
@@ -289,5 +290,5 @@ $(document).ready(function () {
             },
         });
     });
-});
->>>>>>> navdeep
+
+

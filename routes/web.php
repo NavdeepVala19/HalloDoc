@@ -399,6 +399,7 @@ Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('f
 Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
 Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
 Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
+Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');

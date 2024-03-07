@@ -3,41 +3,42 @@
 namespace App\Http\Controllers;
 
 use ZipArchive;
-use App\Mail\SendLink;
-use App\Mail\SendMail;
+use App\Models\Menu;
+use App\Models\Role;
 
 // Different Models used in these Controller
+use App\Mail\SendLink;
+use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
 use App\Models\Regions;
+use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
+use App\Models\RoleMenu;
+
 use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
-use App\Models\RequestNotes;
-use App\Models\requestTable;
-
-use Illuminate\Http\Request;
-use App\Models\MedicalReport;
 
 // For sending Mails
+use App\Models\RequestNotes;
+use App\Models\requestTable;
+use Illuminate\Http\Request;
+use App\Models\MedicalReport;
+use App\Models\RequestClosed;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
+
+// DomPDF package used for the creation of pdf from the form
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
+// To create zip, used to download multiple documents at once
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
-
-// DomPDF package used for the creation of pdf from the form
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-// To create zip, used to download multiple documents at once
 use App\Models\HealthProfessionalType;
-use App\Models\Menu;
-use App\Models\RequestClosed;
-use App\Models\Role;
-use App\Models\RoleMenu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 
@@ -626,6 +627,22 @@ class AdminController extends Controller
         $menus = Menu::get();
         // dd($role, $menus);
         return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
+    }
+
+
+    public function UserAccess()
+    {
+
+        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile')
+            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
+            ->where('user_roles.id', '>', '14')
+            ->paginate(10);
+
+
+
+
+        return view('adminPage.access.userAccess', compact('userAccessData'));
     }
 
     // Records Page
