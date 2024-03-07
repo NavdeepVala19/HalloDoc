@@ -29,22 +29,125 @@
 @section('content')
     <div class="overlay"></div>
     {{-- Create Shift pop-up  --}}
-    <div class="pop-up create-shift d-none">
+    <div class="pop-up create-shift ">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Create Shift</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <form action="" method="POST" class="m-2">
+        <form action="" method="POST" class="m-4">
             @csrf
             <div class="">
-                <div class="">
-                    <select name="region" class="form-select empty-fields" id="floatingSelect"
+                <select name="region" class="form-select region physicianRegions" id="floatingSelect"
+                    aria-label="Floating label select example">
+                    <option value="0" selected>Region</option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->id }}">{{ $region->region_name }}</option>
+                    @endforeach
+                </select>
+                <div class="form-floating">
+                    <select name="physician" class="form-select physicianSelection" id="floatingSelect"
                         aria-label="Floating label select example">
-                        <option value="0" selected>Region</option>
-                        <option value="1">Admin</option>
-                        <option value="2">Physician</option>
+                        <option selected>Select</option>
                     </select>
+                    <label for="floatingSelect">Physician</label>
                 </div>
+                <div class="form-floating ">
+                    <input type="date" name="shiftDate" class="form-control shiftDate" id="floatingInput"
+                        placeholder="Created Date">
+                    <label for="floatingInput">Shift Date</label>
+                </div>
+                <div class="grid-2">
+                    <div class="form-floating ">
+                        <input type="time" name="shiftStartTime" class="form-control shiftStartTime" id="floatingInput"
+                            placeholder="Created Date">
+                        <label for="floatingInput">Start</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="time" name="shiftEndTime" class="form-control shiftEndTime" id="floatingInput"
+                            placeholder="Created Date">
+                        <label for="floatingInput">End</label>
+                    </div>
+                </div>
+                <div class="form-check form-switch">
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Repeat</label>
+                    <input class="form-check-input repeat-switch" type="checkbox" role="switch"
+                        id="flexSwitchCheckChecked">
+                </div>
+                <div class="checkboxes-section">
+                    <p>Repeat Days</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Sunday
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Monday
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Tuesday
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Wednesday
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Thursday
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Friday
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" disabled>
+                        <label class="form-check-label" for="defaultCheck1">
+                            Every Saturday
+                        </label>
+                    </div>
+                </div>
+                <div class="form-floating">
+                    <select class="form-select repeat-end-selection" name="physician" class="cancel-options"
+                        id="floatingSelect" aria-label="Floating label select example" disabled>
+                        <option selected>2-times</option>
+                    </select>
+                    <label for="floatingSelect">Repeat End</label>
+                </div>
+            </div>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <button type="button" class="primary-fill save-shift-btn">Save</button>
+                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+    {{-- View/Delete Shift --}}
+    <div class="pop-up view-shift">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>View Shift</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form action="" method="POST" class="m-4">
+            @csrf
+            <div>
+                <select name="region" class="form-select empty-fields" id="floatingSelect"
+                    aria-label="Floating label select example">
+                    <option value="0" selected>Region</option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->region_id }}">{{ $region->region_name }}</option>
+                    @endforeach
+                </select>
                 <div class="form-floating">
                     <select class="form-select" name="physician" class="cancel-options" id="floatingSelect"
                         aria-label="Floating label select example">
@@ -53,14 +156,27 @@
                     <label for="floatingSelect">Physician</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control empty-fields" id="floatingInput"
+                    <input type="date" name="shiftDate" class="form-control" id="floatingInput"
                         placeholder="Created Date">
                     <label for="floatingInput">Shift Date</label>
                 </div>
+                <div class="grid-2">
+                    <div class="form-floating ">
+                        <input type="time" name="shiftTimeStart" class="form-control" id="floatingInput"
+                            placeholder="Created Date">
+                        <label for="floatingInput">Start</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="time" name="shiftTimeEnd" class="form-control" id="floatingInput"
+                            placeholder="Created Date">
+                        <label for="floatingInput">End</label>
+                    </div>
+                </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill">Save</button>
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+                <button type="submit" class="primary-fill">Return</button>
+                <button type="button" class="primary-fill">Edit</button>
+                <button type="button" class="delete-selected-btn">Delete</button>
             </div>
         </form>
     </div>
@@ -84,7 +200,7 @@
                 <div>
                     <a href="{{ route('providers.on.call') }}" class="primary-fill">Providers On Call</a>
                     <a href="{{ route('shifts.review') }}" class="primary-fill">Shifts For Review</a>
-                    <button class="primary-fill">Add New Shift</button>
+                    <button class="primary-fill new-shift-btn">Add New Shift</button>
                 </div>
             </div>
             <h2 class="date-title m-3">Date</h2>

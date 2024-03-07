@@ -16,19 +16,28 @@
 
    {{-- Javascript for patient login password field --}}
    <script defer src="{{ URL::asset('assets/patientSite/patientLoginPassword.js') }}"></script>
-   
+
    <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
    {{-- Javascript for showing google maps --}}
    <script defer src="{{ URL::asset('assets/provider/providerMapLocation.js') }}"></script>
 =======
    <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
+=======
+
+   {{-- Javascript for showing google maps --}}
+   <script defer src="{{ URL::asset('assets/provider/providerMapLocation.js') }}"></script>
+>>>>>>> 7ec56ae4de7fe1ecee3b55c4452f468fc579cbe7
 
    {{-- FullCalendar JQuery Plugin --}}
    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
 
    <script defer src="{{ URL::asset('assets/adminPage/scheduling.js') }}"></script>
+<<<<<<< HEAD
 >>>>>>> navdeep
+=======
+>>>>>>> 7ec56ae4de7fe1ecee3b55c4452f468fc579cbe7

@@ -74,6 +74,7 @@
     padding: 10px 18px;
     color: #fff;
     border-radius: 8px;
+    border: none;
 }
 .button-section a {
     margin-right: 15px;
@@ -90,4 +91,28 @@
 }
 thead tr .fc-datagrid-cell-cushion {
     margin: 0 auto;
+}
+.fc-timeline {
+    background-color: #f0f0f0;
+}
+.fc-col-header-cell-cushion {
+    color: #fff;
+}
+.fc-daygrid-day-top {
+    background-color: rgb(240, 173, 212);
+}
+.fc-daygrid-day-number {
+    color: #000;
+    margin: 0 auto;
+}
+.create-shift {
+    display: none;
+    width: 650px !important;
+}
+.checkboxes-section div {
+    display: inline-block;
+    margin: 10px;
+}
+.view-shift {
+    display: none;
 }
