@@ -7,32 +7,61 @@ $(document).ready(function () {
     $(".repeat-switch").on("click", function () {
         if ($(".repeat-switch").is(":checked")) {
             $(".checkboxes-section .form-check-input").prop("disabled", false);
-            $('.repeat-end-selection').prop('disabled', false);
+            $(".repeat-end-selection").prop("disabled", false);
         } else {
             $(".checkboxes-section .form-check-input").prop("disabled", true);
-            $('.repeat-end-selection').prop('disabled', true);
+            $(".repeat-end-selection").prop("disabled", true);
         }
     });
+
+    $(".physicianRegions").on("change", function () {
+        $regions = $(this).val();
+        $(".physicianSelection").empty();
+        $.ajax({
+            url: "/physician/" + $regions,
+            type: "GET",
+            success: function (data) {
+                data.forEach(function (physician) {
+                    $(".physicianSelection").append(
+                        '<option value="' +
+                            physician.id +
+                            '">' +
+                            physician.first_name +
+                            " " +
+                            physician.last_name +
+                            "</option>"
+                    );
+                });
+            },
+
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
+
     var calendarEl = document.getElementById("calendar");
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "resourceTimelineDay",
         headerToolbar: {
             left: "prev next",
             center: "title",
             right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
         },
-        initialView: "resourceTimelineDay",
         selectable: true,
-        selectMirror: true,
-        // unselectAuto: true,
+        // selectMirror: true,
         aspectRatio: 1.5,
-        resourceAreaColumns: [{ field: "physician", headerContent: "Staff" }],
         resourceAreaWidth: "20%",
+        dayHeaderFormat: {
+            day: "numeric",
+            weekday: "short",
+            omitComma: true,
+        },
+        resourceAreaColumns: [{ field: "physician", headerContent: "Staff" }],
         resources: {
             url: "/provider-data",
-            // dataType: "json",
         },
-
         views: {
             resourceTimelineWeek: {
                 slotDuration: { days: 1 },
@@ -45,46 +74,13 @@ $(document).ready(function () {
                 ],
             },
         },
-        select: function (selectInfo) {
-            // console.log(selectInfo);
-            $(".create-shift").show();
-            $(".overlay").show();
-        },
-        // dateClick: function (info) {
-        //     // alert(info);
-        // },
-
-        // resourceLabelContent: function (arg) {
-        //     console.log(arg);
-        //     // arg.resource.extendedProps.
-        //     if (arg.resource.id > 0) {
-        //         var editUserLink = userEditLink.replace(
-        //             "userId",
-        //             arg.resource.id
-        //         );
-        //         var link =
-        //             '<a href="javascript:void(0)" onclick="addVacation(' +
-        //             arg.resource.id +
-        //             ')" class="add-vacation" style ="padding-right: 10px;display: inline-flex;" title="Add Vacation"><i class="fal fa-plus-square"></i></a><a href=' +
-        //             editUserLink +
-        //             ">" +
-        //             arg.resource.title +
-        //             "</a>";
-        //     } else {
-        //         var link = arg.resource.title;
-        //     }
-        //     return {
-        //         html: link,
-        //     };
-        // },
-
         eventContent: function (arg) {
-            console.log(arg.resource.extendedProps);
-            // arg.resource.extendedProps.
+            console.log(arg);
             if (arg.resource.id > 0) {
                 var link =
                     `<img src="{{URL::asset('')}}"` +
-                    arg.resource.extendedProps.physician;
+                    arg.resource.extendedProps.physician +
+                    "Test";
             } else {
                 var link = "Data";
             }
@@ -92,14 +88,61 @@ $(document).ready(function () {
                 html: link,
             };
         },
-
-        dayHeaderFormat: {
-            day: "numeric",
-            weekday: "short",
-            omitComma: true,
+        select: function (selectInfo) {
+            let providerId = selectInfo.resource.id;
+            let providerName = selectInfo.resource.extendedProps.physician;
+            $(".create-shift").show();
+            $(".overlay").show();
         },
+        // eventDataTransform: function (eventData) {
+        //     // This hook allows you to receive arbitrary event data from a JSON feed or any other Event Source and transform it into the type of data FullCalendar accepts
+        // },
     });
     calendar.render();
+
+    $(".save-shift-btn").click(function () {
+        var region = $(".region").val();
+        var physicianId = $(".physicianSelection").val();
+        var shiftDate = $(".shiftDate").val();
+        var shiftStartTime = $(".shiftStartTime").val();
+        var shiftEndTime = $(".shiftEndTime").val();
+
+        var dateParts = shiftDate.split("-");
+
+        var startTimeParts = shiftStartTime.split(":");
+
+        var startTime = new Date(
+            dateParts[0],
+            dateParts[1] - 1,
+            dateParts[2],
+            startTimeParts[0],
+            startTimeParts[1]
+        );
+
+        var endTimeParts = shiftEndTime.split(":");
+        var endTime = new Date(
+            dateParts[0],
+            dateParts[1] - 1,
+            dateParts[2],
+            endTimeParts[0],
+            endTimeParts[1]
+        );
+        calendar.addEvent(
+            //     {
+            //     title: "Test",
+            //     start: startTime,
+            //     end: endTime,
+            //     resourceId: physicianId,
+            // }
+            {
+                title: "Dummy Event",
+                start: new Date(), // today's date
+                end: new Date(new Date().getTime() + 2 * 60 * 60 * 1000), // 2 hours from now
+                resourceId: 1,
+            }
+        );
+    });
+
     let date = $(".fc-toolbar-title").text();
     $(".date-title").html(date);
 });

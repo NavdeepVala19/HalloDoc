@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Provider;
+use App\Models\Regions;
 use Illuminate\Http\Request;
 
 class SchedulingController extends Controller
 {
     public function schedulingCalendarView()
     {
-        return view('adminPage.scheduling.scheduling');
+        $regions = Regions::get();
+        return view('adminPage.scheduling.scheduling', compact('regions'));
     }
     public function providerData()
     {
@@ -23,7 +25,6 @@ class SchedulingController extends Controller
             ];
         }
         return response()->json($formattedData);
-
     }
     public function providersOnCall()
     {

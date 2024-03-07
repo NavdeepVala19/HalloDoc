@@ -14,10 +14,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                        reason.id +
-                        '">' +
-                        reason.case_name +
-                        "</option>"
+                            reason.id +
+                            '">' +
+                            reason.case_name +
+                            "</option>"
                     );
                 });
             },
@@ -137,10 +137,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                        entry.id +
-                        '">' +
-                        entry.vendor_name +
-                        "</option>"
+                            entry.id +
+                            '">' +
+                            entry.vendor_name +
+                            "</option>"
                     );
                 });
             },
@@ -190,12 +190,8 @@ $(document).ready(function () {
 
     // Email logs mobile listing
     $(".main-section").click(function () {
-        // $(".details").toggle();
-
-        // Target the next sibling .more-info element specifically
         $(this).next(".details").toggleClass("active");
 
-        // Close any other open .more-info sections
         $(".details").not($(this).next(".details")).removeClass("active");
     });
 
@@ -205,67 +201,6 @@ $(document).ready(function () {
         $(".empty-fields").val("");
     });
 
-<<<<<<< HEAD
-    $(document).on('click', '.action-btn', function () {
-
-        var sibling = $(this).siblings(".actions-menubar:visible").length;
-
-        if (sibling > 0) {
-            $(this).siblings(".actions-menubar").hide();
-        } else {
-            $(this).siblings(".actions-menubar").show();
-        }
-    })
-
-
-
-
-    // ************************************* Shivesh *************************************
-
-    // ***************** Fetching regions from regions table ******************
-    $.ajax({
-        url: "/admin-new",
-        type: "GET",
-        success: function (data) {
-            // Assuming data is an array of reasons
-            data.forEach(function (region) {
-                $(".listing-region").append(
-                    '<option value="' + region.id + '">' + region.region_name + "</option>"
-                );
-            });
-
-        },
-        error: function (error) {
-            console.error(error);
-        },
-
-    });
-
-
-
-    $('.listing-region').on('change', function () {
-        // Store the selected option's ID
-        var selectedId = $(this).val();
-        $.ajax({
-            url: "/dropdown-data/" + selectedId,
-            type: "GET",
-            dataType: 'json',
-            success: function (data) {
-                $("#dropdown-data-body").html(data.html);
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    })
-
-
-
-});
-
-
-
-=======
     // Display different roles checkboxes as per the roles selected
     $(".role-selected").on("change", function () {
         let role = $(this).val();
@@ -289,5 +224,53 @@ $(document).ready(function () {
             },
         });
     });
+
+    // ************************************* Shivesh *************************************
+
+    $(document).on("click", ".action-btn", function () {
+        var sibling = $(this).siblings(".actions-menubar:visible").length;
+
+        if (sibling > 0) {
+            $(this).siblings(".actions-menubar").hide();
+        } else {
+            $(this).siblings(".actions-menubar").show();
+        }
+    });
+
+    // ***************** Fetching regions from regions table ******************
+    $.ajax({
+        url: "/admin-new",
+        type: "GET",
+        success: function (data) {
+            // Assuming data is an array of reasons
+            data.forEach(function (region) {
+                $(".listing-region").append(
+                    '<option value="' +
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
+                );
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+    });
+
+    $(".listing-region").on("change", function () {
+        // Store the selected option's ID
+        var selectedId = $(this).val();
+        $.ajax({
+            url: "/dropdown-data/" + selectedId,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $("#dropdown-data-body").html(data.html);
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
 });
->>>>>>> navdeep

@@ -113,3 +113,6 @@ thead tr .fc-datagrid-cell-cushion {
     display: inline-block;
     margin: 10px;
 }
+.view-shift {
+    display: none;
+}

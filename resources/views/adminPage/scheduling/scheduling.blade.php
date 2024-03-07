@@ -37,32 +37,33 @@
         <form action="" method="POST" class="m-4">
             @csrf
             <div class="">
-                <select name="region" class="form-select empty-fields" id="floatingSelect"
+                <select name="region" class="form-select region physicianRegions" id="floatingSelect"
                     aria-label="Floating label select example">
                     <option value="0" selected>Region</option>
-                    <option value="1">Admin</option>
-                    <option value="2">Physician</option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->id }}">{{ $region->region_name }}</option>
+                    @endforeach
                 </select>
                 <div class="form-floating">
-                    <select class="form-select" name="physician" class="cancel-options" id="floatingSelect"
+                    <select name="physician" class="form-select physicianSelection" id="floatingSelect"
                         aria-label="Floating label select example">
                         <option selected>Select</option>
                     </select>
                     <label for="floatingSelect">Physician</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control" id="floatingInput"
+                    <input type="date" name="shiftDate" class="form-control shiftDate" id="floatingInput"
                         placeholder="Created Date">
                     <label for="floatingInput">Shift Date</label>
                 </div>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="time" name="shiftTimeStart" class="form-control" id="floatingInput"
+                        <input type="time" name="shiftStartTime" class="form-control shiftStartTime" id="floatingInput"
                             placeholder="Created Date">
                         <label for="floatingInput">Start</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="time" name="shiftTimeEnd" class="form-control" id="floatingInput"
+                        <input type="time" name="shiftEndTime" class="form-control shiftEndTime" id="floatingInput"
                             placeholder="Created Date">
                         <label for="floatingInput">End</label>
                     </div>
@@ -126,7 +127,7 @@
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill">Save</button>
+                <button type="button" class="primary-fill save-shift-btn">Save</button>
                 <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
             </div>
         </form>
@@ -143,8 +144,9 @@
                 <select name="region" class="form-select empty-fields" id="floatingSelect"
                     aria-label="Floating label select example">
                     <option value="0" selected>Region</option>
-                    <option value="1">Admin</option>
-                    <option value="2">Physician</option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->region_id }}">{{ $region->region_name }}</option>
+                    @endforeach
                 </select>
                 <div class="form-floating">
                     <select class="form-select" name="physician" class="cancel-options" id="floatingSelect"
