@@ -46,31 +46,39 @@
                         <td class="actions">Actions</td>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Name</td>
-                            <td>Date</td>
-                            <td>Confirmation Number</td>
-                            <td>Provider Name</td>
-                            <td>Concluded date</td>
-                            <td>Status</td>
-                            <td><button class="primary-empty">View</button></td>
-                            <td>
-                                <div class="dropdown ">
-                                    <button class="primary-empty" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        Actions
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-actions">
-                                        <li><a class="dropdown-item " href="">View
-                                                Case</a></li>
-                                        <li><a class="dropdown-item" href="">Chat</a></li>
-                                        <li><a class="dropdown-item" href="">(Count) Documents</a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                        @foreach ($data as $record)
+                            @if (!empty($record))
+                                <tr>
+                                    <td>{{ $record->first_name }}</td>
+                                    <td>{{ $record->created_at }}</td>
+                                    <td>{{ $record->request->confirmation_no }}</td>
+                                    <td>
+                                        @if ($status->provider)
+                                            Dr. {{ $status->provider->first_name }}
+                                        @endif
+                                    </td>
+                                    <td>Concluded date</td>
+                                    <td>{{ $status->statusTable->status_type }}</td>
+                                    <td><button class="primary-empty">View</button></td>
+                                    <td>
+                                        <div class="dropdown ">
+                                            <button class="primary-empty" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-actions">
+                                                <li><a href="{{ route('admin.view.case', $record->id) }}"
+                                                        class="dropdown-item" href="">View
+                                                        Case</a></li>
+                                                <li><a class="dropdown-item" href="">Chat</a></li>
+                                                <li><a class="dropdown-item" href="">(Count) Documents</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
                     </tbody>
                 </table>
             </div>

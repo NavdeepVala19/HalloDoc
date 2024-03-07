@@ -30,6 +30,54 @@ $(document).ready(function () {
     $(".assign-case-btn").click(function () {
         $(".assign-case").show();
         $(".overlay").show();
+
+        $(".physicianRegions").empty();
+        $(".requestId").val($(this).data("id"));
+
+        // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
+        $.ajax({
+            url: "/physician-regions",
+            type: "GET",
+            success: function (data) {
+                data.forEach(function (region) {
+                    $(".physicianRegions").append(
+                        '<option value="' +
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
+                    );
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+    });
+
+    $(".physicianRegions").on("change", function () {
+        $physician = $(this).val();
+        $(".selectPhysician").empty();
+        $.ajax({
+            url: "/physician/" + $physician,
+            type: "GET",
+            success: function (data) {
+                data.forEach(function (physician) {
+                    $(".selectPhysician").append(
+                        $("<option>", {
+                            value: physician.id,
+                            text:
+                                physician.first_name +
+                                " " +
+                                physician.last_name,
+                        })
+                    );
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
     });
 
     $(".block-case-btn").click(function () {
@@ -157,6 +205,7 @@ $(document).ready(function () {
         $(".empty-fields").val("");
     });
 
+<<<<<<< HEAD
     $(document).on('click', '.action-btn', function () {
 
         var sibling = $(this).siblings(".actions-menubar:visible").length;
@@ -216,3 +265,29 @@ $(document).ready(function () {
 
 
 
+=======
+    // Display different roles checkboxes as per the roles selected
+    $(".role-selected").on("change", function () {
+        let role = $(this).val();
+        $.ajax({
+            url: "/fetch-roles/" + role,
+            type: "GET",
+            success: function (data) {
+                $(".menu-section").empty();
+                data.forEach(function (menu) {
+                    let checkBox = `<div class="form-check">
+                    <input class="form-check-input" name="menu_checkbox[]" value=${menu.id} type="checkbox"
+                        id="menu_check_${menu.id}">
+                        ${menu.name}
+                    </label>
+                </div>`;
+                    $(".menu-section").append(checkBox);
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
+});
+>>>>>>> navdeep

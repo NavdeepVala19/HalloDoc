@@ -34,38 +34,44 @@
         </div>
         {{-- d-flex align-items-center justify-content-between gap-3 --}}
         <div class="section">
-            <div class="grid-6 email-search-box">
-                <div class="form-floating">
-                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        <option selected>All</option>
-                        <option value="1">Physician</option>
-                        <option value="2">Admin</option>
-                    </select>
-                    <label for="floatingSelect">Search by role</label>
+            <form action="{{ route('search.filter.email') }}" method="POST">
+                @csrf
+                <div class="grid-6 email-search-box">
+                    <div class="form-floating">
+                        <select name="role_id" class="form-select empty-fields" id="floatingSelect"
+                            aria-label="Floating label select example">
+                            <option value="0" selected>All</option>
+                            <option value="1">Admin</option>
+                            <option value="2">Physician</option>
+                        </select>
+                        <label for="floatingSelect">Search by role</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="text" name="receiver_name" class="form-control empty-fields" id="floatingInput"
+                            placeholder="Receiver Name">
+                        <label for="floatingInput">Receiver Name</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="email" name="email" class="form-control empty-fields" id="floatingInput"
+                            placeholder="name@example.com">
+                        <label for="floatingInput">Email Id</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="date" name="created_date" class="form-control empty-fields" id="floatingInput"
+                            placeholder="Created Date">
+                        <label for="floatingInput">Created Date</label>
+                    </div>
+                    <div class="form-floating ">
+                        <input type="date" name="sent_date" class="form-control empty-fields" id="floatingInput"
+                            placeholder="Sent Date">
+                        <label for="floatingInput">Sent Date</label>
+                    </div>
+                    <div class="button-section">
+                        <button type="submit" class="primary-fill">Search</button>
+                        <button type="button" class="primary-empty clearButton">Clear</button>
+                    </div>
                 </div>
-                <div class="form-floating ">
-                    <input type="text" name="receiver_name" class="form-control" id="floatingInput"
-                        placeholder="Receiver Name">
-                    <label for="floatingInput">Receiver Name</label>
-                </div>
-                <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email Id</label>
-                </div>
-                <div class="form-floating ">
-                    <input type="date" name="created_date" class="form-control" id="floatingInput"
-                        placeholder="Created Date">
-                    <label for="floatingInput">Created Date</label>
-                </div>
-                <div class="form-floating ">
-                    <input type="date" name="sent_date" class="form-control" id="floatingInput" placeholder="Sent Date">
-                    <label for="floatingInput">Sent Date</label>
-                </div>
-                <div class="button-section">
-                    <button class="primary-fill">Search</button>
-                    <button class="primary-empty">Clear</button>
-                </div>
-            </div>
+            </form>
             <div class="table-responsive table-view">
                 <table class="table">
                     <thead class="table-secondary">
@@ -85,12 +91,12 @@
                                 <tr>
                                     <td>Name</td>
                                     <td>Request Monthly Data</td>
-                                    <td>Physician</td>
-                                    <td>new@mail.com</td>
-                                    <td>$email->created_at</td>
-                                    <td>sent date</td>
+                                    <td>{{ $email->roles->name }}</td>
+                                    <td>{{ $email->email }}</td>
+                                    <td>{{ $email->created_at }}</td>
+                                    <td>{{ $email->sent_date }}</td>
                                     <td>Yes</td>
-                                    <td>1</td>
+                                    <td>{{ $email->sent_tries }}</td>
                                     <td>-</td>
                                 </tr>
                             @endif

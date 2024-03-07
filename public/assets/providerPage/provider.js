@@ -56,6 +56,8 @@ $(document).ready(function () {
     $(".transfer-btn").click(function () {
         $(".transfer-request").show();
         $(".overlay").show();
+
+        $('.requestId').val($(this).data('id'));
     });
 
     // for showing send-link pop-up on every listing page
