@@ -10,4 +10,11 @@ class EmailLog extends Model
     use HasFactory;
 
     protected $table = 'email_log';
+
+    protected $guarded = [];
+
+    public function roles()
+    {
+        return $this->hasOne(Roles::class, 'id', 'role_id');
+    }
 }

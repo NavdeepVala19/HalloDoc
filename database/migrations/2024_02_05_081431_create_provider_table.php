@@ -50,15 +50,15 @@ return new class extends Migration
             //add these 
             $table->unsignedBigInteger('status')->nullable();
             $table->foreign('status')->references('id')->on('status');
-            
-            
+
+
             $table->string('business_name')->nullable();
             $table->string('business_website')->nullable();
-        
-            
+
+
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');
-            
+
             $table->string('npi_number')->nullable();
             $table->boolean('IsLicenseDoc')->nullable();
             $table->string('signature')->nullable();

@@ -5,15 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Status extends Model
+class RequestClosed extends Model
 {
     use HasFactory;
 
-    protected $table = "status";
-
-    protected $fillable = [
-        'id',
-        'status_type'
-    ];
-
+    protected $table = 'request_closed';
 }

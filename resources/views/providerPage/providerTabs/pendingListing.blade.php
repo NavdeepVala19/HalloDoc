@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
+@section('username')
+    {{ $userData->username }}
+@endsection
+
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
@@ -96,22 +100,28 @@ pending state, providers need to send an agreement link to patients. --}}
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
+
     {{-- Transfer Request --}}
     <div class="pop-up transfer-request">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Transfer Request</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-            <div class="form-floating">
-                <textarea class="form-control transfer-description" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Description</label>
+        <span class="p-2">This request will be transferred to admin.</span>
+        <form action="{{route('provider.transfer.case')}}" method="POST">
+            @csrf
+<input type="text" class="requestId" name="requestId" hidden>
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <div class="form-floating">
+                    <textarea name="notes" class="form-control transfer-description" placeholder="notes" id="floatingTextarea2"></textarea>
+                    <label for="floatingTextarea2">Description</label>
+                </div>
             </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Submit</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <button class="primary-fill">Submit</button>
+                <button class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </form>
     </div>
 
     <nav>
@@ -188,7 +198,8 @@ pending state, providers need to send an agreement link to patients. --}}
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
+                <form
+                    action="{{ route('provider.searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
                     method="GET">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
@@ -243,7 +254,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                                 <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
                                                     data-request_type_id={{ $case->request_type_id }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
-                                                <button class="transfer-btn"><i
+                                                <button class="transfer-btn" data-id="{{ $case->request->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
                                                 <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>

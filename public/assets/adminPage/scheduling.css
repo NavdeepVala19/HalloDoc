@@ -1,0 +1,115 @@
+.region-dropdown {
+    width: 250px;
+}
+.pending-shift {
+    display: inline-block;
+    width: 55px;
+    height: 35px;
+    background-color: rgb(240, 173, 212);
+    border-radius: 5px;
+    border: 2px solid rgb(210, 133, 190);
+}
+.approved-shift {
+    display: inline-block;
+    width: 55px;
+    height: 35px;
+    background-color: rgb(167, 204, 163);
+    border-radius: 5px;
+    border: 2px solid rgb(136, 168, 141);
+}
+
+/* Calendar Styling */
+#calendar {
+    width: 70%;
+    height: 800px !important;
+    margin: 25px auto;
+}
+.fc-prev-button,
+.fc-next-button {
+    background-color: var(--blue) !important;
+    border-radius: 100% !important;
+}
+.fc-resourceTimelineDay-button,
+.fc-resourceTimelineWeek-button,
+.fc-dayGridWeek-button,
+.fc-dayGridMonth-button {
+    border: 1px solid var(--blue) !important;
+    background-color: #fff !important;
+    padding: 10px 18px !important;
+    color: var(--blue) !important;
+    border-radius: 8px !important;
+}
+.fc-button-active {
+    /* border: none; */
+    background-color: var(--blue) !important;
+    /* padding: 8px 20px; */
+    color: #fff !important;
+    /* border-radius: 5px; */
+}
+.fc-toolbar-title {
+    /* display: none; */
+}
+.provider-profile-photo {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+.current-shift-btn {
+    /* border: 1px solid var(--blue); */
+    background-color: rgb(27, 94, 32);
+    padding: 10px 18px;
+    color: #fff;
+    border-radius: 8px;
+}
+.approved-selected-btn {
+    background-color: rgb(46, 125, 50);
+    padding: 10px 18px;
+    color: #fff;
+    border-radius: 8px;
+}
+.delete-selected-btn {
+    background-color: rgb(212, 47, 47);
+    padding: 10px 18px;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+}
+.button-section a {
+    margin-right: 15px;
+}
+.fc-scrollgrid-section-header {
+    background-color: rgb(109, 110, 112);
+    color: #fff;
+}
+.fs-scroller {
+    text-align: center;
+}
+.fc .fc-timeline-slot-cushion {
+    color: #fff;
+}
+thead tr .fc-datagrid-cell-cushion {
+    margin: 0 auto;
+}
+.fc-timeline {
+    background-color: #f0f0f0;
+}
+.fc-col-header-cell-cushion {
+    color: #fff;
+}
+.fc-daygrid-day-top {
+    background-color: rgb(240, 173, 212);
+}
+.fc-daygrid-day-number {
+    color: #000;
+    margin: 0 auto;
+}
+.create-shift {
+    display: none;
+    width: 650px !important;
+}
+.checkboxes-section div {
+    display: inline-block;
+    margin: 10px;
+}

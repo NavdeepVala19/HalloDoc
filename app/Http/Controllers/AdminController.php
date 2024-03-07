@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 use App\Mail\SendLink;
+use App\Mail\SendMail;
 
 // Different Models used in these Controller
-use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
 use App\Models\Regions;
@@ -15,24 +15,29 @@ use App\Models\Provider;
 use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
 use App\Models\RequestNotes;
-
 use App\Models\requestTable;
+
 use Illuminate\Http\Request;
+use App\Models\MedicalReport;
 
 // For sending Mails
-use App\Models\MedicalReport;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
+use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
+use Illuminate\Support\Facades\DB;
 
 // DomPDF package used for the creation of pdf from the form
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-// To create zip, used to download multiple documents at once
 use Illuminate\Support\Facades\Mail;
+// To create zip, used to download multiple documents at once
 use App\Models\HealthProfessionalType;
+use App\Models\Menu;
+use App\Models\RequestClosed;
+use App\Models\Role;
+use App\Models\RoleMenu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 
@@ -59,49 +64,58 @@ class AdminController extends Controller
     }
 
     // provides all cases data as per status
-    public function cases($status, $count)
+    public function cases($status, $count, $userData)
     {
         if ($status == 'new') {
             $cases = RequestStatus::with('request')->where('status', 1)->paginate(10);
-            return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'pending') {
             $cases = RequestStatus::with('request')->where('status', 3)->paginate(10);
-            return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'active') {
             $cases = RequestStatus::with('request')->where('status', 4)->orWhere('status', 5)->paginate(10);
-            return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'conclude') {
             $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
-            return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'toclose') {
             $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->paginate(10);
-            return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'unpaid') {
             $cases = RequestStatus::with('request')->where('status', 9)->paginate(10);
-            return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
+            return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
         }
     }
 
+    // Admin dashboard
+    public function adminDashboard()
+    {
+        return redirect('/admin/new');
+    }
 
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+        $userData = Auth::user();
+        // dd($userData);
         $count = $this->totalCasesCount();
-        return $this->cases($status, $count);
+        return $this->cases($status, $count, $userData);
     }
+
 
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
 
     public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
+        $userData = Auth::user();
         $count = $this->totalCasesCount();
 
 
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
             // Retrieve data for all request type
-            return $this->cases($status, $count);
+            return $this->cases($status, $count, $userData);
         } else {
             // Retrieve data for specific request type using request_type_id
             // Provides data as per the status and required category
@@ -109,32 +123,32 @@ class AdminController extends Controller
                 $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 7)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
-                return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
+                return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
             }
         }
     }
@@ -287,6 +301,42 @@ class AdminController extends Controller
         return $categoryMapping[$category] ?? null;
     }
 
+    // Assign case - All physician Regions
+    public function physicianRegions()
+    {
+        $regions = Regions::get();
+        return response()->json($regions);
+    }
+
+    public function getPhysicians($id = null)
+    {
+        $physiciansId = PhysicianRegion::where('region_id', $id)->pluck('provider_id')->toArray();
+        $physicians = Provider::whereIn('id', $physiciansId)->get()->toArray();
+        // dd($physicians);
+        return response()->json($physicians);
+    }
+    // assign Case login 
+    public function assignCase(Request $request)
+    {
+        // dd($request->physician);
+        RequestStatus::where('request_id', $request->requestId)->update(['TransToPhysicianId' => $request->physician]);
+        return redirect()->back();
+    }
+
+    public function transferCase(Request $request)
+    {
+        // dd($request->physician);
+        RequestStatus::where('request_id', $request->requestId)->where('TransToAdmin', true)
+            ->update([
+                'TransToPhysicianId' => $request->physician,
+                'TransToAdmin' => null,
+                'notes' => $request->notes,
+                'status' => 1
+            ]);
+        return redirect()->back();
+    }
+
+    // fetch all caseTag data from its table and show in cancelCase PopUp
     public function cancelCaseOptions()
     {
         $reasons = caseTag::all();
@@ -329,12 +379,33 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    // View case
+    public function viewCase($id)
+    {
+        $data = request_Client::where('id', $id)->first();
+        return view('adminPage.pages.viewCase', compact('data'));
+    }
 
-    // ****************** This code is for Sending Mail ************************
+
+    // ****************** This code is for Sending Link ************************
 
     public function sendMail(Request $request)
     {
         Mail::to($request->email)->send(new SendLink($request->all()));
+
+        EmailLog::create([
+            'role_id' => 1,
+            // 'provider_id' => specify provider id
+            // 'email_template' =>,
+            // 'subject_name' =>,
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+            'sent_date' => now(),
+            'email_template' => 'mail.blade.php',
+            'subject_name' => 'Create Request Link',
+            'email' => $request->email,
+        ]);
+
         return redirect()->back();
     }
 
@@ -360,6 +431,11 @@ class AdminController extends Controller
             ]);
         } else if ($request->input('closeCaseBtn') == 'Close Case') {
             RequestStatus::where('request_id', $request->requestId)->update(['status' => 9]);
+            $statusId = RequestStatus::where('request_id', $request->requestId)->pluck('id')->first();
+            RequestClosed::insert([
+                'request_id' => $request->requestId,
+                'request_status_id' => $statusId
+            ]);
             return redirect()->route('admin.status', 'unpaid');
         }
         return redirect()->back();
@@ -489,11 +565,67 @@ class AdminController extends Controller
     // Access Page
     public function accessView()
     {
-        return view('adminPage.access.access');
+        $roles = Role::get();
+        return view('adminPage.access.access', compact('roles'));
     }
     public function createRoleView()
     {
-        return view('adminPage.access.createRole');
+        $menus = Menu::get();
+        return view('adminPage.access.createRole', compact('menus'));
+    }
+
+    public function fetchRoles($id = null)
+    {
+        if ($id == 0) {
+            $menus = Menu::get();
+            return response()->json($menus);
+        } else if ($id == 1) {
+            $menus = Menu::where('account_type', 'Admin')->get();
+            return response()->json($menus);
+        } else if ($id == 2) {
+            $menus = Menu::where('account_type', 'Physician')->get();
+            return response()->json($menus);
+        }
+    }
+
+    public function createAccess(Request $request)
+    {
+        $this->validate($request, [
+            'role_name' => 'required|in:1,2,3', [
+                'role_name.required' => 'Please select a menu from the dropdown list.',
+                'role_name.in' => 'Invalid menu selection. Please choose a valid role option.'
+            ],
+            'role' => 'required'
+        ]);
+        // dd(->all());
+        if ($request->role_name == 1) {
+            $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
+        } else if ($request->role_name == 2) {
+            $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'physician']);
+        }
+
+        foreach ($request->input('menu_checkbox') as $key => $value) {
+            RoleMenu::insert([
+                'role_id' => $roleId,
+                'menu_id' => $value
+            ]);
+        }
+        return redirect()->route('admin.access.view');
+    }
+
+    public function deleteAccess($id = null)
+    {
+        Role::where('id', $id)->delete();
+        return redirect()->back();
+    }
+
+    public function editAccess($id = null)
+    {
+        $role = Role::where('id', $id)->first();
+        $roleMenus = RoleMenu::where('role_id', $id)->get();
+        $menus = Menu::get();
+        // dd($role, $menus);
+        return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
     }
 
     // Records Page
@@ -504,7 +636,34 @@ class AdminController extends Controller
 
     public function emailRecordsView()
     {
-        $emails = EmailLog::get();
+        $emails = EmailLog::with(['roles'])->get();
+        return view('adminPage.records.emailLogs', compact('emails'));
+    }
+    public function searchEmail(Request $request)
+    {
+        // if ($request->role_id == 0) {
+        //     return redirect()->route('admin.email.records.view');
+        // }
+
+        $emails = EmailLog::when($request->role_id, function ($query) use ($request) {
+            $query->where('role_id', $request->role_id);
+        })
+            ->when($request->email, function ($query) use ($request) {
+                $query->where('email', 'LIKE',  "%$request->email%");
+            })
+            ->when($request->created_date, function ($query) use ($request) {
+                $query->where('created_at', "LIKE", "%$request->created_date%");
+                // Carbon::parse($request->created_at)->format('Y-m-d')
+            })->when($request->sent_date, function ($query) use ($request) {
+                $query->where('sent_date', $request->sent_date);
+            })->get();
+
+        // dd($emails);
+        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get(   ));
+        // ->when($request->receiver_name, function ($query) use ($request) {
+        //     $query->where('last_name', 'LIKE', "%$request->last_name%");
+        // })
+
         return view('adminPage.records.emailLogs', compact('emails'));
     }
     public function smsRecordsView()
@@ -515,9 +674,34 @@ class AdminController extends Controller
     {
         return view('adminPage.records.blockHistory');
     }
-    public function patientRecordsView()
+    public function patientHistoryView()
     {
-        return view('adminPage.records.patientHistory');
+        $patients = request_Client::paginate(10);
+        return view('adminPage.records.patientHistory', compact('patients'));
+    }
+    public function searchPatientData(Request $request)
+    {
+        $patients = request_Client::where('first_name', 'LIKE',  "%$request->first_name%")
+            ->when($request->last_name, function ($query) use ($request) {
+                $query->where('last_name', 'LIKE', "%$request->last_name%");
+            })
+            ->when($request->email, function ($query) use ($request) {
+                $query->where('email', 'LIKE',  "%$request->email%");
+            })
+            ->when($request->phone_number, function ($query) use ($request) {
+                $query->where('phone_number', 'LIKE', "%$request->phone_number%");
+            })->paginate(10);
+
+        return view('adminPage.records.patientHistory', compact('patients'));
+    }
+    public function patientRecordsView($id = null)
+    {
+
+        $email = request_Client::where('id', $id)->pluck('email')->first();
+        $data = request_Client::where('email', $email)->get();
+        $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
+        // dd($status);
+        return view('adminPage.records.patientRecords', compact('data', 'status'));
     }
 
     // Cancel History Page
@@ -534,7 +718,6 @@ class AdminController extends Controller
         $email = $request->email;
         $date = $request->date;
         $phone_number = $request->phone_number;
-        dd($date);
         // dd($request->name);
         $query = RequestStatus::where('status', 2);
 

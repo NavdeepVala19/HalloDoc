@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
+@section('username')
+    {{ $userData->username }}
+@endsection
+
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
@@ -185,7 +189,7 @@
                                             <div class="action-menu">
                                                 <a href=" {{ route('provider.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <button><i class="bi bi-check-square me-2 ms-3"></i>Accept</button>
+                                                <a href="{{ route('provider.accept.case', $case->request->id) }}"><i class="bi bi-check-square me-2 ms-3"></i>Accept</a>
                                                 <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
