@@ -301,8 +301,9 @@ class ProviderController extends Controller
     // Encounter pop-up consult selected, perform these operation
     public function encounter(Request $request)
     {
-        requestTable::where('id', $request->caseId)->update(['status' => 4], ['call_type' => 'consult']);
-        return redirect()->route('provider-status', ['status' => 'conclude']);
+        RequestStatus::where('request_id', $request->caseId)->update(['status' => 6]);
+        requestTable::where('id', $request->caseId)->update(['call_type' => 'consult']);
+        return redirect()->route('provider.status', ['status' => 'conclude']);
     }
 
     // show a new medical form or an existing one on clicking encounter button in conclude listing
@@ -363,7 +364,7 @@ class ProviderController extends Controller
             $medicalReport->create($array);
         }
 
-        return redirect()->route('provider-status', ['status' => 'conclude']);
+        return redirect()->route('provider.status', ['status' => 'conclude']);
     }
 
     // Generate pdf on click
