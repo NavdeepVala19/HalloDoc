@@ -13,7 +13,7 @@ class RequestStatus extends Model
 
     public function request()
     {
-        return $this->hasOne(RequestTable::class, 'id');
+        return $this->hasOne(RequestTable::class, 'id', 'request_id');
     }
     public function statusTable()
     {
@@ -22,5 +22,9 @@ class RequestStatus extends Model
     public function provider()
     {
         return $this->hasOne(Provider::class, 'id', 'physician_id');
+    }
+    public function requestClient()
+    {
+        return $this->hasOne(request_Client::class, 'request_id', 'request_id');
     }
 }

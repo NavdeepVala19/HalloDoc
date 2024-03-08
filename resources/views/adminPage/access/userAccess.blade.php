@@ -7,13 +7,35 @@
 @endsection
 
 @section('nav-links')
-<a href="{{ route('admin.dashboard') }}">Dashboard</a>
-<a href="">Provider Location</a>
+
+<a href="{{route('admin.dashboard')}}">Dashboard</a>
+<a href="{{route('providerLocation')}}">Provider Location</a>
 <a href="">My Profile</a>
-<a href="">Providers</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Providers
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item active-link" href="">Provider</a></li>
+        <li><a class="dropdown-item" href="">Scheduling</a></li>
+        <li><a class="dropdown-item" href="">Invoicing</a></li>
+    </ul>
+</div>
+</div>
 <a href="{{ route('admin.partners') }}">Partners</a>
-<a href="" class="active-link">Access</a>
-<a href="">Records</a>
+<a href="{{ route('admin.access.view') }}" class="active-link">Access</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Records
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+    </ul>
+</div>
 @endsection
 
 @section('content')
@@ -26,7 +48,6 @@
                     <option value="0">All</option>
                     <option value="1">Admin</option>
                     <option value="2">Physician</option>
-                    <option value="3">Patient</option>
                 </select>
                 <label for="floatingSelect">Account Type</label>
             </div>
@@ -44,18 +65,15 @@
                 </thead>
                 <tbody class="text-center align-middle">
                     @foreach ($userAccessData as $data )
-
                     <tr>
                         <td>{{$data->name}}</td>
                         <td>{{$data->first_name}}</td>
                         <td>{{$data->mobile}}</td>
-                        <td>Pending</td>
+                        <td>{{$data->status}}</td>
                         <td>123</td>
                         <td><a href="" class="primary-empty" type="button">Edit</a></td>
                     </tr>
                     @endforeach
-
-
                 </tbody>
             </table>
             {{$userAccessData->links('pagination::bootstrap-5')}}

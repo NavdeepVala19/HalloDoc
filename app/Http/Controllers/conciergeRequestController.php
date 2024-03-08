@@ -125,6 +125,7 @@ class conciergeRequestController extends Controller
         // store all details of patient in allUsers table
 
         $requestUsers = new allusers();
+        $requestUsers->user_id = $requestEmail->id;
         $requestUsers->first_name = $request->first_name;
         $requestUsers->last_name = $request->last_name;
         $requestUsers->email = $request->email;

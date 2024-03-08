@@ -29,7 +29,7 @@ class patientController extends Controller
 
     public function create(Request $request)
     {
-        
+
 
         // $request->validate([
         //     'first_name'=>['required','min:2','max:30'],
@@ -56,17 +56,6 @@ class patientController extends Controller
         // ]);
 
 
-
-
-        // $myDate = ($request->date_of_birth);
-
-        // $date = Carbon::createFromDate($myDate);
-
-        // $monthName = $date->format('F');
-
-        // dd($monthName);
-
-
         // store email and phoneNumber in users table
         $requestEmail = new users();
         $requestEmail->email = $request->email;
@@ -91,7 +80,7 @@ class patientController extends Controller
         $requestStatus->status = 1;
         $requestStatus->save();
 
-        
+
         if (!empty($requestStatus)) {
             $requestData->update(['status' => $requestStatus->id]);
         }
@@ -143,6 +132,7 @@ class patientController extends Controller
         // store all details of patient in allUsers table
 
         $requestUsers = new allusers();
+        $requestUsers->user_id = $requestEmail->id;
         $requestUsers->first_name = $request->first_name;
         $requestUsers->last_name = $request->last_name;
         $requestUsers->email = $request->email;

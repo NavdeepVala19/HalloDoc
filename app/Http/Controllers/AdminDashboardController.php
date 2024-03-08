@@ -116,5 +116,9 @@ class AdminDashboardController extends Controller
 
    
 
+    public function adminProfile(){
+        return view('adminPage/adminProfile');
+    }
+
 
 }

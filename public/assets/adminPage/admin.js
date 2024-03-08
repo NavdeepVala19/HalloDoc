@@ -42,10 +42,10 @@ $(document).ready(function () {
                 data.forEach(function (region) {
                     $(".physicianRegions").append(
                         '<option value="' +
-                            region.id +
-                            '">' +
-                            region.region_name +
-                            "</option>"
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
                     );
                 });
             },
@@ -220,6 +220,11 @@ $(document).ready(function () {
 
 
 
+    $('.request-support-btn').click(function () {
+        $('.request-support').show();
+    })
+
+
 
     // ************************************* Shivesh *************************************
 
@@ -245,12 +250,23 @@ $(document).ready(function () {
 
 
     $('.listing-region').on('change', function () {
+        var token = $('meta[name="csrf-token"]').attr('content')
         // Store the selected option's ID
+        var tab = $(".nav-link.active").attr('id');
+        var words = tab.split("-");
+        var activeStatus = words[1];
+
         var selectedId = $(this).val();
+
         $.ajax({
-            url: "/dropdown-data/" + selectedId,
-            type: "GET",
+            url: "/dropdown-data/",
+            type: "POST",
             dataType: 'json',
+            data: {
+                regionId: selectedId,
+                status: activeStatus,
+                "_token": token
+            },
             success: function (data) {
                 $("#dropdown-data-body").html(data.html);
             },
@@ -267,28 +283,30 @@ $(document).ready(function () {
 
 
 
-    // Display different roles checkboxes as per the roles selected
-    $(".role-selected").on("change", function () {
-        let role = $(this).val();
-        $.ajax({
-            url: "/fetch-roles/" + role,
-            type: "GET",
-            success: function (data) {
-                $(".menu-section").empty();
-                data.forEach(function (menu) {
-                    let checkBox = `<div class="form-check">
+// Display different roles checkboxes as per the roles selected
+$(".role-selected").on("change", function () {
+    let role = $(this).val();
+    $.ajax({
+        url: "/fetch-roles/" + role,
+        type: "GET",
+        success: function (data) {
+            $(".menu-section").empty();
+            data.forEach(function (menu) {
+                let checkBox = `<div class="form-check">
                     <input class="form-check-input" name="menu_checkbox[]" value=${menu.id} type="checkbox"
                         id="menu_check_${menu.id}">
                         ${menu.name}
                     </label>
                 </div>`;
-                    $(".menu-section").append(checkBox);
-                });
-            },
-            error: function (error) {
-                console.error(error);
-            },
-        });
+                $(".menu-section").append(checkBox);
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
     });
+});
+
+
 
 

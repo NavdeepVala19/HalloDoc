@@ -11,15 +11,14 @@
 <a href="{{route('providerLocation')}}" class="active-link">Provider Location</a>
 <a href="">My Profile</a>
 <div class="dropdown record-navigation">
-    <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
     </button>
     <ul class="dropdown-menu records-menu">
-        <li><a class="dropdown-item" href="">Provider</a></li>
+        <li><a class="dropdown-item" href="{{route('adminProvidersInfo')}}">Provider</a></li>
         <li><a class="dropdown-item" href="">Scheduling</a></li>
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
-</div>
 </div>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}">Access</a>

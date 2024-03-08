@@ -222,11 +222,14 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-route::get('/dropdown-data/{selectedId}', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
+route::POST('/dropdown-data/', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
 
 
 
 route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
+
+
+route::get('/admin/profile', [AdminDashboardController::class, 'adminProfile']);
 
 // ****************************************************************************************************************************
 

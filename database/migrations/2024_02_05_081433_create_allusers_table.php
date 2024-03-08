@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('mobile')->nullable();
             $table->boolean('is_mobile')->nullable();
-            $table->integer('street')->nullable();
+            $table->string('street')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->unsignedBigInteger('region_id')->nullable();
@@ -36,8 +36,8 @@ return new class extends Migration
             $table->string('modified_by')->nullable();
 
 
-            $table->unsignedBigInteger('status')->nullable();
-            $table->foreign('status')->references('id')->on('status');
+            $table->enum('status',['pending','active','inactive'])->nullable();
+            // $table->foreign('status')->references('id')->on('status');
             $table->boolean('is_request_with_email');
 
             $table->timestamps();

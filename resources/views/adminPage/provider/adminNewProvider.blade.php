@@ -66,26 +66,6 @@
                     @enderror
                 </div>
 
-                <div class="form-floating status-select">
-                    <select class="form-select" name="status">
-                        <option selected>Status</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Active</option>
-                        <option value="3">Not Active</option>
-                    </select>
-                    </input>
-                </div>
-
-                <div class="form-floating role-select">
-                    <select class="form-select">
-                        <option selected>Role</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                    </input>
-                </div>
-
 
             </div>
 
