@@ -21,7 +21,7 @@ class SchedulingController extends Controller
             $formattedData[] = [
                 'id' => $provider->id,
                 'physician' => $provider->first_name .  " " . $provider->last_name,
-                'photo' => $provider->photo
+                'photo' => $provider->photo,
             ];
         }
         return response()->json($formattedData);
@@ -33,5 +33,9 @@ class SchedulingController extends Controller
     public function shiftsReviewView()
     {
         return view('adminPage.scheduling.shiftsForReview');
+    }
+    public function createShiftData(Request $request)
+    {
+        dd($request->all());
     }
 }

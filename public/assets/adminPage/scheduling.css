@@ -116,3 +116,10 @@ thead tr .fc-datagrid-cell-cushion {
 .view-shift {
     display: none;
 }
+.resource-img {
+    height: 70px;
+}
+
+.fc-event:hover {
+    cursor: pointer;
+}

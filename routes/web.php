@@ -424,6 +424,8 @@ Route::get('/provider-data', [SchedulingController::class, 'providerData'])->nam
 Route::get('/providers-on-call', [SchedulingController::class, 'providersOnCall'])->name('providers.on.call');
 // Shifts for Review view
 Route::get('/shifts-review', [SchedulingController::class, 'shiftsReviewView'])->name('shifts.review');
+// Create Shift data
+Route::post('/create-shift', [SchedulingController::class, 'createShiftData'])->name('scheduling-data');
 
 // For Testing Purpose only
 Route::get('/test', function () {

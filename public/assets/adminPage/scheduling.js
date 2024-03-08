@@ -50,7 +50,6 @@ $(document).ready(function () {
             right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
         },
         selectable: true,
-        // selectMirror: true,
         aspectRatio: 1.5,
         resourceAreaWidth: "20%",
         dayHeaderFormat: {
@@ -74,13 +73,9 @@ $(document).ready(function () {
                 ],
             },
         },
-        eventContent: function (arg) {
-            console.log(arg);
+        resourceLabelContent: function (arg) {
             if (arg.resource.id > 0) {
-                var link =
-                    `<img src="{{URL::asset('')}}"` +
-                    arg.resource.extendedProps.physician +
-                    "Test";
+                var link = `<img class="resource-img" src="${window.location.origin}/storage/${arg.resource.extendedProps.photo}" alt="${arg.resource.extendedProps.physician}"/> <span>${arg.resource.extendedProps.physician}</span>`;
             } else {
                 var link = "Data";
             }
@@ -89,10 +84,38 @@ $(document).ready(function () {
             };
         },
         select: function (selectInfo) {
+            let shiftDate = selectInfo.startStr.slice(0, 10);
+            let startTime = selectInfo.startStr.slice(11, 19);
+            let endTime = selectInfo.endStr.slice(11, 19);
+
             let providerId = selectInfo.resource.id;
             let providerName = selectInfo.resource.extendedProps.physician;
+
             $(".create-shift").show();
             $(".overlay").show();
+
+            $(".shiftDate").val(shiftDate);
+            $(".shiftStartTime").val(startTime);
+            $(".shiftEndTime").val(endTime);
+        },
+        eventClick: function (info) {
+            let shiftDate = info.event.startStr.slice(0, 10);
+            let startTime = info.event.startStr.slice(11, 19);
+            let endTime = info.event.endStr.slice(11, 19);
+            // console.log();
+
+            // let providerId = info.event.resource.id;
+            // let providerName = info.event.resource.extendedProps.physician;
+            // console.log(info.event, providerId, providerName);
+
+            $(".view-shift").show();
+            $(".overlay").show();
+
+            // $(".region-view-shift");
+            // $(".physician-view-shift");
+            $(".shiftDate").val(shiftDate);
+            $(".shiftStartTime").val(startTime);
+            $(".shiftEndTime").val(endTime);
         },
         // eventDataTransform: function (eventData) {
         //     // This hook allows you to receive arbitrary event data from a JSON feed or any other Event Source and transform it into the type of data FullCalendar accepts
@@ -102,6 +125,7 @@ $(document).ready(function () {
 
     $(".save-shift-btn").click(function () {
         var region = $(".region").val();
+        var physician = $(".physicianSelection option:selected").text();
         var physicianId = $(".physicianSelection").val();
         var shiftDate = $(".shiftDate").val();
         var shiftStartTime = $(".shiftStartTime").val();
@@ -127,20 +151,38 @@ $(document).ready(function () {
             endTimeParts[0],
             endTimeParts[1]
         );
-        calendar.addEvent(
-            //     {
-            //     title: "Test",
-            //     start: startTime,
-            //     end: endTime,
-            //     resourceId: physicianId,
-            // }
-            {
-                title: "Dummy Event",
-                start: new Date(), // today's date
-                end: new Date(new Date().getTime() + 2 * 60 * 60 * 1000), // 2 hours from now
-                resourceId: 1,
-            }
-        );
+
+        if ($(".repeat-switch").is(":checked")) {
+            calendar.addEvent({
+                title: physician,
+                start: startTime,
+                end: endTime,
+                resourceId: physicianId,
+                textColor: "#000",
+                backgroundColor: "rgb(167, 204, 163)",
+                // daysOfWeek: ,
+                // startTime: ,
+                // endTime: ,
+                // startRecur: ,
+                // endRecur: ,
+            });
+        } else {
+            calendar.addEvent({
+                title: physician,
+                start: startTime,
+                end: endTime,
+                resourceId: physicianId,
+                textColor: "#000",
+                backgroundColor: "rgb(167, 204, 163)",
+            });
+        }
+        // Update the event
+        // calendar.getEventById(physicianId).update({
+        //     title: physician,
+        //     start: startDate,
+        //     end: endDate,
+        // });
+        // calendar.render();
     });
 
     let date = $(".fc-toolbar-title").text();
