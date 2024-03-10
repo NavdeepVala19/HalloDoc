@@ -780,11 +780,9 @@ class AdminController extends Controller
     public function sendRequestSupport(Request $request){
 
         $requestMessage = $request->contact_msg;
-        $providerData = Provider::get()->where('id', 1);
-
-        Mail::to($providerData->first()->email)->send(new RequestSupportMessage($requestMessage));
+        
+        Mail::to('recipient@example.com')->send(new RequestSupportMessage($requestMessage));
         return redirect()->back();
-
     }
 
 

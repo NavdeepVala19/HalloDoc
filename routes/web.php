@@ -206,7 +206,10 @@ route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'de
 // route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
 
 
+
 route::post('admin/new/request-support',[AdminController::class,'sendRequestSupport'])->name('sendRequestSupport');
+
+
 
 
 route::get('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
