@@ -638,7 +638,7 @@ class AdminController extends Controller
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status','roles.id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-
+            ->where('user_roles.id', '>', '13')
             ->paginate(10);
 
 
