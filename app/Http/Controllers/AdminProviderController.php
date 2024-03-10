@@ -36,10 +36,15 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
+
+        $enteredText = $request->contact_msg;
+
         $providerData = Provider::get()->where('id', $request->provider_id);
+        Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
         Mail::send('email.contactYourProvider', ['id' => $request->provider_id], function ($message) use ($providerData) {
             $message->to($providerData->first()->email);
+
         });
 
         return redirect()->route('adminProvidersInfo')->with('message', 'Your mail has been sent successfully.');
@@ -81,7 +86,6 @@ class AdminProviderController extends Controller
 
 
 
-
         // store data of providers in users table
 
         $userProvider = new users();
@@ -96,8 +100,6 @@ class AdminProviderController extends Controller
 
         $providerData = new Provider();
         $physicianRegion = new PhysicianRegion();
-
-
 
 
 
@@ -334,7 +336,6 @@ class AdminProviderController extends Controller
     {
 
         $providers = Provider::where('id', '>', '38')->get();
-
 
         return view('adminPage/provider/providerLocation', compact('providers'));
     }

@@ -17,16 +17,15 @@ class ContactProvider extends Mailable
      * Create a new message instance.
      */
 
-    public $messages;
+     public $enteredText;
 
-
-    public function __construct($messages)
+    public function __construct($enteredText)
     {
-        $this->messages = $messages;
+        $this->enteredText = $enteredText;
     }
 
     public function build(){
-        return $this->subject('Contact Provider')->view('email.contactYourProvider');
+        return $this->view('email.contactYourProvider')->with(['enteredText' => $this->enteredText]);
     }
 
     /**
@@ -45,7 +44,7 @@ class ContactProvider extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'email.contactYourProvider',
         );
     }
 

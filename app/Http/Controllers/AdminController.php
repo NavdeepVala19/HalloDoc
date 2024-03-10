@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\Role;
 
 // Different Models used in these Controller
+use App\Models\Roles;
 use App\Mail\SendLink;
 use App\Mail\SendMail;
 use App\Models\Orders;
@@ -15,24 +16,24 @@ use App\Models\Regions;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
-use App\Models\RoleMenu;
 
+use App\Models\RoleMenu;
 use App\Mail\SendAgreement;
-use App\Models\BlockRequest;
 
 // For sending Mails
+use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
 use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-use App\Models\request_Client;
 
 // DomPDF package used for the creation of pdf from the form
+use App\Models\request_Client;
 use App\Models\PhysicianRegion;
-use App\Models\RequestWiseFile;
 // To create zip, used to download multiple documents at once
+use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
@@ -633,16 +634,28 @@ class AdminController extends Controller
     public function UserAccess()
     {
 
-        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile')
+        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile','roles.id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->where('user_roles.id', '>', '14')
             ->paginate(10);
 
-
-
-
+ 
         return view('adminPage.access.userAccess', compact('userAccessData'));
+    }
+
+    public function UserAccessEdit($id){
+
+        $UserAccessRoleName = Roles::select('name','user_id')
+        ->leftJoin('user_roles','user_roles.role_id','roles.id')
+        ->where('roles.id',$id)->get();
+
+        dd($UserAccessRoleName->first()->name);
+
+        if($UserAccessRoleName->first()->name =='admin'){
+            return redirect()->route('providerLocation', ['id' => $UserAccessRoleName->first()->user_id]);
+        }else if($UserAccessRoleName->first()->name =='physician'){
+            return redirect()->route('admineditProvider',['id' => $UserAccessRoleName->first()->user_id]);
+        } 
     }
 
     // Records Page

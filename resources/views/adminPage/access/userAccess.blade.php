@@ -51,7 +51,7 @@
                         <td>{{$data->mobile}}</td>
                         <td>Pending</td>
                         <td>123</td>
-                        <td><a href="" class="primary-empty" type="button">Edit</a></td>
+                        <td><a href="{{route('admin.user.accessEdit',$data->id)}}" class="primary-empty" type="button">Edit</a></td>
                     </tr>
                     @endforeach
 
