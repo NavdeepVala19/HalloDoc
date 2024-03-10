@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContactProvider extends Mailable
+class RequestSupportMessage extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -17,16 +17,18 @@ class ContactProvider extends Mailable
      * Create a new message instance.
      */
 
-     public $enteredText;
+     public $requestSupportMessage;
 
-    public function __construct($enteredText)
+    public function __construct($message)
     {
-        $this->enteredText = $enteredText;
+       $this->requestSupportMessage = $message;
     }
+
 
     public function build(){
-        return $this->view('email.contactYourProvider')->with(['enteredText' => $this->enteredText]);
+        return $this->view('email.requestSupport')->with(['requestSupportMessage' => $this->requestSupportMessage]);
     }
+
 
     /**
      * Get the message envelope.
@@ -34,7 +36,7 @@ class ContactProvider extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Contact Provider',
+            subject: 'Request Support Message',
         );
     }
 
@@ -44,7 +46,7 @@ class ContactProvider extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.contactYourProvider',
+            view: 'view.name',
         );
     }
 

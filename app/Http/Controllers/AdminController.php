@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\Role;
 
 // Different Models used in these Controller
+use App\Models\Roles;
 use App\Mail\SendLink;
 use App\Mail\SendMail;
 use App\Models\Orders;
@@ -15,27 +16,28 @@ use App\Models\Regions;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
-use App\Models\RoleMenu;
 
+use App\Models\RoleMenu;
 use App\Mail\SendAgreement;
-use App\Models\BlockRequest;
 
 // For sending Mails
+use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
 use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-use App\Models\request_Client;
 
 // DomPDF package used for the creation of pdf from the form
+use App\Models\request_Client;
 use App\Models\PhysicianRegion;
-use App\Models\RequestWiseFile;
 // To create zip, used to download multiple documents at once
+use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
+use App\Mail\RequestSupportMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\HealthProfessionalType;
@@ -633,15 +635,28 @@ class AdminController extends Controller
     public function UserAccess()
     {
 
-        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status')
+        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status','roles.id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->where('user_roles.id', '>', '13')
+
             ->paginate(10);
 
-        dd($userAccessData->first()->name);
 
         return view('adminPage.access.userAccess', compact('userAccessData'));
+    }
+
+    public function UserAccessEdit($id){
+
+        $UserAccessRoleName = Roles::select('name','user_id')
+        ->leftJoin('user_roles','user_roles.role_id','roles.id')
+        ->where('roles.id',$id)->get();
+
+
+        if($UserAccessRoleName->first()->name =='admin'){
+            return redirect()->route('adminProfile', ['id' => $UserAccessRoleName->first()->user_id]);
+        }else if($UserAccessRoleName->first()->name =='physician'){
+            return redirect()->route('adminEditProfileThroughUserAccess',['id' => $UserAccessRoleName->first()->user_id]);
+        } 
     }
 
     // Records Page
@@ -762,6 +777,15 @@ class AdminController extends Controller
     }
 
 
+    public function sendRequestSupport(Request $request){
+
+        $requestMessage = $request->contact_msg;
+        $providerData = Provider::get()->where('id', 1);
+
+        Mail::to($providerData->first()->email)->send(new RequestSupportMessage($requestMessage));
+        return redirect()->back();
+
+    }
 
 
     // fetching regions from regions table and show in All Regions drop-down button

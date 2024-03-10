@@ -62,7 +62,7 @@
 
     <div class="section">
 
-        <form action="" method="POST">
+        <form action="{{route('adminProfileEdit',$adminProfileData->id)}}" method="POST">
             @csrf
             <h3>Account Information</h3>
             <div class="grid-2">
@@ -107,14 +107,16 @@
             <h3>Administrator Information</h3>
             <div class="grid-2">
                 <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name" disabled>
+                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name"
+                    value="{{ $adminProfileData->first_name}}">
+
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name" disabled>
+                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name" value="{{ $adminProfileData->last_name}}">
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -122,16 +124,16 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" disabled>
+                    <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com" value="{{ $adminProfileData->email}}">
                     <label for="floatingInput">Email</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" disabled>
+                    <input type="email" class="form-control" id="floatingInput" name="confirm-email" placeholder="name@example.com" value="{{ $adminProfileData->email}}">
                     <label for="floatingInput">Confirm Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" disabled>
+                <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ $adminProfileData->mobile}}">
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -157,15 +159,15 @@
             <h3>Mailing & Billing Information</h3>
             <div class="grid-2">
                 <div class="form-floating ">
-                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1" disabled>
+                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1" value="{{ $adminProfileData->address1}}">
                     <label for="floatingInput">Address 1</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2" disabled>
+                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2" value="{{ $adminProfileData->address2}}">
                     <label for="floatingInput">Address 2</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city" disabled>
+                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city" value="{{ $adminProfileData->city}}">
                     <label for="floatingInput">City</label>
                 </div>
                 <div>
@@ -181,10 +183,10 @@
                     </div>
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip" disabled>
+                    <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip" value="{{ $adminProfileData->zip}}">
                     <label for="floatingInput">Zip</label>
                 </div>
-                <input type="tel" name="mobile" class="form-control phone" id="telephone" placeholder="mobile" disabled>
+                <input type="tel" name="mobile" class="form-control phone" id="telephone" placeholder="mobile" value="{{ $adminProfileData->alt_phone}}">
                 @error('mobile')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -193,6 +195,10 @@
                 <button class="primary-fill">Edit</button>
             </div>
 
+            <div class="d-flex flex-row justify-content-end gap-3 mt-3">
+                <button class="primary-fill" type="submit">Save</button>
+                <a href="" class="btn btn-danger">Delete Account</a>
+            </div>
         </form>
         <hr>
 

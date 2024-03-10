@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\users;
 use App\Models\allusers;
+use App\Models\Provider;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ class AdminDashboardController extends Controller
     {
         return view('adminPage/adminRequest');
     }
+
 
     public function createAdminPatientRequest(Request $request)
     {
@@ -116,9 +119,55 @@ class AdminDashboardController extends Controller
 
    
 
-    public function adminProfile(){
-        return view('adminPage/adminProfile');
+    public function adminProfile($id){
+
+        $adminProfileData = Admin::where('user_id',$id)->first();
+        return view('adminPage/adminProfile',compact('adminProfileData'));
     }
 
+    public function adminProfileEdit(Request $request, $id){
+
+        // $request->validate([
+        //     'user_name' => 'required',
+        //     'password' => 'required',
+        //     'first_name' => 'required',
+        //     'last_name' => 'required',
+        //     'email' => 'required|email',
+        //     'phone_number' => 'required',
+        //     'medical_license' => 'required',
+        //     'npi_number' => 'required',
+        //     'email_alt' => 'required|email',
+        //     'address1' => 'required',
+        //     'address2' => 'required',
+        //     'city' => 'required',
+        //     'zip' => 'required',
+        //     'phone_number_alt' => 'required',
+        //     'business_name' => 'required',
+        //     'business_website' => 'required',
+        //     'admin_notes' => 'required',
+        // ]);
+
+        $getAdminInformation = Admin::where('user_id',$id)->first();
+
+        $getAdminInformation->first_name = $request->first_name;
+        $getAdminInformation->last_name = $request->last_name;
+        $getAdminInformation->email = $request->email;
+        $getAdminInformation->mobile = $request->phone_number;
+        $getAdminInformation->city = $request->city;
+        $getAdminInformation->address1 = $request->address1;
+        $getAdminInformation->address2 = $request->address2;
+        $getAdminInformation->zip = $request->zip;
+
+        $getAdminInformation->save();
+
+        return redirect()->route('admin.user.access');
+
+    }
+
+    public function adminEditProfileThroughUserAccess($id){
+        
+        $getProviderData = Provider::with('users')->where('user_id', $id)->first();   
+        return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+    }
 
 }
