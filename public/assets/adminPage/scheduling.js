@@ -123,70 +123,100 @@ $(document).ready(function () {
     });
     calendar.render();
 
-    $(".save-shift-btn").click(function () {
-        var region = $(".region").val();
-        var physician = $(".physicianSelection option:selected").text();
-        var physicianId = $(".physicianSelection").val();
-        var shiftDate = $(".shiftDate").val();
-        var shiftStartTime = $(".shiftStartTime").val();
-        var shiftEndTime = $(".shiftEndTime").val();
-
-        var dateParts = shiftDate.split("-");
-
-        var startTimeParts = shiftStartTime.split(":");
-
-        var startTime = new Date(
-            dateParts[0],
-            dateParts[1] - 1,
-            dateParts[2],
-            startTimeParts[0],
-            startTimeParts[1]
-        );
-
-        var endTimeParts = shiftEndTime.split(":");
-        var endTime = new Date(
-            dateParts[0],
-            dateParts[1] - 1,
-            dateParts[2],
-            endTimeParts[0],
-            endTimeParts[1]
-        );
-
-        if ($(".repeat-switch").is(":checked")) {
-            calendar.addEvent({
-                title: physician,
-                start: startTime,
-                end: endTime,
-                resourceId: physicianId,
-                textColor: "#000",
-                backgroundColor: "rgb(167, 204, 163)",
-                // daysOfWeek: ,
-                // startTime: ,
-                // endTime: ,
-                // startRecur: ,
-                // endRecur: ,
-            });
-        } else {
-            calendar.addEvent({
-                title: physician,
-                start: startTime,
-                end: endTime,
-                resourceId: physicianId,
-                textColor: "#000",
-                backgroundColor: "rgb(167, 204, 163)",
-            });
-        }
-        // Update the event
-        // calendar.getEventById(physicianId).update({
-        //     title: physician,
-        //     start: startDate,
-        //     end: endDate,
-        // });
-        // calendar.render();
-    });
+    // $(".save-shift-btn").click(function () {
+    //     if ($(".repeat-switch").is(":checked")) {
+    //         calendar.addEvent({
+    //             title: physician,
+    //             start: startTime,
+    //             end: endTime,
+    //             resourceId: physicianId,
+    //             textColor: "#000",
+    //             backgroundColor: "rgb(167, 204, 163)",
+    //             // daysOfWeek: ,
+    //             // startTime: ,
+    //             // endTime: ,
+    //             // startRecur: ,
+    //             // endRecur: ,
+    //         });
+    //     } else {
+    //         calendar.addEvent({
+    //             title: physician,
+    //             start: startTime,
+    //             end: endTime,
+    //             resourceId: physicianId,
+    //             textColor: "#000",
+    //             backgroundColor: "rgb(167, 204, 163)",
+    //         });
+    //     }
+    // });
 
     let date = $(".fc-toolbar-title").text();
     $(".date-title").html(date);
+    var events;
+    $.ajax({
+        url: "/events-data",
+        type: "GET",
+        success: function (response) {
+            events = response.map(function (event) {
+                var shiftDate = event.shiftDate;
+                var shiftStartTime = event.startTime;
+                var shiftEndTime = event.endTime;
+
+                var dateParts = shiftDate.split("-");
+
+                var startTimeParts = shiftStartTime.split(":");
+                var startTime = new Date(
+                    dateParts[0],
+                    dateParts[1] - 1,
+                    dateParts[2],
+                    startTimeParts[0],
+                    startTimeParts[1]
+                );
+
+                var endTimeParts = shiftEndTime.split(":");
+                var endTime = new Date(
+                    dateParts[0],
+                    dateParts[1] - 1,
+                    dateParts[2],
+                    endTimeParts[0],
+                    endTimeParts[1]
+                );
+
+                var repeatEnd = new Date(event.shiftDate);
+                repeatEnd.setDate(repeatEnd.getDate() + 14);
+
+                if (event.is_repeat == 1) {
+                    return {
+                        title: event.title,
+                        daysOfWeek: event.week_days,
+                        startTime: startTime,
+                        endTime: endTime,
+                        recurrence: {
+                            repeat: true,
+                            unit: "week",
+                            until: repeatEnd,
+                        },
+                    };
+                }
+                return {
+                    title: event.title,
+                    start: startTime,
+                    end: endTime,
+                    resourceId: event.resourceId,
+                    textColor: "#000",
+                    backgroundColor: "rgb(167, 204, 163)",
+                    // Update the event
+                    // calendar.getEventById(physicianId).update({
+                    //     title: physician,
+                    //     start: startDate,
+                    //     end: endDate,
+                    // });
+                    // calendar.render();
+                };
+            });
+            calendar.addEventSource(events);
+        },
+    });
 });
 
 // eventColor: '#378006'

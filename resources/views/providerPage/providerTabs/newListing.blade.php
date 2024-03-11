@@ -189,7 +189,8 @@
                                             <div class="action-menu">
                                                 <a href=" {{ route('provider.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.accept.case', $case->request->id) }}"><i class="bi bi-check-square me-2 ms-3"></i>Accept</a>
+                                                <a href="{{ route('provider.accept.case', $case->request->id) }}"><i
+                                                        class="bi bi-check-square me-2 ms-3"></i>Accept</a>
                                                 <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
@@ -247,17 +248,17 @@
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :
-                                    {{ $case->date }}
+                                    {{ $case->request->requestClient->date }}
                                 </span>
                                 <br>
                                 <span>
                                     <i class="bi bi-envelope"></i> Email :
-                                    {{ $case->email }}
+                                    {{ $case->request->requestClient->email }}
                                 </span>
                                 <br>
                                 <span>
                                     <i class="bi bi-telephone"></i> Patient :
-                                    {{ $case->phone_number }}
+                                    {{ $case->request->requestClient->phone_number }}
                                 </span>
                                 <div class="grid-2-listing">
                                     <button class="accept-btn">Accept</button>

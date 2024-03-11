@@ -39,12 +39,15 @@
             <div class="">
                 <select name="region" class="form-select region physicianRegions" id="floatingSelect"
                     aria-label="Floating label select example">
-                    <option value="0" selected>Region</option>
+                    <option selected>Region</option>
                     @foreach ($regions as $region)
                         <option value="{{ $region->id }}" id="region_{{ $region->id }}">{{ $region->region_name }}
                         </option>
                     @endforeach
                 </select>
+                @error('region')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 <div class="form-floating">
                     <select name="physician" class="form-select physicianSelection" id="floatingSelect"
                         aria-label="Floating label select example">
@@ -71,56 +74,63 @@
                 </div>
                 <div class="form-check form-switch">
                     <label class="form-check-label" for="flexSwitchCheckChecked">Repeat</label>
-                    <input class="form-check-input repeat-switch" type="checkbox" role="switch"
+                    <input name="is_repeat" class="form-check-input repeat-switch" type="checkbox" role="switch"
                         id="flexSwitchCheckChecked">
                 </div>
                 <div class="checkboxes-section">
                     <p>Repeat Days</p>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="0" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="0" id="defaultCheck1"
+                            disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Sunday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="1" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="1" id="defaultCheck1"
+                            disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Monday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="2" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Tuesday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="3" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="3"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Wednesday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="4" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Thursday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="5" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="5"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Friday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="6" id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="6"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Saturday
                         </label>
                     </div>
                 </div>
                 <div class="form-floating">
-                    <select class="form-select repeat-end-selection" name="physician" class="cancel-options"
+                    <select class="form-select repeat-end-selection" name="repeatEnd" class="cancel-options"
                         id="floatingSelect" aria-label="Floating label select example" disabled>
                         <option selected value="2">2-times</option>
                         <option value="3">3-times</option>
@@ -131,7 +141,7 @@
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
                 {{-- <button type="submit" class="primary-fill save-shift-btn">Save</button> --}}
-                <button type="button" class="primary-fill save-shift-btn">Save</button>
+                <button type="submit" class="primary-fill save-shift-btn">Save</button>
                 <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
             </div>
         </form>

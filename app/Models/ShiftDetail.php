@@ -9,4 +9,10 @@ class ShiftDetail extends Model
 {
     use HasFactory;
     protected  $table = 'shift_detail';
+
+
+    public function shiftDetailRegion()
+    {
+        $this->hasOne(ShiftDetailRegion::class, 'shift_detail_id', 'id');
+    }
 }
