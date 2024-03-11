@@ -194,7 +194,8 @@ $(document).ready(function () {
                         recurrence: {
                             repeat: true,
                             unit: "week",
-                            until: repeatEnd,
+                            until: repeatEnd.toISOString(),
+                            // count: 2
                         },
                     };
                 }
