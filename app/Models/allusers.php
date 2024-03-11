@@ -42,7 +42,14 @@ class allusers extends Model
         return $this->hasMany('App\Model\request', 'user_id', 'user_id');
     }
 
-    public function user_roles(){
+    public function user_roles()
+    {
         return $this->belongsTo(UserRoles::class);
+    }
+
+
+    public function provider()
+    {
+        return $this->belongsTo(allusers::class, 'user_id', 'user_id');
     }
 }

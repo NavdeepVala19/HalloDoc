@@ -37,7 +37,11 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
+
+        $enteredText = $request->contact_msg;
+
         $providerData = Provider::get()->where('id', $request->provider_id);
+        Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
         Mail::send('email.contactYourProvider', ['id' => $request->provider_id], function ($message) use ($providerData) {
             $message->to($providerData->first()->email);
@@ -60,25 +64,25 @@ class AdminProviderController extends Controller
     public function adminCreateNewProvider(Request $request)
     {
 
-        $request->validate([
-            'user_name' => 'required',
-            'password' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
-            'medical_license' => 'required',
-            'npi_number' => 'required',
-            'email_alt' => 'required|email',
-            'address1' => 'required',
-            'address2' => 'required',
-            'city' => 'required',
-            'zip' => 'required',
-            'phone_number_alt' => 'required',
-            'business_name' => 'required',
-            'business_website' => 'required',
-            'admin_notes' => 'required',
-        ]);
+        // $request->validate([
+        //     'user_name' => 'required',
+        //     'password' => 'required',
+        //     'first_name' => 'required',
+        //     'last_name' => 'required',
+        //     'email' => 'required|email',
+        //     'phone_number' => 'required',
+        //     'medical_license' => 'required',
+        //     'npi_number' => 'required',
+        //     'email_alt' => 'required|email',
+        //     'address1' => 'required',
+        //     'address2' => 'required',
+        //     'city' => 'required',
+        //     'zip' => 'required',
+        //     'phone_number_alt' => 'required',
+        //     'business_name' => 'required',
+        //     'business_website' => 'required',
+        //     'admin_notes' => 'required',
+        // ]);
 
 
 
@@ -98,6 +102,9 @@ class AdminProviderController extends Controller
         $physicianRegion = new PhysicianRegion();
 
 
+
+
+
         // store data of providers in providers table
 
         $providerData->user_id = $userProvider->id;
@@ -112,7 +119,7 @@ class AdminProviderController extends Controller
         $providerData->address1 = $request->address1;
         $providerData->address2 = $request->address2;
         $providerData->city = $request->city;
-        $providerData->status = 'pending';
+        // $providerData->status = 'pending';
         $providerData->zip = $request->zip;
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
@@ -275,10 +282,8 @@ class AdminProviderController extends Controller
         return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
 
-
     public function updateAdminProviderProfile(Request $request, $id)
     {
-
 
         // $request->validate([
         //     'user_name' => 'required',
@@ -303,9 +308,6 @@ class AdminProviderController extends Controller
 
         $getProviderInformation = Provider::with('users')->where('id', $id)->first();
 
-
-        $getProviderInformation->users->username = $request->user_name;
-        $getProviderInformation->users->password = $request->password;
         $getProviderInformation->first_name = $request->first_name;
         $getProviderInformation->last_name = $request->last_name;
         $getProviderInformation->email = $request->email;
@@ -322,9 +324,18 @@ class AdminProviderController extends Controller
         $getProviderInformation->business_website = $request->business_website;
         $getProviderInformation->admin_notes = $request->admin_notes;
 
-
-
         $getProviderInformation->save();
+
+
+
+        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
+
+
+
+        $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
+        $updateProviderInfoUsers->username = $request->user_name;
+        $updateProviderInfoUsers->password = $request->password;
+        $updateProviderInfoUsers->save();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');
     }
@@ -346,7 +357,7 @@ class AdminProviderController extends Controller
     public function providerLocation()
     {
 
-        $providers = Provider::where('id', '<=', '3')->get();
+        $providers = Provider::where('id', '>', '38')->get();
 
 
         return view('adminPage/provider/providerLocation', compact('providers'));

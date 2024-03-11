@@ -5,12 +5,12 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
-{{--
-@section('username')
-    {{ $userData->username }}
-@endsection
---}}
 
+{{--
+    @section('username')
+    {{ $userData->username }}
+    @endsection
+--}}
 
 @section('nav-links')
 <a href="" class="active-link">Dashboard</a>
@@ -197,7 +197,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         <span>Request Support</span>
         <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
     </div>
-    <form action="" method="POST">
+    <form action="{{route('sendRequestSupport')}}" method="POST">
         @csrf
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
 

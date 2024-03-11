@@ -239,7 +239,6 @@ $(document).ready(function () {
                     '<option value="' + region.id + '">' + region.region_name + "</option>"
                 );
             });
-
         },
         error: function (error) {
             console.error(error);
@@ -248,6 +247,8 @@ $(document).ready(function () {
     });
 
 
+
+    // ***************** Filtering regions from dropdown button ******************
 
     $('.listing-region').on('change', function () {
         var token = $('meta[name="csrf-token"]').attr('content')
@@ -277,6 +278,30 @@ $(document).ready(function () {
     })
 
 
+
+    // ********************* Filtering AccountType in User Access Page ***********************
+
+    $('#accountType').on('change', function () {
+        var accountType = $(this).val();
+        var token = $('meta[name="csrf-token"]').attr('content')
+
+        $.ajax({
+            url: "/user-access/filter",
+            method: "POST",
+            data: {
+                accountType: accountType,
+                "_token": token
+            },
+            success: function (response) {
+                $('#user-access-table').html(response.html);
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+
+    })
 
 });
 

@@ -44,17 +44,17 @@
     <div class="section">
         <div>
             <div class="form-floating w-25 m-3">
-                <select class="form-select role-selected" name="role_name" id="floatingSelect">
-                    <option value="0">All</option>
-                    <option value="1">Admin</option>
-                    <option value="2">Physician</option>
+                <select class="form-select role-selected" name="role_name" id="accountType">
+                    <option value="all">All</option>
+                    <option value="admin">Admin</option>
+                    <option value="physician">Physician</option>
                 </select>
                 <label for="floatingSelect">Account Type</label>
             </div>
         </div>
 
         <div class="table-responsive table-view">
-            <table class="table">
+            <table class="table" id="user-access-table">
                 <thead class="table-secondary text-center align-middle">
                     <td>Account Type <i class="bi bi-arrow-up"></i></td>
                     <td>Account POC</td>
@@ -71,7 +71,7 @@
                         <td>{{$data->mobile}}</td>
                         <td>{{$data->status}}</td>
                         <td>123</td>
-                        <td><a href="" class="primary-empty" type="button">Edit</a></td>
+                        <td><a href="{{route('admin.user.accessEdit',$data->user_id)}}" class="primary-empty" type="button">Edit</a></td>
                     </tr>
                     @endforeach
                 </tbody>

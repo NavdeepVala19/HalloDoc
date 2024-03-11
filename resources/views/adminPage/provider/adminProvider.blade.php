@@ -97,7 +97,7 @@
                         <td class="data"> Active </td>
                         <td class="data gap-1">
                             <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
-                            <a href="{{route('admineditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
+                            <a href="{{route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                         </td>
                     </tr>
                     @endforeach

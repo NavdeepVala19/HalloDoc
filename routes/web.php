@@ -198,12 +198,17 @@ route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'
 route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
 
-route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('admineditProvider');
+route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
 route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'updateAdminProviderProfile'])->name('adminUpdatedProvider');
 
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 // route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
+
+
+
+route::post('admin/new/request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
+
 
 
 
@@ -229,7 +234,21 @@ route::POST('/dropdown-data/', [AdminController::class, 'filterPatientByRegion']
 route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
 
 
-route::get('/admin/profile', [AdminDashboardController::class, 'adminProfile']);
+
+Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
+Route::get('/user-access-edit/{id}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
+
+
+route::get('/admin/profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
+route::post('/admin/profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
+
+
+
+route::get('/admin/provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
+route::post('/admin/provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
+
+route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
+
 
 // ****************************************************************************************************************************
 
@@ -402,7 +421,7 @@ Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('f
 Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
 Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
 Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
-Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
+
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
