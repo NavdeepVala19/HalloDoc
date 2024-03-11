@@ -639,7 +639,7 @@ class AdminController extends Controller
             ->where('user_roles.id', '>', '13')
             ->paginate(10);
 
-        dd($userAccessData->first()->name);
+        // dd($userAccessData->first()->name);
 
         return view('adminPage.access.userAccess', compact('userAccessData'));
     }

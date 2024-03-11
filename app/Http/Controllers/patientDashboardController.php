@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\view;
 use App\Models\request_Client;
@@ -152,20 +153,17 @@ class patientDashboardController extends Controller
 
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y-m-d');
-        dd($currentDate);
-        
+
+
         $userData = Auth::user();
-        $email = $userData["email"];
-        
+        // $email = $userData["email"];
+
 
         $data = DB::table('request')
             ->join('status', 'request.status', '=', 'status.id')
             ->select('request.created_at', 'status.status_type')
             ->paginate(10);
-     
+
         return view('patientSite/patientDashboard', compact('data'));
-
-
     }
-
 }
