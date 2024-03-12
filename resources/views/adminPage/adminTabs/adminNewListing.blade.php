@@ -11,18 +11,18 @@
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="{{route('providerLocation')}}">Provider Location</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{route('adminProvidersInfo')}}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
             <li><a class="dropdown-item" href="">Scheduling</a></li>
             <li><a class="dropdown-item" href="">Invoicing</a></li>
         </ul>
-</div>
+    </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="{{ route('admin.access.view') }}">Access</a>
     <div class="dropdown record-navigation">
@@ -302,19 +302,19 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
+                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{route('exportNewData')}}" class="primary-fill">
+                <a href="{{ route('exportNewData') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <a href="{{route('exportAll')}}" class="primary-fill">
+                <a href="{{ route('exportAll') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down-fill"></i>
                     <span class="txt">
                         Export All
@@ -375,7 +375,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     <tbody id="dropdown-data-body">
                         @foreach ($cases as $case)
                             @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}" >
+                                <tr class="type-{{ $case->request->request_type_id }}">
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
                                     <td>{{ $case->request->first_name }}</td>
@@ -495,6 +495,5 @@ can block any case. All blocked cases can be seen in Block history page. --}}
             {{ $cases->links('pagination::bootstrap-5') }}
         </div>
 
-    </div>
     </div>
 @endsection

@@ -21,14 +21,18 @@
 
 <body>
     {{-- HEADER SECTION --}}
-    @include('layouts.header')
+    <div class="wrapper">
 
+        @include('layouts.header')
 
-    @yield('content')
+        <div class="main-container">
+            @yield('content')
+        </div>
+
+        @include('layouts.footer')
+    </div>
 
     {{-- FOOTER SECTION --}}
-    @include('layouts.footer')
-
 
     {{-- Include script links from links.script blade file --}}
     @include('links.script')

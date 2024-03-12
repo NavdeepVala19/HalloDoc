@@ -150,13 +150,13 @@
     <div class="pop-up view-shift">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>View Shift</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+            <button class="hide-popup-btn view-shift-close"><i class="bi bi-x-lg"></i></button>
         </div>
         <form action="" method="POST" class="m-4">
             @csrf
             <div>
                 <select name="region" class="form-select region-view-shift" id="floatingSelect"
-                    aria-label="Floating label select example">
+                    aria-label="Floating label select example" disabled>
                     <option value="0" selected>Region</option>
                     @foreach ($regions as $region)
                         <option value="{{ $region->region_id }}">{{ $region->region_name }}</option>
@@ -164,32 +164,33 @@
                 </select>
                 <div class="form-floating">
                     <select class="form-select physician-view-shift" name="physician" id="floatingSelect"
-                        aria-label="Floating label select example">
+                        aria-label="Floating label select example" disabled>
                         <option selected>Select</option>
                     </select>
                     <label for="floatingSelect">Physician</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control shiftDate" id="floatingInput"
-                        placeholder="Created Date">
+                    <input type="date" name="shiftDate" class="form-control shiftDate shiftDateInput" id="floatingInput"
+                        placeholder="Created Date" disabled>
                     <label for="floatingInput">Shift Date</label>
                 </div>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="time" name="shiftTimeStart" class="form-control shiftStartTime"
-                            id="floatingInput" placeholder="Created Date">
+                        <input type="time" name="shiftTimeStart" class="form-control shiftStartTime shiftStartTimeInput"
+                            id="floatingInput" placeholder="Created Date" disabled>
                         <label for="floatingInput">Start</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="time" name="shiftTimeEnd" class="form-control shiftEndTime" id="floatingInput"
-                            placeholder="Created Date">
+                        <input type="time" name="shiftTimeEnd" class="form-control shiftEndTime shiftEndTimeInput" id="floatingInput"
+                            placeholder="Created Date" disabled>
                         <label for="floatingInput">End</label>
                     </div>
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill">Return</button>
-                <button type="button" class="primary-fill">Edit</button>
+                <button type="button" class="primary-fill">Return</button>
+                <button type="button" class="primary-fill edit-btn">Edit</button>
+                <button type="button" class="primary-fill save-btn">Save</button>
                 <button type="button" class="delete-selected-btn">Delete</button>
             </div>
         </form>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\view;
 use App\Models\request_Client;
@@ -32,9 +33,10 @@ class patientDashboardController extends Controller
         return view("patientSite/patientSomeoneRequest");
     }
 
-    public function viewAgreement()
+    public function viewAgreement($data)
     {
-        return view("patientSite/patientAgreement");
+        $clientData = RequestTable::with('requestClient')->where('id', $data)->first();
+        return view("patientSite/patientAgreement", compact('clientData'));
     }
 
     public function createNewPatient(Request $request)
@@ -153,19 +155,16 @@ class patientDashboardController extends Controller
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y-m-d');
         dd($currentDate);
-        
+
         $userData = Auth::user();
         $email = $userData["email"];
-        
+
 
         $data = DB::table('request')
             ->join('status', 'request.status', '=', 'status.id')
             ->select('request.created_at', 'status.status_type')
             ->paginate(10);
-     
+
         return view('patientSite/patientDashboard', compact('data'));
-
-
     }
-
 }

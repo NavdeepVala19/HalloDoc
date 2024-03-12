@@ -164,7 +164,7 @@ route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 
 
 //  ***************************************************************************************************************************************
 // it will show agreement page
-route::get('/patientAgreement', [patientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
+route::get('/patientAgreement/{data}', [patientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
 //  ***************************************************************************************************************************************
 
 

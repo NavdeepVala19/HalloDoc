@@ -123,3 +123,7 @@ thead tr .fc-datagrid-cell-cushion {
 .fc-event:hover {
     cursor: pointer;
 }
+
+.save-btn {
+    display: none;
+}

@@ -24,20 +24,20 @@ class AdminDashboardController extends Controller
     public function createAdminPatientRequest(Request $request)
     {
 
-
-        // $request->validate([
-        //     'first_name' => 'required|min:2|max:30',
-        //     'last_name' => 'string|min:2|max:30',
-        //     'email' => 'required|email|min:2|max:30',
-        //     'phone_number' => 'required|numeric|digits:10',
-        //     'street' => 'min:2|max:30',
-        //     'city' => 'alpha|min:2|max:30',
-        //     'zipcode' => 'numeric',
-        //     'state' => 'alpha|min:2|max:30',
-        //     'room' => 'numeric',
-        // ]);
-
-
+        try {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'phone_number' => 'required',
+                'email' => 'required|email',
+                // 'dob' => 'required',
+                'street' => 'required',
+                'city' => 'required',
+                'state' => 'required'
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
 
         // store email and phoneNumber in users table
         $requestEmail = new users();
@@ -45,12 +45,10 @@ class AdminDashboardController extends Controller
         $requestEmail->phone_number = $request->phone_number;
         // $requestEmail->save();
 
-
-
         $requestData = new RequestTable();
         $requestStatus = new RequestStatus();
 
-        // $requestData->status = $requestStatus->id;
+        $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
@@ -92,6 +90,7 @@ class AdminDashboardController extends Controller
         $request_notes = new RequestNotes();
         $request_notes->request_id = $requestData->id;
         $request_notes->admin_notes = $request->adminNote;
+        $request_notes->created_by = 'admin';
 
         $request_notes->save();
 
@@ -111,10 +110,5 @@ class AdminDashboardController extends Controller
 
 
         return redirect()->route('admin.dashboard');
-
     }
-
-   
-
-
 }

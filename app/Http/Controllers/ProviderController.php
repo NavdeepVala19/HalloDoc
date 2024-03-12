@@ -19,6 +19,7 @@ use App\Models\MedicalReport;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
 use App\Models\RequestWiseFile;
+use App\Models\users;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 // DomPDF package used for the creation of pdf from the form
@@ -263,19 +264,35 @@ class ProviderController extends Controller
         } catch (\Throwable $th) {
             dd($th);
         }
+        // $requestEmail = new users();
+        // $requestEmail->email = $request->email;
+        // $requestEmail->phone_number = $request->phone_number;
+        // $requestEmail->save();
+
         $requestTable = new requestTable();
+
+        $requestStatus = new RequestStatus();
+
         $requestTable->request_type_id = $request->request_type_id;
         $requestTable->first_name = $request->first_name;
         $requestTable->last_name = $request->last_name;
         $requestTable->phone_number = $request->phone_number;
         $requestTable->email = $request->email;
-        $requestTable->status = 1;
+        $requestTable->status = $requestStatus->id;
         $requestTable->is_urgent_email_sent = 0;
         $requestTable->is_mobile = 0;
         $requestTable->case_tag_physician = 0;
         $requestTable->patient_account_id = 0;
         $requestTable->created_user_id = 0;
         $requestTable->save();
+
+        $requestStatus->request_id = $requestTable->id;
+        $requestStatus->status = 1;
+        $requestStatus->save();
+
+        if (!empty($requestStatus)) {
+            $requestTable->update(["status" => $requestStatus->id]);
+        }
 
         $requestClient = new request_Client();
         $requestClient->request_id = $requestTable->id;
@@ -504,7 +521,8 @@ class ProviderController extends Controller
 
     public function sendAgreementLink(Request $request)
     {
-        Mail::to($request->email)->send(new SendAgreement($request->all()));
+        $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
+        Mail::to($request->email)->send(new SendAgreement($clientData));
         return redirect()->back();
     }
 }

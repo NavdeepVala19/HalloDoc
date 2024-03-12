@@ -187,7 +187,7 @@
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
-                                                <a href=" {{ route('provider.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                                 <a href="{{ route('provider.accept.case', $case->request->id) }}"><i
                                                         class="bi bi-check-square me-2 ms-3"></i>Accept</a>
@@ -261,8 +261,9 @@
                                     {{ $case->request->requestClient->phone_number }}
                                 </span>
                                 <div class="grid-2-listing">
-                                    <button class="accept-btn">Accept</button>
-                                    <a href="{{ route('provider.view.case', $case->id) }}"
+                                    <a href="{{ route('provider.accept.case', $case->request->id) }}"
+                                        class="accept-btn">Accept</a>
+                                    <a href="{{ route('provider.view.notes', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn">Email</button>

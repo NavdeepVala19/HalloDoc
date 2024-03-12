@@ -123,41 +123,15 @@ $(document).ready(function () {
     });
     calendar.render();
 
-    // $(".save-shift-btn").click(function () {
-    //     if ($(".repeat-switch").is(":checked")) {
-    //         calendar.addEvent({
-    //             title: physician,
-    //             start: startTime,
-    //             end: endTime,
-    //             resourceId: physicianId,
-    //             textColor: "#000",
-    //             backgroundColor: "rgb(167, 204, 163)",
-    //             // daysOfWeek: ,
-    //             // startTime: ,
-    //             // endTime: ,
-    //             // startRecur: ,
-    //             // endRecur: ,
-    //         });
-    //     } else {
-    //         calendar.addEvent({
-    //             title: physician,
-    //             start: startTime,
-    //             end: endTime,
-    //             resourceId: physicianId,
-    //             textColor: "#000",
-    //             backgroundColor: "rgb(167, 204, 163)",
-    //         });
-    //     }
-    // });
-
     let date = $(".fc-toolbar-title").text();
     $(".date-title").html(date);
-    var events;
+    var events = [];
+    var eventData;
     $.ajax({
         url: "/events-data",
         type: "GET",
         success: function (response) {
-            events = response.map(function (event) {
+            response.map(function (event) {
                 var shiftDate = event.shiftDate;
                 var shiftStartTime = event.startTime;
                 var shiftEndTime = event.endTime;
@@ -183,23 +157,32 @@ $(document).ready(function () {
                 );
 
                 var repeatEnd = new Date(event.shiftDate);
-                repeatEnd.setDate(repeatEnd.getDate() + 14);
-
                 if (event.is_repeat == 1) {
-                    return {
+                    if (event.repeat_upto == 2) {
+                        repeatEnd.setDate(repeatEnd.getDate() + 14);
+                    } else if (event.repeat_upto == 3) {
+                        repeatEnd.setDate(repeatEnd.getDate() + 21);
+                    } else if (event.repeat_upto == 4) {
+                        repeatEnd.setDate(repeatEnd.getDate() + 28);
+                    }
+                    repeatEnd.toISOString().split("T")[0];
+                    eventData = {
                         title: event.title,
+                        // start: startTime,
+                        // end: endTime,
+                        resourceId: event.resourceId,
                         daysOfWeek: event.week_days,
-                        startTime: startTime,
-                        endTime: endTime,
-                        recurrence: {
-                            repeat: true,
-                            unit: "week",
-                            until: repeatEnd.toISOString(),
-                            // count: 2
-                        },
+                        startTime: event.startTime,
+                        endTime: event.endTime,
+                        startRecur: event.shiftDate,
+                        endRecur: repeatEnd,
+                        textColor: "#000",
+                        backgroundColor: "rgb(167, 204, 163)",
                     };
+                    events.push(eventData);
                 }
-                return {
+
+                eventData = {
                     title: event.title,
                     start: startTime,
                     end: endTime,
@@ -214,9 +197,29 @@ $(document).ready(function () {
                     // });
                     // calendar.render();
                 };
+                events.push(eventData);
+                return events;
             });
+            console.log(events);
             calendar.addEventSource(events);
         },
+    });
+
+    $(".edit-btn").click(function () {
+        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
+            "disabled",
+            false
+        );
+        $(".save-btn").show();
+        $(".edit-btn").hide();
+    });
+    $(".view-shift-close").click(function () {
+        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
+            "disabled",
+            true
+        );
+        $(".save-btn").hide();
+        $(".edit-btn").show();
     });
 });
 

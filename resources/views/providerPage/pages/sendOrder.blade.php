@@ -18,7 +18,7 @@
             <h1 class="heading">
                 Send Order
             </h1>
-            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ url()->previous() }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         <form action="" method="POST">

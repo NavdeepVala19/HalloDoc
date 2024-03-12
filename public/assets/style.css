@@ -10,9 +10,22 @@
     --blue: rgb(0, 190, 232);
 }
 
+html,
 body {
     font-family: "Poppins", sans-serif;
     font-style: normal;
+    height: 100vh;
+    /* margin: 0;
+    padding: 0; */
+}
+.wrapper {
+    /* Wrap content and footer */
+    display: flex;
+    flex-direction: column; /* Stack content on top */
+    min-height: 100vh; /* Ensure minimum full height */
+}
+.main-container {
+    flex: 1;
 }
 
 a {

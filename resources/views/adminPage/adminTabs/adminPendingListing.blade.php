@@ -11,7 +11,7 @@
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="{{route('providerLocation')}}">Provider Location</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
     <a href="">Providers</a>
     <a href="{{ route('admin.partners') }}">Partners</a>
@@ -116,23 +116,19 @@ pending state, providers need to send an agreement link to patients. --}}
                 <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
                     concierge)</span>
                 <p class="m-2">To send Agreement please make sure you are updating the correct contact information
-                    below
-                    for
-                    the
-                    responsible party.
-                </p>
+                    below for the responsible party. </p>
             </div>
             <form action="{{ route('send.agreement') }}" method="POST">
                 @csrf
                 <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
                 <div>
                     <div class="form-floating ">
-                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
+                        <input type="text" name="phone_number" class="form-control agreement-phone-number" id="floatingInput"
                             placeholder="Phone Number">
                         <label for="floatingInput">Phone Number</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control" id="floatingInput"
+                        <input type="email" name="email" class="form-control agreement-email" id="floatingInput"
                             placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
@@ -267,13 +263,13 @@ pending state, providers need to send an agreement link to patients. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
+                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{route('exportPending')}}" class="primary-fill">
+                <a href="{{ route('exportPending') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
@@ -305,7 +301,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
-                   <select class="form-select listing-region">
+                    <select class="form-select listing-region">
                         <option name="regions" selected>All Regions</option>
                     </select>
                 </form>
@@ -375,7 +371,9 @@ pending state, providers need to send an agreement link to patients. --}}
                                                         class="bi bi-x-circle me-2 ms-3"></i>Clear
                                                     Case</button>
                                                 <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
-                                                    data-request_type_id={{ $case->request->request_type_id }}><i
+                                                    data-request_type_id={{ $case->request->request_type_id }}
+                                                    data-phone_number={{ $case->request->phone_number }}
+                                                    data-email={{ $case->request->email }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Send
                                                     Agreement</button>
                                             </div>
