@@ -27,10 +27,7 @@ class patientLoginController extends Controller
     public function userLogin(Request $request)
     {
 
-        // $encryptedEmail = Crypt::encryptString($request->email);
-
-        // Session::put('email', $encryptedEmail);
-
+    
 
         $request->validate([
             'email' => 'required|email',
@@ -61,7 +58,7 @@ class patientLoginController extends Controller
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email',
         ]);
 
         $token = Str::random(64);
@@ -90,8 +87,8 @@ class patientLoginController extends Controller
     {
 
         $request->validate([
-            'confirm_password' => 'required',
-            'new_password' => 'required|same:confirm_password',
+            'confirm_password' => 'required|min:8|max:20',
+            'new_password' => 'required|same:confirm_password|min:8|max:20',
         ]);
 
         $updatePassword = users::where('token', $request->token)->first();

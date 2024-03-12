@@ -26,20 +26,17 @@ class AdminDashboardController extends Controller
     public function createAdminPatientRequest(Request $request)
     {
 
-
-        // $request->validate([
-        //     'first_name' => 'required|min:2|max:30',
-        //     'last_name' => 'string|min:2|max:30',
-        //     'email' => 'required|email|min:2|max:30',
-        //     'phone_number' => 'required|numeric|digits:10',
-        //     'street' => 'min:2|max:30',
-        //     'city' => 'alpha|min:2|max:30',
-        //     'zipcode' => 'numeric',
-        //     'state' => 'alpha|min:2|max:30',
-        //     'room' => 'numeric',
-        // ]);
-
-
+        $request->validate([
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'min:2|max:30',
+            'email' => 'required|email|min:2|max:30',
+            'phone_number' => 'required|numeric|digits:10',
+            'street' => 'min:2|max:30',
+            'city' => 'min:2|max:30',
+            'zipcode' => 'numeric',
+            'state' => 'min:2|max:30',
+            'room' => 'numeric',
+        ]);
 
         // store email and phoneNumber in users table
         $requestEmail = new users();

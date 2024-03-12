@@ -29,7 +29,10 @@
                 @csrf
                 <div class="mb-4 username">
                     <i class="bi bi-person-circle person-logo"></i>
-                    <input type="text" class="form-control" placeholder=" email" name="email">
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder=" email" name="email">
+                    @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="buttons">

@@ -425,6 +425,7 @@ Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('a
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
+Route::post('/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
 

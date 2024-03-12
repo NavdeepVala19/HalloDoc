@@ -14,8 +14,7 @@
 
     <div class="header_part">
         <h1 class="heading">I am a..</h1>
-        <button type="button" class="btn btn-outline-primary" href="{{route('patientSite')}}">
-            < Back</button>
+        <a href="{{route('patientSite')}}" type="button" class="primary-empty"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
 

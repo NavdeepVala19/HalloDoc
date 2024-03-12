@@ -395,6 +395,14 @@ class AdminController extends Controller
 
     public function sendMail(Request $request)
     {
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number'=>'required',
+            'email' => 'required|email',
+        ]);
+
         Mail::to($request->email)->send(new SendLink($request->all()));
 
         EmailLog::create([
@@ -637,8 +645,111 @@ class AdminController extends Controller
     // Records Page
     public function searchRecordsView()
     {
-        return view('adminPage.records.searchRecords');
+        $searchRecordsData2 = RequestTable::select(
+            'provider.first_name',
+            'request_status.status',
+            'status.status_type'
+        )
+            ->leftJoin('provider', 'request.physician_id', 'provider.id')
+            ->leftJoin('request_status', 'request.id', 'request_status.request_id')
+            ->leftJoin('status', 'status.id', 'request_status.status')
+            ->get();
+
+        $results = request_Client::distinct()
+            ->select([
+                'request.request_type_id',
+                'request_client.first_name',
+                'request_client.email',
+                'request_client.phone_number',
+                'request_client.street',
+                'request_client.city',
+                'request_client.state',
+                'request_client.zipcode',
+                'request_notes.patient_notes',
+                'request_notes.physician_notes',
+                'request_notes.admin_notes',
+                'provider.first_name as physician_first_name',
+                'request_status.status',
+                'status.status_type',
+            ])
+            ->join('request', 'request.id', '=', 'request_client.request_id')
+            ->join('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
+            ->join('provider', 'request.physician_id', '=', 'provider.id')
+            ->join('request_status', 'request.id', '=', 'request_status.request_id')
+            ->join('status', 'status.id', '=', 'request_status.status')
+            ->get();
+
+
+
+        $searchRecordsData = request_Client::select(
+            'request.request_type_id',
+            'request_client.first_name',
+            'request_client.email',
+            'request_client.phone_number',
+            'request_client.street',
+            'request_client.city',
+            'request_client.state',
+            'request_client.zipcode',
+            'request_notes.patient_notes',
+            'request_notes.physician_notes',
+            'request_notes.admin_notes'
+        )
+            ->leftJoin('request', 'request.id', 'request_client.request_id')
+            ->leftJoin('request_notes', 'request_notes.request_id', 'request_client.request_id')
+            ->paginate(10);
+
+
+        return view('adminPage.records.searchRecords', compact('searchRecordsData'));
     }
+
+    public function searchRecordSearching(Request $request)
+    {
+
+        $searchRecordsData = request_Client::select(
+            'request.request_type_id',
+            'request_client.first_name',
+            'request_client.email',
+            'request_client.phone_number',
+            'request_client.street',
+            'request_client.city',
+            'request_client.state',
+            'request_client.zipcode',
+            'request_notes.patient_notes',
+            'request_notes.physician_notes',
+            'request_notes.admin_notes'
+        )
+            ->leftJoin('request', 'request.id', 'request_client.request_id')
+            ->leftJoin('request_notes', 'request_notes.request_id', 'request_client.request_id');
+
+        if (!empty($request->patient_name)) {
+            $searchRecordsData = $searchRecordsData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+        }
+        if (!empty($request->email)) {
+            $searchRecordsData = $searchRecordsData->orWhere('request_client.email', "like", "%" . $request->email . "%");
+        }
+        if (!empty($request->phone_number)) {
+            $searchRecordsData = $searchRecordsData->orWhere('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+        }
+        if (!empty($request->request_type)) {
+            $searchRecordsData = $searchRecordsData->orWhere('request.request_type_id', "like", "%" . $request->request_type . "%");
+        }
+        $searchRecordsData = $searchRecordsData->paginate(10);
+
+        // ->when($request->email, function ($query) use ($request) {
+        //     $query->orWhere('request_client.email', "like", "%" . $request->email . "%");
+        // })
+        // ->when($request->phone_number, function ($query) use ($request) {
+        //     $query->orWhere('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+        // })
+        // ->when($request->request_type, function ($query) use ($request) {
+        //     $query->orWhere('request.request_type_id', "like", "%" . $request->request_type . "%");
+        // })
+
+
+        return view('adminPage.records.searchRecords', compact('searchRecordsData'));
+    }
+
+
 
     public function emailRecordsView()
     {

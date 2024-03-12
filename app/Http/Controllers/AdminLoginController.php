@@ -107,8 +107,8 @@ class AdminLoginController extends Controller
         try {
             // dd($request);
             $request->validate([
-                'confirm_password' => 'required',
-                'new_password' => 'required|same:confirm_password',
+                'confirm_password' => 'required|min:8|max:20',
+                'new_password' => 'required|same:confirm_password|min:8|max:20',
 
             ]);
         } catch (\Throwable $th) {
