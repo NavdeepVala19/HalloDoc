@@ -37,33 +37,44 @@
 
 @section('content')
 <div class="m-5 spacing">
+
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
-        <a href="" class="primary-empty"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
+
+        <a href="{{route('downloadFilteredData')}}" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
     </div>
+
+
     <div class="section">
         <form action="{{route('admin.search.records')}}" method="post">
+
             @csrf
             <div class="grid-4">
 
                 <div class="form-floating request-status-select">
-                    <select class="form-select">
+                    <select class="form-select status-type" name="request_status">
                         <option selected>Select Request Status</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Settled</option>
-                        <option value="3">Declined</option>
-                        <option value="4">Settled Offline</option>
+                        <option value="1">Unassigned</option>
+                        <option value="2">Cancelled</option>
+                        <option value="3">Accepted</option>
+                        <option value="4">MDEnRoute</option>
+                        <option value="5">MDOnSite</option>
+                        <option value="6">Conclude</option>
+                        <option value="7">Closed</option>
+                        <option value="8">Clear</option>
+                        <option value="9">UnPaid</option>
+                        <option value="10">Block</option>
                     </select>
                     </input>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="patient_name" class="form-control" id="floatingInput" placeholder="Patient Name" value="{{ old('patient_name') }}">
+                    <input type="text" name="patient_name" class="form-control patient-name" id="floatingInput" placeholder="Patient Name">
                     <label for="floatingInput">Patient Name</label>
                 </div>
 
                 <div class="form-floating request-type-select">
-                    <select class="form-select" name="request_type">
+                    <select class="form-select request-type" name="request_type">
                         <option selected>Select Request Type</option>
                         <option value="1">Patient</option>
                         <option value="2">Family/Friend</option>
@@ -74,27 +85,27 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="date" class="form-control" id="floatingInput" placeholder="From the Date of Service">
+                    <input type="date" class="form-control from-date-of-service" id="floatingInput" placeholder="From the Date of Service" name="from_date_of_service">
                     <label for="floatingInput">From the Date of Service</label>
                 </div>
 
 
                 <div class="form-floating ">
-                    <input type="date" class="form-control" id="floatingInput" placeholder="To the Date of Service">
+                    <input type="date" class="form-control to-date-of-service" id="floatingInput" placeholder="To the Date of Service">
                     <label for="floatingInput">To the Date of Service</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="provider_name" class="form-control" id="floatingInput" placeholder="Provider Name">
+                    <input type="text" name="provider_name" class="form-control provider-name" id="floatingInput" placeholder="Provider Name">
                     <label for="floatingInput">Provider Name</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" value="{{ old('email') }}">
+                    <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email">
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
+                <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" placeholder="Phone Number">
             </div>
 
 
@@ -116,8 +127,8 @@
                         <td>Patient Name</td>
                         <td>Requestor</td>
                         <td>Date-of-service</td>
-                        <td>Close-Case</td>
-                        <td class="table-email">Email</td>
+                        <td>Close Case Date</td>
+                        <td>Email</td>
                         <td>Phone Number</td>
                         <td>Address</td>
                         <td>Zip</td>
@@ -131,7 +142,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($searchRecordsData as $data )
+                    @foreach ($combinedData as $data )
                     <tr>
                         <td>{{$data->first_name}}</td>
                         <td>
@@ -145,31 +156,53 @@
                             Business
                             @endif
                         </td>
-                        <td>Aug 23,2023</td>
+                        <td>{{date_format(date_create($data->created_date), 'd-m-Y')}}</td>
                         <td>Oct 10,2023</td>
                         <td>{{$data->email}}</td>
                         <td>{{$data->phone_number}}</td>
                         <td>{{$data->street}},{{$data->city}},{{$data->state}}</td>
                         <td>{{$data->zipcode}}</td>
-                        <td>Pending</td>
-                        <td>Physician</td>
+                        <td>
+                            @if ($data->status ==1)
+                            Unassigned
+                            @elseif ($data->status ==2)
+                            Cancelled
+                            @elseif ($data->status ==3)
+                            Accepted
+                            @elseif ($data->status ==4 )
+                            MDEnRoute
+                            @elseif ($data->status ==5 )
+                            MDOnSite
+                            @elseif ($data->status ==6 )
+                            Conclude
+                            @elseif ($data->status ==7 )
+                            Closed
+                            @elseif ($data->status ==8 )
+                            Clear
+                            @elseif ($data->status ==9 )
+                            UnPaid
+                            @elseif ($data->status ==10 )
+                            Block
+                            @endif
+                        </td>
+                        <td>{{$data->physician_first_name}}</td>
                         <td>{{$data->physician_notes}}</td>
                         <td>Note</td>
                         <td>{{$data->admin_notes}}</td>
                         <td>{{$data->patient_notes}}</td>
-                        <td class="text-center align-middle"><a href="" class="primary-empty" type="button">Delete</a></td>
+
+                        <td class="text-center align-middle"> <a href="{{route('admin.search.records.delete', $data->id)}}" class="primary-empty" type="button">Delete</a> </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-            {{$searchRecordsData->links('pagination::bootstrap-5')}}
+            {{$combinedData->links('pagination::bootstrap-5')}}
         </div>
 
+
         <div class="mobile-listing mt-3">
-
             <div class="mobile-list">
-                @foreach ( $searchRecordsData as $data )
-
+                @foreach ( $combinedData as $data )
 
                 <div class="main-section">
                     <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox"> {{$data->first_name}} </h5>
@@ -195,7 +228,7 @@
                         Business
                         @endif </span>
                     <br>
-                    <span><i class="bi bi-calendar3"></i>Date of service : Aug 23,2023</span>
+                    <span><i class="bi bi-calendar3"></i>Date of service : {{date_format(date_create($data->created_date), 'd-m-Y')}}</span>
                     <br>
                     <span><i class="bi bi-calendar3"></i>Case Closed Date : Oct 10,2023</span>
                     <br>
@@ -207,9 +240,32 @@
                     <br>
                     <span><i class="bi bi-geo-alt"></i>zipcode : {{$data->zipcode}}</span>
                     <br>
-                    <span><i class="bi bi-check2"></i>Request Status :closed </span>
+                    <span><i class="bi bi-check2"></i>Request Status :
+
+                        @if ($data->status ==1)
+                        Unassigned
+                        @elseif ($data->status ==2)
+                        Cancelled
+                        @elseif ($data->status ==3)
+                        Accepted
+                        @elseif ($data->status ==4 )
+                        MDEnRoute
+                        @elseif ($data->status ==5 )
+                        MDOnSite
+                        @elseif ($data->status ==6 )
+                        Conclude
+                        @elseif ($data->status ==7 )
+                        Closed
+                        @elseif ($data->status ==8 )
+                        Clear
+                        @elseif ($data->status ==9 )
+                        UnPaid
+                        @elseif ($data->status ==10 )
+                        Block
+                        @endif
+                    </span>
                     <br>
-                    <span><i class="bi bi-person"></i>Provider :</span>
+                    <span><i class="bi bi-person"></i>Provider : {{$data->physician_first_name}}</span>
                     <br>
                     <span><i class="bi bi-journal"></i>Provider Note : {{$data->physician_notes}}</span>
                     <br>
@@ -222,16 +278,18 @@
                     <span><i class="bi bi-journal"></i>Patient Note : {{$data->patient_notes}} </span>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <button class="primary-empty">
+                        <a class="primary-empty" type="button" href="{{route('admin.search.records.delete', $data->id)}}">
                             Delete Permanently
-                        </button>
+                        </a>
                     </div>
                 </div>
                 @endforeach
             </div>
-            {{$searchRecordsData->links('pagination::bootstrap-5')}}
+            {{$combinedData->links('pagination::bootstrap-5')}}
         </div>
     </div>
 </div>
+
+
 
 @endsection

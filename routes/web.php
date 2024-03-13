@@ -207,6 +207,7 @@ route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'de
 
 
 
+
 route::post('admin/new/request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
 
 
@@ -219,6 +220,9 @@ route::get('/admin/new/exportConclude', [ExcelController::class, 'concludeDataEx
 route::get('/admin/new/exportToClose', [ExcelController::class, 'toCloseDataExport'])->name('exportToClose');
 route::get('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport'])->name('exportUnPaid');
 route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
+
+
+route::get('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
 
 
 route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
@@ -426,6 +430,7 @@ Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('a
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
 Route::post('/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
+Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
 

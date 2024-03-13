@@ -356,10 +356,7 @@ class AdminProviderController extends Controller
 
     public function providerLocation()
     {
-
-        $providers = Provider::where('id', '>', '38')->get();
-
-
+        $providers = Provider::where('id', '<', '4')->get();
         return view('adminPage/provider/providerLocation', compact('providers'));
     }
 }

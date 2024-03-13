@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ActiveStatusExport;
-use App\Exports\ConcludeStatusExport;
-use App\Exports\UsersExport;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
+use App\Exports\UsersExport;
+use App\Exports\ActiveStatusExport;
+use App\Exports\ConcludeStatusExport;
 use App\Exports\NewStatusExport;
 use App\Exports\PendingStatusExport;
 use App\Exports\ToCloseStatusExport;
@@ -24,7 +24,6 @@ class ExcelController extends Controller
     {
         return Excel::download(new NewStatusExport, 'NewData.xls');
     }
-
 
 
     public function pendingDataExport()
