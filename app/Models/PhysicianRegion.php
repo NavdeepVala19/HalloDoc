@@ -10,4 +10,9 @@ class PhysicianRegion extends Model
     use HasFactory;
 
     protected $table = 'physician_region';
+
+    public function regions()
+    {
+        return $this->hasOne(Regions::class, 'id', 'region_id');
+    }
 }

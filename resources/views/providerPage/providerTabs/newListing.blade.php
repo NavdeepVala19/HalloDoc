@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
     <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
@@ -163,7 +163,6 @@
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -181,19 +180,15 @@
                                         {{ $case->request->requestClient->state }}
                                     </td>
                                     <td>
-                                        <button class="table-btn "><i class="bi bi-person-check me-2"></i>Admin</button>
-                                    </td>
-                                    <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
-                                                        class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                                 <a href="{{ route('provider.accept.case', $case->request->id) }}"><i
                                                         class="bi bi-check-square me-2 ms-3"></i>Accept</a>
+                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
+                                                        class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                                 <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                                <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                             </div>
                                         </div>
                                     </td>

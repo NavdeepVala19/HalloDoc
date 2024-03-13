@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
     <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
@@ -74,23 +74,6 @@ giving service to the patient. --}}
                 {{-- If the provider selects the consult, then that request will move into Conclude state. --}}
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <div class="form-floating time-dropdown">
-                    <select class="form-select" id="floatingSelect">
-                        <option selected value="30min">30 Minutes</option>
-                        <option value="1hour">1 Hour </option>
-                        <option value="1hour 30Minutes">1 Hour 30 Minutes</option>
-                        <option value="2Hour">2 Hour</option>
-                        <option value="2Hour 30Minutes">2 Hour 30 Minutes</option>
-                        <option value="3Hour">3 Hour</option>
-                        <option value="3Hour 30Minutes">3 Hour 30 Minutes</option>
-                        <option value="4Hour ">4 Hour</option>
-                        <option value="4Hour 30Minutes">4 Hour 30 Minutes</option>
-                        <option value="5Hour">5 Hour</option>
-                        <option value="5Hour 30Minutes">5 Hour 30 Minutes</option>
-                        <option value="6Hour">6 Hour</option>
-                    </select>
-                    <label for="floatingSelect">Select Approximate Arrival Time</label>
-                </div>
                 {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
                 <input type="submit" class="primary-fill encounter-save-btn" id="save-btn" value="Save">
                 <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
@@ -137,8 +120,7 @@ giving service to the patient. --}}
                     </div>
                 </a>
 
-                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link"
-                    id="nav-conclude-tab">
+                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
                     <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
                             <i class="bi bi-clock-history"></i> CONCLUDE
@@ -204,7 +186,6 @@ giving service to the patient. --}}
                                 <th>Phone</th>
                                 <th>Address</th>
                                 <th>Status</th>
-                                <th>Chat With</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -214,10 +195,12 @@ giving service to the patient. --}}
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->phone_number }}</td>
                                     <td>{{ $case->request->requestClient->address }}</td>
-                                    <td>Status</td>
                                     <td>
-                                        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                                        @if ($case->request->call_type)
+                                            <span class="primary-fill"> {{ $case->request->call_type }} </span>
+                                        @else
+                                            Call Type
+                                        @endif
                                     </td>
                                     <td>
                                         <div class="action-container">
@@ -226,18 +209,15 @@ giving service to the patient. --}}
                                             <div class="action-menu">
                                                 <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
-                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                                <button><i class="bi bi-check-square me-2 ms-3"></i>Doctors Note</button>
                                                 <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <button class="encounter-btn"><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
+                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <a href="{{ route('provider.view.order', $case->request->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button><i class="bi bi-check-square me-2 ms-3"></i>House Call</button>
-                                                <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                                <button class="encounter-btn"><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>
                                         </div>
                                     </td>

@@ -10,4 +10,6 @@ class ShiftDetailRegion extends Model
     use HasFactory;
 
     protected $table = 'shift_detail_region';
+
+    protected $guarded = [];
 }

@@ -11,9 +11,18 @@
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="{{route('providerLocation')}}">Provider Location</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
-    <a href="">Providers</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+    </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="{{ route('admin.access.view') }}">Access</a>
     <div class="dropdown record-navigation ">
@@ -126,7 +135,8 @@ pending state, providers need to send an agreement link to patients. --}}
                 @enderror
             </div>
 
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
+            <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                placeholder="Phone Number">
             @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
@@ -241,13 +251,13 @@ pending state, providers need to send an agreement link to patients. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
+                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{route('exportToClose')}}" class="primary-fill">
+                <a href="{{ route('exportToClose') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
@@ -307,7 +317,6 @@ pending state, providers need to send an agreement link to patients. --}}
                             <th>Date Of Service</th>
                             <th>Address</th>
                             <th>Notes</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -325,10 +334,6 @@ pending state, providers need to send an agreement link to patients. --}}
                                         {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
                                     </td>
                                     <td>Notes</td>
-                                    <td>
-                                        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
-                                    </td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn"

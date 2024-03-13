@@ -12,10 +12,6 @@
     </td>
     <td>Notes</td>
     <td>
-        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
-    </td>
-    <td>
         <div class="action-container">
             <button class="table-btn action-btn" data-id={{ $case->request_id }}>Actions</button>
             <div class="action-menu">

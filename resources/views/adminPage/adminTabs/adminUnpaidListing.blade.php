@@ -11,9 +11,18 @@
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="{{route('providerLocation')}}">Provider Location</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
-    <a href="">Providers</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+    </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="{{ route('admin.access.view') }}">Access</a>
     <div class="dropdown record-navigation ">
@@ -217,13 +226,13 @@ pending state, providers need to send an agreement link to patients. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
+                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{route('exportUnPaid')}}" class="primary-fill">
+                <a href="{{ route('exportUnPaid') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
@@ -255,7 +264,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
-                   <select class="form-select listing-region">
+                    <select class="form-select listing-region">
                         <option name="regions" selected>All Regions</option>
                     </select>
                 </form>
@@ -284,7 +293,6 @@ pending state, providers need to send an agreement link to patients. --}}
                             <th>Date Of Service</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -299,10 +307,6 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <td>
                                         {{ $case->request->requestClient->street }},
                                         {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
-                                    </td>
-                                    <td>
-                                        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
                                     </td>
                                     <td>
                                         <div class="action-container">
@@ -408,8 +412,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                 <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                             </div>
                         </div>
-                        @endif
-                    @endforeach
+                    @endif
+                @endforeach
             </div>
             <div class="page">
                 {{ $cases->links('pagination::bootstrap-5') }}

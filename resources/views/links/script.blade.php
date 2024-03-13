@@ -14,21 +14,19 @@
    {{-- Jquery file for Provider Page (Searching & Filtering) Feature --}}
    <script defer src="{{ URL::asset('assets/providerPage/provider.js') }}"></script>
 
+   <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
+
+
+   {{-- SHIVESH SCRIPT FILE --}}
    {{-- Javascript for patient login password field --}}
    <script defer src="{{ URL::asset('assets/patientSite/patientLoginPassword.js') }}"></script>
 
-   <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
-
    {{-- Javascript for showing google maps --}}
    <script defer src="{{ URL::asset('assets/provider/providerMapLocation.js') }}"></script>
-   <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
-
-   {{-- Javascript for showing google maps --}}
-   <script defer src="{{ URL::asset('assets/provider/providerMapLocation.js') }}"></script>
-
-
+   {{-- ------------------------------------ --}}
+   
    {{-- FullCalendar JQuery Plugin --}}
    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
-
-   <script defer src="{{ URL::asset('assets/adminPage/scheduling.js') }}"></script>
+   
+   @yield('script')

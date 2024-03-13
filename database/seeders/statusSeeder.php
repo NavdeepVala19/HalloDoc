@@ -33,6 +33,7 @@ class StatusSeeder extends Seeder
             ['id' => 7, 'status_type' => 'closed'], // request send from conclude -> toclose state
             ['id' => 8, 'status_type' => 'clear'], // admin clear case
             ['id' => 9, 'status_type' => 'unpaid'],
+            ['id' => 10, 'status_type' => 'block'],
             // ['id' => 2, 'status_type' => 'Pending'],
             // ['id' => 11, 'status_type' => 'CancelledByProvider'],
         ]);

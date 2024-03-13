@@ -16,6 +16,10 @@
     color: #fff;
 }
 
+.table-responsive {
+    min-height: 350px;
+}
+
 .case-new {
     position: relative;
     border: 1px solid rgb(150, 155, 182);

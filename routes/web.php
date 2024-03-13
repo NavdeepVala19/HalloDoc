@@ -19,6 +19,7 @@ use App\Http\Controllers\businessRequestController;
 use App\Http\Controllers\conciergeRequestController;
 use App\Http\Controllers\patientDashboardController;
 use App\Http\Controllers\PatientViewDocumentsController;
+use App\Http\Controllers\ProviderSchedulingController;
 
 // ******************************* SHIVESH **********************************************
 
@@ -416,18 +417,28 @@ Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView
 Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
 Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
 
-// Scheduling
+// Admin Scheduling
 // Scheduling Calendar view 
-Route::get('/scheduling', [SchedulingController::class, 'schedulingCalendarView'])->name('scheduling');
+Route::get('/scheduling', [SchedulingController::class, 'schedulingCalendarView'])->name('admin.scheduling');
 Route::get('/provider-data', [SchedulingController::class, 'providerData'])->name('provider.data');
 // Providers on call view
 Route::get('/providers-on-call', [SchedulingController::class, 'providersOnCall'])->name('providers.on.call');
 // Shifts for Review view
 Route::get('/shifts-review', [SchedulingController::class, 'shiftsReviewView'])->name('shifts.review');
 // Create Shift data
-Route::post('/create-shift', [SchedulingController::class, 'createShiftData'])->name('scheduling-data');
+Route::post('/create-shift', [SchedulingController::class, 'createShiftData'])->name('admin.scheduling.data');
 // Events data
 Route::get('/events-data', [SchedulingController::class, 'eventsData'])->name('events.data');
+
+// Provider Scheduling
+// Scheduling Calendar view 
+Route::get('/provider-scheduling', [ProviderSchedulingController::class, 'providerCalendarView'])->name('provider.scheduling');
+// Provider information for add new shift
+Route::get('/provider-information', [ProviderSchedulingController::class, 'providerInformation'])->name('provider.information');
+// Provider created Shift data
+Route::post('/provider-create-shift', [ProviderSchedulingController::class, 'providerShiftData'])->name('physician.scheduling.data');
+// Provider shift data 
+Route::get('/provider-shift', [ProviderSchedulingController::class, 'providerShift'])->name('provider.shift');
 
 // For Testing Purpose only
 Route::get('/test', function () {

@@ -33,7 +33,6 @@ $(document).ready(function () {
                     );
                 });
             },
-
             error: function (error) {
                 console.error(error);
             },
@@ -43,7 +42,7 @@ $(document).ready(function () {
     var calendarEl = document.getElementById("calendar");
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "resourceTimelineDay",
+        initialView: "dayGridMonth",
         headerToolbar: {
             left: "prev next",
             center: "title",
@@ -56,6 +55,12 @@ $(document).ready(function () {
             day: "numeric",
             weekday: "short",
             omitComma: true,
+        },
+        datesSet: function (view) {
+            // Added event handler
+            // Update title or span element here (optional)
+            let currentDate = $(".fc-toolbar-title").text();
+            $(".date-title").text(currentDate);
         },
         resourceAreaColumns: [{ field: "physician", headerContent: "Staff" }],
         resources: {
@@ -123,8 +128,6 @@ $(document).ready(function () {
     });
     calendar.render();
 
-    let date = $(".fc-toolbar-title").text();
-    $(".date-title").html(date);
     var events = [];
     var eventData;
     $.ajax({

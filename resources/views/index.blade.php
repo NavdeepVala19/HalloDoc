@@ -20,19 +20,18 @@
 </head>
 
 <body>
-    {{-- HEADER SECTION --}}
     <div class="wrapper">
-
+        {{-- HEADER SECTION --}}
         @include('layouts.header')
 
         <div class="main-container">
             @yield('content')
         </div>
 
+        {{-- FOOTER SECTION --}}
         @include('layouts.footer')
     </div>
 
-    {{-- FOOTER SECTION --}}
 
     {{-- Include script links from links.script blade file --}}
     @include('links.script')

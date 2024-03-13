@@ -11,9 +11,18 @@
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="{{route('providerLocation')}}">Provider Location</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
-    <a href="">Providers</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+    </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <a href="{{ route('admin.access.view') }}">Access</a>
     <div class="dropdown record-navigation ">
@@ -123,7 +132,8 @@ transferred into conclude state providers can finally conclude care for the pati
                 </div>
             </a>
 
-            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link active" id="nav-conclude-tab">
+            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link active"
+                id="nav-conclude-tab">
                 <div
                     class="case case-conclude active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
@@ -170,13 +180,13 @@ transferred into conclude state providers can finally conclude care for the pati
                         Send Link
                     </span>
                 </button>
-                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
+                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{route('exportConclude')}}" class="primary-fill">
+                <a href="{{ route('exportConclude') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
@@ -199,7 +209,8 @@ transferred into conclude state providers can finally conclude care for the pati
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
+                <form
+                    action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
                     method="GET" class="d-flex align-items-center">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
@@ -234,7 +245,6 @@ transferred into conclude state providers can finally conclude care for the pati
                             <th>Date Of Service</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -250,11 +260,6 @@ transferred into conclude state providers can finally conclude care for the pati
                                     <td>{{ $case->request->phone_number }}</td>
                                     <td>{{ $case->request->requestClient->street }},
                                         {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
-                                    </td>
-
-                                    <td>
-                                        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
                                     </td>
                                     <td>
                                         <div class="action-container">

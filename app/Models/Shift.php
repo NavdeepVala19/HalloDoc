@@ -10,6 +10,8 @@ class Shift extends Model
     use HasFactory;
     protected $table = 'shift';
 
+    protected $guarded = [];
+
     public function shiftDetail()
     {
         return $this->hasOne(ShiftDetail::class, 'shift_id', 'id');

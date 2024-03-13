@@ -19,7 +19,7 @@
         </button>
         <ul class="dropdown-menu records-menu">
             <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="">Scheduling</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
             <li><a class="dropdown-item" href="">Invoicing</a></li>
         </ul>
     </div>
@@ -368,7 +368,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                             <th>Phone</th>
                             <th>Address</th>
                             <th>Notes</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -386,9 +385,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                         {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
                                     </td>
                                     <td>{{ $case->request->requestClient->notes }}</td>
-                                    <td>
-                                        <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
-                                    </td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
