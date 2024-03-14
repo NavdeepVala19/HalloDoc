@@ -33,9 +33,6 @@ $(document).ready(function () {
         $('.overlay').show();
     })
 
-    $('.request-support-btn').click(function () {
-        $('.request-support').show();
-    })
 
 
     // *************************** This code is for show provider photo name ******************************
@@ -233,9 +230,3 @@ function openFileSelection() {
 
 //   ***************************************************************************************
 
-
-
-
-$(document).ready(function () {
-
-})

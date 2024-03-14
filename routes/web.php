@@ -198,7 +198,7 @@ route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'
 route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
 
-route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('admineditProvider');
+route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
 route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'updateAdminProviderProfile'])->name('adminUpdatedProvider');
 
 
@@ -207,7 +207,12 @@ route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'de
 
 
 
-route::get('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
+
+route::post('admin/new/request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
+
+
+
+route::post('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
 route::get('/admin/new/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
 route::get('/admin/new/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
 route::get('/admin/new/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
@@ -216,17 +221,37 @@ route::get('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport
 route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
 
+route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
+
+
 route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
 route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
 
 
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-route::get('/dropdown-data/{selectedId}', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
+route::POST('/dropdown-data/', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
 
 
 
 route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
+
+
+
+Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
+Route::get('/user-access-edit/{id}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
+
+
+route::get('/admin/profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
+route::post('/admin/profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
+
+
+
+route::get('/admin/provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
+route::post('/admin/provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
+
+route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
+
 
 // ****************************************************************************************************************************
 
@@ -400,8 +425,11 @@ Route::post('/create-access', [AdminController::class, 'createAccess'])->name('a
 Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
 Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
 
+
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
+Route::post('/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
+Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
 

@@ -1,39 +1,57 @@
 $(document).ready(function () {
+    $(".new-shift-btn").click(function () {
+        $(".create-shift").show();
+        $(".overlay").show();
+    });
+
+    $(".repeat-switch").on("click", function () {
+        if ($(".repeat-switch").is(":checked")) {
+            $(".checkboxes-section .form-check-input").prop("disabled", false);
+            $('.repeat-end-selection').prop('disabled', false);
+        } else {
+            $(".checkboxes-section .form-check-input").prop("disabled", true);
+            $('.repeat-end-selection').prop('disabled', true);
+        }
+    });
     var calendarEl = document.getElementById("calendar");
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
             left: "prev next",
             center: "title",
-            right: "resourceTimelineDay dayGridWeek dayGridMonth",
+            right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
         },
         initialView: "resourceTimelineDay",
+        selectable: true,
+        selectMirror: true,
+        // unselectAuto: true,
         aspectRatio: 1.5,
         resourceAreaColumns: [{ field: "physician", headerContent: "Staff" }],
+        resourceAreaWidth: "20%",
         resources: {
             url: "/provider-data",
             // dataType: "json",
         },
 
-        // views: {
-        //     resourceTimelineWeek: {
-        //         type: "resourceTimelineWeek",
-        //         slotDuration: {
-        //             days: 1,
-        //         },
-        //         slotLabelInterval: {
-        //             days: 1,
-        //         },
-        //         slotLabelFormat: [
-        //             {
-        //                 weekday: "long",
-        //             }, // lower level of text
-        //             {
-        //                 month: "long",
-        //                 day: "numeric",
-        //             }, // lower level of text
-        //         ],
-        //     },
+        views: {
+            resourceTimelineWeek: {
+                slotDuration: { days: 1 },
+                slotLabelInterval: { days: 1 },
+                slotLabelFormat: [
+                    {
+                        weekday: "short",
+                        day: "numeric",
+                    },
+                ],
+            },
+        },
+        select: function (selectInfo) {
+            // console.log(selectInfo);
+            $(".create-shift").show();
+            $(".overlay").show();
+        },
+        // dateClick: function (info) {
+        //     // alert(info);
         // },
 
         // resourceLabelContent: function (arg) {
@@ -64,7 +82,9 @@ $(document).ready(function () {
             console.log(arg.resource.extendedProps);
             // arg.resource.extendedProps.
             if (arg.resource.id > 0) {
-                var link = `<img src=""` + arg.resource.extendedProps.physician;
+                var link =
+                    `<img src="{{URL::asset('')}}"` +
+                    arg.resource.extendedProps.physician;
             } else {
                 var link = "Data";
             }
@@ -72,11 +92,16 @@ $(document).ready(function () {
                 html: link,
             };
         },
+
+        dayHeaderFormat: {
+            day: "numeric",
+            weekday: "short",
+            omitComma: true,
+        },
     });
     calendar.render();
     let date = $(".fc-toolbar-title").text();
     $(".date-title").html(date);
 });
 
-// dragScroll: true,
 // eventColor: '#378006'

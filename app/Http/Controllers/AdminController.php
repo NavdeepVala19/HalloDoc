@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use ZipArchive;
+use Carbon\Carbon;
+
+// Different Models used in these Controller
+use App\Models\Roles;
 use App\Mail\SendLink;
 use App\Mail\SendMail;
 
@@ -10,29 +14,34 @@ use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
 use App\Models\Regions;
+use App\Models\allusers;
 use App\Models\EmailLog;
+
 use App\Models\Provider;
+
+// For sending Mails
+use App\Models\UserRoles;
 use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
-
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
 
-// For sending Mails
+// DomPDF package used for the creation of pdf from the form
 use App\Models\RequestStatus;
+// To create zip, used to download multiple documents at once
 use App\Models\request_Client;
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
-
-// DomPDF package used for the creation of pdf from the form
+use App\Exports\SearchRecordExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\RequestSupportMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-// To create zip, used to download multiple documents at once
 use App\Models\HealthProfessionalType;
 use App\Models\Menu;
 use App\Models\RequestClosed;
@@ -173,6 +182,7 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)
                     ->whereHas('request', function ($q) use ($request) {
@@ -182,6 +192,7 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
                     ->whereHas('request', function ($q) use ($request) {
@@ -191,6 +202,7 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -199,6 +211,7 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 2)->orWhere('status', 7)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -207,6 +220,7 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -216,7 +230,8 @@ class AdminController extends Controller
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
             }
-        } else {
+        } 
+        else {
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)
                     ->whereHas('request', function ($q) use ($request, $category) {
@@ -391,6 +406,14 @@ class AdminController extends Controller
 
     public function sendMail(Request $request)
     {
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email',
+        ]);
+
         Mail::to($request->email)->send(new SendLink($request->all()));
 
         EmailLog::create([
@@ -628,11 +651,171 @@ class AdminController extends Controller
         return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
     }
 
+
+
     // Records Page
     public function searchRecordsView()
     {
-        return view('adminPage.records.searchRecords');
+
+        // Getting Providers Name and status type
+
+        // $searchRecordsData2 = RequestTable::select(
+        //     'provider.first_name',
+        //     'request_status.status',
+        //     'status.status_type'
+        // )
+        //     ->leftJoin('provider', 'request.physician_id', 'provider.id')
+        //     ->leftJoin('request_status', 'request.id', 'request_status.request_id')
+        //     ->leftJoin('status', 'status.id', 'request_status.status')
+        //     ->get();
+
+
+        // Getting Patient Name.email,mobile,address,notes(admin,patient,physician) and request_Type
+
+        // $searchRecordsData = request_Client::select(
+        //     'request.request_type_id',
+        //     'request_client.first_name',
+        //     'request_client.email',
+        //     'request_client.phone_number',
+        //     'request_client.street',
+        //     'request_client.city',
+        //     'request_client.state',
+        //     'request_client.zipcode',
+        //     'request_notes.patient_notes',
+        //     'request_notes.physician_notes',
+        //     'request_notes.admin_notes'
+        // )
+        //     ->leftJoin('request', 'request.id', 'request_client.request_id')
+        //     ->leftJoin('request_notes', 'request_notes.request_id', 'request_client.request_id')
+        //     ->paginate(10);
+
+        // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
+
+        $combinedData = request_Client::distinct()->select([
+            'request.request_type_id',
+            'request_client.first_name',
+            'request_client.id',
+            'request_client.email',
+            DB::raw('DATE(request_client.created_at) as created_date'),
+            'request_client.phone_number',
+            'request_client.street',
+            'request_client.city',
+            'request_client.state',
+            'request_client.zipcode',
+            'request_notes.patient_notes',
+            'request_notes.physician_notes',
+            'request_notes.admin_notes',
+            'request_status.status',
+            'provider.first_name as physician_first_name',
+        ])
+            ->join('request', 'request.id', '=', 'request_client.request_id')
+            ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
+            ->leftJoin('request_status', 'request_status.request_id', '=', 'request_client.request_id')
+            ->leftJoin('provider', function ($join) {
+                $join->on('request.physician_id', '=', 'provider.id');
+            })
+            ->leftJoin('status', 'status.id', '=', 'request_status.status')
+            ->paginate(10);
+
+
+
+        return view('adminPage.records.searchRecords', compact('combinedData'));
     }
+
+
+    public function searchRecordSearching(Request $request)
+    {
+        $combinedData = $this->exportFilteredSearchRecord($request);
+        $combinedData = $combinedData->paginate(10);
+
+        $session = session(
+            [
+                'request_status'=>$request->input('request_status'),
+                'patient_name' => $request->input('patient_name'),
+                'request_type'=> $request->input('request_type'),
+                'from_date_of_service'=>$request->input('from_date_of_service'),
+                'to_date_of_service'=>$request->input('to_date_of_service'),
+                'email'=>$request->input('email'),
+                'phone_number'=>$request->input('phone_number'),
+                'provider_name'=>$request->input('provider_name'),
+            ]
+        );
+
+        return view('adminPage.records.searchRecords', compact('combinedData'));
+    }
+
+    public function exportFilteredSearchRecord($request)
+    {
+
+        $combinedData = request_Client::distinct()->select([
+            'request_client.first_name',
+            'request.request_type_id',
+            DB::raw('DATE(request_client.created_at) as created_date'),
+            'request_client.email',
+            'request_client.phone_number',
+            'request_client.street',
+            'request_client.city',
+            'request_client.state',
+            'request_client.zipcode',
+            'request_status.status',
+            'provider.first_name as physician_first_name',
+            'request_notes.physician_notes',
+            'request_notes.admin_notes',
+            'request_notes.patient_notes',
+            'request_client.id',
+        ])
+            ->join('request', 'request.id', '=', 'request_client.request_id')
+            ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
+            ->leftJoin('request_status', 'request_status.request_id', '=', 'request_client.request_id')
+            ->leftJoin('provider', function ($join) {
+                $join->on('request.physician_id', '=', 'provider.id');
+            })
+            ->leftJoin('status', 'status.id', '=', 'request_status.status');
+
+        if (!empty($request->patient_name)) {
+            $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+        }
+        if (!empty($request->email)) {
+            $combinedData = $combinedData->orWhere('request_client.email', "like", "%" . $request->email . "%");
+        }
+        if (!empty($request->phone_number)) {
+            $combinedData = $combinedData->orWhere('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+        }
+        if (!empty($request->request_type)) {
+            $combinedData = $combinedData->orWhere('request.request_type_id', "like", "%" . $request->request_type . "%");
+        }
+        if (!empty($request->provider_name)) {
+            $combinedData = $combinedData->orWhere('provider.first_name', "like", "%" . $request->provider_name . "%");
+        }
+        if (!empty($request->request_status)) {
+            $combinedData = $combinedData->orWhere('request_status.status', "like", "%" . $request->request_status . "%");
+        }
+        if (!empty($request->from_date_of_service)) {
+            $combinedData = $combinedData->orWhere('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
+        }
+
+        return $combinedData;
+    }
+
+
+    public function downloadFilteredData(Request $request)
+    {
+
+        $data = $this->exportFilteredSearchRecord($request);
+        $export = new SearchRecordExport($data);
+
+        return Excel::download($export, 'filtered_data.xls');
+    }
+
+
+
+    public function deleteSearchRecordData($id)
+    {
+        $deleteData = request_Client::where('id', $id)->forceDelete();
+        return redirect()->back();
+    }
+
+
 
     public function emailRecordsView()
     {
@@ -746,6 +929,42 @@ class AdminController extends Controller
     }
 
 
+    public function UserAccess()
+    {
+
+        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
+            ->where('user_roles.id', '>', '13')
+            ->paginate(10);
+
+        return view('adminPage.access.userAccess', compact('userAccessData'));
+    }
+
+    public function UserAccessEdit($id)
+    {
+
+        $UserAccessRoleName = Roles::select('name')
+            ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
+            ->where('user_roles.user_id', $id)
+            ->whereBetween('user_roles.id', [14, 25])
+            ->get();
+
+        if ($UserAccessRoleName->first()->name == 'admin') {
+            return redirect()->route('adminProfile', ['id' => $id]);
+        } else if ($UserAccessRoleName->first()->name == 'physician') {
+            $getProviderId = Provider::where('user_id', $id);
+            return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
+        }
+    }
+
+    public function sendRequestSupport(Request $request)
+    {
+
+        $requestMessage = $request->contact_msg;
+        Mail::to('recipient@example.com')->send(new RequestSupportMessage($requestMessage));
+        return redirect()->back();
+    }
 
 
     // fetching regions from regions table and show in All Regions drop-down button
@@ -755,70 +974,84 @@ class AdminController extends Controller
         return response()->json($fetchedRegions);
     }
 
-    // fetching only that data which is filter-by All-Regions drop-down button
-
-    public function filterPatientByRegion(Request $request, $selectedId)
+    // *****  fetching only that data which is filter-by All-Regions drop-down button  ****
+    public function filterPatientByRegion(Request $request)
     {
-        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
 
-        $patientData = request_Client::with('request')->where('state', $regionName)->get();
-
+        $cases = [];
+        if ($status == 'new') {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+                $query->where('state', 'like', '%' . $regionName . '%');
+            })->where('status', 1)->get();
+        } else if ($status == 'pending') {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+                $query->where('state', 'like', '%' . $regionName . '%');
+            })->where('status', 3)->get();
+        } else if ($status == 'active') {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+                $query->where('state', 'like', '%' . $regionName . '%');
+            })->where('status', 5)->get();
+        } else if ($status == 'conclude') {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+                $query->where('state', 'like', '%' . $regionName . '%');
+            })->where('status', 6)->get();
+        } else if ($status == 'toclose') {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+                $query->where('state', 'like', '%' . $regionName . '%');
+            })->where('status', 7)->get();
+        } else if ($status == 'unpaid') {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+                $query->where('state', 'like', '%' . $regionName . '%');
+            })->where('status', 9)->get();
+        }
 
         // Format the data as needed (optional)
         $formattedData = [];
-        foreach ($patientData as $patient) {
+        foreach ($cases as $patient) {
             $formattedData[] = [
                 'request_id' => $patient->request->id,
                 'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->first_name,
-                'last_name' => $patient->last_name,
-                'date_of_birth' => $patient->date_of_birth,
+                'first_name' => $patient->requestClient->first_name,
+                'last_name' => $patient->requestClient->last_name,
+                'date_of_birth' => $patient->requestClient->date_of_birth,
                 'requestor' => $patient->request->first_name,
-                'created_at' => $patient->created_at,
-                'phone_number' => $patient->phone_number,
-                'street' => $patient->street,
-                'city' => $patient->city,
-                'state' => $patient->state,
+                'created_at' => $patient->requestClient->created_at,
+                'phone_number' => $patient->requestClient->phone_number,
+                'street' => $patient->requestClient->street,
+                'city' => $patient->requestClient->city,
+                'state' => $patient->requestClient->state,
             ];
         }
         $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $formattedData)->render();
         return response()->json(['html' => $data]);
     }
 
-    public function filterPatientByRegionPendingState($selectedId)
+
+    public function FilterUserAccessAccountTypeWise(Request $request)
     {
+        $account = $request->accountType == "all" ? '' : $request->accountType;
 
-        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
+        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
 
-        $patientData = request_Client::with('request')->where('state', $regionName)->get();
-
-        // Format the data as needed (optional)
-        $formattedData = [];
-        foreach ($patientData as $patient) {
-            $formattedData[] = [
-                'request_id' => $patient->request->id,
-                'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->first_name,
-                'last_name' => $patient->last_name,
-                'date_of_birth' => $patient->date_of_birth,
-                'requestor' => $patient->request->first_name,
-                'physician_name' => $patient->request->last_name,
-                'created_at' => $patient->created_at,
-                'phone_number' => $patient->phone_number,
-                'street' => $patient->street,
-                'city' => $patient->city,
-                'state' => $patient->state,
-            ];
+        if (!empty($account) && isset($account)) {
+            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
         }
+        $userAccessDataFiltering = $userAccessDataFiltering->get();
 
-        $data = view('adminPage.adminTabs.regions-filter-pending')->with('cases', $formattedData)->render();
+
+        $data = view('adminPage.access.userAccessFiltering')->with('userAccessData', $userAccessDataFiltering)->render();
+
         return response()->json(['html' => $data]);
     }
 
 
     public function filterPatientByRegionActiveState($selectedId)
     {
-
         $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
 
         $patientData = request_Client::with('request')->where('state', $regionName)->get();
