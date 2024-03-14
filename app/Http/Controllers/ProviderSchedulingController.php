@@ -49,6 +49,7 @@ class ProviderSchedulingController extends Controller
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
+            'created_by' => Auth::user()->id
         ]);
 
         $shiftDetail = ShiftDetail::create([
@@ -57,6 +58,7 @@ class ProviderSchedulingController extends Controller
             'region_id' => $request['region'],
             'start_time' => $request['shiftStartTime'],
             'end_time' => $request['shiftEndTime'],
+            'status' => 1
         ]);
         ShiftDetailRegion::create([
             'shift_detail_id' => $shiftDetail->id,
@@ -71,19 +73,28 @@ class ProviderSchedulingController extends Controller
         $shifts = Shift::with('shiftDetail')->where('physician_id', $physician->id)->get();
         $formattedShift = $shifts->map(function ($event) {
             return [
-                // 'id' => $event->id,
+                'shiftId' => $event->id,
                 'title' => $event->provider->first_name . " " . $event->provider->last_name,
                 'shiftDate' => $event->shiftDetail->shift_date,
                 'startTime' => $event->shiftDetail->start_time,
                 'endTime' => $event->shiftDetail->end_time,
                 'resourceId' => $event->physician_id,
                 'physician_id' => $event->physician_id,
+                // 'regiond_id' => $event->shiftDetail,
                 'is_repeat' => $event->is_repeat,
                 'week_days' => explode(',', $event->week_days),
-                'repeat_upto' => $event->repeat_upto
+                'repeat_upto' => $event->repeat_upto,
+                'status' => $event->shiftDetail->status
             ];
         });
 
         return response()->json($formattedShift->toArray());
+    }
+
+    public function providerEditShift(Request $request)
+    {
+        if ($request['action'] == 'save') {
+        } else {
+        }
     }
 }

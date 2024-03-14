@@ -6,8 +6,9 @@ use App\Models\Shift;
 use App\Models\Regions;
 use App\Models\Provider;
 use App\Models\ShiftDetail;
-use App\Models\ShiftDetailRegion;
 use Illuminate\Http\Request;
+use App\Models\ShiftDetailRegion;
+use Illuminate\Support\Facades\Auth;
 
 class SchedulingController extends Controller
 {
@@ -50,24 +51,27 @@ class SchedulingController extends Controller
         } else {
             $is_repeat = 0;
         }
-        $shiftId =  Shift::insertGetId([
+        $shift =  Shift::create([
             'physician_id' => $request['physician'],
             'start_date' => $request['shiftDate'],
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
+            // 'created_by' => Auth::user()->id
         ]);
-        $shiftDetailId = ShiftDetail::insertGetId([
-            'shift_id' => $shiftId,
+        $shiftDetail = ShiftDetail::create([
+            'shift_id' => $shift->id,
             'shift_date' => $request['shiftDate'],
-            'region_id' => $request['region'],
+            // 'region_id' => $request['region'],
             'start_time' => $request['shiftStartTime'],
             'end_time' => $request['shiftEndTime'],
+            'status' => 2
         ]);
-        ShiftDetailRegion::insert([
-            'shift_detail_id' => $shiftDetailId,
+        $shiftDetailRegion = ShiftDetailRegion::create([
+            'shift_detail_id' => $shiftDetail->id,
             'region_id' => $request['region']
         ]);
+        ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
         return redirect()->back();
     }
 
@@ -78,19 +82,37 @@ class SchedulingController extends Controller
 
         $formattedShift = $shifts->map(function ($event) {
             return [
-                // 'id' => $event->id,
+                'shiftId' => $event->id,
                 'title' => $event->provider->first_name . " " . $event->provider->last_name,
                 'shiftDate' => $event->shiftDetail->shift_date,
                 'startTime' => $event->shiftDetail->start_time,
                 'endTime' => $event->shiftDetail->end_time,
                 'resourceId' => $event->physician_id,
                 'physician_id' => $event->physician_id,
+                'region_id' => $event->shiftDetail->shiftDetailRegion->region_id,
                 'is_repeat' => $event->is_repeat,
                 'week_days' => explode(',', $event->week_days),
-                'repeat_upto' => $event->repeat_upto
+                'repeat_upto' => $event->repeat_upto,
+                'status' => $event->shiftDetail->status
             ];
         });
 
         return response()->json($formattedShift->toArray());
+    }
+
+    public function editShift(Request $request)
+    {
+        if ($request['action'] == 'return') {
+            $status = ShiftDetail::where('shift_id', $request->shiftId)->first();
+            if ($status->status == 'approved') {
+                ShiftDetail::where('shift_id', $request->shiftId)->update(['status' => 1]);
+                return redirect()->back();
+            } else {
+                ShiftDetail::where('shift_id', $request->shiftId)->update(['status' => 2]);
+                return redirect()->back();
+            }
+        } else if ($request['action'] == 'save') {
+        } else {
+        }
     }
 }

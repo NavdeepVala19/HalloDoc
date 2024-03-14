@@ -429,6 +429,8 @@ Route::get('/shifts-review', [SchedulingController::class, 'shiftsReviewView'])-
 Route::post('/create-shift', [SchedulingController::class, 'createShiftData'])->name('admin.scheduling.data');
 // Events data
 Route::get('/events-data', [SchedulingController::class, 'eventsData'])->name('events.data');
+// Edit Shifts
+Route::post('/admin-edit-shift', [SchedulingController::class, 'editShift'])->name('admin.edit.shift');
 
 // Provider Scheduling
 // Scheduling Calendar view 
@@ -439,6 +441,8 @@ Route::get('/provider-information', [ProviderSchedulingController::class, 'provi
 Route::post('/provider-create-shift', [ProviderSchedulingController::class, 'providerShiftData'])->name('physician.scheduling.data');
 // Provider shift data 
 Route::get('/provider-shift', [ProviderSchedulingController::class, 'providerShift'])->name('provider.shift');
+// Provider Edit Shift
+Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'providerEditShift'])->name('provider.edit.shift');
 
 // For Testing Purpose only
 Route::get('/test', function () {

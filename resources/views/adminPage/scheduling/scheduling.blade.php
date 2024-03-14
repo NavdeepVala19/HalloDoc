@@ -152,8 +152,9 @@
             <span>View Shift</span>
             <button class="hide-popup-btn view-shift-close"><i class="bi bi-x-lg"></i></button>
         </div>
-        <form action="" method="POST" class="m-4">
+        <form action="{{ route('admin.edit.shift') }}" method="POST" class="m-4">
             @csrf
+            <input type="text" name="shiftId" class="shiftId" hidden>
             <div>
                 <select name="region" class="form-select region-view-shift" id="floatingSelect"
                     aria-label="Floating label select example" disabled>
@@ -189,10 +190,11 @@
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="button" class="primary-fill">Return</button>
+                <button type="submit" name="action" value="return" class="primary-fill">Return</button>
+                {{-- Change status from pending to approved and vice-versa --}}
                 <button type="button" class="primary-fill edit-btn">Edit</button>
-                <button type="button" class="primary-fill save-btn">Save</button>
-                <button type="button" class="delete-selected-btn">Delete</button>
+                <button type="submit" name="action" value="save" class="primary-fill save-btn">Save</button>
+                <button type="submit" name="action" value="delete" class="delete-selected-btn">Delete</button>
             </div>
         </form>
     </div>

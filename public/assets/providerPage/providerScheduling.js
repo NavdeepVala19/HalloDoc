@@ -23,7 +23,25 @@ $(document).ready(function () {
             let currentDate = $(".fc-toolbar-title").text();
             $(".calendar-date").text(currentDate);
         },
-        
+        eventClick: function (info) {
+            let shiftDate = info.event.startStr.slice(0, 10);
+            let startTime = info.event.startStr.slice(11, 19);
+            let endTime = info.event.endStr.slice(11, 19);
+            // console.log();
+
+            // let providerId = info.event.resource.id;
+            // let providerName = info.event.resource.extendedProps.physician;
+            // console.log(info.event, providerId, providerName);
+
+            $(".view-shift").show();
+            $(".overlay").show();
+
+            // $(".region-view-shift");
+            // $(".physician-view-shift");
+            $(".shiftDate").val(shiftDate);
+            $(".shiftStartTime").val(startTime);
+            $(".shiftEndTime").val(endTime);
+        },
     });
     calendar.render();
 
@@ -114,7 +132,14 @@ $(document).ready(function () {
                         startRecur: event.shiftDate,
                         endRecur: repeatEnd,
                         textColor: "#000",
-                        backgroundColor: "rgb(167, 204, 163)",
+                        backgroundColor:
+                            event.status == "approved"
+                                ? "rgb(167, 204, 163)"
+                                : "rgb(240, 173, 212)",
+                        className:
+                            event.status == "approved"
+                                ? "approved-shift-style"
+                                : "pending-shift-style",
                     };
                     events.push(eventData);
                 }
@@ -125,7 +150,14 @@ $(document).ready(function () {
                     end: endTime,
                     resourceId: event.resourceId,
                     textColor: "#000",
-                    backgroundColor: "rgb(167, 204, 163)",
+                    backgroundColor:
+                        event.status == "approved"
+                            ? "rgb(167, 204, 163)"
+                            : "rgb(240, 173, 212)",
+                    className:
+                        event.status == "approved"
+                            ? "approved-shift-style"
+                            : "pending-shift-style",
                     // Update the event
                     // calendar.getEventById(physicianId).update({
                     //     title: physician,
@@ -139,5 +171,22 @@ $(document).ready(function () {
             });
             calendar.addEventSource(events);
         },
+    });
+
+    $(".edit-btn").click(function () {
+        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
+            "disabled",
+            false
+        );
+        $(".save-btn").show();
+        $(".edit-btn").hide();
+    });
+    $(".view-shift-close").click(function () {
+        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
+            "disabled",
+            true
+        );
+        $(".save-btn").hide();
+        $(".edit-btn").show();
     });
 });

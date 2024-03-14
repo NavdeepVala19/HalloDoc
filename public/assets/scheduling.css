@@ -9,6 +9,16 @@
     border-radius: 5px;
     border: 2px solid rgb(210, 133, 190);
 }
+.pending-shift-style {
+    color: #000;
+    background-color: rgb(240, 173, 212);
+    border: 2px solid rgb(210, 133, 190);
+}
+.approved-shift-style {
+    color: #000;
+    background-color: rgb(167, 204, 163);
+    border: 2px solid rgb(136, 168, 141);
+}
 .approved-shift {
     display: inline-block;
     width: 55px;
@@ -139,23 +149,24 @@ thead tr .fc-datagrid-cell-cushion {
 .fc-daygrid-day-events .fc-daygrid-event-harness,
 .fc-timeline-event-harness {
     /* height: 35px; */
-    background-color: rgb(167, 204, 163);
+    /* background-color: rgb(167, 204, 163); */
     border-radius: 5px;
-    border: 2px solid rgb(136, 168, 141);
+    /* border: 2px solid rgb(136, 168, 141); */
 }
 .fc-daygrid-event {
-    color: #000;
+    /* color: #000; */
     padding: 5px;
 }
 .fc-daygrid-event-dot {
-    border-color: #000 !important;
+    /* border-color: #000 !important; */
+    display: none;
 }
 .fc-timeline-event {
     padding: 5px;
-    color: #000;
+    /* color: #000; */
 }
 .fc-event-main {
-    color: #000 !important;
+    /* color: #000 !important; */
 }
 .fc-h-event {
     border: none;
