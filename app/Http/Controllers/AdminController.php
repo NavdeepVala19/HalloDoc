@@ -180,6 +180,7 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)
                     ->whereHas('request', function ($q) use ($request) {
@@ -189,6 +190,7 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
                     ->whereHas('request', function ($q) use ($request) {
@@ -198,6 +200,7 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -206,6 +209,7 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
+
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 2)->orWhere('status', 7)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -214,6 +218,7 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
+
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -223,7 +228,8 @@ class AdminController extends Controller
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
             }
-        } else {
+        } 
+        else {
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)
                     ->whereHas('request', function ($q) use ($request, $category) {
@@ -718,55 +724,20 @@ class AdminController extends Controller
     public function searchRecordSearching(Request $request)
     {
         $combinedData = $this->exportFilteredSearchRecord($request);
+        $combinedData = $combinedData->paginate(10);
 
-
-        // $combinedData = request_Client::distinct()->select([
-        //     'request.request_type_id',
-        //     'request_client.id',
-        //     'request_client.first_name',
-        //     'request_client.email',
-        //     DB::raw('DATE(request_client.created_at) as created_date'),
-        //     'request_client.phone_number',
-        //     'request_client.street',
-        //     'request_client.city',
-        //     'request_client.state',
-        //     'request_client.zipcode',
-        //     'request_notes.patient_notes',
-        //     'request_notes.physician_notes',
-        //     'request_notes.admin_notes',
-        //     'request_status.status',
-        //     'provider.first_name as physician_first_name',
-        // ])
-        //     ->join('request', 'request.id', '=', 'request_client.request_id')
-        //     ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
-        //     ->leftJoin('request_status', 'request_status.request_id', '=', 'request_client.request_id')
-        //     ->leftJoin('provider', function ($join) {
-        //         $join->on('request.physician_id', '=', 'provider.id');
-        //     })
-        //     ->leftJoin('status', 'status.id', '=', 'request_status.status');
-
-        // if (!empty($request->patient_name)) {
-        //     $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
-        // }
-        // if (!empty($request->email)) {
-        //     $combinedData = $combinedData->orWhere('request_client.email', "like", "%" . $request->email . "%");
-        // }
-        // if (!empty($request->phone_number)) {
-        //     $combinedData = $combinedData->orWhere('request_client.phone_number', "like", "%" . $request->phone_number . "%");
-        // }
-        // if (!empty($request->request_type)) {
-        //     $combinedData = $combinedData->orWhere('request.request_type_id', "like", "%" . $request->request_type . "%");
-        // }
-        // if (!empty($request->provider_name)) {
-        //     $combinedData = $combinedData->orWhere('provider.first_name', "like", "%" . $request->provider_name . "%");
-        // }
-        // if (!empty($request->request_status)) {
-        //     $combinedData = $combinedData->orWhere('request_status.status', "like", "%" . $request->request_status . "%");
-        // }
-        // if (!empty($request->from_date_of_service)) {
-        //     $combinedData = $combinedData->orWhere('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
-        // }
-        // $combinedData = $combinedData->paginate(10);
+        $session = session(
+            [
+                'request_status'=>$request->input('request_status'),
+                'patient_name' => $request->input('patient_name'),
+                'request_type'=> $request->input('request_type'),
+                'from_date_of_service'=>$request->input('from_date_of_service'),
+                'to_date_of_service'=>$request->input('to_date_of_service'),
+                'email'=>$request->input('email'),
+                'phone_number'=>$request->input('phone_number'),
+                'provider_name'=>$request->input('provider_name'),
+            ]
+        );
 
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
@@ -820,9 +791,6 @@ class AdminController extends Controller
         if (!empty($request->from_date_of_service)) {
             $combinedData = $combinedData->orWhere('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
         }
-        $combinedData = $combinedData->paginate(10);
-
-
 
         return $combinedData;
     }
@@ -830,10 +798,13 @@ class AdminController extends Controller
 
     public function downloadFilteredData(Request $request)
     {
+
         $data = $this->exportFilteredSearchRecord($request);
         $export = new SearchRecordExport($data);
+
         return Excel::download($export, 'filtered_data.xls');
     }
+
 
 
     public function deleteSearchRecordData($id)
@@ -841,6 +812,7 @@ class AdminController extends Controller
         $deleteData = request_Client::where('id', $id)->forceDelete();
         return redirect()->back();
     }
+
 
 
     public function emailRecordsView()

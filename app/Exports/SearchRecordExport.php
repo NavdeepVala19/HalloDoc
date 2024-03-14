@@ -10,9 +10,8 @@ use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
 class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
-
     private $data;
+
 
     public function __construct($data)
     {
@@ -27,7 +26,7 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
 
     public function headings(): array
     {
-        return ['PatientName', 'Requestor', 'Date-Of-Service', 'Close-Case-Date', 'Email', 'Phone_Number', 'Address', 'Zip', 'Request Status', 'Physician', 'Physician Note', 'Cancelled By Provider Note', 'Admin Note', 'Patient Note'];
+        return ['PatientName', 'Requestor', 'Email', 'Phone_Number', 'Address', 'Zip', 'Request Status', 'Physician', 'Physician Note', 'Admin Note', 'Patient Note'];
     }
 
 
@@ -36,7 +35,9 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
      */
     public function collection()
     {
-        return collect($this->data)->map(function ($patient) {
+        $patientData = $this->data->get();
+
+        return collect($patientData)->map(function ($patient) {
             $requestor = '';
             switch ($patient->request_type_id) {
                 case 1:
@@ -52,7 +53,7 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
                     $requestor = 'Business';
                     break;
                 default:
-                    $requestor = "";
+                    $requestor = '';
                     break;
             }
 
@@ -99,13 +100,13 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
                     break;
 
                 default:
-                    $request_status = "";
+                    $request_status = '';
                     break;
             }
 
             return [
                 // Map patient data to desired Excel columns
-                'PatientName' => $patient->name,
+                'PatientName' => $patient->first_name,
                 'Requestor' => $requestor,
                 'Email' => $patient->email,
                 'Phone_Number' => $patient->phone_number,
@@ -116,7 +117,7 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
                 'Physician Note' => $patient->physician_notes,
                 'Admin Note' => $patient->admin_notes,
                 'Patient Note' => $patient->patient_notes,
-                'Cancelled By Provider Note'
+
             ];
         });
     }

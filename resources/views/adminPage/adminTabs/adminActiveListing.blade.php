@@ -230,10 +230,10 @@ giving service to the patient. --}}
                 <form action="{{ route('searching', ['status' => 'active', 'category' => request('category', 'all')]) }}" method="GET" class="d-flex align-items-center">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
-                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient-active" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
-                    <select class="form-select listing-region">
+                    <select class="form-select listing-region-active" id="listing-region">
                         <option name="regions" selected>All Regions</option>
                     </select>
                 </form>
@@ -267,7 +267,7 @@ giving service to the patient. --}}
                         <tr class="type-{{ $case->request->request_type_id }}">
                             <td>{{ $case->request->requestClient->first_name }}</td>
                             <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                            <td>Requestor Name</td>
+                            <td>{{ $case->request->first_name }}</td>
                             <td>Physician Name</td>
                             <td>{{ $case->request->created_at }}</td>
                             <td>{{ $case->request->phone_number }}</td>

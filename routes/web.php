@@ -212,8 +212,7 @@ route::post('admin/new/request-support', [AdminController::class, 'sendRequestSu
 
 
 
-
-route::get('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
+route::post('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
 route::get('/admin/new/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
 route::get('/admin/new/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
 route::get('/admin/new/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
@@ -222,7 +221,7 @@ route::get('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport
 route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
 
-route::get('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
+route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
 
 
 route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');

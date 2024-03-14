@@ -9,7 +9,7 @@
 {{--
     @section('username')
     {{ $userData->username }}
-    @endsection
+@endsection
 --}}
 
 @section('nav-links')
@@ -303,12 +303,20 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     Create Requests
                 </span>
             </a>
-            <a href="{{route('exportNewData')}}" class="primary-fill">
+            <a href="#" class="primary-fill" id="filterExportBtnNew">
                 <i class="bi bi-send-arrow-down"></i>
-                <span class="txt">
+                <span class="primary-fill">
                     Export
                 </span>
             </a>
+            <form action="{{route('exportNewData')}}" method="POST" id="filterExport">
+                @csrf
+                <input name="filter_search" value="" hidden>
+                <input name="filter_region" value="" hidden>
+                <input name="filter_category" value="" hidden>
+                <button type="submit" hidden>export</button>
+            </form>
+
             <a href="{{route('exportAll')}}" class="primary-fill">
                 <i class="bi bi-send-arrow-down-fill"></i>
                 <span class="txt">
@@ -328,11 +336,11 @@ can block any case. All blocked cases can be seen in Block history page. --}}
             <form action="{{ route('searching', ['status' => 'new', 'category' => request('category', 'all')]) }}" method="GET" class="d-flex align-items-center">
                 {{-- @csrf --}}
                 <div class="input-group mb-3">
-                    <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                    <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient-new" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
                     {{-- <input type="submit" class="primary-fill"> --}}
                 </div>
 
-                <select class="form-select listing-region">
+                <select class="form-select listing-region-new" id="listing-region">
                     <option name="regions" selected>All Regions</option>
                 </select>
 

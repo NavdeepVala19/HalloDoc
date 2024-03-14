@@ -235,7 +235,7 @@ $(document).ready(function () {
         success: function (data) {
             // Assuming data is an array of reasons
             data.forEach(function (region) {
-                $(".listing-region").append(
+                $("#listing-region").append(
                     '<option value="' + region.id + '">' + region.region_name + "</option>"
                 );
             });
@@ -250,7 +250,7 @@ $(document).ready(function () {
 
     // ***************** Filtering regions from dropdown button ******************
 
-    $('.listing-region').on('change', function () {
+    $('#listing-region').on('change', function () {
         var token = $('meta[name="csrf-token"]').attr('content')
         // Store the selected option's ID
         var tab = $(".nav-link.active").attr('id');

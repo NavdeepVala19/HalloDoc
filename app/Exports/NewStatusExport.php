@@ -12,6 +12,14 @@ use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
 class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
+
+    private $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -19,7 +27,7 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
 
     public function headings(): array
     {
-        return ['PatientName', 'DOB', 'RequestorName', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
     }
 
     /**
@@ -27,11 +35,18 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
      */
     public function collection()
     {
-        $data = request_Client::distinct()->select('request_client.first_name', 'request_client.date_of_birth', 'request.first_name as request_first_name', 'request_client.created_at', 'request_client.phone_number', DB::raw("CONCAT(request_client.street,',',request_client.city,',',request_client.state) AS address"))
-            ->leftJoin('request', 'request.id', '=', 'request_client.request_id')
-            ->leftJoin('request_status', 'request.id', '=', 'request_status.request_id')
-            ->where('request_status.status', 1)
-            ->get();
-        return $data;
+        $adminNewData = $this->data->get();
+
+        return collect($adminNewData)->map(function ($adminNew) {
+
+            return [
+                'PatientName' => $adminNew->request->requestClient->first_name,
+                'Date of Birth' => $adminNew->request->requestClient->date_of_birth,
+                'Requestor' => $adminNew->request->first_name,
+                'RequestedDate' => $adminNew->request->created_at,
+                'Mobile' => $adminNew->request->phone_number,
+                'Address' => $adminNew->request->requestClient->street . ',' . $adminNew->request->requestClient->city . ',' . $adminNew->request->requestClient->state,
+            ];
+        });
     }
 }

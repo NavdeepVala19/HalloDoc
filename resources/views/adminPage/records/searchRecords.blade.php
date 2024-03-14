@@ -41,18 +41,18 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
 
-        <a href="{{route('downloadFilteredData')}}" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
+        <a href="#" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
     </div>
 
 
     <div class="section">
-        <form action="{{route('admin.search.records')}}" method="post">
+        <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">
 
             @csrf
             <div class="grid-4">
 
                 <div class="form-floating request-status-select">
-                    <select class="form-select status-type" name="request_status">
+                    <select class="form-select status-type" name="request_status" value="{{old('request_status' ,request()->input('request_status'))}}">
                         <option selected>Select Request Status</option>
                         <option value="1">Unassigned</option>
                         <option value="2">Cancelled</option>
@@ -69,12 +69,12 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="patient_name" class="form-control patient-name" id="floatingInput" placeholder="Patient Name">
+                    <input type="text" name="patient_name" class="form-control patient-name" id="floatingInput" placeholder="Patient Name" value="{{old('patient_name' ,request()->input('patient_name'))}}">
                     <label for="floatingInput">Patient Name</label>
                 </div>
 
                 <div class="form-floating request-type-select">
-                    <select class="form-select request-type" name="request_type">
+                    <select class="form-select request-type" name="request_type" value="{{old('request_type' ,request()->input('request_type'))}}">
                         <option selected>Select Request Type</option>
                         <option value="1">Patient</option>
                         <option value="2">Family/Friend</option>
@@ -85,27 +85,27 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="date" class="form-control from-date-of-service" id="floatingInput" placeholder="From the Date of Service" name="from_date_of_service">
+                    <input type="date" class="form-control from-date-of-service" id="floatingInput" placeholder="From the Date of Service" name="from_date_of_service" value="{{old('from_date_of_service' ,request()->input('from_date_of_service'))}}">
                     <label for="floatingInput">From the Date of Service</label>
                 </div>
 
 
                 <div class="form-floating ">
-                    <input type="date" class="form-control to-date-of-service" id="floatingInput" placeholder="To the Date of Service">
+                    <input type="date" class="form-control to-date-of-service" id="floatingInput" placeholder="To the Date of Service" name="to_date_of_service" value="{{old('to_date_of_service' ,request()->input('to_date_of_service'))}}">
                     <label for="floatingInput">To the Date of Service</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="provider_name" class="form-control provider-name" id="floatingInput" placeholder="Provider Name">
+                    <input type="text" name="provider_name" class="form-control provider-name" id="floatingInput" placeholder="Provider Name" value="{{old('provider_name' ,request()->input('provider_name'))}}">
                     <label for="floatingInput">Provider Name</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email">
+                    <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{old('email' ,request()->input('email'))}}">
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" placeholder="Phone Number">
+                <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" placeholder="Phone Number" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
 
 
