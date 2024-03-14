@@ -4,7 +4,7 @@
     <a href="{{ route('provider.dashboard') }}">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="">My Schedule</a>
-    <a href="" class="active-link">My Profile</a>
+    <a href="">My Profile</a>
 @endsection
 
 @section('content')
@@ -88,15 +88,16 @@
                         <button class="primary-empty"><i class="bi bi-geo-alt"></i></button>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="room" value="{{ $data->room }}" class="form-control" id="floatingInput" placeholder="room">
+                        <input type="text" name="room" value="{{ $data->room }}" class="form-control"
+                            id="floatingInput" placeholder="room">
                         <label for="floatingInput">Room #</label>
                     </div>
                 </div>
 
                 <div class="text-end">
-                    <button class="primary-fill">Assign</button>
-                    <button class="primary-fill">View Notes</button>
-                    <button class="primary-red">Cancel</button>
+                    {{-- <button class="primary-fill">Assign</button> --}}
+                    <a href="{{ route('provider.view.notes', $data->id) }}" class="primary-fill">View Notes</a>
+                    <a href="{{ route('provider.status', 'new') }}" class="primary-red">Cancel</a>
                 </div>
             </form>
         </div>

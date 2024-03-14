@@ -33,9 +33,10 @@ class patientDashboardController extends Controller
         return view("patientSite/patientSomeoneRequest");
     }
 
-    public function viewAgreement()
+    public function viewAgreement($data)
     {
-        return view("patientSite/patientAgreement");
+        $clientData = RequestTable::with('requestClient')->where('id', $data)->first();
+        return view("patientSite/patientAgreement", compact('clientData'));
     }
 
     public function createNewPatient(Request $request)

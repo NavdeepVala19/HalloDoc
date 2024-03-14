@@ -101,7 +101,6 @@
                     </div>
 
                     <div class="d-flex gap-2 align-items-center">
-
                         <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
                             class="form-control phone @error('last_name') is-invalid @enderror" id="telephone"
                             placeholder="Phone Number" disabled>

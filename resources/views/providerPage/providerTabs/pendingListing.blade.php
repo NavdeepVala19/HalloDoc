@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
     <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
@@ -35,22 +35,19 @@ pending state, providers need to send an agreement link to patients. --}}
                 <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
                     concierge)</span>
                 <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
-                    for
-                    the
-                    responsible party.
-                </p>
+                    for the responsible party. </p>
             </div>
             <form action="{{ route('send.agreement') }}" method="POST">
                 @csrf
                 <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
                 <div>
                     <div class="form-floating ">
-                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
-                            placeholder="Phone Number">
+                        <input type="text" name="phone_number" class="form-control agreement-phone-number"
+                            id="floatingInput" placeholder="Phone Number">
                         <label for="floatingInput">Phone Number</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control" id="floatingInput"
+                        <input type="email" name="email" class="form-control agreement-email" id="floatingInput"
                             placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
@@ -108,9 +105,9 @@ pending state, providers need to send an agreement link to patients. --}}
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
         <span class="p-2">This request will be transferred to admin.</span>
-        <form action="{{route('provider.transfer.case')}}" method="POST">
+        <form action="{{ route('provider.transfer.case') }}" method="POST">
             @csrf
-<input type="text" class="requestId" name="requestId" hidden>
+            <input type="text" class="requestId" name="requestId" hidden>
             <div class="d-flex align-items-center justify-content-center gap-2">
                 <div class="form-floating">
                     <textarea name="notes" class="form-control transfer-description" placeholder="notes" id="floatingTextarea2"></textarea>
@@ -228,8 +225,6 @@ pending state, providers need to send an agreement link to patients. --}}
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Status</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -240,28 +235,24 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->phone_number }}</td>
                                     <td>{{ $case->request->requestClient->address }}</td>
-                                    <td>Status</td>
-                                    <td>
-                                        <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                        <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-                                    </td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
+                                                <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
+                                                    data-request_type_id={{ $case->request->request_type_id }}
+                                                    data-phone_number={{ $case->request->phone_number }}
+                                                    data-email={{ $case->request->email }}><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
                                                 <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
-                                                    data-request_type_id={{ $case->request_type_id }}><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
-                                                <button class="transfer-btn" data-id="{{ $case->request->id }}"><i
-                                                        class="bi bi-send me-2 ms-3"></i>Transfer</button>
-                                                <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
-                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
+                                                <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
+                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
+                                                <button class="transfer-btn" data-id="{{ $case->request->id }}"><i
+                                                        class="bi bi-send me-2 ms-3"></i>Transfer</button>
                                             </div>
                                         </div>
                                     </td>

@@ -45,7 +45,6 @@ class businessRequestController extends Controller
     $requestEmail = new users();
     $requestEmail->email = $request->email;
     $requestEmail->phone_number = $request->phone_number;
-
     $requestEmail->save();
 
 

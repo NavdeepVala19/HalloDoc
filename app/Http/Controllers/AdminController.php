@@ -327,20 +327,17 @@ class AdminController extends Controller
     {
         $physiciansId = PhysicianRegion::where('region_id', $id)->pluck('provider_id')->toArray();
         $physicians = Provider::whereIn('id', $physiciansId)->get()->toArray();
-        // dd($physicians);
         return response()->json($physicians);
     }
     // assign Case login 
     public function assignCase(Request $request)
     {
-        // dd($request->physician);
         RequestStatus::where('request_id', $request->requestId)->update(['TransToPhysicianId' => $request->physician]);
         return redirect()->back();
     }
 
     public function transferCase(Request $request)
     {
-        // dd($request->physician);
         RequestStatus::where('request_id', $request->requestId)->where('TransToAdmin', true)
             ->update([
                 'TransToPhysicianId' => $request->physician,

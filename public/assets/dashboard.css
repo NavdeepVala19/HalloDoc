@@ -16,6 +16,10 @@
     color: #fff;
 }
 
+.table-responsive {
+    min-height: 350px;
+}
+
 .case-new {
     position: relative;
     border: 1px solid rgb(150, 155, 182);
@@ -479,6 +483,7 @@ tr>td {
 
     .accept-btn {
         border: none;
+        text-align: center;
         background-color: rgb(158, 57, 188);
         color: #fff;
         padding: 5px 0;
@@ -622,22 +627,13 @@ tr>td {
     height: 150px !important;
 }
 
-
 /******************************* Request DTY PopUp - AdminListingPages **************************************/
-
 
 .request-support {
     display: none;
     width: 500px;
     z-index: 20;
 }
-
-
-
-
-
-
-
 
 /* ******************************* CSS of ActionMenu button of Regions filter blade file ****************************** */
 
@@ -652,7 +648,7 @@ tr>td {
     z-index: 999;
 }
 
-.actions-menubar>button {
+.actions-menubar > button {
     width: 200px !important;
     border: none;
     background-color: #fff;
@@ -660,7 +656,7 @@ tr>td {
     text-align: left;
 }
 
-.actions-menubar>a {
+.actions-menubar > a {
     display: block;
     width: 200px !important;
     border: none;
@@ -670,7 +666,7 @@ tr>td {
     text-align: left;
 }
 
-.actions-menubar>button:hover,
-.actions-menubar>a:hover {
+.actions-menubar > button:hover,
+.actions-menubar > a:hover {
     background-color: rgba(128, 128, 128);
 }

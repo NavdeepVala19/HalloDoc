@@ -57,7 +57,7 @@ $(document).ready(function () {
         $(".transfer-request").show();
         $(".overlay").show();
 
-        $('.requestId').val($(this).data('id'));
+        $(".requestId").val($(this).data("id"));
     });
 
     // for showing send-link pop-up on every listing page
@@ -105,6 +105,11 @@ $(document).ready(function () {
         $(".overlay").show();
         $(".send-agreement-id").val($(this).data("id"));
 
+        console.log($(this).data("phone_number"));
+
+        $(".agreement-phone-number").val($(this).data("phone_number"));
+        $(".agreement-email").val($(this).data("email"));
+
         // console.log($(this).data("request_type_id"));
         if ($(this).data("request_type_id") == 1) {
             $(".request-detail").html(
@@ -124,11 +129,7 @@ $(document).ready(function () {
             );
         }
     });
-
-
 });
-
-
 
 // var canvas = document.getElementById('signatureCanvas');
 //     var context = canvas.getContext('2d');

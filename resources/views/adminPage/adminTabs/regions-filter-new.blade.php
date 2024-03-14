@@ -11,9 +11,6 @@
     </td>
     <td></td>
     <td>
-        <button class="table-btn "><i class="bi bi-person me-2"></i>Provider</button>
-    </td>
-    <td>
         <div class="action-container">
             <button class="table-btn action-btn">Actions</button>
             <div class="actions-menubar">

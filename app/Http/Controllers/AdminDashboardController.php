@@ -25,18 +25,20 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
-
-        $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'min:2|max:30',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number' => 'required|numeric|digits:10',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
-            'state' => 'min:2|max:30',
-            'room' => 'numeric',
-        ]);
+        try {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'phone_number' => 'required',
+                'email' => 'required|email',
+                // 'dob' => 'required',
+                'street' => 'required',
+                'city' => 'required',
+                'state' => 'required'
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
 
         // store email and phoneNumber in users table
         $requestEmail = new users();
@@ -44,12 +46,10 @@ class AdminDashboardController extends Controller
         $requestEmail->phone_number = $request->phone_number;
         // $requestEmail->save();
 
-
-
         $requestData = new RequestTable();
         $requestStatus = new RequestStatus();
 
-        // $requestData->status = $requestStatus->id;
+        $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
@@ -62,11 +62,9 @@ class AdminDashboardController extends Controller
         $requestStatus->status = 1;
         $requestStatus->save();
 
-
         if (!empty($requestStatus)) {
             $requestData->update(['status' => $requestStatus->id]);
         }
-
 
         $adminPatientRequest = new request_Client();
         $adminPatientRequest->request_id = $requestData->id;
@@ -88,9 +86,9 @@ class AdminDashboardController extends Controller
         $request_notes = new RequestNotes();
         $request_notes->request_id = $requestData->id;
         $request_notes->admin_notes = $request->adminNote;
+        $request_notes->created_by = 'admin';
 
         $request_notes->save();
-
 
         // store all details of patient in allUsers table
 
@@ -105,11 +103,8 @@ class AdminDashboardController extends Controller
         $requestUsers->zipcode = $request->zipcode;
         $requestUsers->save();
 
-
         return redirect()->route('admin.dashboard');
     }
-
-
 
     public function adminProfile($id)
     {
@@ -119,15 +114,11 @@ class AdminDashboardController extends Controller
 
     public function adminProfileEdit(Request $request, $id)
     {
-
-
         $request->validate([
             'user_name' => 'required',
             'first_name' => 'required',
             'email' => 'required|email',
         ]);
-
-
         $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
 
         $updateAdminInformation->first_name = $request->first_name;
@@ -141,17 +132,11 @@ class AdminDashboardController extends Controller
         $updateAdminInformation->alt_phone = $request->alt_mobile;
         $updateAdminInformation->save();
 
-
-
         $updateAdminInfoInUsers = users::where('id', $id)->first();
         $updateAdminInfoInUsers->username = $request->user_name;
         $updateAdminInfoInUsers->password = $request->password;
         $updateAdminInfoInUsers->save();    
         
-        
-
-
-
         $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
 
         $updateAdminInfoAllUsers->first_name = $request->first_name;
@@ -173,10 +158,4 @@ class AdminDashboardController extends Controller
     //     $getProviderData = Provider::with('users')->where('user_id', $id)->first();
     //     return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     // }
-
-
-
-    
-
-
 }

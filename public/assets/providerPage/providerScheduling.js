@@ -1,8 +1,51 @@
 $(document).ready(function () {
-    $(".new-shift-btn").click(function () {
-        $(".create-shift").show();
-        $(".overlay").show();
+    var calendarEl = document.getElementById("calendar");
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        headerToolbar: {
+            left: "prev next",
+            center: "title",
+            right: "customAddShift",
+        },
+        customButtons: {
+            customAddShift: {
+                text: "Add New Shift",
+                click: function () {
+                    $(".create-shift").show();
+                    $(".overlay").show();
+                },
+            },
+        },
+        datesSet: function (view) {
+            // Added event handler
+            // Update title or span element here (optional)
+            let currentDate = $(".fc-toolbar-title").text();
+            $(".calendar-date").text(currentDate);
+        },
+        eventClick: function (info) {
+            let shiftDate = info.event.startStr.slice(0, 10);
+            let startTime = info.event.startStr.slice(11, 19);
+            let endTime = info.event.endStr.slice(11, 19);
+            // console.log();
+
+            // let providerId = info.event.resource.id;
+            // let providerName = info.event.resource.extendedProps.physician;
+            // console.log(info.event, providerId, providerName);
+
+            $(".view-shift").show();
+            $(".overlay").show();
+
+            // $(".region-view-shift");
+            // $(".physician-view-shift");
+            $(".shiftDate").val(shiftDate);
+            $(".shiftStartTime").val(startTime);
+            $(".shiftEndTime").val(endTime);
+        },
     });
+    calendar.render();
+
+    // $(".add-new-shift-btn").click(function () {});
 
     $(".repeat-switch").on("click", function () {
         if ($(".repeat-switch").is(":checked")) {
@@ -14,21 +57,19 @@ $(document).ready(function () {
         }
     });
 
-    $(".physicianRegions").on("change", function () {
-        $regions = $(this).val();
-        $(".physicianSelection").empty();
+    $(".fc-customAddShift-button").click(function () {
+        $(".physicianRegions").empty();
         $.ajax({
-            url: "/physician/" + $regions,
+            url: "/provider-information",
             type: "GET",
             success: function (data) {
-                data.forEach(function (physician) {
-                    $(".physicianSelection").append(
-                        '<option value="' +
-                            physician.id +
-                            '">' +
-                            physician.first_name +
-                            " " +
-                            physician.last_name +
+                $("#providerId").val(data["physicianId"]);
+                data["allRegions"].forEach((region) => {
+                    $(".physicianRegions").append(
+                        "<option value='" +
+                            region.region_id +
+                            "'>" +
+                            region.regions.region_name +
                             "</option>"
                     );
                 });
@@ -39,99 +80,10 @@ $(document).ready(function () {
         });
     });
 
-    var calendarEl = document.getElementById("calendar");
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        headerToolbar: {
-            left: "prev next",
-            center: "title",
-            right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
-        },
-        selectable: true,
-        aspectRatio: 1.5,
-        resourceAreaWidth: "20%",
-        dayHeaderFormat: {
-            day: "numeric",
-            weekday: "short",
-            omitComma: true,
-        },
-        datesSet: function (view) {
-            // Added event handler
-            // Update title or span element here (optional)
-            let currentDate = $(".fc-toolbar-title").text();
-            $(".date-title").text(currentDate);
-        },
-        resourceAreaColumns: [{ field: "physician", headerContent: "Staff" }],
-        resources: {
-            url: "/provider-data",
-        },
-        views: {
-            resourceTimelineWeek: {
-                slotDuration: { days: 1 },
-                slotLabelInterval: { days: 1 },
-                slotLabelFormat: [
-                    {
-                        weekday: "short",
-                        day: "numeric",
-                    },
-                ],
-            },
-        },
-        resourceLabelContent: function (arg) {
-            if (arg.resource.id > 0) {
-                var link = `<img class="resource-img" src="${window.location.origin}/storage/${arg.resource.extendedProps.photo}" alt="${arg.resource.extendedProps.physician}"/> <span>${arg.resource.extendedProps.physician}</span>`;
-            } else {
-                var link = "Data";
-            }
-            return {
-                html: link,
-            };
-        },
-        select: function (selectInfo) {
-            let shiftDate = selectInfo.startStr.slice(0, 10);
-            let startTime = selectInfo.startStr.slice(11, 19);
-            let endTime = selectInfo.endStr.slice(11, 19);
-
-            let providerId = selectInfo.resource.id;
-            let providerName = selectInfo.resource.extendedProps.physician;
-
-            $(".create-shift").show();
-            $(".overlay").show();
-
-            $(".shiftDate").val(shiftDate);
-            $(".shiftStartTime").val(startTime);
-            $(".shiftEndTime").val(endTime);
-        },
-        eventClick: function (info) {
-            let shiftDate = info.event.startStr.slice(0, 10);
-            let startTime = info.event.startStr.slice(11, 19);
-            let endTime = info.event.endStr.slice(11, 19);
-
-            // let providerId = info.event.resource.id;
-            // let providerName = info.event.resource.extendedProps.physician;
-            // console.log(info.event, providerId, providerName);
-
-            $(".view-shift").show();
-            $(".overlay").show();
-            // $(".region-view-shift").val(info.event.extendedProps.regionId);
-
-            // $(".region-view-shift");
-            // $(".physician-view-shift");
-            $(".shiftDate").val(shiftDate);
-            $(".shiftStartTime").val(startTime);
-            $(".shiftEndTime").val(endTime);
-        },
-        // eventDataTransform: function (eventData) {
-        //     // This hook allows you to receive arbitrary event data from a JSON feed or any other Event Source and transform it into the type of data FullCalendar accepts
-        // },
-    });
-    calendar.render();
-
     var events = [];
     var eventData;
     $.ajax({
-        url: "/events-data",
+        url: "/provider-shift",
         type: "GET",
         success: function (response) {
             response.map(function (event) {
@@ -160,9 +112,6 @@ $(document).ready(function () {
                 );
 
                 var repeatEnd = new Date(event.shiftDate);
-
-                $(".shiftId").val(event.shiftId);
-
                 if (event.is_repeat == 1) {
                     if (event.repeat_upto == 2) {
                         repeatEnd.setDate(repeatEnd.getDate() + 14);
@@ -172,7 +121,6 @@ $(document).ready(function () {
                         repeatEnd.setDate(repeatEnd.getDate() + 28);
                     }
                     repeatEnd.toISOString().split("T")[0];
-
                     eventData = {
                         title: event.title,
                         // start: startTime,
@@ -184,10 +132,6 @@ $(document).ready(function () {
                         startRecur: event.shiftDate,
                         endRecur: repeatEnd,
                         textColor: "#000",
-                        extendedProps: {
-                            physicianId: event.physician_id,
-                            regionId: event.region_id,
-                        },
                         backgroundColor:
                             event.status == "approved"
                                 ? "rgb(167, 204, 163)"
@@ -210,10 +154,6 @@ $(document).ready(function () {
                         event.status == "approved"
                             ? "rgb(167, 204, 163)"
                             : "rgb(240, 173, 212)",
-                    extendedProps: {
-                        physicianId: event.physician_id,
-                        regionId: event.region_id,
-                    },
                     className:
                         event.status == "approved"
                             ? "approved-shift-style"
@@ -229,7 +169,6 @@ $(document).ready(function () {
                 events.push(eventData);
                 return events;
             });
-
             calendar.addEventSource(events);
         },
     });
@@ -251,5 +190,3 @@ $(document).ready(function () {
         $(".edit-btn").show();
     });
 });
-
-// eventColor: '#378006'

@@ -17,11 +17,10 @@ return new class extends Migration
             $table->foreign('shift_id')->references('id')->on('shift');
             $table->date('shift_date');
             $table->unsignedBigInteger('region_id')->nullable();
-            $table->foreign('region_id')->references('id')->on('regions');
+            $table->foreign('region_id')->references('id')->on('shift_detail_region');
             $table->time('start_time');
             $table->time('end_time');
-            $table->unsignedBigInteger('status');
-            $table->foreign('status')->references('id')->on('status');
+            $table->enum('status', ['pending', 'approved']);
 
             //check here
             $table->string('modified_by')->nullable();

@@ -14,10 +14,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                        reason.id +
-                        '">' +
-                        reason.case_name +
-                        "</option>"
+                            reason.id +
+                            '">' +
+                            reason.case_name +
+                            "</option>"
                     );
                 });
             },
@@ -137,10 +137,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                        entry.id +
-                        '">' +
-                        entry.vendor_name +
-                        "</option>"
+                            entry.id +
+                            '">' +
+                            entry.vendor_name +
+                            "</option>"
                     );
                 });
             },
@@ -190,13 +190,9 @@ $(document).ready(function () {
 
     // Email logs mobile listing
     $(".main-section").click(function () {
-        // $(".details").toggle();
-        console.log('here')
-
         // Target the next sibling .more-info element specifically
         $(this).next(".details").toggleClass("active");
 
-        // Close any other open .more-info sections
         $(".details").not($(this).next(".details")).removeClass("active");
     });
 
@@ -205,18 +201,6 @@ $(document).ready(function () {
     $(".clearButton").click(function () {
         $(".empty-fields").val("");
     });
-
-    $(document).on('click', '.action-btn', function () {
-
-        var sibling = $(this).siblings(".actions-menubar:visible").length;
-
-        if (sibling > 0) {
-            $(this).siblings(".actions-menubar").hide();
-        } else {
-            $(this).siblings(".actions-menubar").show();
-        }
-    })
-
 
 
     $('.request-support-btn').click(function () {
@@ -293,17 +277,13 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $('#user-access-table').html(response.html);
-
             },
             error: function (error) {
                 console.error(error);
             }
         })
-
     })
-
 });
-
 
 
     // Display different roles checkboxes as per the roles selected
@@ -330,4 +310,33 @@ $(document).ready(function () {
         });
     });
 
+    
+    // ************************************* Shivesh *************************************
 
+    $(document).on("click", ".action-btn", function () {
+        var sibling = $(this).siblings(".actions-menubar:visible").length;
+
+        if (sibling > 0) {
+            $(this).siblings(".actions-menubar").hide();
+        } else {
+            $(this).siblings(".actions-menubar").show();
+        }
+    });
+
+    $(".listing-region").on("change", function () {
+        // Store the selected option's ID
+        var selectedId = $(this).val();
+        $.ajax({
+            url: "/dropdown-data/" + selectedId,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $("#dropdown-data-body").html(data.html);
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
+
+    

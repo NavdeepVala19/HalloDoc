@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
     <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
@@ -110,7 +110,8 @@
 
             <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link active"
                 id="nav-conclude-tab">
-                <div class="case case-conclude active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div
+                    class="case case-conclude active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-clock-history"></i> CONCLUDE
                     </span>
@@ -174,8 +175,6 @@
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Status</th>
-                            <th>Chat With</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -186,32 +185,19 @@
                                 <td>{{ $case->request->requestClient->phone_number }}</td>
                                 <td>{{ $case->request->requestClient->address }}</td>
                                 <td>
-                                    @if ($case->request->call_type)
-                                        <span class="primary-fill"> {{ $case->request->call_type }} </span>
-                                    @else
-                                        Call Type
-                                    @endif
-                                </td>
-                                <td>
-                                    <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                    <button class="table-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-                                </td>
-                                <td>
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
+                                            <button><i class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</button>
                                             <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                            <button><i class="bi bi-check-square me-2 ms-3"></i>Conclude Case</button>
-                                            <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
-                                                    class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                            <button><i class="bi bi-journal-check me-2 ms-3"></i>Doctor Notes</button>
                                             <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
+                                            <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
+                                                    class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                             <a href="{{ route('provider.encounter.form', $case->request->id) }}"
                                                 class="encounter-form-btn"><i
                                                     class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
-                                            <button><i class="bi bi-envelope-open me-2 ms-3"></i>Email</button>
                                         </div>
                                     </div>
                                 </td>
@@ -228,7 +214,7 @@
                             <p>{{ $case->request->requestClient->first_name }} </p>
                             <span>
                                 @if ($case->request->requestClient)
-                                    {{ $case->requestClient->address }}
+                                    {{ $case->request->requestClient->address }}
                                 @endif Address
                             </span>
                         </div>
@@ -275,7 +261,8 @@
                                     class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>
-                                <a href="{{ route('provider.view.upload', $case->request->id) }}" class="secondary-btn">View
+                                <a href="{{ route('provider.view.upload', $case->request->id) }}"
+                                    class="secondary-btn">View
                                     Uploads</a>
                                 <button class="secondary-btn">Encouter</button>
                                 <button class="secondary-btn">Email</button>

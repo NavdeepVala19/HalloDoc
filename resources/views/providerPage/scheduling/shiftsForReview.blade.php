@@ -2,7 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/scheduling.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/scheduling.css') }}">
 @endsection
 
 @section('nav-links')
@@ -30,7 +30,7 @@
     <div class="m-5 spacing">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h3>Requested Shifts</h3>
-            <a href="{{ route('admin.scheduling') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('scheduling') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -43,7 +43,7 @@
                     </select>
                 </div>
                 <div class="button-section">
-                    <a href="{{ route('admin.scheduling') }}" class="current-shift-btn">View Current Month Shifts</a>
+                    <a href="{{ route('scheduling') }}" class="current-shift-btn">View Current Month Shifts</a>
                     <a href="" class="approved-selected-btn">Approved Selected</a>
                     <a href="" class="delete-selected-btn">Delete Selected</a>
                 </div>
