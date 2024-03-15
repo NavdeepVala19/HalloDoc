@@ -30,11 +30,12 @@
 <div class="m-5 spacing">
     <h3>Block History</h3>
     <div class="section">
-        <form action="" method="POST">
+
+        <form action="{{route('admin.block.history.search')}}" method="POST">
             @csrf
             <div class="grid-4">
                 <div class="form-floating ">
-                    <input type="text" name="name" class="form-control empty-fields" id="floatingInput" placeholder="Name">
+                    <input type="text" name="patient_name" class="form-control empty-fields" id="floatingInput" placeholder="Name">
                     <label for="floatingInput">Name</label>
                 </div>
                 <div class="form-floating">
@@ -50,12 +51,13 @@
                 <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone" placeholder="Phone Number">
             </div>
             <div class="text-end mb-3">
-                <button class="primary-empty clearButton">Clear</button>
+                <button type="reset" class="primary-empty clearButton">Clear</button>
                 <button type="submit" class="primary-fill">Search</button>
             </div>
         </form>
+
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="blockListTable">
                 <thead class="table-secondary">
                     <td>Patient Name</td>
                     <td>Phone</td>
@@ -66,20 +68,22 @@
                     <td>Action</td>
                 </thead>
                 <tbody>
+                    @foreach ($blockData as $data)
                     <tr>
-                        <td>test</td>
-                        <td>1234567890</td>
-                        <td>email@gmail.com</td>
-                        <td>May 31 2024</td>
-                        <td>Test</td>
-                        <td><input class="form-check-input me-3" type="checkbox" value="" id="checkbox"></td>
+                        <td>{{$data->patient_name}}</td>
+                        <td>{{$data->phone_number}}</td>
+                        <td>{{$data->email}}</td>
+                        <td>{{$data->created_date}}</td>
+                        <td>{{$data->reason}}</td>
+                        <td><input class="form-check-input me-3" type="checkbox" value="1"  @checked($data->is_active === 1) id="checkbox_{{$data->id}}"></td>
                         <td>
-                            <button class="primary-empty"> Unblock </button>
+                            <a href="{{route('admin.block.history.unblock',$data->id)}}" class="primary-empty"> Unblock </a>
                         </td>
                     </tr>
-
+                    @endforeach
                 </tbody>
             </table>
+            {{$blockData->links('pagination::bootstrap-5')}}
         </div>
 
 

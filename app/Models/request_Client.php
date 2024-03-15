@@ -48,4 +48,8 @@ class request_Client extends Model
     {
         return $this->belongsTo(RequestTable::class);
     }
+
+    public function request_status(){
+        return $this->belongs(RequestStatus::class, 'request_id', 'request_id');
+    }
 }

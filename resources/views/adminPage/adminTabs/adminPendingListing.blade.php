@@ -6,38 +6,40 @@
 @endsection
 
 
+{{--
 @section('username')
     {{ $userData->username }}
 @endsection
+--}}
 
 @section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation ">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
+<a href="" class="active-link">Dashboard</a>
+<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="">My Profile</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Providers
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+        <li><a class="dropdown-item" href="">Invoicing</a></li>
+    </ul>
+</div>
+<a href="{{ route('admin.partners') }}">Partners</a>
+<a href="{{ route('admin.access.view') }}">Access</a>
+<div class="dropdown record-navigation ">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Records
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+    </ul>
+</div>
 @endsection
 
 @section('content')
@@ -258,143 +260,95 @@ pending state, providers need to send an agreement link to patients. --}}
     </div>
 </nav>
 
-    <div class="main">
-        <div class="heading-section d-flex align-items-center justify-content-between">
-            <div class=" d-flex align-items-center">
-                <h3>Patients </h3> <strong class="case-type ps-2 ">(Pending)</strong>
-            </div>
-            <div class="admin-btn  d-flex gap-2">
-                <button class="primary-fill send-link-btn">
-                    <i class="bi bi-send"></i>
-                    <span class="txt">
-                        Send Link
-                    </span>
-                </button>
-                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
-                    <i class="bi bi-pencil-square"></i>
-                    <span class="txt">
-                        Create Requests
-                    </span>
-                </a>
-                <a href="{{ route('exportPending') }}" class="primary-fill">
-                    <i class="bi bi-send-arrow-down"></i>
-                    <span class="txt">
-                        Export
-                    </span>
-                </a>
-                <a href="" class="primary-fill">
-                    <i class="bi bi-send-arrow-down-fill"></i>
-                    <span class="txt">
-                        Export All
-                    </span>
-                </a>
-                <a href="" class="primary-fill">
-                    <i class="bi bi-pencil-square"></i>
-                    <span class="txt">
-                        Request DTY Support
-                    </span>
-                </a>
+<div class="main">
+    <div class="heading-section d-flex align-items-center justify-content-between">
+        <div class=" d-flex align-items-center">
+            <h3>Patients </h3> <strong class="case-type ps-2 ">(Pending)</strong>
+        </div>
+        <div class="admin-btn  d-flex gap-2">
+            <button class="primary-fill send-link-btn">
+                <i class="bi bi-send"></i>
+                <span class="txt">
+                    Send Link
+                </span>
+            </button>
+            <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
+                <i class="bi bi-pencil-square"></i>
+                <span class="txt">
+                    Create Requests
+                </span>
+            </a>
+            <a href="{{ route('exportPending') }}" class="primary-fill">
+                <i class="bi bi-send-arrow-down"></i>
+                <span class="txt">
+                    Export
+                </span>
+            </a>
+            <form action="{{route('exportPending')}}" method="POST" id="filterExport" class="d-none">
+                @csrf
+                <input name="filter_search" value="" hidden>
+                <input name="filter_region" value="" hidden>
+                <input name="filter_category" value="" hidden>
+                <button type="submit" hidden>export</button>
+            </form>
+            <a href="" class="primary-fill">
+                <i class="bi bi-send-arrow-down-fill"></i>
+                <span class="txt">
+                    Export All
+                </span>
+            </a>
+            <a href="" class="primary-fill">
+                <i class="bi bi-pencil-square"></i>
+                <span class="txt">
+                    Request DTY Support
+                </span>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="listing">
+        <div class="search-section d-flex align-items-center  justify-content-between ">
+            <form action="{{ route('searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}" method="GET" class="d-flex align-items-center">
+                {{-- @csrf --}}
+                <div class="input-group mb-3">
+                    <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                    {{-- <input type="submit" class="primary-fill"> --}}
+                </div>
+                <select class="form-select listing-region">
+                    <option name="regions" selected>All Regions</option>
+                </select>
+            </form>
+            <div class="src-category d-flex gap-3 align-items-center">
+                <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}" data-category="all" class="btn-all filter-btn">All</a>
+                <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}" data-category="patient" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}" data-category="family" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}" data-category="business" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}" data-category="concierge" class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
             </div>
         </div>
-
-
-        <div class="listing">
-            <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
-                    method="GET" class="d-flex align-items-center">
-                    {{-- @csrf --}}
-                    <div class="input-group mb-3">
-                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        {{-- <input type="submit" class="primary-fill"> --}}
-                    </div>
-                    <select class="form-select listing-region">
-                        <option name="regions" selected>All Regions</option>
-                    </select>
-                </form>
-                <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}"
-                        class="btn-all filter-btn">All</a>
-                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover ">
-                    <thead class="table-secondary">
-                        <tr>
-                            <th>Name</th>
-                            <th>Date Of Birth</th>
-                            <th>Requestor</th>
-                            <th>Physician Name</th>
-                            <th>Date Of Service</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Notes</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dropdown-data-body">
-                        @foreach ($cases as $case)
-                            @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}</td>
-                                    <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>Requestor Name</td>
-                                    <td>Physician Name</td>
-                                    <td>{{ $case->request->created_at }}</td>
-                                    <td>{{ $case->request->phone_number }}</td>
-                                    <td>{{ $case->request->requestClient->street }},
-                                        {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
-                                    </td>
-                                    <td>{{ $case->request->requestClient->notes }}</td>
-                                    <td>
-                                        <div class="action-container">
-                                            <button class="table-btn action-btn">Actions</button>
-                                            <div class="action-menu">
-                                                <a href="{{ route('admin.view.case', $case->request->id) }}"><i
-                                                        class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a
-                                                    href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}">
-                                                    <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
-                                                    View Uploads
-                                                </a>
-                                                <button><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</button>
-                                                <button class="transfer-btn assign-case-btn"
-                                                    data-id="{{ $case->request->id }}"><i
-                                                        class="bi bi-send me-2 ms-3"></i>Transfer</button>
-                                                <button class="clear-btn" data-id="{{ $case->request->id }}"><i
-                                                        class="bi bi-x-circle me-2 ms-3"></i>Clear
-                                                    Case</button>
-                                                <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
-                                                    data-request_type_id={{ $case->request->request_type_id }}
-                                                    data-phone_number={{ $case->request->phone_number }}
-                                                    data-email={{ $case->request->email }}><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Send
-                                                    Agreement</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mobile-listing">
-                @foreach ($cases as $case)
+        <div class="table-responsive">
+            <table class="table table-hover ">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Name</th>
+                        <th>Date Of Birth</th>
+                        <th>Requestor</th>
+                        <th>Physician Name</th>
+                        <th>Date Of Service</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dropdown-data-body">
+                    @foreach ($cases as $case)
                     @if (!empty($case->request) && !empty($case->request->requestClient))
                     <tr class="type-{{ $case->request->request_type_id }}">
                         <td>{{ $case->request->requestClient->first_name }}</td>
                         <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                        <td>{{ $case->request->first_name }}</td>
+                        <td>Requestor Name</td>
                         <td>Physician Name</td>
                         <td>{{ $case->request->created_at }}</td>
                         <td>{{ $case->request->phone_number }}</td>
@@ -402,10 +356,6 @@ pending state, providers need to send an agreement link to patients. --}}
                             {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
                         </td>
                         <td>{{ $case->request->requestClient->notes }}</td>
-                        <td>
-                            <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                            <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
-                        </td>
                         <td>
                             <div class="action-container">
                                 <button class="table-btn action-btn">Actions</button>
@@ -419,7 +369,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <button class="transfer-btn assign-case-btn" data-id="{{ $case->request->id }}"><i class="bi bi-send me-2 ms-3"></i>Transfer</button>
                                     <button class="clear-btn" data-id="{{ $case->request->id }}"><i class="bi bi-x-circle me-2 ms-3"></i>Clear
                                         Case</button>
-                                    <button class="send-agreement-btn" data-id="{{ $case->request->id }}" data-request_type_id={{ $case->request->request_type_id }}><i class="bi bi-text-paragraph me-2 ms-3"></i>Send
+                                    <button class="send-agreement-btn" data-id="{{ $case->request->id }}" data-request_type_id={{ $case->request->request_type_id }} data-phone_number={{ $case->request->phone_number }} data-email={{ $case->request->email }}><i class="bi bi-text-paragraph me-2 ms-3"></i>Send
                                         Agreement</button>
                                 </div>
                             </div>
@@ -428,6 +378,49 @@ pending state, providers need to send an agreement link to patients. --}}
                     @endif
                     @endforeach
                 </tbody>
+            </table>
+        </div>
+
+        <div class="mobile-listing">
+            @foreach ($cases as $case)
+            @if (!empty($case->request) && !empty($case->request->requestClient))
+            <tr class="type-{{ $case->request->request_type_id }}">
+                <td>{{ $case->request->requestClient->first_name }}</td>
+                <td>{{ $case->request->requestClient->date_of_birth }}</td>
+                <td>{{ $case->request->first_name }}</td>
+                <td>Physician Name</td>
+                <td>{{ $case->request->created_at }}</td>
+                <td>{{ $case->request->phone_number }}</td>
+                <td>{{ $case->request->requestClient->street }},
+                    {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                </td>
+                <td>{{ $case->request->requestClient->notes }}</td>
+                <td>
+                    <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
+                    <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
+                </td>
+                <td>
+                    <div class="action-container">
+                        <button class="table-btn action-btn">Actions</button>
+                        <div class="action-menu">
+                            <a href="{{ route('admin.view.case', $case->request->id) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                            <a href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}">
+                                <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
+                                View Uploads
+                            </a>
+                            <button><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</button>
+                            <button class="transfer-btn assign-case-btn" data-id="{{ $case->request->id }}"><i class="bi bi-send me-2 ms-3"></i>Transfer</button>
+                            <button class="clear-btn" data-id="{{ $case->request->id }}"><i class="bi bi-x-circle me-2 ms-3"></i>Clear
+                                Case</button>
+                            <button class="send-agreement-btn" data-id="{{ $case->request->id }}" data-request_type_id={{ $case->request->request_type_id }}><i class="bi bi-text-paragraph me-2 ms-3"></i>Send
+                                Agreement</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            @endif
+            @endforeach
+            </tbody>
             </table>
         </div>
 

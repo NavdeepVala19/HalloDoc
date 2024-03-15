@@ -35,13 +35,16 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
      */
     public function collection()
     {
+
+
         $adminNewData = $this->data->get();
+        // dd($adminNewData);
 
         return collect($adminNewData)->map(function ($adminNew) {
 
             return [
-                'PatientName' => $adminNew->request->requestClient->first_name,
-                'Date of Birth' => $adminNew->request->requestClient->date_of_birth,
+                'PatientName' => $adminNew->requestClient->first_name,
+                'Date of Birth' => $adminNew->requestClient->date_of_birth,
                 'Requestor' => $adminNew->request->first_name,
                 'RequestedDate' => $adminNew->request->created_at,
                 'Mobile' => $adminNew->request->phone_number,

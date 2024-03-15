@@ -6,31 +6,36 @@ use ZipArchive;
 use Carbon\Carbon;
 
 // Different Models used in these Controller
+use App\Models\Menu;
+use App\Models\Role;
 use App\Models\Roles;
-use App\Mail\SendLink;
-use App\Mail\SendMail;
 
 // Different Models used in these Controller
+use App\Mail\SendLink;
+use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
 use App\Models\Regions;
-use App\Models\allusers;
-use App\Models\EmailLog;
 
-use App\Models\Provider;
+use App\Models\SMSLogs;
 
 // For sending Mails
+use App\Models\allusers;
+use App\Models\EmailLog;
+use App\Models\Provider;
+use App\Models\RoleMenu;
 use App\Models\UserRoles;
 use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
+
+// DomPDF package used for the creation of pdf from the form
 use App\Models\RequestNotes;
+// To create zip, used to download multiple documents at once
 use App\Models\requestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
-
-// DomPDF package used for the creation of pdf from the form
+use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-// To create zip, used to download multiple documents at once
 use App\Models\request_Client;
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
@@ -38,15 +43,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
 use App\Exports\SearchRecordExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Mail\RequestSupportMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\HealthProfessionalType;
-use App\Models\Menu;
-use App\Models\RequestClosed;
-use App\Models\Role;
-use App\Models\RoleMenu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 
@@ -182,7 +183,6 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)
                     ->whereHas('request', function ($q) use ($request) {
@@ -192,7 +192,6 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
                     ->whereHas('request', function ($q) use ($request) {
@@ -202,7 +201,6 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -211,7 +209,6 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 2)->orWhere('status', 7)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -220,7 +217,6 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
-
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -230,8 +226,7 @@ class AdminController extends Controller
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
             }
-        } 
-        else {
+        } else {
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)
                     ->whereHas('request', function ($q) use ($request, $category) {
@@ -727,14 +722,14 @@ class AdminController extends Controller
 
         $session = session(
             [
-                'request_status'=>$request->input('request_status'),
+                'request_status' => $request->input('request_status'),
                 'patient_name' => $request->input('patient_name'),
-                'request_type'=> $request->input('request_type'),
-                'from_date_of_service'=>$request->input('from_date_of_service'),
-                'to_date_of_service'=>$request->input('to_date_of_service'),
-                'email'=>$request->input('email'),
-                'phone_number'=>$request->input('phone_number'),
-                'provider_name'=>$request->input('provider_name'),
+                'request_type' => $request->input('request_type'),
+                'from_date_of_service' => $request->input('from_date_of_service'),
+                'to_date_of_service' => $request->input('to_date_of_service'),
+                'email' => $request->input('email'),
+                'phone_number' => $request->input('phone_number'),
+                'provider_name' => $request->input('provider_name'),
             ]
         );
 
@@ -839,7 +834,7 @@ class AdminController extends Controller
             })->get();
 
         // dd($emails);
-        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get(   ));
+        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get());
         // ->when($request->receiver_name, function ($query) use ($request) {
         //     $query->where('last_name', 'LIKE', "%$request->last_name%");
         // })
@@ -848,12 +843,74 @@ class AdminController extends Controller
     }
     public function smsRecordsView()
     {
-        return view('adminPage.records.smsLogs');
+        $sms = SMSLogs::select('admin.first');
+        return view('adminPage.records.smsLogs',compact('sms'));
     }
+
     public function blockHistoryView()
     {
-        return view('adminPage.records.blockHistory');
+        $blockData = BlockRequest::select(
+            'block_request.phone_number',
+            'block_request.email',
+            'block_request.id',
+            'block_request.is_active',
+            DB::raw('DATE(block_request.created_at) as created_date'),
+            'block_request.reason',
+            'request_client.first_name as patient_name',
+        )
+            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
+            ->paginate(10);
+
+        return view('adminPage.records.blockHistory', compact('blockData'));
     }
+
+    public function updateBlockHistoryIsActive(Request $request)
+    {
+        $block = BlockRequest::find($request->blockId);
+
+        $block->update(['is_active' => $request->is_active]);
+    }
+
+
+    public function unBlockPatientInBlockHistoryPage($id)
+    {
+
+        $unBlockData = BlockRequest::where('id', $id)->delete();
+
+        return redirect()->back();
+    }
+
+    public function blockHistroySearchData(Request $request)
+    {
+
+        $blockData = BlockRequest::select(
+            'request_client.first_name as patient_name',
+            'block_request.id',
+            'block_request.phone_number',
+            'block_request.email',
+            'block_request.is_active',
+            'block_request.reason',
+            DB::raw('DATE(block_request.created_at) as created_date'),
+        )
+            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
+
+        if (!empty($request->patient_name)) {
+            $blockData = $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+        }
+        if (!empty($request->email)) {
+            $blockData = $blockData->orWhere('block_request.email', "like", "%" . $request->email . "%");
+        }
+        if (!empty($request->phone_number)) {
+            $blockData = $blockData->orWhere('block_request.phone_number', "like", "%" . $request->phone_number . "%");
+        }
+        if (!empty($request->date)) {
+            $blockData = $blockData->orWhere('block_request.created_at', "like", "%" . $request->date . "%");
+        }
+        $blockData = $blockData->paginate(10);
+
+        return view('adminPage.records.blockHistory', compact('blockData'));
+    }
+
     public function patientHistoryView()
     {
         $patients = request_Client::paginate(10);

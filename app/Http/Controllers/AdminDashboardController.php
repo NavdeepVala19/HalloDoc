@@ -158,4 +158,10 @@ class AdminDashboardController extends Controller
     //     $getProviderData = Provider::with('users')->where('user_id', $id)->first();
     //     return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     // }
+
+
+
+
+
+
 }

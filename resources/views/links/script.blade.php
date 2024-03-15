@@ -23,6 +23,8 @@
 
    <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
 
+   <script defer src="{{ URL::asset('assets/adminPage/blockHistory.js') }}"></script>
+
 
    {{-- SHIVESH SCRIPT FILE --}}
    {{-- Javascript for patient login password field --}}

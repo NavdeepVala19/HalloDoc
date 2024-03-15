@@ -231,7 +231,7 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-route::POST('/dropdown-data/', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
+route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
 
 
 
@@ -433,9 +433,11 @@ Route::post('/search-records/search', [AdminController::class, 'searchRecordSear
 Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
-
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
+Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
+Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');
+Route::get('/block-history/unblock/{id}', [AdminController::class, 'unBlockPatientInBlockHistoryPage'])->name('admin.block.history.unblock');
 Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
 Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
 Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
