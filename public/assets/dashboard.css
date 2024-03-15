@@ -389,6 +389,10 @@ tr > td {
         padding: 10px;
     }
 
+    .table-responsive {
+        min-height: 0;
+    }
+
     .case {
         align-items: center !important;
         justify-content: center !important;

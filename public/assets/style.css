@@ -14,7 +14,7 @@ html,
 body {
     font-family: "Poppins", sans-serif;
     font-style: normal;
-    height: 100vh;
+    /* height: 100vh; */
     /* margin: 0;
     padding: 0; */
 }
@@ -132,7 +132,8 @@ nav {
         gap: 5px !important;
 
         height: 100vh;
-        width: 40vw;
+        width: 50vw;
+        top: 42px;
         position: absolute;
     }
 }
