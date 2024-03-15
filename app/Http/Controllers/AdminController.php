@@ -617,7 +617,6 @@ class AdminController extends Controller
             ],
             'role' => 'required'
         ]);
-        // dd(->all());
         if ($request->role_name == 1) {
             $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
         } else if ($request->role_name == 2) {

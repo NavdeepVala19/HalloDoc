@@ -37,7 +37,7 @@ class ProviderSchedulingController extends Controller
         } else {
             $weekDays = null;
         }
-        $request->validate(['region' => 'required|in:1,2,3']);
+        $request->validate(['region' => 'required|in:1,2,3,4,5']);
         if ($request['is_repeat'] == true) {
             $is_repeat = 1;
         } else {
@@ -55,15 +55,16 @@ class ProviderSchedulingController extends Controller
         $shiftDetail = ShiftDetail::create([
             'shift_id' => $shift->id,
             'shift_date' => $request['shiftDate'],
-            'region_id' => $request['region'],
             'start_time' => $request['shiftStartTime'],
             'end_time' => $request['shiftEndTime'],
             'status' => 1
         ]);
-        ShiftDetailRegion::create([
+        $shiftDetailRegion = ShiftDetailRegion::create([
             'shift_detail_id' => $shiftDetail->id,
             'region_id' => $request['region']
         ]);
+
+        ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
         return redirect()->back();
     }
     public function providerShift()
@@ -80,7 +81,8 @@ class ProviderSchedulingController extends Controller
                 'endTime' => $event->shiftDetail->end_time,
                 'resourceId' => $event->physician_id,
                 'physician_id' => $event->physician_id,
-                // 'regiond_id' => $event->shiftDetail,
+                'region_id' => $event->shiftDetail->shiftDetailRegion->region_id,
+                'region_name' => $event->shiftDetail->shiftDetailRegion->region->region_name,
                 'is_repeat' => $event->is_repeat,
                 'week_days' => explode(',', $event->week_days),
                 'repeat_upto' => $event->repeat_upto,
@@ -94,7 +96,21 @@ class ProviderSchedulingController extends Controller
     public function providerEditShift(Request $request)
     {
         if ($request['action'] == 'save') {
+            Shift::where('id', $request->shiftId)->update([
+                'start_date' => $request->shiftDate,
+            ]);
+
+            ShiftDetail::where('shift_id', $request->shiftId)->update([
+                'shift_date' => $request->shiftDate,
+                'start_time' => $request->shiftTimeStart,
+                'end_time' => $request->shiftTimeEnd,
+                'modified_by' => Auth::user()->id
+            ]);
+
+            return redirect()->back();
         } else {
+            Shift::where('id', $request->shiftId)->delete();
+            return redirect()->back();
         }
     }
 }

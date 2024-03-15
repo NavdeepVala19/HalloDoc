@@ -141,10 +141,6 @@
             <div>
                 <select name="region" class="form-select region-view-shift" id="floatingSelect"
                     aria-label="Floating label select example" disabled>
-                    <option value="0" selected>Region</option>
-                    {{-- @foreach ($regions as $region)
-                        <option value="{{ $region->region_id }}">{{ $region->region_name }}</option>
-                    @endforeach --}}
                 </select>
                 <div class="form-floating ">
                     <input type="date" name="shiftDate" class="form-control shiftDate shiftDateInput"

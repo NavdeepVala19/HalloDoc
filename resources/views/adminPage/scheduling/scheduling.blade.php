@@ -37,8 +37,7 @@
         <form action="{{ route('admin.scheduling.data') }}" method="POST" class="m-4">
             @csrf
             <div class="">
-                <select name="region" class="form-select region physicianRegions" id="floatingSelect"
-                    aria-label="Floating label select example">
+                <select name="region" class="form-select region physicianRegions" id="floatingSelect">
                     <option selected>Region</option>
                     @foreach ($regions as $region)
                         <option value="{{ $region->id }}" id="region_{{ $region->id }}">{{ $region->region_name }}
@@ -49,8 +48,7 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
                 <div class="form-floating">
-                    <select name="physician" class="form-select physicianSelection" id="floatingSelect"
-                        aria-label="Floating label select example">
+                    <select name="physician" class="form-select physicianSelection" id="floatingSelect">
                         <option selected>Select</option>
                     </select>
                     <label for="floatingSelect">Physician</label>
@@ -94,8 +92,8 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
-                            id="defaultCheck1" disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2" id="defaultCheck1"
+                            disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Tuesday
                         </label>
@@ -158,16 +156,10 @@
             <div>
                 <select name="region" class="form-select region-view-shift" id="floatingSelect"
                     aria-label="Floating label select example" disabled>
-                    <option value="0" selected>Region</option>
-                    @foreach ($regions as $region)
-                        <option value="{{ $region->region_id }}">{{ $region->region_name }}</option>
-                    @endforeach
                 </select>
                 <div class="form-floating">
                     <select class="form-select physician-view-shift" name="physician" id="floatingSelect"
-                        aria-label="Floating label select example" disabled>
-                        <option selected>Select</option>
-                    </select>
+                        aria-label="Floating label select example" disabled> </select>
                     <label for="floatingSelect">Physician</label>
                 </div>
                 <div class="form-floating ">
@@ -208,8 +200,7 @@
         <div class="section">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="region-dropdown">
-                    <select name="role_id" class="form-select empty-fields" id="floatingSelect"
-                        aria-label="Floating label select example">
+                    <select name="role_id" class="form-select" id="floatingSelect">
                         <option value="0" selected>All Regions</option>
                         <option value="1">Admin</option>
                         <option value="2">Physician</option>

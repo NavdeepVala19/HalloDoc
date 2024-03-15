@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('event_id')->nullable();
             $table->boolean('is_sync')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

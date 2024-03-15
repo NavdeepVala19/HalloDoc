@@ -8,6 +8,7 @@ use App\Models\Provider;
 use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
 use App\Models\ShiftDetailRegion;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class SchedulingController extends Controller
@@ -36,7 +37,12 @@ class SchedulingController extends Controller
     }
     public function shiftsReviewView()
     {
-        return view('adminPage.scheduling.shiftsForReview');
+        // $shifts = ShiftDetail::get();
+        $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
+        $regions = Regions::get();
+        // dd($shiftDetails);
+
+        return view('adminPage.scheduling.shiftsForReview', compact('shiftDetails', 'regions'));
     }
     public function createShiftData(Request $request)
     {
@@ -45,7 +51,7 @@ class SchedulingController extends Controller
         } else {
             $weekDays = null;
         }
-        $request->validate(['region' => 'required|in:1,2,3']);
+        $request->validate(['region' => 'required|in:1,2,3,4,5']);
         if ($request['is_repeat'] == true) {
             $is_repeat = 1;
         } else {
@@ -62,7 +68,6 @@ class SchedulingController extends Controller
         $shiftDetail = ShiftDetail::create([
             'shift_id' => $shift->id,
             'shift_date' => $request['shiftDate'],
-            // 'region_id' => $request['region'],
             'start_time' => $request['shiftStartTime'],
             'end_time' => $request['shiftEndTime'],
             'status' => 2
@@ -90,6 +95,7 @@ class SchedulingController extends Controller
                 'resourceId' => $event->physician_id,
                 'physician_id' => $event->physician_id,
                 'region_id' => $event->shiftDetail->shiftDetailRegion->region_id,
+                'region_name' => $event->shiftDetail->shiftDetailRegion->region->region_name,
                 'is_repeat' => $event->is_repeat,
                 'week_days' => explode(',', $event->week_days),
                 'repeat_upto' => $event->repeat_upto,
@@ -112,7 +118,43 @@ class SchedulingController extends Controller
                 return redirect()->back();
             }
         } else if ($request['action'] == 'save') {
+            Shift::where('id', $request->shiftId)->update([
+                'start_date' => $request->shiftDate,
+            ]);
+
+            ShiftDetail::where('shift_id', $request->shiftId)->update([
+                'shift_date' => $request->shiftDate,
+                'start_time' => $request->shiftTimeStart,
+                'end_time' => $request->shiftTimeEnd,
+                // 'modified_by' => Auth::user()->id
+            ]);
+
+            return redirect()->back();
         } else {
+            Shift::where('id', $request->shiftId)->delete();
+
+            return redirect()->back();
         }
+    }
+    public function shiftAction(Request $request)
+    {
+        if ($request->action == 'approve') {
+            ShiftDetail::whereIn('id', $request->selected)->update(['status' => 2]);
+            return redirect()->back();
+        } else {
+            $shifts = ShiftDetail::whereIn('id', $request->selected)->get();
+            foreach ($shifts as $shift) {
+                $shift->getShiftData->delete();
+            }
+            return redirect()->back();
+        }
+    }
+    public function filterRegions($regionId)
+    {
+        $allShifts = ShiftDetailRegion::where('region_id', $regionId)->pluck('shift_detail_id')->toArray();
+        $shiftDetails = ShiftDetail::whereIn('id', $allShifts)->get();
+        $regions = Regions::get();
+
+        return view('adminPage.scheduling.shiftsForReview', compact('shiftDetails', 'regions'));
     }
 }

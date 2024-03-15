@@ -3,6 +3,7 @@ $(document).ready(function () {
         $(".create-shift").show();
         $(".overlay").show();
     });
+    
 
     $(".repeat-switch").on("click", function () {
         if ($(".repeat-switch").is(":checked")) {
@@ -58,7 +59,6 @@ $(document).ready(function () {
         },
         datesSet: function (view) {
             // Added event handler
-            // Update title or span element here (optional)
             let currentDate = $(".fc-toolbar-title").text();
             $(".date-title").text(currentDate);
         },
@@ -108,23 +108,29 @@ $(document).ready(function () {
             let startTime = info.event.startStr.slice(11, 19);
             let endTime = info.event.endStr.slice(11, 19);
 
-            // let providerId = info.event.resource.id;
-            // let providerName = info.event.resource.extendedProps.physician;
-            // console.log(info.event, providerId, providerName);
-
             $(".view-shift").show();
             $(".overlay").show();
-            // $(".region-view-shift").val(info.event.extendedProps.regionId);
+            $(".region-view-shift").append(
+                "<option value='" +
+                    info.event.extendedProps.regionId +
+                    "' selected >" +
+                    info.event.extendedProps.regionName +
+                    "</option>"
+            );
 
-            // $(".region-view-shift");
-            // $(".physician-view-shift");
+            $(".physician-view-shift").append(
+                "<option value='" +
+                    info.event.extendedProps.physicianId +
+                    "' selected>" +
+                    info.event.extendedProps.physicianName +
+                    "</option>"
+            );
+
+            $(".shiftId").val(info.event.extendedProps.shiftId);
             $(".shiftDate").val(shiftDate);
             $(".shiftStartTime").val(startTime);
             $(".shiftEndTime").val(endTime);
         },
-        // eventDataTransform: function (eventData) {
-        //     // This hook allows you to receive arbitrary event data from a JSON feed or any other Event Source and transform it into the type of data FullCalendar accepts
-        // },
     });
     calendar.render();
 
@@ -161,8 +167,6 @@ $(document).ready(function () {
 
                 var repeatEnd = new Date(event.shiftDate);
 
-                $(".shiftId").val(event.shiftId);
-
                 if (event.is_repeat == 1) {
                     if (event.repeat_upto == 2) {
                         repeatEnd.setDate(repeatEnd.getDate() + 14);
@@ -175,8 +179,6 @@ $(document).ready(function () {
 
                     eventData = {
                         title: event.title,
-                        // start: startTime,
-                        // end: endTime,
                         resourceId: event.resourceId,
                         daysOfWeek: event.week_days,
                         startTime: event.startTime,
@@ -185,8 +187,11 @@ $(document).ready(function () {
                         endRecur: repeatEnd,
                         textColor: "#000",
                         extendedProps: {
+                            shiftId: event.shiftId,
                             physicianId: event.physician_id,
+                            physicianName: event.title,
                             regionId: event.region_id,
+                            regionName: event.region_name,
                         },
                         backgroundColor:
                             event.status == "approved"
@@ -206,14 +211,17 @@ $(document).ready(function () {
                     end: endTime,
                     resourceId: event.resourceId,
                     textColor: "#000",
+                    extendedProps: {
+                        shiftId: event.shiftId,
+                        physicianId: event.physician_id,
+                        physicianName: event.title,
+                        regionId: event.region_id,
+                        regionName: event.region_name,
+                    },
                     backgroundColor:
                         event.status == "approved"
                             ? "rgb(167, 204, 163)"
                             : "rgb(240, 173, 212)",
-                    extendedProps: {
-                        physicianId: event.physician_id,
-                        regionId: event.region_id,
-                    },
                     className:
                         event.status == "approved"
                             ? "approved-shift-style"
@@ -250,6 +258,6 @@ $(document).ready(function () {
         $(".save-btn").hide();
         $(".edit-btn").show();
     });
-});
 
-// eventColor: '#378006'
+    
+});

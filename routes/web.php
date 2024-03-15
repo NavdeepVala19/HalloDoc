@@ -459,6 +459,10 @@ Route::post('/create-shift', [SchedulingController::class, 'createShiftData'])->
 Route::get('/events-data', [SchedulingController::class, 'eventsData'])->name('events.data');
 // Edit Shifts
 Route::post('/admin-edit-shift', [SchedulingController::class, 'editShift'])->name('admin.edit.shift');
+// Approve or Delete Selected shifts from shifts-review Page
+Route::post('/shift-action', [SchedulingController::class, 'shiftAction'])->name('admin.shifts.review');
+// Filter Shifts review page as per the region selected
+Route::get('/filter-regions/{regionId}', [SchedulingController::class, 'filterRegions'])->name('filter-regions-shifts');
 
 // Provider Scheduling
 // Scheduling Calendar view 

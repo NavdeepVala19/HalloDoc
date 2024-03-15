@@ -17,4 +17,9 @@ class ShiftDetail extends Model
     {
         return $this->hasOne(ShiftDetailRegion::class, 'shift_detail_id', 'region_id');
     }
+
+    public function getShiftData()
+    {
+        return $this->belongsTo(Shift::class, 'shift_id', 'id');
+    }
 }

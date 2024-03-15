@@ -30,7 +30,7 @@
     <div class="m-5 spacing">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h3>MDs On Call</h3>
-            <a href="{{ route('scheduling') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.scheduling') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         {{-- d-flex align-items-center justify-content-between gap-3 --}}
         <div class="section">
@@ -45,7 +45,7 @@
                     {{-- <label for="floatingSelect">All Regions</label> --}}
                 </div>
                 <div>
-                    <a href="{{ route('scheduling') }}" class="primary-fill">Calendar View</a>
+                    <a href="{{ route('admin.scheduling') }}" class="primary-fill">Calendar View</a>
                     <a href="{{ route('shifts.review') }}" class="primary-fill">Shifts For Review</a>
                 </div>
             </div>

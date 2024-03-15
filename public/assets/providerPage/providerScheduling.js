@@ -19,7 +19,6 @@ $(document).ready(function () {
         },
         datesSet: function (view) {
             // Added event handler
-            // Update title or span element here (optional)
             let currentDate = $(".fc-toolbar-title").text();
             $(".calendar-date").text(currentDate);
         },
@@ -27,25 +26,25 @@ $(document).ready(function () {
             let shiftDate = info.event.startStr.slice(0, 10);
             let startTime = info.event.startStr.slice(11, 19);
             let endTime = info.event.endStr.slice(11, 19);
-            // console.log();
-
-            // let providerId = info.event.resource.id;
-            // let providerName = info.event.resource.extendedProps.physician;
-            // console.log(info.event, providerId, providerName);
 
             $(".view-shift").show();
             $(".overlay").show();
 
-            // $(".region-view-shift");
-            // $(".physician-view-shift");
+            $(".region-view-shift").append(
+                "<option value='" +
+                    info.event.extendedProps.regionId +
+                    "' selected >" +
+                    info.event.extendedProps.regionName +
+                    "</option>"
+            );
+
+            $(".shiftId").val(info.event.extendedProps.shiftId);
             $(".shiftDate").val(shiftDate);
             $(".shiftStartTime").val(startTime);
             $(".shiftEndTime").val(endTime);
         },
     });
     calendar.render();
-
-    // $(".add-new-shift-btn").click(function () {});
 
     $(".repeat-switch").on("click", function () {
         if ($(".repeat-switch").is(":checked")) {
@@ -123,8 +122,6 @@ $(document).ready(function () {
                     repeatEnd.toISOString().split("T")[0];
                     eventData = {
                         title: event.title,
-                        // start: startTime,
-                        // end: endTime,
                         resourceId: event.resourceId,
                         daysOfWeek: event.week_days,
                         startTime: event.startTime,
@@ -132,6 +129,13 @@ $(document).ready(function () {
                         startRecur: event.shiftDate,
                         endRecur: repeatEnd,
                         textColor: "#000",
+                        extendedProps: {
+                            shiftId: event.shiftId,
+                            physicianId: event.physician_id,
+                            physicianName: event.title,
+                            regionId: event.region_id,
+                            regionName: event.region_name,
+                        },
                         backgroundColor:
                             event.status == "approved"
                                 ? "rgb(167, 204, 163)"
@@ -150,6 +154,13 @@ $(document).ready(function () {
                     end: endTime,
                     resourceId: event.resourceId,
                     textColor: "#000",
+                    extendedProps: {
+                        shiftId: event.shiftId,
+                        physicianId: event.physician_id,
+                        physicianName: event.title,
+                        regionId: event.region_id,
+                        regionName: event.region_name,
+                    },
                     backgroundColor:
                         event.status == "approved"
                             ? "rgb(167, 204, 163)"
