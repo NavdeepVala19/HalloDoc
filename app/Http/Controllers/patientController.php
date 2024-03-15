@@ -29,7 +29,6 @@ class patientController extends Controller
 
     public function create(Request $request)
     {
-        
 
         // $request->validate([
         //     'first_name'=>['required','min:2','max:30'],
@@ -43,28 +42,18 @@ class patientController extends Controller
         //     'room' =>['numeric']
         // ]);
 
-        // $request->validate([
-        //     'first_name'=>'required|min:2|max:30',
-        //     'last_name'=>'string|min:2|max:30',
-        //     'email' => 'required|email|min:2|max:30',
-        //     'phone_number'=>'required|numeric|digits:10',
-        //     'street'=>'min:2|max:30',
-        //     'city' => 'alpha|min:2|max:30',
-        //     'zipcode' => 'numeric', 
-        //     'state' => 'alpha|min:2|max:30',
-        //     'room' => 'numeric',
-        // ]);
-
-
-
-
-        // $myDate = ($request->date_of_birth);
-
-        // $date = Carbon::createFromDate($myDate);
-
-        // $monthName = $date->format('F');
-
-        // dd($monthName);
+        $request->validate([
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'string|min:2|max:30',
+            'date_of_birth'=>'required',
+            'email' => 'required|email|min:2|max:30',
+            'phone_number' => 'required|numeric|digits:10',
+            'street' => 'min:2|max:30',
+            'city' => 'min:2|max:30',
+            'zipcode' => 'numeric',
+            'state' => 'min:2|max:30',
+            'room' => 'numeric',
+        ]);
 
 
         // store email and phoneNumber in users table
@@ -91,7 +80,7 @@ class patientController extends Controller
         $requestStatus->status = 1;
         $requestStatus->save();
 
-        
+
         if (!empty($requestStatus)) {
             $requestData->update(['status' => $requestStatus->id]);
         }
@@ -131,11 +120,11 @@ class patientController extends Controller
 
         // store symptoms in request_notes table
 
-        // $request_notes = new RequestNotes();
-        // $request_notes->request_id = $requestData->id;
-        // $request_notes->patient_notes = $request->symptoms;
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $requestData->id;
+        $request_notes->patient_notes = $request->symptoms;
 
-        // $request_notes->save();
+        $request_notes->save();
 
 
 
@@ -143,6 +132,7 @@ class patientController extends Controller
         // store all details of patient in allUsers table
 
         $requestUsers = new allusers();
+        $requestUsers->user_id = $requestEmail->id;
         $requestUsers->first_name = $request->first_name;
         $requestUsers->last_name = $request->last_name;
         $requestUsers->email = $request->email;
@@ -164,8 +154,7 @@ class patientController extends Controller
 
 
         $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
-        // dd($confirmationNumber);
-
+    
         if (!empty($requestData->id)) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }

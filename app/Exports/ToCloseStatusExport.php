@@ -11,6 +11,14 @@ use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
 class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
+
+    private $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+    
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -18,7 +26,7 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
 
     public function headings(): array
     {
-        return ['PatientName', 'DOB', 'RequestorName', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
     }
 
     /**
@@ -26,11 +34,18 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
      */
     public function collection()
     {
-        $data = request_Client::distinct()->select('request_client.first_name', 'request_client.date_of_birth', 'request.first_name as request_first_name', 'request_client.created_at', 'request_client.phone_number', DB::raw("CONCAT(request_client.street,',',request_client.city,',',request_client.state) AS address"))
-            ->leftJoin('request', 'request.id', '=', 'request_client.request_id')
-            ->leftJoin('request_status', 'request.id', '=', 'request_status.request_id')
-            ->where('request_status.status', 7)
-            ->get();
-        return $data;
+        $adminToCloseData = $this->data->get();
+
+        return collect($adminToCloseData)->map(function ($adminToClose) {
+
+            return [
+                'PatientName' => $adminToClose->request->requestClient->first_name,
+                'Date of Birth' => $adminToClose->request->requestClient->date_of_birth,
+                'Requestor' => $adminToClose->request->first_name,
+                'RequestedDate' => $adminToClose->request->created_at,
+                'Mobile' => $adminToClose->request->phone_number,
+                'Address' => $adminToClose->request->requestClient->street . ',' . $adminToClose->request->requestClient->city . ',' . $adminToClose->request->requestClient->state,
+            ];
+        });
     }
 }

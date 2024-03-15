@@ -23,21 +23,23 @@ class businessRequestController extends Controller
   {
 
 
-    // $request->validate([
-    //     'first_name'=>'required|min:2|max:30',
-    //     'last_name'=>'string|min:2|max:30',
-    //     'email' => 'required|email|min:2|max:30',
-    //     'phone_number'=>'required|numeric|digits:10',
-    //     'street'=>'min:2|max:30',
-    //     'city' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
-    //     'zipcode' => 'numeric', 
-    //     'state' => 'regex:/^[\pL\s\-]+$/u|min:2|max:30',
-    //     'room' => 'numeric',
-    //     'business_first_name'=>'required|min:2|max:30',
-    //     'business_email' =>'required|email|min:2|max:30',
-    //     'business_mobile'=>'required',
-    //     'business_property_name'=>'required|min:2|max:30',
-    // ]);
+    $request->validate([
+      'first_name' => 'required|min:2|max:30',
+      'last_name' => 'string|min:2|max:30',
+      'email' => 'required|email|min:2|max:30',
+      'date_of_birth'=>'required',
+      'phone_number' => 'required|numeric|digits:10',
+      'street' => 'min:2|max:30',
+      'city' => 'min:2|max:30',
+      'zipcode' => 'numeric',
+      'state' => 'min:2|max:30',
+      'room' => 'numeric',
+      'business_first_name' => 'required|min:2|max:30',
+      'business_last_name' => 'min:2|max:30',
+      'business_email' => 'required|email|min:2|max:30',
+      'business_mobile' => 'required',
+      'business_property_name' => 'required|min:2|max:30',
+    ]);
 
     // store email and phoneNumber in users table
     $requestEmail = new users();
@@ -104,11 +106,11 @@ class businessRequestController extends Controller
 
     // store symptoms in request_notes table
 
-    // $request_notes = new RequestNotes();
-    // $request_notes->request_id = $requestBusiness->id;
-    // $request_notes->patient_notes = $request->symptoms;
+    $request_notes = new RequestNotes();
+    $request_notes->request_id = $requestBusiness->id;
+    $request_notes->patient_notes = $request->symptoms;
 
-    // $request_notes->save();
+    $request_notes->save();
 
 
 
@@ -117,6 +119,7 @@ class businessRequestController extends Controller
     // store all details of patient in allUsers table
 
     $requestUsers = new allusers();
+    $requestUsers->user_id = $requestEmail->id;
     $requestUsers->first_name = $request->first_name;
     $requestUsers->last_name = $request->last_name;
     $requestUsers->email = $request->email;

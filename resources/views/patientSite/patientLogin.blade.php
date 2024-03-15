@@ -37,15 +37,18 @@
 
                 <div class="mb-4 email">
                     <i class="bi bi-person-circle person-logo"></i>
-                    <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="Email" name="email">
-
-
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
+                    @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
+
                 <div class="mb-3 password">
                     <i class="bi bi-eye-fill person-eye"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="password"
-                        name="password">
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="exampleInputPassword1" placeholder="password" name="password">
+                    @error('password')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="buttons">

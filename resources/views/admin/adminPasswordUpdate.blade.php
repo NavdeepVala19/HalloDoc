@@ -30,17 +30,21 @@
                 @csrf
 
                 <input type="hidden" name="token" value="{{ $token }}">
-                
+
                 <div class="mb-4 password">
                     <i class="bi bi-eye-fill person-eye"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword1" placeholder="New Password"
-                        name="new_password">
+                    <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="exampleInputPassword1" placeholder="New Password" name="new_password">
+                    @error('new_password')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3 confirm-password">
                     <i class="bi bi-eye-fill person-eye-two"></i>
-                    <input type="password" class="form-control " id="exampleInputPassword2"
-                        placeholder="Confirm Password" name="confirm_password">
+                    <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" id="exampleInputPassword2" placeholder="Confirm Password" name="confirm_password">
+                    @error('confirm_password')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="buttons">

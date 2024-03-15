@@ -14,6 +14,13 @@
    {{-- Jquery file for Provider Page (Searching & Filtering) Feature --}}
    <script defer src="{{ URL::asset('assets/providerPage/provider.js') }}"></script>
 
+   {{-- Javascript for patient login password field --}}
+   <script defer src="{{ URL::asset('assets/patientSite/patientLoginPassword.js') }}"></script>
+
+   <script defer src="{{ URL::asset('assets/adminPage/searchRecords.js') }}"></script>
+
+   <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+
    <script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
 
 

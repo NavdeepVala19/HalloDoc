@@ -12,6 +12,14 @@ use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
 class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
+
+    private $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+    
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -19,7 +27,7 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
     public function headings(): array
     {
-        return ['PatientName', 'DOB', 'RequestorName', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
     }
 
     /**
@@ -27,11 +35,18 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
      */
     public function collection()
     {
-        $data = request_Client::distinct()->select('request_client.first_name', 'request_client.date_of_birth', 'request.first_name as request_first_name', 'request_client.created_at', 'request_client.phone_number', DB::raw("CONCAT(request_client.street,',',request_client.city,',',request_client.state) AS address"))
-            ->leftJoin('request', 'request.id', '=', 'request_client.request_id')
-            ->leftJoin('request_status', 'request.id', '=', 'request_status.request_id')
-            ->where('request_status.status', 9)
-            ->get();
-        return $data;
+        $adminUnpaidData = $this->data->get();
+
+        return collect($adminUnpaidData)->map(function ($adminUnpaid) {
+
+            return [
+                'PatientName' => $adminUnpaid->request->requestClient->first_name,
+                'Date of Birth' => $adminUnpaid->request->requestClient->date_of_birth,
+                'Requestor' => $adminUnpaid->request->first_name,
+                'RequestedDate' => $adminUnpaid->request->created_at,
+                'Mobile' => $adminUnpaid->request->phone_number,
+                'Address' => $adminUnpaid->request->requestClient->street . ',' . $adminUnpaid->request->requestClient->city . ',' . $adminUnpaid->request->requestClient->state,
+            ];
+        });
     }
 }

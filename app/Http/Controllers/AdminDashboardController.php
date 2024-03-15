@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\users;
 use App\Models\allusers;
+use App\Models\Provider;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -23,7 +25,6 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
-
         try {
             $request->validate([
                 'first_name' => 'required',
@@ -61,11 +62,9 @@ class AdminDashboardController extends Controller
         $requestStatus->status = 1;
         $requestStatus->save();
 
-
         if (!empty($requestStatus)) {
             $requestData->update(['status' => $requestStatus->id]);
         }
-
 
         $adminPatientRequest = new request_Client();
         $adminPatientRequest->request_id = $requestData->id;
@@ -82,9 +81,6 @@ class AdminDashboardController extends Controller
 
         $adminPatientRequest->save();
 
-
-
-
         // store notes in request_notes table
 
         $request_notes = new RequestNotes();
@@ -93,7 +89,6 @@ class AdminDashboardController extends Controller
         $request_notes->created_by = 'admin';
 
         $request_notes->save();
-
 
         // store all details of patient in allUsers table
 
@@ -108,7 +103,59 @@ class AdminDashboardController extends Controller
         $requestUsers->zipcode = $request->zipcode;
         $requestUsers->save();
 
-
         return redirect()->route('admin.dashboard');
     }
+
+    public function adminProfile($id)
+    {
+        $adminProfileData = Admin::with('users')->where('user_id', $id)->first();
+        return view('adminPage/adminProfile', compact('adminProfileData'));
+    }
+
+    public function adminProfileEdit(Request $request, $id)
+    {
+        $request->validate([
+            'user_name' => 'required',
+            'first_name' => 'required',
+            'email' => 'required|email',
+        ]);
+        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
+
+        $updateAdminInformation->first_name = $request->first_name;
+        $updateAdminInformation->last_name = $request->last_name;
+        $updateAdminInformation->email = $request->email;
+        $updateAdminInformation->mobile = $request->phone_number;
+        $updateAdminInformation->address1 = $request->address1;
+        $updateAdminInformation->address2 = $request->address2;
+        $updateAdminInformation->city = $request->city;
+        $updateAdminInformation->zip = $request->zip;
+        $updateAdminInformation->alt_phone = $request->alt_mobile;
+        $updateAdminInformation->save();
+
+        $updateAdminInfoInUsers = users::where('id', $id)->first();
+        $updateAdminInfoInUsers->username = $request->user_name;
+        $updateAdminInfoInUsers->password = $request->password;
+        $updateAdminInfoInUsers->save();    
+        
+        $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
+
+        $updateAdminInfoAllUsers->first_name = $request->first_name;
+        $updateAdminInfoAllUsers->last_name = $request->last_name;
+        $updateAdminInfoAllUsers->email = $request->email;
+        $updateAdminInfoAllUsers->mobile = $request->phone_number;
+        $updateAdminInfoAllUsers->street = $request->address1;
+        $updateAdminInfoAllUsers->city = $request->city;
+        $updateAdminInfoAllUsers->zipcode = $request->zip;
+
+        $updateAdminInfoAllUsers->save();
+
+
+        return redirect()->route('admin.user.access');
+    }
+
+    // public function adminEditProviderThroughUserAccess($id)
+    // {
+    //     $getProviderData = Provider::with('users')->where('user_id', $id)->first();
+    //     return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+    // }
 }

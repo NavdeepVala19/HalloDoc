@@ -1,13 +1,15 @@
 @extends('index')
 
 @section('css')
-    <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
+
 
 @section('username')
     {{ $userData->username }}
 @endsection
+
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
@@ -40,200 +42,198 @@
 @endsection
 
 @section('content')
-    {{-- This page will display patient requests for which patients have accepted the service agreement and provider is
+{{-- This page will display patient requests for which patients have accepted the service agreement and provider is
 giving service to the patient. --}}
-    <div class="overlay"></div>
+<div class="overlay"></div>
 
-    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
-                <label for="floatingInput">First Name</label>
-                @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-                @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-            @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
-            </div>
-
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
+{{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
+<div class="pop-up send-link">
+    <div class="popup-heading-section d-flex align-items-center justify-content-between">
+        <span>Send mail to patient for submitting request</span>
+        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
     </div>
-
-    {{-- Encounter --}}
-    <div class="pop-up encounter">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Select Type Of Care</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+    <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
+        <div class="form-floating ">
+            <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
+            <label for="floatingInput">First Name</label>
+            @error('first_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
         </div>
-        <form action="{{ route('encounter') }}" method="GET">
-            <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-                <button type="button" class="primary-empty housecall-btn">Housecall</button>
-                {{-- If the provider will select house-call, then another dropdown will be visible to select the approximate
+        <div class="form-floating ">
+            <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
+            <label for="floatingInput">Last Name</label>
+            @error('last_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
+        @error('phone_number')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+        <div class="form-floating ">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Email</label>
+        </div>
+
+    </div>
+    <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+        <button class="primary-fill">Send</button>
+        <button class="primary-empty hide-popup-btn">Cancel</button>
+    </div>
+</div>
+
+{{-- Encounter --}}
+<div class="pop-up encounter">
+    <div class="popup-heading-section d-flex align-items-center justify-content-between">
+        <span>Select Type Of Care</span>
+        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <form action="{{ route('encounter') }}" method="GET">
+        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+            <button type="button" class="primary-empty housecall-btn">Housecall</button>
+            {{-- If the provider will select house-call, then another dropdown will be visible to select the approximate
             arrival time of the provider to that patient’s house. That dropdown contains options from 0.5 hour to 6 hour
             with a 30-minute gap. --}}
-                <button type="button" class="primary-empty consult-btn">Consult</button>
-                <input type="text" name="caseId" class="case-id" value="" hidden>
-                {{-- If the provider selects the consult, then that request will move into Conclude state. --}}
+            <button type="button" class="primary-empty consult-btn">Consult</button>
+            <input type="text" name="caseId" class="case-id" value="" hidden>
+            {{-- If the provider selects the consult, then that request will move into Conclude state. --}}
+        </div>
+        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+            <div class="form-floating time-dropdown">
+                <select class="form-select" id="floatingSelect">
+                    <option selected value="30min">30 Minutes</option>
+                    <option value="1hour">1 Hour </option>
+                    <option value="1hour 30Minutes">1 Hour 30 Minutes</option>
+                    <option value="2Hour">2 Hour</option>
+                    <option value="2Hour 30Minutes">2 Hour 30 Minutes</option>
+                    <option value="3Hour">3 Hour</option>
+                    <option value="3Hour 30Minutes">3 Hour 30 Minutes</option>
+                    <option value="4Hour ">4 Hour</option>
+                    <option value="4Hour 30Minutes">4 Hour 30 Minutes</option>
+                    <option value="5Hour">5 Hour</option>
+                    <option value="5Hour 30Minutes">5 Hour 30 Minutes</option>
+                    <option value="6Hour">6 Hour</option>
+                </select>
+                <label for="floatingSelect">Select Approximate Arrival Time</label>
             </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <div class="form-floating time-dropdown">
-                    <select class="form-select" id="floatingSelect">
-                        <option selected value="30min">30 Minutes</option>
-                        <option value="1hour">1 Hour </option>
-                        <option value="1hour 30Minutes">1 Hour 30 Minutes</option>
-                        <option value="2Hour">2 Hour</option>
-                        <option value="2Hour 30Minutes">2 Hour 30 Minutes</option>
-                        <option value="3Hour">3 Hour</option>
-                        <option value="3Hour 30Minutes">3 Hour 30 Minutes</option>
-                        <option value="4Hour ">4 Hour</option>
-                        <option value="4Hour 30Minutes">4 Hour 30 Minutes</option>
-                        <option value="5Hour">5 Hour</option>
-                        <option value="5Hour 30Minutes">5 Hour 30 Minutes</option>
-                        <option value="6Hour">6 Hour</option>
-                    </select>
-                    <label for="floatingSelect">Select Approximate Arrival Time</label>
+            {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
+            <input type="submit" class="primary-fill encounter-save-btn" id="save-btn" value="Save">
+            <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="bg-blur">
+    <nav>
+        <div class="nav nav-tabs " id="nav-tab">
+            <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
+                <div class="case case-new p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
+                    <span>
+                        <i class="bi bi-plus-circle"></i> NEW
+                    </span>
+                    <span>
+                        {{ $count['newCase'] }}
+                    </span>
                 </div>
-                {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
-                <input type="submit" class="primary-fill encounter-save-btn" id="save-btn" value="Save">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+            </a>
 
-
-    <div class="bg-blur">
-        <nav>
-            <div class="nav nav-tabs " id="nav-tab">
-                <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link " id="nav-new-tab">
-                    <div class="case case-new p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
-                        <span>
-                            <i class="bi bi-plus-circle"></i> NEW
-                        </span>
-                        <span>
-                            {{ $count['newCase'] }}
-                        </span>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
-                    <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                        <span>
-                            <i class="bi bi-person-square"></i> PENDING
-                        </span>
-                        <span>
-                            {{ $count['pendingCase'] }}
-                        </span>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.status', ['status' => 'active']) }}" class="nav-link active"
-                    id="nav-active-tab">
-                    <div
-                        class="case case-active active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                        <span>
-                            <i class="bi bi-check2-circle"></i> ACTIVE
-                        </span>
-                        <span>
-                            {{ $count['activeCase'] }}
-                        </span>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
-                    <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                        <span>
-                            <i class="bi bi-clock-history"></i> CONCLUDE
-                        </span>
-                        <span>
-                            {{ $count['concludeCase'] }}
-                        </span>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.status', ['status' => 'toclose']) }}" class="nav-link" id="nav-conclude-tab">
-                    <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                        <span>
-                            <i class="bi bi-person-fill-x"></i> TO CLOSE
-                        </span>
-                        <span>
-                            {{ $count['tocloseCase'] }}
-                        </span>
-                    </div>
-                </a>
-
-                <a href="{{ route('admin.status', ['status' => 'unpaid']) }}" class="nav-link" id="nav-conclude-tab">
-                    <div class="case case-unpaid p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
-                        <span>
-                            <i class="bi bi-cash-coin"></i> UNPAID
-                        </span>
-                        <span>
-                            {{ $count['unpaidCase'] }}
-                        </span>
-                    </div>
-                </a>
-            </div>
-        </nav>
-        <div class="main">
-            <div class="heading-section d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <h3>Patients </h3> <strong class="case-type ps-2 ">(Active)</strong>
+            <a href="{{ route('admin.status', ['status' => 'pending']) }}" class="nav-link" id="nav-pending-tab">
+                <div class="case case-pending p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-person-square"></i> PENDING
+                    </span>
+                    <span>
+                        {{ $count['pendingCase'] }}
+                    </span>
                 </div>
-                <div class="admin-btn  d-flex gap-2">
-                    <button class="primary-fill send-link-btn">
-                        <i class="bi bi-send"></i>
-                        <span class="txt">
-                            Send Link
-                        </span>
-                    </button>
-                    <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
-                        <i class="bi bi-pencil-square"></i>
-                        <span class="txt">
-                            Create Requests
-                        </span>
-                    </a>
-                    <a href="{{ route('exportActive') }}" class="primary-fill">
-                        <i class="bi bi-send-arrow-down"></i>
-                        <span class="txt">
-                            Export
-                        </span>
-                    </a>
-                    <a href="" class="primary-fill">
-                        <i class="bi bi-send-arrow-down-fill"></i>
-                        <span class="txt">
-                            Export All
-                        </span>
-                    </a>
-                    <a href="" class="primary-fill">
-                        <i class="bi bi-pencil-square"></i>
-                        <span class="txt">
-                            Request DTY Support
-                        </span>
-                    </a>
+            </a>
+
+            <a href="{{ route('admin.status', ['status' => 'active']) }}" class="nav-link active" id="nav-active-tab">
+                <div class="case case-active active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-check2-circle"></i> ACTIVE
+                    </span>
+                    <span>
+                        {{ $count['activeCase'] }}
+                    </span>
                 </div>
+            </a>
+
+            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
+                <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-clock-history"></i> CONCLUDE
+                    </span>
+                    <span>
+                        {{ $count['concludeCase'] }}
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.status', ['status' => 'toclose']) }}" class="nav-link" id="nav-toclose-tab">
+                <div class="case case-toclose p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-person-fill-x"></i> TO CLOSE
+                    </span>
+                    <span>
+                        {{ $count['tocloseCase'] }}
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.status', ['status' => 'unpaid']) }}" class="nav-link" id="nav-unpaid-tab">
+                <div class="case case-unpaid p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                    <span>
+                        <i class="bi bi-cash-coin"></i> UNPAID
+                    </span>
+                    <span>
+                        {{ $count['unpaidCase'] }}
+                    </span>
+                </div>
+            </a>
+        </div>
+    </nav>
+    <div class="main">
+        <div class="heading-section d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <h3>Patients </h3> <strong class="case-type ps-2 ">(Active)</strong>
             </div>
+            <div class="admin-btn  d-flex gap-2">
+                <button class="primary-fill send-link-btn">
+                    <i class="bi bi-send"></i>
+                    <span class="txt">
+                        Send Link
+                    </span>
+                </button>
+                <a href="{{route('adminPatientRequest')}}" class="primary-fill">
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="txt">
+                        Create Requests
+                    </span>
+                </a>
+                <a href="{{route('exportActive')}}" class="primary-fill">
+                    <i class="bi bi-send-arrow-down"></i>
+                    <span class="txt">
+                        Export
+                    </span>
+                </a>
+                <a href="" class="primary-fill">
+                    <i class="bi bi-send-arrow-down-fill"></i>
+                    <span class="txt">
+                        Export All
+                    </span>
+                </a>
+                <button class="primary-fill request-support-btn">
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="txt">
+                        Request DTY Support
+                    </span>
+                </button>
+            </div>
+        </div>
             <div class="listing">
                 <div class="search-section d-flex align-items-center  justify-content-between ">
                     <form
@@ -321,7 +321,7 @@ giving service to the patient. --}}
                         </tbody>
                     </table>
                 </div>
-
+            </div>
                 <div class="mobile-listing">
                     @foreach ($cases as $case)
                         @if (!empty($case->request) && !empty($case->request->requestClient))
@@ -433,8 +433,8 @@ giving service to the patient. --}}
                 </div>
                 <div class="page">
                     {{ $cases->links('pagination::bootstrap-5') }}
-                </div>
             </div>
         </div>
     </div>
+</div>
 @endsection

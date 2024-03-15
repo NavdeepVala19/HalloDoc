@@ -42,10 +42,10 @@ $(document).ready(function () {
                 data.forEach(function (region) {
                     $(".physicianRegions").append(
                         '<option value="' +
-                            region.id +
-                            '">' +
-                            region.region_name +
-                            "</option>"
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
                     );
                 });
             },
@@ -190,6 +190,7 @@ $(document).ready(function () {
 
     // Email logs mobile listing
     $(".main-section").click(function () {
+        // Target the next sibling .more-info element specifically
         $(this).next(".details").toggleClass("active");
 
         $(".details").not($(this).next(".details")).removeClass("active");
@@ -200,6 +201,90 @@ $(document).ready(function () {
     $(".clearButton").click(function () {
         $(".empty-fields").val("");
     });
+
+
+    $('.request-support-btn').click(function () {
+        $('.request-support').show();
+    })
+
+
+
+    // ************************************* Shivesh *************************************
+
+    // ***************** Fetching regions from regions table ******************
+    $.ajax({
+        url: "/admin-new",
+        type: "GET",
+        success: function (data) {
+            // Assuming data is an array of reasons
+            data.forEach(function (region) {
+                $("#listing-region").append(
+                    '<option value="' + region.id + '">' + region.region_name + "</option>"
+                );
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+
+    });
+
+
+
+    // ***************** Filtering regions from dropdown button ******************
+
+    $('#listing-region').on('change', function () {
+        var token = $('meta[name="csrf-token"]').attr('content')
+        // Store the selected option's ID
+        var tab = $(".nav-link.active").attr('id');
+        var words = tab.split("-");
+        var activeStatus = words[1];
+
+        var selectedId = $(this).val();
+
+        $.ajax({
+            url: "/dropdown-data/",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                regionId: selectedId,
+                status: activeStatus,
+                "_token": token
+            },
+            success: function (data) {
+                $("#dropdown-data-body").html(data.html);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    })
+
+
+
+    // ********************* Filtering AccountType in User Access Page ***********************
+
+    $('#accountType').on('change', function () {
+        var accountType = $(this).val();
+        var token = $('meta[name="csrf-token"]').attr('content')
+
+        $.ajax({
+            url: "/user-access/filter",
+            method: "POST",
+            data: {
+                accountType: accountType,
+                "_token": token
+            },
+            success: function (response) {
+                $('#user-access-table').html(response.html);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    })
+});
+
 
     // Display different roles checkboxes as per the roles selected
     $(".role-selected").on("change", function () {
@@ -238,27 +323,6 @@ $(document).ready(function () {
         }
     });
 
-    // ***************** Fetching regions from regions table ******************
-    $.ajax({
-        url: "/admin-new",
-        type: "GET",
-        success: function (data) {
-            // Assuming data is an array of reasons
-            data.forEach(function (region) {
-                $(".listing-region").append(
-                    '<option value="' +
-                        region.id +
-                        '">' +
-                        region.region_name +
-                        "</option>"
-                );
-            });
-        },
-        error: function (error) {
-            console.error(error);
-        },
-    });
-
     $(".listing-region").on("change", function () {
         // Store the selected option's ID
         var selectedId = $(this).val();
@@ -274,5 +338,5 @@ $(document).ready(function () {
             },
         });
     });
-});
+
     

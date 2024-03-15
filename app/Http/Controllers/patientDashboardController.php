@@ -42,11 +42,10 @@ class patientDashboardController extends Controller
     public function createNewPatient(Request $request)
     {
 
-        // dd($request->all()); 
-
+     
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'last_name' => 'min:2|max:30',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required',
             'street' => 'min:2|max:30',
@@ -154,10 +153,10 @@ class patientDashboardController extends Controller
 
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y-m-d');
-        dd($currentDate);
+
 
         $userData = Auth::user();
-        $email = $userData["email"];
+        // $email = $userData["email"];
 
 
         $data = DB::table('request')
