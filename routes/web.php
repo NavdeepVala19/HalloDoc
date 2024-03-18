@@ -214,11 +214,11 @@ route::post('admin/new/request-support', [AdminController::class, 'sendRequestSu
 
 
 route::post('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
-route::get('/admin/new/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
-route::get('/admin/new/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
-route::get('/admin/new/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
-route::get('/admin/new/exportToClose', [ExcelController::class, 'toCloseDataExport'])->name('exportToClose');
-route::get('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport'])->name('exportUnPaid');
+route::post('/admin/pending/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
+route::post('/admin/active/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
+route::post('/admin/conclude/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
+route::post('/admin/toclose/exportToClose', [ExcelController::class, 'toCloseDataExport'])->name('exportToClose');
+route::post('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport'])->name('exportUnPaid');
 route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
 

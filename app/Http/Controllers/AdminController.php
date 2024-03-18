@@ -168,6 +168,11 @@ class AdminController extends Controller
     // Search for specific keyword in first_name of requestTable 
     public function search(Request $request, $status = 'new', $category = 'all')
     {
+
+        $session = session(
+            ['search' => $request->input('search'),]
+        );
+        
         $userData = Auth::user();
         $count = $this->totalCasesCount();
 
@@ -843,37 +848,14 @@ class AdminController extends Controller
     }
     public function smsRecordsView()
     {
-        $sms = SMSLogs::select(
-            'sms_log.mobile_number',
-            'sms_log.created_date',
-            'sms_log.sent_date',
-            'sms_log.sent_tries',
-            'sms_log.is_sms_sent',
-            'sms_log.sent_date',
-            'sms_log.is_sms_sent',
-            'sms_log.sent_tries',  
-            'provider.first_name as doctor_name'
-        )
-        ->leftJoin('provider', 'sms_log.provider_id', '=', 'provider.id')
-        ->get();
+        $sms = SMSLogs::paginate(10);
        
         return view('adminPage.records.smsLogs',compact('sms'));
     }
 
     public function searchSMSLogs(Request $request){
 
-        $sms = SMSLogs::select(
-            'sms_log.mobile_number',
-            'sms_log.created_date',
-            'sms_log.sent_date',
-            'sms_log.sent_tries',
-            'sms_log.is_sms_sent',
-            'sms_log.sent_date',
-            'sms_log.is_sms_sent',
-            'sms_log.sent_tries',  
-            'provider.first_name as doctor_name'
-        )
-        ->leftJoin('provider', 'sms_log.provider_id', '=', 'provider.id');
+        $sms = SMSLogs::select();
     
         if (!empty($request->receiver_name)) {
             $sms = $sms->where('provider.first_name', 'like', '%' . $request->receiver_name . '%');
@@ -887,7 +869,20 @@ class AdminController extends Controller
         if (!empty($request->sent_date)) {
             $sms = $sms->orWhere('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
         }
-        $sms->get();
+        if (!empty($request->role_type)) {
+            $sms = $sms->orWhere('sms_log.role_id', "like", "%" . $request->role_type . "%");
+        }
+        $sms = $sms->paginate(10);
+
+
+        $session = session(
+            [
+                'receiver_name' => $request->input('receiver_name'),
+                'phone_number' => $request->input('phone_number'),
+                'created_date' => $request->input('created_date'),
+                'sent_date' => $request->input('sent_date'),           
+            ]
+        );
    
         return view('adminPage.records.smsLogs',compact('sms'));
 

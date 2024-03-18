@@ -317,14 +317,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 <input name="filter_category" value="" hidden>
                 <button type="submit" hidden>export</button>
             </form>
-            <form action="{{route('exportNewData')}}" method="POST" id="filterExport" class="d-none">
-                @csrf
-                <input name="filter_search" value="" hidden>
-                <input name="filter_region" value="" hidden>
-                <input name="filter_category" value="" hidden>
-                <button type="submit" hidden>export</button>
-            </form>
-
             <a href="{{ route('exportAll') }}" class="primary-fill">
                 <i class="bi bi-send-arrow-down-fill"></i>
                 <span class="txt">

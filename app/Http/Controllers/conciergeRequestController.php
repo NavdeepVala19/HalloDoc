@@ -28,7 +28,7 @@ class conciergeRequestController extends Controller
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'min:2|max:30',
             'email' => 'required|email|min:2|max:30',
-            'phone_number' => 'required|numeric|digits:10',
+            'phone_number' => 'required',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30',
             'zipcode' => 'numeric',
@@ -107,7 +107,7 @@ class conciergeRequestController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-        $patientRequest->notes = $request->symptoms;
+
         $patientRequest->save();
 
 

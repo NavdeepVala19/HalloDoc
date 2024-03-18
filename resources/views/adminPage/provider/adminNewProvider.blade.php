@@ -17,7 +17,7 @@
         <li><a class="dropdown-item" href="">Scheduling</a></li>
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
-</div>
+
 </div>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}">Access</a>
@@ -66,6 +66,15 @@
                     @enderror
                 </div>
 
+                <div class="form-floating role-select">
+                    <select class="form-select" id="provider-role" name="role">
+                        <option selected>Role</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                    </input>
+                </div>
 
             </div>
 
@@ -171,11 +180,13 @@
                 <div>
                     {{-- Dropdown State Selection --}}
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="select-state">
                             <option selected>State</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option value="1">Somnath</option>
+                            <option value="2">Dwarka</option>
+                            <option value="3">Rajkot</option>
+                            <option value="3">Bhavnagar</option>
+                            <option value="3">Ahmedabad</option>
                         </select>
                         <!-- <label for="floatingSelect">State</label> -->
                     </div>
@@ -239,11 +250,9 @@
                 <label for="floatingTextarea2">Admin Notes</label>
             </div>
 
-
-
-
             <hr>
             <div>
+
                 <h3>Onboarding</h3>
 
                 <div class="table mt-4">
@@ -265,7 +274,6 @@
 
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
 
-                                        <button class="primary-fill ms-4">View</button>
                                         <p id="Contractor"></p>
                                     </div>
 
@@ -273,7 +281,7 @@
                                         <label for="independent_contractor" class="upload primary-fill"> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <input type="file" id="fileInput-independent_contractor-agreement" class="independent-contractor-input" name="independent_contractor-btn" hidden>
 
-                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+
                                         <p id="Contractor"></p>
                                     </div>
                                 </td>
@@ -293,13 +301,13 @@
                                     <div class="ms-4 btns">
                                         <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="background-input" name="background_doc" hidden>
-                                        <button class="primary-fill ms-4">View</button>
+
                                         <p id="Background"></p>
                                     </div>
 
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+
                                         <p id="Background"></p>
                                     </div>
                                 </td>
@@ -319,12 +327,12 @@
                                     <div class="ms-4 btns">
                                         <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="hipaa-input" hidden name="hipaa_docs">
-                                        <button class="primary-fill ms-4">View</button>
+
                                         <p id="HIPAA"></p>
                                     </div>
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+
                                         <p id="HIPAA"></p>
                                     </div>
                                 </td>

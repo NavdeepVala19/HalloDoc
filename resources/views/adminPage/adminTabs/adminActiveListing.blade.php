@@ -215,7 +215,7 @@ giving service to the patient. --}}
                         Create Requests
                     </span>
                 </a>
-                <a href="{{route('exportActive')}}" class="primary-fill">
+                <a href="{{route('exportActive')}}" class="primary-fill" id="filterExportBtnActive">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
@@ -247,7 +247,7 @@ giving service to the patient. --}}
                 <form action="{{ route('searching', ['status' => 'active', 'category' => request('category', 'all')]) }}" method="GET" class="d-flex align-items-center">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
-                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                        <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{old('search' ,request()->input('search'))}}">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                     <select class="form-select listing-region">

@@ -21,7 +21,6 @@
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
 </div>
-</div>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}">Access</a>
 <div class="dropdown record-navigation">
@@ -36,7 +35,6 @@
         <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
     </ul>
 </div>
-
 
 
 @endsection
@@ -61,9 +59,11 @@
 
             <select class="form-select">
                 <option selected>All </option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="1">Somnath</option>
+                <option value="2">Dwarka</option>
+                <option value="3">Rajkot</option>
+                <option value="4">Bhavnagar</option>
+                <option value="5">Ahmedabad</option>
             </select>
 
             <div class="provider-btn">
@@ -94,7 +94,7 @@
                         <td class="data"> {{$data->first_name}}</td>
                         <td class="data"> Physician</td>
                         <td class="data"> Available</td>
-                        <td class="data"> Active </td>
+                        <td class="data"> {{$data->status}} </td>
                         <td class="data gap-1">
                             <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
                             <a href="{{route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
@@ -130,7 +130,7 @@
                         </div>
 
                         <div class="radio-email">
-                            <input class="form-check-input" type="radio" value="email" name="emailContact" id="flexRadioDefault2" checked>
+                            <input class="form-check-input" type="radio" value="email" name="emailContact" id="flexRadioDefault2">
                             <label class="form-check-label ms-1" for="flexRadioEmail">
                                 Email
                             </label>

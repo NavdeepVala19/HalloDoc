@@ -64,6 +64,8 @@ class AdminProviderController extends Controller
     public function adminCreateNewProvider(Request $request)
     {
 
+
+
         // $request->validate([
         //     'user_name' => 'required',
         //     'password' => 'required',
@@ -102,9 +104,6 @@ class AdminProviderController extends Controller
         $physicianRegion = new PhysicianRegion();
 
 
-
-
-
         // store data of providers in providers table
 
         $providerData->user_id = $userProvider->id;
@@ -119,7 +118,7 @@ class AdminProviderController extends Controller
         $providerData->address1 = $request->address1;
         $providerData->address2 = $request->address2;
         $providerData->city = $request->city;
-        // $providerData->status = 'pending';
+        $providerData->status = 'pending';
         $providerData->zip = $request->zip;
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
@@ -276,9 +275,17 @@ class AdminProviderController extends Controller
 
     // **************** This code is for edit provider profile *********************
 
+    public function regionName()
+    {
+        $regions = Regions::get();
+        dd($regions);
+        return view('/adminPage/provider/adminEditProvider', compact('regions'));
+    }
+
     public function editProvider($id)
     {
         $getProviderData = Provider::with('users')->where('id', $id)->first();
+
         return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
 
@@ -323,6 +330,7 @@ class AdminProviderController extends Controller
         $getProviderInformation->business_name = $request->business_name;
         $getProviderInformation->business_website = $request->business_website;
         $getProviderInformation->admin_notes = $request->admin_notes;
+        $getProviderInformation->status = $request->status_type;
 
         $getProviderInformation->save();
 
@@ -330,11 +338,9 @@ class AdminProviderController extends Controller
 
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
 
-
-
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
         $updateProviderInfoUsers->username = $request->user_name;
-        $updateProviderInfoUsers->password = $request->password;
+        $updateProviderInfoUsers->password = Hash::make($request->password);
         $updateProviderInfoUsers->save();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');

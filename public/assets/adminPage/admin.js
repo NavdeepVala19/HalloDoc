@@ -1,20 +1,6 @@
 $(document).ready(function () {
 
-    var pathname = window.location.pathname;
-    var url = pathname.split('/');
-    var activeCategory = url[3];
 
-    if (!activeCategory) {
-        $(".btn-all.filter-btn").addClass("active-filter");
-    }
-
-
-    var filterBtns = $(".filter-btn");
-    filterBtns.map(function (index, element) {
-        if (element.dataset.category == activeCategory) {
-            $(element).addClass("active-filter");
-        }
-    });
 
 
 
@@ -229,6 +215,29 @@ $(document).ready(function () {
 
 
     // ************************************* Shivesh *************************************
+
+    // ********************
+    // this code is for getting filtername in admin dashboard (all,patient,family,concierge,business)
+
+    var pathname = window.location.pathname;
+    var url = pathname.split('/');
+    var activeCategory = url[3];
+
+    if (!activeCategory) {
+        $(".btn-all.filter-btn").addClass("active-filter");
+    }
+
+
+    var filterBtns = $(".filter-btn");
+    filterBtns.map(function (index, element) {
+        if (element.dataset.category == activeCategory) {
+            $(element).addClass("active-filter");
+        }
+    });
+
+    // *******************
+
+    
 
     // ***************** Fetching regions from regions table ******************
     $.ajax({

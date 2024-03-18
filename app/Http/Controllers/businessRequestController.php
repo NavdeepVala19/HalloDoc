@@ -27,8 +27,8 @@ class businessRequestController extends Controller
       'first_name' => 'required|min:2|max:30',
       'last_name' => 'string|min:2|max:30',
       'email' => 'required|email|min:2|max:30',
-      'date_of_birth'=>'required',
-      'phone_number' => 'required|numeric|digits:10',
+      'date_of_birth' => 'required',
+      'phone_number' => 'required',
       'street' => 'min:2|max:30',
       'city' => 'min:2|max:30',
       'zipcode' => 'numeric',
@@ -100,7 +100,7 @@ class businessRequestController extends Controller
     $patientRequest->state = $request->state;
     $patientRequest->zipcode = $request->zipcode;
     $patientRequest->room = $request->room;
-    $patientRequest->notes = $request->symptoms;
+
     $patientRequest->save();
 
 
@@ -146,8 +146,13 @@ class businessRequestController extends Controller
     $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
 
 
-    $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
-    // dd($confirmationNumber);
+    $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
+    $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
+    $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
+
+
+
+    $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
     if (!empty($requestBusiness->id)) {
       $requestBusiness->update(['confirmation_no' => $confirmationNumber]);

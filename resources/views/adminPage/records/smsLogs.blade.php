@@ -35,41 +35,41 @@
     {{-- d-flex align-items-center justify-content-between gap-3 --}}
     <div class="section">
 
-    <form action="{{route('admin.sms.records.search')}}" method="post">
-    @csrf
+        <form action="{{route('admin.sms.records.search')}}" method="post">
 
-        <div class="grid-6 email-search-box">
-            <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                    <option selected>All</option>
-                    <option value="1">Physician</option>
-                    <option value="2">Admin</option>
-                </select>
-                <label for="floatingSelect">Search by role</label>
-            </div>
-            <div class="form-floating ">
-                <input type="text" name="receiver_name" class="form-control" id="floatingInput" placeholder="Receiver Name">
-                <label for="floatingInput">Receiver Name</label>
-            </div>
-            <div class="form-floating ">
-                <input type="tel" class="form-control" id="floatingInput" placeholder="name@example.com" name="phone_number">
-                <label for="floatingInput">Mobile Number</label>
-            </div>
-            <div class="form-floating ">
-                <input type="date" name="created_date" class="form-control" id="floatingInput" placeholder="Created Date" name="created_date">
-                <label for="floatingInput">Created Date</label>
-            </div>
-            <div class="form-floating ">
-                <input type="date" name="sent_date" class="form-control" id="floatingInput" placeholder="Sent Date" name="sent_date">
-                <label for="floatingInput">Sent Date</label>
-            </div>
-            <div class="button-section">
-                <button class="primary-fill" type="submit">Search</button>
-                <button class="primary-empty" type="reset">Clear</button>
-            </div>
+            @csrf
+            <div class="grid-6 email-search-box">
+                <div class="form-floating">
+                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="role_type">
+                        <option selected>All</option>
+                        <option value="1">Admin</option>
+                        <option value="2">Physician</option>
+                        <option value="3">Patient</option>
+                    </select>
+                    <label for="floatingSelect">Search by role</label>
+                </div>
+                <div class="form-floating ">
+                    <input type="text" name="receiver_name" class="form-control" id="floatingInput" placeholder="Receiver Name" value="{{old('receiver_name' ,request()->input('receiver_name'))}}">
+                    <label for="floatingInput">Receiver Name</label>
+                </div>
+                <div class="form-floating ">
+                    <input type="tel" class="form-control" id="floatingInput" placeholder="name@example.com" name="phone_number" value="{{old('phone_number' ,request()->input('phone_number'))}}">
+                    <label for="floatingInput">Mobile Number</label>
+                </div>
+                <div class="form-floating ">
+                    <input type="date" name="created_date" class="form-control" id="floatingInput" placeholder="Created Date" name="created_date" value="{{old('created_date' ,request()->input('created_date'))}}">
+                    <label for="floatingInput">Created Date</label>
+                </div>
+                <div class="form-floating ">
+                    <input type="date" name="sent_date" class="form-control" id="floatingInput" placeholder="Sent Date" name="sent_date" value="{{old('sent_date' ,request()->input('sent_date'))}}">
+                    <label for="floatingInput">Sent Date</label>
+                </div>
+                <div class="button-section">
+                    <button class="primary-fill" type="submit">Search</button>
+                    <button class="primary-empty" type="reset">Clear</button>
+                </div>
 
-     
-        </div>
+            </div>
         </form>
 
         <div class="table-responsive table-view">
@@ -88,22 +88,32 @@
                 <tbody>
                     @foreach($sms as $data)
                     <tr>
-                        <td>{{$data->doctor_name}}</td>
+                        <td>{{$data->recipient_name}}</td>
                         <td>-</td>
-                        <td>Physician</td>
+                        <td>
+                            @if ($data->request_id=="" && $data->provider_id=="")
+                            admin
+                            @elseif ($data->admin_id=="" && $data->request_id=="")
+                            physician
+                            @elseif ($data->admin_id=="" && $data->provider_id=="")
+                            patient
+                            @endif
+                        </td>
                         <td>{{$data->mobile_number}}</td>
                         <td>{{$data->created_date}} </td>
                         <td>{{$data->sent_date}} </td>
                         <td>
-                            @if($data->is_sms_sent==1)1
+                            @if($data->is_sms_sent==1)
+                            1
                             @endif
                         </td>
                         <td>{{$data->sent_tries}}</td>
                         <td>-</td>
                     </tr>
-                    @endforeach 
+                    @endforeach
                 </tbody>
             </table>
+            {{$sms->links('pagination::bootstrap-5')}}
         </div>
 
         <div class="mobile-listing">

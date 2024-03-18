@@ -38,13 +38,37 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
 
         return collect($adminConcludeData)->map(function ($adminConclude) {
 
+            $patientName = null;
+            $dateOfBirth = null;
+            $street = null;
+            $city = null;
+            $state = null;
+
+            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
+                $patientName = $adminConclude->request->requestClient->first_name;
+            }
+
+            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
+                $dateOfBirth = $adminConclude->request->requestClient->date_of_birth;
+            }
+
+            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
+                $street = $adminConclude->request->requestClient->street;
+            }
+            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
+                $city = $adminConclude->request->requestClient->city;
+            }
+            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
+                $state = $adminConclude->request->requestClient->state;
+            }
+
             return [
-                'PatientName' => $adminConclude->request->requestClient->first_name,
-                'Date of Birth' => $adminConclude->request->requestClient->date_of_birth,
+                'PatientName' => $patientName,
+                'Date of Birth' => $dateOfBirth,
                 'Requestor' => $adminConclude->request->first_name,
                 'RequestedDate' => $adminConclude->request->created_at,
                 'Mobile' => $adminConclude->request->phone_number,
-                'Address' => $adminConclude->request->requestClient->street . ',' . $adminConclude->request->requestClient->city . ',' . $adminConclude->request->requestClient->state,
+                'Address' => $street . ',' . $city . ',' . $state,
             ];
         });
     }

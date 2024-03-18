@@ -233,7 +233,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     Create Requests
                 </span>
             </a>
-            <a href="{{route('exportUnPaid')}}" class="primary-fill">
+            <a href="{{route('exportUnPaid')}}" class="primary-fill" id="filterExportBtnUnPaid">
                 <i class="bi bi-send-arrow-down"></i>
                 <span class="txt">
                     Export
@@ -266,7 +266,7 @@ pending state, providers need to send an agreement link to patients. --}}
             <form action="{{ route('searching', ['status' => 'unpaid', 'category' => request('category', 'all')]) }}" method="GET" class="d-flex align-items-center">
                 {{-- @csrf --}}
                 <div class="input-group mb-3">
-                    <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                    <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient" placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{old('search' ,request()->input('search'))}}">
                     {{-- <input type="submit" class="primary-fill"> --}}
                 </div>
                 <select class="form-select listing-region">

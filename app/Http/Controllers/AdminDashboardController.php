@@ -25,7 +25,7 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
-        try {
+    
             $request->validate([
                 'first_name' => 'required',
                 'last_name' => 'required',
@@ -36,10 +36,7 @@ class AdminDashboardController extends Controller
                 'city' => 'required',
                 'state' => 'required'
             ]);
-        } catch (\Throwable $th) {
-            dd($th);
-        }
-
+        
         // store email and phoneNumber in users table
         $requestEmail = new users();
         $requestEmail->email = $request->email;
