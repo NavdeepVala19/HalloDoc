@@ -395,9 +395,9 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                                     data-patient_name="{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}"><i
                                                         class="bi bi-x-circle me-2 ms-3"></i>Cancel
                                                     Case</button>
-                                                <button><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View
-                                                    Case</button>
-                                                <a href="/view-notes/{{ $case->request->id }}"><i
+                                                <a href="{{route("admin.view.case", $case->request->id)}}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View
+                                                    Case</a>
+                                                <a href="{{route("")}}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button class="block-case-btn" data-id="{{ $case->request->id }}"
                                                     data-patient_name="{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}">

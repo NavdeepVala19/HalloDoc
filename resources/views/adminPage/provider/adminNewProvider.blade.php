@@ -18,7 +18,6 @@
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
 </div>
-</div>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}">Access</a>
 <div class="dropdown record-navigation">

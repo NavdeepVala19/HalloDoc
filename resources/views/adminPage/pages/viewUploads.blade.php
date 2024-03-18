@@ -17,7 +17,7 @@
             <h1 class="heading">
                 Documents
             </h1>
-            <a href="{{ route('provider-dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 
