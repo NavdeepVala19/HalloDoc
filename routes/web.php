@@ -345,7 +345,8 @@ Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->nam
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
 
-
+// Conclude Care -> conclude state -> Provider
+Route::get('/conclude-care', [ProviderController::class, 'viewConcludeCare'])->name('provider.conclude.care');
 
 
 

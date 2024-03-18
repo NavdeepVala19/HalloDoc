@@ -194,7 +194,9 @@ giving service to the patient. --}}
                                 <tr class="type-{{ $case->request->request_type_id }}">
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->phone_number }}</td>
-                                    <td>{{ $case->request->requestClient->address }}</td>
+                                    <td>{{ $case->request->requestClient->street }},
+                                        {{ $case->request->requestClient->city }},
+                                        {{ $case->request->requestClient->state }}</td>
                                     <td>
                                         @if ($case->request->call_type)
                                             <span class="primary-fill"> {{ $case->request->call_type }} </span>

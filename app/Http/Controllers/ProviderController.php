@@ -525,4 +525,9 @@ class ProviderController extends Controller
         Mail::to($request->email)->send(new SendAgreement($clientData));
         return redirect()->back();
     }
+
+    public function viewConcludeCare()
+    {
+        return view('providerPage.conclude.care');
+    }
 }

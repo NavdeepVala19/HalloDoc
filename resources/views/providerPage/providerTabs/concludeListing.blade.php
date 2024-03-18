@@ -183,12 +183,14 @@
                             <tr class="type-{{ $case->request->request_type_id }}">
                                 <td>{{ $case->request->requestClient->first_name }}</td>
                                 <td>{{ $case->request->requestClient->phone_number }}</td>
-                                <td>{{ $case->request->requestClient->address }}</td>
+                                <td>{{ $case->request->requestClient->street }},
+                                    {{ $case->request->requestClient->city }},
+                                    {{ $case->request->requestClient->state }}</td>
                                 <td>
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <button><i class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</button>
+                                            <a href="{{ route('provider.conclude.care') }}"><i class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
                                             <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
