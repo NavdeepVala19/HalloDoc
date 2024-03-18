@@ -843,8 +843,54 @@ class AdminController extends Controller
     }
     public function smsRecordsView()
     {
-        $sms = SMSLogs::select('admin.first');
+        $sms = SMSLogs::select(
+            'sms_log.mobile_number',
+            'sms_log.created_date',
+            'sms_log.sent_date',
+            'sms_log.sent_tries',
+            'sms_log.is_sms_sent',
+            'sms_log.sent_date',
+            'sms_log.is_sms_sent',
+            'sms_log.sent_tries',  
+            'provider.first_name as doctor_name'
+        )
+        ->leftJoin('provider', 'sms_log.provider_id', '=', 'provider.id')
+        ->get();
+       
         return view('adminPage.records.smsLogs',compact('sms'));
+    }
+
+    public function searchSMSLogs(Request $request){
+
+        $sms = SMSLogs::select(
+            'sms_log.mobile_number',
+            'sms_log.created_date',
+            'sms_log.sent_date',
+            'sms_log.sent_tries',
+            'sms_log.is_sms_sent',
+            'sms_log.sent_date',
+            'sms_log.is_sms_sent',
+            'sms_log.sent_tries',  
+            'provider.first_name as doctor_name'
+        )
+        ->leftJoin('provider', 'sms_log.provider_id', '=', 'provider.id');
+    
+        if (!empty($request->receiver_name)) {
+            $sms = $sms->where('provider.first_name', 'like', '%' . $request->receiver_name . '%');
+        }
+        if (!empty($request->phone_number)) {
+            $sms = $sms->orWhere('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+        }
+        if (!empty($request->created_date)) {
+            $sms = $sms->orWhere('sms_log.created_date', "like", "%" . $request->created_date . "%");
+        }
+        if (!empty($request->sent_date)) {
+            $sms = $sms->orWhere('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+        }
+        $sms->get();
+   
+        return view('adminPage.records.smsLogs',compact('sms'));
+
     }
 
     public function blockHistoryView()

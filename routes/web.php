@@ -434,6 +434,9 @@ Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearch
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
+
+Route::post('/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
 Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
 Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');

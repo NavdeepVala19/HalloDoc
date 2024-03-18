@@ -34,6 +34,10 @@
     </div>
     {{-- d-flex align-items-center justify-content-between gap-3 --}}
     <div class="section">
+
+    <form action="{{route('admin.sms.records.search')}}" method="post">
+    @csrf
+
         <div class="grid-6 email-search-box">
             <div class="form-floating">
                 <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
@@ -48,22 +52,26 @@
                 <label for="floatingInput">Receiver Name</label>
             </div>
             <div class="form-floating ">
-                <input type="tel" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="tel" class="form-control" id="floatingInput" placeholder="name@example.com" name="phone_number">
                 <label for="floatingInput">Mobile Number</label>
             </div>
             <div class="form-floating ">
-                <input type="date" name="created_date" class="form-control" id="floatingInput" placeholder="Created Date">
+                <input type="date" name="created_date" class="form-control" id="floatingInput" placeholder="Created Date" name="created_date">
                 <label for="floatingInput">Created Date</label>
             </div>
             <div class="form-floating ">
-                <input type="date" name="sent_date" class="form-control" id="floatingInput" placeholder="Sent Date">
+                <input type="date" name="sent_date" class="form-control" id="floatingInput" placeholder="Sent Date" name="sent_date">
                 <label for="floatingInput">Sent Date</label>
             </div>
             <div class="button-section">
-                <button class="primary-fill">Search</button>
-                <button class="primary-empty">Clear</button>
+                <button class="primary-fill" type="submit">Search</button>
+                <button class="primary-empty" type="reset">Clear</button>
             </div>
+
+     
         </div>
+        </form>
+
         <div class="table-responsive table-view">
             <table class="table">
                 <thead class="table-secondary">
@@ -78,18 +86,22 @@
                     <td>Confirmation Number</td>
                 </thead>
                 <tbody>
+                    @foreach($sms as $data)
                     <tr>
-                        <td>Name</td>
-                        <td>Action</td>
+                        <td>{{$data->doctor_name}}</td>
+                        <td>-</td>
                         <td>Physician</td>
-                        <td>123456789</td>
-                        <td>nov 30,2023 </td>
-                        <td>Nov 30,2023</td>
-                        <td>Yes</td>
-                        <td>1</td>
+                        <td>{{$data->mobile_number}}</td>
+                        <td>{{$data->created_date}} </td>
+                        <td>{{$data->sent_date}} </td>
+                        <td>
+                            @if($data->is_sms_sent==1)1
+                            @endif
+                        </td>
+                        <td>{{$data->sent_tries}}</td>
                         <td>-</td>
                     </tr>
-               
+                    @endforeach 
                 </tbody>
             </table>
         </div>

@@ -11,4 +11,9 @@ class SMSLogs extends Model
 
     protected $table = 'sms_log'; 
 
+
+    public function provider(){
+        return $this->belongsTo(Provider::class);
+    }
+
 }
