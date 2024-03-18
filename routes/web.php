@@ -478,5 +478,5 @@ Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'provi
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('adminPage.scheduling.scheduling');
+    return view('providerPage.concludeCare');
 });

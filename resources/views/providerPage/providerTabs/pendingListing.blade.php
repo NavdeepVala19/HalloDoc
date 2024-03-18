@@ -234,7 +234,9 @@ pending state, providers need to send an agreement link to patients. --}}
                                 <tr class="type-{{ $case->request->request_type_id }}">
                                     <td>{{ $case->request->requestClient->first_name }}</td>
                                     <td>{{ $case->request->requestClient->phone_number }}</td>
-                                    <td>{{ $case->request->requestClient->address }}</td>
+                                    <td>{{ $case->request->requestClient->street }},
+                                        {{ $case->request->requestClient->city }},
+                                        {{ $case->request->requestClient->state }}</td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>

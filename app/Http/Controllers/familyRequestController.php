@@ -20,23 +20,23 @@ class familyRequestController extends Controller
     public function create(Request $request)
     {
 
-        $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'min:2|max:30',
-            'date_of_birth'=>'required',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number' => 'required|numeric|digits:10',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
-            'state' => 'min:2|max:30',
-            'room' => 'numeric',
-            'family_first_name' => 'required|min:2|max:30',
-            'family_last_name' => 'min:2|max:30',
-            'family_email' => 'required|email|min:2|max:30',
-            'family_phone_number' => 'required',
-            'family_relation' => 'required',
-        ]);
+        // $request->validate([
+        //     'first_name' => 'required|min:2|max:30',
+        //     'last_name' => 'min:2|max:30',
+        //     'date_of_birth'=>'required',
+        //     'email' => 'required|email|min:2|max:30',
+        //     'phone_number' => 'required|numeric|digits:10',
+        //     'street' => 'min:2|max:30',
+        //     'city' => 'min:2|max:30',
+        //     'zipcode' => 'numeric',
+        //     'state' => 'min:2|max:30',
+        //     'room' => 'numeric',
+        //     'family_first_name' => 'required|min:2|max:30',
+        //     'family_last_name' => 'min:2|max:30',
+        //     'family_email' => 'required|email|min:2|max:30',
+        //     'family_phone_number' => 'required',
+        //     'family_relation' => 'required',
+        // ]);
 
 
         // store email and phoneNumber in users table
@@ -106,11 +106,11 @@ class familyRequestController extends Controller
 
         // store symptoms in request_notes table
 
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $familyRequest->id;
-        $request_notes->patient_notes = $request->symptoms;
+        // $request_notes = new RequestNotes();
+        // $request_notes->request_id = $familyRequest->id;
+        // $request_notes->patient_notes = $request->symptoms;
 
-        $request_notes->save();
+        // $request_notes->save();
 
 
         // store all details of patient in allUsers table

@@ -7,7 +7,6 @@
 @endsection
 
 @section('nav-links')
-
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
 <a href="{{route('providerLocation')}}">Provider Location</a>
 <a href="">My Profile</a>
@@ -20,7 +19,6 @@
         <li><a class="dropdown-item" href="">Scheduling</a></li>
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
-</div>
 </div>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}">Access</a>
@@ -36,9 +34,6 @@
         <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
     </ul>
 </div>
-
-
-
 @endsection
 
 @section('content')

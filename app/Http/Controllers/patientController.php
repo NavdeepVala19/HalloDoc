@@ -42,18 +42,18 @@ class patientController extends Controller
         //     'room' =>['numeric']
         // ]);
 
-        $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
-            'date_of_birth'=>'required',
-            'email' => 'required|email|min:2|max:30',
-            'phone_number' => 'required|numeric|digits:10',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
-            'state' => 'min:2|max:30',
-            'room' => 'numeric',
-        ]);
+        // $request->validate([
+        //     'first_name' => 'required|min:2|max:30',
+        //     'last_name' => 'string|min:2|max:30',
+        //     'date_of_birth'=>'required',
+        //     'email' => 'required|email|min:2|max:30',
+        //     'phone_number' => 'required|numeric|digits:10',
+        //     'street' => 'min:2|max:30',
+        //     'city' => 'min:2|max:30',
+        //     'zipcode' => 'numeric',
+        //     'state' => 'min:2|max:30',
+        //     'room' => 'numeric',
+        // ]);
 
 
         // store email and phoneNumber in users table
@@ -120,11 +120,11 @@ class patientController extends Controller
 
         // store symptoms in request_notes table
 
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $requestData->id;
-        $request_notes->patient_notes = $request->symptoms;
+        // $request_notes = new RequestNotes();
+        // $request_notes->request_id = $requestData->id;
+        // $request_notes->patient_notes = $request->symptoms;
 
-        $request_notes->save();
+        // $request_notes->save();
 
 
 
