@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sms_log', function (Blueprint $table) {
             $table->id();
+            $table->string('recipient_name');
             $table->string('sms_template');
             $table->integer('mobile_number');
             $table->integer('confirmation_number')->nullable();
@@ -28,7 +29,7 @@ return new class extends Migration
             $table->date('sent_date')->nullable();
             $table->boolean('is_sms_sent')->nullable();
             $table->integer('sent_tries')->nullable();
-            $table->string('action')->nullable();
+            $table->enum('action', ['Link to create Request', 'Notification to Provider', 'Provider Edit Profile Request', 'Send Agreement to Patient'])->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

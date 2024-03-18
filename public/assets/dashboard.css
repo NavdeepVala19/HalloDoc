@@ -241,10 +241,6 @@ tr > td {
     background-color: var(--concierge-color) !important;
 }
 
-.type-5 td {
-    background-color: var(--vip-color) !important;
-}
-
 .mobile-listing {
     display: none;
 }
@@ -313,6 +309,39 @@ tr > td {
 /* Pending Listing send agreement */
 .send-agreement {
     display: none;
+}
+
+/* View Case Styling */
+.request-type-1 {
+    background-color: rgb(96, 189, 96) !important;
+    border-radius: 45px;
+    color: #fff;
+    padding: 8px 12px;
+}
+
+.request-type-2 {
+    background-color: var(--family-color) !important;
+    border-radius: 45px;
+    color: #fff;
+    padding: 8px 12px;
+}
+
+.request-type-3 {
+    background-color: var(--business-color) !important;
+    border-radius: 45px;
+    color: #fff;
+    padding: 8px 12px;
+}
+
+.request-type-4 {
+    background-color: var(--concierge-color) !important;
+    border-radius: 45px;
+    color: #fff;
+    padding: 8px 12px;
+}
+
+.confirmationNumber {
+    color: var(--blue);
 }
 
 /* ********************** MEDIA QUERIES *********************** */

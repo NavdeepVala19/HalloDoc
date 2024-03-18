@@ -190,7 +190,7 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.conclude.care') }}"><i class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
+                                            <a href="{{ route('provider.conclude.care.view', $case->request->id) }}"><i class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
                                             <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <a href="{{ route('provider.view.upload', $case->request->id) }}"><i

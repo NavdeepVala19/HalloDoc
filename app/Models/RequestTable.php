@@ -66,5 +66,11 @@ class RequestTable extends Model
     {
         return $this->belongsTo(RequestStatus::class);
     }
+
+    public function requestType()
+    {
+        return $this->hasOne(requestType::class, 'id', 'request_type_id');
+    }
+
     
 }

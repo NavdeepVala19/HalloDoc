@@ -7,7 +7,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="{{ route('provider.scheduling') }}" class="active-link">My Schedule</a>
     <a href="{{ route('provider.profile') }}">My Profile</a>
@@ -173,7 +173,7 @@
     <div class="m-5 spacing">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h2>My Schedule</h2>
-            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
             <div class="d-flex align-items-center justify-content-between">

@@ -361,7 +361,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                                 <a href="{{ route('admin.view.case', $case->request->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                                 <a
-                                                    href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}">
+                                                    href="{{ route('admin.view.upload', ['id' => $case->request->id]) }}">
                                                     <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
                                                     View Uploads
                                                 </a>
@@ -387,48 +387,6 @@ pending state, providers need to send an agreement link to patients. --}}
                     </tbody>
                 </table>
             </div>
-
-            <div class="mobile-listing">
-                @foreach ($cases as $case)
-                    @if (!empty($case->request) && !empty($case->request->requestClient))
-                    <tr class="type-{{ $case->request->request_type_id }}">
-                        <td>{{ $case->request->requestClient->first_name }}</td>
-                        <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                        <td>{{ $case->request->first_name }}</td>
-                        <td>Physician Name</td>
-                        <td>{{ $case->request->created_at }}</td>
-                        <td>{{ $case->request->phone_number }}</td>
-                        <td>{{ $case->request->requestClient->street }},
-                            {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
-                        </td>
-                        <td>{{ $case->request->requestClient->notes }}</td>
-                        <td>
-                            <button class="table-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                            <button class="table-btn"><i class="bi bi-person-check me-2"></i>Provider</button>
-                        </td>
-                        <td>
-                            <div class="action-container">
-                                <button class="table-btn action-btn">Actions</button>
-                                <div class="action-menu">
-                                    <a href="{{ route('admin.view.case', $case->request->id) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                    <a href="{{ route('provider.view.upload', ['id' => $case->request->id]) }}">
-                                        <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
-                                        View Uploads
-                                    </a>
-                                    <button><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</button>
-                                    <button class="transfer-btn assign-case-btn" data-id="{{ $case->request->id }}"><i class="bi bi-send me-2 ms-3"></i>Transfer</button>
-                                    <button class="clear-btn" data-id="{{ $case->request->id }}"><i class="bi bi-x-circle me-2 ms-3"></i>Clear
-                                        Case</button>
-                                    <button class="send-agreement-btn" data-id="{{ $case->request->id }}" data-request_type_id={{ $case->request->request_type_id }}><i class="bi bi-text-paragraph me-2 ms-3"></i>Send
-                                        Agreement</button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                </tbody>
-            </table>
         </div>
 
         <div class="mobile-listing">

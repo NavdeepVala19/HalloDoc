@@ -46,13 +46,22 @@
     font-weight: bold;
 }
 
-.confirmation-number{
+.confirmation-number {
     font-size: 18px;
     color: grey;
 }
-.doc-symbol{
+.doc-symbol {
     color: var(--blue);
     font-size: 25px;
+}
+
+.upload-label {
+    cursor: pointer;
+}
+
+.action-column {
+    width: 100px;
+    text-align: center;
 }
 
 @media (max-width: 550px) {

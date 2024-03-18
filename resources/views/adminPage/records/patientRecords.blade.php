@@ -70,7 +70,6 @@
                                                 <li><a href="{{ route('admin.view.case', $record->id) }}"
                                                         class="dropdown-item" href="">View
                                                         Case</a></li>
-                                                <li><a class="dropdown-item" href="">Chat</a></li>
                                                 <li><a class="dropdown-item" href="">(Count) Documents</a>
                                                 </li>
                                             </ul>

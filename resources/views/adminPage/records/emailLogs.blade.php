@@ -89,15 +89,27 @@
                         @foreach ($emails as $email)
                             @if (!empty($email))
                                 <tr>
-                                    <td>Name</td>
-                                    <td>Request Monthly Data</td>
+                                    <td>
+                                        @if ($email->request_id)
+                                            {{-- {{ $email->request->first_name }} {{ $email->request->last_name }} --}}
+                                        @elseif ($email->admin_id)
+                                            {{-- {{ $email->admin->first_name }} {{ $email->admin->last_name }} --}}
+                                        @else
+                                            {{-- {{ $email->provider->first_name }} {{ $email->provider->last_name }} --}}
+                                        @endif
+                                    </td>
+                                    <td>{{ $email->action }}</td>
                                     <td>{{ $email->roles->name }}</td>
                                     <td>{{ $email->email }}</td>
                                     <td>{{ $email->created_at }}</td>
                                     <td>{{ $email->sent_date }}</td>
                                     <td>Yes</td>
                                     <td>{{ $email->sent_tries }}</td>
-                                    <td>-</td>
+                                    <td>
+                                        @if ($email->request_id)
+                                            {{ $email->request->confirmation_no }}
+                                        @endif
+                                    </td>
                                 </tr>
                             @endif
                         @endforeach

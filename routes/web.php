@@ -299,8 +299,8 @@ Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote']
 Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('provider.view.upload');
 Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument']);
 
-// download document uploaded in view Uploads
-Route::get('/download/{id?}', [ProviderController::class, 'download'])->name('download');
+// download document uploaded in view Uploads / Conclude Care
+Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
 
 // Delete document
 Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->name('document.delete');
@@ -345,12 +345,12 @@ Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->nam
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
 
-// Conclude Care -> conclude state -> Provider
-Route::get('/conclude-care', [ProviderController::class, 'viewConcludeCare'])->name('provider.conclude.care');
-
-
-
-
+// Conclude Care Page view -> conclude state -> Provider
+Route::get('/conclude-care/{id}', [ProviderController::class, 'viewConcludeCare'])->name('provider.conclude.care.view');
+// Conclude Care implementation
+Route::post('/conclude-care', [ProviderController::class, 'concludeCare'])->name('provider.conclude.care');
+// conclude Care upload docs
+Route::post('/upload-document-conclude-care', [ProviderController::class, 'uploadDocsConcludeCare'])->name('upload.conclude.care.docs');
 
 
 // ************** ADMIN DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
@@ -389,6 +389,11 @@ Route::post('block-case', [AdminController::class, 'blockCase'])->name('admin.bl
 // Admin View Case
 Route::get('admin/view/case/{id?}', [AdminController::class, 'viewCase'])->name('admin.view.case');
 
+// Admin View Notes
+Route::get('admin/view/notes/{id}', [AdminController::class, 'viewNote'])->name('admin.view.note');
+
+// Admin View Uploads
+Route::get('admin/view/uploads/{id}', [AdminController::class, 'viewUpload'])->name('admin.view.upload');
 
 // Clear Case by admin pending and close state
 Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');

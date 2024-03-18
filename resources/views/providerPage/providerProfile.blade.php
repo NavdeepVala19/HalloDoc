@@ -12,14 +12,16 @@
 @endsection
 
 @section('content')
+    <div class="overlay"></div>
+
     {{-- Request To Admin --}}
     <div class="pop-up request-to-admin">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Request To Administrator</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <p class="m-3">Need to send message to edit</p>
-        <div class="p-3 d-flex align-items-center justify-content-center ">
+        <p class="ms-3 mt-3">Need to send message to edit</p>
+        <div class="ps-3 pe-3  d-flex align-items-center justify-content-center ">
             <div class="form-floating">
                 <textarea class="form-control request-message" placeholder="injury" id="floatingTextarea2"></textarea>
                 <label for="floatingTextarea2">Message</label>
@@ -30,6 +32,7 @@
             <button class="primary-empty hide-popup-btn">Cancel</button>
         </div>
     </div>
+
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">My Profile</h1>
@@ -137,7 +140,8 @@
                     <div>
                         {{-- Dropdown State Selection --}}
                         <div class="form-floating">
-                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example" disabled>
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                                disabled>
                                 <option selected>Open this select menu</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -151,8 +155,8 @@
                             id="floatingInput" placeholder="zip" disabled>
                         <label for="floatingInput">Zip</label>
                     </div>
-                    <input type="tel" name="mobile" value="{{ $provider->alt_phone }}" class="form-control phone" id="telephone"
-                        placeholder="mobile" disabled>
+                    <input type="tel" name="mobile" value="{{ $provider->alt_phone }}" class="form-control phone"
+                        id="telephone" placeholder="mobile" disabled>
                     @error('mobile')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -160,13 +164,13 @@
                 <h3>Provider Profile</h3>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="business_name" value="{{ $provider->business_name }}" class="form-control" id="floatingInput"
-                            placeholder="Business Name" disabled>
+                        <input type="text" name="business_name" value="{{ $provider->business_name }}"
+                            class="form-control" id="floatingInput" placeholder="Business Name" disabled>
                         <label for="floatingInput">Business Name</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="business_website" value="{{ $provider->business_website }}" class="form-control" id="floatingInput"
-                            placeholder="Business Website" disabled>
+                        <input type="text" name="business_website" value="{{ $provider->business_website }}"
+                            class="form-control" id="floatingInput" placeholder="Business Website" disabled>
                         <label for="floatingInput">Business Website</label>
                     </div>
                     <div>

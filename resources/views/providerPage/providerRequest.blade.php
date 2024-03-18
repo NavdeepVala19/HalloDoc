@@ -42,12 +42,14 @@
 
                     </div>
 
-                    <input type="tel" name="phone_number"
-                        class="form-control phone @error('last_name') is-invalid @enderror" id="telephone"
-                        placeholder="Phone Number">
-                    @error('phone_number')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                    <div class="form-floating ">
+                        <input type="tel" name="phone_number"
+                            class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                            placeholder="Phone Number">
+                        @error('phone_number')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="form-floating ">
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
@@ -58,7 +60,7 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="date of birth">
+                        <input type="date" name="dob" class="form-control" id="floatingInput" placeholder="date of birth">
                         <label for="floatingInput">Date Of Birth(Optional)</label>
                     </div>
                 </div>

@@ -20,7 +20,7 @@
             <h1 class="heading">
                 Send Order
             </h1>
-            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.status', 'active') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         <form action="{{ route('admin.send.order') }}" method="POST">
@@ -46,12 +46,13 @@
                         <label for="floatingSelect">Select Business</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="business_contact" class="form-control business_contact" id="floatingInput"
-                            placeholder="Business Contact">
+                        <input type="text" name="business_contact" class="form-control business_contact"
+                            id="floatingInput" placeholder="Business Contact">
                         <label for="floatingInput">Business Contact</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control email" id="floatingInput" placeholder="email">
+                        <input type="email" name="email" class="form-control email" id="floatingInput"
+                            placeholder="email">
                         <label for="floatingInput">Email</label>
                     </div>
                     <div class="form-floating ">
@@ -83,7 +84,7 @@
 
                 <div class="text-end">
                     <input type="submit" value="Submit" class="primary-fill">
-                    <button class="primary-empty">Cancel</button>
+                    <a href="{{ route('admin.status', 'active') }}" class="primary-empty">Cancel</a>
                 </div>
             </div>
         </form>

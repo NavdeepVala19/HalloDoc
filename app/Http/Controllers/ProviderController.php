@@ -91,7 +91,9 @@ class ProviderController extends Controller
         $providerId = Provider::where('user_id', $userData->id)->first()->id;
 
         $count = $this->totalCasesCount($providerId);
-
+        // echo "<pre>";
+        // print_r($category);
+        // dd($this->getCategoryId($category));
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
             // Retrieve data for all request type
@@ -100,22 +102,22 @@ class ProviderController extends Controller
             // Retrieve data for specific request type using request_type_id
             // Provides data as per the status and required category
             if ($status == 'new') {
-                $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($category) {
+                $cases = RequestStatus::where('status', 1)->where('TransToPhysicianId', $providerId)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
                 return view('providerPage.providerTabs.newListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
-                $cases = RequestStatus::where('status', 3)->whereHas('request', function ($q) use ($category) {
+                $cases = RequestStatus::where('status', 3)->where('physician_id', $providerId)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
                 return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
-                $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
+                $cases = RequestStatus::where('status', 4)->where('physician_id', $providerId)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
                 return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
-                $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($category) {
+                $cases = RequestStatus::where('status', 6)->where('physician_id', $providerId)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->paginate(10);
                 return view('providerPage.providerTabs.concludeListing', compact('cases', 'count', 'userData'));
@@ -133,7 +135,7 @@ class ProviderController extends Controller
         // check for both status & category and fetch data for only the searched term  
         if ($category == 'all') {
             if ($status == 'new') {
-                $cases = RequestStatus::where('status', 1)
+                $cases = RequestStatus::where('status', 1)->where('TransToPhysicianId', $providerId)
                     ->whereHas('request', function ($q) use ($request) {
                         $q->where('first_name', 'like', '%' . $request->search . '%');
                         $q->orWhereHas('requestClient', function ($query) use ($request) {
@@ -142,7 +144,7 @@ class ProviderController extends Controller
                     })->paginate(10);
                 return view('providerPage.providerTabs.newListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
-                $cases = RequestStatus::where('status', 3)
+                $cases = RequestStatus::where('status', 3)->where('physician_id', $providerId)
                     ->whereHas('request', function ($q) use ($request) {
                         $q->where('first_name', 'like', '%' . $request->search . '%');
                         $q->orWhereHas('requestClient', function ($query) use ($request) {
@@ -151,7 +153,7 @@ class ProviderController extends Controller
                     })->paginate(10);
                 return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
-                $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
+                $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->where('physician_id', $providerId)
                     ->whereHas('request', function ($q) use ($request) {
                         $q->where('first_name', 'like', '%' . $request->search . '%');
                         $q->orWhereHas('requestClient', function ($query) use ($request) {
@@ -161,7 +163,7 @@ class ProviderController extends Controller
 
                 return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
-                $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
+                $cases = RequestStatus::where('status', 6)->where('physician_id', $providerId)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
                     $q->orWhereHas('requestClient', function ($query) use ($request) {
                         $query->where('first_name', 'like', "%$request->search%");
@@ -171,7 +173,7 @@ class ProviderController extends Controller
             }
         } else {
             if ($status == 'new') {
-                $cases = RequestStatus::where('status', 1)
+                $cases = RequestStatus::where('status', 1)->where('TransToPhysicianId', $providerId)
                     ->whereHas('request', function ($q) use ($request, $category) {
                         $q->where('request_type_id', $this->getCategoryId($category))
                             ->whereHas('requestClient', function ($query) use ($request) {
@@ -181,8 +183,7 @@ class ProviderController extends Controller
 
                 return view('providerPage.providerTabs.newListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
-
-                $cases = RequestStatus::where('status', 3)
+                $cases = RequestStatus::where('status', 3)->where('physician_id', $providerId)
                     ->whereHas('request', function ($q) use ($request, $category) {
                         $q->where('request_type_id', $this->getCategoryId($category))
                             ->whereHas('requestClient', function ($query) use ($request) {
@@ -193,7 +194,7 @@ class ProviderController extends Controller
                 return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
 
-                $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
+                $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->where('physician_id', $providerId)
                     ->whereHas('request', function ($q) use ($request, $category) {
                         $q->where('request_type_id', $this->getCategoryId($category))
                             ->whereHas('requestClient', function ($query) use ($request) {
@@ -204,7 +205,7 @@ class ProviderController extends Controller
                 return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
 
-                $cases = RequestStatus::where('status', 6)
+                $cases = RequestStatus::where('status', 6)->where('physician_id', $providerId)
                     ->whereHas('request', function ($q) use ($request, $category) {
                         $q->where('request_type_id', $this->getCategoryId($category))
                             ->whereHas('requestClient', function ($query) use ($request) {
@@ -250,20 +251,20 @@ class ProviderController extends Controller
     // Create Request Page for Provider
     public function createRequest(Request $request)
     {
-        try {
-            $request->validate([
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'phone_number' => 'required',
-                'email' => 'required|email',
-                // 'dob' => 'required',
-                'street' => 'required',
-                'city' => 'required',
-                'state' => 'required'
-            ]);
-        } catch (\Throwable $th) {
-            dd($th);
-        }
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email',
+            // 'dob' => 'required',
+            'street' => 'required',
+            'city' => 'required',
+            'state' => 'required'
+        ]);
+        // try {
+        // } catch (\Throwable $th) {
+        //     dd($th);
+        // }
         // $requestEmail = new users();
         // $requestEmail->email = $request->email;
         // $requestEmail->phone_number = $request->phone_number;
@@ -299,6 +300,7 @@ class ProviderController extends Controller
         $requestClient->first_name = $request->first_name;
         $requestClient->last_name = $request->last_name;
         $requestClient->phone_number = $request->phone_number;
+        $requestClient->date_of_birth = $request->dob;
         $requestClient->street = $request->street;
         $requestClient->city = $request->city;
         $requestClient->state = $request->state;
@@ -429,7 +431,7 @@ class ProviderController extends Controller
     // show a particular case page as required
     public function viewCase($id)
     {
-        $data = request_Client::where('id', $id)->first();
+        $data = RequestTable::where('id', $id)->first();
         return view('providerPage.pages.viewCase', compact('data'));
     }
     // show notes page for particular request
@@ -442,12 +444,14 @@ class ProviderController extends Controller
     public function sendMail(Request $request)
     {
         Mail::to($request->email)->send(new SendMail($request->all()));
+        $name = $request->first_name . " " . $request->last_name;
         EmailLog::create([
             'role_id' => 2,
             'provider_id' => Auth::user()->id,
-            // 'email_template' =>,
-            // 'subject_name' =>,
+            'recipient_name' => $name,
+            'subject_name' => 'Send mail to patient for submitting request',
             'is_email_sent' => true,
+            'action' => 1,
             'sent_tries' => 1,
             'sent_date' => now(),
             'email_template' => 'mail.blade.php',
@@ -472,7 +476,7 @@ class ProviderController extends Controller
 
         return redirect()->back();
     }
-    public function download(Request $requet, $id = null)
+    public function download($id = null)
     {
         $file = RequestWiseFile::where('id', $id)->first();
         $path = (public_path() . '/storage/' . $file->file_name);
@@ -526,8 +530,29 @@ class ProviderController extends Controller
         return redirect()->back();
     }
 
-    public function viewConcludeCare()
+    public function viewConcludeCare($id)
     {
-        return view('providerPage.conclude.care');
+        $case = RequestTable::where('id', $id)->first();
+        $docs = RequestWiseFile::get();
+        return view('providerPage.concludeCare', compact('case', 'docs'));
+    }
+
+    public function concludeCare(Request $request)
+    {
+        RequestStatus::where('request_id', $request->caseId)->update(['status' => 7]);
+        RequestNotes::where('request_id', $request->caseId)->update(['physician_notes' => $request->providerNotes]);
+
+        return redirect()->route('provider.status', 'conclude');
+    }
+    public function uploadDocsConcludeCare(Request $request)
+    {
+        $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+        RequestWiseFile::create([
+            'request_id' => $request->caseId,
+            'file_name' => $request->file('document')->getClientOriginalName(),
+            'physician_id' => Auth::user()->id,
+        ]);
+
+        return redirect()->back();
     }
 }

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('provider_id')->references('id')->on('roles');
 
+            $table->string('recipient_name'); 
             $table->string('email_template');
             $table->string('subject_name');
             $table->string('email');
@@ -36,8 +37,7 @@ return new class extends Migration
             $table->date('sent_date')->nullable();
             $table->boolean('is_email_sent')->nullable();
             $table->integer('sent_tries')->nullable();
-            $table->string('action')->nullable();
-
+            $table->enum('action', ['Link to create Request', 'Notification to Provider', 'Provider Edit Profile Request', 'Send Agreement to Patient'])->nullable();
 
             $table->timestamps();
             $table->softDeletes();

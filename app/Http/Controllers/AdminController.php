@@ -182,7 +182,6 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)
                     ->whereHas('request', function ($q) use ($request) {
@@ -192,7 +191,6 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
                     ->whereHas('request', function ($q) use ($request) {
@@ -202,7 +200,6 @@ class AdminController extends Controller
                         });
                     })->paginate(10);
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -211,7 +208,6 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
-
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 2)->orWhere('status', 7)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -220,7 +216,6 @@ class AdminController extends Controller
                     });
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
-
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search . '%');
@@ -230,8 +225,7 @@ class AdminController extends Controller
                 })->paginate(10);
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
             }
-        } 
-        else {
+        } else {
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)
                     ->whereHas('request', function ($q) use ($request, $category) {
@@ -385,19 +379,30 @@ class AdminController extends Controller
             'phone_number' => $client->phone_number,
             'email' => $client->email
         ]);
-        // After that case is deleted from both, request_table and request_client table
-        RequestTable::where('id', $request->requestId)->delete();
-        request_Client::where('request_id', $request->requestId)->delete();
+        RequestStatus::where('request_id', $request->requestId)->update(['status' => 10]);
+
         return redirect()->back();
     }
 
     // View case
     public function viewCase($id)
     {
-        $data = request_Client::where('id', $id)->first();
+        $data = RequestTable::where('id', $id)->first();
         return view('adminPage.pages.viewCase', compact('data'));
     }
 
+    // View Notes
+    public function viewNote($id)
+    {
+        return view('adminPage.pages.viewNotes');
+    }
+
+    public function viewUpload($id)
+    {
+        $data  = requestTable::where('id', $id)->first();
+        $documents = RequestWiseFile::get();
+        return view('adminPage.pages.viewUploads', compact('data', 'documents'));
+    }
 
     // ****************** This code is for Sending Link ************************
 
@@ -726,14 +731,14 @@ class AdminController extends Controller
 
         $session = session(
             [
-                'request_status'=>$request->input('request_status'),
+                'request_status' => $request->input('request_status'),
                 'patient_name' => $request->input('patient_name'),
-                'request_type'=> $request->input('request_type'),
-                'from_date_of_service'=>$request->input('from_date_of_service'),
-                'to_date_of_service'=>$request->input('to_date_of_service'),
-                'email'=>$request->input('email'),
-                'phone_number'=>$request->input('phone_number'),
-                'provider_name'=>$request->input('provider_name'),
+                'request_type' => $request->input('request_type'),
+                'from_date_of_service' => $request->input('from_date_of_service'),
+                'to_date_of_service' => $request->input('to_date_of_service'),
+                'email' => $request->input('email'),
+                'phone_number' => $request->input('phone_number'),
+                'provider_name' => $request->input('provider_name'),
             ]
         );
 
