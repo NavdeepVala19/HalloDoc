@@ -11,7 +11,7 @@
 
 <div class="container-fluid main-section mt-5">
 
-    <div class="main-container">
+    <div class="main-container1">
 
         <div class="details">
             <h1>Reset Your Password</h1>
