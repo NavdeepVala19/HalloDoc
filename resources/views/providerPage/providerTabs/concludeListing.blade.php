@@ -146,7 +146,8 @@
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
+                <form
+                    action="{{ route('provider.searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
                     method="GET">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
@@ -190,7 +191,8 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.conclude.care.view', $case->request->id) }}"><i class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
+                                            <a href="{{ route('provider.conclude.care.view', $case->request->id) }}"><i
+                                                    class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
                                             <a href="{{ route('provider.view.case', $case->request->id) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
                                             <a href="{{ route('provider.view.upload', $case->request->id) }}"><i

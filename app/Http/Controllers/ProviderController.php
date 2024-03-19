@@ -95,8 +95,6 @@ class ProviderController extends Controller
         $providerId = Provider::where('user_id', $userData->id)->first()->id;
 
         $count = $this->totalCasesCount($providerId);
-        // echo "<pre>";
-        // print_r($category);
         // dd($this->getCategoryId($category));
         // By default, category is all, and when any other button is clicked for filter that data will be passed to the view.
         if ($category == 'all') {
@@ -116,7 +114,12 @@ class ProviderController extends Controller
                 })->orderByDesc('id')->paginate(10);
                 return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
-                $cases = RequestStatus::where('status', 4)->where('physician_id', $providerId)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
+                $cases = RequestStatus::
+                    where(function ($query) use ($providerId){
+                        $query->where('status', 4)->orWhere('status', 5);
+                    })
+                    ->where('physician_id', $providerId)
+                    ->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
                 return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));

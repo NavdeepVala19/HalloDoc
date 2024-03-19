@@ -155,7 +155,7 @@ giving service to the patient. --}}
             <div class="listing">
                 <div class="search-section d-flex align-items-center  justify-content-between ">
                     <form
-                        action="{{ route('searching', ['status' => 'active', 'category' => request('category', 'all')]) }}"
+                        action="{{ route('provider.searching', ['status' => 'active', 'category' => request('category', 'all')]) }}"
                         method="GET">
                         {{-- @csrf --}}
                         <div class="input-group mb-3">

@@ -25,7 +25,6 @@
             <h6>Patient Name</h6>
             <p class="patient-name mb-4">{{ $case->requestClient->first_name }}
                 {{ $case->requestClient->last_name }}</p>
-
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h3>Encounter Forms</h3>
                 <form action="{{ route('upload.conclude.care.docs') }}" method="POST" enctype="multipart/form-data"

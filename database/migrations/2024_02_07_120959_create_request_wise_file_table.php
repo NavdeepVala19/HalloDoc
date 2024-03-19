@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('request_wise_file', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('request_id');
+            $table->unsignedBigInteger('request_id')->nullable();
             $table->foreign('request_id')->references('id')->on('request');
 
             $table->string('file_name')->nullable();
@@ -22,10 +22,10 @@ return new class extends Migration
             $table->unsignedBigInteger('admin_id')->nullable();
             $table->foreign('admin_id')->references('id')->on('admin');
             $table->enum('doc_type', ['test_one', 'medical_report', 'cost_receipt'])->nullable();
-            $table->boolean('is_frontSide');
-            $table->boolean('is_compensation');
-            $table->boolean('is_finalize');
-            $table->boolean('is_patient_records');
+            $table->boolean('is_frontSide')->nullable();
+            $table->boolean('is_compensation')->nullable();
+            $table->boolean('is_finalize')->nullable();
+            $table->boolean('is_patient_records')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

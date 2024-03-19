@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('declined_by')->nullable();
             $table->boolean('is_urgent_email_sent')->nullable();
             $table->date('last_wellness_date')->nullable();
-            $table->boolean('is_mobile');
+            $table->boolean('is_mobile')->nullable();
             $table->enum('call_type', ['house_call', 'consult'])->nullable();
             $table->boolean('completed_by_physician')->nullable();
             $table->date('last_reservation_date')->nullable();
@@ -35,9 +35,9 @@ return new class extends Migration
             $table->string('relation_name')->nullable();
             $table->string('case_number')->nullable();
             $table->unsignedBigInteger('case_tag')->nullable();
-            $table->string('case_tag_physician');
-            $table->string('patient_account_id');
-            $table->integer('created_user_id');
+            $table->string('case_tag_physician')->nullable();
+            $table->string('patient_account_id')->nullable();
+            $table->integer('created_user_id')->nullable();
 
             $table->foreign('request_type_id')->references('id')->on('request_type');
             $table->foreign('physician_id')->references('id')->on('provider');
