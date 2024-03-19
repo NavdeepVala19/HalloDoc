@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,19 +9,22 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-use Illuminate\Mail\Mailables\Address;
-
-class SendMail extends Mailable
+class ProviderRequest extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
+    public $admin;
+    public $provider;
     public $data;
-    public function __construct($data)
+
+    public function __construct($admin, $provider, $data)
     {
-        $this->data = $data; 
+        $this->admin = $admin;
+        $this->provider = $provider;
+        $this->data = $data;
     }
 
     /**
@@ -31,8 +33,7 @@ class SendMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('xyx@rst.com', "Provider"),
-            subject: 'Link for creating request',
+            subject: 'Request from Provider to Edit Profile',
         );
     }
 
@@ -41,9 +42,8 @@ class SendMail extends Mailable
      */
     public function content(): Content
     {
-        // defines the Blade template that will be used to generate the message content.
         return new Content(
-            view: 'email.mail',
+            view: 'email.providerRequest',
         );
     }
 

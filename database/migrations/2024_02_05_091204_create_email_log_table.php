@@ -21,19 +21,19 @@ return new class extends Migration
             $table->foreign('request_id')->references('id')->on('request');
 
             $table->unsignedBigInteger('admin_id')->nullable();
-            $table->foreign('admin_id')->references('id')->on('roles');
+            $table->foreign('admin_id')->references('id')->on('admin');
 
             $table->unsignedBigInteger('provider_id')->nullable();
-            $table->foreign('provider_id')->references('id')->on('roles');
+            $table->foreign('provider_id')->references('id')->on('provider');
 
-            $table->string('recipient_name'); 
+            $table->string('recipient_name')->nullable();
             $table->string('email_template');
             $table->string('subject_name');
             $table->string('email');
             $table->string('confirmation_number')->nullable();
             $table->string('file_path')->nullable();
 
-            $table->date('create_date');
+            $table->date('create_date')->nullable();
             $table->date('sent_date')->nullable();
             $table->boolean('is_email_sent')->nullable();
             $table->integer('sent_tries')->nullable();

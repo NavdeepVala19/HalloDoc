@@ -18,6 +18,7 @@ class SchedulingController extends Controller
         $regions = Regions::get();
         return view('adminPage.scheduling.scheduling', compact('regions'));
     }
+
     public function providerData()
     {
         $providers = Provider::get();
@@ -31,9 +32,78 @@ class SchedulingController extends Controller
         }
         return response()->json($formattedData);
     }
+    public function shiftFilter($id)
+    {
+        if ($id == 0) {
+            $shifts = Shift::with('shiftDetail')->get();
+
+            $formattedShift = $shifts->map(function ($event) {
+                return [
+                    'shiftId' => $event->id,
+                    'title' => $event->provider->first_name . " " . $event->provider->last_name,
+                    'shiftDate' => $event->shiftDetail->shift_date,
+                    'startTime' => $event->shiftDetail->start_time,
+                    'endTime' => $event->shiftDetail->end_time,
+                    'resourceId' => $event->physician_id,
+                    'physician_id' => $event->physician_id,
+                    'region_id' => $event->shiftDetail->shiftDetailRegion->region_id,
+                    'region_name' => $event->shiftDetail->shiftDetailRegion->region->region_name,
+                    'is_repeat' => $event->is_repeat,
+                    'week_days' => explode(',', $event->week_days),
+                    'repeat_upto' => $event->repeat_upto,
+                    'status' => $event->shiftDetail->status
+                ];
+            });
+
+            return response()->json($formattedShift->toArray());
+        }
+        $shiftDetailIds = ShiftDetailRegion::where('region_id', $id)->pluck('shift_detail_id')->toArray();
+        // $shifts = ShiftDetail::where('id', $shiftDetailIds)->pluck('shift_id');
+        $filteredShift = ShiftDetail::whereIn('id', $shiftDetailIds)->pluck('shift_id');
+        // dd($shiftDetailIds, $shifts);
+        $shifts = Shift::with('shiftDetail')->whereIn('id', $filteredShift)->get();
+
+        $formattedShift = $shifts->map(function ($event) {
+            return [
+                'shiftId' => $event->id,
+                'title' => $event->provider->first_name . " " . $event->provider->last_name,
+                'shiftDate' => $event->shiftDetail->shift_date,
+                'startTime' => $event->shiftDetail->start_time,
+                'endTime' => $event->shiftDetail->end_time,
+                'resourceId' => $event->physician_id,
+                'physician_id' => $event->physician_id,
+                'region_id' => $event->shiftDetail->shiftDetailRegion->region_id,
+                'region_name' => $event->shiftDetail->shiftDetailRegion->region->region_name,
+                'is_repeat' => $event->is_repeat,
+                'week_days' => explode(',', $event->week_days),
+                'repeat_upto' => $event->repeat_upto,
+                'status' => $event->shiftDetail->status
+            ];
+        });
+
+        return response()->json($formattedShift->toArray());
+    }
     public function providersOnCall()
     {
-        return view('adminPage.scheduling.providerOnCall');
+        // Regions data for DropDown
+        $regions = Regions::get();
+
+        $currentDate = now()->toDateString();
+        $currentTime = now()->format('H:i');
+
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)
+            ->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->whereHas('getShiftData', function ($q) {
+                $q->groupBy('physician_id');
+            })->get();
+        $getAllId = $onCallShifts->pluck('id')->toArray();
+        // dd($getAllId);
+        // $offDutyShifts = ShiftDetail::with('getShiftData')
+        //     ->orWhere('start_time', '>', $currentTime)->orWhere('end_time', '<', $currentTime)->get();
+        // dd($currentTime);
+        $offDutyShifts = ShiftDetail::with('getShiftData')->whereNotIn('id', $getAllId)->get();
+        dd($offDutyShifts);
+
+        return view('adminPage.scheduling.providerOnCall', compact('regions', 'onCallShifts', 'offDutyShifts'));
     }
     public function shiftsReviewView()
     {

@@ -76,22 +76,22 @@ class AdminController extends Controller
     public function cases($status, $count, $userData)
     {
         if ($status == 'new') {
-            $cases = RequestStatus::with('request')->where('status', 1)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 1)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'pending') {
-            $cases = RequestStatus::with('request')->where('status', 3)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 3)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'active') {
-            $cases = RequestStatus::with('request')->where('status', 4)->orWhere('status', 5)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 4)->orWhere('status', 5)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'conclude') {
-            $cases = RequestStatus::with('request')->where('status', 6)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 6)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'toclose') {
-            $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'unpaid') {
-            $cases = RequestStatus::with('request')->where('status', 9)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 9)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
         }
     }
@@ -106,7 +106,6 @@ class AdminController extends Controller
     public function status(Request $request, $status = 'new')
     {
         $userData = Auth::user();
-        // dd($userData);
         $count = $this->totalCasesCount();
         return $this->cases($status, $count, $userData);
     }
@@ -131,32 +130,32 @@ class AdminController extends Controller
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where('status', 7)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
             }
         }

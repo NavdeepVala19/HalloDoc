@@ -19,23 +19,22 @@ return new class extends Migration
 
             // $table->unsignedBigInteger('region_id')->nullable();
             // $table->foreign('region_id')->references('id')->on('regions');
-            
-            $table->unsignedBigInteger('status')->nullable();
-            $table->foreign('status')->references('id')->on('status');
+
+            $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
 
 
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('email');
-            $table->integer('mobile')->nullable();
+            $table->string('mobile')->nullable();
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
             $table->string('city')->nullable();
             $table->integer('region_id')->nullable();
             $table->string('zip')->nullable();
-            $table->integer('alt_phone')->nullable();
+            $table->string('alt_phone')->nullable();
 
-            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('user_roles');
 
             // $table->unsignedBigInteger('created_by');

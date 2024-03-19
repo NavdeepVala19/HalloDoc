@@ -49,18 +49,16 @@ class AdminLoginController extends Controller
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
             // dd($userRolesData);
 
-            if($userRolesData->role_id==2){
+            if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
-            }
-            else{
+            } else {
                 return redirect()->route('admin.dashboard');
             }
 
 
             // return redirect()->route('patientDashboardData');
         }
-
-
+        return redirect()->route('adminLogin');
     }
 
 
@@ -130,5 +128,11 @@ class AdminLoginController extends Controller
         users::where(['email' => $request->email])->delete();
 
         return redirect('/adminLogin')->with('message', 'Your password has been changed!');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('adminLogin');
     }
 }

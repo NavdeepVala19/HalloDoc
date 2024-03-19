@@ -32,13 +32,13 @@ return new class extends Migration
             $table->integer('int_date')->nullable();
 
             // Check Here
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
             $table->string('modified_by')->nullable();
 
 
-            $table->enum('status',['pending','active','inactive'])->nullable();
+            $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
             // $table->foreign('status')->references('id')->on('status');
-            $table->boolean('is_request_with_email');
+            $table->boolean('is_request_with_email')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

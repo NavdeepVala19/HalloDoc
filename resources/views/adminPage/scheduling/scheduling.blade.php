@@ -200,10 +200,11 @@
         <div class="section">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="region-dropdown">
-                    <select name="role_id" class="form-select" id="floatingSelect">
+                    <select name="role_id" class="form-select region-filter" id="floatingSelect">
                         <option value="0" selected>All Regions</option>
-                        <option value="1">Admin</option>
-                        <option value="2">Physician</option>
+                        @foreach ($regions as $region)
+                            <option value="{{ $region->id }}">{{ $region->region_name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>

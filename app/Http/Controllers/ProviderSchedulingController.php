@@ -21,17 +21,10 @@ class ProviderSchedulingController extends Controller
     {
         $data = Provider::where('user_id', Auth::user()->id)->first();
         $regions = PhysicianRegion::with('regions')->where('provider_id', $data->id)->get();
-        // $allRegions = [];
-        // foreach ($regions as  $region) {
-        //     dump($region->id, $region->regions->region_name);
-        //     // $allRegions.push(['region_id' => $region->id, 'region_name' => $region->regions->region_name]);
-        // }
         return response()->json(['physicianId' => $data->id, 'allRegions' => $regions]);
     }
     public function providerShiftData(Request $request)
     {
-        // dd($request->all());
-
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
         } else {
@@ -49,7 +42,6 @@ class ProviderSchedulingController extends Controller
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
-            'created_by' => Auth::user()->id
         ]);
 
         $shiftDetail = ShiftDetail::create([

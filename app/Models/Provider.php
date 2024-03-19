@@ -19,4 +19,5 @@ class Provider extends Model
     {
         return $this->belongsTo(users::class, 'user_id');
     }
+
 }

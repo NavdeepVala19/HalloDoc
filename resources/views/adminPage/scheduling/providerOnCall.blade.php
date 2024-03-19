@@ -39,8 +39,9 @@
                     <select name="role_id" class="form-select empty-fields" id="floatingSelect"
                         aria-label="Floating label select example">
                         <option value="0" selected>All Regions</option>
-                        <option value="1">Admin</option>
-                        <option value="2">Physician</option>
+                        @foreach ($regions as $region)
+                            <option value="{{ $region->id }}">{{ $region->region_name }}</option>
+                        @endforeach
                     </select>
                     {{-- <label for="floatingSelect">All Regions</label> --}}
                 </div>
@@ -49,15 +50,34 @@
                     <a href="{{ route('shifts.review') }}" class="primary-fill">Shifts For Review</a>
                 </div>
             </div>
-            <h2 class="date-title m-3">MD's On Call</h2>
+            <div class="m-3">
+                <h5>MD's On Call</h5>
+                <div class="grid-3 ">
+                    @foreach ($onCallShifts as $onCallShift)
+                        <div class="provider">
+                            <img src="{{ asset('storage/' . $onCallShift->getShiftData->provider->photo) }}"
+                                class="provider-profile-photo" alt="provider profile photo">
+                            <span>
+                                Dr. {{ $onCallShift->getShiftData->provider->first_name }}
+                                {{ $onCallShift->getShiftData->provider->last_name }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
             <div class="m-3">
                 <h5>Physicians Off Duty</h5>
                 <div class="grid-3 ">
-                    <div class="provider">
-                        <img src="{{ asset('assets/logo.png') }}" class="provider-profile-photo"
-                            alt="provider profile photo">
-                        <span>Dr.Brown</span>
-                    </div>
+                    @foreach ($offDutyShifts as $offDutyShift)
+                        <div class="provider">
+                            <img src="{{ asset('storage/' . $offDutyShift->getShiftData->provider->photo) }}"
+                                class="provider-profile-photo" alt="provider profile photo">
+                            <span>
+                                Dr. {{ $offDutyShift->getShiftData->provider->first_name }}
+                                {{ $offDutyShift->getShiftData->provider->last_name }}
+                            </span>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

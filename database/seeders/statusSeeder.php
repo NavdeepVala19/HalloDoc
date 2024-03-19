@@ -14,14 +14,6 @@ class StatusSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('status')->insert([
-        //     ['status_type' => 'New'],
-        //     ['status_type' => 'Pending'],
-        //     ['status_type' => 'Active'],
-        //     ['status_type' => 'Conclude'],
-        //     ['status_type' => 'Toclose'],
-        //     ['status_type' => 'Unpaid']
-        // ]);
 
         Status::insert([
             ['id' => 1, 'status_type' => 'Unassigned'], // New state for both provider and admin

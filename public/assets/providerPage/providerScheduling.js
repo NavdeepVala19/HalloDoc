@@ -57,7 +57,8 @@ $(document).ready(function () {
     });
 
     $(".fc-customAddShift-button").click(function () {
-        $(".physicianRegions").empty();
+        console.log("Button Clicked!!!");
+        $(".physicianRegions option").remove();
         $.ajax({
             url: "/provider-information",
             type: "GET",
@@ -169,13 +170,6 @@ $(document).ready(function () {
                         event.status == "approved"
                             ? "approved-shift-style"
                             : "pending-shift-style",
-                    // Update the event
-                    // calendar.getEventById(physicianId).update({
-                    //     title: physician,
-                    //     start: startDate,
-                    //     end: endDate,
-                    // });
-                    // calendar.render();
                 };
                 events.push(eventData);
                 return events;

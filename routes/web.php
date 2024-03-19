@@ -176,6 +176,8 @@ route::get('/patientAgreement/{data}', [patientDashboardController::class, 'view
 
 // admin LogIn
 route::get('/adminLogin', [AdminLoginController::class, 'adminLogin'])->name('adminLogin');
+route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
+
 route::post('/adminLoggedIn', [AdminLoginController::class, 'userLogin'])->name('adminLoggedIn');
 
 
@@ -344,6 +346,10 @@ Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->nam
 
 // Provider Profile page (MyProfile)
 Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
+// Provider Reset Password (MyProfile)
+Route::post('/provider-reset-password', [ProviderController::class, 'resetPassword'])->name('provider.reset.password');
+// Provider Edit Profile Send message (Email) to Admin 
+Route::post('/provider-edit-profile', [ProviderController::class, 'editProfileMessage'])->name('provider.edit.profile');
 
 // Conclude Care Page view -> conclude state -> Provider
 Route::get('/conclude-care/{id}', [ProviderController::class, 'viewConcludeCare'])->name('provider.conclude.care.view');
@@ -454,6 +460,8 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 // Admin Scheduling
 // Scheduling Calendar view 
 Route::get('/scheduling', [SchedulingController::class, 'schedulingCalendarView'])->name('admin.scheduling');
+// Scheduling Filter by region
+Route::get('/scheduling/region/{id}', [SchedulingController::class, 'shiftFilter'])->name('admin.scheduling.filter');
 Route::get('/provider-data', [SchedulingController::class, 'providerData'])->name('provider.data');
 // Providers on call view
 Route::get('/providers-on-call', [SchedulingController::class, 'providersOnCall'])->name('providers.on.call');

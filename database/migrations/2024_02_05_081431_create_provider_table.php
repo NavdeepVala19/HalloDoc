@@ -57,7 +57,7 @@ return new class extends Migration
 
 
             $table->unsignedBigInteger('role_id')->nullable();
-            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('role_id')->references('id')->on('user_roles');
 
             $table->string('npi_number')->nullable();
             $table->boolean('IsLicenseDoc')->nullable();

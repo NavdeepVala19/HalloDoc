@@ -3,7 +3,6 @@ $(document).ready(function () {
         $(".create-shift").show();
         $(".overlay").show();
     });
-    
 
     $(".repeat-switch").on("click", function () {
         if ($(".repeat-switch").is(":checked")) {
@@ -259,5 +258,106 @@ $(document).ready(function () {
         $(".edit-btn").show();
     });
 
-    
+    $(".region-filter").on("change", function () {
+        let regionId = $(this).val();
+        calendar.removeAllEvents();
+        events.length = 0;
+        $.ajax({
+            url: "/scheduling/region/" + regionId,
+            type: "GET",
+            success: function (response) {
+                response.map(function (event) {
+                    var shiftDate = event.shiftDate;
+                    var shiftStartTime = event.startTime;
+                    var shiftEndTime = event.endTime;
+
+                    var dateParts = shiftDate.split("-");
+
+                    var startTimeParts = shiftStartTime.split(":");
+                    var startTime = new Date(
+                        dateParts[0],
+                        dateParts[1] - 1,
+                        dateParts[2],
+                        startTimeParts[0],
+                        startTimeParts[1]
+                    );
+
+                    var endTimeParts = shiftEndTime.split(":");
+                    var endTime = new Date(
+                        dateParts[0],
+                        dateParts[1] - 1,
+                        dateParts[2],
+                        endTimeParts[0],
+                        endTimeParts[1]
+                    );
+
+                    var repeatEnd = new Date(event.shiftDate);
+
+                    if (event.is_repeat == 1) {
+                        if (event.repeat_upto == 2) {
+                            repeatEnd.setDate(repeatEnd.getDate() + 14);
+                        } else if (event.repeat_upto == 3) {
+                            repeatEnd.setDate(repeatEnd.getDate() + 21);
+                        } else if (event.repeat_upto == 4) {
+                            repeatEnd.setDate(repeatEnd.getDate() + 28);
+                        }
+                        repeatEnd.toISOString().split("T")[0];
+
+                        eventData = {
+                            title: event.title,
+                            resourceId: event.resourceId,
+                            daysOfWeek: event.week_days,
+                            startTime: event.startTime,
+                            endTime: event.endTime,
+                            startRecur: event.shiftDate,
+                            endRecur: repeatEnd,
+                            textColor: "#000",
+                            extendedProps: {
+                                shiftId: event.shiftId,
+                                physicianId: event.physician_id,
+                                physicianName: event.title,
+                                regionId: event.region_id,
+                                regionName: event.region_name,
+                            },
+                            backgroundColor:
+                                event.status == "approved"
+                                    ? "rgb(167, 204, 163)"
+                                    : "rgb(240, 173, 212)",
+                            className:
+                                event.status == "approved"
+                                    ? "approved-shift-style"
+                                    : "pending-shift-style",
+                        };
+                        events.push(eventData);
+                    }
+
+                    eventData = {
+                        title: event.title,
+                        start: startTime,
+                        end: endTime,
+                        resourceId: event.resourceId,
+                        textColor: "#000",
+                        extendedProps: {
+                            shiftId: event.shiftId,
+                            physicianId: event.physician_id,
+                            physicianName: event.title,
+                            regionId: event.region_id,
+                            regionName: event.region_name,
+                        },
+                        backgroundColor:
+                            event.status == "approved"
+                                ? "rgb(167, 204, 163)"
+                                : "rgb(240, 173, 212)",
+                        className:
+                            event.status == "approved"
+                                ? "approved-shift-style"
+                                : "pending-shift-style",
+                    };
+                    events.push(eventData);
+                    return events;
+                });
+                calendar.addEventSource(events);
+            },
+        });
+    });
 });

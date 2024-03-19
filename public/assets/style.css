@@ -109,6 +109,13 @@ nav {
     padding: 20px;
 }
 
+/* Styling for ALERT AND SUCCESS Messages/Pop-ups */
+.popup-message {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
 /* ********************************MEDIA QUERIES************************************* */
 @media (max-width: 550px) {

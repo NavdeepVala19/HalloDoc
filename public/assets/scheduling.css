@@ -50,14 +50,8 @@
     border-radius: 8px !important;
 }
 .fc-button-active {
-    /* border: none; */
     background-color: var(--blue) !important;
-    /* padding: 8px 20px; */
     color: #fff !important;
-    /* border-radius: 5px; */
-}
-.fc-toolbar-title {
-    /* display: none; */
 }
 .provider-profile-photo {
     display: inline-block;
@@ -69,7 +63,6 @@
 .current-shift-btn,
 .add-new-shift-btn,
 .fc-toolbar-chunk .fc-customAddShift-button {
-    /* border: 1px solid var(--blue); */
     border: none;
     background-color: rgb(27, 94, 32);
     padding: 10px 18px;
@@ -135,7 +128,7 @@ thead tr .fc-datagrid-cell-cushion {
     display: none;
 }
 .resource-img {
-    height: 70px;
+    height: 50px;
 }
 
 .fc-event:hover {
@@ -150,25 +143,16 @@ thead tr .fc-datagrid-cell-cushion {
 }
 .fc-daygrid-day-events .fc-daygrid-event-harness,
 .fc-timeline-event-harness {
-    /* height: 35px; */
-    /* background-color: rgb(167, 204, 163); */
     border-radius: 5px;
-    /* border: 2px solid rgb(136, 168, 141); */
 }
 .fc-daygrid-event {
-    /* color: #000; */
     padding: 5px;
 }
 .fc-daygrid-event-dot {
-    /* border-color: #000 !important; */
     display: none;
 }
 .fc-timeline-event {
     padding: 5px;
-    /* color: #000; */
-}
-.fc-event-main {
-    /* color: #000 !important; */
 }
 .fc-h-event {
     border: none;

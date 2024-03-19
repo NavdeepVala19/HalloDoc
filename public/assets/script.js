@@ -17,4 +17,8 @@ $(document).ready(function () {
     $("#telephone").intlTelInput({
         initialCountry: "in",
     });
+
+    setTimeout(function () {
+        $(".popup-message").fadeOut("slow");
+    }, 2000);
 });

@@ -6,7 +6,7 @@
 @endsection
 
 @section('username')
-    {{ $userData->username }}
+    {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
 

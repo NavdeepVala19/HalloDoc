@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Mail\ProviderRequest;
 use ZipArchive;
-use App\Mail\SendMail;
+use App\Models\User;
 
 // Different Models used in these Controller
+use App\Models\users;
+use App\Mail\SendMail;
+use App\Models\Regions;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
+use App\Models\Admin;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
 use Illuminate\Http\Request;
-use App\Models\MedicalReport;
-
 // For sending Mails
+use App\Models\MedicalReport;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
+use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
-use App\Models\users;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 // DomPDF package used for the creation of pdf from the form
@@ -28,6 +31,7 @@ use Illuminate\Support\Facades\DB;
 
 // To create zip, used to download multiple documents at once
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -54,16 +58,16 @@ class ProviderController extends Controller
     {
         // *********************************************************** Working
         if ($status == 'new') {
-            $cases = RequestStatus::with('request')->where('status', 1)->where('TransToPhysicianId', $providerId)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 1)->where('TransToPhysicianId', $providerId)->orderByDesc('id')->paginate(10);
             return view('providerPage.providerTabs.newListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'pending') {
-            $cases = RequestStatus::with('request')->where('status', 3)->where('physician_id', $providerId)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 3)->where('physician_id', $providerId)->orderByDesc('id')->paginate(10);
             return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'active') {
-            $cases = RequestStatus::with('request')->where('status', 4)->where('physician_id', $providerId)->orWhere('status', 5)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 4)->where('physician_id', $providerId)->orderByDesc('id')->orWhere('status', 5)->paginate(10);
             return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'conclude') {
-            $cases = RequestStatus::with('request')->where('status', 6)->where('physician_id', $providerId)->paginate(10);
+            $cases = RequestStatus::with('request')->where('status', 6)->where('physician_id', $providerId)->orderByDesc('id')->paginate(10);
             return view('providerPage.providerTabs.concludeListing', compact('cases', 'count', 'userData'));
         }
     }
@@ -104,22 +108,22 @@ class ProviderController extends Controller
             if ($status == 'new') {
                 $cases = RequestStatus::where('status', 1)->where('TransToPhysicianId', $providerId)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('providerPage.providerTabs.newListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)->where('physician_id', $providerId)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('providerPage.providerTabs.pendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where('status', 4)->where('physician_id', $providerId)->orWhere('status', 5)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('providerPage.providerTabs.activeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->where('physician_id', $providerId)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
-                })->paginate(10);
+                })->orderByDesc('id')->paginate(10);
                 return view('providerPage.providerTabs.concludeListing', compact('cases', 'count', 'userData'));
             }
         }
@@ -261,14 +265,6 @@ class ProviderController extends Controller
             'city' => 'required',
             'state' => 'required'
         ]);
-        // try {
-        // } catch (\Throwable $th) {
-        //     dd($th);
-        // }
-        // $requestEmail = new users();
-        // $requestEmail->email = $request->email;
-        // $requestEmail->phone_number = $request->phone_number;
-        // $requestEmail->save();
 
         $requestTable = new requestTable();
 
@@ -404,16 +400,47 @@ class ProviderController extends Controller
     {
         $userData = Auth::user();
         $provider = Provider::where('user_id', $userData->id)->first();
-        return view('providerPage.providerProfile', compact('provider', 'userData'));
+        $regions = Regions::get();
+        $physicianRegions = PhysicianRegion::where('provider_id', $provider->id)->get();
+        return view('providerPage.providerProfile', compact('provider', 'userData', 'regions', 'physicianRegions'));
     }
-
-    // Provider My Profile Data request for edit on submit
-    public function providerData(Request $request)
+    // Reset Password Provider
+    public function resetPassword(Request $request)
     {
-        $userData = Auth::user();
-        // Fetch Provider data as per the provider logged in 
-        Provider::where('user_id', $userData->id)->first();
-        dd($userData);
+        $request->validate([
+            'password' => 'required|min:5'
+        ]);
+        $userId = Provider::where('id', $request->providerId)->first()->id;
+
+        User::where('id', $userId)->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->back()->with('success', 'Password Reset Successfully');
+    }
+    // Provider send Mail to Admin for changes in Profile
+    public function editProfileMessage(Request $request)
+    {
+        $admin = Admin::where('id', 1)->first();
+        $provider = Provider::where('id', $request->providerId)->first();
+
+        EmailLog::create([
+            'role_id' => 2,
+            'provider_id' => $request->providerId,
+            'subject_name' => 'Request from Provider to Edit Profile',
+            'create_date' => now(),
+            'sent_date' => now(),
+            'is_email_sent' => 1,
+            'action' => 3,
+            'recipient_name' => $admin->first_name . " " . $admin->last_name,
+            // 'email_template' => ,
+            'email' => $admin->email,
+            'sent_tries' => 1,
+        ]);
+
+        Mail::to($admin->email)->send(new ProviderRequest($admin, $provider, $request));
+
+        return redirect()->back();
     }
 
     // Accept Case 
@@ -526,6 +553,19 @@ class ProviderController extends Controller
     public function sendAgreementLink(Request $request)
     {
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
+        EmailLog::create([
+            // 'role_id' => 2,
+            'provider_id' => $request->providerId,
+            'subject_name' => 'Agreement Link Sent to Patient',
+            'create_date' => now(),
+            'sent_date' => now(),
+            'is_email_sent' => 1,
+            'action' => 4,
+            // 'recipient_name' => $request->first_name . " " . $request->last_name,
+            // 'email_template' => ,
+            'email' => $request->email,
+            'sent_tries' => 1,
+        ]);
         Mail::to($request->email)->send(new SendAgreement($clientData));
         return redirect()->back();
     }

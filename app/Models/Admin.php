@@ -11,7 +11,10 @@ class Admin extends Model
 
     protected $table = 'admin';
 
-    public function users(){
-        return $this->belongsTo(users::class,'user_id','id');
+    protected $guarded = [];
+
+    public function users()
+    {
+        return $this->hasOne(users::class, 'id', 'user_id');
     }
 }

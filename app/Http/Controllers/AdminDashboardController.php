@@ -25,26 +25,23 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
-        try {
-            $request->validate([
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'phone_number' => 'required',
-                'email' => 'required|email',
-                // 'dob' => 'required',
-                'street' => 'required',
-                'city' => 'required',
-                'state' => 'required'
-            ]);
-        } catch (\Throwable $th) {
-            dd($th);
-        }
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email',
+            // 'dob' => 'required',
+            'street' => 'required',
+            'city' => 'required',
+            'state' => 'required'
+        ]);
+
 
         // store email and phoneNumber in users table
         $requestEmail = new users();
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
-        // $requestEmail->save();
+        $requestEmail->save();
 
         $requestData = new RequestTable();
         $requestStatus = new RequestStatus();
@@ -135,8 +132,8 @@ class AdminDashboardController extends Controller
         $updateAdminInfoInUsers = users::where('id', $id)->first();
         $updateAdminInfoInUsers->username = $request->user_name;
         $updateAdminInfoInUsers->password = $request->password;
-        $updateAdminInfoInUsers->save();    
-        
+        $updateAdminInfoInUsers->save();
+
         $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
 
         $updateAdminInfoAllUsers->first_name = $request->first_name;

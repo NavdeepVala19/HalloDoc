@@ -39,13 +39,14 @@
                         @error('last_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-
                     </div>
 
-                    <div class="form-floating ">
-                        <input type="tel" name="phone_number"
-                            class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                            placeholder="Phone Number">
+                    <div>
+                        <div>
+                            <input type="tel" name="phone_number"
+                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                                placeholder="Phone Number">
+                        </div>
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
@@ -60,7 +61,8 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" name="dob" class="form-control" id="floatingInput" placeholder="date of birth">
+                        <input type="date" name="dob" class="form-control" id="floatingInput"
+                            placeholder="date of birth">
                         <label for="floatingInput">Date Of Birth(Optional)</label>
                     </div>
                 </div>
@@ -95,7 +97,7 @@
                         <label for="floatingInput">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">
-                        <input type="text" name="room" class="form-control" id="floatingInput" placeholder="Room">
+                        <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room">
                         <label for="floatingInput">Room # (Optional)</label>
                     </div>
                 </div>

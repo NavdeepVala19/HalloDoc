@@ -97,16 +97,10 @@ class AdminProviderController extends Controller
 
 
         // store data in physician region
-
         $providerData = new Provider();
         $physicianRegion = new PhysicianRegion();
 
-
-
-
-
         // store data of providers in providers table
-
         $providerData->user_id = $userProvider->id;
         $providerData->first_name = $request->first_name;
         $providerData->last_name = $request->last_name;
@@ -142,19 +136,14 @@ class AdminProviderController extends Controller
 
         Provider::where('id', $providerData->id)->update(['regions_id' => $ids]);
 
-
-
         // make entry in user_roles table to identify the user(whether it is admin or physician)
-
         $user_roles = new UserRoles();
         $user_roles->user_id = $userProvider->id;
         $user_roles->role_id = 2;
         $user_roles->save();
 
 
-
         // store data in allusers table 
-
         $providerAllUsers = new allusers();
         $providerAllUsers->user_id = $userProvider->id;
         $providerAllUsers->first_name = $request->first_name;
@@ -166,7 +155,6 @@ class AdminProviderController extends Controller
         $providerAllUsers->zipcode = $request->zip;
         $providerAllUsers->status =  'pending';
         $providerAllUsers->save();
-
 
 
         // store documents in request_wise_file
