@@ -132,8 +132,10 @@
 
                     <div class="col-md patient-details-col3 me-4">
                         <label for="">Date of Birth</label>
-                        <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 " id="" name="date_of_birth">
-
+                        <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 @error('date_of_birth') is-invalid @enderror" id="" name="date_of_birth">
+                        @error('date_of_birth')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                 </div>

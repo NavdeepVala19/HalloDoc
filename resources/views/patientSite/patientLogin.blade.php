@@ -12,9 +12,9 @@
 
 <!-- main content -->
 
-<div class="container-fluid main-section">
+<div class="container-fluid main-section patient_login">
 
-    <div class="main-container">
+    <div class="patient-login">
 
         <div class="details">
             <div class="main-content">

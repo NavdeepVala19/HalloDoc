@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\request_Client;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
@@ -18,21 +19,29 @@ class patientProfileController extends Controller
 
     public function patientEdit(Request $request)
     {
-
         $userData = Auth::user();
         $email = $userData["email"];
-
 
         $getEmailData = request_client::where('email', '=', $email)->first();
 
         return view("patientSite/patientProfile", compact('getEmailData'));
-
     }
 
 
 
     public function patientUpdate(Request $request)
     {
+
+        $request->validate([
+            'first_name' =>'required',
+            'last_name' => 'required' ,
+            'email' => 'required',
+            'phone_number' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'street' => 'required',
+            'zipcode' => 'required'
+        ]);
 
 
         $userData = Auth::user();
@@ -52,15 +61,15 @@ class patientProfileController extends Controller
             'zipcode' => $request->input('zipcode')
         ];
 
-
+        $updateUserData = [
+            'email' => $request->input('email'),
+        ];
 
         $updateData = request_Client::where('email', $userData['email'])->update($updatedData);
 
+        $updateUser = User::where('email', $userData['email'])->update($updateUserData);
 
-        return redirect()->route('patientProfile');
 
-
+        return redirect()->route('patientDashboardData');
     }
-
-
 }

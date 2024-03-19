@@ -20,17 +20,18 @@ use App\Models\Regions;
 use App\Models\SMSLogs;
 
 // For sending Mails
+use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RoleMenu;
 use App\Models\UserRoles;
 use App\Mail\SendAgreement;
-use App\Models\BlockRequest;
 
 // DomPDF package used for the creation of pdf from the form
-use App\Models\RequestNotes;
+use App\Models\BlockRequest;
 // To create zip, used to download multiple documents at once
+use App\Models\RequestNotes;
 use App\Models\requestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
@@ -172,7 +173,7 @@ class AdminController extends Controller
         $session = session(
             ['search' => $request->input('search'),]
         );
-        
+
         $userData = Auth::user();
         $count = $this->totalCasesCount();
 
@@ -404,14 +405,39 @@ class AdminController extends Controller
     public function sendMail(Request $request)
     {
 
+        $firstname = $request->first_name;
+        $lastname = $request->last_name;
+
+        // Route name 
+        $routeName = 'submitRequest';
+
+        // Generate the link using route() helper (assuming route parameter is optional)
+        $link = route($routeName);
+
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required|email',
         ]);
 
         Mail::to($request->email)->send(new SendLink($request->all()));
+
+
+        // send SMS 
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->messages
+            ->create(
+                "+91 99780 71802", // to
+                [
+                    "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
+                    "from" =>  $senderNumber
+                ]
+            );
+
 
         EmailLog::create([
             'role_id' => 1,
@@ -425,6 +451,20 @@ class AdminController extends Controller
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
         ]);
+
+        SMSLogs::create(
+            [
+                'mobile_number' => $request->phone_number,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'role_id' => 1,
+                'recipient_name' => $request->first_name,
+                'sent_tries' => 1,
+                'is_sms_sent' => 1,
+                'action' => 1,
+                'sms_template' => "Hii ,Click on the below link to create request"
+            ]
+        );
 
         return redirect()->back();
     }
@@ -849,16 +889,17 @@ class AdminController extends Controller
     public function smsRecordsView()
     {
         $sms = SMSLogs::paginate(10);
-       
-        return view('adminPage.records.smsLogs',compact('sms'));
+
+        return view('adminPage.records.smsLogs', compact('sms'));
     }
 
-    public function searchSMSLogs(Request $request){
+    public function searchSMSLogs(Request $request)
+    {
 
         $sms = SMSLogs::select();
-    
+
         if (!empty($request->receiver_name)) {
-            $sms = $sms->where('provider.first_name', 'like', '%' . $request->receiver_name . '%');
+            $sms = $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
         }
         if (!empty($request->phone_number)) {
             $sms = $sms->orWhere('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
@@ -880,12 +921,11 @@ class AdminController extends Controller
                 'receiver_name' => $request->input('receiver_name'),
                 'phone_number' => $request->input('phone_number'),
                 'created_date' => $request->input('created_date'),
-                'sent_date' => $request->input('sent_date'),           
+                'sent_date' => $request->input('sent_date'),
             ]
         );
-   
-        return view('adminPage.records.smsLogs',compact('sms'));
 
+        return view('adminPage.records.smsLogs', compact('sms'));
     }
 
     public function blockHistoryView()
@@ -917,6 +957,8 @@ class AdminController extends Controller
     {
 
         $unBlockData = BlockRequest::where('id', $id)->delete();
+
+        $statusChanges = BlockRequest::with('request_status')->where('request_id');
 
         return redirect()->back();
     }

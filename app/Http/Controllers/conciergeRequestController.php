@@ -28,6 +28,7 @@ class conciergeRequestController extends Controller
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'min:2|max:30',
             'email' => 'required|email|min:2|max:30',
+            'date_of_birth'=>'required',
             'phone_number' => 'required',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30',

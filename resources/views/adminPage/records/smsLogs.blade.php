@@ -91,11 +91,11 @@
                         <td>{{$data->recipient_name}}</td>
                         <td>-</td>
                         <td>
-                            @if ($data->request_id=="" && $data->provider_id=="")
+                            @if ($data->role_id==1)
                             admin
-                            @elseif ($data->admin_id=="" && $data->request_id=="")
+                            @elseif ($data->role_id==2)
                             physician
-                            @elseif ($data->admin_id=="" && $data->provider_id=="")
+                            @elseif ($data->role_id==3)
                             patient
                             @endif
                         </td>

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\allusers;
 use App\Models\users;
 use App\Models\Regions;
+use App\Models\SMSLogs;
+use Twilio\Rest\Client;
+use App\Models\allusers;
+use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
 use Illuminate\Http\Request;
@@ -33,21 +36,85 @@ class AdminProviderController extends Controller
     }
 
 
+
+    // ****************** This code is for Filtering Physician through regions ************************
+
+    public function filterPhysicianThroughRegions(Request $request)
+    {
+
+        $physicianRegions = PhysicianRegion::where('region_id', $request->regionId)->pluck('provider_id');
+
+        $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+
+        $data = view('/adminPage/provider/adminProviderFilterData')->with('providersData', $providersData)->render();
+        return response()->json(['html' => $data]);
+    }
+
+
+
     // ****************** This code is for Sending Mail ************************
 
     public function sendMailToContactProvider(Request $request, $id)
     {
+
+        $receipientData = Provider::where('id', $id)->get();
+        $receipientId = $receipientData->first()->id;
+        $receipientName = $receipientData->first()->first_name;
+        $receipientEmail = $receipientData->first()->email;
+        $receipientMobile = $receipientData->first()->mobile;
 
         $enteredText = $request->contact_msg;
 
         $providerData = Provider::get()->where('id', $request->provider_id);
         Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
-        Mail::send('email.contactYourProvider', ['id' => $request->provider_id], function ($message) use ($providerData) {
-            $message->to($providerData->first()->email);
-        });
+        // send SMS 
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-        return redirect()->route('adminProvidersInfo')->with('message', 'Your mail has been sent successfully.');
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->messages
+            ->create(
+                "+91 99780 71802", // to
+                [
+                    "body" => "$enteredText",
+                    "from" =>  $senderNumber
+                ]
+            );
+
+        EmailLog::create([
+            'role_id' => 1,
+            // 'provider_id' => specify provider id
+            // 'email_template' =>,
+            // 'subject_name' =>,
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+            'sent_date' => now(),
+            'email_template' =>  $enteredText,
+            'recipient_name' => $receipientName,
+            'subject_name' => 'notification to provider',
+            'email' => $receipientEmail,
+            'provider_id'=> $receipientId,
+        ]);
+
+        SMSLogs::create(
+            [
+                'provider_id'=> $receipientId,
+                'mobile_number' => $receipientMobile,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'role_id' => 1,
+                'recipient_name' => $receipientName,
+                'sent_tries' => 1,
+                'is_sms_sent' => 1,
+                'action' => 1,
+                'sms_template' => $enteredText
+            ]
+        );
+
+        return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
     }
 
 

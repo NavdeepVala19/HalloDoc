@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BlockRequest extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'block_request';
 
     protected $fillable = [
@@ -19,4 +19,9 @@ class BlockRequest extends Model
         'phone_number',
         'is_active'
     ];
+
+    public function request_status()
+    {
+        return $this->belongsTo(RequestStatus::class, 'request_id', 'request_id');
+    }
 }

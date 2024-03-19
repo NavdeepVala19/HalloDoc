@@ -107,12 +107,10 @@
 
                         <div class="col-md patient-contact-col2">
 
-                            <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}" class="form-control mobile-text mobile @error('mobile') @enderror" id="" name="phone_number">
+                            <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}" class="form-control mobile-text mobile @error('phone_number') is-invalid @enderror" id="" name="phone_number">
 
-                            <!-- <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number"> -->
-
-                            @error('mobile')
-                            <div class="text-danger">{{ $message }}</div>
+                            @error('phone_number')
+                            <div class="text-danger" role="alert">{{ $message }}</div>
                             @enderror
                         </div>
 

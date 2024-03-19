@@ -28,4 +28,57 @@ $(document).ready(function () {
         $(".alt-phone-provider").removeAttr("disabled");
     })
 
+
+
+    // ***************** Fetching regions from regions table ******************
+    $.ajax({
+        url: "/admin-new",
+        type: "GET",
+        success: function (data) {
+
+            data.forEach(function (region) {
+                $("#listing-region-admin-provider").append(
+                    '<option value="' + region.id + '" class="regions-name">' + region.region_name + "</option>"
+                );
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+
+    });
+
+
+
+    $('#listing-region-admin-provider').on('change', function () {
+        var token = $('meta[name="csrf-token"]').attr('content')
+        var selectedId = $(this).val();
+
+        console.log(selectedId);
+
+        $.ajax({
+            url: "/regions",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                regionId: selectedId,
+                "_token": token
+            },
+            success: function (data) {
+                $('#all-providers-data').html(data.html)
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    })
+
+
+    // this code is for new provider account page
+    $('.contact-btn').click(function () {
+        $('.new-provider-pop-up').show();
+        $('.overlay').show();
+    })
+
+
 })

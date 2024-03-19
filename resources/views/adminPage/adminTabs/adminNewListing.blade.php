@@ -5,11 +5,11 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
-{{--
+
 @section('username')
-    {{ $userData->username }}
+{{ $userData->username }}
 @endsection
---}}
+
 
 
 @section('nav-links')

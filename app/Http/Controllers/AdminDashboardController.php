@@ -15,6 +15,7 @@ use App\Models\RequestWiseFile;
 use App\Services\TwilioService;
 use App\Exports\PendingStatusExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Twilio\Rest\Client;
 
 class AdminDashboardController extends Controller
 {
@@ -25,18 +26,18 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
-    
-            $request->validate([
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'phone_number' => 'required',
-                'email' => 'required|email',
-                // 'dob' => 'required',
-                'street' => 'required',
-                'city' => 'required',
-                'state' => 'required'
-            ]);
-        
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email',
+            // 'dob' => 'required',
+            'street' => 'required',
+            'city' => 'required',
+            'state' => 'required'
+        ]);
+
         // store email and phoneNumber in users table
         $requestEmail = new users();
         $requestEmail->email = $request->email;
@@ -132,8 +133,8 @@ class AdminDashboardController extends Controller
         $updateAdminInfoInUsers = users::where('id', $id)->first();
         $updateAdminInfoInUsers->username = $request->user_name;
         $updateAdminInfoInUsers->password = $request->password;
-        $updateAdminInfoInUsers->save();    
-        
+        $updateAdminInfoInUsers->save();
+
         $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
 
         $updateAdminInfoAllUsers->first_name = $request->first_name;
@@ -150,15 +151,25 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.user.access');
     }
 
-    // public function adminEditProviderThroughUserAccess($id)
-    // {
-    //     $getProviderData = Provider::with('users')->where('user_id', $id)->first();
-    //     return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
-    // }
 
+    public function sendSMS(Request $request)
+    {
 
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
+        $twilio = new Client($sid, $token);
 
+        $message = $twilio->messages
+            ->create(
+            "+91 99780 71802", // to
+                [
+                    "body" => "har har mahadev",
+                    "from" =>  $senderNumber
+                ]
+            );
 
-
+        dd('success message');
+    }
 }

@@ -44,7 +44,7 @@
 <div class="overlay"> </div>
 
 @if(session('message'))
-<h6 class="alert alert-success">
+<h6 class="alert alert-success ">
     {{ session('message') }}
 </h6>
 @endif
@@ -57,13 +57,8 @@
 
         <div class="content-header d-flex flex-row justify-content-between align-items-center">
 
-            <select class="form-select">
-                <option selected>All </option>
-                <option value="1">Somnath</option>
-                <option value="2">Dwarka</option>
-                <option value="3">Rajkot</option>
-                <option value="4">Bhavnagar</option>
-                <option value="5">Ahmedabad</option>
+            <select class="form-select" id="listing-region-admin-provider">
+                <option name="regions" selected>All</option>
             </select>
 
             <div class="provider-btn">
@@ -74,7 +69,7 @@
 
         <div class="listing-table mt-3">
 
-            <table class="provider-table table">
+            <table class="provider-table table" id="all-providers-data">
                 <thead class="table-secondary">
                     <tr>
                         <td style="width: 7%;" class="theader">Stop Notification</td>
@@ -107,6 +102,8 @@
             {{$providersData->links('pagination::bootstrap-5')}}
 
 
+
+
             <!-- contact your provider pop-up -->
 
             <div class="pop-up new-provider-pop-up">
@@ -122,23 +119,21 @@
 
                         <input type="text" name="provider_id" class="provider_id" hidden>
 
-                        <div class="radio-sms">
+                        <div class="form-check">
                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label ms-1" for="flexRadioSMS">
+                            <label class="form-check-label" for="flexRadioDefault1">
                                 SMS
                             </label>
                         </div>
-
-                        <div class="radio-email">
-                            <input class="form-check-input" type="radio" value="email" name="emailContact" id="flexRadioDefault2">
-                            <label class="form-check-label ms-1" for="flexRadioEmail">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <label class="form-check-label" for="flexRadioDefault2">
                                 Email
                             </label>
                         </div>
-
-                        <div class="radio-both">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-                            <label class="form-check-label ms-1" for="flexRadioBoth">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <label class="form-check-label" for="flexRadioDefault2">
                                 Both
                             </label>
                         </div>
@@ -162,6 +157,14 @@
 
     </div>
 
+    <!-- <div class="mobile-listing">
+
+        <div class="mobile-list">
+            <div class="main-section">
+                    
+            </div>
+        </div>
+    </div> -->
 </div>
 
 

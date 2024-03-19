@@ -49,18 +49,12 @@ class AdminLoginController extends Controller
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
             // dd($userRolesData);
 
-            if($userRolesData->role_id==2){
+            if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
-            }
-            else{
+            } else if ($userRolesData->role_id == 1) {
                 return redirect()->route('admin.dashboard');
             }
-
-
-            // return redirect()->route('patientDashboardData');
         }
-
-
     }
 
 

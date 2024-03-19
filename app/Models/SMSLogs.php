@@ -9,11 +9,24 @@ class SMSLogs extends Model
 {
     use HasFactory;
 
-    protected $table = 'sms_log'; 
+    protected $table = 'sms_log';
 
 
-    public function provider(){
+    protected $fillable = [
+        'recipient_name',
+        'sms_template',
+        'mobile_number',
+        'confirmation_number',
+        'created_date',
+        'sent_date',
+        'is_sms_sent',
+        'sent_tries',
+        'action',
+    ];
+
+
+    public function provider()
+    {
         return $this->belongsTo(Provider::class);
     }
-
 }

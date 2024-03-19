@@ -244,7 +244,7 @@ $(document).ready(function () {
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-            // Assuming data is an array of reasons
+           
             data.forEach(function (region) {
                 $(".listing-region").append(
                     '<option value="' + region.id + '">' + region.region_name + "</option>"

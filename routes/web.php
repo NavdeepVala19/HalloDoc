@@ -84,7 +84,6 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
 route::post('/patientloggedIn', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
 
-// route::get('/pat')
 
 route::post('/patient_logout', [patientLoginController::class, 'logout'])->name('logout');
 //  ***************************************************************************************************************************************
@@ -116,7 +115,7 @@ route::get('/patientDashboard', [patientDashboardController::class, 'read'])->na
 
 //  ***************************************************************************************************************************************
 // to edit profile of patient
-// Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
+
 
 route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
 route::post('/patientProfileUpdated', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
@@ -204,7 +203,8 @@ route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'up
 
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
-// route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
+
+route::post('/regions', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 
 
 
@@ -253,6 +253,9 @@ route::post('/admin/provider-profile-edited/{id}', [AdminDashboardController::cl
 
 route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
 
+
+
+route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
 
 // ****************************************************************************************************************************
 

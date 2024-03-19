@@ -27,11 +27,7 @@ $(document).ready(function () {
         }
     })
 
-    // this code is for new provider account page
-    $('.contact-btn').click(function () {
-        $('.new-provider-pop-up').show();
-        $('.overlay').show();
-    })
+
 
 
 

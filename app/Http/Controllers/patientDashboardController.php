@@ -42,7 +42,7 @@ class patientDashboardController extends Controller
     public function createNewPatient(Request $request)
     {
 
-     
+
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'min:2|max:30',
@@ -113,57 +113,18 @@ class patientDashboardController extends Controller
     public function read()
     {
 
-        $timestamp = RequestTable::select('created_at')->get();
-        // return view('patientSite/patientDashboard')->with('date', $timestamp);
+        $data = RequestTable::select('created_at')->paginate(10);
+        return view('patientSite/patientDashboard',compact('data'));
 
 
-        // $newDate = $timestamp->implode('', $timestamp);
+        // $currentTime = Carbon::now();
+        // $currentDate = $currentTime->format('Y-m-d');
 
-        // $carbonDate = Carbon::parse($newDate);
+        // $data = DB::table('request')
+        //     ->join('status', 'request.status', '=', 'status.id')
+        //     ->select('request.created_at', 'status.status_type')
+        //     ->paginate(10);
 
-        // $dateOnly = $carbonDate->toDateString();
-
-
-        // $date = RequestTable::select('created_at')->get();
-
-        // dd($date);
-
-        // $items = array();
-        // foreach ($timestamp as $key) {
-        //     $items[] = $key;
-        // }
-        // print_r($items);
-
-
-        // $jsonString = '{"created_at":"2024-02-16T05:23:20.000000Z"}';
-
-        // Decode the JSON string to an object
-        // $jsonObject = json_decode($jsonString);
-
-        // Extract the 'created_at' value
-        // $createdAtString = $jsonObject->created_at;
-
-        // Now, parse the 'created_at' string with Carbon
-        // $createdAt = Carbon::parse($createdAtString);
-
-        // If you need it in a specific format or just the date part
-        // Outputs: 2024-02-16
-
-        // $dateString = $createdAt->toDateString()
-
-        $currentTime = Carbon::now();
-        $currentDate = $currentTime->format('Y-m-d');
-
-
-        $userData = Auth::user();
-        // $email = $userData["email"];
-
-
-        $data = DB::table('request')
-            ->join('status', 'request.status', '=', 'status.id')
-            ->select('request.created_at', 'status.status_type')
-            ->paginate(10);
-
-        return view('patientSite/patientDashboard', compact('data'));
+        // return view('patientSite/patientDashboard', compact('data'));
     }
 }

@@ -31,7 +31,6 @@
                 <div class="form-floating ">
                     <input type="text" name="first_name" class="form-control" id="floatingInput"
                         value="{{$getEmailData->first_name}}" placeholder="First Name">
-                        
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
