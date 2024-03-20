@@ -111,10 +111,14 @@ nav {
 
 /* Styling for ALERT AND SUCCESS Messages/Pop-ups */
 .popup-message {
+    position: absolute;
+    top: 100px;
+    right: 100px;
     width: 400px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 999;
 }
 
 /* ********************************MEDIA QUERIES************************************* */

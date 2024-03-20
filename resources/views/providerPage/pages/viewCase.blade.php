@@ -89,15 +89,15 @@
                     <div class="d-flex align-items-center gap-2 ">
                         <div class="form-floating w-100">
                             <input type="text" name="business_name" class="form-control" id="floatingInput"
+                                value="{{ $data->requestClient->street }}, {{ $data->requestClient->city }}, {{ $data->requestClient->state }}"
                                 placeholder="business">
                             <label for="floatingInput">Business Name/Address</label>
                         </div>
                         <button class="primary-empty"><i class="bi bi-geo-alt"></i></button>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="room"
-                            value="{{ $data->requestClient->street }}, {{ $data->requestClient->city }}, {{ $data->requestClient->state }}"
-                            class="form-control" id="floatingInput" placeholder="room">
+                        <input type="text" name="room" value="{{ $data->requestClient->room }}" class="form-control"
+                            id="floatingInput" placeholder="room">
                         <label for="floatingInput">Room #</label>
                     </div>
                 </div>

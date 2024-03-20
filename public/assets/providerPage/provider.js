@@ -16,18 +16,23 @@ $(document).ready(function () {
     $(".encounter-btn").on("click", function () {
         $(".encounter").show();
         $(".overlay").show();
+        $(".case-id").val($(this).data("id"));
     });
 
     $(".housecall-btn").click(function () {
         $(this).toggleClass("btn-active");
         $(".consult-btn").removeClass("btn-active");
-        $(".time-dropdown").show();
+
+        $(".house_call").val(1);
+        $(".consult").val(0);
     });
 
     $(".consult-btn").click(function () {
         $(this).toggleClass("btn-active");
         $(".housecall-btn").removeClass("btn-active");
-        $(".time-dropdown").hide();
+
+        $(".house_call").val(0);
+        $(".consult").val(1);
     });
 
     $(".encounter-save-btn").click(function () {

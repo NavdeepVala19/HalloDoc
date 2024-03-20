@@ -324,9 +324,11 @@ Route::get('/view-order/{id?}', [ProviderController::class, 'viewOrder'])->name(
 // Send Agreement via email and sms, pending page
 Route::post('/send-agreement', [ProviderController::class, 'sendAgreementLink'])->name('send.agreement');
 
-
 // when consult is selected from the encounter of active listing perform operation
-Route::get('/encounter', [ProviderController::class, 'encounter'])->name("encounter");
+Route::get('/provider-encounter', [ProviderController::class, 'encounter'])->name("provider.active.encounter");
+
+// When clicked on House Call From active page, change it's state to conlude
+Route::get('/provider-housecall-encounter/{requestId}', [ProviderController::class, 'encounterHouseCall'])->name('provider.houseCall.encounter');
 
 // ENCOUNTER FORM
 // Show Encounter Form when clicked on Encounter from Conclude State
@@ -465,6 +467,8 @@ Route::get('/scheduling/region/{id}', [SchedulingController::class, 'shiftFilter
 Route::get('/provider-data', [SchedulingController::class, 'providerData'])->name('provider.data');
 // Providers on call view
 Route::get('/providers-on-call', [SchedulingController::class, 'providersOnCall'])->name('providers.on.call');
+// Filter Providers based on region selected for Providers on Call Page
+Route::get('/filterProvidersByRegion/{id}', [SchedulingController::class, 'filterProviderByRegion'])->name('filter.providers.by.region');
 // Shifts for Review view
 Route::get('/shifts-review', [SchedulingController::class, 'shiftsReviewView'])->name('shifts.review');
 // Create Shift data

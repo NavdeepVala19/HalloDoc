@@ -29,7 +29,7 @@
                             placeholder="First Name">
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
@@ -37,7 +37,7 @@
                             id="floatingInput" placeholder="Last Name">
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -48,7 +48,7 @@
                                 placeholder="Phone Number">
                         </div>
                         @error('phone_number')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -57,7 +57,7 @@
                             id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email address</label>
                         @error('email')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
@@ -73,7 +73,7 @@
                             id="floatingInput" placeholder="Street">
                         <label for="floatingInput">Street</label>
                         @error('street')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
@@ -81,7 +81,7 @@
                             id="floatingInput" placeholder="City">
                         <label for="floatingInput">City</label>
                         @error('city')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
@@ -89,11 +89,11 @@
                             id="floatingInput" placeholder="State">
                         <label for="floatingInput">State</label>
                         @error('state')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="email" name="zip" class="form-control" id="floatingInput" placeholder="zip code">
+                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code">
                         <label for="floatingInput">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">

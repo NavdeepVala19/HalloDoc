@@ -28,12 +28,12 @@ class AdminDashboardController extends Controller
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone_number' => 'required',
+            'phone_number' => 'required|numeric',
             'email' => 'required|email',
-            // 'dob' => 'required',
             'street' => 'required',
             'city' => 'required',
-            'state' => 'required'
+            'state' => 'required',
+            'zip' => 'required|max:6'
         ]);
 
 

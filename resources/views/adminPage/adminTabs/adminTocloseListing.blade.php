@@ -7,7 +7,7 @@
 
 
 @section('username')
-    {{ $userData->username }}
+    {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
 
@@ -325,16 +325,21 @@ pending state, providers need to send an agreement link to patients. --}}
                         @foreach ($cases as $case)
                             @if (!empty($case->request) && !empty($case->request->requestClient))
                                 <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}</td>
+                                    <td>{{ $case->request->requestClient->first_name }}
+                                        {{ $case->request->requestClient->last_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
                                     <td>Region</td>
-                                    <td>Physician Name</td>
+                                    <td>
+                                        @if ($case->provider)
+                                            {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                        @endif
+                                    </td>
                                     <td>{{ $case->request->created_at }}</td>
                                     <td>
                                         {{ $case->request->requestClient->street }},
                                         {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
                                     </td>
-                                    <td>Notes</td>
+                                    <td>{{ $case->notes }}</td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn"

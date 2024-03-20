@@ -6,7 +6,7 @@
 @endsection
 
 @section('username')
-    {{ $userData->username }}
+    {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
 @section('nav-links')
@@ -63,15 +63,15 @@ giving service to the patient. --}}
             <span>Select Type Of Care</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <form action="{{ route('encounter') }}" method="GET">
+        <form action="{{ route('provider.active.encounter') }}" method="GET">
             <div class="p-4 d-flex align-items-center justify-content-center gap-2">
+                <input type="text" name="requestId" class="case-id" value="" hidden>
+                {{-- If the provider selects the housecall, then that request will be in same state, but status changes from MdEnRoute to MdEnSite --}}
                 <button type="button" class="primary-empty housecall-btn">Housecall</button>
-                {{-- If the provider will select house-call, then another dropdown will be visible to select the approximate
-            arrival time of the provider to that patient’s house. That dropdown contains options from 0.5 hour to 6 hour
-            with a 30-minute gap. --}}
-                <button type="button" class="primary-empty consult-btn">Consult</button>
-                <input type="text" name="caseId" class="case-id" value="" hidden>
+                <input type="text" class="house_call" name="house_call" hidden>
                 {{-- If the provider selects the consult, then that request will move into Conclude state. --}}
+                <button type="button" class="primary-empty consult-btn">Consult</button>
+                <input type="text" class="consult" name="consult" hidden>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
                 {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
@@ -192,16 +192,16 @@ giving service to the patient. --}}
                         <tbody>
                             @foreach ($cases as $case)
                                 <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}</td>
+                                    <td>{{ $case->request->requestClient->first_name }}
+                                        {{ $case->request->requestClient->last_name }}</td>
                                     <td>{{ $case->request->requestClient->phone_number }}</td>
                                     <td>{{ $case->request->requestClient->street }},
                                         {{ $case->request->requestClient->city }},
                                         {{ $case->request->requestClient->state }}</td>
                                     <td>
-                                        @if ($case->request->call_type)
-                                            <span class="primary-fill"> {{ $case->request->call_type }} </span>
-                                        @else
-                                            Call Type
+                                        @if ($case->request->call_type && $case->request->call_type == 'house_call')
+                                            <a href="{{ route('provider.houseCall.encounter', $case->request->id) }}"
+                                                class="primary-fill houseCallBtn"> House Call </a>
                                         @endif
                                     </td>
                                     <td>
@@ -218,7 +218,7 @@ giving service to the patient. --}}
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <a href="{{ route('provider.view.order', $case->request->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn"><i
+                                                <button class="encounter-btn" data-id={{ $case->request->id }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>
                                         </div>
@@ -230,7 +230,6 @@ giving service to the patient. --}}
                 </div>
 
                 <div class="mobile-listing">
-
                     @foreach ($cases as $case)
                         <div class="mobile-list d-flex justify-content-between">
                             <div class="d-flex flex-column">

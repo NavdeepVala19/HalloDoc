@@ -43,10 +43,33 @@
 @section('content')
     <div class="overlay"></div>
 
+    {{-- Error or Success Message Alerts/Pop-ups --}}
+    {{-- Admin Logged In Successfully --}}
     @if (session('message'))
-        <h6 class="alert alert-success">
+        <h6 class="alert alert-success popup-message">
             {{ session('message') }}
         </h6>
+    @endif
+
+
+    {{-- Case Assigned Successfully --}}
+    @if (session('assigned'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('assigned') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Physician Not selected in Assign Case Action --}}
+    @if ($errors->has('physician'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ $errors->first('physician') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
     @endif
 
     {{-- Cancel Case Pop-up --}}
@@ -104,11 +127,17 @@ to providers based on patient’s region using this pop-up. --}}
                     <label for="floatingSelect">Narrow Search by Region</label>
                 </div>
                 <div class="form-floating">
-                    <select class="form-select selectPhysician" name="physician" id="floatingSelect"
-                        aria-label="Floating label select example">
-                        <option selected>Select Physician</option>
+                    <select
+                        class="form-select selectPhysician @error('physician')
+                    is-invalid
+                    @enderror"
+                        name="physician" id="floatingSelect" aria-label="Floating label select example" required>
+                        <option>Select Physician</option>
                     </select>
                     <label for="floatingSelect">Select Physician</label>
+                    @error('physician')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-floating">
                     <textarea class="form-control" name="description" placeholder="Description" id="floatingTextarea2"></textarea>
@@ -375,9 +404,10 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                         @foreach ($cases as $case)
                             @if (!empty($case->request) && !empty($case->request->requestClient))
                                 <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}</td>
+                                    <td>{{ $case->request->requestClient->first_name }}
+                                        {{ $case->request->requestClient->last_name }}</td>
                                     <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>{{ $case->request->first_name }}</td>
+                                    <td>{{ $case->request->first_name }} {{ $case->request->last_name }}</td>
                                     <td>{{ $case->request->created_at }}</td>
                                     <td>{{ $case->request->phone_number }}</td>
                                     <td>

@@ -35,8 +35,8 @@
         {{-- d-flex align-items-center justify-content-between gap-3 --}}
         <div class="section">
             <div class="d-flex align-items-center justify-content-between">
-                <div class=" region-dropdown">
-                    <select name="role_id" class="form-select empty-fields" id="floatingSelect"
+                <div class="region-dropdown">
+                    <select name="role_id" class="form-select providerOnCallRegionFilter" id="floatingSelect"
                         aria-label="Floating label select example">
                         <option value="0" selected>All Regions</option>
                         @foreach ($regions as $region)
@@ -52,14 +52,14 @@
             </div>
             <div class="m-3">
                 <h5>MD's On Call</h5>
-                <div class="grid-3 ">
-                    @foreach ($onCallShifts as $onCallShift)
+                <div class="grid-3 onDuty-provider-grid">
+                    @foreach ($onCallPhysicians as $onCallPhysician)
                         <div class="provider">
-                            <img src="{{ asset('storage/' . $onCallShift->getShiftData->provider->photo) }}"
-                                class="provider-profile-photo" alt="provider profile photo">
+                            <img src="{{ asset('storage/' . $onCallPhysician->photo) }}" class="provider-profile-photo"
+                                alt="provider profile photo">
                             <span>
-                                Dr. {{ $onCallShift->getShiftData->provider->first_name }}
-                                {{ $onCallShift->getShiftData->provider->last_name }}
+                                Dr. {{ $onCallPhysician->first_name }}
+                                {{ $onCallPhysician->last_name }}
                             </span>
                         </div>
                     @endforeach
@@ -67,14 +67,14 @@
             </div>
             <div class="m-3">
                 <h5>Physicians Off Duty</h5>
-                <div class="grid-3 ">
-                    @foreach ($offDutyShifts as $offDutyShift)
+                <div class="grid-3 offDuty-provider-grid">
+                    @foreach ($offDutyPhysicians as $offDutyPhysician)
                         <div class="provider">
-                            <img src="{{ asset('storage/' . $offDutyShift->getShiftData->provider->photo) }}"
-                                class="provider-profile-photo" alt="provider profile photo">
+                            <img src="{{ asset('storage/' . $offDutyPhysician->photo) }}" class="provider-profile-photo"
+                                alt="provider profile photo">
                             <span>
-                                Dr. {{ $offDutyShift->getShiftData->provider->first_name }}
-                                {{ $offDutyShift->getShiftData->provider->last_name }}
+                                Dr. {{ $offDutyPhysician->first_name }}
+                                {{ $offDutyPhysician->last_name }}
                             </span>
                         </div>
                     @endforeach
@@ -82,4 +82,11 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        var imageUrl = "{{ asset('storage/') }}";
+    </script>
+    <script src="{{ asset('assets/adminPage/providerOnCall.js') }}"></script>
 @endsection

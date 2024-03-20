@@ -29,31 +29,18 @@ class patientController extends Controller
 
     public function create(Request $request)
     {
-
-        // $request->validate([
-        //     'first_name'=>['required','min:2','max:30'],
-        //     'last_name'=>['string','min:2','max:30'],
-        //     'email' => ['required','email','min:2','max:30'],
-        //     'phone_number'=>['required','numeric',],
-        //     'street'=>['min:2','max:30'],
-        //     'city' => ['string','min:2','max:30'],
-        //     'zipcode' => ['numeric'], 
-        //     'state' => ['string','min:2','max:30'],
-        //     'room' =>['numeric']
-        // ]);
-
-        // $request->validate([
-        //     'first_name' => 'required|min:2|max:30',
-        //     'last_name' => 'string|min:2|max:30',
-        //     'date_of_birth'=>'required',
-        //     'email' => 'required|email|min:2|max:30',
-        //     'phone_number' => 'required|numeric|digits:10',
-        //     'street' => 'min:2|max:30',
-        //     'city' => 'min:2|max:30',
-        //     'zipcode' => 'numeric',
-        //     'state' => 'min:2|max:30',
-        //     'room' => 'numeric',
-        // ]);
+        $request->validate([
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'string|min:2|max:30',
+            'date_of_birth' => 'required',
+            'email' => 'required|email|min:2|max:30',
+            'phone_number' => 'required|numeric|digits:10',
+            'street' => 'min:2|max:30',
+            'city' => 'min:2|max:30',
+            'zipcode' => 'numeric',
+            'state' => 'min:2|max:30',
+            'room' => 'numeric',
+        ]);
 
 
         // store email and phoneNumber in users table
@@ -154,7 +141,7 @@ class patientController extends Controller
 
 
         $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
-    
+
         if (!empty($requestData->id)) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
