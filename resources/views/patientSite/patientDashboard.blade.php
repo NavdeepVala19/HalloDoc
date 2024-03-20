@@ -42,10 +42,14 @@
                 <tbody>
                     @foreach($data as $patientData)
                     <tr>
-                        <td> {{$patientData->created_at}}</td>
-                        <td> {{$patientData->status_type}}</td>
-                        <td>
-                            <a href="{{route('patientViewDocsFile')}}" type="button" class="primary-empty btn ">Documents</a>
+                        <td style="height: 5%;"> {{$patientData->created_date}}</td>
+                        <td style="height: 5%;"> {{$patientData->status_type}}</td>
+                        <td style="height: 5%;">
+                            @if($patientData->id==null)
+                            -
+                            @else
+                            <a href="{{route('patientViewDocsFile',$patientData->request_id)}}" type="button" class="primary-empty btn ">Documents</a>
+                            @endif
                         </td>
                         @endforeach
                     </tr>
@@ -60,15 +64,18 @@
 
             @foreach($data as $patientData)
             <button class="accordion"> <i class="bi bi-clock"></i>
-                Created-Date:{{$patientData->created_at}}</button>
+                Created-Date:{{$patientData->created_date}}</button>
             <div class="panel">
-
-                <div>
+                <div class="m-2">
                     <i class="bi bi-check-circle"></i> Current Status:{{$patientData->status_type}}
                 </div>
+                @if($patientData->id==null)
+                -
+                @else
                 <div>
-                    <a type="button" class="primary-empty btn" href="{{route('patientViewDocsFile')}}">Docs</a>
+                    <a href="{{route('patientViewDocsFile',$patientData->request_id)}}" type="button" class="primary-empty btn ">Documents</a>
                 </div>
+                @endif
             </div>
             @endforeach
         </div>
@@ -97,23 +104,10 @@
         </div>
 
 
-
-        <script>
-            var acc = document.getElementsByClassName("accordion");
-            var i;
-
-            for (i = 0; i < acc.length; i++) {
-                acc[i].addEventListener("click", function() {
-                    this.classList.toggle("active");
-                    var panel = this.nextElementSibling;
-                    if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                    } else {
-                        panel.style.display = "block";
-                    }
-                });
-            }
-        </script>
-
     </div>
+    @endsection
+
+
+    @section('script')
+    <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
     @endsection

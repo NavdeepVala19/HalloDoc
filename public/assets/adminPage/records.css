@@ -7,6 +7,10 @@ table td {
     padding: 15px !important;
 }
 
+.account-type-drop-down {
+    width: 25%;
+}
+
 .dropdown-actions li a:hover {
     background-color: rgba(128, 128, 128);
 }
@@ -14,6 +18,13 @@ table td {
 .grid-6 {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
+    margin-bottom: 25px;
+    gap: 20px;
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     margin-bottom: 25px;
     gap: 20px;
 }
@@ -33,11 +44,24 @@ table td {
     }
 }
 
+@media (max-width: 1200px) {
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 820px) {
     .mobile-listing {
         display: block;
     }
 
+    #blockHistoryTable {
+        display: none;
+    }
+
+    .account-type-drop-down {
+        width: 97% !important;
+    }
 
     .table-view {
         display: none;

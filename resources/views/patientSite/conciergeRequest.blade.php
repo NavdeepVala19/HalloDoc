@@ -230,7 +230,7 @@
 
                 <div class="buttons">
                     <button class="primary-fill btn-submit" type="submit">Submit</button>
-                    <button class="primary-empty btn-cancel" type="cancel">Cancel</button>
+                    <button class="primary-empty btn-cancel" type="reset">Cancel</button>
                 </div>
 
 

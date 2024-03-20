@@ -401,3 +401,9 @@
 </div>
 
 @endsection
+
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
+@endsection

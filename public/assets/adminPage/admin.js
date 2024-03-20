@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-
-
-
-
     $(".cancel-case-btn").click(function () {
         $(".cancel-case").show();
         $(".overlay").show();
@@ -216,8 +212,23 @@ $(document).ready(function () {
 
     // ************************************* Shivesh *************************************
 
-    // ********************
-    // this code is for getting filtername in admin dashboard (all,patient,family,concierge,business)
+
+
+    $(document).on("click", ".action-btn", function () {
+        var sibling = $(this).siblings(".actions-menubar:visible").length;
+
+        if (sibling > 0) {
+            $(this).siblings(".actions-menubar").hide();
+        } else {
+            $(this).siblings(".actions-menubar").show();
+        }
+    });
+
+
+    
+
+    // ***** This code is for getting filtername in admin dashboard (all,patient,family,concierge,business) *****
+    
 
     var pathname = window.location.pathname;
     var url = pathname.split('/');
@@ -235,41 +246,44 @@ $(document).ready(function () {
         }
     });
 
-    // *******************
-
+    // ************************************************************************************
     
-
+    
+    
     // ***************** Fetching regions from regions table ******************
     $.ajax({
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-           
+            
             data.forEach(function (region) {
                 $(".listing-region").append(
                     '<option value="' + region.id + '">' + region.region_name + "</option>"
-                );
-            });
-        },
-        error: function (error) {
-            console.error(error);
-        },
+                    );
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+            
+        });
+    // ************************************************************************************
+    
 
-    });
-
-
-
+    
+    
+    
     // ***************** Filtering regions from dropdown button ******************
-
+    
     $('.listing-region').on('change', function () {
         var token = $('meta[name="csrf-token"]').attr('content')
         // Store the selected option's ID
         var tab = $(".nav-link.active").attr('id');
         var words = tab.split("-");
         var activeStatus = words[1];
-
+        
         var selectedId = $(this).val();
-
+        
         $.ajax({
             url: "/dropdown-data",
             type: "POST",
@@ -287,9 +301,12 @@ $(document).ready(function () {
             }
         });
     })
-
-
-
+    // ************************************************************************************
+    
+    
+    
+    
+    
     // ********************* Filtering AccountType in User Access Page ***********************
 
     $('#accountType').on('change', function () {
@@ -312,6 +329,9 @@ $(document).ready(function () {
         })
     })
 });
+
+// ************************************************************************************
+
 
 
 // Display different roles checkboxes as per the roles selected
@@ -341,17 +361,7 @@ $(".role-selected").on("change", function () {
 
 
 
-// ************************************* Shivesh *************************************
 
-$(document).on("click", ".action-btn", function () {
-    var sibling = $(this).siblings(".actions-menubar:visible").length;
-
-    if (sibling > 0) {
-        $(this).siblings(".actions-menubar").hide();
-    } else {
-        $(this).siblings(".actions-menubar").show();
-    }
-});
 
 
 

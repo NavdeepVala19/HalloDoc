@@ -52,4 +52,8 @@ class request_Client extends Model
     public function request_status(){
         return $this->belongs(RequestStatus::class, 'request_id', 'request_id');
     }
+
+    public function request_wise_file(){
+        return $this->belongsTo(RequestWiseFile::class,'request_id','request_id');
+    }
 }

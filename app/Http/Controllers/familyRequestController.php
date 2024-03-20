@@ -44,7 +44,7 @@ class familyRequestController extends Controller
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
 
-        // $requestEmail->save();
+        $requestEmail->save();
 
 
 

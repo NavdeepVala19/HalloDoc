@@ -117,36 +117,51 @@
         </div>
 
         <div class="mobile-listing">
-
+            @foreach($sms as $data)
             <div class="mobile-list">
                 <div class="main-section">
-                    <h5 class="heading">Name</h5>
+                    <h5 class="heading">{{$data->recipient_name}}</h5>
                     <div class="detail-box">
                         <span>
                             Action Name: <strong>Test</strong>
                         </span>
                         <br>
                         <span>
-                            Email: <strong>Mail</strong>
+                            Mobile Number: <strong>{{$data->mobile_number}}</strong>
                         </span>
                     </div>
                 </div>
                 <div class="details">
-                    <span><i class="bi bi-person"></i> Role Name:</span>
+                    <span><i class="bi bi-person"></i>
+                        Role Name :
+                        @if ($data->role_id==1)
+                        admin
+                        @elseif ($data->role_id==2)
+                        physician
+                        @elseif ($data->role_id==3)
+                        patient
+                        @endif</span>
                     <br>
-                    <span><i class="bi bi-calendar3"></i>Create Date:</span>
+                    <span><i class="bi bi-calendar3"></i>Create Date : {{$data->created_date}}</span>
                     <br>
-                    <span><i class="bi bi-calendar3"></i>Sent Date:</span>
+                    <span><i class="bi bi-calendar3"></i>Sent Date : {{$data->sent_date}}</span>
                     <br>
-                    <span><i class="bi bi-check2"></i>Sent:</span>
+                    <span><i class="bi bi-check2"></i>
+                        Sent : @if($data->is_sms_sent==1)
+                        yes
+                        @else
+                        no
+                        @endif
+                    </span>
                     <br>
-                    <span><i class="bi bi-envelope"></i>Sent Tries:</span>
+                    <span><i class="bi bi-envelope"></i>Sent Tries : {{$data->sent_tries}}</span>
                     <br>
-                    <span><i class="bi bi-check2"></i>Confirmation Number:</span>
+                    <span><i class="bi bi-check2"></i>Confirmation Number : </span>
 
                 </div>
             </div>
-
+            @endforeach
+            {{$sms->links('pagination::bootstrap-5')}}
         </div>
 
     </div>

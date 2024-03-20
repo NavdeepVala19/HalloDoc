@@ -13,9 +13,9 @@ use ZipArchive;
 class PatientViewDocumentsController extends Controller
 {
 
-    public function patientViewDocument()
+    public function patientViewDocument($id)
     {
-        $documents = DB::table('request_wise_file')->paginate(10);
+        $documents = RequestWiseFile::where('request_id', $id)->paginate(10);
         return view('patientSite/patientViewDocument', compact('documents'));
     }
 
@@ -25,8 +25,6 @@ class PatientViewDocumentsController extends Controller
         $requestData->request_type_id = $request->request_type;
         $requestData->save();
 
-
-
         // store documents in request_wise_file table
 
         $request_file = new RequestWiseFile();
@@ -35,9 +33,7 @@ class PatientViewDocumentsController extends Controller
         $path = $request->file('docs')->storeAs('public', $request->docs->getClientOriginalName());
         $request_file->save();
 
-
         return redirect('patientViewDocument');
-
 
     }
 
@@ -55,7 +51,6 @@ class PatientViewDocumentsController extends Controller
 
     public function downloadSelectedFiles(Request $request)
     {
-    
         $ids = $request->input('selected_files');
 
         $zip = new ZipArchive;

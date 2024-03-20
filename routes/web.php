@@ -149,7 +149,7 @@ route::post('/createdSomeoneRequests', [patientDashboardController::class, 'crea
 
 //  ***************************************************************************************************************************************
 // to view documents 
-route::get('/patientViewDocsFile', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
+route::get('/patientViewDocsFile/{id}', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
 route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'uploadDocs'])->name('patientViewDocuments');
 
 route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');

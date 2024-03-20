@@ -484,3 +484,12 @@ pending state, providers need to send an agreement link to patients. --}}
 </div>
 </div>
 @endsection
+
+
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
+
+<script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+@endsection

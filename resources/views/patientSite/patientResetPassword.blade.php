@@ -54,3 +54,7 @@
 
 
 @endsection
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+@endsection

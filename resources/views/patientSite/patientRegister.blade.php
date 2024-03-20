@@ -15,7 +15,7 @@
 
 <div class="container-fluid main-section">
 
-    <div class="main-container">
+    <div class="password-reset">
 
         <div class="details">
             <h1>Create Account</h1>
@@ -61,4 +61,9 @@
 </div>
 
 
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

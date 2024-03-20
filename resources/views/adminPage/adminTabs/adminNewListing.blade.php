@@ -478,3 +478,12 @@ can block any case. All blocked cases can be seen in Block history page. --}}
     {{ $cases->links('pagination::bootstrap-5') }}
 </div>
 @endsection
+
+
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
+
+<script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+@endsection

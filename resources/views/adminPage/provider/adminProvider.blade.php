@@ -84,7 +84,7 @@
                 <tbody>
                     @foreach ($providersData as $data)
                     <tr>
-                        <td class="checks"> <input class="form-check-input" type="checkbox" value="" id="checkbox">
+                        <td class="checks"> <input class="form-check-input" type="checkbox" value="" id="checkbox1">
                         </td>
                         <td class="data"> {{$data->first_name}}</td>
                         <td class="data"> Physician</td>
@@ -101,9 +101,6 @@
             </table>
             {{$providersData->links('pagination::bootstrap-5')}}
 
-
-
-
             <!-- contact your provider pop-up -->
 
             <div class="pop-up new-provider-pop-up">
@@ -112,28 +109,28 @@
                     <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
                 </div>
                 <p class="mt-4 ms-3">Choose communication to send message</p>
-                <div class="ms-3 ">
+                <div class="ms-3">
 
-                    <form action="#" method="post" id="ContactProviderForm">
+                    <form action="{{route('sendMailToProvider',$data->id)}}" method="post" id="ContactProviderForm">
                         @csrf
 
                         <input type="text" name="provider_id" class="provider_id" hidden>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
+                            <input class="form-check-input" type="radio" name="contact" value="sms" checked id="flexRadioDefault">
+                            <label class="form-check-label" for="flexRadioDefault">
                                 SMS
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                            <label class="form-check-label" for="flexRadioDefault2">
+                            <input class="form-check-input" type="radio" name="contact" value="email" id="flexRadioDefault">
+                            <label class="form-check-label" for="flexRadioDefault">
                                 Email
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                            <label class="form-check-label" for="flexRadioDefault2">
+                            <input class="form-check-input" type="radio" name="contact" value="both" id="flexRadioDefault">
+                            <label class="form-check-label" for="flexRadioDefault">
                                 Both
                             </label>
                         </div>
@@ -154,18 +151,88 @@
 
         </div>
 
+        <div class="mobile-listing">
+            @foreach ($providersData as $data)
+            <div class="mobile-list">
+                <div class="main-section mt-3">
+                    <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox"> {{$data->first_name}}</h5>
+                    <div class="detail-box">
+                        <span>
+                            On Call Status: <strong>Available</strong>
+                        </span>
+                    </div>
+                </div>
+                <div class="details mt-3">
+                    <span><i class="bi bi-person"></i> Role Name : Physician</span>
+                    <br>
+                    <span><i class="bi bi-check2"></i>Status : {{$data->status}} </span>
 
-    </div>
+                    <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                        <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
+                        <a href="{{route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
+                    </div>
 
-    <!-- <div class="mobile-listing">
-
-        <div class="mobile-list">
-            <div class="main-section">
-                    
+                </div>
             </div>
+            @endforeach
+            {{$providersData->links('pagination::bootstrap-5')}}
+
+
+            <!-- contact your provider pop-up -->
+
+            <div class="pop-up new-provider-pop-up">
+                <div class="popup-heading-section d-flex align-items-center justify-content-between">
+                    <span class="ms-3">Contact Your Provider</span>
+                    <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <p class="mt-4 ms-3">Choose communication to send message</p>
+                <div class="ms-3">
+
+                    <form action="{{route('sendMailToProvider',$data->id)}}" method="post" id="ContactProviderForm">
+                        @csrf
+
+                        <input type="text" name="provider_id" class="provider_id" hidden>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="contact" value="sms" checked id="flexRadioDefault">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                SMS
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="contact" value="email" id="flexRadioDefault">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Email
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="contact" value="both" id="flexRadioDefault">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Both
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
+                            <label for="floatingTextarea2">Message</label>
+                        </div>
+
+                </div>
+
+                <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                    <button class="primary-fill sen-btn" type="submit">Send</button>
+                    <button class="primary-empty hide-popup-btn">Cancel</button>
+                </div>
+                </form>
+            </div>
+
         </div>
-    </div> -->
+    </div>
 </div>
+@endsection
 
 
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
 @endsection

@@ -29,16 +29,14 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control" id="floatingInput"
-                        value="{{$getEmailData->first_name}}" placeholder="First Name">
+                    <input type="text" name="first_name" class="form-control" id="floatingInput" value="{{$getEmailData->first_name}}" placeholder="First Name">
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput"
-                        value="{{$getEmailData->last_name}}" placeholder="Last Name">
+                    <input type="text" name="last_name" class="form-control" id="floatingInput" value="{{$getEmailData->last_name}}" placeholder="Last Name">
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -46,8 +44,7 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="date" class="form-control" id="floatingInput" placeholder="date of birth"
-                        value="{{$getEmailData->date_of_birth}}">
+                    <input type="date" class="form-control" id="floatingInput" placeholder="date of birth" value="{{$getEmailData->date_of_birth}}">
                     <label for="floatingInput">Date Of Birth</label>
                 </div>
 
@@ -57,15 +54,13 @@
 
             <div class="grid-2">
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone"
-                    value="{{$getEmailData->phone_number}}" placeholder="Phone Number">
+                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{$getEmailData->phone_number}}" placeholder="Phone Number">
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" value="{{$getEmailData->email}}"
-                        placeholder="name@example.com" name="email">
+                    <input type="email" class="form-control" id="floatingInput" value="{{$getEmailData->email}}" placeholder="name@example.com" name="email">
                     <label for="floatingInput">Email</label>
                 </div>
 
@@ -76,21 +71,18 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="street" class="form-control" id="floatingInput" placeholder="Street"
-                        value="{{$getEmailData->street}}">
+                    <input type="text" name="street" class="form-control" id="floatingInput" placeholder="Street" value="{{$getEmailData->street}}">
                     <label for="floatingInput">Street</label>
 
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="City"
-                        value="{{$getEmailData->city}}">
+                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="City" value="{{$getEmailData->city}}">
                     <label for="floatingInput">City</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="state" class="form-control" id="floatingInput" placeholder="State"
-                        value="{{$getEmailData->state}}">
+                    <input type="text" name="state" class="form-control" id="floatingInput" placeholder="State" value="{{$getEmailData->state}}">
                     <label for="floatingInput">State</label>
 
                 </div>
@@ -98,8 +90,7 @@
                 <div class="d-flex gap-4 align-items-center">
 
                     <div class="form-floating w-100">
-                        <input type="text" name="zipcode" class="form-control" id="floatingInput" placeholder="Zipcode"
-                            value="{{$getEmailData->zipcode}}">
+                        <input type="text" name="zipcode" class="form-control" id="floatingInput" placeholder="Zipcode" value="{{$getEmailData->zipcode}}">
                         <label for="floatingInput">Zipcode</label>
                     </div>
                     <a href="" class="primary-empty d-flex gap-2"> <i class="bi bi-geo-alt"></i> Map</a>
@@ -108,7 +99,6 @@
             </div>
 
             <div class="text-end">
-
                 <button class="primary-fill">Edit</button>
             </div>
 
@@ -116,4 +106,9 @@
 
     </div>
 </div>
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

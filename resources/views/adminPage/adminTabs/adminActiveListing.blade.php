@@ -430,3 +430,10 @@ giving service to the patient. --}}
 </div>
 </div>
 @endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
+
+<script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+@endsection

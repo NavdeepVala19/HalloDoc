@@ -376,3 +376,12 @@ transferred into conclude state providers can finally conclude care for the pati
 </div>
 </div>
 @endsection
+
+
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
+
+<script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+@endsection

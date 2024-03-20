@@ -56,7 +56,7 @@
             </div>
         </form>
 
-        <div class="table-responsive">
+        <div class="table-responsive" id="blockHistoryTable">
             <table class="table" id="blockListTable">
                 <thead class="table-secondary">
                     <td>Patient Name</td>
@@ -75,7 +75,7 @@
                         <td>{{$data->email}}</td>
                         <td>{{$data->created_date}}</td>
                         <td>{{$data->reason}}</td>
-                        <td><input class="form-check-input me-3" type="checkbox" value="1"  @checked($data->is_active === 1) id="checkbox_{{$data->id}}"></td>
+                        <td><input class="form-check-input me-3" type="checkbox" value="1" @checked($data->is_active === 1) id="checkbox_{{$data->id}}"></td>
                         <td>
                             <a href="{{route('admin.block.history.unblock',$data->id)}}" class="primary-empty"> Unblock </a>
                         </td>
@@ -88,36 +88,48 @@
 
 
         <div class="mobile-listing">
-
+            @foreach ($blockData as $data)
             <div class="mobile-list">
                 <div class="main-section">
-
                     <div class="detail-box">
-                        <span>
-                            Patient Name
-                        </span>
+                        <h5>
+                            {{$data->patient_name}}
+                        </h5>
                         <br>
                         <span>
-                            email@gmail.com
+                            {{$data->email}}
                         </span>
                     </div>
                 </div>
                 <div class="details">
-                    <span><i class="bi bi-telephone"></i> Phone Number:</span>
+                    <span><i class="bi bi-telephone"></i> Phone Number : {{$data->phone_number}}</span>
                     <br>
-                    <span><i class="bi bi-calendar3"></i>Create Date:</span>
+                    <span><i class="bi bi-calendar3"></i>Create Date : {{$data->created_date}}</span>
                     <br>
-                    <span><i class="bi bi-journal"></i></i>Notes:</span>
+                    <span><i class="bi bi-journal"></i></i>Notes : {{$data->reason}}</span>
                     <br>
-                    <span><i class="bi bi-check2"></i>is Active : Yes</span>
+                    <span><i class="bi bi-check2"></i>is Active :
+                        @if ($data->is_active === 1)
+                        yes
+                        @else
+                        no
+                        @endif
+                    </span>
                     <br>
                     <div class="d-flex justify-content-end">
-                        <button class="primary-empty">Unblock</button>
+                        <a href="{{route('admin.block.history.unblock',$data->id)}}" class="primary-empty"> Unblock </a>
                     </div>
                 </div>
             </div>
-
+            @endforeach
+            {{$blockData->links('pagination::bootstrap-5')}}
         </div>
     </div>
 </div>
+@endsection
+
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/blockHistory.js') }}"></script>
 @endsection

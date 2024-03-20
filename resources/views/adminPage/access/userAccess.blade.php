@@ -21,7 +21,6 @@
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
 </div>
-</div>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}" class="active-link">Access</a>
 <div class="dropdown record-navigation">
@@ -43,7 +42,7 @@
     <h3 class="main-heading">User Access</h3>
     <div class="section">
         <div>
-            <div class="form-floating w-25 m-3">
+            <div class="form-floating m-3 account-type-drop-down">
                 <select class="form-select role-selected" name="role_name" id="accountType">
                     <option value="all">All</option>
                     <option value="admin">Admin</option>
@@ -80,29 +79,37 @@
         </div>
 
         <div class="mobile-listing">
+            @foreach ($userAccessData as $data )
             <div class="mobile-list">
                 <div class="main-section">
-                    <h5 class="heading">John Smith</h5>
+                    <h5 class="heading">{{$data->first_name}}</h5>
                     <div class="detail-box">
                         <span>
-                            Account Type: Admin
+                            Account Type: {{$data->name}}
                         </span>
                     </div>
                 </div>
                 <div class="details">
-                    <span><i class="bi bi-telephone"></i> Phone: 1234567890</span>
+                    <span><i class="bi bi-telephone"></i> Phone: {{$data->mobile}}</span>
                     <br>
-                    <span><i class="bi bi-check-lg"></i></i>Status: Pending</span>
+                    <span><i class="bi bi-check-lg"></i></i>Status: {{$data->status}}</span>
                     <br>
                     <span><i class="bi bi-journal"></i>Open Requests: 123</span>
                     <br>
                     <div class="d-flex justify-content-end">
-                        <a href="" class="primary-empty" type="button">Edit</a>
+                        <a href="{{route('admin.user.accessEdit',$data->user_id)}}" class="primary-empty" type="button">Edit</a>
                     </div>
                 </div>
             </div>
+            @endforeach
+            {{$userAccessData->links('pagination::bootstrap-5')}}
         </div>
 
     </div>
 </div>
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
 @endsection

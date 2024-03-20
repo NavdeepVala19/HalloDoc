@@ -281,6 +281,9 @@
                         <a class="primary-empty" type="button" href="{{route('admin.search.records.delete', $data->id)}}">
                             Delete Permanently
                         </a>
+                        <a class="primary-empty" type="button" href="">
+                            View Case
+                        </a>
                     </div>
                 </div>
                 @endforeach
@@ -292,4 +295,9 @@
 
 
 
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminPage/searchRecords.js') }}"></script>
 @endsection

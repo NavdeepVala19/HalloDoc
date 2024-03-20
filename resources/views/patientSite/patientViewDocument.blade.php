@@ -22,8 +22,7 @@
 
     <div class="head-btn">
         <h2>Documents</h2>
-        <a type="button" class="primary-empty btn" href="{{route('patientDashboardData')}}"> <i
-                class="bi bi-chevron-left"></i> Back</a>
+        <a type="button" class="primary-empty btn" href="{{route('patientDashboardData')}}"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
     <form action="{{route('patientViewDocuments')}}" method="post" enctype="multipart/form-data">
@@ -66,8 +65,7 @@
         <table class="table">
             <thead class="table-secondary">
                 <tr>
-                    <td><input class="form-check-input master-checkbox" type="checkbox" id="flexCheckDefault" name=""
-                            value="">
+                    <td><input class="form-check-input master-checkbox" type="checkbox" id="flexCheckDefault" name="" value="">
                     </td>
                     <td></td>
                     <td>Uploader</td>
@@ -79,16 +77,13 @@
             <tbody>
                 <tr>
                     @foreach ($documents as $document)
-                    <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault"
-                            name="selected_files[]" value="{{$document->id}}"></td>
+                    <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault" name="selected_files[]" value="{{$document->id}}"></td>
                     <td><i class="bi bi-filetype-doc"></i> {{$document->file_name}}</td>
                     <td>Testing test</td>
                     <td>{{$document->created_at}}</td>
-                    <td> <a href="{{route('downloadOne', $document->id)}}" class="primary-empty cloud-down"> <i
-                                class="bi bi-cloud-download "></i> </a> </td>
+                    <td> <a href="{{route('downloadOne', $document->id)}}" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
                 </tr>
-                @endforeach
-
+                    @endforeach
             </tbody>
         </table>
         {{$documents->links('pagination::bootstrap-5')}}
@@ -117,4 +112,9 @@
 </div>
 
 
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

@@ -257,7 +257,7 @@
                 <!--  SUBMIT and CANCEL Buttons -->
                 <div class="buttons">
                     <button class="primary-fill btn-submit" type="submit">Submit</button>
-                    <button class="primary-empty btn-cancel" type="cancel">Cancel</button>
+                    <button class="primary-empty btn-cancel" type="reset">Cancel</button>
                 </div>
 
 
@@ -267,4 +267,8 @@
 </div>
 </div>
 
+@endsection
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

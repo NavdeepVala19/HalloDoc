@@ -29,7 +29,6 @@ class patientController extends Controller
 
     public function create(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'string|min:2|max:30',
@@ -40,7 +39,6 @@ class patientController extends Controller
             'city' => 'min:2|max:30',
             'zipcode' => 'numeric',
             'state' => 'min:2|max:30',
-            'room' => 'numeric',
         ]);
 
 
@@ -127,8 +125,6 @@ class patientController extends Controller
         $requestUsers->state = $request->state;
         $requestUsers->zipcode = $request->zipcode;
         $requestUsers->save();
-
-
 
 
         $currentTime = Carbon::now();
