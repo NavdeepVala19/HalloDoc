@@ -141,7 +141,7 @@ to providers based on patient’s region using this pop-up. --}}
                     @enderror
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" name="description" placeholder="Description" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control" name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Description</label>
                 </div>
             </div>

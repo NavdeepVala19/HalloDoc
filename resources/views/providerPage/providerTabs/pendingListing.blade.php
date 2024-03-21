@@ -207,15 +207,19 @@ pending state, providers need to send an agreement link to patients. --}}
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
                     <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'pending']) }}"
-                        class="btn-all filter-btn">All</a>
+                        data-category="all" class="btn-all filter-btn">All</a>
                     <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                        data-category="patient" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill green"></i>Patient</a>
                     <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                        data-category="family" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill yellow"></i>Family/Friend</a>
                     <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                        data-category="business" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill red"></i>Business</a>
                     <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                        data-category="concierge" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
             <div class="table-responsive">

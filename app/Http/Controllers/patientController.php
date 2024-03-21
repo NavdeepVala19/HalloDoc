@@ -43,7 +43,6 @@ class patientController extends Controller
             'zipcode' => 'digits:6',
         ]);
 
-        dd("ss");
         $isEmailStored = users::where('email', $request->email)->pluck('email');
 
         if ($request->email != $isEmailStored) {

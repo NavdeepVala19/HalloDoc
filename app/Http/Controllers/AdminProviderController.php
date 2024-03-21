@@ -247,7 +247,7 @@ class AdminProviderController extends Controller
 
 
         foreach ($request->region_id as $region) {
-            PhysicianRegion::insert([
+            PhysicianRegion::create([
                 [
                     'provider_id' => $providerData->id,
                     'region_id' => $region

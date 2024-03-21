@@ -42,8 +42,6 @@
             </h1>
             <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
-
-
         <div class="section">
             <div class="grid-2">
                 <div class="d-flex align-items-center gap-4">
@@ -68,13 +66,17 @@
                     </div>
                 </div>
             </div>
-            <div class="form-floating mb-3">
-                <textarea class="form-control" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Patient Notes</label>
-            </div>
-            <div class="text-end">
-                <button class="primary-fill">Save Changes</button>
-            </div>
+            <form action="{{ route('admin.store.note') }}" method="POST">
+                @csrf
+                <input type="text" value="{{ $id }}" name="requestId" hidden>
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" name="admin_note" placeholder="injury" id="floatingTextarea2"></textarea>
+                    <label for="floatingTextarea2">Additional Notes</label>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="primary-fill">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection

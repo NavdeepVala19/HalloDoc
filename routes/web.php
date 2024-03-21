@@ -402,6 +402,8 @@ Route::get('admin/view/case/{id?}', [AdminController::class, 'viewCase'])->name(
 
 // Admin View Notes
 Route::get('admin/view/notes/{id}', [AdminController::class, 'viewNote'])->name('admin.view.note');
+// Store Additional Note entered by Admin 
+Route::post('/admin/store/notes', [AdminController::class, 'storeNote'])->name('admin.store.note');
 
 // Admin View Uploads
 Route::get('admin/view/uploads/{id}', [AdminController::class, 'viewUpload'])->name('admin.view.upload');

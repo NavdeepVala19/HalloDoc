@@ -68,10 +68,10 @@ giving service to the patient. --}}
                 <input type="text" name="requestId" class="case-id" value="" hidden>
                 {{-- If the provider selects the housecall, then that request will be in same state, but status changes from MdEnRoute to MdEnSite --}}
                 <button type="button" class="primary-empty housecall-btn">Housecall</button>
-                <input type="text" class="house_call" name="house_call" hidden>
+                <input type="text" class="house_call" name="house_call" hidden required>
                 {{-- If the provider selects the consult, then that request will move into Conclude state. --}}
                 <button type="button" class="primary-empty consult-btn">Consult</button>
-                <input type="text" class="consult" name="consult" hidden>
+                <input type="text" class="consult" name="consult" hidden required>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
                 {{-- <button class="primary-fill encounter-save-btn">Save</button> --}}
@@ -167,15 +167,19 @@ giving service to the patient. --}}
                     </form>
                     <div class="src-category d-flex gap-3 align-items-center">
                         <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'active']) }}"
-                            class="btn-all filter-btn">All</a>
+                            data-category="all" class="btn-all filter-btn">All</a>
                         <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'active']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                            data-category="patient" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill green"></i>Patient</a>
                         <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'active']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                            data-category="family" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill yellow"></i>Family/Friend</a>
                         <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'active']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                            data-category="business" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill red"></i>Business</a>
                         <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'active']) }}"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                            data-category="concierge" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill blue"></i>Concierge</a>
                     </div>
                 </div>
                 <div class="table-responsive">

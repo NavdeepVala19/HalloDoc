@@ -144,15 +144,15 @@
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'new']) }}"
+                    <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'new']) }}" data-category="all"
                         class="btn-all filter-btn">All</button>
-                        <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'new']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'new']) }}" data-category="patient"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                        <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'new']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'new']) }}" data-category="family"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                        <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'new']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'new']) }}"  data-category="business"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                        <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'new']) }}"
+                        <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'new']) }}" data-category="concierge"
                             class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>

@@ -10,4 +10,6 @@ class RequestClosed extends Model
     use HasFactory;
 
     protected $table = 'request_closed';
+
+    protected $guarded = [];
 }

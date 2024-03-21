@@ -196,5 +196,9 @@
 @endsection
 
 @section('script')
+    {{-- FullCalendar JQuery Plugin --}}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
+    {{-- Custom Script for Implementation of Scheduling --}}
     <script defer src="{{ URL::asset('assets/providerPage/providerScheduling.js') }}"></script>
 @endsection

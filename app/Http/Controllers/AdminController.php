@@ -32,7 +32,7 @@ use App\Mail\SendAgreement;
 use App\Models\BlockRequest;
 // To create zip, used to download multiple documents at once
 use App\Models\RequestNotes;
-use App\Models\requestTable;
+use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
 use App\Models\RequestClosed;
@@ -58,11 +58,17 @@ class AdminController extends Controller
     {
         // Total count of cases as per the status (displayed in all listing pages)
         $newCasesCount = RequestStatus::where('status', 1)->count(); // unassigned case, assigned to provider but not accepted
+        // $newCasesCount = RequestTable::where('status', 1)->count(); // unassigned case, assigned to provider but not accepted
         $pendingCasesCount = RequestStatus::where('status', 3)->count(); //accepted by provider, pending state
+        // $pendingCasesCount = RequestTable::where('status', 3)->count(); //accepted by provider, pending state
         $activeCasesCount = RequestStatus::where('status', 4)->orWhere('status', 5)->count(); //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
+        // $activeCasesCount = RequestTable::where('status', 4)->orWhere('status', 5)->count(); //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
         $concludeCasesCount = RequestStatus::where('status', 6)->count();
+        // $concludeCasesCount = RequestTable::where('status', 6)->count();
         $tocloseCasesCount = RequestStatus::where('status', 2)->orWhere('status', 7)->count();
+        // $tocloseCasesCount = RequestTable::where('status', 2)->orWhere('status', 7)->count();
         $unpaidCasesCount = RequestStatus::where('status', 9)->count();
+        // $unpaidCasesCount = RequestTable::where('status', 9)->count();
 
         return [
             'newCase' => $newCasesCount,
@@ -79,23 +85,27 @@ class AdminController extends Controller
     {
         if ($status == 'new') {
             $cases = RequestStatus::with('request')->where('status', 1)->orderByDesc('id')->paginate(10);
-            // $cases = RequestStatus::with('request')->where('status', 1)->orderByDesc('id')->get();
-            // dd($cases);
+            // $cases = RequestTable::with('requestClient')->where('status', 1)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'pending') {
             $cases = RequestStatus::with('request')->where('status', 3)->orderByDesc('id')->paginate(10);
+            // $cases = RequestTable::with('requestClient')->where('status', 3)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'active') {
             $cases = RequestStatus::with('request')->where('status', 4)->orWhere('status', 5)->orderByDesc('id')->paginate(10);
+            // $cases = RequestTable::with('requestClient')->where('status', 4)->orWhere('status', 5)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'conclude') {
             $cases = RequestStatus::with('request')->where('status', 6)->orderByDesc('id')->paginate(10);
+            // $cases = RequestTable::with('requestClient')->where('status', 6)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'toclose') {
             $cases = RequestStatus::with('request')->where('status', 2)->orWhere('status', 7)->orderByDesc('id')->paginate(10);
+            // $cases = RequestTable::with('requestClient')->where('status', 2)->orWhere('status', 7)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
         } else if ($status == 'unpaid') {
             $cases = RequestStatus::with('request')->where('status', 9)->orderByDesc('id')->paginate(10);
+            // $cases = RequestTable::with('requestClient')->where('status', 9)->orderByDesc('id')->paginate(10);
             return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
         }
     }
@@ -130,11 +140,13 @@ class AdminController extends Controller
                 $cases = RequestStatus::where('status', 1)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 1)->where('request_type_id', $this->getCategoryId($category));
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 3)->where('request_type_id', $this->getCategoryId($category));
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where(function ($query) {
@@ -142,11 +154,13 @@ class AdminController extends Controller
                 })->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where(function ($query) {$query->where('status', 4)->orWhere('status', 5);}->where('request_type_id', $this->getCategoryId($category));
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 6)->where('request_type_id', $this->getCategoryId($category));
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where(function ($query) {
@@ -154,11 +168,13 @@ class AdminController extends Controller
                 })->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where(function ($query) {$query->where('status', 2)->orWhere('status', 7);}->where('request_type_id', $this->getCategoryId($category));
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($category) {
                     $q->where('request_type_id', $this->getCategoryId($category));
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 9)->where('request_type_id', $this->getCategoryId($category));
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
             }
         }
@@ -185,6 +201,7 @@ class AdminController extends Controller
                             $query->where('first_name', 'like', "%$request->search%");
                         });
                     })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 1)->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
                 $cases = RequestStatus::where('status', 3)
@@ -194,6 +211,7 @@ class AdminController extends Controller
                             $query->where('first_name', 'like', "%$request->search%");
                         });
                     })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 3)->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
                 $cases = RequestStatus::where(function ($query) {
@@ -204,6 +222,7 @@ class AdminController extends Controller
                         $query->where('first_name', 'like', "%$request->search%");
                     });
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where(function ($query) {$query->where('status', 4)->orWhere('status', 5);})->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
                 $cases = RequestStatus::where('status', 6)->whereHas('request', function ($q) use ($request) {
@@ -212,6 +231,7 @@ class AdminController extends Controller
                         $query->where('first_name', 'like', "%$request->search%");
                     });
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 6)->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
                 $cases = RequestStatus::where(function ($query) {
@@ -222,6 +242,7 @@ class AdminController extends Controller
                         $query->where('first_name', 'like', "%$request->search%");
                     });
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where(function ($query) {$query->where('status', 2)->orWhere('status', 7);})->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminTocloseListing', compact('cases', 'count'));
             } else if ($status == 'unpaid') {
                 $cases = RequestStatus::where('status', 9)->whereHas('request', function ($q) use ($request) {
@@ -230,6 +251,7 @@ class AdminController extends Controller
                         $query->where('first_name', 'like', "%$request->search%");
                     });
                 })->orderByDesc('id')->paginate(10);
+                // $cases = RequestTable::where('status', 9)->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count'));
             }
         } else {
@@ -241,7 +263,7 @@ class AdminController extends Controller
                                 $query->where('first_name', 'like', '%' . $request->search . '%');
                             });
                     })->orderByDesc('id')->paginate(10);
-
+                // $cases = RequestTable::where('status', 1)->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
                 return view('adminPage.adminTabs.adminNewListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'pending') {
 
@@ -252,6 +274,8 @@ class AdminController extends Controller
                                 $query->where('first_name', 'like', '%' . $request->search . '%');
                             });
                     })->orderByDesc('id')->paginate(10);
+
+                // $cases = RequestTable::where('status', 3)->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
 
                 return view('adminPage.adminTabs.adminPendingListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'active') {
@@ -265,6 +289,8 @@ class AdminController extends Controller
                                 $query->where('first_name', 'like', '%' . $request->search . '%');
                             });
                     })->orderByDesc('id')->paginate(10);
+
+                // $cases = RequestTable::where(function ($query) {$query->where('status', 4)->orWhere('status', 5);})->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
 
                 return view('adminPage.adminTabs.adminActiveListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'conclude') {
@@ -277,6 +303,8 @@ class AdminController extends Controller
                             });
                     })->orderByDesc('id')->paginate(10);
 
+                // $cases = RequestTable::where('status', 6)->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
+
                 return view('adminPage.adminTabs.adminConcludeListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'toclose') {
 
@@ -290,6 +318,10 @@ class AdminController extends Controller
                             });
                     })->orderByDesc('id')->paginate(10);
 
+
+                // $cases = RequestTable::where(function ($query) {$query->where('status', 2)->orWhere('status', 7);})->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
+
+
                 return view('adminPage.adminTabs.adminToCloseListing', compact('cases', 'count', 'userData'));
             } else if ($status == 'unpaid') {
 
@@ -300,6 +332,8 @@ class AdminController extends Controller
                                 $query->where('first_name', 'like', '%' . $request->search . '%');
                             });
                     })->orderByDesc('id')->paginate(10);
+
+                // $cases = RequestTable::where('status', 9)->where('request_type_id', $this->getCategoryId($category))->where('first_name', 'like', "%$request->search%")->orWhereHas('requestClient', function ($query) use ($request) {$query->where('first_name', 'like', "%$request->search%");})->orderByDesc('id')->paginate(10);
 
                 return view('adminPage.adminTabs.adminUnpaidListing', compact('cases', 'count', 'userData'));
             }
@@ -338,7 +372,15 @@ class AdminController extends Controller
         $request->validate([
             'physician' => 'required|numeric'
         ]);
-        RequestStatus::where('request_id', $request->requestId)->update(['TransToPhysicianId' => $request->physician]);
+        RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
+        RequestStatus::create([
+            'request_id', $request->requestId,
+            'TransToPhysicianId' => $request->physician,
+            'status' => "1",
+            'admin' => '1',
+            'notes' => $request->assign_note
+        ]);
+
         $physician = Provider::where('id', $request->physician)->first();
         $physicianName = $physician->first_name . " " . $physician->last_name;
         return redirect()->back()->withErrors('physician', 'Select Physician to Assign case')->with('assigned', "Case Assigned Successfully to physician - {$physicianName}");
@@ -346,13 +388,17 @@ class AdminController extends Controller
 
     public function transferCase(Request $request)
     {
-        RequestStatus::where('request_id', $request->requestId)->where('TransToAdmin', true)
-            ->update([
-                'TransToPhysicianId' => $request->physician,
-                'TransToAdmin' => null,
-                'notes' => $request->notes,
-                'status' => 1
-            ]);
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 1,
+            'physician_id' => $request->physician
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'TransToPhysicianId' => $request->physician,
+            'status' => "1",
+            'admin' => '1',
+            'notes' => $request->assign_note
+        ]);
         return redirect()->back();
     }
 
@@ -365,20 +411,27 @@ class AdminController extends Controller
     // Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog
     public function cancelCase(Request $request)
     {
-        RequestTable::where('id', $request->requestId)->update(['case_tag' => $request->case_tag]);
-        RequestStatus::where('request_id', $request->requestId)->update(['status' => 2]);
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 2,
+            'case_tag' => $request->case_tag
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => '2',
+            'notes' => $request->reason
+        ]);
 
         // Check if there is an entry with the specified 'request_id' and 'notes' is null in RequestStatus
-        $statusEntry = RequestStatus::where('request_id', $request->requestId)->first();
+        // $statusEntry = RequestStatus::where('request_id', $request->requestId)->first();
 
-        if (!empty($statusEntry->notes)) {
-            // Entry exists with 'notes' as null, update in RequestStatus
-            RequestStatus::where('request_id', $request->requestId)
-                ->update(['notes' => $request->reason]);
-        } else {
-            // Entry doesn't exist or 'notes' is not null, perform insert in RequestStatus
-            RequestStatus::where('request_id', $request->requestId)->update(['notes' => $request->reason]);
-        }
+        // if (!empty($statusEntry->notes)) {
+        //     // Entry exists with 'notes' as null, update in RequestStatus
+        //     RequestStatus::where('request_id', $request->requestId)
+        //         ->update(['notes' => $request->reason]);
+        // } else {
+        //     // Entry doesn't exist or 'notes' is not null, perform insert in RequestStatus
+        //     RequestStatus::where('request_id', $request->requestId)->update(['notes' => $request->reason]);
+        // }
         return redirect()->back();
     }
 
@@ -408,7 +461,18 @@ class AdminController extends Controller
     // View Notes
     public function viewNote($id)
     {
-        return view('adminPage.pages.viewNotes');
+        $note = RequestNotes::where('request_id', $id)->first();
+        return view('adminPage.pages.viewNotes', compact('id', 'note'));
+    }
+
+    public function storeNote(Request $request)
+    {
+        dd($request->all());
+        RequestNotes::where('request_id', $request->requestId)->update([
+            'admin_notes' => $request->admin_note,
+        ]);
+
+        return redirect()->route('admin.view.note', compact('id'));
     }
 
     public function viewUpload($id)
@@ -510,7 +574,7 @@ class AdminController extends Controller
         } else if ($request->input('closeCaseBtn') == 'Close Case') {
             RequestStatus::where('request_id', $request->requestId)->update(['status' => 9]);
             $statusId = RequestStatus::where('request_id', $request->requestId)->pluck('id')->first();
-            RequestClosed::insert([
+            RequestClosed::create([
                 'request_id' => $request->requestId,
                 'request_status_id' => $statusId
             ]);
@@ -558,7 +622,7 @@ class AdminController extends Controller
     // Add Business Logic
     public function addBusiness(Request $request)
     {
-        HealthProfessional::insert([
+        HealthProfessional::create([
             'vendor_name' => $request->buisness_name,
             'profession' => $request->profession,
             'fax_number' => $request->fax_number,
@@ -608,7 +672,7 @@ class AdminController extends Controller
     // Send orders from action menu 
     public function sendOrder(Request $request)
     {
-        Orders::insert([
+        Orders::create([
             'vendor_id' => $request->vendor_id,
             'request_id' => $request->requestId,
             'fax_number' => $request->fax_number,
@@ -682,7 +746,7 @@ class AdminController extends Controller
         }
 
         foreach ($request->input('menu_checkbox') as $key => $value) {
-            RoleMenu::insert([
+            RoleMenu::create([
                 'role_id' => $roleId,
                 'menu_id' => $value
             ]);

@@ -6,7 +6,7 @@
 @endsection
 
 @section('username')
-{{ !empty($userData) ? $userData->username : '' }}
+    {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
 @section('nav-links')
@@ -158,15 +158,19 @@
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
                     <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'conclude']) }}"
-                        class="btn-all filter-btn">All</a>
+                        data-category="all" class="btn-all filter-btn">All</a>
                     <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'conclude']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
+                        data-category="patient" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill green"></i>Patient</a>
                     <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'conclude']) }}"
-                        class="d-flex gap-2 filter-btn "> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                        data-category="family" class="d-flex gap-2 filter-btn "> <i
+                            class="bi bi-circle-fill yellow"></i>Family/Friend</a>
                     <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'conclude']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
+                        data-category="business" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill red"></i>Business</a>
                     <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'conclude']) }}"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                        data-category="concierge" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
             <div class="table-responsive">
@@ -182,7 +186,8 @@
                     <tbody>
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request->request_type_id }}">
-                                <td>{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}</td>
+                                <td>{{ $case->request->requestClient->first_name }}
+                                    {{ $case->request->requestClient->last_name }}</td>
                                 <td>{{ $case->request->requestClient->phone_number }}</td>
                                 <td>{{ $case->request->requestClient->street }},
                                     {{ $case->request->requestClient->city }},

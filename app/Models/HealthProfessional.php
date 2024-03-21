@@ -14,6 +14,7 @@ class HealthProfessional extends Model
     use SoftDeletes;
 
     protected $table = 'health_professional';
+    protected $guarded = [];
 
     public function healthProfessionalType()
     {
