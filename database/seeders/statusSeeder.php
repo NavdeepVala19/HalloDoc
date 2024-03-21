@@ -26,10 +26,28 @@ class StatusSeeder extends Seeder
             ['id' => 8, 'status_type' => 'clear'], // admin clear case
             ['id' => 9, 'status_type' => 'unpaid'],
             ['id' => 10, 'status_type' => 'block'],
-            // ['id' => 2, 'status_type' => 'Pending'],
-            // ['id' => 11, 'status_type' => 'CancelledByProvider'],
+            ['id' => 11, 'status_type' => 'CancelledByPatient']
         ]);
 
         // to close case -> cancelled and closed
     }
 }
+
+
+// Request Status		 Dashboard Status
+// 1. Unassigned			New
+// -------
+// 2. Accepted			    Pending
+// -------
+// 4. MDEnRoute			    Active
+// 5. MDONSite			    Active
+// -------
+// 6. Conclude			    Conclude
+// -------
+// 3. Cancelled			    To-close
+// 7. CancelledByPatient	To-close
+// 8. Closed				To-close
+// -------
+// 9. Unpaid				Unpaid
+// -------
+// 10. Clear				Will not show in dashboard

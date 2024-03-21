@@ -10,6 +10,7 @@ class PhysicianRegion extends Model
     use HasFactory;
 
     protected $table = 'physician_region';
+    protected $guarded = [];
 
     public function regions()
     {

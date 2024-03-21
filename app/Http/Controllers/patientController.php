@@ -41,9 +41,9 @@ class patientController extends Controller
             'state' => 'min:2|max:30',
         ]);
 
-
         // store email and phoneNumber in users table
         $requestEmail = new users();
+        $requestEmail->username = $request->first_name . " " . $request->last_name;
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
         $requestEmail->save();
