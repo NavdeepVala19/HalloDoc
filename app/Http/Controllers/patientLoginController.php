@@ -99,7 +99,7 @@ class patientLoginController extends Controller
 
         users::where([
             'token' => $request->token
-        ])->update(['password_hash' => Hash::make($request->new_password)]);
+        ])->update(['password' => Hash::make($request->new_password)]);
 
 
         // users::where(['email' => $request->email])->delete();

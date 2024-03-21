@@ -23,13 +23,17 @@
     vertical-align: middle;
 }
 
-input[type="checkbox"] {
+#checkbox1 {
     border: 1px solid rgb(126, 122, 122);
     width: 25px;
     height: 25px;
 }
 
-#flexRadioDefault1 {
+#checkbox {
+    border: 1px solid rgb(126, 122, 122);
+}
+
+#flexRadioDefault {
     border: 1px solid black;
 }
 
@@ -42,3 +46,64 @@ input[type="checkbox"] {
     color: #3c9eff;
 }
 
+.mobile-listing {
+    display: none;
+}
+
+@media(max-width:550px) {
+    .new-provider-pop-up {
+        width: 350px;
+    }
+}
+
+
+
+@media(max-width:820px) {
+
+    .content-header {
+        flex-direction: column !important;
+    }
+
+    #listing-region-admin-provider {
+        width: 100%;
+    }
+
+    .listing-table {
+        display: none;
+    }
+
+    .provider-btn {
+        margin-top: 20px;
+    }
+
+    .mobile-listing {
+        display: block;
+        background-color: rgb(233, 245, 250)
+    }
+
+    .details.active {
+        display: block;
+    }
+
+    .detail-box {
+        padding: 0 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid grey;
+    }
+
+    .details span i {
+        margin-right: 10px;
+        color: rgb(0, 190, 232);
+    }
+
+    .details {
+        display: none;
+    }
+
+    .details span {
+        display: inline-block;
+        margin: 8px 25px;
+    }
+
+
+}

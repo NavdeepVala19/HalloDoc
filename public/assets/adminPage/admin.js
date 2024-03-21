@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     $(".cancel-case-btn").click(function () {
         $(".cancel-case").show();
         $(".overlay").show();
@@ -14,10 +15,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                            reason.id +
-                            '">' +
-                            reason.case_name +
-                            "</option>"
+                        reason.id +
+                        '">' +
+                        reason.case_name +
+                        "</option>"
                     );
                 });
             },
@@ -137,10 +138,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                            entry.id +
-                            '">' +
-                            entry.vendor_name +
-                            "</option>"
+                        entry.id +
+                        '">' +
+                        entry.vendor_name +
+                        "</option>"
                     );
                 });
             },
@@ -211,39 +212,80 @@ $(document).ready(function () {
 
     // ************************************* Shivesh *************************************
 
+
+
+    $(document).on("click", ".action-btn", function () {
+        var sibling = $(this).siblings(".actions-menubar:visible").length;
+
+        if (sibling > 0) {
+            $(this).siblings(".actions-menubar").hide();
+        } else {
+            $(this).siblings(".actions-menubar").show();
+        }
+    });
+
+
+    
+
+    // ***** This code is for getting filtername in admin dashboard (all,patient,family,concierge,business) *****
+    
+
+    var pathname = window.location.pathname;
+    var url = pathname.split('/');
+    var activeCategory = url[3];
+
+    if (!activeCategory) {
+        $(".btn-all.filter-btn").addClass("active-filter");
+    }
+
+
+    var filterBtns = $(".filter-btn");
+    filterBtns.map(function (index, element) {
+        if (element.dataset.category == activeCategory) {
+            $(element).addClass("active-filter");
+        }
+    });
+
+    // ************************************************************************************
+    
+    
+    
     // ***************** Fetching regions from regions table ******************
     $.ajax({
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-            // Assuming data is an array of reasons
+            
             data.forEach(function (region) {
-                $("#listing-region").append(
+                $(".listing-region").append(
                     '<option value="' + region.id + '">' + region.region_name + "</option>"
-                );
-            });
-        },
-        error: function (error) {
-            console.error(error);
-        },
+                    );
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+            
+        });
+    // ************************************************************************************
+    
 
-    });
-
-
-
+    
+    
+    
     // ***************** Filtering regions from dropdown button ******************
-
-    $('#listing-region').on('change', function () {
+    
+    $('.listing-region').on('change', function () {
         var token = $('meta[name="csrf-token"]').attr('content')
         // Store the selected option's ID
         var tab = $(".nav-link.active").attr('id');
         var words = tab.split("-");
         var activeStatus = words[1];
-
+        
         var selectedId = $(this).val();
-
+        
         $.ajax({
-            url: "/dropdown-data/",
+            url: "/dropdown-data",
             type: "POST",
             dataType: 'json',
             data: {
@@ -259,9 +301,12 @@ $(document).ready(function () {
             }
         });
     })
-
-
-
+    // ************************************************************************************
+    
+    
+    
+    
+    
     // ********************* Filtering AccountType in User Access Page ***********************
 
     $('#accountType').on('change', function () {
@@ -285,58 +330,39 @@ $(document).ready(function () {
     })
 });
 
+// ************************************************************************************
 
-    // Display different roles checkboxes as per the roles selected
-    $(".role-selected").on("change", function () {
-        let role = $(this).val();
-        $.ajax({
-            url: "/fetch-roles/" + role,
-            type: "GET",
-            success: function (data) {
-                $(".menu-section").empty();
-                data.forEach(function (menu) {
-                    let checkBox = `<div class="form-check">
+
+
+// Display different roles checkboxes as per the roles selected
+$(".role-selected").on("change", function () {
+    let role = $(this).val();
+    $.ajax({
+        url: "/fetch-roles/" + role,
+        type: "GET",
+        success: function (data) {
+            $(".menu-section").empty();
+            data.forEach(function (menu) {
+                let checkBox = `<div class="form-check">
                     <input class="form-check-input" name="menu_checkbox[]" value=${menu.id} type="checkbox"
                         id="menu_check_${menu.id}">
                         ${menu.name}
                     </label>
                 </div>`;
-                    $(".menu-section").append(checkBox);
-                });
-            },
-            error: function (error) {
-                console.error(error);
-            },
-        });
+                $(".menu-section").append(checkBox);
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
     });
+});
 
-    
-    // ************************************* Shivesh *************************************
 
-    $(document).on("click", ".action-btn", function () {
-        var sibling = $(this).siblings(".actions-menubar:visible").length;
 
-        if (sibling > 0) {
-            $(this).siblings(".actions-menubar").hide();
-        } else {
-            $(this).siblings(".actions-menubar").show();
-        }
-    });
 
-    $(".listing-region").on("change", function () {
-        // Store the selected option's ID
-        var selectedId = $(this).val();
-        $.ajax({
-            url: "/dropdown-data/" + selectedId,
-            type: "GET",
-            dataType: "json",
-            success: function (data) {
-                $("#dropdown-data-body").html(data.html);
-            },
-            error: function (error) {
-                console.error(error);
-            },
-        });
-    });
 
-    
+
+
+
+

@@ -20,11 +20,11 @@ return new class extends Migration
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->unsignedBigInteger('admin_id')->nullable();
-            $table->foreign('admin_id')->references('id')->on('roles');
+            $table->foreign('admin_id')->references('id')->on('admin');
             $table->unsignedBigInteger('request_id')->nullable();
             $table->foreign('request_id')->references('id')->on('request');
             $table->unsignedBigInteger('provider_id')->nullable();
-            $table->foreign('provider_id')->references('id')->on('roles');
+            $table->foreign('provider_id')->references('id')->on('provider');
             $table->date('created_date')->nullable();
             $table->date('sent_date')->nullable();
             $table->boolean('is_sms_sent')->nullable();

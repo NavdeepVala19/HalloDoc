@@ -9,7 +9,7 @@
 
     <!-- this div is for back button -->
 
-   
+
     <div class="header_part">
         <a href="{{route('submitRequest')}}" type="button" class="primary-empty">
             < Back</a>
@@ -173,8 +173,10 @@
 
                         <div class="col-md patient-details-col3 me-4">
                             <label for="">Date of Birth</label>
-                            <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 " id="" name="date_of_birth">
-
+                            <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 @error('date_of_birth') is-invalid @enderror" id="" name="date_of_birth">
+                            @error('date_of_birth')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                     </div>
@@ -215,10 +217,8 @@
                     <div class="row patient-location-row3">
 
                         <div class="col-md patient-location-col3 me-4">
-                            <input type="number" placeholder="Room/Suite(optional)" name="room" class="form-control patient-location-room-text w-50  @error('room') is-invalid @enderror" id="room" name="room">
-                            @error('room')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
+                            <input type="number" placeholder="Room/Suite(optional)" name="room" class="form-control patient-location-room-text w-50 " id="room" name="room">
+
                         </div>
 
 
@@ -230,7 +230,7 @@
 
                 <div class="buttons">
                     <button class="primary-fill btn-submit" type="submit">Submit</button>
-                    <button class="primary-empty btn-cancel" type="cancel">Cancel</button>
+                    <button class="primary-empty btn-cancel" type="reset">Cancel</button>
                 </div>
 
 

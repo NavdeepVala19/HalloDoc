@@ -11,9 +11,9 @@ table td {
     background-color: rgba(128, 128, 128);
 }
 
-.grid-6 {
+.grid-4 {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     margin-bottom: 25px;
     gap: 20px;
 }
@@ -27,8 +27,8 @@ table td {
     display: none;
 }
 
-@media (max-width: 1300px) {
-    .grid-6 {
+@media (max-width: 1200px) {
+    .grid-4 {
         grid-template-columns: 1fr;
     }
 }

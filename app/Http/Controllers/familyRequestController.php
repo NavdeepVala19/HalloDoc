@@ -20,23 +20,23 @@ class familyRequestController extends Controller
     public function create(Request $request)
     {
 
-        // $request->validate([
-        //     'first_name' => 'required|min:2|max:30',
-        //     'last_name' => 'min:2|max:30',
-        //     'date_of_birth'=>'required',
-        //     'email' => 'required|email|min:2|max:30',
-        //     'phone_number' => 'required|numeric|digits:10',
-        //     'street' => 'min:2|max:30',
-        //     'city' => 'min:2|max:30',
-        //     'zipcode' => 'numeric',
-        //     'state' => 'min:2|max:30',
-        //     'room' => 'numeric',
-        //     'family_first_name' => 'required|min:2|max:30',
-        //     'family_last_name' => 'min:2|max:30',
-        //     'family_email' => 'required|email|min:2|max:30',
-        //     'family_phone_number' => 'required',
-        //     'family_relation' => 'required',
-        // ]);
+        $request->validate([
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'min:2|max:30',
+            'date_of_birth'=>'required',
+            'email' => 'required|email|min:2|max:30',
+            'phone_number' => 'required',
+            'street' => 'min:2|max:30',
+            'city' => 'min:2|max:30',
+            'zipcode' => 'numeric',
+            'state' => 'min:2|max:30',
+            'room' => 'numeric',
+            'family_first_name' => 'required|min:2|max:30',
+            'family_last_name' => 'min:2|max:30',
+            'family_email' => 'required|email|min:2|max:30',
+            'family_phone_number' => 'required',
+            'family_relation' => 'required',
+        ]);
 
 
         // store email and phoneNumber in users table
@@ -44,7 +44,7 @@ class familyRequestController extends Controller
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
 
-        // $requestEmail->save();
+        $requestEmail->save();
 
 
 
@@ -52,10 +52,6 @@ class familyRequestController extends Controller
 
         $familyRequest = new RequestTable();
 
-
-
-
-        // $familyRequest->status = $requestStatus->id;
         $familyRequest->user_id = $requestEmail->id;
         $familyRequest->request_type_id = $request->request_type;
         $familyRequest->first_name = $request->family_first_name;
@@ -69,8 +65,6 @@ class familyRequestController extends Controller
         $requestStatus->request_id = $familyRequest->id;
         $requestStatus->status = 1;
         $requestStatus->save();
-
-
 
 
         if (!empty($requestStatus)) {
@@ -89,7 +83,7 @@ class familyRequestController extends Controller
         $patientRequest->city = $request->city;
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
-        $patientRequest->notes = $request->symptoms;
+
         $patientRequest->save();
 
 
@@ -136,8 +130,13 @@ class familyRequestController extends Controller
         $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
 
 
-        $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
-        // dd($confirmationNumber);
+        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
+        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
+        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
+
+
+
+        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
         if (!empty($familyRequest->id)) {
             $familyRequest->update(['confirmation_no' => $confirmationNumber]);

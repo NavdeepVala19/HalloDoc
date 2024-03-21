@@ -13,8 +13,6 @@ class TwilioService
     }
     public function sendSMS($to, $message)
     {
-        print_r($to);
-       
         return $this->client->messages->create($to, [
             'from' => env('TWILIO_PHONE_NUMBER'),
             'body' => $message,

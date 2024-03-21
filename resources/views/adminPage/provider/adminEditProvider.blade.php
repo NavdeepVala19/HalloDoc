@@ -18,7 +18,7 @@
         <li><a class="dropdown-item" href="">Invoicing</a></li>
     </ul>
 </div>
-</div>
+
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="{{ route('admin.access.view') }}">Access</a>
 <div class="dropdown record-navigation">
@@ -52,14 +52,14 @@
 
             <div class="grid-2">
                 <div class="form-floating ">
-                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name" disabled value="{{ $getProviderData->users->username}}">
+                    <input type="text" name="user_name" class="form-control provider-username-field" id="floatingInput" placeholder="User Name" disabled value="{{ $getProviderData->users->username}}">
                     <label for="floatingInput">User Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="password" name="password" class="form-control" id="floatingInput" value="{{$getProviderData->users->password}}" placeholder="password">
+                    <input type="password" name="password" class="form-control provider-password-field" id="floatingInput" value="{{$getProviderData->users->password}}" placeholder="password" disabled>
                     <label for="floatingInput">Password</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -67,17 +67,18 @@
                 </div>
 
                 <div class="form-floating status-select">
-                    <select class="form-select">
+                    <select class="form-select" id="provider-status" disabled name="status_type" value="{{$getProviderData->status}}">
                         <option selected>Status</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Active</option>
-                        <option value="3">Not Active</option>
+                        <option value="pending" {{$getProviderData->status == 'pending'? "selected" :""}}>Pending</option>
+                        <option value="active" {{$getProviderData->status == 'active'?  "selected":""}}>Active</option>
+                        <option value="inactive" {{$getProviderData->status == 'inactive'? "selected" :""}}>Not Active</option>
                     </select>
                     </input>
                 </div>
 
+
                 <div class="form-floating role-select">
-                    <select class="form-select">
+                    <select class="form-select" id="provider-role" disabled name="role">
                         <option selected>Role</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
@@ -87,12 +88,11 @@
                 </div>
 
                 <div>
-
                 </div>
 
                 <div class="d-flex flex-row justify-content-end gap-3">
-                    <button class="primary-fill">Edit</button>
-                    <button class="primary-empty">Reset Password</button>
+                    <button type="button" class="primary-fill" id="provider-credentials-edit-btn">Edit</button>
+                    <button class="primary-empty" type="button" id="provider-reset-password-btn">Reset Password</button>
                 </div>
             </div>
 
@@ -103,7 +103,7 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control" id="floatingInput" value="{{ $getProviderData->first_name}}" placeholder="First Name">
+                    <input type="text" name="first_name" class="form-control provider-firstname" id="floatingInput" value="{{ $getProviderData->first_name}}" placeholder="First Name" disabled>
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name" value="{{ $getProviderData->last_name}}">
+                    <input type="text" name="last_name" class="form-control provider-lastname" id="floatingInput" placeholder="Last Name" value="{{ $getProviderData->last_name}}" disabled>
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -119,42 +119,63 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->email}}" name="email">
+                    <input type="email" class="form-control provider-email" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->email}}" name="email" disabled>
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->mobile}}" placeholder="Phone Number">
+                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->mobile}}" placeholder="Phone Number" disabled>
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
 
                 <div class="form-floating ">
-                    <input type="text" name="medical_license" class="form-control" id="floatingInput" value="{{ $getProviderData->medical_license}}" placeholder="Medical License">
+                    <input type="text" name="medical_license" class="form-control provider-license" id="floatingInput" value="{{ $getProviderData->medical_license}}" placeholder="Medical License" disabled>
                     <label for="floatingInput">Medical license # </label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="npi_number" class="form-control" id="floatingInput" value="{{ $getProviderData->npi_number}}" placeholder="NPI Number">
+                    <input type="text" name="npi_number" class="form-control provider-npi" id="floatingInput" value="{{ $getProviderData->npi_number}}" placeholder="NPI Number" disabled>
                     <label for="floatingInput">NPI Number</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->syncEmailAddress}}" name="alt_email">
+                    <input type="email" class="form-control provider-alt-email" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->syncEmailAddress}}" name="alt_email" disabled>
                     <label for="floatingInput">Email</label>
                 </div>
 
                 <div class="d-flex gap-4 ">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-somnath">
                         <label class="form-check-label" for="flexCheckDefault">
-                            District of Columbia
+                            Somanth
                         </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-dwarka">
                         <label class="form-check-label" for="flexCheckDefault">
-                            New York
+                            Dwarka
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-rajkot">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Rajkot
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-bhavnagar">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Bhavnagar
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-ahmedabad">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Ahmedabad
                         </label>
                     </div>
                 </div>
@@ -164,7 +185,7 @@
                 </div>
 
                 <div class="d-flex flex-row justify-content-end">
-                    <button class="primary-fill">Edit</button>
+                    <button class="primary-fill" type="button" id="provider-info-btn">Edit</button>
                 </div>
 
             </div>
@@ -172,17 +193,17 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1" value="{{ $getProviderData->address1}}">
+                    <input type="text" name="address1" class="form-control provider-bill-add1" id="floatingInput" placeholder="Address 1" value="{{ $getProviderData->address1}}" disabled>
                     <label for="floatingInput">Address 1</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2" value="{{ $getProviderData->address2}}">
+                    <input type="text" name="address2" class="form-control provider-bill-add2" id="floatingInput" placeholder="Address 2" value="{{ $getProviderData->address2}}" disabled>
                     <label for="floatingInput">Address 2</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city" value="{{ $getProviderData->city}}">
+                    <input type="text" name="city" class="form-control provider-bill-city" id="floatingInput" placeholder="city" value="{{ $getProviderData->city}}" disabled>
                     <label for="floatingInput">City</label>
                 </div>
 
@@ -200,11 +221,11 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="zip" class="form-control" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip}}">
+                    <input type="text" name="zip" class="form-control provider-bill-zip" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip}}" disabled>
                     <label for="floatingInput">Zip</label>
                 </div>
 
-                <input type="tel" name="alt_phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->alt_phone}}" placeholder="Phone Number">
+                <input type="tel" name="alt_phone_number" class="form-control phone alt-phone-provider" id="telephone" value="{{ $getProviderData->alt_phone}}" placeholder="Phone Number" disabled>
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -214,7 +235,7 @@
                 </div>
 
                 <div class="d-flex flex-row justify-content-end">
-                    <button class="primary-fill">Edit</button>
+                    <button class="primary-fill" type="button" id="provider-bill-edit-btn">Edit</button>
                 </div>
 
 
@@ -414,4 +435,10 @@
 </div>
 </div>
 
+@endsection
+
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
 @endsection

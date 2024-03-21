@@ -1,12 +1,13 @@
 
 $(document).ready(function () {
 
+    // this code is for admin/new
     $('#filterExportBtnNew').click(function (e) {
         e.preventDefault();
 
-        var search_value = $(".search-patient-new").val();
-        var region_value = $(".listing-region-new").val() === "All Regions" ? "" : $(".listing-region-new").val();
-        var category_value = $(".filter-btn").val();
+        var search_value = $(".search-patient").val();
+        var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").find('option:selected').text();
+        var category_value = $(".filter-btn.active-filter").attr('data-category');
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
@@ -18,84 +19,84 @@ $(document).ready(function () {
     })
 
 
-
-    $('#filterExportBtn').click(function (e) {
+    // this code is for admin/pending
+    $('#filterExportBtnPending').click(function (e) {
         e.preventDefault();
 
-        var search_value = $(".search-patient-pending").val();
-        var region_value = $(".listing-region-pending").val() === "All Regions" ? "" : $(".listing-region-pending").val();
-        var category_value = $(".filter-btn").val();
+        var search_value = $(".search-patient").val();
+        var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
+        var category_value = $(".filter-btn.active-filter").attr('data-category');
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/new/exportPending");
+        $('#filterExport').attr('action', "/admin/pending/exportPending");
         $('#filterExport').submit();
 
     })
 
 
-
-    $('#filterExportBtn').click(function (e) {
+    // this code is for admin/active
+    $('#filterExportBtnActive').click(function (e) {
         e.preventDefault();
 
-        var search_value = $(".search-patient-active").val();
-        var region_value = $(".listing-region-active").val() === "All Regions" ? "" : $(".listing-region-active").val();
-        var category_value = $(".filter-btn").val();
+        var search_value = $(".search-patient").val();
+        var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
+        var category_value = $(".filter-btn.active-filter").attr('data-category');
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/new/exportActive");
+        $('#filterExport').attr('action', "/admin/active/exportActive");
         $('#filterExport').submit();
 
     })
 
-
-    $('#filterExportBtn').click(function (e) {
+    // this code is for admin/conclude
+    $('#filterExportBtnConclude').click(function (e) {
         e.preventDefault();
 
-        var search_value = $(".search-patient-conclude").val();
-        var region_value = $(".listing-region-conclude").val() === "All Regions" ? "" : $(".listing-region-conclude").val();
-        var category_value = $(".filter-btn").val();
+        var search_value = $(".search-patient").val();
+        var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
+        var category_value = $(".filter-btn.active-filter").attr('data-category');
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/new/exportConclude");
+        $('#filterExport').attr('action', "/admin/conclude/exportConclude");
         $('#filterExport').submit();
 
     })
 
 
-
-    $('#filterExportBtn').click(function (e) {
+    // this code is for admin/toclose
+    $('#filterExportBtnToClose').click(function (e) {
         e.preventDefault();
 
-        var search_value = $(".search-patient-toclose").val();
-        var region_value = $(".listing-region-toclose").val() === "All Regions" ? "" : $(".listing-region-toclose").val();
-        var category_value = $(".filter-btn").val();
+        var search_value = $(".search-patient").val();
+        var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
+        var category_value = $(".filter-btn.active-filter").attr('data-category');
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/new/exportToClose");
+        $('#filterExport').attr('action', "/admin/toclose/exportToClose");
         $('#filterExport').submit();
 
     })
 
 
-
-    $('#filterExportBtn').click(function (e) {
+    // this code is for admin/unpaid
+    $('#filterExportBtnUnPaid').click(function (e) {
         e.preventDefault();
 
-        var search_value = $(".search-patient-unpaid").val();
-        var region_value = $(".listing-region-unpaid").val() === "All Regions" ? "" : $(".listing-region-unpaid").val();
-        var category_value = $(".filter-btn").val();
+        var search_value = $(".search-patient").val();
+        var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
+        var category_value = $(".filter-btn.active-filter").attr('data-category');
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);

@@ -13,9 +13,9 @@
 
 <!-- main content -->
 
-<div class="container-fluid main-section">
+<div class="container-fluid main-section w-45">
 
-    <div class="main-container">
+    <div class="password-reset">
 
         <div class="details">
             <h1>Reset Password</h1>
@@ -25,6 +25,7 @@
             <form action="{{ route('reset.password.post')}}" method="post">
                 @csrf
                 <input type="hidden" name="token" value="{{ $token }}">
+
                 <div class="mb-4 password">
                     <i class="bi bi-eye-fill person-eye"></i>
                     <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="exampleInputPassword1" placeholder="New Password" name="new_password">
@@ -53,4 +54,9 @@
 </div>
 
 
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

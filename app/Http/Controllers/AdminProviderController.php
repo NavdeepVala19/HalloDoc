@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\allusers;
 use App\Models\users;
 use App\Models\Regions;
+use App\Models\SMSLogs;
+use Twilio\Rest\Client;
+use App\Models\allusers;
+use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
 use Illuminate\Http\Request;
@@ -33,21 +36,142 @@ class AdminProviderController extends Controller
     }
 
 
+
+    // ****************** This code is for Filtering Physician through regions ************************
+
+    public function filterPhysicianThroughRegions(Request $request)
+    {
+
+        $physicianRegions = PhysicianRegion::where('region_id', $request->regionId)->pluck('provider_id');
+
+        $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+
+        $data = view('/adminPage/provider/adminProviderFilterData')->with('providersData', $providersData)->render();
+        return response()->json(['html' => $data]);
+    }
+
+
+
     // ****************** This code is for Sending Mail ************************
 
     public function sendMailToContactProvider(Request $request, $id)
     {
 
+        $receipientData = Provider::where('id', $id)->get();
+        $receipientId = $id;
+        $receipientName = $receipientData->first()->first_name;
+        $receipientEmail = $receipientData->first()->email;
+        $receipientMobile = $receipientData->first()->mobile;
+
         $enteredText = $request->contact_msg;
 
-        $providerData = Provider::get()->where('id', $request->provider_id);
-        Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+        if ($request->contact == "email") {
+            // send email
+            $providerData = Provider::get()->where('id', $request->provider_id);
+            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
-        Mail::send('email.contactYourProvider', ['id' => $request->provider_id], function ($message) use ($providerData) {
-            $message->to($providerData->first()->email);
-        });
+            EmailLog::create([
+                'role_id' => 1,
+                // 'provider_id' => specify provider id
+                // 'email_template' =>,
+                // 'subject_name' =>,
+                'is_email_sent' => true,
+                'sent_tries' => 1,
+                'sent_date' => now(),
+                'email_template' =>  $enteredText,
+                'subject_name' => 'notification to provider',
+                'email' => $receipientEmail,
+                'provider_id' => $receipientId,
+            ]);
+        } else if ($request->contact == "sms") {
+            // send SMS 
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-        return redirect()->route('adminProvidersInfo')->with('message', 'Your mail has been sent successfully.');
+            $twilio = new Client($sid, $token);
+
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "$enteredText",
+                        "from" => $senderNumber
+                    ]
+                );
+
+
+            SMSLogs::create(
+                [
+                    'provider_id' => $receipientId,
+                    'mobile_number' => $receipientMobile,
+                    'created_date' => now(),
+                    'sent_date' => now(),
+                    'role_id' => 1,
+                    'recipient_name' => $receipientName,
+                    'sent_tries' => 1,
+                    'is_sms_sent' => 1,
+                    'action' => 1,
+                    'sms_template' => $enteredText
+                ]
+            );
+        } else if ($request->contact == "both") {
+            // send email
+            $providerData = Provider::get()->where('id', $request->provider_id);
+            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+
+            // send SMS 
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+            $twilio = new Client(
+                $sid,
+                $token
+            );
+
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "$enteredText",
+                        "from" => $senderNumber
+                    ]
+                );
+
+
+            EmailLog::create([
+                'role_id' => 1,
+                // 'provider_id' => specify provider id
+                // 'email_template' =>,
+                // 'subject_name' =>,
+                'is_email_sent' => true,
+                'sent_tries' => 1,
+                'sent_date' => now(),
+                'email_template' =>  $enteredText,
+                'subject_name' => 'notification to provider',
+                'email' => $receipientEmail,
+                'provider_id' => $receipientId,
+            ]);
+
+            SMSLogs::create(
+                [
+                    'provider_id' => $receipientId,
+                    'mobile_number' => $receipientMobile,
+                    'created_date' => now(),
+                    'sent_date' => now(),
+                    'role_id' => 1,
+                    'recipient_name' => $receipientName,
+                    'sent_tries' => 1,
+                    'is_sms_sent' => 1,
+                    'action' => 1,
+                    'sms_template' => $enteredText
+                ]
+            );
+        }
+
+
+        return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
     }
 
 
@@ -64,26 +188,25 @@ class AdminProviderController extends Controller
     public function adminCreateNewProvider(Request $request)
     {
 
-        // $request->validate([
-        //     'user_name' => 'required',
-        //     'password' => 'required',
-        //     'first_name' => 'required',
-        //     'last_name' => 'required',
-        //     'email' => 'required|email',
-        //     'phone_number' => 'required',
-        //     'medical_license' => 'required',
-        //     'npi_number' => 'required',
-        //     'email_alt' => 'required|email',
-        //     'address1' => 'required',
-        //     'address2' => 'required',
-        //     'city' => 'required',
-        //     'zip' => 'required',
-        //     'phone_number_alt' => 'required',
-        //     'business_name' => 'required',
-        //     'business_website' => 'required',
-        //     'admin_notes' => 'required',
-        // ]);
-
+        $request->validate([
+            'user_name' => 'required',
+            'password' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'medical_license' => 'required',
+            'npi_number' => 'required',
+            'email_alt' => 'required|email',
+            'address1' => 'required',
+            'address2' => 'required',
+            'city' => 'required',
+            'zip' => 'required',
+            'phone_number_alt' => 'required',
+            'business_name' => 'required',
+            'business_website' => 'required',
+            'admin_notes' => 'required',
+        ]);
 
 
         // store data of providers in users table
@@ -113,7 +236,7 @@ class AdminProviderController extends Controller
         $providerData->address1 = $request->address1;
         $providerData->address2 = $request->address2;
         $providerData->city = $request->city;
-        // $providerData->status = 'pending';
+        $providerData->status = 'pending';
         $providerData->zip = $request->zip;
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
@@ -264,34 +387,42 @@ class AdminProviderController extends Controller
 
     // **************** This code is for edit provider profile *********************
 
+    public function regionName()
+    {
+        $regions = Regions::get();
+        dd($regions);
+        return view('/adminPage/provider/adminEditProvider', compact('regions'));
+    }
+
     public function editProvider($id)
     {
         $getProviderData = Provider::with('users')->where('id', $id)->first();
+
         return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
 
     public function updateAdminProviderProfile(Request $request, $id)
     {
 
-        // $request->validate([
-        //     'user_name' => 'required',
-        //     'password' => 'required',
-        //     'first_name' => 'required',
-        //     'last_name' => 'required',
-        //     'email' => 'required|email',
-        //     'phone_number' => 'required',
-        //     'medical_license' => 'required',
-        //     'npi_number' => 'required',
-        //     'email_alt' => 'required|email',
-        //     'address1' => 'required',
-        //     'address2' => 'required',
-        //     'city' => 'required',
-        //     'zip' => 'required',
-        //     'phone_number_alt' => 'required',
-        //     'business_name' => 'required',
-        //     'business_website' => 'required',
-        //     'admin_notes' => 'required',
-        // ]);
+        $request->validate([
+            'user_name' => 'required',
+            'password' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'medical_license' => 'required',
+            'npi_number' => 'required',
+            'email_alt' => 'required|email',
+            'address1' => 'required',
+            'address2' => 'required',
+            'city' => 'required',
+            'zip' => 'required',
+            'phone_number_alt' => 'required',
+            'business_name' => 'required',
+            'business_website' => 'required',
+            'admin_notes' => 'required',
+        ]);
 
 
         $getProviderInformation = Provider::with('users')->where('id', $id)->first();
@@ -311,6 +442,7 @@ class AdminProviderController extends Controller
         $getProviderInformation->business_name = $request->business_name;
         $getProviderInformation->business_website = $request->business_website;
         $getProviderInformation->admin_notes = $request->admin_notes;
+        $getProviderInformation->status = $request->status_type;
 
         $getProviderInformation->save();
 
@@ -318,11 +450,9 @@ class AdminProviderController extends Controller
 
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
 
-
-
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
         $updateProviderInfoUsers->username = $request->user_name;
-        $updateProviderInfoUsers->password = $request->password;
+        $updateProviderInfoUsers->password = Hash::make($request->password);
         $updateProviderInfoUsers->save();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');
@@ -346,5 +476,6 @@ class AdminProviderController extends Controller
     {
         $providers = Provider::where('id', '<', '4')->get();
         return view('adminPage/provider/providerLocation', compact('providers'));
+        // return response()->json($providers);
     }
 }

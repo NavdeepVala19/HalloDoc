@@ -1,21 +1,32 @@
 
+$(document).ready(function () {
 
-// function showMap(lat, long) {
-//     var coord = { lat: lat, lng: long };
+    function updateMap(providers) {
 
-//     const map = new google.maps.Map(document.getElementById('map'),
-//         {
-//             zoom: 10,
-//             center: coord
-//         }
-//     )
+        //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
 
-//     // Add a marker to the map
-//     const marker = new google.maps.Marker({
-//         position: coord,
-//         map: map,
-//     });
+        console.log(json(providers));
+        var addresses = @json(providers);
 
-// }
 
-// showMap(21.1702, 72.8311);
+        var mapUrl = "https://www.google.com/maps?q=";
+
+
+        // This forEach takes callback function as an argument and 
+        // callback function takes 2 parameters 1st is provider(the current element of array) and 2nd is index(the index of current element)
+
+        addresses.forEach(function (provider, index) {
+            if (index !== 0) {
+                mapUrl += "+";
+            }
+
+            mapUrl += encodeURIComponent(provider.address1 + ", " + provider.address2 + ", " + provider.city + ", " + provider.zipcode);
+        });
+
+        document.getElementById('map-iframe').src = mapUrl + "&output=embed";
+    }
+
+    // Call the function to update the map when the page loads
+    updateMap();
+
+})

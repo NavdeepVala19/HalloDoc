@@ -6,31 +6,37 @@ use ZipArchive;
 use Carbon\Carbon;
 
 // Different Models used in these Controller
+use App\Models\Menu;
+use App\Models\Role;
 use App\Models\Roles;
-use App\Mail\SendLink;
-use App\Mail\SendMail;
 
 // Different Models used in these Controller
+use App\Mail\SendLink;
+use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
 use App\Models\Regions;
-use App\Models\allusers;
-use App\Models\EmailLog;
 
-use App\Models\Provider;
+use App\Models\SMSLogs;
 
 // For sending Mails
+use Twilio\Rest\Client;
+use App\Models\allusers;
+use App\Models\EmailLog;
+use App\Models\Provider;
+use App\Models\RoleMenu;
 use App\Models\UserRoles;
 use App\Mail\SendAgreement;
+
+// DomPDF package used for the creation of pdf from the form
 use App\Models\BlockRequest;
+// To create zip, used to download multiple documents at once
 use App\Models\RequestNotes;
 use App\Models\requestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
-
-// DomPDF package used for the creation of pdf from the form
+use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-// To create zip, used to download multiple documents at once
 use App\Models\request_Client;
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
@@ -38,15 +44,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
 use App\Exports\SearchRecordExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Mail\RequestSupportMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\HealthProfessionalType;
-use App\Models\Menu;
-use App\Models\RequestClosed;
-use App\Models\Role;
-use App\Models\RoleMenu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 
@@ -165,6 +167,11 @@ class AdminController extends Controller
     // Search for specific keyword in first_name of requestTable 
     public function search(Request $request, $status = 'new', $category = 'all')
     {
+
+        $session = session(
+            ['search' => $request->input('search'),]
+        );
+
         $userData = Auth::user();
         $count = $this->totalCasesCount();
 
@@ -416,14 +423,39 @@ class AdminController extends Controller
     public function sendMail(Request $request)
     {
 
+        $firstname = $request->first_name;
+        $lastname = $request->last_name;
+
+        // Route name 
+        $routeName = 'submitRequest';
+
+        // Generate the link using route() helper (assuming route parameter is optional)
+        $link = route($routeName);
+
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required|email',
         ]);
 
         Mail::to($request->email)->send(new SendLink($request->all()));
+
+
+        // send SMS 
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->messages
+            ->create(
+                "+91 99780 71802", // to
+                [
+                    "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
+                    "from" =>  $senderNumber
+                ]
+            );
+
 
         EmailLog::create([
             'role_id' => 1,
@@ -437,6 +469,20 @@ class AdminController extends Controller
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
         ]);
+
+        SMSLogs::create(
+            [
+                'mobile_number' => $request->phone_number,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'role_id' => 1,
+                'recipient_name' => $request->first_name,
+                'sent_tries' => 1,
+                'is_sms_sent' => 1,
+                'action' => 1,
+                'sms_template' => "Hii ,Click on the below link to create request"
+            ]
+        );
 
         return redirect()->back();
     }
@@ -850,7 +896,7 @@ class AdminController extends Controller
             })->get();
 
         // dd($emails);
-        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get(   ));
+        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get());
         // ->when($request->receiver_name, function ($query) use ($request) {
         //     $query->where('last_name', 'LIKE', "%$request->last_name%");
         // })
@@ -859,12 +905,112 @@ class AdminController extends Controller
     }
     public function smsRecordsView()
     {
-        return view('adminPage.records.smsLogs');
+        $sms = SMSLogs::paginate(10);
+
+        return view('adminPage.records.smsLogs', compact('sms'));
     }
+
+    public function searchSMSLogs(Request $request)
+    {
+
+        $sms = SMSLogs::select();
+
+        if (!empty($request->receiver_name)) {
+            $sms = $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
+        }
+        if (!empty($request->phone_number)) {
+            $sms = $sms->orWhere('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+        }
+        if (!empty($request->created_date)) {
+            $sms = $sms->orWhere('sms_log.created_date', "like", "%" . $request->created_date . "%");
+        }
+        if (!empty($request->sent_date)) {
+            $sms = $sms->orWhere('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+        }
+        if (!empty($request->role_type)) {
+            $sms = $sms->orWhere('sms_log.role_id', "like", "%" . $request->role_type . "%");
+        }
+        $sms = $sms->paginate(10);
+
+
+        $session = session(
+            [
+                'receiver_name' => $request->input('receiver_name'),
+                'phone_number' => $request->input('phone_number'),
+                'created_date' => $request->input('created_date'),
+                'sent_date' => $request->input('sent_date'),
+            ]
+        );
+
+        return view('adminPage.records.smsLogs', compact('sms'));
+    }
+
     public function blockHistoryView()
     {
-        return view('adminPage.records.blockHistory');
+        $blockData = BlockRequest::select(
+            'block_request.phone_number',
+            'block_request.email',
+            'block_request.id',
+            'block_request.is_active',
+            DB::raw('DATE(block_request.created_at) as created_date'),
+            'block_request.reason',
+            'request_client.first_name as patient_name',
+        )
+            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
+            ->paginate(10);
+
+        return view('adminPage.records.blockHistory', compact('blockData'));
     }
+
+    public function updateBlockHistoryIsActive(Request $request)
+    {
+        $block = BlockRequest::find($request->blockId);
+
+        $block->update(['is_active' => $request->is_active]);
+    }
+
+
+    public function unBlockPatientInBlockHistoryPage($id)
+    {
+
+        $unBlockData = BlockRequest::where('id', $id)->delete();
+
+        $statusChanges = BlockRequest::with('request_status')->where('request_id');
+
+        return redirect()->back();
+    }
+
+    public function blockHistroySearchData(Request $request)
+    {
+
+        $blockData = BlockRequest::select(
+            'request_client.first_name as patient_name',
+            'block_request.id',
+            'block_request.phone_number',
+            'block_request.email',
+            'block_request.is_active',
+            'block_request.reason',
+            DB::raw('DATE(block_request.created_at) as created_date'),
+        )
+            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
+
+        if (!empty($request->patient_name)) {
+            $blockData = $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+        }
+        if (!empty($request->email)) {
+            $blockData = $blockData->orWhere('block_request.email', "like", "%" . $request->email . "%");
+        }
+        if (!empty($request->phone_number)) {
+            $blockData = $blockData->orWhere('block_request.phone_number', "like", "%" . $request->phone_number . "%");
+        }
+        if (!empty($request->date)) {
+            $blockData = $blockData->orWhere('block_request.created_at', "like", "%" . $request->date . "%");
+        }
+        $blockData = $blockData->paginate(10);
+
+        return view('adminPage.records.blockHistory', compact('blockData'));
+    }
+
     public function patientHistoryView()
     {
         $patients = request_Client::paginate(10);

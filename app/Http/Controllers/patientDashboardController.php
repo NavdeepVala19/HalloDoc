@@ -42,7 +42,7 @@ class patientDashboardController extends Controller
     public function createNewPatient(Request $request)
     {
 
-     
+
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'min:2|max:30',
@@ -112,57 +112,34 @@ class patientDashboardController extends Controller
 
     public function read()
     {
-
-        $timestamp = RequestTable::select('created_at')->get();
-        // return view('patientSite/patientDashboard')->with('date', $timestamp);
-
-
-        // $newDate = $timestamp->implode('', $timestamp);
-
-        // $carbonDate = Carbon::parse($newDate);
-
-        // $dateOnly = $carbonDate->toDateString();
-
-
-        // $date = RequestTable::select('created_at')->get();
-
-        // dd($date);
-
-        // $items = array();
-        // foreach ($timestamp as $key) {
-        //     $items[] = $key;
-        // }
-        // print_r($items);
-
-
-        // $jsonString = '{"created_at":"2024-02-16T05:23:20.000000Z"}';
-
-        // Decode the JSON string to an object
-        // $jsonObject = json_decode($jsonString);
-
-        // Extract the 'created_at' value
-        // $createdAtString = $jsonObject->created_at;
-
-        // Now, parse the 'created_at' string with Carbon
-        // $createdAt = Carbon::parse($createdAtString);
-
-        // If you need it in a specific format or just the date part
-        // Outputs: 2024-02-16
-
-        // $dateString = $createdAt->toDateString()
-
-        $currentTime = Carbon::now();
-        $currentDate = $currentTime->format('Y-m-d');
-
+        // $data = RequestTable::select('created_at')->paginate(10);
 
         $userData = Auth::user();
-        // $email = $userData["email"];
+        $email = $userData["email"];
 
-
-        $data = DB::table('request')
-            ->join('status', 'request.status', '=', 'status.id')
-            ->select('request.created_at', 'status.status_type')
+        $data = request_Client::select(
+            'request_status.status',
+            'request_status.request_id',
+            'request_client.request_id',
+            'request_client.first_name',
+            'request_wise_file.id',
+            DB::raw('DATE(request_client.created_at) as created_date'),
+            'status.status_type'
+        )
+            ->leftJoin('request_status', 'request_status.request_id', 'request_client.request_id')
+            ->leftJoin('status', 'status.id', 'request_status.status')
+            ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request_client.request_id')
+            ->where('email', $email)
             ->paginate(10);
+
+       
+            
+
+        // $data = DB::table('request')
+        //     ->join('status', 'request.status', '=', 'status.id')
+        //     ->select('request.created_at', 'status.status_type')
+        //     ->paginate(10);
+
 
         return view('patientSite/patientDashboard', compact('data'));
     }

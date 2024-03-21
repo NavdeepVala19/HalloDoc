@@ -15,7 +15,7 @@
 
 <div class="container-fluid main-section">
 
-    <div class="main-container">
+    <div class="reset-password">
 
         <div class="details">
             <div class="main-content">
@@ -53,4 +53,8 @@
 </div>
 
 
+@endsection
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

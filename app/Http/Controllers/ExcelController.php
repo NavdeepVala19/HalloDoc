@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
+use App\Models\request_Client;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\RequestStatus;
@@ -16,6 +17,7 @@ use App\Exports\ConcludeStatusExport;
 
 class ExcelController extends Controller
 {
+
     public function exportAll()
     {
         return Excel::download(new UsersExport, 'AllData.xls');
@@ -33,37 +35,45 @@ class ExcelController extends Controller
                     });
                 });
         } 
+        
         else if (!empty($request->filter_region)) {
-
-            if ($request->filter_region == 1) {
-                $regionName = "Somnath";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 1);
-            } else if ($request->filter_region == 2) {
-                $regionName = "Dwarka";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 1);
-            } else if ($request->filter_region == 3) {
-                $regionName = "Rajkot";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 1);
-            } else if ($request->filter_region == 4) {
-                $regionName = "Bhavnagar";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 1);
-            } else if ($request->filter_region == 5) {
-                $regionName = "Ahmedabad";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 1);
-            }
-        } 
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($request) {
+                $query->where('state', 'like', '%' . $request->filter_region . '%');
+            })->where('status', 1);
+        }
+        
         else if (!empty($request->filter_category)) {
-            dd('category');
+
+
+            if($request->filter_category == 'all'){
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 1);
+            }
+            else if ($request->filter_category == 'patient') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 1)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 1);
+                    });
+            } else if ($request->filter_category == 'family') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 1)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 2);
+                    });
+            } else if ($request->filter_category == 'business') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 1)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 3);
+                    });
+            } else if ($request->filter_category == 'concierge') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 1)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 4);
+                    });
+            }
         }
 
         $exportNew = new NewStatusExport($cases);
@@ -77,42 +87,50 @@ class ExcelController extends Controller
 
         if (!empty($request->filter_search)) {
             $cases = RequestStatus::where('status', 3)
-            ->whereHas('request', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->filter_search . '%');
-                $q->orWhereHas('requestClient', function ($query) use ($request) {
-                    $query->where('first_name', 'like', "%$request->filter_search%");
+                ->whereHas('request', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->filter_search . '%');
+                    $q->orWhereHas('requestClient', function ($query) use ($request) {
+                        $query->where('first_name', 'like', "%$request->filter_search%");
+                    });
                 });
-            });
-        } else if (!empty($request->filter_region)) {
+        } 
+        
+        else if (!empty($request->filter_region)) {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($request) {
+                $query->where('state', 'like', '%' . $request->filter_region . '%');
+            })->where('status', 3);
+        } 
 
-            if ($request->filter_region == 1) {
-                $regionName = "Somnath";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 3);
-            } else if ($request->filter_region == 2) {
-                $regionName = "Dwarka";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 3);
-            } else if ($request->filter_region == 3) {
-                $regionName = "Rajkot";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 3);
-            } else if ($request->filter_region == 4) {
-                $regionName = "Bhavnagar";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 3);
-            } else if ($request->filter_region == 5) {
-                $regionName = "Ahmedabad";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 3);
+        else if (!empty($request->filter_category)) {
+
+            if ($request->filter_category == 'all') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 3);
+            } else if ($request->filter_category == 'patient') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 3)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 1);
+                    });
+            } else if ($request->filter_category == 'family') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 3)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 2);
+                    });
+            } else if ($request->filter_category == 'business') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 3)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 3);
+                    });
+            } else if ($request->filter_category == 'concierge') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 3)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 4);
+                    });
             }
-        } else if (!empty($request->filter_category)) {
-            dd('category');
         }
 
         $exportPending = new PendingStatusExport($cases);
@@ -123,44 +141,57 @@ class ExcelController extends Controller
 
     public function activeDataExport(Request $request)
     {
+ 
         if (!empty($request->filter_search)) {
             $cases = RequestStatus::where('status', 4)->orWhere('status', 5)
-            ->whereHas('request', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->filter_search . '%');
-                $q->orWhereHas('requestClient', function ($query) use ($request) {
-                    $query->where('first_name', 'like', "%$request->filter_search%");
+                ->whereHas('request', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->filter_search . '%');
+                    $q->orWhereHas('requestClient', function ($query) use ($request) {
+                        $query->where('first_name', 'like', "%$request->filter_search%");
+                    });
                 });
-            });
-        } else if (!empty($request->filter_region)) {
+        } 
+        
+        else if (!empty($request->filter_region)) {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($request) {
+                $query->where('state', 'like', '%' . $request->filter_region . '%');
+            })->where('status', 4)->orWhere('status',5);
+        } 
+        
+        else if (!empty($request->filter_category)) {
 
-            if ($request->filter_region == 1) {
-                $regionName = "Somnath";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 4)->orWhere('status', 5);
-            } else if ($request->filter_region == 2) {
-                $regionName = "Dwarka";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 4)->orWhere('status', 5);
-            } else if ($request->filter_region == 3) {
-                $regionName = "Rajkot";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 4)->orWhere('status', 5);
-            } else if ($request->filter_region == 4) {
-                $regionName = "Bhavnagar";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 4)->orWhere('status', 5);
-            } else if ($request->filter_region == 5) {
-                $regionName = "Ahmedabad";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 4)->orWhere('status', 5);
+            if ($request->filter_category == 'all') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 4)->orWhere('status', 5);
+            } 
+            else if ($request->filter_category == 'patient') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 4)->orWhere('status',5)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 1);
+                    });
+            } 
+            else if ($request->filter_category == 'family') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 4)->orWhere('status',5)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 2);
+                    });
             }
-        } else if (!empty($request->filter_category)) {
-            dd('category');
+             else if ($request->filter_category == 'business') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 4)->orWhere('status',5)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 3);
+                    });
+            } 
+            else if ($request->filter_category == 'concierge') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 4)->orWhere('status',5)
+                    ->whereHas('request', function ($q) {
+                        $q->where('request_type_id', 4);
+                    });
+            }
         }
 
 
@@ -172,44 +203,51 @@ class ExcelController extends Controller
 
     public function concludeDataExport(Request $request)
     {
+
         if (!empty($request->filter_search)) {
             $cases = RequestStatus::where('status', 6)
-            ->whereHas('request', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->filter_search . '%');
-                $q->orWhereHas('requestClient', function ($query) use ($request) {
-                    $query->where('first_name', 'like', "%$request->filter_search%");
+                ->whereHas('request', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->filter_search . '%');
+                    $q->orWhereHas('requestClient', function ($query) use ($request) {
+                        $query->where('first_name', 'like', "%$request->filter_search%");
+                    });
                 });
-            });
-        } else if (!empty($request->filter_region)) {
+        } 
+        else if (!empty($request->filter_region)) {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($request) {
+                $query->where('state', 'like', '%' . $request->filter_region . '%');
+            })->where('status', 6);
+        } 
+        else if (!empty($request->filter_category)) {
 
-            if ($request->filter_region == 1) {
-                $regionName = "Somnath";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 6);
-            } else if ($request->filter_region == 2) {
-                $regionName = "Dwarka";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 6);
-            } else if ($request->filter_region == 3) {
-                $regionName = "Rajkot";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 6);
-            } else if ($request->filter_region == 4) {
-                $regionName = "Bhavnagar";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 6);
-            } else if ($request->filter_region == 5) {
-                $regionName = "Ahmedabad";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 6);
+            if ($request->filter_category == 'all') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 6);
+            } else if ($request->filter_category == 'patient') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 6)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 1);
+                });
+            } else if ($request->filter_category == 'family') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 6)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 2);
+                });
+            } else if ($request->filter_category == 'business') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 6)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 3);
+                });
+            } else if ($request->filter_category == 'concierge') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 6)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 4);
+                });
             }
-        } else if (!empty($request->filter_category)) {
-            dd('category');
         }
 
         $exportConclude = new ConcludeStatusExport($cases);
@@ -221,43 +259,51 @@ class ExcelController extends Controller
     {
 
         if (!empty($request->filter_search)) {
-            $cases = RequestStatus::where('status', 2)->orWhere('status',7)
-            ->whereHas('request', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->filter_search . '%');
-                $q->orWhereHas('requestClient', function ($query) use ($request) {
-                    $query->where('first_name', 'like', "%$request->filter_search%");
+            $cases = RequestStatus::where('status', 2)->orWhere('status', 7)
+                ->whereHas('request', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->filter_search . '%');
+                    $q->orWhereHas('requestClient', function ($query) use ($request) {
+                        $query->where('first_name', 'like', "%$request->filter_search%");
+                    });
                 });
-            });
-        } else if (!empty($request->filter_region)) {
+        } 
+        
+        else if (!empty($request->filter_region)) {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($request) {
+                $query->where('state', 'like', '%' . $request->filter_region . '%');
+            })->where('status', 2)->orWhere('status', 7);
+        }
+        
+        else if (!empty($request->filter_category)) {
 
-            if ($request->filter_region == 1) {
-                $regionName = "Somnath";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 2)->orWhere('status', 7);
-            } else if ($request->filter_region == 2) {
-                $regionName = "Dwarka";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 2)->orWhere('status', 7);
-            } else if ($request->filter_region == 3) {
-                $regionName = "Rajkot";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 2)->orWhere('status', 7);
-            } else if ($request->filter_region == 4) {
-                $regionName = "Bhavnagar";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 2)->orWhere('status', 7);
-            } else if ($request->filter_region == 5) {
-                $regionName = "Ahmedabad";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 2)->orWhere('status', 7);
+            if ($request->filter_category == 'all') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 2)->orWhere('status',7);
+            } else if ($request->filter_category == 'patient') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 2)->orWhere('status', 7)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 1);
+                });
+            } else if ($request->filter_category == 'family') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 2)->orWhere('status', 7)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 2);
+                });
+            } else if ($request->filter_category == 'business') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 2)->orWhere('status', 7)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 3);
+                });
+            } else if ($request->filter_category == 'concierge') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 2)->orWhere('status', 7)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 4);
+                });
             }
-        } else if (!empty($request->filter_category)) {
-            dd('category');
         }
 
         $exportToClose = new ToCloseStatusExport($cases);
@@ -270,44 +316,49 @@ class ExcelController extends Controller
 
         if (!empty($request->filter_search)) {
             $cases = RequestStatus::where('status', 9)
-            ->whereHas('request', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->filter_search . '%');
-                $q->orWhereHas('requestClient', function ($query) use ($request) {
-                    $query->where('first_name', 'like', "%$request->filter_search%");
+                ->whereHas('request', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->filter_search . '%');
+                    $q->orWhereHas('requestClient', function ($query) use ($request) {
+                        $query->where('first_name', 'like', "%$request->filter_search%");
+                    });
                 });
-            });
-        } else if (!empty($request->filter_region)) {
+        } 
+        else if (!empty($request->filter_region)) {
+            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($request) {
+                $query->where('state', 'like', '%' . $request->filter_region . '%');
+            })->where('status', 9);
+        } 
+        else if (!empty($request->filter_category)) {
 
-            if ($request->filter_region == 1) {
-                $regionName = "Somnath";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 9);
-            } else if ($request->filter_region == 2) {
-                $regionName = "Dwarka";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 9);
-            } else if ($request->filter_region == 3) {
-                $regionName = "Rajkot";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 9);
-            } else if ($request->filter_region == 4) {
-                $regionName = "Bhavnagar";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 9);
-            } else if ($request->filter_region == 5) {
-                $regionName = "Ahmedabad";
-                $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                    $query->where('state', 'like', '%' . $regionName . '%');
-                })->where('status', 9);
+            if ($request->filter_category == 'all') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                    ->where('status', 9);
+            } else if ($request->filter_category == 'patient') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 9)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 1);
+                });
+            } else if ($request->filter_category == 'family') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 9)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 2);
+                });
+            } else if ($request->filter_category == 'business') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 9)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 3);
+                });
+            } else if ($request->filter_category == 'concierge') {
+                $cases = RequestStatus::with(['request', 'requestClient'])
+                ->where('status', 9)
+                ->whereHas('request', function ($q) {
+                    $q->where('request_type_id', 4);
+                });
             }
-        } else if (!empty($request->filter_category)) {
-            dd('category');
         }
-
 
         $exportUnpaid = new UnPaidStatusExport($cases);
 

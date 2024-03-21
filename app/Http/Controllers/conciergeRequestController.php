@@ -24,26 +24,27 @@ class conciergeRequestController extends Controller
     public function create(Request $request)
     {
 
-        // $request->validate([
-        //     'first_name' => 'required|min:2|max:30',
-        //     'last_name' => 'min:2|max:30',
-        //     'email' => 'required|email|min:2|max:30',
-        //     'phone_number' => 'required|numeric|digits:10',
-        //     'street' => 'min:2|max:30',
-        //     'city' => 'min:2|max:30',
-        //     'zipcode' => 'numeric',
-        //     'state' => 'min:2|max:30',
-        //     'room' => 'numeric',
-        //     'concierge_first_name' => 'required|min:2|max:30',
-        //     'concierge_last_name' => 'min:2|max:30',
-        //     'concierge_email' => 'required|email|min:2|max:30',
-        //     'concierge_mobile' => 'required',
-        //     'concierge_hotel_name' => 'required|min:2|max:30',
-        //     'concierge_street' => 'min:2|max:30',
-        //     'concierge_state' => 'min:2|max:30',
-        //     'concierge_city' => 'min:2|max:30',
-        //     'concierge_zip_code' => 'numeric',
-        // ]);
+        $request->validate([
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'min:2|max:30',
+            'email' => 'required|email|min:2|max:30',
+            'date_of_birth'=>'required',
+            'phone_number' => 'required',
+            'street' => 'min:2|max:30',
+            'city' => 'min:2|max:30',
+            'zipcode' => 'numeric',
+            'state' => 'min:2|max:30',
+            'room' => 'numeric',
+            'concierge_first_name' => 'required|min:2|max:30',
+            'concierge_last_name' => 'min:2|max:30',
+            'concierge_email' => 'required|email|min:2|max:30',
+            'concierge_mobile' => 'required',
+            'concierge_hotel_name' => 'required|min:2|max:30',
+            'concierge_street' => 'min:2|max:30',
+            'concierge_state' => 'min:2|max:30',
+            'concierge_city' => 'min:2|max:30',
+            'concierge_zip_code' => 'numeric',
+        ]);
 
 
 
@@ -107,7 +108,7 @@ class conciergeRequestController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-        $patientRequest->notes = $request->symptoms;
+
         $patientRequest->save();
 
 

@@ -15,6 +15,7 @@ use App\Models\RequestWiseFile;
 use App\Services\TwilioService;
 use App\Exports\PendingStatusExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Twilio\Rest\Client;
 
 class AdminDashboardController extends Controller
 {
@@ -25,17 +26,17 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
+
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone_number' => 'required|numeric',
+            'phone_number' => 'required',
             'email' => 'required|email',
+            // 'dob' => 'required',
             'street' => 'required',
             'city' => 'required',
-            'state' => 'required',
-            'zip' => 'required|max:6'
+            'state' => 'required'
         ]);
-
 
         // store email and phoneNumber in users table
         $requestEmail = new users();
@@ -150,9 +151,25 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.user.access');
     }
 
-    // public function adminEditProviderThroughUserAccess($id)
-    // {
-    //     $getProviderData = Provider::with('users')->where('user_id', $id)->first();
-    //     return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
-    // }
+
+    public function sendSMS(Request $request)
+    {
+
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->messages
+            ->create(
+            "+91 99780 71802", // to
+                [
+                    "body" => "har har mahadev",
+                    "from" =>  $senderNumber
+                ]
+            );
+
+        dd('success message');
+    }
 }

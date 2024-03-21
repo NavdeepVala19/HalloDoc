@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlockRequest extends Model
 {
@@ -15,6 +16,12 @@ class BlockRequest extends Model
         'request_id',
         'reason',
         'email',
-        'phone_number'
+        'phone_number',
+        'is_active'
     ];
+
+    public function request_status()
+    {
+        return $this->belongsTo(RequestStatus::class, 'request_id', 'request_id');
+    }
 }

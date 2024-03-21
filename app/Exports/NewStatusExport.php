@@ -38,14 +38,37 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
         $adminNewData = $this->data->get();
 
         return collect($adminNewData)->map(function ($adminNew) {
+            $patientName = null;
+            $dateOfBirth = null;
+            $street = null;
+            $city = null;
+            $state = null;
 
+            if (isset($adminNew->request) && $adminNew->request->requestClient) {
+                $patientName = $adminNew->request->requestClient->first_name;
+            }
+
+            if (isset($adminNew->request) && $adminNew->request->requestClient) {
+                $dateOfBirth = $adminNew->request->requestClient->date_of_birth;
+            }
+
+            if (isset($adminNew->request) && $adminNew->request->requestClient) {
+                $street = $adminNew->request->requestClient->street;
+            }
+            if (isset($adminNew->request) && $adminNew->request->requestClient) {
+                $city = $adminNew->request->requestClient->city;
+            }
+            if (isset($adminNew->request) && $adminNew->request->requestClient) {
+                $state = $adminNew->request->requestClient->state;
+            }
+           
             return [
-                'PatientName' => $adminNew->request->requestClient->first_name,
-                'Date of Birth' => $adminNew->request->requestClient->date_of_birth,
+                'PatientName' => $patientName,
+                'Date of Birth' => $dateOfBirth,
                 'Requestor' => $adminNew->request->first_name,
                 'RequestedDate' => $adminNew->request->created_at,
                 'Mobile' => $adminNew->request->phone_number,
-                'Address' => $adminNew->request->requestClient->street . ',' . $adminNew->request->requestClient->city . ',' . $adminNew->request->requestClient->state,
+                'Address' => $street . ',' . $city . ',' . $state,
             ];
         });
     }

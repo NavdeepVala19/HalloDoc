@@ -84,7 +84,6 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
 route::post('/patientloggedIn', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
 
-// route::get('/pat')
 
 route::post('/patient_logout', [patientLoginController::class, 'logout'])->name('logout');
 //  ***************************************************************************************************************************************
@@ -116,7 +115,7 @@ route::get('/patientDashboard', [patientDashboardController::class, 'read'])->na
 
 //  ***************************************************************************************************************************************
 // to edit profile of patient
-// Route::get('/patient_profile', [patientProfileController::class, 'profile'])->name('patientProfile');
+
 
 route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
 route::post('/patientProfileUpdated', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
@@ -150,7 +149,7 @@ route::post('/createdSomeoneRequests', [patientDashboardController::class, 'crea
 
 //  ***************************************************************************************************************************************
 // to view documents 
-route::get('/patientViewDocsFile', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
+route::get('/patientViewDocsFile/{id}', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
 route::post('/patientViewDocuments', [PatientViewDocumentsController::class, 'uploadDocs'])->name('patientViewDocuments');
 
 route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');
@@ -206,7 +205,8 @@ route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'up
 
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
-// route::get('/admin/providers', [AdminProviderController::class, 'providersInfo'])->name('adminProvidersInfo');
+
+route::post('/regions', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 
 
 
@@ -216,11 +216,11 @@ route::post('admin/new/request-support', [AdminController::class, 'sendRequestSu
 
 
 route::post('/admin/new/exportNew', [ExcelController::class, 'exportNewData'])->name('exportNewData');
-route::get('/admin/new/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
-route::get('/admin/new/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
-route::get('/admin/new/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
-route::get('/admin/new/exportToClose', [ExcelController::class, 'toCloseDataExport'])->name('exportToClose');
-route::get('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport'])->name('exportUnPaid');
+route::post('/admin/pending/exportPending', [ExcelController::class, 'pendingDataExport'])->name('exportPending');
+route::post('/admin/active/exportActive', [ExcelController::class, 'activeDataExport'])->name('exportActive');
+route::post('/admin/conclude/exportConclude', [ExcelController::class, 'concludeDataExport'])->name('exportConclude');
+route::post('/admin/toclose/exportToClose', [ExcelController::class, 'toCloseDataExport'])->name('exportToClose');
+route::post('/admin/new/exportUnPaid', [ExcelController::class, 'unPaidDataExport'])->name('exportUnPaid');
 route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
 
@@ -233,7 +233,7 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-route::POST('/dropdown-data/', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
+route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
 
 
 
@@ -255,6 +255,9 @@ route::post('/admin/provider-profile-edited/{id}', [AdminDashboardController::cl
 
 route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
 
+
+
+route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
 
 // ****************************************************************************************************************************
 
@@ -447,9 +450,14 @@ Route::post('/search-records/search', [AdminController::class, 'searchRecordSear
 Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
 Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
-
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
+
+Route::post('/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
+Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
+Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');
+Route::get('/block-history/unblock/{id}', [AdminController::class, 'unBlockPatientInBlockHistoryPage'])->name('admin.block.history.unblock');
 Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
 Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
 Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');

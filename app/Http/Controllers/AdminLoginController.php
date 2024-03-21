@@ -51,12 +51,9 @@ class AdminLoginController extends Controller
 
             if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
-            } else {
+            } else if ($userRolesData->role_id == 1) {
                 return redirect()->route('admin.dashboard');
             }
-
-
-            // return redirect()->route('patientDashboardData');
         }
         return redirect()->route('adminLogin');
     }

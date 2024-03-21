@@ -34,12 +34,11 @@ class patientController extends Controller
             'last_name' => 'string|min:2|max:30',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
-            'phone_number' => 'required|numeric|digits:10',
+            'phone_number' => 'required',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
+            'zipcode' => 'numeric|max:6|size:6',
             'state' => 'min:2|max:30',
-            'room' => 'numeric',
         ]);
 
 
@@ -86,7 +85,7 @@ class patientController extends Controller
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
 
-        $patientRequest->notes = $request->symptoms;
+
         $patientRequest->save();
 
 
@@ -107,14 +106,11 @@ class patientController extends Controller
 
         // store symptoms in request_notes table
 
-        // $request_notes = new RequestNotes();
-        // $request_notes->request_id = $requestData->id;
-        // $request_notes->patient_notes = $request->symptoms;
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $requestData->id;
+        $request_notes->patient_notes = $request->symptoms;
 
-        // $request_notes->save();
-
-
-
+        $request_notes->save();
 
         // store all details of patient in allUsers table
 
@@ -131,21 +127,23 @@ class patientController extends Controller
         $requestUsers->save();
 
 
-
-
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
         $todayDate = $currentTime->format('Y-m-d');
         $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
 
+        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
+        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
+        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
 
-        $confirmationNumber = substr($request->state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
+
+
+        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
         if (!empty($requestData->id)) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
-
 
         return redirect()->route('submitRequest');
     }

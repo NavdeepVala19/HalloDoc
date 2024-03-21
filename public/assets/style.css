@@ -18,12 +18,16 @@ body {
     /* margin: 0;
     padding: 0; */
 }
+
 .wrapper {
     /* Wrap content and footer */
     display: flex;
-    flex-direction: column; /* Stack content on top */
-    min-height: 100vh; /* Ensure minimum full height */
+    flex-direction: column;
+    /* Stack content on top */
+    min-height: 100vh;
+    /* Ensure minimum full height */
 }
+
 .main-container {
     flex: 1;
 }
@@ -52,7 +56,7 @@ nav a {
     display: none;
 }
 
-nav > a:hover {
+nav>a:hover {
     color: var(--blue);
     border-bottom: 2px solid var(--blue);
 }
@@ -218,7 +222,7 @@ nav {
         rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 }
 
-form > h3 {
+form>h3 {
     margin-bottom: 24px;
 }
 

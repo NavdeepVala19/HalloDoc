@@ -14,7 +14,7 @@
 
 <div class=" main-section mt-5">
 
-    <div class="main-container">
+    <div class="w-50">
 
         <div class="details">
             <h2>Login To Your Account</h2>
@@ -58,4 +58,9 @@
 
 
 
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

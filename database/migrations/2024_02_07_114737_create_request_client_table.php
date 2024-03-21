@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('noti_mobile')->nullable();
             $table->string('noti_email')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->nullable() ;
             $table->string('str_month')->nullable();
             $table->integer('int_year')->nullable();
             $table->integer('int_date')->nullable();
