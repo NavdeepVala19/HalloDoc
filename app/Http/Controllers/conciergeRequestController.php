@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\users;
 use App\Models\allusers;
+use App\Models\EmailLog;
 use App\Models\Concierge;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\RequestStatus;
-use App\Models\request_Client;
 
+use App\Mail\sendEmailAddress;
+use App\Models\request_Client;
 use App\Models\RequestConcierge;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Mail;
 
 // use App\Models\User;
 
@@ -26,34 +29,52 @@ class conciergeRequestController extends Controller
 
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'min:2|max:30',
+            'last_name' => 'string|min:2|max:30',
+            'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
-            'date_of_birth'=>'required',
-            'phone_number' => 'required',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
-            'state' => 'min:2|max:30',
-            'room' => 'numeric',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'zipcode' => 'digits:6',
             'concierge_first_name' => 'required|min:2|max:30',
             'concierge_last_name' => 'min:2|max:30',
             'concierge_email' => 'required|email|min:2|max:30',
             'concierge_mobile' => 'required',
             'concierge_hotel_name' => 'required|min:2|max:30',
             'concierge_street' => 'min:2|max:30',
-            'concierge_state' => 'min:2|max:30',
-            'concierge_city' => 'min:2|max:30',
-            'concierge_zip_code' => 'numeric',
+            'concierge_state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'concierge_city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'concierge_zip_code' => 'digits:6',
         ]);
 
 
 
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
+        $isEmailStored = users::where('email', $request->email)->pluck('email');
 
-        $requestEmail->save();
+        if ($request->email != $isEmailStored) {
+            // store email and phoneNumber in users table
+            $requestEmail = new users();
+            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->email = $request->email;
+            $requestEmail->phone_number = $request->phone_number;
+
+            $requestEmail->save();
+
+            // store all details of patient in allUsers table
+
+            $requestUsers = new allusers();
+            $requestUsers->user_id = $requestEmail->id;
+            $requestUsers->first_name = $request->first_name;
+            $requestUsers->last_name = $request->last_name;
+            $requestUsers->email = $request->email;
+            $requestUsers->mobile = $request->phone_number;
+            $requestUsers->street = $request->street;
+            $requestUsers->city = $request->city;
+            $requestUsers->state = $request->state;
+            $requestUsers->zipcode = $request->zipcode;
+            $requestUsers->save();
+        }
 
 
 
@@ -114,29 +135,11 @@ class conciergeRequestController extends Controller
 
         // store symptoms in request_notes table
 
-        // $request_notes = new RequestNotes();
-        // $request_notes->request_id = $requestConcierge->id;
-        // $request_notes->patient_notes = $request->symptoms;
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $requestConcierge->id;
+        $request_notes->patient_notes = $request->symptoms;
 
-        // $request_notes->save();
-
-
-
-
-        // store all details of patient in allUsers table
-
-        $requestUsers = new allusers();
-        $requestUsers->user_id = $requestEmail->id;
-        $requestUsers->first_name = $request->first_name;
-        $requestUsers->last_name = $request->last_name;
-        $requestUsers->email = $request->email;
-        $requestUsers->mobile = $request->phone_number;
-        $requestUsers->street = $request->street;
-        $requestUsers->city = $request->city;
-        $requestUsers->state = $request->state;
-        $requestUsers->zipcode = $request->zipcode;
-        $requestUsers->save();
-
+        $request_notes->save();
 
 
         // store data in request_concierge table
@@ -156,10 +159,31 @@ class conciergeRequestController extends Controller
 
 
         $confirmationNumber = substr($request->concierge_state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
-        // dd($confirmationNumber);
+
 
         if (!empty($requestConcierge->id)) {
             $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
+        }
+
+        if ($request->email != $isEmailStored) {
+
+            // send email
+            $emailAddress = $request->email;
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+
+            EmailLog::create([
+                'request_id' => $requestConcierge->id,
+                'confirmation_number' => $confirmationNumber,
+                'role_id' => 3,
+                'is_email_sent' => 1,
+                'sent_tries' => 1,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'email_template' => $request->email,
+                'subject_name' => 'Create account by clicking on below link with below email address',
+                'email' => $request->email,
+            ]);
+
         }
 
         return redirect()->route('submitRequest');

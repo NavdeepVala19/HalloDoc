@@ -129,7 +129,7 @@ route::post('/patientProfileUpdated', [patientProfileController::class, 'patient
 //  ***************************************************************************************************************************************
 // to create account of patient
 route::get('/patient_register', [patientAccountController::class, 'patientRegister'])->name('patientRegister');
-route::post('/patientDashboard', [patientAccountController::class, 'createAccount'])->name('patientRegistered');
+route::post('/patientRegistered', [patientAccountController::class, 'createAccount'])->name('patientRegistered');
 //  ***************************************************************************************************************************************
 
 

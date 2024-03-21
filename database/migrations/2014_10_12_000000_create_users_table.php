@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->string('email')->unique()->nullable();
             $table->string('phone_number')->nullable();
+            $table->string('token')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

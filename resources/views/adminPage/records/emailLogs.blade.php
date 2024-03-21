@@ -91,7 +91,7 @@
                                 <tr>
                                     <td>
                                         @if ($email->request_id)
-                                            {{-- {{ $email->request->first_name }} {{ $email->request->last_name }} --}}
+                                            {{-- {{ $email->request->first_name }} {{ $email->request->last_name }} 
                                         @elseif ($email->admin_id)
                                             {{-- {{ $email->admin->first_name }} {{ $email->admin->last_name }} --}}
                                         @else

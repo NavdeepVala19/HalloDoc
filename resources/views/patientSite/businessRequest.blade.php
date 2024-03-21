@@ -83,7 +83,7 @@
 
                     </div>
                     <div class="col-md business-col2">
-                        <input type="text" placeholder="Case Number(optional)" name="case_number" class="form-control business-case-number-text ">
+                        <input type="number" placeholder="Case Number(optional)" name="case_number" class="form-control business-case-number-text ">
 
                     </div>
 
@@ -249,8 +249,29 @@
         </div>
     </form>
 
+    <div class="overlay"></div>
+    <div class="pop-up submit-valid-details">
 
+        <div class="m-5 d-flex flex-column justify-content-center align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+            </svg>
+            <h3 class="mt-4">Information</h3>
+
+            <div class="mt-2">When submitting a request,you must provide the correct
+                contact information for the patient or the responsibly party.
+                Failure to provide the correct email and phone number will be delay servide or be declined
+            </div>
+            <button class="primary-fill submit-valid-details-ok-btn w-6 mt-4">Ok</button>
+        </div>
+
+    </div>
 
 </div>
 
+@endsection
+
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

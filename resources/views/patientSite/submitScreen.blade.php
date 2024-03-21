@@ -6,9 +6,17 @@
 
 @section('content')
 
+
+@if (Session::has('message'))
+<div class="alert alert-success popup-message" role="alert">
+    {{ Session::get('message') }}
+</div>
+@endif
+
 <!-- main content of submit request screen -->
 
 <div class="container">
+
 
     <!-- this div is for heading and back button -->
 
@@ -16,6 +24,7 @@
         <h1 class="heading">I am a..</h1>
         <a href="{{route('patientSite')}}" type="button" class="primary-empty"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
+
 
 
     <!-- this div is for main content -->

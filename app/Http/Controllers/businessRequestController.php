@@ -7,12 +7,15 @@ use App\Models\users;
 use App\Models\Orders;
 use App\Models\allusers;
 use App\Models\Business;
+use App\Models\EmailLog;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\RequestStatus;
+use App\Mail\sendEmailAddress;
 use App\Models\request_Client;
 use App\Models\RequestBusiness;
+use Illuminate\Support\Facades\Mail;
 
 // use App\Models\User;
 
@@ -26,14 +29,13 @@ class businessRequestController extends Controller
     $request->validate([
       'first_name' => 'required|min:2|max:30',
       'last_name' => 'string|min:2|max:30',
-      'email' => 'required|email|min:2|max:30',
       'date_of_birth' => 'required',
-      'phone_number' => 'required',
+      'email' => 'required|email|min:2|max:30',
+      'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
       'street' => 'min:2|max:30',
-      'city' => 'min:2|max:30',
-      'zipcode' => 'numeric',
-      'state' => 'min:2|max:30',
-      'room' => 'numeric',
+      'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+      'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+      'zipcode' => 'digits:6',
       'business_first_name' => 'required|min:2|max:30',
       'business_last_name' => 'min:2|max:30',
       'business_email' => 'required|email|min:2|max:30',
@@ -41,11 +43,32 @@ class businessRequestController extends Controller
       'business_property_name' => 'required|min:2|max:30',
     ]);
 
-    // store email and phoneNumber in users table
-    $requestEmail = new users();
-    $requestEmail->email = $request->email;
-    $requestEmail->phone_number = $request->phone_number;
-    $requestEmail->save();
+
+    $isEmailStored = users::where('email', $request->email)->pluck('email');
+
+    if ($request->email != $isEmailStored) {
+      // store email and phoneNumber in users table
+      $requestEmail = new users();
+      $requestEmail->username = $request->first_name . " " . $request->last_name;
+      $requestEmail->email = $request->email;
+      $requestEmail->phone_number = $request->phone_number;
+
+      $requestEmail->save();
+
+      // store all details of patient in allUsers table
+
+      $requestUsers = new allusers();
+      $requestUsers->user_id = $requestEmail->id;
+      $requestUsers->first_name = $request->first_name;
+      $requestUsers->last_name = $request->last_name;
+      $requestUsers->email = $request->email;
+      $requestUsers->mobile = $request->phone_number;
+      $requestUsers->street = $request->street;
+      $requestUsers->city = $request->city;
+      $requestUsers->state = $request->state;
+      $requestUsers->zipcode = $request->zipcode;
+      $requestUsers->save();
+    }
 
 
 
@@ -106,29 +129,11 @@ class businessRequestController extends Controller
 
     // store symptoms in request_notes table
 
-    // $request_notes = new RequestNotes();
-    // $request_notes->request_id = $requestBusiness->id;
-    // $request_notes->patient_notes = $request->symptoms;
+    $request_notes = new RequestNotes();
+    $request_notes->request_id = $requestBusiness->id;
+    $request_notes->patient_notes = $request->symptoms;
 
-    // $request_notes->save();
-
-
-
-
-
-    // store all details of patient in allUsers table
-
-    $requestUsers = new allusers();
-    $requestUsers->user_id = $requestEmail->id;
-    $requestUsers->first_name = $request->first_name;
-    $requestUsers->last_name = $request->last_name;
-    $requestUsers->email = $request->email;
-    $requestUsers->mobile = $request->phone_number;
-    $requestUsers->street = $request->street;
-    $requestUsers->city = $request->city;
-    $requestUsers->state = $request->state;
-    $requestUsers->zipcode = $request->zipcode;
-    $requestUsers->save();
+    $request_notes->save();
 
 
     // store data in request business table 
@@ -157,6 +162,27 @@ class businessRequestController extends Controller
     if (!empty($requestBusiness->id)) {
       $requestBusiness->update(['confirmation_no' => $confirmationNumber]);
     }
+
+
+    if ($request->email != $isEmailStored) {
+      // send email
+      $emailAddress = $request->email;
+      Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+
+      EmailLog::create([
+        'request_id' => $requestBusiness->id,
+        'confirmation_number' => $confirmationNumber,
+        'role_id' => 3,
+        'is_email_sent' => 1,
+        'sent_tries' => 1,
+        'create_date' => now(),
+        'sent_date' => now(),
+        'email_template' => $request->email,
+        'subject_name' => 'Create account by clicking on below link with below email address',
+        'email' => $request->email,
+      ]);
+    }
+
 
     return redirect()->route('submitRequest');
   }

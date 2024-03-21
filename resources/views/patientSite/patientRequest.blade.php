@@ -89,11 +89,11 @@
 
                         <div class="col-md patient-contact-col2">
 
-                            <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}" class="form-control mobile-text mobile @error('mobile') @enderror" id="" name="phone_number">
+                            <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}" class="form-control mobile-text mobile @error('phone_number') is-invalid @enderror" id="" name="phone_number">
 
                             <!-- <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number"> -->
 
-                            @error('mobile')
+                            @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
@@ -188,7 +188,7 @@
 
                 <div class="buttons">
                     <button class="primary-fill me-2" type="submit">Submit</button>
-                    <button class="primary-empty " type="cancel">Cancel</button>
+                    <button class="primary-empty " type="reset">Cancel</button>
                 </div>
 
             </div>

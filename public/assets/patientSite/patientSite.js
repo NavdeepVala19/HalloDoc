@@ -31,9 +31,18 @@ $(document).ready(function () {
         }
     })
 
-
     //  ********************************************************************************************
 
+
+
+
+    // **** This code is for hiding pop-up button in family/concierge/business page ****
+    $('.submit-valid-details-ok-btn').click(function () {
+        $('.submit-valid-details').hide();
+        $('.overlay').hide()
+    })
+    //  ********************************************************************************************
+    
 
 
 

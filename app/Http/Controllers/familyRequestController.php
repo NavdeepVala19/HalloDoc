@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\request_Client;
-use App\Models\allusers;
-use App\Models\RequestNotes;
-use App\Models\RequestStatus;
-use App\Models\users;
-use App\Models\RequestTable;
-use App\Models\RequestWiseFile;
-use Illuminate\Http\Request;
-use App\Models\RequestWise;
 use Carbon\Carbon;
+use App\Models\users;
+use App\Models\allusers;
+use App\Models\EmailLog;
+use App\Models\RequestWise;
+use App\Models\RequestNotes;
+use App\Models\RequestTable;
+use Illuminate\Http\Request;
+use App\Models\RequestStatus;
+use App\Mail\sendEmailAddress;
+use App\Models\request_Client;
+use App\Models\RequestWiseFile;
+use Illuminate\Support\Facades\Mail;
 // use App\Models\User;
 class familyRequestController extends Controller
 {
@@ -19,18 +22,17 @@ class familyRequestController extends Controller
 
     public function create(Request $request)
     {
-
+   
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'min:2|max:30',
-            'date_of_birth'=>'required',
+            'last_name' => 'string|min:2|max:30',
+            'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
-            'phone_number' => 'required',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
-            'state' => 'min:2|max:30',
-            'room' => 'numeric',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'zipcode' => 'digits:6',
             'family_first_name' => 'required|min:2|max:30',
             'family_last_name' => 'min:2|max:30',
             'family_email' => 'required|email|min:2|max:30',
@@ -38,15 +40,32 @@ class familyRequestController extends Controller
             'family_relation' => 'required',
         ]);
 
+        $isEmailStored = users::where('email', $request->email)->pluck('email');
+       
 
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
+        if($request->email != $isEmailStored){
+            // store email and phoneNumber in users table
+            $requestEmail = new users();
+            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->email = $request->email;
+            $requestEmail->phone_number = $request->phone_number;
 
-        $requestEmail->save();
+            $requestEmail->save();
 
+            // store all details of patient in allUsers table
 
+            $requestUsers = new allusers();
+            $requestUsers->user_id = $requestEmail->id;
+            $requestUsers->first_name = $request->first_name;
+            $requestUsers->last_name = $request->last_name;
+            $requestUsers->email = $request->email;
+            $requestUsers->mobile = $request->phone_number;
+            $requestUsers->street = $request->street;
+            $requestUsers->city = $request->city;
+            $requestUsers->state = $request->state;
+            $requestUsers->zipcode = $request->zipcode;
+            $requestUsers->save();
+        }
 
         // family request creating
 
@@ -100,29 +119,14 @@ class familyRequestController extends Controller
 
         // store symptoms in request_notes table
 
-        // $request_notes = new RequestNotes();
-        // $request_notes->request_id = $familyRequest->id;
-        // $request_notes->patient_notes = $request->symptoms;
+        $request_notes = new RequestNotes();
+        $request_notes->request_id = $familyRequest->id;
+        $request_notes->patient_notes = $request->symptoms;
 
-        // $request_notes->save();
-
-
-        // store all details of patient in allUsers table
-
-        $requestUsers = new allusers();
-        $requestUsers->user_id = $requestEmail->id;
-        $requestUsers->first_name = $request->first_name;
-        $requestUsers->last_name = $request->last_name;
-        $requestUsers->email = $request->email;
-        $requestUsers->mobile = $request->phone_number;
-        $requestUsers->street = $request->street;
-        $requestUsers->city = $request->city;
-        $requestUsers->state = $request->state;
-        $requestUsers->zipcode = $request->zipcode;
-        $requestUsers->save();
+        $request_notes->save();
 
 
-
+ 
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -142,6 +146,28 @@ class familyRequestController extends Controller
             $familyRequest->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        return redirect()->route('submitRequest');
+
+        if ($request->email != $isEmailStored) {
+
+            // send email
+            $emailAddress = $request->email;
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+
+            EmailLog::create([
+                'role_id' => 3,
+                'request_id' => $familyRequest->id,
+                'confirmation_number' => $confirmationNumber,
+                'is_email_sent' => 1,
+                'sent_tries' => 1,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'email_template' => $request->email,
+                'subject_name' => 'Create account by clicking on below link with below email address',
+                'email' => $request->email,
+            ]);
+
+        }
+
+        return redirect()->route('submitRequest')->with('message','Email for Create Account is Sent');
     }
 }

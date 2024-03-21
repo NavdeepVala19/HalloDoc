@@ -27,8 +27,6 @@ class patientLoginController extends Controller
     public function userLogin(Request $request)
     {
 
-    
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -40,11 +38,11 @@ class patientLoginController extends Controller
             'password' => $request->password,
         ];
 
-
-
         if (Auth::attempt($credentials)) {
             $userData = Auth::user();
             return redirect()->route('patientDashboardData');
+        } else {
+            return back()->with('message', 'Invalid credentials');
         }
     }
 
@@ -87,8 +85,8 @@ class patientLoginController extends Controller
     {
 
         $request->validate([
-            'confirm_password' => 'required|min:8|max:20',
-            'new_password' => 'required|same:confirm_password|min:8|max:20',
+            'new_password' => 'required|min:8|max:20',
+            'confirm_password' => 'required|same:new_password',
         ]);
 
         $updatePassword = users::where('token', $request->token)->first();
@@ -102,8 +100,6 @@ class patientLoginController extends Controller
         ])->update(['password' => Hash::make($request->new_password)]);
 
 
-        // users::where(['email' => $request->email])->delete();
-
         users::where(['email' => $request->email])->update(['token' => null]);
 
 
@@ -116,4 +112,3 @@ class patientLoginController extends Controller
         return redirect("loginScreen");
     }
 }
-
