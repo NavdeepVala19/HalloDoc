@@ -47,7 +47,7 @@
             </div>
             <div class="form-floating mb-3">
                 <textarea class="form-control" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Patient Notes</label>
+                <label for="floatingTextarea2">Additional Notes</label>
             </div>
             <div class="text-end">
                 <button class="primary-fill">Save Changes</button>

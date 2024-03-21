@@ -25,6 +25,9 @@ $(document).ready(function () {
 
         $(".house_call").val(1);
         $(".consult").val(0);
+
+        $(".encounter-save-btn").toggleClass("houseCallSelected");
+        $(".encounter-save-btn").removeClass("consultCallSelected");
     });
 
     $(".consult-btn").click(function () {
@@ -33,13 +36,9 @@ $(document).ready(function () {
 
         $(".house_call").val(0);
         $(".consult").val(1);
-    });
 
-    $(".encounter-save-btn").click(function () {
-        if ($(".consult-btn").hasClass("btn-active")) {
-            console.log($(".case-id").val());
-        } else if ($(".housecall-btn").hasClass("btn-active")) {
-        }
+        $(".encounter-save-btn").toggleClass("consultCallSelected");
+        $(".encounter-save-btn").removeClass("houseCallSelected");
     });
 
     // Conclude Case Encounter Form - Medical Report
