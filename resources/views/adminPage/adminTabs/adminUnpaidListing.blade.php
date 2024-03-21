@@ -6,11 +6,10 @@
 @endsection
 
 
-{{--
 @section('username')
     {{ $userData->username }}
 @endsection
---}}
+
 
 @section('nav-links')
 <a href="" class="active-link">Dashboard</a>

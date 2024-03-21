@@ -58,8 +58,6 @@
         <div class="docs-download">
             <h3>Documents</h3>
             <input type="submit" value="Download" class="primary-empty btn down-button">
-
-
         </div>
 
         <table class="table">

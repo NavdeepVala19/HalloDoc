@@ -37,7 +37,7 @@ class patientController extends Controller
             'phone_number' => 'required',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30',
-            'zipcode' => 'numeric',
+            'zipcode' => 'numeric|max:6|size:6',
             'state' => 'min:2|max:30',
         ]);
 
