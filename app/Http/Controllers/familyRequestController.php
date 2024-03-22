@@ -49,7 +49,6 @@ class familyRequestController extends Controller
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
-
             $requestEmail->save();
 
             // store all details of patient in allUsers table
@@ -70,7 +69,6 @@ class familyRequestController extends Controller
         // family request creating
 
         $familyRequest = new RequestTable();
-
         $familyRequest->user_id = $requestEmail->id;
         $familyRequest->request_type_id = $request->request_type;
         $familyRequest->first_name = $request->family_first_name;
@@ -78,18 +76,8 @@ class familyRequestController extends Controller
         $familyRequest->email = $request->family_email;
         $familyRequest->phone_number = $request->family_phone_number;
         $familyRequest->relation_name = $request->family_relation;
+        $familyRequest->status = 1;
         $familyRequest->save();
-
-        $requestStatus = new RequestStatus();
-        $requestStatus->request_id = $familyRequest->id;
-        $requestStatus->status = 1;
-        $requestStatus->save();
-
-
-        if (!empty($requestStatus)) {
-            $familyRequest->update(['status' => $requestStatus->id]);
-        }
-
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $familyRequest->id;
@@ -102,7 +90,7 @@ class familyRequestController extends Controller
         $patientRequest->city = $request->city;
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
-
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
 
@@ -115,17 +103,6 @@ class familyRequestController extends Controller
             $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
             $request_file->save();
         }
-
-
-        // store symptoms in request_notes table
-
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $familyRequest->id;
-        $request_notes->patient_notes = $request->symptoms;
-
-        $request_notes->save();
-
-
  
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
@@ -133,12 +110,9 @@ class familyRequestController extends Controller
         $todayDate = $currentTime->format('Y-m-d');
         $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
 
-
         $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
         $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
         $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-
 
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
@@ -146,9 +120,7 @@ class familyRequestController extends Controller
             $familyRequest->update(['confirmation_no' => $confirmationNumber]);
         }
 
-
         if ($request->email != $isEmailStored) {
-
             // send email
             $emailAddress = $request->email;
             Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
@@ -165,7 +137,6 @@ class familyRequestController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
-
         }
 
         return redirect()->route('submitRequest')->with('message','Email for Create Account is Sent');

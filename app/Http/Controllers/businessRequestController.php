@@ -52,11 +52,9 @@ class businessRequestController extends Controller
       $requestEmail->username = $request->first_name . " " . $request->last_name;
       $requestEmail->email = $request->email;
       $requestEmail->phone_number = $request->phone_number;
-
       $requestEmail->save();
 
       // store all details of patient in allUsers table
-
       $requestUsers = new allusers();
       $requestUsers->user_id = $requestEmail->id;
       $requestUsers->first_name = $request->first_name;
@@ -77,17 +75,12 @@ class businessRequestController extends Controller
     $business = new Business();
     $business->phone_number = $request->business_mobile;
     $business->business_name = $request->business_property_name;
-
     $business->save();
 
     //business request store in request table
 
     $requestBusiness = new RequestTable();
-
-    $requestStatus = new RequestStatus();
-
-
-    $requestBusiness->status = $requestStatus->id;
+    $requestBusiness->status = 1;
     $requestBusiness->user_id = $requestEmail->id;
     $requestBusiness->request_type_id = $request->request_type;
     $requestBusiness->first_name = $request->business_first_name;
@@ -97,19 +90,6 @@ class businessRequestController extends Controller
     $requestBusiness->relation_name = $request->business_property_name;
     $requestBusiness->case_number = $request->case_number;
     $requestBusiness->save();
-
-
-    $requestStatus->request_id = $requestBusiness->id;
-    $requestStatus->status = 1;
-    $requestStatus->save();
-
-    if (!empty($requestStatus)) {
-      $requestBusiness->update(["status" => $requestStatus->id]);
-    }
-
-
-
-
 
     $patientRequest = new request_Client();
     $patientRequest->request_id = $requestBusiness->id;
@@ -123,21 +103,11 @@ class businessRequestController extends Controller
     $patientRequest->state = $request->state;
     $patientRequest->zipcode = $request->zipcode;
     $patientRequest->room = $request->room;
-
+    $patientRequest->notes = $request->symptoms;
     $patientRequest->save();
 
 
-    // store symptoms in request_notes table
-
-    $request_notes = new RequestNotes();
-    $request_notes->request_id = $requestBusiness->id;
-    $request_notes->patient_notes = $request->symptoms;
-
-    $request_notes->save();
-
-
     // store data in request business table 
-
     $businessRequest = new RequestBusiness();
     $businessRequest->request_id = $requestBusiness->id;
     $businessRequest->business_id = $business->id;
@@ -154,8 +124,6 @@ class businessRequestController extends Controller
     $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
     $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
     $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-
 
     $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
@@ -182,7 +150,6 @@ class businessRequestController extends Controller
         'email' => $request->email,
       ]);
     }
-
 
     return redirect()->route('submitRequest');
   }

@@ -17,10 +17,19 @@
 @endsection
 
 @section('content')
-    {{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement by patients. --}}
-    {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the "Pending" state to the "Active" state. --}}
+{{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement by patients. --}}
+{{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the "Pending" state to the "Active" state. --}}
+<div class="overlay"></div>
 
-    <div class="overlay"></div>
+{{-- Error or Success Message Alerts/Pop-ups --}}
+@if (session('caseAccepted'))
+<div class="alert alert-success popup-message ">
+    <span>
+        {{ session('caseAccepted') }}
+    </span>
+    <i class="bi bi-check-circle-fill"></i>
+</div>
+@endif
 
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
@@ -234,31 +243,31 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody>
                         @foreach ($cases as $case)
-                            @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}
-                                        {{ $case->request->requestClient->last_name }}</td>
-                                    <td>{{ $case->request->requestClient->phone_number }}</td>
-                                    <td>{{ $case->request->requestClient->street }},
-                                        {{ $case->request->requestClient->city }},
-                                        {{ $case->request->requestClient->state }}</td>
+                            @if (!empty($case) && !empty($case->requestClient))
+                                <tr class="type-{{ $case->request_type_id }}">
+                                    <td>{{ $case->requestClient->first_name }}
+                                        {{ $case->requestClient->last_name }}</td>
+                                    <td>{{ $case->requestClient->phone_number }}</td>
+                                    <td>{{ $case->requestClient->street }},
+                                        {{ $case->requestClient->city }},
+                                        {{ $case->requestClient->state }}</td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
-                                                <button class="send-agreement-btn" data-id="{{ $case->request->id }}"
-                                                    data-request_type_id={{ $case->request->request_type_id }}
-                                                    data-phone_number={{ $case->request->phone_number }}
-                                                    data-email={{ $case->request->email }}><i
+                                                <button class="send-agreement-btn" data-id="{{ $case->id }}"
+                                                    data-request_type_id={{ $case->request_type_id }}
+                                                    data-phone_number={{ $case->phone_number }}
+                                                    data-email={{ $case->email }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
-                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.case', $case->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.upload', $case->id) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                                <button class="transfer-btn" data-id="{{ $case->request->id }}"><i
+                                                <button class="transfer-btn" data-id="{{ $case->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
                                             </div>
                                         </div>
@@ -272,33 +281,33 @@ pending state, providers need to send an agreement link to patients. --}}
 
             <div class="mobile-listing">
                 @foreach ($cases as $case)
-                    @if (!empty($case->request) && !empty($case->request->requestClient))
+                    @if (!empty($case) && !empty($case->requestClient))
                         <div class="mobile-list d-flex justify-content-between">
                             <div class="d-flex flex-column">
-                                <p>{{ $case->request->requestClient->first_name }} </p>
+                                <p>{{ $case->requestClient->first_name }} </p>
                                 <span>
-                                    @if ($case->request->requestClient)
-                                        {{ $case->request->requestClient->address }}
+                                    @if ($case->requestClient)
+                                        {{ $case->requestClient->address }}
                                     @endif Address
                                 </span>
                             </div>
                             <div class="d-flex flex-column align-items-center justify-content-around">
-                                @if ($case->request->request_type_id == 1)
+                                @if ($case->request_type_id == 1)
                                     <span>
                                         Patient
                                         <i class="bi bi-circle-fill ms-1 green"></i>
                                     </span>
-                                @elseif ($case->request->request_type_id == 2)
+                                @elseif ($case->request_type_id == 2)
                                     <span>
                                         Family/Friend
                                         <i class="bi bi-circle-fill ms-1 yellow"></i>
                                     </span>
-                                @elseif ($case->request->request_type_id == 3)
+                                @elseif ($case->request_type_id == 3)
                                     <span>
                                         Business
                                         <i class="bi bi-circle-fill ms-1 red"></i>
                                     </span>
-                                @elseif ($case->request->request_type_id == 4)
+                                @elseif ($case->request_type_id == 4)
                                     <span>
                                         Concierge
                                         <i class="bi bi-circle-fill ms-1 blue"></i>
@@ -308,7 +317,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View
+                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View
                                 Case</a>
                             <div>
                                 <span>
@@ -327,7 +336,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                 </span>
                                 <div class="grid-2-listing ">
                                     <button class="agreement-btn">Send Agreement</button>
-                                    <a href="{{ route('provider.view.notes', $case->request->id) }}"
+                                    <a href="{{ route('provider.view.notes', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn">View Uploads</button>
@@ -338,18 +347,14 @@ pending state, providers need to send an agreement link to patients. --}}
                                 Chat With:
                                 <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
                                 <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-
                             </div>
                         </div>
                     @endif
                 @endforeach
             </div>
-
             <div class="page">
                 {{ $cases->links('pagination::bootstrap-5') }}
             </div>
         </div>
-
-
     </div>
 @endsection

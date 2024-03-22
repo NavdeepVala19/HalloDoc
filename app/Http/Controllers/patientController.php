@@ -51,11 +51,9 @@ class patientController extends Controller
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
-
             $requestEmail->save();
 
             // store all details of patient in allUsers table
-
             $requestUsers = new allusers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
@@ -72,26 +70,14 @@ class patientController extends Controller
 
 
         $requestData = new RequestTable();
-        $requestStatus = new RequestStatus();
-
-        // $requestData->status = $requestStatus->id;
         $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
         $requestData->last_name = $request->last_name;
         $requestData->email = $request->email;
         $requestData->phone_number = $request->phone_number;
+        $requestData->status = 1;
         $requestData->save();
-
-        $requestStatus->request_id = $requestData->id;
-        $requestStatus->status = 1;
-        $requestStatus->save();
-
-
-        if (!empty($requestStatus)) {
-            $requestData->update(['status' => $requestStatus->id]);
-        }
-
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestData->id;
@@ -105,8 +91,7 @@ class patientController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-
-
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
 
@@ -121,16 +106,6 @@ class patientController extends Controller
         }
 
 
-
-        // store symptoms in request_notes table
-
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $requestData->id;
-        $request_notes->patient_notes = $request->symptoms;
-
-        $request_notes->save();
-
-
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -141,14 +116,11 @@ class patientController extends Controller
         $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
         $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
 
-
-
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
         if (!empty($requestData->id)) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
-
 
         // send email
         $emailAddress = $request->email;

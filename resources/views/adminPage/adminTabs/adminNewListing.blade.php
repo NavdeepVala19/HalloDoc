@@ -413,37 +413,37 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                     </thead>
                     <tbody id="dropdown-data-body">
                         @foreach ($cases as $case)
-                            @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}
-                                        {{ $case->request->requestClient->last_name }}
+                            @if (!empty($case->requestClient))
+                                <tr class="type-{{ $case->request_type_id }}">
+                                    <td>{{ $case->requestClient->first_name }}
+                                        {{ $case->requestClient->last_name }}
                                     </td>
-                                    <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>{{ $case->request->first_name }} {{ $case->request->last_name }}</td>
-                                    <td>{{ $case->request->created_at }}</td>
-                                    <td>{{ $case->request->phone_number }}</td>
+                                    <td>{{ $case->requestClient->date_of_birth }}</td>
+                                    <td>{{ $case->first_name }} {{ $case->last_name }}</td>
+                                    <td>{{ $case->created_at }}</td>
+                                    <td>{{ $case->phone_number }}</td>
                                     <td>
-                                        {{ $case->request->requestClient->street }},
-                                        {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                        {{ $case->requestClient->street }},
+                                        {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     </td>
-                                    <td>{{ $case->request->requestClient->notes }}</td>
+                                    <td>{{ $case->requestClient->notes }}</td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
-                                                <button class="assign-case-btn" data-id="{{ $case->request->id }}"><i
+                                                <button class="assign-case-btn" data-id="{{ $case->id }}"><i
                                                         class="bi bi-journal-check me-2 ms-3"></i>Assign Case</button>
-                                                <button class="cancel-case-btn" data-id="{{ $case->request->id }}"
-                                                    data-patient_name="{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}"><i
+                                                <button class="cancel-case-btn" data-id="{{ $case->id }}"
+                                                    data-patient_name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"><i
                                                         class="bi bi-x-circle me-2 ms-3"></i>Cancel
                                                     Case</button>
-                                                <a href="{{ route('admin.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View
                                                     Case</a>
-                                                <a href="{{ route('admin.view.note', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                                <button class="block-case-btn" data-id="{{ $case->request->id }}"
-                                                    data-patient_name="{{ $case->request->requestClient->first_name }} {{ $case->request->requestClient->last_name }}">
+                                                <button class="block-case-btn" data-id="{{ $case->id }}"
+                                                    data-patient_name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}">
                                                     <i class="bi bi-ban me-2 ms-3"></i>
                                                     Block Patient</button>
                                             </div>
@@ -459,64 +459,64 @@ can block any case. All blocked cases can be seen in Block history page. --}}
 
         <div class="mobile-listing">
             @foreach ($cases as $case)
-                @if (!empty($case->request) && !empty($case->request->requestClient))
+                @if (!empty($case->requestClient))
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->request->first_name }} </p>
+                            <p>{{ $case->first_name }} </p>
                             <span>Address:
-                                @if ($case->request->requestClient)
-                                    {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                @if ($case->requestClient)
+                                    {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                 @endif
                                 <button class="map-btn">Map Location</button>
                         </div>
                     </div>
                     <div class="more-info">
-                        <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of birth :
-                                {{ $case->request->requestClient->date_of_birth }}
+                                {{ $case->requestClient->date_of_birth }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-envelope"></i> Email :
-                                {{ $case->request->requestClient->email }}
+                                {{ $case->requestClient->email }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-telephone"></i> Patient :
-                                {{ $case->request->requestClient->phone_number }}
+                                {{ $case->requestClient->phone_number }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-cash"></i> Transfer :Admin transferred to
-                                {{ $case->request->requestClient->last_name }}
+                                {{ $case->requestClient->last_name }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of services :
-                                {{ $case->request->created_at }}
+                                {{ $case->created_at }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-person-circle"></i> Physician :
-                                {{ $case->request->last_name }}
+                                {{ $case->last_name }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-person-plus-fill"></i> Requestor:
-                                {{ $case->request->first_name }}
+                                {{ $case->first_name }}
                             </span>
                             <div class="grid-2-listing">
-                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-5 text-center">Assign
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-5 text-center">Assign
                                     Case</a>
-                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-4 text-center">Cancel
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-4 text-center">Cancel
                                     Case</a>
-                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn text-center">View
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
                                     Notes</a>
-                                <a href="/view-notes/{{ $case->request->id }}" class="secondary-btn-4 text-center">Block
+                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-4 text-center">Block
                                     Patient</a>
-                                <a href="/view-notes/{{ $case->request->id }}"
+                                <a href="/view-notes/{{ $case->id }}"
                                     class="secondary-btn text-center">Email</a>
                             </div>
                         </div>

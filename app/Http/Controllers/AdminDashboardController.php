@@ -26,13 +26,11 @@ class AdminDashboardController extends Controller
 
     public function createAdminPatientRequest(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
             'phone_number' => 'required',
             'email' => 'required|email',
-            // 'dob' => 'required',
             'street' => 'required',
             'city' => 'required',
             'state' => 'required'
@@ -45,9 +43,7 @@ class AdminDashboardController extends Controller
         $requestEmail->save();
 
         $requestData = new RequestTable();
-        $requestStatus = new RequestStatus();
-
-        $requestData->status = $requestStatus->id;
+        $requestData->status = 1;
         $requestData->user_id = $requestEmail->id;
         $requestData->request_type_id = $request->request_type;
         $requestData->first_name = $request->first_name;
@@ -55,14 +51,6 @@ class AdminDashboardController extends Controller
         $requestData->email = $request->email;
         $requestData->phone_number = $request->phone_number;
         $requestData->save();
-
-        $requestStatus->request_id = $requestData->id;
-        $requestStatus->status = 1;
-        $requestStatus->save();
-
-        if (!empty($requestStatus)) {
-            $requestData->update(['status' => $requestStatus->id]);
-        }
 
         $adminPatientRequest = new request_Client();
         $adminPatientRequest->request_id = $requestData->id;
@@ -76,7 +64,6 @@ class AdminDashboardController extends Controller
         $adminPatientRequest->state = $request->state;
         $adminPatientRequest->zipcode = $request->zipcode;
         $adminPatientRequest->room = $request->room;
-
         $adminPatientRequest->save();
 
         // store notes in request_notes table
@@ -85,11 +72,9 @@ class AdminDashboardController extends Controller
         $request_notes->request_id = $requestData->id;
         $request_notes->admin_notes = $request->adminNote;
         $request_notes->created_by = 'admin';
-
         $request_notes->save();
 
         // store all details of patient in allUsers table
-
         $requestUsers = new allusers();
         $requestUsers->first_name = $request->first_name;
         $requestUsers->last_name = $request->last_name;

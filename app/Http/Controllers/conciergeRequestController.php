@@ -87,16 +87,12 @@ class conciergeRequestController extends Controller
         $concierge->city = $request->concierge_city;
         $concierge->state = $request->concierge_state;
         $concierge->zipcode = $request->concierge_zip_code;
-
         $concierge->save();
 
         // concierge request into request table
 
         $requestConcierge = new RequestTable();
-
-        $requestStatus = new RequestStatus();
-
-        $requestConcierge->status = $requestStatus->id;
+        $requestConcierge->status = 1;
         $requestConcierge->user_id = $requestEmail->id;
         $requestConcierge->request_type_id = $request->request_type;
         $requestConcierge->first_name = $request->concierge_first_name;
@@ -105,17 +101,6 @@ class conciergeRequestController extends Controller
         $requestConcierge->phone_number = $request->concierge_mobile;
         $requestConcierge->relation_name = $request->concierge_hotel_name;
         $requestConcierge->save();
-
-
-        $requestStatus->request_id = $requestConcierge->id;
-        $requestStatus->status = 1;
-        $requestStatus->save();
-
-        if (!empty($requestStatus)) {
-            $requestConcierge->update(["status" => $requestStatus->id]);
-        }
-
-
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestConcierge->id;
@@ -129,26 +114,14 @@ class conciergeRequestController extends Controller
         $patientRequest->state = $request->state;
         $patientRequest->zipcode = $request->zipcode;
         $patientRequest->room = $request->room;
-
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
-
-
-        // store symptoms in request_notes table
-
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $requestConcierge->id;
-        $request_notes->patient_notes = $request->symptoms;
-
-        $request_notes->save();
-
 
         // store data in request_concierge table
         $conciergeRequest = new RequestConcierge();
         $conciergeRequest->request_id = $requestConcierge->id;
         $conciergeRequest->concierge_id = $concierge->id;
         $conciergeRequest->save();
-
-
 
 
         $currentTime = Carbon::now();

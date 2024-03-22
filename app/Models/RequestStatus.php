@@ -10,6 +10,7 @@ class RequestStatus extends Model
     use HasFactory;
 
     protected $table = 'request_status';
+    protected $guarded = [];
 
     public function request()
     {

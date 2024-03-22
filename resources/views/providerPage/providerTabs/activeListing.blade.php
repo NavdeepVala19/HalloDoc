@@ -195,34 +195,34 @@ giving service to the patient. --}}
                         </thead>
                         <tbody>
                             @foreach ($cases as $case)
-                                <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}
-                                        {{ $case->request->requestClient->last_name }}</td>
-                                    <td>{{ $case->request->requestClient->phone_number }}</td>
-                                    <td>{{ $case->request->requestClient->street }},
-                                        {{ $case->request->requestClient->city }},
-                                        {{ $case->request->requestClient->state }}</td>
+                                <tr class="type-{{ $case->request_type_id }}">
+                                    <td>{{ $case->requestClient->first_name }}
+                                        {{ $case->requestClient->last_name }}</td>
+                                    <td>{{ $case->requestClient->phone_number }}</td>
+                                    <td>{{ $case->requestClient->street }},
+                                        {{ $case->requestClient->city }},
+                                        {{ $case->requestClient->state }}</td>
                                     <td>
-                                        @if ($case->request->call_type && $case->request->call_type == 'house_call')
-                                            <a href="{{ route('provider.houseCall.encounter', $case->request->id) }}"
+                                        @if ($case->call_type && $case->call_type == 'house_call')
+                                            <a href="{{ route('provider.houseCall.encounter', $case->id) }}"
                                                 class="primary-fill houseCallBtn"> House Call </a>
                                         @endif
                                     </td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn"
-                                                data-id="{{ $case->request->id }}">Actions</button>
+                                                data-id="{{ $case->id }}">Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('provider.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.case', $case->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.view.upload', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.upload', $case->id) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href="{{ route('provider.view.notes', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                                <a href="{{ route('provider.view.order', $case->request->id) }}"><i
+                                                <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn" data-id={{ $case->request->id }}><i
+                                                <button class="encounter-btn" data-id={{ $case->id }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>
                                         </div>
@@ -239,28 +239,28 @@ giving service to the patient. --}}
                             <div class="d-flex flex-column">
                                 <p> patient name </p>
                                 <span>Address:
-                                    @if ($case->request->requestClient)
-                                        {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                    @if ($case->requestClient)
+                                        {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     @endif
                                 </span>
                             </div>
                             <div class="d-flex flex-column align-items-center justify-content-around">
-                                @if ($case->request->request_type_id == 1)
+                                @if ($case->request_type_id == 1)
                                     <span>
                                         Patient
                                         <i class="bi bi-circle-fill ms-1 green"></i>
                                     </span>
-                                @elseif ($case->request->request_type_id == 2)
+                                @elseif ($case->request_type_id == 2)
                                     <span>
                                         Family/Friend
                                         <i class="bi bi-circle-fill ms-1 yellow"></i>
                                     </span>
-                                @elseif ($case->request->request_type_id == 3)
+                                @elseif ($case->request_type_id == 3)
                                     <span>
                                         Business
                                         <i class="bi bi-circle-fill ms-1 red"></i>
                                     </span>
-                                @elseif ($case->request->request_type_id == 4)
+                                @elseif ($case->request_type_id == 4)
                                     <span>
                                         Concierge
                                         <i class="bi bi-circle-fill ms-1 blue"></i>
@@ -270,7 +270,7 @@ giving service to the patient. --}}
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View
+                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View
                                 Case</a>
                             <div>
                                 <span>
@@ -283,7 +283,7 @@ giving service to the patient. --}}
                             {{-- {{$case->requestClient->phone_number}} --}}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href="{{ route('provider.view.notes', $case->request->id) }}"
+                                    <a href="{{ route('provider.view.notes', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>

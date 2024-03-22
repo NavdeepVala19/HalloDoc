@@ -5,12 +5,9 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
-
-
 @section('username')
     {{ !empty($userData) ? $userData->username : '' }}
 @endsection
-
 
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
@@ -362,44 +359,44 @@ pending state, providers need to send an agreement link to patients. --}}
                     </thead>
                     <tbody id="dropdown-data-body">
                         @foreach ($cases as $case)
-                            @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}
-                                        {{ $case->request->requestClient->last_name }}
+                            @if (!empty($case->requestClient))
+                                <tr class="type-{{ $case->request_type_id }}">
+                                    <td>{{ $case->requestClient->first_name }}
+                                        {{ $case->requestClient->last_name }}
                                     </td>
-                                    <td>{{ $case->request->requestClient->date_of_birth }}</td>
+                                    <td>{{ $case->requestClient->date_of_birth }}</td>
                                     <td>Region</td>
                                     <td>
                                         @if ($case->provider)
                                             {{ $case->provider->first_name }} {{ $case->provider->last_name }}
                                         @endif
                                     </td>
-                                    <td>{{ $case->request->created_at }}</td>
+                                    <td>{{ $case->created_at }}</td>
                                     <td>
-                                        {{ $case->request->requestClient->street }},
-                                        {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                        {{ $case->requestClient->street }},
+                                        {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     </td>
                                     <td>{{ $case->notes }}</td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn"
-                                                data-id={{ $case->request->id }}>Actions</button>
+                                                data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('admin.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('admin.view.upload', ['id' => $case->request->id]) }}"><i
+                                                <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href="{{ route('admin.view.note', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View
                                                     Notes</a>
-                                                <a href="{{ route('admin.view.order', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <a href="{{ route('admin.close.case', $case->request->id) }}">
+                                                <a href="{{ route('admin.close.case', $case->id) }}">
                                                     <i class="bi bi-x-circle me-2 ms-3"></i>Close Case</a>
                                                 <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors
                                                     Note</button>
-                                                <button class="clear-btn" data-id="{{ $case->request->id }}"><i
+                                                <button class="clear-btn" data-id="{{ $case->id }}"><i
                                                         class="bi
                                                     bi-x-circle me-2 ms-3"></i>Clear
                                                     Case</button>
@@ -417,13 +414,13 @@ pending state, providers need to send an agreement link to patients. --}}
         </div>
         <div class="mobile-listing">
             @foreach ($cases as $case)
-                @if (!empty($case->request) && !empty($case->request->requestClient))
+                @if (!empty($case) && !empty($case->requestClient))
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->request->first_name }} </p>
+                            <p>{{ $case->first_name }} </p>
                             <span>Address:
-                                @if ($case->request->requestClient)
-                                    {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                @if ($case->requestClient)
+                                    {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                 @endif
                             </span>
                         </div>
@@ -457,37 +454,37 @@ pending state, providers need to send an agreement link to patients. --}}
                         <div>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of birth :
-                                {{ $case->request->requestClient->date_of_birth }}
+                                {{ $case->requestClient->date_of_birth }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-envelope"></i> Email :
-                                {{ $case->request->requestClient->email }}
+                                {{ $case->requestClient->email }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-cash"></i> Transfer :Admin transferred to
-                                {{ $case->request->requestClient->last_name }}
+                                {{ $case->requestClient->last_name }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of services :
-                                {{ $case->request->created_at }}
+                                {{ $case->created_at }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-person-circle"></i> Physician :
-                                {{ $case->request->last_name }}
+                                {{ $case->last_name }}
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-person-plus-fill"></i> Requestor:
-                                {{ $case->request->first_name }}
+                                {{ $case->first_name }}
                             </span>
                             <div class="grid-2-listing ">
                                 <a href="{{ route('provider.view.notes', $case->id) }}"
                                     class="secondary-btn-4 text-center">Close Case</a>
-                                <a href="{{ route('provider.view.notes', $case->request->id) }}"
+                                <a href="{{ route('provider.view.notes', $case->id) }}"
                                     class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>

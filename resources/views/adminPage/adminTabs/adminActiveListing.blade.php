@@ -293,34 +293,34 @@ giving service to the patient. --}}
                     </thead>
                     <tbody id="dropdown-data-body">
                         @foreach ($cases as $case)
-                            @if (!empty($case->request) && !empty($case->request->requestClient))
-                                <tr class="type-{{ $case->request->request_type_id }}">
-                                    <td>{{ $case->request->requestClient->first_name }}
-                                        {{ $case->request->requestClient->last_name }}</td>
-                                    <td>{{ $case->request->requestClient->date_of_birth }}</td>
-                                    <td>{{ $case->request->first_name }} {{ $case->request->last_name }}</td>
+                            @if (!empty($case->requestClient))
+                                <tr class="type-{{ $case->request_type_id }}">
+                                    <td>{{ $case->requestClient->first_name }}
+                                        {{ $case->requestClient->last_name }}</td>
+                                    <td>{{ $case->requestClient->date_of_birth }}</td>
+                                    <td>{{ $case->first_name }} {{ $case->last_name }}</td>
                                     <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
-                                    <td>{{ $case->request->created_at }}</td>
-                                    <td>{{ $case->request->phone_number }}</td>
-                                    <td>{{ $case->request->requestClient->street }},
-                                        {{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                    <td>{{ $case->created_at }}</td>
+                                    <td>{{ $case->phone_number }}</td>
+                                    <td>{{ $case->requestClient->street }},
+                                        {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     </td>
                                     <td>Notes</td>
                                     <td>
                                         <div class="action-container">
                                             <button class="table-btn action-btn"
-                                                data-id={{ $case->request->id }}>Actions</button>
+                                                data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('admin.view.case', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View
                                                     Case</a>
-                                                <a href="{{ route('admin.view.upload', ['id' => $case->request->id]) }}"><i
+                                                <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href="{{ route('admin.view.note', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View
                                                     Notes</a>
-                                                <a href="{{ route('admin.view.order', $case->request->id) }}"><i
+                                                <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors
                                                     Note</button>
@@ -338,33 +338,33 @@ giving service to the patient. --}}
         </div>
         <div class="mobile-listing">
             @foreach ($cases as $case)
-                @if (!empty($case->request) && !empty($case->request->requestClient))
+                @if (!empty($case->requestClient))
                     <div class="mobile-list d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <p>{{ $case->request->first_name }} </p>
+                            <p>{{ $case->first_name }} </p>
                             <span>Address:
-                                @if ($case->request->requestClient)
-                                    {{ $case->request->requestClient->street }},{{ $case->request->requestClient->city }},{{ $case->request->requestClient->state }}
+                                @if ($case->requestClient)
+                                    {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                 @endif
                             </span>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-around">
-                            @if ($case->request->request_type_id == 1)
+                            @if ($case->request_type_id == 1)
                                 <span>
                                     Patient
                                     <i class="bi bi-circle-fill ms-1 green"></i>
                                 </span>
-                            @elseif ($case->request->request_type_id == 2)
+                            @elseif ($case->request_type_id == 2)
                                 <span>
                                     Family/Friend
                                     <i class="bi bi-circle-fill ms-1 yellow"></i>
                                 </span>
-                            @elseif ($case->request->request_type_id == 3)
+                            @elseif ($case->request_type_id == 3)
                                 <span>
                                     Business
                                     <i class="bi bi-circle-fill ms-1 red"></i>
                                 </span>
-                            @elseif ($case->request->request_type_id == 4)
+                            @elseif ($case->request_type_id == 4)
                                 <span>
                                     Concierge
                                     <i class="bi bi-circle-fill ms-1 blue"></i>
@@ -374,59 +374,59 @@ giving service to the patient. --}}
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="{{ route('provider.view.case', $case->request->id) }}" class="view-btn">View
+                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View
                             Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of birth :
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->requestClient->date_of_birth }}
+                                @isset($case->requestClient)
+                                    {{ $case->requestClient->date_of_birth }}
                                 @endisset
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-envelope"></i> Email :
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->requestClient->email }}
+                                @isset($case->requestClient)
+                                    {{ $case->requestClient->email }}
                                 @endisset
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-telephone"></i> Patient :
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->phone_number }}
+                                @isset($case->requestClient)
+                                    {{ $case->phone_number }}
                                 @endisset
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-cash"></i> Transfer :Admin transferred to
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->requestClient->last_name }}
+                                @isset($case->requestClient)
+                                    {{ $case->requestClient->last_name }}
                                 @endisset
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-calendar3"></i> Date of services :
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->created_at }}
+                                @isset($case->requestClient)
+                                    {{ $case->created_at }}
                                 @endisset
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-person-circle"></i> Physician :
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->last_name }}
+                                @isset($case->requestClient)
+                                    {{ $case->last_name }}
                                 @endisset
                             </span>
                             <br>
                             <span>
                                 <i class="bi bi-person-plus-fill"></i> Requestor:
-                                @isset($case->request->requestClient)
-                                    {{ $case->request->first_name }}
+                                @isset($case->requestClient)
+                                    {{ $case->first_name }}
                                 @endisset
                             </span>
                             <div class="grid-2-listing ">
-                                <a href="{{ route('provider.view.notes', $case->request->id) }}"
+                                <a href="{{ route('provider.view.notes', $case->id) }}"
                                     class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>

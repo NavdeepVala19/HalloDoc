@@ -72,5 +72,8 @@ class RequestTable extends Model
         return $this->hasOne(requestType::class, 'id', 'request_type_id');
     }
 
-    
+    public function provider()
+    {
+        return $this->hasOne(Provider::class, 'id', 'physician_id');
+    }
 }
