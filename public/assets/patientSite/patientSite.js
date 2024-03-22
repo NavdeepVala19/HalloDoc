@@ -1,8 +1,8 @@
 
 
 $(document).ready(function () {
-    
-    
+
+
     // **** This code is for create a new request in patient dashboard page  *****
     $('.create-btn').click(function () {
         $('.new-request').show();
@@ -35,14 +35,15 @@ $(document).ready(function () {
 
 
 
-
     // **** This code is for hiding pop-up button in family/concierge/business page ****
+
     $('.submit-valid-details-ok-btn').click(function () {
-        $('.submit-valid-details').hide();
-        $('.overlay').hide()
+        $('.submit-valid-details').show();
+        $('.overlay').show()
     })
+
     //  ********************************************************************************************
-    
+
 
 
 
@@ -149,3 +150,58 @@ for (i = 0; i < acc.length; i++) {
 //   ****************************************************************************
 
 
+
+$(document).ready(function () {
+
+    $('#back-btn').click(function () {
+        localStorage.setItem("popupShown", "true");
+    });
+
+    $('#cancel-btn').click(function () {
+        localStorage.setItem("popupShown", "true");
+    });
+
+    // Check if the popup was already shown
+    if (localStorage.getItem("popupShown") == "false") {
+        // Show the popup if not shown before
+        $("#validDetailsPopup").hide();
+        $('.overlay').hide()
+
+    } else {
+        $("#validDetailsPopup").show();
+        $('.overlay').show()
+    }
+
+    // Attach an event listener to the "OK" button in the popup
+    $("#closePopupBtn").on("click", function () {
+        // When clicked, hide the popup
+        $("#validDetailsPopup").hide();
+        $('.overlay').hide()
+
+        // And set a flag in localStorage indicating the popup was shown
+        localStorage.setItem("popupShown", "false");
+    });
+});
+
+
+
+// **** This code is for Enabling input fields in patientProfile Page and replacing Edit with Save and cancel button
+
+$(document).ready(function () {
+    $('#patientProfileEditBtn').click(function () {
+        $('.first_name').removeAttr("disabled");
+        $('.last_name').removeAttr("disabled");
+        $('.date_of_birth').removeAttr("disabled");
+        $('.phone').removeAttr("disabled");
+        $('.email').removeAttr("disabled");
+        $('.street').removeAttr("disabled");
+        $('.city').removeAttr("disabled");
+        $('.state').removeAttr("disabled");
+        $('.zipcode').removeAttr("disabled");
+
+        $('#patientProfileEditBtn').hide();
+        $('#patientProfileSubmitBtn').show();
+        $('#patientProfileCancelBtn').show();
+
+    })
+})

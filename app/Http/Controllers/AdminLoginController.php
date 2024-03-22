@@ -45,9 +45,7 @@ class AdminLoginController extends Controller
         if (Auth::attempt($credentials)) {
 
             $userData = Auth::user();
-            // dd($userData);
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
-            // dd($userRolesData);
 
             if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
@@ -55,7 +53,7 @@ class AdminLoginController extends Controller
                 return redirect()->route('admin.dashboard');
             }
         }
-        return redirect()->route('adminLogin');
+        return redirect()->route('adminLogin')->with('message', 'invalid credentials');
     }
 
 

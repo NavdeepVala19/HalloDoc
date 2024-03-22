@@ -29,6 +29,10 @@ class patientController extends Controller
 
     // this controller is responsible for creating/storing the patient
 
+    public function patientRequests(){
+        return view('patientSite/patientRequest');
+    }
+
     public function create(Request $request)
     {
         $request->validate([

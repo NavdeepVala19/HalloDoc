@@ -22,7 +22,7 @@
 
     <div class="header_part">
         <h1 class="heading">I am a..</h1>
-        <a href="{{route('patientSite')}}" type="button" class="primary-empty"> <i class="bi bi-chevron-left"></i> Back</a>
+        <a href="{{route('patientSite')}}" type="button" class="primary-empty d-flex justify-content-center align-items-center"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
 
@@ -58,4 +58,8 @@
 
 </div>
 
+@endsection
+
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection
