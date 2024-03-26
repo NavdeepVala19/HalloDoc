@@ -46,7 +46,7 @@
                         <td style="height: 5%;"> {{$patientData->status_type}}</td>
                         <td style="height: 5%;">
                             @if($patientData->id==null)
-                            -
+                            
                             @else
                             <a href="{{route('patientViewDocsFile',$patientData->request_id)}}" type="button" class="primary-empty btn ">Documents</a>
                             @endif
@@ -81,7 +81,7 @@
         </div>
 
         <!-- create a new request pop-up -->
-
+        <!-- <div class="overlay"></div> -->
         <div class="pop-up new-request">
             <div class="popup-heading-section d-flex align-items-center justify-content-between">
                 <span>Create new Request</span>

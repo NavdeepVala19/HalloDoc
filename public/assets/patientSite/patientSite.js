@@ -6,6 +6,7 @@ $(document).ready(function () {
     // **** This code is for create a new request in patient dashboard page  *****
     $('.create-btn').click(function () {
         $('.new-request').show();
+        $('.overlay').show();
     })
 
     //  ********************************************************************************************
@@ -17,6 +18,7 @@ $(document).ready(function () {
         $(this).toggleClass('btn-active');
         $('.btn-me').removeClass('btn-active');
     })
+
     $('.btn-me').click(function () {
         $(this).toggleClass('btn-active');
         $('.btn-someone').removeClass('btn-active');
@@ -25,9 +27,11 @@ $(document).ready(function () {
     $('.continue-btn').click(function () {
         if ($('.btn-me').hasClass('btn-active')) {
             $(window).attr('location', '/createPatientRequests');
-        } else {
+        } 
+        else if($('.btn-someone').hasClass('btn-active')) {
             $(window).attr('location', '/createSomeoneRequests');
-
+        } else{
+            alert('please select "Me" or "SomeOne Else"');
         }
     })
 

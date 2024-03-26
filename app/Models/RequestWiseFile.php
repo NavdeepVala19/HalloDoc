@@ -24,4 +24,12 @@ class RequestWiseFile extends Model
         'is_finalize',
         'is_patient_records',
     ];
+
+    public function RequestClient(){
+        return $this->belongsTo(request_Client::class,'request_id','request_id');
+    }
+
+    public function Request(){
+        return $this->belongsTo(RequestTable::class,'id','request_id');
+    }
 }

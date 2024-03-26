@@ -154,6 +154,10 @@ class patientController extends Controller
         }
 
 
+        
+        $isEmailStored = users::where('email', $request->email)->pluck('email');
+
+        if ($request->email != $isEmailStored) {
         // send email
         $emailAddress = $request->email;
         Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
@@ -171,7 +175,8 @@ class patientController extends Controller
             'email' => $request->email,
         ]);
 
-
+        }
+        
         return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
     }
 }

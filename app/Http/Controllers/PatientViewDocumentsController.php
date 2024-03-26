@@ -12,15 +12,26 @@ use ZipArchive;
 
 class PatientViewDocumentsController extends Controller
 {
-
     public function patientViewDocument($id)
     {
-        $documents = RequestWiseFile::where('request_id', $id)->paginate(10);
+        $documents = RequestWiseFile::select(
+            'request.first_name',
+            'request.confirmation_no',
+            'request_wise_file.file_name',
+            'request_wise_file.created_at',
+            'request_wise_file.id',
+        )
+        ->leftJoin('request','request.id','request_wise_file.request_id')
+        ->where('request_id', $id)
+        ->paginate(10);
+
         return view('patientSite/patientViewDocument', compact('documents'));
     }
 
     public function uploadDocs(Request $request)
     {
+        // $documents = RequestWiseFile::where('request_id', $id)->get();
+
         $requestData = new RequestTable();
         $requestData->request_type_id = $request->request_type;
         $requestData->save();
