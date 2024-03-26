@@ -202,6 +202,5 @@ $(document).ready(function () {
         $('#patientProfileEditBtn').hide();
         $('#patientProfileSubmitBtn').show();
         $('#patientProfileCancelBtn').show();
-
     })
 })
