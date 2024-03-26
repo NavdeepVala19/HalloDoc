@@ -44,8 +44,11 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="date" class="form-control date_of_birth" id="floatingInput"  name="date_of_birth" placeholder="date of birth" disabled value="{{$getEmailData->date_of_birth}}">
+                    <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth" placeholder="date of birth" disabled value="{{$getEmailData->date_of_birth}}">
                     <label for="floatingInput">Date Of Birth</label>
+                    @error('date_of_birth')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
             </div>
@@ -54,15 +57,23 @@
 
             <div class="grid-2">
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{$getEmailData->phone_number}}" disabled placeholder="Phone Number">
-                @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
+                <div class="form-floating ">
+                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{$getEmailData->phone_number}}" disabled placeholder="Phone Number">
+                    @error('phone_number')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="form-floating ">
                     <input type="email" class="form-control email" id="floatingInput" value="{{$getEmailData->email}}" disabled placeholder="name@example.com" name="email">
                     <label for="floatingInput">Email</label>
+                    @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
+
+
+
 
             </div>
 
@@ -73,17 +84,25 @@
                 <div class="form-floating ">
                     <input type="text" name="street" class="form-control street" id="floatingInput" disabled placeholder="Street" value="{{$getEmailData->street}}">
                     <label for="floatingInput">Street</label>
-
+                    @error('street')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating ">
                     <input type="text" name="city" class="form-control city" id="floatingInput" disabled placeholder="City" value="{{$getEmailData->city}}">
                     <label for="floatingInput">City</label>
+                    @error('city')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating ">
                     <input type="text" name="state" class="form-control state" id="floatingInput" disabled placeholder="State" value="{{$getEmailData->state}}">
                     <label for="floatingInput">State</label>
+                    @error('state')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
 
                 </div>
 
@@ -92,16 +111,19 @@
                     <div class="form-floating w-100">
                         <input type="text" name="zipcode" class="form-control zipcode" disabled id="floatingInput" placeholder="Zipcode" value="{{$getEmailData->zipcode}}">
                         <label for="floatingInput">Zipcode</label>
+                        @error('zipcode')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+
                     </div>
                     <a href="" class="primary-empty d-flex gap-2"> <i class="bi bi-geo-alt"></i> Map</a>
-
-                </div>
+                    </div>
             </div>
 
             <div class="text-end">
-                <button class="primary-fill" id="patientProfileEditBtn">Edit</button>
                 <button class="primary-fill me-2" type="submit" id="patientProfileSubmitBtn" style="display: none;">Submit</button>
                 <button class="primary-empty" type="reset" id="patientProfileCancelBtn" style="display: none;">Cancel </button>
+                <button class="primary-fill" id="patientProfileEditBtn" type="button">Edit</button>
             </div>
 
         </form>

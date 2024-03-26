@@ -36,16 +36,15 @@ class patientProfileController extends Controller
 
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'street' => 'required|min:2|max:30',
+            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6',
         ]);
-
 
 
         $userData = Auth::user();
@@ -73,7 +72,7 @@ class patientProfileController extends Controller
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
-            'phone_number' => $request->input('phone_number'),
+            'mobile' => $request->input('phone_number'),
             'city' => $request->input('city'),
             'state' => $request->input('state'),
             'street' => $request->input('street'),

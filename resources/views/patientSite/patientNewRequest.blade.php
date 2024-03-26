@@ -15,8 +15,8 @@
     <!-- this div is for heading and back button -->
 
     <div class="header_part">
-        <button type="button" class="primary-empty">
-            < Back</button>
+    <a href="{{route('patientDashboardData')}}"  type="button" class="primary-empty">
+            < Back</a>
     </div>
 
 
@@ -205,7 +205,7 @@
 
                 <div class="buttons">
                     <button class="primary-fill me-2" type="submit">Submit</button>
-                    <button class="primary-empty " type="cancel">Cancel</button>
+                    <a href="{{route('patientDashboardData')}}" class="primary-empty " type="button">Cancel</a>
                 </div>
 
             </div>

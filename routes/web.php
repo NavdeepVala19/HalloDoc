@@ -24,6 +24,7 @@ use App\Http\Controllers\ProviderSchedulingController;
 // ******************************* SHIVESH **********************************************
 
 
+route::get('/pass-reset',[Controller::class,'passReset']);
 
 //  ******* First page of patient site *********
 route::get('/', [Controller::class, 'patientSite'])->name('patientSite');
@@ -118,7 +119,7 @@ route::post('/createdPatientRequests', [patientDashboardController::class, 'crea
 
 
 route::get('/createSomeoneRequests', [patientDashboardController::class, 'createSomeoneRequest'])->name('createSomeoneRequests');
-route::post('/createdSomeoneRequests', [patientDashboardController::class, 'createNewPatient'])->name('createdSomeoneRequests');
+route::post('/createdSomeoneRequests', [patientDashboardController::class, 'createSomeOneElseRequest'])->name('createdSomeoneRequests');
 //  ****************************************************************************************************************************
 
 
