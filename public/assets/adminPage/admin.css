@@ -1,6 +1,6 @@
-.logout-link {
+/* .logout-link {
     display: block;
-}
+} */
 
 .case-toclose {
     position: relative;
@@ -103,10 +103,12 @@
 
 /* changes start from here */
 
+#filterExport {
+    display: none;
+}
 @media (max-width: 750px) {
-
-    .admin-btn>button,
-    .admin-btn>a {
+    .admin-btn > button,
+    .admin-btn > a {
         padding: 8px;
     }
 
@@ -117,16 +119,35 @@
     .case-unpaid::after {
         display: none;
     }
+
+    .state-grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .state-grid-3 .nav-link {
+        margin: 5px 5px;
+    }
+    .case span i {
+        display: none;
+    }
+    .case span {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 550px) {
+    .filter-section {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 12px;
+    }
 }
 
 .heading-section {
     margin-left: 10px;
     margin-right: 10px;
 }
-
-
-
-
 
 /* ********************** Shivesh ************************************** */
 
@@ -155,17 +176,14 @@ input[type="checkbox"] {
     height: 20px;
 }
 
-
-@media(max-width:820px) {
+@media (max-width: 820px) {
     .search-record-table {
         display: none;
     }
-
 }
 
-@media(min-width:551px) {
+@media (min-width: 551px) {
     .search-record-accordion {
         display: none;
     }
-
 }

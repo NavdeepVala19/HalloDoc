@@ -220,7 +220,7 @@
     border-radius: 5px;
 }
 
-tr>td {
+tr > td {
     padding: 16px !important;
     color: #fff !important;
 }
@@ -245,7 +245,7 @@ tr>td {
     display: none;
 }
 
-.page>nav {
+.page > nav {
     margin: 10px 20px !important;
 }
 
@@ -265,7 +265,7 @@ tr>td {
     z-index: 999;
 }
 
-.action-menu>button {
+.action-menu > button {
     width: 200px !important;
     border: none;
     background-color: #fff;
@@ -273,7 +273,7 @@ tr>td {
     text-align: left;
 }
 
-.action-menu>a {
+.action-menu > a {
     display: block;
     width: 200px !important;
     border: none;
@@ -283,8 +283,8 @@ tr>td {
     text-align: left;
 }
 
-.action-menu>button:hover,
-.action-menu>a:hover {
+.action-menu > button:hover,
+.action-menu > a:hover {
     background-color: rgba(128, 128, 128);
 }
 
@@ -400,7 +400,7 @@ tr>td {
         justify-content: start !important;
     }
 
-    .src-category>a {
+    .src-category > a {
         flex-direction: column;
         align-items: center;
         font-size: 12px;
@@ -429,7 +429,7 @@ tr>td {
         border-radius: 0;
     }
 
-    .src-category>button {
+    .src-category > button {
         font-size: 12px;
         padding: 5px;
     }
@@ -445,6 +445,7 @@ tr>td {
 
     .heading-section {
         margin-bottom: 18px;
+        margin-top: 18px;
     }
 
     .table {
@@ -591,11 +592,68 @@ tr>td {
         position: absolute;
         right: 20px;
         top: -14px;
-        background-color: rgba(255, 255, 255, 0.776);
+        background-color: rgba(255, 255, 255);
         border: 1px solid #8044c4;
         color: #8044c4;
         border-radius: 15px;
+        padding: 2px 8px;
+        font-size: 12px;
         /* font-size: 12px; */
+    }
+}
+
+@media (max-width: 550px) {
+    .admin-btn button,
+    .admin-btn a {
+        padding: 2px 6px !important;
+    }
+    .admin-btn > button > i,
+    .admin-btn > a > i {
+        font-size: 14px;
+    }
+    .heading-section:first-child h3 {
+        font-size: 16px !important;
+        margin-bottom: 0;
+    }
+    .heading-section:first-child strong {
+        font-size: 12px;
+    }
+    .admin-btn {
+        gap: 5px !important;
+    }
+    .case-type {
+        padding: 0 !important;
+    }
+    .mobile-list p,
+    .mobile-list span {
+        font-size: 12px;
+    }
+    .address-section {
+        width: 200px;
+    }
+
+    .more-info span {
+        font-size: 14px;
+    }
+    .grid-2-listing a,
+    .grid-2-listing button {
+        font-size: 12px;
+    }
+
+    .map-btn {
+        text-wrap: nowrap;
+    }
+
+    .heading-section div:nth-child(2) button > i,
+    .heading-section div:nth-child(2) a > i {
+        font-size: 14px;
+    }
+    .heading-section div:nth-child(2) button,
+    .heading-section div:nth-child(2) a {
+        padding: 2px 6px !important;
+    }
+    .heading-section div:nth-child(2) button {
+        margin-right: 5px !important;
     }
 }
 
@@ -681,7 +739,7 @@ tr>td {
     z-index: 999;
 }
 
-.actions-menubar>button {
+.actions-menubar > button {
     width: 200px !important;
     border: none;
     background-color: #fff;
@@ -689,7 +747,7 @@ tr>td {
     text-align: left;
 }
 
-.actions-menubar>a {
+.actions-menubar > a {
     display: block;
     width: 200px !important;
     border: none;
@@ -699,7 +757,7 @@ tr>td {
     text-align: left;
 }
 
-.actions-menubar>button:hover,
-.actions-menubar>a:hover {
+.actions-menubar > button:hover,
+.actions-menubar > a:hover {
     background-color: rgba(128, 128, 128);
 }

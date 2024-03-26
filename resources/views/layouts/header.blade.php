@@ -11,7 +11,7 @@
             {{-- Admin UserName or Provider UserName will be fetched and showed here --}}
             <strong> @yield('username') </strong>
         </span>
-        <a href="" class="logout-btn primary-empty">
+        <a href="{{ route('logout') }}" class="logout-btn primary-empty">
             <i class="bi bi-box-arrow-right"></i>
         </a>
         <a href="{{ route('logout') }}" class="logout-link primary-empty">Logout</a>

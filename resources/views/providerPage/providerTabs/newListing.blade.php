@@ -146,14 +146,18 @@
                 <div class="src-category d-flex gap-3 align-items-center">
                     <a href="{{ route('provider.listing', ['category' => 'all', 'status' => 'new']) }}" data-category="all"
                         class="btn-all filter-btn">All</button>
-                        <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'new']) }}" data-category="patient"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                        <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'new']) }}" data-category="family"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                        <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'new']) }}"  data-category="business"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                        <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'new']) }}" data-category="concierge"
-                            class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                        <a href="{{ route('provider.listing', ['category' => 'patient', 'status' => 'new']) }}"
+                            data-category="patient" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill green"></i>Patient</a>
+                        <a href="{{ route('provider.listing', ['category' => 'family', 'status' => 'new']) }}"
+                            data-category="family" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                        <a href="{{ route('provider.listing', ['category' => 'business', 'status' => 'new']) }}"
+                            data-category="business" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill red"></i>Business</a>
+                        <a href="{{ route('provider.listing', ['category' => 'concierge', 'status' => 'new']) }}"
+                            data-category="concierge" class="d-flex gap-2 filter-btn"> <i
+                                class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
             <div class="table-responsive">
@@ -167,7 +171,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach ($cases as $case)
                             @if (!empty($case) && !empty($case->requestClient))
                                 <tr class="type-{{ $case->request_type_id }}">
@@ -198,43 +201,43 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="mobile-listing">
                 @foreach ($cases as $case)
                     @if (!empty($case) && !empty($case->requestClient))
-                        <div class="mobile-list d-flex justify-content-between">
-                            <div class="d-flex flex-column">
-                                <p>{{ $case->requestClient->first_name }} </p>
-                                <span>
+                        <div class="mobile-list d-flex justify-content-center align-items-between flex-column">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}
+                                </span>
+                                <div>
+                                    @if ($case->request_type_id == 1)
+                                        <span>
+                                            Patient
+                                            <i class="bi bi-circle-fill ms-1 green"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 2)
+                                        <span>
+                                            Family/Friend
+                                            <i class="bi bi-circle-fill ms-1 yellow"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 3)
+                                        <span>
+                                            Business
+                                            <i class="bi bi-circle-fill ms-1 red"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 4)
+                                        <span>
+                                            Concierge
+                                            <i class="bi bi-circle-fill ms-1 blue"></i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="address-section">
                                     @if ($case->requestClient)
-                                        {{ $case->requestClient->street }},
-                                        {{ $case->requestClient->city }},
-                                        {{ $case->requestClient->state }}
+                                        {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     @endif
                                 </span>
-                            </div>
-                            <div class="d-flex flex-column align-items-center justify-content-around">
-                                @if ($case->request_type_id == 1)
-                                    <span>
-                                        Patient
-                                        <i class="bi bi-circle-fill ms-1 green"></i>
-                                    </span>
-                                @elseif ($case->request_type_id == 2)
-                                    <span>
-                                        Family/Friend
-                                        <i class="bi bi-circle-fill ms-1 yellow"></i>
-                                    </span>
-                                @elseif ($case->request_type_id == 3)
-                                    <span>
-                                        Business
-                                        <i class="bi bi-circle-fill ms-1 red"></i>
-                                    </span>
-                                @elseif ($case->request_type_id == 4)
-                                    <span>
-                                        Concierge
-                                        <i class="bi bi-circle-fill ms-1 blue"></i>
-                                    </span>
-                                @endif
                                 <button class="map-btn">Map Location</button>
                             </div>
                         </div>
@@ -243,7 +246,7 @@
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :
-                                    {{ $case->requestClient->date }}
+                                    {{ $case->requestClient->date_of_birth }}
                                 </span>
                                 <br>
                                 <span>
@@ -263,10 +266,6 @@
                                         Notes</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>
-                            </div>
-                            <div>
-                                Chat With:
-                                <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                             </div>
                         </div>
                     @endif

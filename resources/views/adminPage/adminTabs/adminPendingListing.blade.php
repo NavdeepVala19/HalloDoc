@@ -223,7 +223,7 @@ pending state, providers need to send an agreement link to patients. --}}
     </div>
 
     <nav>
-        <div class="nav nav-tabs " id="nav-tab">
+        <div class="nav nav-tabs state-grid-3" id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
                 <div class="case case-new p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
@@ -317,7 +317,7 @@ pending state, providers need to send an agreement link to patients. --}}
                         Export
                     </span>
                 </a>
-                <form action="{{ route('exportPending') }}" method="POST" id="filterExport" class="d-none">
+                <form action="{{ route('exportPending') }}" method="POST" id="filterExport">
                     @csrf
                     <input name="filter_search" value="" hidden>
                     <input name="filter_region" value="" hidden>
@@ -331,7 +331,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     </span>
                 </a>
                 <button class="primary-fill request-support-btn">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-person-square"></i>
                     <span class="txt">
                         Request DTY Support
                     </span>
@@ -342,7 +342,7 @@ pending state, providers need to send an agreement link to patients. --}}
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
                 <form action="{{ route('searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
-                    method="GET" class="d-flex align-items-center">
+                    method="GET" class="d-flex align-items-center filter-section">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
@@ -354,16 +354,20 @@ pending state, providers need to send an agreement link to patients. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}" data-category="all"
-                        class="btn-all filter-btn">All</a>
-                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}" data-category="patient"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill green"></i>Patient</a>
-                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}" data-category="family"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill yellow"></i>Family/Friend</a>
-                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}" data-category="business"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill red"></i>Business</a>
-                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}" data-category="concierge"
-                        class="d-flex gap-2 filter-btn"> <i class="bi bi-circle-fill blue"></i>Concierge</a>
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'pending']) }}"
+                        data-category="all" class="btn-all filter-btn">All</a>
+                    <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'pending']) }}"
+                        data-category="patient" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill green"></i>Patient</a>
+                    <a href="{{ route('admin.listing', ['category' => 'family', 'status' => 'pending']) }}"
+                        data-category="family" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill yellow"></i>Family/Friend</a>
+                    <a href="{{ route('admin.listing', ['category' => 'business', 'status' => 'pending']) }}"
+                        data-category="business" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill red"></i>Business</a>
+                    <a href="{{ route('admin.listing', ['category' => 'concierge', 'status' => 'pending']) }}"
+                        data-category="concierge" class="d-flex gap-2 filter-btn"> <i
+                            class="bi bi-circle-fill blue"></i>Concierge</a>
                 </div>
             </div>
             <div class="table-responsive">
@@ -406,7 +410,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
                                                     View Uploads
                                                 </a>
-                                                <button><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</button>
+                                                <a href="{{ route('admin.view.note', $case->id) }}"><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button class="transfer-btn assign-case-btn"
                                                     data-id="{{ $case->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
@@ -428,106 +432,105 @@ pending state, providers need to send an agreement link to patients. --}}
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <div class="mobile-listing">
-            @foreach ($cases as $case)
-                @if (!empty($case) && !empty($case->requestClient))
-                    <div class="mobile-list d-flex justify-content-between">
-                        <div class="d-flex flex-column">
-                            <p>{{ $case->first_name }} </p>
-                            <span>Address:
-                                @if ($case->requestClient)
-                                    {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
-                                @endif
-                            </span>
-                        </div>
-                        <div class="d-flex flex-column align-items-center justify-content-around">
-                            @if ($case->request_type_id == 1)
-                                <span>
-                                    Patient
-                                    <i class="bi bi-circle-fill ms-1 green"></i>
+            <div class="mobile-listing">
+                @foreach ($cases as $case)
+                    @if (!empty($case) && !empty($case->requestClient))
+                        <div class="mobile-list d-flex justify-content-center align-items-between flex-column">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }} </span>
+                                <div>
+                                    @if ($case->request_type_id == 1)
+                                        <span>
+                                            Patient
+                                            <i class="bi bi-circle-fill ms-1 green"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 2)
+                                        <span>
+                                            Family/Friend
+                                            <i class="bi bi-circle-fill ms-1 yellow"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 3)
+                                        <span>
+                                            Business
+                                            <i class="bi bi-circle-fill ms-1 red"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 4)
+                                        <span>
+                                            Concierge
+                                            <i class="bi bi-circle-fill ms-1 blue"></i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="address-section">
+                                    @if ($case->requestClient)
+                                        {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
+                                    @endif
                                 </span>
-                            @elseif ($case->request_type_id == 2)
-                                <span>
-                                    Family/Friend
-                                    <i class="bi bi-circle-fill ms-1 yellow"></i>
-                                </span>
-                            @elseif ($case->request_type_id == 3)
-                                <span>
-                                    Business
-                                    <i class="bi bi-circle-fill ms-1 red"></i>
-                                </span>
-                            @elseif ($case->request_type_id == 4)
-                                <span>
-                                    Concierge
-                                    <i class="bi bi-circle-fill ms-1 blue"></i>
-                                </span>
-                            @endif
-                            <button class="map-btn">Map Location</button>
-                        </div>
-                    </div>
-                    <div class="more-info ">
-                        <a href="/view-case/{{ $case->id }}" class="view-btn">View Case</a>
-                        <div>
-                            <span>
-                                <i class="bi bi-calendar3"></i> Date of birth :
-                                {{ $case->requestClient->date_of_birth }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-envelope"></i> Email :
-                                {{ $case->requestClient->email }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-telephone"></i> Patient :
-                                {{ $case->requestClient->phone_number }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-cash"></i> Transfer :Admin transferred to
-                                {{ $case->requestClient->last_name }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-calendar3"></i> Date of services :
-                                {{ $case->created_at }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-person-circle"></i> Physician :
-                                {{ $case->last_name }}
-                            </span>
-                            <br>
-                            <span>
-                                <i class="bi bi-person-plus-fill"></i> Requestor:
-                                {{ $case->first_name }}
-                            </span>
-                            <div class="grid-2-listing ">
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-2 text-center">Send
-                                    Agreement</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
-                                    Notes</a>
-                                <a href="/view-notes/{{ $case->id }}"
-                                    class="secondary-btn-3 text-center">Transfer</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">View
-                                    Uploads</a>
-                                <a href="/view-notes/{{ $case->id }}" class="secondary-btn-2 text-center">Clear
-                                    Case</a>
-                                <a href="/view-notes/{{ $case->id }}"
-                                    class="secondary-btn text-center">Email</a>
+                                <button class="map-btn">Map Location</button>
                             </div>
                         </div>
-                        <div>
-                            Chat With:
-                            <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                            <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
+                        <div class="more-info ">
+                            <a href="{{ route('admin.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <div>
+                                <span>
+                                    <i class="bi bi-calendar3"></i> Date of birth :
+                                    {{ $case->requestClient->date_of_birth }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-envelope"></i> Email :
+                                    {{ $case->requestClient->email }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-telephone"></i> Patient :
+                                    {{ $case->requestClient->phone_number }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-cash"></i> Transfer :Admin transferred to
+                                    {{ $case->requestClient->last_name }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-calendar3"></i> Date of services :
+                                    {{ $case->created_at }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-person-circle"></i> Physician : Dr.
+                                    {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-person-plus-fill"></i> Requestor:
+                                    {{ $case->first_name }} {{ $case->last_name }}
+                                </span>
+                                <div class="grid-2-listing send-agreement-btn">
+                                    <button class="secondary-btn-2 text-center" data-id="{{ $case->id }}"
+                                        data-request_type_id={{ $case->request_type_id }}
+                                        data-phone_number={{ $case->phone_number }} data-email={{ $case->email }}>
+                                        Send Agreement</button>
+                                    <a href="{{ route('admin.view.note', $case->id) }}" class="secondary-btn text-center">View
+                                        Notes</a>
+                                    <button
+                                        class="secondary-btn-3 text-center transfer-btn assign-case-btn" data-id="{{ $case->id }}">Transfer</button>
+                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}" class="secondary-btn text-center">View
+                                        Uploads</a>
+                                    <button class="secondary-btn-2 text-center clear-btn" data-id="{{ $case->id }}">Clear
+                                        Case</button>
+                                    <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">Email</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endforeach
+                    @endif
+                @endforeach
+            </div>
         </div>
+
+
     </div>
     <div class="page">
         {{ $cases->links('pagination::bootstrap-5') }}

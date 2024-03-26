@@ -235,37 +235,40 @@ giving service to the patient. --}}
 
                 <div class="mobile-listing">
                     @foreach ($cases as $case)
-                        <div class="mobile-list d-flex justify-content-between">
-                            <div class="d-flex flex-column">
-                                <p> patient name </p>
-                                <span>Address:
+                        <div class="mobile-list d-flex justify-content-center align-items-between flex-column">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}
+                                </span>
+                                <div>
+                                    @if ($case->request_type_id == 1)
+                                        <span>
+                                            Patient
+                                            <i class="bi bi-circle-fill ms-1 green"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 2)
+                                        <span>
+                                            Family/Friend
+                                            <i class="bi bi-circle-fill ms-1 yellow"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 3)
+                                        <span>
+                                            Business
+                                            <i class="bi bi-circle-fill ms-1 red"></i>
+                                        </span>
+                                    @elseif ($case->request_type_id == 4)
+                                        <span>
+                                            Concierge
+                                            <i class="bi bi-circle-fill ms-1 blue"></i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="address-section">
                                     @if ($case->requestClient)
                                         {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     @endif
                                 </span>
-                            </div>
-                            <div class="d-flex flex-column align-items-center justify-content-around">
-                                @if ($case->request_type_id == 1)
-                                    <span>
-                                        Patient
-                                        <i class="bi bi-circle-fill ms-1 green"></i>
-                                    </span>
-                                @elseif ($case->request_type_id == 2)
-                                    <span>
-                                        Family/Friend
-                                        <i class="bi bi-circle-fill ms-1 yellow"></i>
-                                    </span>
-                                @elseif ($case->request_type_id == 3)
-                                    <span>
-                                        Business
-                                        <i class="bi bi-circle-fill ms-1 red"></i>
-                                    </span>
-                                @elseif ($case->request_type_id == 4)
-                                    <span>
-                                        Concierge
-                                        <i class="bi bi-circle-fill ms-1 blue"></i>
-                                    </span>
-                                @endif
                                 <button class="map-btn">Map Location</button>
                             </div>
                         </div>
@@ -274,31 +277,28 @@ giving service to the patient. --}}
                                 Case</a>
                             <div>
                                 <span>
-                                    <i class="bi bi-envelope"></i> Email : example@xyz.com
-                                    {{-- {{$case->requestClient->email}}
-                        </span>
-                        <br>
-                        <span>
-                            <i class="bi bi-telephone"></i> Patient : +91 123456789
-                            {{-- {{$case->requestClient->phone_number}} --}}
+                                    <i class="bi bi-envelope"></i> Email :
+                                    {{ $case->requestClient->email }}
+                                </span>
+                                <br>
+                                <span>
+                                    <i class="bi bi-telephone"></i> Patient :
+                                    {{ $case->requestClient->phone_number }}
                                 </span>
                                 <div class="grid-2-listing ">
                                     <a href="{{ route('provider.view.notes', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
-                                    <button class="secondary-btn">View Uploads</button>
-                                    <button class="secondary-btn">Encouter</button>
-                                    <button class="secondary-btn-2">orders</button>
+                                    <a href="{{ route('provider.view.upload', $case->id) }}" class="secondary-btn text-center">View
+                                        Uploads</a>
+                                    <button class="secondary-btn encounter-btn"
+                                        data-id={{ $case->id }}>Encouter</button>
+                                    <a href="{{ route('provider.view.order', $case->id) }}"
+                                        class="secondary-btn-2 text-center">orders</a>
                                     <button class="secondary-btn-3">House Call</button>
                                     <button class="secondary-btn">Email</button>
                                 </div>
-                            </div>
-                            <div>
-                                Chat With:
-                                <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
-
                             </div>
                         </div>
                     @endforeach
