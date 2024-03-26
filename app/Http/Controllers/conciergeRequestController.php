@@ -49,9 +49,10 @@ class conciergeRequestController extends Controller
             'concierge_zip_code' => 'digits:6',
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
+        $isEmailStored = users::where('email', $request->email)->first();
 
-        if ($request->email != $isEmailStored) {
+
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -75,7 +76,7 @@ class conciergeRequestController extends Controller
             $requestUsers->save();
         }
 
-
+        $requestEmail = new users();
 
         // concierge request into concierge table
 
@@ -163,7 +164,7 @@ class conciergeRequestController extends Controller
             $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        if ($request->email != $isEmailStored) {
+        if ($isEmailStored == null) {
 
             // send email
             $emailAddress = $request->email;
@@ -183,6 +184,10 @@ class conciergeRequestController extends Controller
             ]);
         }
 
-        return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        if ($isEmailStored == null) {
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        } else {
+            return redirect()->route('submitRequest');
+        }
     }
 }

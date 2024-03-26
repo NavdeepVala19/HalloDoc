@@ -14,38 +14,37 @@ use Illuminate\Support\Facades\Session;
 
 class patientProfileController extends Controller
 {
-    public function profile()
-    {
-        return view("patientSite/patientProfile");
-    }
-
     public function patientEdit(Request $request)
     {
         $userData = Auth::user();
         $email = $userData["email"];
 
-        $getEmailData = request_client::where('email', '=', $email)->first();
-
+        $getEmailData = allusers::where('email', '=', $email)->first();
         return view("patientSite/patientProfile", compact('getEmailData'));
     }
 
-
+    public function patientprofileEdit($id)
+    {
+        $getPatientData = allusers::where('id', '=', $id)->first();
+        return view("patientSite/patientProfileEdit", compact('getPatientData'));
+    }
 
     public function patientUpdate(Request $request)
     {
-
+        // dd($request->all());
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'street' => 'required|min:2|max:30',
+            'street' => 'required|min:2',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6',
         ]);
 
+        dd($request->all());
 
         $userData = Auth::user();
 
@@ -73,6 +72,7 @@ class patientProfileController extends Controller
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'mobile' => $request->input('phone_number'),
+            'date_of_birth' => $request->input('date_of_birth'),
             'city' => $request->input('city'),
             'state' => $request->input('state'),
             'street' => $request->input('street'),
@@ -87,5 +87,15 @@ class patientProfileController extends Controller
 
 
         return redirect()->route('patientDashboardData');
+    }
+
+    public function patientMapLocation()
+    {
+        $userData = Auth::user();
+        $email = $userData["email"];
+        $getEmailData = allusers::where('email', '=', $email)->first();
+        $address = $getEmailData->street . $getEmailData->city . $getEmailData->state;
+
+        return view('patientSite.patientMapLocation', compact('address'));
     }
 }

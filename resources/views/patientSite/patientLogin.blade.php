@@ -23,9 +23,15 @@
             <h1>Login To Your Account</h1>
         </div>
 
-        @if (Session::has('message'))
+        @if (Session::has('error'))
         <div class="alert alert-danger popup-message" role="alert">
-            {{ Session::get('message') }}
+            {{ Session::get('error') }}
+        </div>
+        @endif
+
+        @if (Session::has('success'))
+        <div class="alert alert-success popup-message" role="alert">
+            {{ Session::get('success') }}
         </div>
         @endif
 

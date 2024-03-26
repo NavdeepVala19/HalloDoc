@@ -24,7 +24,7 @@ use App\Http\Controllers\ProviderSchedulingController;
 // ******************************* SHIVESH **********************************************
 
 
-route::get('/pass-reset',[Controller::class,'passReset']);
+route::get('/pass-reset', [Controller::class, 'passReset']);
 
 //  ******* First page of patient site *********
 route::get('/', [Controller::class, 'patientSite'])->name('patientSite');
@@ -60,7 +60,7 @@ Route::post('/concierge_create', [conciergeRequestController::class, 'create'])-
 
 
 //  ******** Business request creating **********
-route::get('/submit_request/business',[businessRequestController::class, 'businessRequests'])->name('business');
+route::get('/submit_request/business', [businessRequestController::class, 'businessRequests'])->name('business');
 Route::post('/business_create', [businessRequestController::class, 'create'])->name('businessRequests');
 //  ************************************************************************************************************
 
@@ -98,7 +98,9 @@ route::get('/patientDashboard', [patientDashboardController::class, 'read'])->na
 
 //  ********* Edit profile of patient ***********
 route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
+route::get('/patientProfileEdit/{id}', [patientProfileController::class, 'patientprofileEdit'])->name('patientProfileEditData');
 route::post('/patientProfileUpdated', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
+route::get('/patientMapLocation', [patientProfileController::class, 'patientMapLocation'])->name('patientLocationOnMap');
 
 //  ********************************************************************************************************************
 
@@ -231,6 +233,9 @@ route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAcc
 
 
 route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
+
+
+route::get('/admin/createAdmin', [AdminController::class, 'adminAccount']);
 
 // ****************************************************************************************************************************
 

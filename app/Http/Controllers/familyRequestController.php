@@ -27,6 +27,7 @@ class familyRequestController extends Controller
     public function create(Request $request)
     {
 
+
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
@@ -44,10 +45,10 @@ class familyRequestController extends Controller
             'family_relation' => 'required',
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
 
+        $isEmailStored = users::where('email', $request->email)->first();
 
-        if ($request->email != $isEmailStored) {
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -70,6 +71,8 @@ class familyRequestController extends Controller
             $requestUsers->zipcode = $request->zipcode;
             $requestUsers->save();
         }
+
+        $requestEmail = new users();
 
         // family request creating
 
@@ -151,7 +154,7 @@ class familyRequestController extends Controller
         }
 
 
-        if ($request->email != $isEmailStored) {
+        if ($isEmailStored == null) {
 
             // send email
             $emailAddress = $request->email;
@@ -171,6 +174,12 @@ class familyRequestController extends Controller
             ]);
         }
 
-        return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        if ($isEmailStored == null) {
+
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        } else {
+
+            return redirect()->route('submitRequest');
+        }
     }
 }

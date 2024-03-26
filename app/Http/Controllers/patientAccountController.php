@@ -21,7 +21,7 @@ class patientAccountController extends Controller
     {
 
         $request->validate([
-            "email" => "required|unique:App\Models\user,email",
+            "email" => "required",
             "password" => "required|min:8|max:20",
             "confirm_password" => "required|same:password",
         ]);
@@ -39,8 +39,6 @@ class patientAccountController extends Controller
                 $create_account->save();
             }
         }
-
-
 
         $data = request_Client::select(
             'request_status.status',

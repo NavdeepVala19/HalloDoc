@@ -27,10 +27,10 @@ $(document).ready(function () {
     $('.continue-btn').click(function () {
         if ($('.btn-me').hasClass('btn-active')) {
             $(window).attr('location', '/createPatientRequests');
-        } 
-        else if($('.btn-someone').hasClass('btn-active')) {
+        }
+        else if ($('.btn-someone').hasClass('btn-active')) {
             $(window).attr('location', '/createSomeoneRequests');
-        } else{
+        } else {
             alert('please select "Me" or "SomeOne Else"');
         }
     })
@@ -188,23 +188,59 @@ $(document).ready(function () {
 });
 
 
-
-// **** This code is for Enabling input fields in patientProfile Page and replacing Edit with Save and cancel button
-
 $(document).ready(function () {
-    $('#patientProfileEditBtn').click(function () {
-        $('.first_name').removeAttr("disabled");
-        $('.last_name').removeAttr("disabled");
-        $('.date_of_birth').removeAttr("disabled");
-        $('.phone').removeAttr("disabled");
-        $('.email').removeAttr("disabled");
-        $('.street').removeAttr("disabled");
-        $('.city').removeAttr("disabled");
-        $('.state').removeAttr("disabled");
-        $('.zipcode').removeAttr("disabled");
 
-        $('#patientProfileEditBtn').hide();
-        $('#patientProfileSubmitBtn').show();
-        $('#patientProfileCancelBtn').show();
-    })
-})
+    $('#patientProfileEditForm').validate({ // initialize the plugin
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30
+            },
+            last_name: {
+                required: true,
+                minlength: 5
+            },
+            date_of_birth: {
+                required: true,
+                minlength: 5
+            },
+            phone_number: {
+                required: true,
+                regex: /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/,
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            street: {
+                required: true,
+                minlength: 5,
+                maxlength: 30,
+            },
+            city: {
+                required: true,
+                minlength: 5,
+                maxlength: 30,
+            },
+            state: {
+                required: true,
+                minlength: 5,
+                maxlength: 30,
+            },
+            zipcode: {
+                required: true,
+                zipcodeLength: true,
+            },
+        },
+        messages: {
+            email: {
+                required: "Please enter your email.",
+                email: "Please enter a valid email address."
+            },
+        },
+    });
+
+});
+
+

@@ -46,14 +46,16 @@ class AdminLoginController extends Controller
 
             $userData = Auth::user();
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
+   
 
             if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
             } else if ($userRolesData->role_id == 1) {
                 return redirect()->route('admin.dashboard');
+            } else if ($userRolesData->role_id == 3) {
+                return back()->with('error', 'invalid credentials');
             }
         }
-        return redirect()->route('adminLogin')->with('message', 'invalid credentials');
     }
 
 
@@ -71,9 +73,13 @@ class AdminLoginController extends Controller
             'email' => 'required|email|exists:users',
         ]);
 
+        $user = users::where('email', $request->email)->first();
+        if ($user == null) {
+            return back()->with('error', 'no such email is registered');
+        }
+
         $token = Str::random(64);
 
-        $user = users::where('email', $request->email)->first();
         $user->token = $token;
         $user->save();
 
@@ -97,17 +103,13 @@ class AdminLoginController extends Controller
 
     public function submitUpdatePasswordForm(Request $request)
     {
-        try {
-            // dd($request);
-            $request->validate([
-                'confirm_password' => 'required|min:8|max:20',
-                'new_password' => 'required|same:confirm_password|min:8|max:20',
 
-            ]);
-        } catch (\Throwable $th) {
-            //throw $th;
-            dd($th);
-        }
+        $request->validate([
+            'confirm_password' => 'required|min:8|max:20',
+            'new_password' => 'required|same:confirm_password|min:8|max:20',
+
+        ]);
+
 
         $updatePassword = users::where('token', $request->token)->first();
 
@@ -117,7 +119,7 @@ class AdminLoginController extends Controller
 
         users::where([
             'token' => $request->token
-        ])->update(['password_hash' => Hash::make($request->new_password)]);
+        ])->update(['password' => Hash::make($request->new_password)]);
 
 
         users::where(['email' => $request->email])->delete();

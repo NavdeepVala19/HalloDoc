@@ -39,10 +39,9 @@ class patientLoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $userData = Auth::user();
             return redirect()->route('patientDashboardData');
         } else {
-            return back()->with('message', 'Invalid credentials');
+            return back()->with('error', 'Invalid credentials');
         }
     }
 
@@ -59,9 +58,13 @@ class patientLoginController extends Controller
             'email' => 'required|email',
         ]);
 
-        $token = Str::random(64);
-
         $user = users::where('email', $request->email)->first();
+     
+        if ($user== null) {
+            return back()->with('error', 'no such email is registered');
+        }
+
+        $token = Str::random(64);
         $user->token = $token;
         $user->save();
 
@@ -70,7 +73,7 @@ class patientLoginController extends Controller
             $message->subject('Reset Password');
         });
 
-        return redirect()->route('loginScreen')->with('message', 'We have e-mailed your password reset link!');
+        return redirect()->route('loginScreen')->with('success', 'We have e-mailed your password reset link!');
     }
 
 
@@ -103,7 +106,7 @@ class patientLoginController extends Controller
         users::where(['email' => $request->email])->update(['token' => null]);
 
 
-        return redirect('/patient_login')->with('message', 'Your password has been changed!');
+        return redirect('/patient_login')->with('success', 'Your password has been changed!');
     }
 
     public function logout()

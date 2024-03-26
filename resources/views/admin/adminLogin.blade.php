@@ -26,6 +26,12 @@
         </div>
         @endif
 
+        @if (Session::has('error'))
+        <div class="alert alert-danger popup-message" role="alert">
+            {{ Session::get('error') }}
+        </div>
+        @endif
+
 
         <div class="form">
 

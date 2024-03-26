@@ -29,7 +29,8 @@ class patientController extends Controller
 
     // this controller is responsible for creating/storing the patient
 
-    public function patientRequests(){
+    public function patientRequests()
+    {
         return view('patientSite/patientRequest');
     }
 
@@ -47,9 +48,10 @@ class patientController extends Controller
             'zipcode' => 'digits:6',
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
+        $isEmailStored = users::where('email', $request->email)->first();
 
-        if ($request->email != $isEmailStored) {
+
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -73,7 +75,7 @@ class patientController extends Controller
             $requestUsers->save();
         }
 
-
+        $requestEmail = new users();
 
         $requestData = new RequestTable();
         $requestStatus = new RequestStatus();
@@ -154,29 +156,30 @@ class patientController extends Controller
         }
 
 
-        
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
 
-        if ($request->email != $isEmailStored) {
-        // send email
-        $emailAddress = $request->email;
-        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+        if ($isEmailStored == null) {
+            // send email
+            $emailAddress = $request->email;
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-        EmailLog::create([
-            'role_id' => 3,
-            'request_id' =>  $requestData->id,
-            'confirmation_number' => $confirmationNumber,
-            'is_email_sent' => 1,
-            'sent_tries' => 1,
-            'create_date' => now(),
-            'sent_date' => now(),
-            'email_template' => $request->email,
-            'subject_name' => 'Create account by clicking on below link with below email address',
-            'email' => $request->email,
-        ]);
-
+            EmailLog::create([
+                'role_id' => 3,
+                'request_id' =>  $requestData->id,
+                'confirmation_number' => $confirmationNumber,
+                'is_email_sent' => 1,
+                'sent_tries' => 1,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'email_template' => $request->email,
+                'subject_name' => 'Create account by clicking on below link with below email address',
+                'email' => $request->email,
+            ]);
         }
-        
-        return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+
+        if ($isEmailStored == null) {
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        } else {
+            return redirect()->route('submitRequest');
+        }
     }
 }

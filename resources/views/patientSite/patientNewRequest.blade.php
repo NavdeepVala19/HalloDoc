@@ -15,7 +15,7 @@
     <!-- this div is for heading and back button -->
 
     <div class="header_part">
-    <a href="{{route('patientDashboardData')}}"  type="button" class="primary-empty">
+        <a href="{{route('patientDashboardData')}}" type="button" class="primary-empty">
             < Back</a>
     </div>
 
@@ -93,7 +93,7 @@
 
                     <div class="row patient-contact-row1">
                         <div class="col-md patient-contact-col1">
-                            <input type="email" placeholder="Email" class="form-control email-text @error('email') is-invalid @enderror" id="" value="{{ old('email') }}" name="email">
+                            <input type="email" placeholder="Email" disabled class="form-control email-text @error('email') is-invalid @enderror" id="" value="{{ $email }}" name="email">
 
                             @error('email')
                             <div class="text-danger" role="alert">{{ $message }}</div>
@@ -196,8 +196,9 @@
                             <input type="file" id="fileInput" class="file-input" name="docs" />
                             <div class="file-button">Upload</div>
                         </div>
-                        <p></p>
+                        <p id="demo"></p>
                     </div>
+
                 </div>
 
 
@@ -213,7 +214,10 @@
     </div>
 </div>
 
+@endsection
 
 
 
+@section('script')
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

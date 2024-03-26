@@ -48,9 +48,9 @@ class businessRequestController extends Controller
     ]);
 
 
-    $isEmailStored = users::where('email', $request->email)->pluck('email');
+    $isEmailStored = users::where('email', $request->email)->first();
 
-    if ($request->email != $isEmailStored) {
+    if ($isEmailStored == null) {
       // store email and phoneNumber in users table
       $requestEmail = new users();
       $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -73,7 +73,7 @@ class businessRequestController extends Controller
       $requestUsers->zipcode = $request->zipcode;
       $requestUsers->save();
     }
-
+    $requestEmail = new users();
     // business data store in business field
 
     $business = new Business();
@@ -162,7 +162,7 @@ class businessRequestController extends Controller
     }
 
 
-    if ($request->email != $isEmailStored) {
+    if ($isEmailStored == null) {
       // send email
       $emailAddress = $request->email;
       Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
@@ -181,7 +181,10 @@ class businessRequestController extends Controller
       ]);
     }
 
-
-    return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+    if ($isEmailStored == null) {
+      return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+    } else {
+      return redirect()->route('submitRequest');
+    }
   }
 }

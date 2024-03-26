@@ -206,7 +206,7 @@ $(document).ready(function () {
 
     $('.request-support-btn').click(function () {
         $('.request-support').show();
-        $('.overlay').show();
+        // $('.overlay').show();
     })
 
 

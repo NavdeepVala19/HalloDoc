@@ -1386,4 +1386,17 @@ class AdminController extends Controller
         $data = view('adminPage.adminTabs.regions-filter-unpaid')->with('cases', $formattedData)->render();
         return response()->json(['html' => $data]);
     }
+
+
+    public function adminAccount()
+    {
+        $regions = Regions::get();
+        return view("adminPage.createAdminAccount", compact('regions'));
+        // return view("adminPage.createAdminAccount");
+    }
+
+    public function createAdminAccount(Request $request){
+
+
+    }
 }

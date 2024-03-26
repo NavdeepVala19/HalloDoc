@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Http\Request;
+use ZipArchive;
 use App\Models\RequestTable;
+use Illuminate\Http\Request;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\Support\MediaStream;
-use ZipArchive;
 
 class PatientViewDocumentsController extends Controller
 {
@@ -21,31 +22,34 @@ class PatientViewDocumentsController extends Controller
             'request_wise_file.created_at',
             'request_wise_file.id',
         )
-        ->leftJoin('request','request.id','request_wise_file.request_id')
-        ->where('request_id', $id)
-        ->paginate(10);
+            ->leftJoin('request', 'request.id', 'request_wise_file.request_id')
+            ->where('request_id', $id)
+            ->paginate(10);
+
+
 
         return view('patientSite/patientViewDocument', compact('documents'));
     }
 
-    public function uploadDocs(Request $request)
+    public function uploadDocs(Request $request, $id)
     {
         // $documents = RequestWiseFile::where('request_id', $id)->get();
 
-        $requestData = new RequestTable();
-        $requestData->request_type_id = $request->request_type;
-        $requestData->save();
+        $userData = Auth::user();
+        $email = $userData["email"];
+
+        $uploadData = RequestWiseFile::where('id', $id)->first();
+        dd($uploadData);
 
         // store documents in request_wise_file table
 
         $request_file = new RequestWiseFile();
-        $request_file->request_id = $requestData->id;
+        $request_file->request_id = $uploadData->id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->docs->getClientOriginalName());
         $request_file->save();
 
-        return redirect('patientViewDocument');
-
+        return redirect('patientViewDocsFile');
     }
 
 
@@ -78,7 +82,4 @@ class PatientViewDocumentsController extends Controller
         }
         return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
     }
-
-
 }
-

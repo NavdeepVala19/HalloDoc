@@ -13,6 +13,13 @@
 @endsection
 
 @section('content')
+
+@if (Session::has('message'))
+<div class="alert alert-success popup-message" role="alert">
+    {{ Session::get('message') }}
+</div>
+@endif
+
 <div class="container-fluid">
 
     <h2>Medical History</h2>
@@ -25,7 +32,6 @@
             <a href="" type="button" class="btn primary-empty plus"><i class="bi bi-plus"></i></a>
 
         </div>
-
 
 
         <div class="listing-table patient-history-table">
@@ -46,7 +52,7 @@
                         <td style="height: 5%;"> {{$patientData->status_type}}</td>
                         <td style="height: 5%;">
                             @if($patientData->id==null)
-                            
+
                             @else
                             <a href="{{route('patientViewDocsFile',$patientData->request_id)}}" type="button" class="primary-empty btn ">Documents</a>
                             @endif
