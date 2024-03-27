@@ -72,5 +72,9 @@ class RequestTable extends Model
         return $this->hasOne(requestType::class, 'id', 'request_type_id');
     }
 
+    public function RequestWiseFile(){
+        return $this->hasOne(RequestWiseFile::class, 'request_id', 'id');
+    }
+
     
 }

@@ -86,6 +86,10 @@ h2 {
     display: none;
 }
 
+.new-request-create {
+    width: 50px;
+}
+
 @media(max-width:550px) {
     .table {
         display: none;
@@ -142,6 +146,22 @@ h2 {
     /* display: block; */
 }
 
+.pop-up-accordion {
+    display: none;
+    /* Change Width of Pop-up as needed */
+
+    width: 250px;
+    background-color: #fff;
+    /* background-color: #cd7e7e; */
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+
+    /* display: block; */
+}
 
 /********************************  Main Content CSS End ************************************** */
 

@@ -25,8 +25,9 @@
         <a type="button" class="primary-empty btn d-flex justify-content-center align-items-center" href="{{route('patientDashboardData')}}"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
-    <form action="{{route('patientViewDocuments') }}" method="post" enctype="multipart/form-data">
+    <form action="{{route('patientViewDocuments')}}" method="post" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="request_wise_file_id" value="{{$documents[0]->request_id}}">
 
         <input type="hidden" name="request_type" value="1">
 
@@ -76,7 +77,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{$documents->links('pagination::bootstrap-5')}}
+
 
         <div class="table-content">
 
@@ -94,7 +95,7 @@
             </div>
             @endforeach
 
-            {{$documents->links('pagination::bootstrap-5')}}
+
         </div>
 
     </form>

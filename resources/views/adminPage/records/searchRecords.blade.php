@@ -40,7 +40,6 @@
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
-
         <a href="#" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
     </div>
 
@@ -52,18 +51,18 @@
             <div class="grid-4">
 
                 <div class="form-floating request-status-select">
-                    <select class="form-select status-type" name="request_status" value="{{old('request_status' ,request()->input('request_status'))}}">
+                    <select class="form-select status-type" name="request_status">
                         <option selected>Select Request Status</option>
-                        <option value="1">Unassigned</option>
-                        <option value="2">Cancelled</option>
-                        <option value="3">Accepted</option>
-                        <option value="4">MDEnRoute</option>
-                        <option value="5">MDOnSite</option>
-                        <option value="6">Conclude</option>
-                        <option value="7">Closed</option>
-                        <option value="8">Clear</option>
-                        <option value="9">UnPaid</option>
-                        <option value="10">Block</option>
+                        <option value="1" {{ Session::get('request_status') == '1' ? 'selected' : '' }}>Unassigned</option>
+                        <option value="2" {{ Session::get('request_status') == '2' ? 'selected' : '' }}>Cancelled</option>
+                        <option value="3" {{ Session::get('request_status') == '3' ? 'selected' : '' }}>Accepted</option>
+                        <option value="4" {{ Session::get('request_status') == '4' ? 'selected' : '' }}>MDEnRoute</option>
+                        <option value="5" {{ Session::get('request_status') == '5' ? 'selected' : '' }}>MDOnSite</option>
+                        <option value="6" {{ Session::get('request_status') == '6' ? 'selected' : '' }}>Conclude</option>
+                        <option value="7" {{ Session::get('request_status') == '7' ? 'selected' : '' }}>Closed</option>
+                        <option value="8" {{ Session::get('request_status') == '8' ? 'selected' : '' }}>Clear</option>
+                        <option value="9" {{ Session::get('request_status') == '9' ? 'selected' : '' }}>UnPaid</option>
+                        <option value="10" {{ Session::get('request_status') == '10' ? 'selected' : '' }}>Block</option>
                     </select>
                     </input>
                 </div>
@@ -74,12 +73,12 @@
                 </div>
 
                 <div class="form-floating request-type-select">
-                    <select class="form-select request-type" name="request_type" value="{{old('request_type' ,request()->input('request_type'))}}">
+                    <select class="form-select request-type" name="request_type">
                         <option selected>Select Request Type</option>
-                        <option value="1">Patient</option>
-                        <option value="2">Family/Friend</option>
-                        <option value="3">Concierge</option>
-                        <option value="4">Business</option>
+                        <option value="1" {{ Session::get('request_type') == '1' ? 'selected' : '' }}>Patient</option>
+                        <option value="2" {{ Session::get('request_type') == '2' ? 'selected' : '' }}>Family/Friend</option>
+                        <option value="3" {{ Session::get('request_type') == '3' ? 'selected' : '' }}>Concierge</option>
+                        <option value="4" {{ Session::get('request_type') == '4' ? 'selected' : '' }}>Business</option>
                     </select>
                     </input>
                 </div>
@@ -110,12 +109,12 @@
 
 
             <div class=" mt-4 d-flex justify-content-end gap-2">
-                <button class="primary-empty" type="reset">
-                    Clear
-                </button>
                 <button class="primary-fill" type="submit">
                     Search
                 </button>
+                <a href="{{route('admin.search.records.view')}}" class="primary-empty" type="button">
+                    Clear
+                </a>
             </div>
 
         </form>
@@ -197,6 +196,7 @@
                 </tbody>
             </table>
             {{$combinedData->links('pagination::bootstrap-5')}}
+
         </div>
 
 
@@ -280,9 +280,6 @@
                     <div class="d-flex justify-content-end gap-2">
                         <a class="primary-empty" type="button" href="{{route('admin.search.records.delete', $data->id)}}">
                             Delete Permanently
-                        </a>
-                        <a class="primary-empty" type="button" href="">
-                            View Case
                         </a>
                     </div>
                 </div>

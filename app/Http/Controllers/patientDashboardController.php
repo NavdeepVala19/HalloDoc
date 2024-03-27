@@ -104,6 +104,10 @@ class patientDashboardController extends Controller
         // store documents in request_wise_file table
 
         $request_file = new RequestWiseFile();
+        $request_file->request_id = $newPatient->id;
+        $request_file->file_name = $request->file('docs')->getClientOriginalName();
+        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+        $request_file->save();   $request_file = new RequestWiseFile();
 
         $request_file->request_id = $newPatient->id;
         $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';
@@ -117,6 +121,23 @@ class patientDashboardController extends Controller
         $request_notes->patient_notes = $request->symptoms;
 
         $request_notes->save();
+
+        // confirmation number
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
+        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
+        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
+
+        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
+
+        if (!empty($newPatient->id)) {
+            $newPatient->update(['confirmation_no' => $confirmationNumber]);
+        }
 
         return redirect()->route('patientDashboardData');
     }
@@ -212,10 +233,9 @@ class patientDashboardController extends Controller
         // store documents in request_wise_file table
 
         $request_file = new RequestWiseFile();
-
         $request_file->request_id = $newPatient->id;
-        $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';
-        $request_file->file_name = $fileName;
+        $request_file->file_name = $request->file('docs')->getClientOriginalName();
+        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
         $request_file->save();
 
         // store symptoms in request_notes table
@@ -226,6 +246,7 @@ class patientDashboardController extends Controller
 
         $request_notes->save();
 
+        // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -279,12 +300,10 @@ class patientDashboardController extends Controller
 
         $data = request_Client::select(
             'request_status.status',
-            'request_status.request_id',
             'request_client.request_id',
-            'request_client.first_name',
             'request_wise_file.id',
+            'status.status_type',
             DB::raw('DATE(request_client.created_at) as created_date'),
-            'status.status_type'
         )
             ->leftJoin('request_status', 'request_status.request_id', 'request_client.request_id')
             ->leftJoin('status', 'status.id', 'request_status.status')
@@ -293,14 +312,5 @@ class patientDashboardController extends Controller
             ->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data'));
-
-        // $data = RequestTable::select('created_at')->paginate(10);
-
-        // $data = DB::table('request')
-        //     ->join('status', 'request.status', '=', 'status.id')
-        //     ->select('request.created_at', 'status.status_type')
-        //     ->paginate(10);
-
-
     }
 }

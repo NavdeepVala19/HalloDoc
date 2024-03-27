@@ -21,6 +21,8 @@ class PatientViewDocumentsController extends Controller
             'request_wise_file.file_name',
             'request_wise_file.created_at',
             'request_wise_file.id',
+            'request_wise_file.request_id',
+
         )
             ->leftJoin('request', 'request.id', 'request_wise_file.request_id')
             ->where('request_id', $id)
@@ -31,25 +33,24 @@ class PatientViewDocumentsController extends Controller
         return view('patientSite/patientViewDocument', compact('documents'));
     }
 
-    public function uploadDocs(Request $request, $id)
+    public function uploadDocs(Request $request)
     {
-        // $documents = RequestWiseFile::where('request_id', $id)->get();
+        // dd($request->all());
 
         $userData = Auth::user();
         $email = $userData["email"];
+        // dd($email);
 
-        $uploadData = RequestWiseFile::where('id', $id)->first();
-        dd($uploadData);
+        $reqestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
 
         // store documents in request_wise_file table
-
         $request_file = new RequestWiseFile();
-        $request_file->request_id = $uploadData->id;
+        $request_file->request_id = $reqestWiseData->first()->request_id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->docs->getClientOriginalName());
         $request_file->save();
 
-        return redirect('patientViewDocsFile');
+        return back();
     }
 
 

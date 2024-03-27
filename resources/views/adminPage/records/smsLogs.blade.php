@@ -42,9 +42,9 @@
                 <div class="form-floating">
                     <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="role_type">
                         <option selected>All</option>
-                        <option value="1">Admin</option>
-                        <option value="2">Physician</option>
-                        <option value="3">Patient</option>
+                        <option value="1" {{ Session::get('role_type') == '1' ? 'selected' : '' }}>Admin</option>
+                        <option value="2" {{ Session::get('role_type') == '2' ? 'selected' : '' }}>Physician</option>
+                        <option value="3" {{ Session::get('role_type') == '3' ? 'selected' : '' }}>Patient</option>
                     </select>
                     <label for="floatingSelect">Search by role</label>
                 </div>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="button-section">
                     <button class="primary-fill" type="submit">Search</button>
-                    <button class="primary-empty" type="reset">Clear</button>
+                    <a href="{{route('admin.sms.records.view')}}" class="primary-empty" type="button">Clear</a>
                 </div>
 
             </div>

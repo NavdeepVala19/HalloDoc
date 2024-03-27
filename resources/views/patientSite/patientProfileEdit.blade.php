@@ -33,6 +33,7 @@
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
                 <div class="form-floating ">
                     <input type="text" name="last_name" class="form-control last_name" id="floatingInput" value="{{$getPatientData->last_name}}" placeholder="Last Name">
@@ -40,6 +41,7 @@
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
@@ -48,6 +50,7 @@
                     @error('date_of_birth')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
 
             </div>
@@ -57,10 +60,11 @@
             <div class="grid-2">
 
                 <div class="form-floating" style="height: 58px;">
-                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{$getPatientData->mobile}}" placeholder="Phone Number">
+                    <input type="tel" name="phone_number" class="form-control phone_number" id="telephone" value="{{$getPatientData->mobile}}" placeholder="Phone Number">
                     @error('phone_number')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
@@ -69,6 +73,7 @@
                     @error('email')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
 
 
@@ -84,6 +89,7 @@
                     @error('street')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
@@ -92,6 +98,7 @@
                     @error('city')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span class="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
@@ -100,7 +107,7 @@
                     @error('state')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-
+                    <span class="errorMsg"></span>
                 </div>
 
                 <div class="d-flex gap-4 align-items-center">
@@ -111,7 +118,7 @@
                         @error('zipcode')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-
+                        <span class="errorMsg"></span>
                     </div>
                     <a href="{{route('patientLocationOnMap')}}" class="primary-empty d-flex gap-2"> <i class="bi bi-geo-alt"></i> Map</a>
                 </div>
@@ -123,8 +130,9 @@
                 <a href="{{ route('patientProfile') }}" class="primary-empty" type="reset" id="patientProfileCancelBtn">Cancel </a>
             </div>
 
-        </form>
 
+
+        </form>
     </div>
 </div>
 @endsection
@@ -133,4 +141,165 @@
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script>
+    $(document).ready(function() {
+
+        // $('#patientProfileEditForm').validate({
+        //     rules: {
+        //         email: {
+        //             required: true,
+        //             email: true,
+        //             minlength: 2,
+        //             maxlength: 30
+        //         },
+        //         first_name: {
+        //             required: true,
+        //             minlength: 2,
+        //             maxlength: 30
+        //         },
+        //         last_name: {
+        //             required: true,
+        //             minlength: 2,
+        //             maxlength: 30
+        //         },
+        //         phone_number: {
+        //             required: true,
+        //             minlength: 2,
+        //             maxlength: 30,
+        //             RegExp: /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/,
+        //         },
+        //         street: {
+        //             required: true,
+        //             minlength: 2,
+        //             maxlength: 30
+        //         },
+        //         city: {
+        //             required: true,
+        //             RegExp: /^[a-zA-Z ,_-]+?$/,
+        //             minlength: 2,
+        //             maxlength: 30
+        //         },
+        //         state: {
+        //             required: true,
+        //             RegExp: /^[a-zA-Z ,_-]+?$/,
+        //             minlength: 2,
+        //             maxlength: 30
+        //         },
+        //         zipcode: {
+        //             required: true,
+
+        //         },
+        //     },
+        //     messages: {
+        //         email: {
+        //             required: "Please enter a valid email format (e.g., user@example.com).",
+        //         },
+        //         first_name: {
+        //             required: "Please enter a firstname between 2 and 30 character",
+        //         },
+        //         last_name: {
+        //             required: "Please enter a lastname between 2 and 30 character",
+        //         },
+        //         phone_number: {
+        //             required: "Please enter a valid mobile",
+        //         },
+        //         street: {
+        //             required: "Please enter a street",
+        //         },
+        //         city: {
+        //             required: "Please enter a city",
+        //         },
+        //         state: {
+        //             required: "Please enter a state",
+        //         },
+        //         zipcode: {
+        //             required: "Please enter a zipcode",
+        //             zipcode: function(element) {
+        //                 return $(element).val().length === 6;
+        //             },
+        //         },
+        //         errorElement: 'span',
+        //         errorPlacement: function(error, element) {
+        //             error.addClass('errorMsg');
+        //             element.closest('.form-floating').append(error);
+        //         },
+        //         highlight: function(element, errorClass, validClass) {
+        //             $(element).addClass('is-invalid').removeClass('is-valid');
+        //         },
+        //         unhighlight: function(element, errorClass, validClass) {
+        //             $(element).removeClass('is-invalid').addClass('is-valid');
+        //         }
+        //     }
+
+        // });
+        $('#patientProfileEditForm').validate({
+            rules: {
+                first_name: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                last_name: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30
+                },
+                phone_number: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30,
+                    // RegExp: /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/,
+                },
+                street: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30
+                },
+                city: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30,
+                    // RegExp: /^[a-zA-Z ,_-]+?$/,
+                },
+                state: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30,
+                    RegExp: /^[a-zA-Z ,_-]+?$/,
+                },
+                zipcode: {
+                    required: true,
+
+                },
+            },
+            messages: {
+                email: {
+                    required: "Please enter a valid email format (e.g., user@example.com).",
+                },
+                first_name: {
+                    required: "Please enter a firstname between 2 and 30 character",
+                },
+                last_name: {
+                    required: "Please enter a lastname between 2 and 30 character",
+                },
+
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('errorMsg');
+                element.closest('.form-floating').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid').addClass('is-valid');
+            }
+        });
+    });
+</script>
 @endsection
