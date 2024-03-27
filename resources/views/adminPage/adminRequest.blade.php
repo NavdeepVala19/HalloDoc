@@ -58,7 +58,7 @@
                         <div>
                             <input type="tel" name="phone_number"
                                 class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                                placeholder="Phone Number" pattern="[0-9]">
+                                placeholder="Phone Number">
                         </div>
                         @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>

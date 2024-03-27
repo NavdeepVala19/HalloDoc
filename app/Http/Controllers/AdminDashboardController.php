@@ -14,6 +14,10 @@ use App\Models\request_Client;
 use App\Models\RequestWiseFile;
 use App\Services\TwilioService;
 use App\Exports\PendingStatusExport;
+use App\Mail\sendEmailAddress;
+use App\Models\EmailLog;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Twilio\Rest\Client;
 
@@ -27,20 +31,40 @@ class AdminDashboardController extends Controller
     public function createAdminPatientRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'string|min:2|max:30',
             'phone_number' => 'required',
             'email' => 'required|email',
             'street' => 'required',
             'city' => 'required',
-            'state' => 'required'
+            'state' => 'required',
+            // 'zipcode' => 'digits:6',
         ]);
+
+        $isEmailStored = users::where('email', $request->email)->pluck('email');
+
+        if ($request->email != $isEmailStored) {
 
         // store email and phoneNumber in users table
         $requestEmail = new users();
+        $requestEmail->username = $request->first_name . " " . $request->last_name;
         $requestEmail->email = $request->email;
         $requestEmail->phone_number = $request->phone_number;
         $requestEmail->save();
+
+        // store all details of patient in allUsers table
+        $requestUsers = new allusers();
+        $requestUsers->user_id = $requestEmail->id;
+        $requestUsers->first_name = $request->first_name;
+        $requestUsers->last_name = $request->last_name;
+        $requestUsers->email = $request->email;
+        $requestUsers->mobile = $request->phone_number;
+        $requestUsers->street = $request->street;
+        $requestUsers->city = $request->city;
+        $requestUsers->state = $request->state;
+        $requestUsers->zipcode = $request->zipcode;
+        $requestUsers->save();
+        }
 
         $requestData = new RequestTable();
         $requestData->status = 1;
@@ -67,7 +91,6 @@ class AdminDashboardController extends Controller
         $adminPatientRequest->save();
 
         // store notes in request_notes table
-
         $request_notes = new RequestNotes();
         $request_notes->request_id = $requestData->id;
         $request_notes->admin_notes = $request->adminNote;
@@ -85,6 +108,40 @@ class AdminDashboardController extends Controller
         $requestUsers->state = $request->state;
         $requestUsers->zipcode = $request->zipcode;
         $requestUsers->save();
+
+
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
+        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
+        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
+
+        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
+
+        if (!empty($requestData->id)) {
+            $requestData->update(['confirmation_no' => $confirmationNumber]);
+        }
+
+        // send email
+        $emailAddress = $request->email;
+        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+
+        EmailLog::create([
+            'role_id' => 3,
+            'request_id' =>  $requestData->id,
+            'confirmation_number' => $confirmationNumber,
+            'is_email_sent' => 1,
+            'sent_tries' => 1,
+            'create_date' => now(),
+            'sent_date' => now(),
+            'email_template' => $request->email,
+            'subject_name' => 'Create account by clicking on below link with below email address',
+            'email' => $request->email,
+        ]);
 
         return redirect()->route('admin.dashboard');
     }
@@ -148,7 +205,7 @@ class AdminDashboardController extends Controller
 
         $message = $twilio->messages
             ->create(
-            "+91 99780 71802", // to
+                "+91 99780 71802", // to
                 [
                     "body" => "har har mahadev",
                     "from" =>  $senderNumber

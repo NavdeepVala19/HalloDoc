@@ -272,7 +272,7 @@ class AdminController extends Controller
 
     public function storeNote(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         RequestNotes::where('request_id', $request->requestId)->update([
             'admin_notes' => $request->admin_note,
         ]);

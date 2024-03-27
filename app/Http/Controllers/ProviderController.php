@@ -13,6 +13,7 @@ use App\Models\Regions;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
+use App\Mail\sendEmailAddress;
 use App\Models\Admin;
 use App\Models\allusers;
 use App\Models\RequestNotes;
@@ -25,7 +26,7 @@ use App\Models\request_Client;
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Carbon\Carbon;
 // DomPDF package used for the creation of pdf from the form
 use Illuminate\Support\Facades\DB;
 
@@ -160,27 +161,48 @@ class ProviderController extends Controller
     public function createRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'string|min:2|max:30',
             'phone_number' => 'required',
             'email' => 'required|email',
             'street' => 'required',
             'city' => 'required',
-            'state' => 'required'
+            'state' => 'required',
+            // 'zipcode' => 'digits:6',
         ]);
 
+        $isEmailStored = users::where('email', $request->email)->pluck('email');
+
+        if ($request->email != $isEmailStored) {
+            // store email and phoneNumber in users table
+            $requestEmail = new users();
+            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->email = $request->email;
+            $requestEmail->phone_number = $request->phone_number;
+            $requestEmail->save();
+
+            // store all details of patient in allUsers table
+            $requestUsers = new allusers();
+            $requestUsers->user_id = $requestEmail->id;
+            $requestUsers->first_name = $request->first_name;
+            $requestUsers->last_name = $request->last_name;
+            $requestUsers->email = $request->email;
+            $requestUsers->mobile = $request->phone_number;
+            $requestUsers->street = $request->street;
+            $requestUsers->city = $request->city;
+            $requestUsers->state = $request->state;
+            $requestUsers->zipcode = $request->zipcode;
+            $requestUsers->save();
+        }
+
         $requestTable = new requestTable();
+        $requestTable->status = 1;
+        $requestTable->user_id = $requestEmail->id;
         $requestTable->request_type_id = $request->request_type_id;
         $requestTable->first_name = $request->first_name;
         $requestTable->last_name = $request->last_name;
-        $requestTable->phone_number = $request->phone_number;
         $requestTable->email = $request->email;
-        $requestTable->status = 1;
-        $requestTable->is_urgent_email_sent = 0;
-        $requestTable->is_mobile = 0;
-        $requestTable->case_tag_physician = 0;
-        $requestTable->patient_account_id = 0;
-        $requestTable->created_user_id = 0;
+        $requestTable->phone_number = $request->phone_number;
         $requestTable->save();
 
         $requestClient = new request_Client();
@@ -202,16 +224,38 @@ class ProviderController extends Controller
         $requestNotes->created_by = 'physician';
         $requestNotes->save();
 
-        $requestUsers = new allusers();
-        $requestUsers->first_name = $request->first_name;
-        $requestUsers->last_name = $request->last_name;
-        $requestUsers->email = $request->email;
-        $requestUsers->mobile = $request->phone_number;
-        $requestUsers->street = $request->street;
-        $requestUsers->city = $request->city;
-        $requestUsers->state = $request->state;
-        $requestUsers->zipcode = $request->zipcode;
-        $requestUsers->save();
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
+        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
+        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
+
+        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
+
+        if (!empty($requestTable->id)) {
+            $requestTable->update(['confirmation_no' => $confirmationNumber]);
+        }
+
+        // send email
+        $emailAddress = $request->email;
+        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+
+        EmailLog::create([
+            'role_id' => 3,
+            'request_id' =>  $requestTable->id,
+            'confirmation_number' => $confirmationNumber,
+            'is_email_sent' => 1,
+            'sent_tries' => 1,
+            'create_date' => now(),
+            'sent_date' => now(),
+            'email_template' => $request->email,
+            'subject_name' => 'Create account by clicking on below link with below email address',
+            'email' => $request->email,
+        ]);
 
         return redirect()->route("provider.dashboard");
     }

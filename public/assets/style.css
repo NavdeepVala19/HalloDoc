@@ -52,7 +52,7 @@ nav a {
     color: #343434;
 }
 
-nav>a:hover {
+nav > a:hover {
     color: var(--blue);
     border-bottom: 2px solid var(--blue);
 }
@@ -159,6 +159,11 @@ nav {
         top: 42px;
         position: absolute;
     }
+
+    .pop-up {
+        width: 80vw !important;
+        height: 100vh !important;
+    }
 }
 
 /* ****************** Telephone library styling ***************************** */
@@ -221,7 +226,7 @@ nav {
         rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 }
 
-form>h3 {
+form > h3 {
     margin-bottom: 24px;
 }
 

@@ -703,6 +703,11 @@ tr > td {
     margin: 15px auto;
 }
 
+/******************************* Assign Case ViewCase - Admin **************************************/
+.assign-case{
+    display: none;
+}
+
 /******************************* Request To Admin PopUp - providerProfile **************************************/
 .request-to-admin {
     display: none;

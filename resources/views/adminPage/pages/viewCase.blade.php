@@ -15,6 +15,54 @@
 @endsection
 
 @section('content')
+    <div class="overlay"></div>
+
+
+    {{-- Assign Case Pop-up --}}
+    {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
+to providers based on patient’s region using this pop-up. --}}
+    <div class="pop-up assign-case">
+        <div class="popup-heading-section d-flex align-items-center justify-content-between">
+            <span>Assign Request</span>
+            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <p class="m-2">To assign this request, search and select another Physician</p>
+        <form action="{{ route('admin.assign.case') }}" method="POST">
+            @csrf
+            <div class="m-3">
+                <input type="text" class="requestId" name="requestId" value="" hidden>
+                <div class="form-floating">
+                    <select class="form-select physicianRegions" name="region" id="floatingSelect"
+                        aria-label="Floating label select example">
+                        <option selected>Regions</option>
+                    </select>
+                    <label for="floatingSelect">Narrow Search by Region</label>
+                </div>
+                <div class="form-floating">
+                    <select
+                        class="form-select selectPhysician @error('physician')
+                is-invalid
+                @enderror"
+                        name="physician" id="floatingSelect" aria-label="Floating label select example" required>
+                        <option>Select Physician</option>
+                    </select>
+                    <label for="floatingSelect">Select Physician</label>
+                    @error('physician')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-floating">
+                    <textarea class="form-control" name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
+                    <label for="floatingTextarea2">Description</label>
+                </div>
+            </div>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <button type="submit" class="primary-fill confirm-case">Submit</button>
+                <button class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div class="d-flex align-items-center justify-content-center gap-2">
@@ -72,7 +120,7 @@
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                        <button class="primary-empty"><i class="bi bi-telephone"></i></button>
+                        <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
                     </div>
                     <div class="form-floating ">
                         <input type="email" class="form-control" value="{{ $data->requestClient->email }}"
@@ -97,7 +145,7 @@
                                 value="{{ $data->requestClient->street }}, {{ $data->requestClient->city }}, {{ $data->requestClient->state }}">
                             <label for="floatingInput">Business Name/Address</label>
                         </div>
-                        <button class="primary-empty"><i class="bi bi-geo-alt"></i></button>
+                        <button type="button" class="primary-empty"><i class="bi bi-geo-alt"></i></button>
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="room" class="form-control" id="floatingInput" placeholder="room"
@@ -107,8 +155,9 @@
                 </div>
 
                 <div class="text-end">
-                    <button class="primary-fill">Assign</button>
-                    <button class="primary-fill">View Notes</button>
+                    <button type="button" class="assign-case-btn primary-fill"
+                        data-id="{{ $data->id }}">Assign</button>
+                    <a href="{{ route('admin.view.note', $data->id) }}" class="primary-fill">View Notes</a>
                     <button class="primary-red">Cancel</button>
                 </div>
             </form>
