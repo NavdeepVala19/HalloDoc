@@ -248,33 +248,7 @@
                     minlength: 2,
                     maxlength: 30
                 },
-                phone_number: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 30,
-                    // RegExp: /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/,
-                },
-                street: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 30
-                },
-                city: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 30,
-                    // RegExp: /^[a-zA-Z ,_-]+?$/,
-                },
-                state: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 30,
-                    RegExp: /^[a-zA-Z ,_-]+?$/,
-                },
-                zipcode: {
-                    required: true,
-
-                },
+                
             },
             messages: {
                 email: {
