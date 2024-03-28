@@ -31,6 +31,8 @@ class AdminProviderController extends Controller
 
     public function readProvidersInfo()
     {
+
+
         $providersData = Provider::paginate(10);
         return view('/adminPage/provider/adminProvider', compact('providersData'));
     }
@@ -56,6 +58,10 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
+
+        $request->validate([
+            'contact_msg' => 'required|min:2'
+        ]);
 
         $receipientData = Provider::where('id', $id)->get();
         $receipientId = $id;
@@ -176,6 +182,14 @@ class AdminProviderController extends Controller
 
 
 
+
+    public function stopNotifications(Request $request)
+    {
+        $stopNotification = Provider::find($request->stopNotificationsCheckId);
+        $stopNotification->update(['is_notifications' => $request->is_notifications]);
+    }
+
+
     // ****************** This code is for creating a new provider ************************
 
     public function newProvider()
@@ -187,25 +201,23 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
-
         $request->validate([
             'user_name' => 'required',
             'password' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
+            'email' => 'required|email|min:2|max:30|unique:App\Models\users,email',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'medical_license' => 'required',
             'npi_number' => 'required',
-            'email_alt' => 'required|email',
-            'address1' => 'required',
+            'address1' => 'required|min:2|max:50',
             'address2' => 'required',
-            'city' => 'required',
-            'zip' => 'required',
-            'phone_number_alt' => 'required',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'zip' => 'digits:6',
+            'phone_number_alt' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'business_name' => 'required',
-            'business_website' => 'required',
-            'admin_notes' => 'required',
+            'business_website' => 'nullable',
+            'admin_notes' => 'nullable',
         ]);
 
 
@@ -217,7 +229,6 @@ class AdminProviderController extends Controller
         $userProvider->email = $request->email;
         $userProvider->phone_number = $request->phone_number;
         $userProvider->save();
-
 
         // store data in physician region
         $providerData = new Provider();
@@ -232,15 +243,17 @@ class AdminProviderController extends Controller
         $providerData->alt_phone = $request->phone_number_alt;
         $providerData->medical_license = $request->medical_license;
         $providerData->npi_number = $request->npi_number;
-        $providerData->syncEmailAddress = $request->email_alt;
         $providerData->address1 = $request->address1;
         $providerData->address2 = $request->address2;
         $providerData->city = $request->city;
-        $providerData->status = 'pending';
         $providerData->zip = $request->zip;
+        $providerData->status = 'pending';
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
+
+        $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
+        $path = $request->file('provider_photo')->storeAs('public', $request->file('provider_photo')->getClientOriginalName());
 
         $providerData->save();
 
@@ -258,6 +271,7 @@ class AdminProviderController extends Controller
         $ids = implode(',', $data);
 
         Provider::where('id', $providerData->id)->update(['regions_id' => $ids]);
+
 
         // make entry in user_roles table to identify the user(whether it is admin or physician)
         $user_roles = new UserRoles();
@@ -296,19 +310,6 @@ class AdminProviderController extends Controller
             $providerData->save();
         }
 
-
-        if (isset($request->provider_signature)) {
-            $request_file = new RequestWiseFile();
-            $request_file->physician_id = $providerData->id;
-
-            $request_file->file_name = $request->file('provider_signature')->getClientOriginalName();
-
-            $providerData->signature = $request_file->file_name;
-
-            $path = $request->file('provider_signature')->storeAs('public', $request->file('provider_signature')->getClientOriginalName());
-            $request_file->save();
-            $providerData->save();
-        }
 
         if (isset($request->independent_contractor)) {
             $request_file = new RequestWiseFile();

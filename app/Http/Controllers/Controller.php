@@ -21,7 +21,8 @@ class Controller extends BaseController
         return view('patientSite.submitScreen');
     }
 
-    public function passReset(){
-        return view ('email.createNewRequest');
+    public function passReset()
+    {
+        return view('email.contactYourProvider');
     }
 }

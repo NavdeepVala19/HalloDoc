@@ -8,6 +8,7 @@ use App\Models\Orders;
 use App\Models\allusers;
 use App\Models\Business;
 use App\Models\EmailLog;
+use App\Models\UserRoles;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -70,6 +71,11 @@ class businessRequestController extends Controller
       $requestUsers->state = $request->state;
       $requestUsers->zipcode = $request->zipcode;
       $requestUsers->save();
+
+      $userRolesEntry = new UserRoles();
+      $userRolesEntry->role_id = 3;
+      $userRolesEntry->user_id = $requestEmail->id;
+      
     }
     $requestEmail = new users();
     // business data store in business field

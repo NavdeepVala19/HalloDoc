@@ -8,22 +8,22 @@ $(document).ready(function () {
         $('#ContactProviderForm').attr('action', url);
         $('.provider_id').val(id);
     })
-    
+
     // ******************************************************************************** 
-    
-    
-    
+
+
+
     // **** This code is for enabling field in adminProviderEdit Page **** 
     $("#provider-credentials-edit-btn").click(function () {
         $(".provider-username-field").removeAttr("disabled");
         $("#provider-status").removeAttr("disabled");
         $("#provider-role").removeAttr("disabled");
     });
-    
+
     $('#provider-reset-password-btn').click(function () {
         $('.provider-password-field').removeAttr("disabled");
     })
-    
+
     $('#provider-info-btn').click(function () {
         $(".provider-firstname").removeAttr("disabled");
         $(".provider-lastname").removeAttr("disabled");
@@ -33,79 +33,91 @@ $(document).ready(function () {
         $(".provider-npi").removeAttr("disabled");
         $(".provider-alt-email").removeAttr("disabled");
     })
-    
+
     $('#provider-bill-edit-btn').click(function () {
         $(".provider-bill-add1").removeAttr("disabled");
         $(".provider-bill-add2").removeAttr("disabled");
         $(".provider-bill-city").removeAttr("disabled");
         $(".provider-bill-zip").removeAttr("disabled");
         $(".alt-phone-provider").removeAttr("disabled");
+        $(".listing-region").removeAttr("disabled");
     })
+
+
+    $('#provider-profile-edit-btn').click(function () {
+        $(".business-name").removeAttr("disabled");
+        $(".business-web").removeAttr("disabled");
+        $(".admin-notes").removeAttr("disabled");
+    })
+
+
+
+
     // ********************************************************************************
-    
-    
-    
-    
+
+
+
+
     // ***************** Fetching regions from regions table ******************
     $.ajax({
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-            
+
             data.forEach(function (region) {
                 $("#listing-region-admin-provider").append(
                     '<option value="' + region.id + '" class="regions-name">' + region.region_name + "</option>"
-                    );
-                });
+                );
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+
+    });
+    // ********************************************************************************
+
+
+
+    // **** Filtering Data according to selected region from dropdown button in adminProvider Page ****
+
+    $('#listing-region-admin-provider').on('change', function () {
+        var token = $('meta[name="csrf-token"]').attr('content')
+        var selectedId = $(this).val();
+
+        console.log(selectedId);
+
+        $.ajax({
+            url: "/regions",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                regionId: selectedId,
+                "_token": token
+            },
+            success: function (data) {
+                $('#all-providers-data').html(data.html)
             },
             error: function (error) {
                 console.error(error);
-            },
-            
+            }
         });
-        // ********************************************************************************
-        
-        
-        
-    // **** Filtering Data according to selected region from dropdown button in adminProvider Page ****
-    
-        $('#listing-region-admin-provider').on('change', function () {
-            var token = $('meta[name="csrf-token"]').attr('content')
-            var selectedId = $(this).val();
-            
-            console.log(selectedId);
-            
-            $.ajax({
-                url: "/regions",
-                type: "POST",
-                dataType: 'json',
-                data: {
-                    regionId: selectedId,
-                    "_token": token
-                },
-                success: function (data) {
-                    $('#all-providers-data').html(data.html)
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-        })
-        
+    })
+
     // ********************************************************************************
-    
-    
-    
-    
-    
+
+
+
+
+
     //***  This code is showing contact your provider pop-up ****
     $('.contact-btn').click(function () {
         $('.new-provider-pop-up').show();
         $('.overlay').show();
     })
     // **************************************************
-    
-    
+
+
 
 
 
@@ -190,3 +202,197 @@ $(document).ready(function () {
     // *********************************************************
 
 })
+
+
+$(document).ready(function () {
+    $.validator.addMethod("phoneUS", function (phone_number, element) {
+        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
+    }, "Please enter a valid phone number.");
+
+    $.validator.addMethod("city", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid city name.");
+
+    $.validator.addMethod("zipcode", function (value, element) {
+        return value.length == 6 && /\d/.test(value);
+    }, "Please enter a valid zipcode.");
+
+    $('#adminEditProviderForm').validate({
+        rules: {
+            user_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            password: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            first_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            last_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            medical_license: {
+                required: true,
+            },
+            npi_number: {
+                required: true,
+            },
+            alt_email: {
+                required: true,
+                email: true
+            },
+            address1: {
+                required: true,
+                minlength: 3,
+                maxlength: 50
+            },
+            address2: {
+                required: true,
+            },
+            city: {
+                required: true,
+                city: true
+            },
+            zip: {
+                required: true,
+                zipcode: true
+            },
+            alt_phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            business_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            business_website: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            Admin_Notes: {
+                required: true,
+            },
+        },
+        message: {
+            user_name: {
+                required: "Please enter a valid username",
+            },
+            password: {
+                required: "Please enter a valid password",
+            },
+            first_name: {
+                required: "Please enter a valid first_name",
+            },
+            last_name: {
+                required: "Please enter a valid last_name",
+            },
+            email: {
+                required: "Please enter a valid email",
+            },
+            phone_number: {
+                required: "Please enter a valid phone_number",
+            },
+            medical_license: {
+                required: "Please enter a valid medical_license",
+            },
+            npi_number: {
+                required: "Please enter a valid npi_number",
+            },
+            alt_email: {
+                required: "Please enter a valid alt_email",
+            },
+            address1: {
+                required: "Please enter a valid address1",
+            },
+            address2: {
+                required: "Please enter a valid address2",
+            },
+            city: {
+                required: "Please enter a valid city",
+            },
+            zip: {
+                required: "Please enter a valid zipcode",
+            },
+            alt_phone_number: {
+                required: "Please enter a valid alt_phone_number",
+            },
+            business_name: {
+                required: "Please enter a valid business_name",
+            },
+            business_website: {
+                required: "Please enter a valid business_website",
+            },
+            Admin_Notes: {
+                required: "Please enter a valid Admin_Notes",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+    })
+})
+
+
+
+$(document).ready(function () {
+    $('#all-providers-data').on('change', '.checkbox1', function (e) {
+        var token = $('meta[name="csrf-token"]').attr('content')
+        var checkbox = $(this);
+
+        var stopNotificationsCheckId = checkbox.attr('id').split('_')[1];
+        var is_notifications = checkbox.prop('checked') ? 1 : 0; // Ternary operator to set is_notify
+
+
+        // this will check that particular checkbox is check or not
+        var isChecked = $(this).is(':checked');
+
+        // store value in contactBtn as per contactBtn id
+        var contactBtn = $('#contact_btn_' + stopNotificationsCheckId);
+
+        // Update contact button state based on checkbox state
+        contactBtn.prop('disabled', isChecked);
+
+
+        $.ajax({
+            url: "/admin/providers/stopNotification",
+            type: 'POST',
+            data: {
+                stopNotificationsCheckId: stopNotificationsCheckId,
+                is_notifications: is_notifications,
+                "_token": token
+            },
+            success: function (response) {
+
+            },
+            error: function (error) {
+                console.error('Error updating stop notifications:', error);
+            }
+        });
+    });
+});

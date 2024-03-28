@@ -60,11 +60,11 @@ class AdminController extends Controller
         // Total count of cases as per the status (displayed in all listing pages)
         return [
             // unassigned case, assigned to provider but not accepted
-            'newCase' => RequestTable::where('status', 1)->count(), 
+            'newCase' => RequestTable::where('status', 1)->count(),
             //accepted by provider, pending state
-            'pendingCase' => RequestTable::where('status', 3)->count(), 
+            'pendingCase' => RequestTable::where('status', 3)->count(),
             //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
-            'activeCase' => RequestTable::whereIn('status', [4, 5])->count(), 
+            'activeCase' => RequestTable::whereIn('status', [4, 5])->count(),
             'concludeCase' => RequestTable::where('status', 6)->count(),
             'tocloseCase' => RequestTable::whereIn('status', [2, 7])->count(),
             'unpaidCase' => RequestTable::where('status', 9)->count(),
@@ -651,16 +651,11 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-
+        // dd("here");
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
 
-
-
-
         $session = session([
-            'request_status' => $request->request_status,
             'patient_name' => $request->patient_name,
-            'request_type' => $request->request_type,
             'from_date_of_service' => $request->from_date_of_service,
             'to_date_of_service' => $request->to_date_of_service,
             'email' => $request->email,
@@ -686,7 +681,6 @@ class AdminController extends Controller
 
     public function exportFilteredSearchRecord($request)
     {
-
         $combinedData = request_Client::distinct()->select([
             'request_client.first_name',
             'request.request_type_id',
@@ -740,7 +734,6 @@ class AdminController extends Controller
 
     public function downloadFilteredData(Request $request)
     {
-
         $data = $this->exportFilteredSearchRecord($request);
         $export = new SearchRecordExport($data);
 

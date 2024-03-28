@@ -23,7 +23,7 @@
     vertical-align: middle;
 }
 
-#checkbox1 {
+.checkbox1 {
     border: 1px solid rgb(126, 122, 122);
     width: 25px;
     height: 25px;

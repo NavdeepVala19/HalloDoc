@@ -183,7 +183,9 @@ route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'de
 
 route::post('/regions', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 
+route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
 
+Route::post('/admin/providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 
 
 route::post('admin/new/request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
@@ -209,10 +211,6 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
 route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
-
-
-
-route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
 
 
 

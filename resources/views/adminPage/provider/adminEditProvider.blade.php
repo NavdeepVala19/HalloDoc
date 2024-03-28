@@ -45,7 +45,7 @@
 
     <div class="section">
 
-        <form action="{{route('adminUpdatedProvider', $getProviderData->id)}}" method="POST">
+        <form action="{{route('adminUpdatedProvider', $getProviderData->id)}}" method="POST" id="adminEditProviderForm">
             @csrf
 
             <h3>Account Information</h3>
@@ -57,6 +57,7 @@
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span id="errorMsg"></span>
                 </div>
                 <div class="form-floating ">
                     <input type="password" name="password" class="form-control provider-password-field" id="floatingInput" value="{{$getProviderData->users->password}}" placeholder="password" disabled>
@@ -64,6 +65,7 @@
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div class="form-floating status-select">
@@ -108,6 +110,7 @@
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
@@ -116,11 +119,16 @@
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
                     <input type="email" class="form-control provider-email" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->email}}" name="email" disabled>
                     <label for="floatingInput">Email</label>
+                    @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    <span id="errorMsg"></span>
                 </div>
 
                 <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->mobile}}" placeholder="Phone Number" disabled>
@@ -131,19 +139,16 @@
                 <div class="form-floating ">
                     <input type="text" name="medical_license" class="form-control provider-license" id="floatingInput" value="{{ $getProviderData->medical_license}}" placeholder="Medical License" disabled>
                     <label for="floatingInput">Medical license # </label>
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
                     <input type="text" name="npi_number" class="form-control provider-npi" id="floatingInput" value="{{ $getProviderData->npi_number}}" placeholder="NPI Number" disabled>
                     <label for="floatingInput">NPI Number</label>
+                    <span id="errorMsg"></span>
                 </div>
 
-                <div class="form-floating ">
-                    <input type="email" class="form-control provider-alt-email" id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->syncEmailAddress}}" name="alt_email" disabled>
-                    <label for="floatingInput">Email</label>
-                </div>
-
-                <div class="d-flex gap-4 ">
+                <div class="d-flex gap-4 flex-wrap">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault-somnath">
                         <label class="form-check-label" for="flexCheckDefault">
@@ -180,12 +185,11 @@
                     </div>
                 </div>
 
-                <div>
-
-                </div>
+                <div></div>
+                <div></div>
 
                 <div class="d-flex flex-row justify-content-end">
-                    <button class="primary-fill" type="button" id="provider-info-btn">Edit</button>
+                    <button class="primary-fill" type="button" id="provider-info-btn" type="button">Edit</button>
                 </div>
 
             </div>
@@ -195,47 +199,48 @@
                 <div class="form-floating ">
                     <input type="text" name="address1" class="form-control provider-bill-add1" id="floatingInput" placeholder="Address 1" value="{{ $getProviderData->address1}}" disabled>
                     <label for="floatingInput">Address 1</label>
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
                     <input type="text" name="address2" class="form-control provider-bill-add2" id="floatingInput" placeholder="Address 2" value="{{ $getProviderData->address2}}" disabled>
                     <label for="floatingInput">Address 2</label>
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div class="form-floating ">
                     <input type="text" name="city" class="form-control provider-bill-city" id="floatingInput" placeholder="city" value="{{ $getProviderData->city}}" disabled>
                     <label for="floatingInput">City</label>
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div>
                     {{-- Dropdown State Selection --}}
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                            <option selected>State</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+
+                        <select class="form-select listing-region" id="floatingSelect" aria-label="Floating label select example" disabled>
+                            <option name="regions" selected>State</option>
                         </select>
-                        <!-- <label for="floatingSelect">State</label> -->
                     </div>
                 </div>
 
                 <div class="form-floating ">
                     <input type="text" name="zip" class="form-control provider-bill-zip" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip}}" disabled>
                     <label for="floatingInput">Zip</label>
+                    <span id="errorMsg"></span>
                 </div>
 
                 <input type="tel" name="alt_phone_number" class="form-control phone alt-phone-provider" id="telephone" value="{{ $getProviderData->alt_phone}}" placeholder="Phone Number" disabled>
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
+                <span id="errorMsg"></span>
 
-                <div>
-
-                </div>
+                <div></div>
+                <div></div>
 
                 <div class="d-flex flex-row justify-content-end">
-                    <button class="primary-fill" type="button" id="provider-bill-edit-btn">Edit</button>
+                    <button type="button" class="primary-fill" type="button" id="provider-bill-edit-btn">Edit</button>
                 </div>
 
 
@@ -243,14 +248,16 @@
             <h3>Provider Profile</h3>
             <div class="grid-2">
 
-                <div class="form-floating ">
-                    <input type="text" name="business_name" class="form-control" id="floatingInput" value="{{ $getProviderData->business_name}}" placeholder="Business Name">
+                <div class="form-floating">
+                    <input type="text" name="business_name" class="form-control business-name" id="floatingInput" disabled value="{{ $getProviderData->business_name}}" placeholder="Business Name">
                     <label for="floatingInput">Business Name</label>
+                    <span id="errorMsg"></span>
                 </div>
 
-                <div class="form-floating ">
-                    <input type="text" name="business_website" class="form-control" id="floatingInput" value="{{ $getProviderData->business_website}}" placeholder="Business Website">
+                <div class="form-floating">
+                    <input type="text" name="business_website" class="form-control business-web" id="floatingInput" disabled value="{{ $getProviderData->business_website}}" placeholder="Business Website">
                     <label for="floatingInput">Business Website</label>
+                    <span id="errorMsg"></span>
                 </div>
 
                 <div>
@@ -262,27 +269,17 @@
                     </div>
                 </div>
 
-                <div class="d-flex align-items-center gap-1 ">
-                    {{-- Select Signature --}}
-                    <div class="custom-file-input">
-                        <input type="text" placeholder="Select Signature" readonly>
-                        <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span class="upload-txt">Upload</span></label>
-                        <input type="file" id="signature-input" hidden>
-                    </div>
-
-                    <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
-                    {{-- <canvas id="signatureCanvas" width="300" height="150"></canvas> --}}
-                </div>
-
 
             </div>
-
-
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" style="height: 120px"> {{$getProviderData->admin_notes}} </textarea>
+                <textarea class="form-control admin-notes" placeholder="Admin_Notes" id="floatingTextarea2" disabled name="admin_notes" style="height: 120px"> {{$getProviderData->admin_notes}} </textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
+                <span id="errorMsg"></span>
             </div>
 
+            <div class="d-flex flex-row justify-content-end mt-3">
+                <button type="button" class="primary-fill" type="button" id="provider-profile-edit-btn">Edit</button>
+            </div>
 
             <hr>
             <div>
@@ -307,7 +304,7 @@
 
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
 
-                                        <button class="primary-fill ms-4">View</button>
+                                        <button class="primary-fill ms-4" type="button">View</button>
                                         <p id="Contractor"></p>
                                     </div>
 
@@ -315,7 +312,7 @@
                                         <label for="independent_contractor" class="upload primary-fill"> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <input type="file" id="fileInput-independent_contractor-agreement" class="independent-contractor-input" name="independent_contractor-btn" hidden>
 
-                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <button class="primary-fill mb-2" type="button"><i class="bi bi-eye"></i></button>
                                         <p id="Contractor"></p>
                                     </div>
                                 </td>
@@ -335,13 +332,13 @@
                                     <div class="ms-4 btns">
                                         <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="background-input" name="background_doc" hidden>
-                                        <button class="primary-fill ms-4">View</button>
+                                        <button class="primary-fill ms-4" type="button">View</button>
                                         <p id="Background"></p>
                                     </div>
 
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <button class="primary-fill mb-2" type="button"><i class="bi bi-eye"></i></button>
                                         <p id="Background"></p>
                                     </div>
                                 </td>
@@ -361,12 +358,12 @@
                                     <div class="ms-4 btns">
                                         <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="hipaa-input" hidden name="hipaa_docs">
-                                        <button class="primary-fill ms-4">View</button>
+                                        <button class="primary-fill ms-4" type="button">View</button>
                                         <p id="HIPAA"></p>
                                     </div>
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-                                        <button class="primary-fill mb-2"><i class="bi bi-eye"></i></button>
+                                        <button class="primary-fill mb-2" type="button"><i class="bi bi-eye"></i></button>
                                         <p id="HIPAA"></p>
                                     </div>
                                 </td>

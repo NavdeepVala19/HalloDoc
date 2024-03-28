@@ -31,7 +31,7 @@ class patientProfileController extends Controller
 
     public function patientUpdate(Request $request)
     {
-        // dd($request->all());
+
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
@@ -44,7 +44,6 @@ class patientProfileController extends Controller
             'zipcode' => 'digits:6',
         ]);
 
-        dd($request->all());
 
         $userData = Auth::user();
 

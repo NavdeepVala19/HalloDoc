@@ -1,4 +1,3 @@
-
 <style>
     body {
         font-family: "Poppins", sans-serif;
@@ -47,7 +46,7 @@
         justify-content: center;
     }
 
-    .container{
+    .container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -99,17 +98,17 @@
 
 <div class="container">
 
-<header class="header px-3 border-bottom shadow bg-body-tertiary">
-    <div>
-        <a href=""><img class="logo img-fluid" src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
-    </div>
-</header>
+    <header class="header px-3 border-bottom shadow bg-body-tertiary">
+        <div>
+            <a href=""><img class="logo img-fluid" src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
+        </div>
+    </header>
 
-<h2>Forget Your Password ??</h2>
+    <h2>Forgot Your Password ?</h2>
 
-<h4>
-    Click on Below Button To Reset Password
-</h4>
-<a href="{{ route('reset.password', $token) }}" type="button" class="case submitType" id="patient">Reset Password</a>
+    <h4>
+        Click on Below Button To Reset Password
+    </h4>
+    <a href="{{ route('reset.password', $token) }}" type="button" class="case submitType" id="patient">Reset Password</a>
 
 </div>

@@ -41,7 +41,7 @@
 <div class="overlay"> </div>
 
 @if(session('message'))
-<h6 class="alert alert-success ">
+<h6 class="alert alert-success popup-message ">
     {{ session('message') }}
 </h6>
 @endif
@@ -81,14 +81,14 @@
                 <tbody>
                     @foreach ($providersData as $data)
                     <tr>
-                        <td class="checks"> <input class="form-check-input" type="checkbox" value="" id="checkbox1">
+                        <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1) id="checkbox_{{$data->id}}">
                         </td>
                         <td class="data"> {{$data->first_name}}</td>
                         <td class="data"> Physician</td>
                         <td class="data"> Available</td>
                         <td class="data"> {{$data->status}} </td>
                         <td class="data gap-1">
-                            <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
+                            <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2" id="contact_btn_{{$data->id}}">Contact</button>
                             <a href="{{route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                         </td>
                     </tr>
@@ -135,6 +135,9 @@
                         <div class="form-floating">
                             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
                             <label for="floatingTextarea2">Message</label>
+                            @error('contact_msg')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                 </div>

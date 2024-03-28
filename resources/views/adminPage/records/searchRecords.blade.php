@@ -40,9 +40,8 @@
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
-        <a href="#" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
+        <a href="" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
     </div>
-
 
     <div class="section">
         <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">

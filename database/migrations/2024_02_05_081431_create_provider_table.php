@@ -66,6 +66,7 @@ return new class extends Migration
             $table->boolean('IsTokenGenerate')->nullable();
 
             $table->string('syncEmailAddress')->nullable();
+            $table->boolean('is_notifications')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -32,13 +32,12 @@ class AdminDashboardController extends Controller
     {
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
-            'phone_number' => 'required',
+            'last_name' => 'required|min:2|max:30',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required|email',
-            'street' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            // 'zipcode' => 'digits:6',
+            'street' => 'min:2|max:30',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
         ]);
 
         $isEmailStored = users::where('email', $request->email)->pluck('email');
