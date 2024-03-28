@@ -46,6 +46,16 @@ by patients. --}}
 patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the
 "Pending" state to the "Active" state. --}}
 
+    {{-- Case Cleared Successfully --}}
+    @if (session('caseCleared'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseCleared') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     <div class="overlay"></div>
 
     {{-- Clear Case Pop-up --}}
@@ -474,8 +484,10 @@ pending state, providers need to send an agreement link to patients. --}}
                                 </span>
                                 <br>
                                 <span>
-                                    <i class="bi bi-person-circle"></i> Physician : Dr.
-                                    {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    <i class="bi bi-person-circle"></i> Physician :
+                                    @if ($case->provider)
+                                        Dr. {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    @endif
                                 </span>
                                 <br>
                                 <span>
@@ -488,9 +500,11 @@ pending state, providers need to send an agreement link to patients. --}}
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
-                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}" class="secondary-btn">View Uploads</a>
+                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
+                                        class="secondary-btn">View Uploads</a>
                                     <button class="secondary-btn encounter-btn">Encouter</button>
-                                    <button class="secondary-btn-2 clear-btn" data-id="{{ $case->id }}">Clear Case</button>
+                                    <button class="secondary-btn-2 clear-btn" data-id="{{ $case->id }}">Clear
+                                        Case</button>
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>

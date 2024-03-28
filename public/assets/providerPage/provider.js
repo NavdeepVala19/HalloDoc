@@ -109,8 +109,6 @@ $(document).ready(function () {
         $(".overlay").show();
         $(".send-agreement-id").val($(this).data("id"));
 
-        console.log($(this).data("phone_number"));
-
         $(".agreement-phone-number").val($(this).data("phone_number"));
         $(".agreement-email").val($(this).data("email"));
 

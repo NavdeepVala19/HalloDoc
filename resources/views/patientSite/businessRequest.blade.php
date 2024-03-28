@@ -30,10 +30,6 @@
                     <h4> Business Information</h4>
                 </div>
 
-
-                <input type="hidden" name="request_type" value="3">
-
-
                 <div class="row business-row1">
                     <div class="col-md business-col1">
 

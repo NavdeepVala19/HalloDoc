@@ -2,36 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ProviderRequest;
 use ZipArchive;
+use Carbon\Carbon;
 use App\Models\User;
 
 // Different Models used in these Controller
+use App\Models\Admin;
 use App\Models\users;
 use App\Mail\SendMail;
 use App\Models\Regions;
+use App\Models\SMSLogs;
+use Twilio\Rest\Client;
+use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
-use App\Mail\sendEmailAddress;
-use App\Models\Admin;
-use App\Models\allusers;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
-use Illuminate\Http\Request;
 // For sending Mails
+use Illuminate\Http\Request;
+use App\Mail\ProviderRequest;
 use App\Models\MedicalReport;
 use App\Models\RequestStatus;
+use App\Mail\sendEmailAddress;
 use App\Models\request_Client;
 use App\Models\PhysicianRegion;
-use App\Models\RequestWiseFile;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 // DomPDF package used for the creation of pdf from the form
-use Illuminate\Support\Facades\DB;
+use App\Models\RequestWiseFile;
 
 
 // To create zip, used to download multiple documents at once
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -123,8 +125,8 @@ class ProviderController extends Controller
         $categoryMapping = [
             'patient' => 1,
             'family' => 2,
-            'business' => 3,
-            'concierge' => 4,
+            'concierge' => 3,
+            'business' => 4,
         ];
         return $categoryMapping[$category] ?? null;
     }
@@ -141,12 +143,19 @@ class ProviderController extends Controller
     }
 
     // Assign Case
-    public function assignCase(Request $request)
+    public function transferCase(Request $request)
     {
-        // dd($request->physician);
-        RequestStatus::where('request_id', $request->requestId)->update([
+        $request->validate([
+            'notes' => 'required',
+        ]);
+        RequestTable::where('id', $request->requestId)->update([
+            'physician_id' => DB::raw("NULL"),
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 3,
             'TransToAdmin' => true,
-            'physician_id' => null,
+            'physician_id' => DB::raw('NULL'),
             'notes' => $request->notes
         ]);
         return redirect()->back();
@@ -263,30 +272,37 @@ class ProviderController extends Controller
     // Encounter pop-up as per action (consult, hous_call) selected perform particular tasks 
     public function encounter(Request $request)
     {
+        $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
+
         if ($request->house_call == 1) {
-            RequestStatus::where('request_id', $request->requestId)->update(['status' => 5]);
-            RequestTable::where('id', $request->requestId)->update(['call_type' => 1]);
+            RequestTable::where('id', $request->requestId)->update(['status' => 5, 'call_type' => 1]);
+            RequestStatus::create([
+                'request_id' => $request->requestId,
+                'status' => 5,
+                'physician_id' => $providerId,
+            ]);
             return redirect()->route('provider.status', ['status' => 'active']);
         } else if ($request->consult == 1) {
-            RequestStatus::where('request_id', $request->requestId)->update(['status' => 6]);
-            RequestTable::where('id', $request->requestId)->update(['call_type' => 2]);
+            RequestTable::where('id', $request->requestId)->update(['status' => 6, 'call_type' => 2]);
+            RequestStatus::create([
+                'request_id' => $request->requestId,
+                'status' => 6,
+                'physician_id' => $providerId,
+            ]);
             return redirect()->route('provider.status', ['status' => 'conclude']);
         }
-
-        // if ($request->house_call == 1) {
-        //     RequestTable::where('id', $request->requestId)->update(['status' => 5,'call_type' => 1]);
-        //     return redirect()->route('provider.status', ['status' => 'active']);
-        // } else if ($request->consult == 1) {
-        //      RequestTable::where('id', $request->requestId)->update(['status' => 5,'call_type' => 2]);
-        //     return redirect()->route('provider.status', ['status' => 'conclude']);
-        // }
     }
 
     // HouseCall button clicked from active listing page
     public function encounterHouseCall($requestId)
     {
-        // RequestTable::where('id', $request->requestId)->update(['status' => 6]);
-        RequestStatus::where('request_id', $requestId)->update(['status' => 6]);
+        $providerId = RequestTable::where('id', $requestId)->first()->physician_id;
+        RequestTable::where('id', $requestId)->update(['status' => 6]);
+        RequestStatus::create([
+            'request_id' => $requestId,
+            'status' => 6,
+            'physician_id' => $providerId,
+        ]);
         return redirect()->route('provider.status', ['status' => 'conclude']);
     }
 
@@ -357,6 +373,7 @@ class ProviderController extends Controller
         try {
             $data = MedicalReport::where('request_id', $id)->first();
 
+            // dd($data);
             $pdf = PDF::loadView('providerPage.pdfForm', ['data' => $data]);
 
             return $pdf->download($data->first_name . "-medical.pdf");
@@ -437,14 +454,78 @@ class ProviderController extends Controller
     // show notes page for particular request
     public function viewNote($id = null)
     {
-        return view('providerPage.pages.viewNotes');
+        $note = RequestNotes::where('request_id', $id)->first();
+        return view('providerPage.pages.viewNotes', compact('id', 'note'));
+    }
+
+    // Store the note in physician_note
+    public function storeNote(Request $request)
+    {
+        $request->validate([
+            'physician_note' => 'required'
+        ]);
+        $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
+        if (!empty($requestNote)) {
+            RequestNotes::where('request_id', $request->requestId)->update([
+                'physician_notes' => $request->physician_note,
+            ]);
+        } else {
+            RequestNotes::create([
+                'request_id' => $request->requestId,
+                'physician_notes' => $request->physician_note,
+            ]);
+        }
+        $id = $request->requestId;
+
+        return redirect()->route('provider.view.notes', compact('id'))->with('providerNoteAdded', 'Your Note Successfully Added');
     }
 
     // Send Mail
     public function sendMail(Request $request)
     {
-        Mail::to($request->email)->send(new SendMail($request->all()));
+        // Generate the link using route() helper (assuming route parameter is optional)
+        $link = route('submitRequest');
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        // send SMS 
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->messages
+            ->create(
+                "+91 99780 71802", // to
+                [
+                    "body" => "Hii $request->first_name $request->last_name, Click on the this link to create request:$link",
+                    "from" =>  $senderNumber
+                ]
+            );
+
         $name = $request->first_name . " " . $request->last_name;
+
+        SMSLogs::create(
+            [
+                'mobile_number' => $request->phone_number,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'role_id' => 2,
+                'recipient_name' => $name,
+                'sent_tries' => 1,
+                'is_sms_sent' => 1,
+                'action' => 1,
+                'sms_template' => "Hii ,Click on the below link to create request"
+            ]
+        );
+
+        Mail::to($request->email)->send(new SendMail($request->all()));
         EmailLog::create([
             'role_id' => 2,
             'provider_id' => Auth::user()->id,
@@ -458,7 +539,7 @@ class ProviderController extends Controller
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
         ]);
-        return redirect()->back();
+        return redirect()->back()->withErrors('Enter all Details as Required!!!');
     }
 
     // View Uploads as per the id 
@@ -525,22 +606,56 @@ class ProviderController extends Controller
 
     public function sendAgreementLink(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'phone_number' => 'required'
+        ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
+        $id = $request->request_id;
         EmailLog::create([
-            // 'role_id' => 2,
+            'role_id' => 2,
             'provider_id' => $request->providerId,
             'subject_name' => 'Agreement Link Sent to Patient',
             'create_date' => now(),
             'sent_date' => now(),
             'is_email_sent' => 1,
             'action' => 4,
-            // 'recipient_name' => $request->first_name . " " . $request->last_name,
-            // 'email_template' => ,
+            'recipient_name' => $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name,
+            'email_template' => 'sendAgreementLink.blade.php',
             'email' => $request->email,
             'sent_tries' => 1,
         ]);
         Mail::to($request->email)->send(new SendAgreement($clientData));
-        return redirect()->back();
+
+        // send SMS 
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->messages
+            ->create(
+                "+91 99780 71802", // to
+                [
+                    "body" => "Hii " .  $clientData->requestClient->first_name . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
+                    "from" =>  $senderNumber
+                ]
+            );
+
+        SMSLogs::create(
+            [
+                'mobile_number' => $request->phone_number,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'role_id' => 2,
+                'sent_tries' => 1,
+                'is_sms_sent' => 1,
+                'action' => 4,
+                'sms_template' => "Hii ,Click on the below link to create request"
+            ]
+        );
+        return redirect()->back()->withErrors('email', 'phone_number');
     }
 
     public function viewConcludeCare($id)

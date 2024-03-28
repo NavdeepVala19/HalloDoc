@@ -59,13 +59,13 @@ class AdminController extends Controller
         // Total count of cases as per the status (displayed in all listing pages)
         return [
             // unassigned case, assigned to provider but not accepted
-            'newCase' => RequestTable::where('status', 1)->count(), 
+            'newCase' => RequestTable::where('status', 1)->count(),
             //accepted by provider, pending state
-            'pendingCase' => RequestTable::where('status', 3)->count(), 
+            'pendingCase' => RequestTable::where('status', 3)->count(),
             //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
-            'activeCase' => RequestTable::whereIn('status', [4, 5])->count(), 
+            'activeCase' => RequestTable::whereIn('status', [4, 5])->count(),
             'concludeCase' => RequestTable::where('status', 6)->count(),
-            'tocloseCase' => RequestTable::whereIn('status', [2, 7])->count(),
+            'tocloseCase' => RequestTable::whereIn('status', [2, 7, 11])->count(),
             'unpaidCase' => RequestTable::where('status', 9)->count(),
         ];
     }
@@ -140,8 +140,8 @@ class AdminController extends Controller
         $categoryMapping = [
             'patient' => 1,
             'family' => 2,
-            'business' => 3,
-            'concierge' => 4,
+            'concierge' => 3,
+            'business' => 4,
         ];
         return $categoryMapping[$category] ?? null;
     }
@@ -152,7 +152,7 @@ class AdminController extends Controller
             'pending' => 3,
             'active' => [4, 5],
             'conclude' => 6,
-            'toclose' => [2, 7],
+            'toclose' => [2, 7, 11],
             'unpaid' => 9,
         ];
         return $statusMapping[$status];
@@ -175,7 +175,9 @@ class AdminController extends Controller
     public function assignCase(Request $request)
     {
         $request->validate([
-            'physician' => 'required|numeric'
+            'physician' => 'required|numeric',
+            'assign_note' => 'required'
+
         ]);
         RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
         RequestStatus::create([
@@ -188,11 +190,15 @@ class AdminController extends Controller
 
         $physician = Provider::where('id', $request->physician)->first();
         $physicianName = $physician->first_name . " " . $physician->last_name;
-        return redirect()->back()->withErrors('physician', 'Select Physician to Assign case')->with('assigned', "Case Assigned Successfully to physician - {$physicianName}");
+        return redirect()->back()->with('assigned', "Case Assigned Successfully to physician - {$physicianName}");
     }
 
     public function transferCase(Request $request)
     {
+        $request->validate([
+            'physician' => 'required|numeric',
+            'notes' => 'required'
+        ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 1,
             'physician_id' => $request->physician
@@ -201,10 +207,10 @@ class AdminController extends Controller
             'request_id' => $request->requestId,
             'TransToPhysicianId' => $request->physician,
             'status' => "1",
-            'admin' => '1',
-            'notes' => $request->assign_note
+            'admin_id' => '1',
+            'notes' => $request->notes
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
     }
 
     // fetch all caseTag data from its table and show in cancelCase PopUp
@@ -216,6 +222,9 @@ class AdminController extends Controller
     // Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog
     public function cancelCase(Request $request)
     {
+        $request->validate([
+            'case_tag' => 'required|in:1,2,3,4'
+        ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 2,
             'case_tag' => $request->case_tag
@@ -243,6 +252,10 @@ class AdminController extends Controller
     // Admin Blocks patient
     public function blockCase(Request $request)
     {
+        $request->validate([
+            'block_reason' => 'required'
+        ]);
+
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
         $client = request_Client::where('request_id', $request->requestId)->first();
         BlockRequest::create([
@@ -251,9 +264,16 @@ class AdminController extends Controller
             'phone_number' => $client->phone_number,
             'email' => $client->email
         ]);
-        RequestStatus::where('request_id', $request->requestId)->update(['status' => 10]);
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 10,
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 10,
+            'notes' => $request->block_reason,
+        ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('CaseBlocked', 'Case Blocked Successfully!');
     }
 
     // View case
@@ -267,17 +287,33 @@ class AdminController extends Controller
     public function viewNote($id)
     {
         $note = RequestNotes::where('request_id', $id)->first();
+        // $transferNotes = RequestStatus::where('request_id', $id)->get();
+        $adminAssignedCase = RequestStatus::where('request_id', $id)->where('status', 1)->get();
+        $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->get();
+        // dd($transferNotes);
         return view('adminPage.pages.viewNotes', compact('id', 'note'));
     }
 
     public function storeNote(Request $request)
     {
-        // dd($request->all());
-        RequestNotes::where('request_id', $request->requestId)->update([
-            'admin_notes' => $request->admin_note,
+        $request->validate([
+            'admin_note' => 'required'
         ]);
+        $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
+        if (!empty($requestNote)) {
+            RequestNotes::where('request_id', $request->requestId)->update([
+                'admin_notes' => $request->admin_note,
+            ]);
+        } else {
+            RequestNotes::create([
+                'request_id' => $request->requestId,
+                'admin_notes' => $request->admin_note,
+            ]);
+        }
 
-        return redirect()->route('admin.view.note', compact('id'));
+        $id = $request->requestId;
+
+        return redirect()->route('admin.view.note', compact('id'))->with('adminNoteAdded', 'Your Note Successfully Added');
     }
 
     public function viewUpload($id)
@@ -292,6 +328,13 @@ class AdminController extends Controller
     public function sendMail(Request $request)
     {
 
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email'
+        ]);
+
         $firstname = $request->first_name;
         $lastname = $request->last_name;
 
@@ -300,11 +343,6 @@ class AdminController extends Controller
 
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route($routeName);
-
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-        ]);
 
         Mail::to($request->email)->send(new SendLink($request->all()));
 
@@ -328,9 +366,6 @@ class AdminController extends Controller
 
         EmailLog::create([
             'role_id' => 1,
-            // 'provider_id' => specify provider id
-            // 'email_template' =>,
-            // 'subject_name' =>,
             'is_email_sent' => true,
             'sent_tries' => 1,
             'sent_date' => now(),
@@ -353,14 +388,20 @@ class AdminController extends Controller
             ]
         );
 
-        return redirect()->back();
+        return redirect()->back()->withErrors('Enter all Details as Required!!!');
     }
 
 
     public function clearCase(Request $request)
     {
-        RequestStatus::where('request_id', $request->requestId)->update(['status' => 8]);
-        return redirect()->back();
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 8,
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 8,
+        ]);
+        return redirect()->back()->with('caseCleared', 'Case Cleared Successfully');
     }
 
     public function closeCase(Request $request, $id = null)
@@ -742,17 +783,15 @@ class AdminController extends Controller
 
     public function emailRecordsView()
     {
-        $emails = EmailLog::with(['roles'])->get();
+        $emails = EmailLog::with(['roles'])->paginate(10);
         return view('adminPage.records.emailLogs', compact('emails'));
     }
     public function searchEmail(Request $request)
     {
-        // if ($request->role_id == 0) {
-        //     return redirect()->route('admin.email.records.view');
-        // }
-
         $emails = EmailLog::when($request->role_id, function ($query) use ($request) {
             $query->where('role_id', $request->role_id);
+        })->when($request->receiver_name, function ($query) use ($request) {
+            $query->where('recipient_name', 'LIKE', "%$request->reciever_name%");
         })
             ->when($request->email, function ($query) use ($request) {
                 $query->where('email', 'LIKE',  "%$request->email%");
@@ -762,13 +801,7 @@ class AdminController extends Controller
                 // Carbon::parse($request->created_at)->format('Y-m-d')
             })->when($request->sent_date, function ($query) use ($request) {
                 $query->where('sent_date', $request->sent_date);
-            })->get();
-
-        // dd($emails);
-        // dd(EmailLog::where('email', 'LIKE', "%$request->email%")->get());
-        // ->when($request->receiver_name, function ($query) use ($request) {
-        //     $query->where('last_name', 'LIKE', "%$request->last_name%");
-        // })
+            })->paginate(10);
 
         return view('adminPage.records.emailLogs', compact('emails'));
     }

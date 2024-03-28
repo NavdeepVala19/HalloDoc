@@ -165,6 +165,10 @@ route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 
 //  ***************************************************************************************************************************************
 // it will show agreement page
 route::get('/patientAgreement/{data}', [patientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
+// Agreement Agreed by patient
+Route::post('/agree-agreement', [patientDashboardController::class, 'agreeAgreement'])->name('patient.agree.agreement');
+// Agreement Cancelled by patient
+Route::post('/cancel-agreement', [patientDashboardController::class, 'cancelAgreement'])->name('patient.cancel.agreement');
 //  ***************************************************************************************************************************************
 
 
@@ -293,11 +297,13 @@ Route::post('/provider-request', [ProviderController::class, 'createRequest'])->
 // Accept Case by provider
 Route::get('/accept-case/{id}', [ProviderController::class, 'acceptCase'])->name('provider.accept.case');
 
-Route::post('/transfer-case', [ProviderController::class, 'assignCase'])->name('provider.transfer.case');
+Route::post('/transfer-case', [ProviderController::class, 'transferCase'])->name('provider.transfer.case');
 
 // VIEW NOTES PAGE
 // show view notes page as per the id
-Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
+Route::get('/provider/view/notes/{id}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
+// Store notes saved by provider
+Route::post('/provider/store/notes', [ProviderController::class, 'storeNote'])->name('provider.store.note');
 
 // VIEW UPLOADS PAGE
 // View Uploads (currently showing all the documents in requestWiseFile table)

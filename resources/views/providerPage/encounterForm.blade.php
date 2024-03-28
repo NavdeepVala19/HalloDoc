@@ -25,7 +25,7 @@
 
                 <div>
                     <div class="grid-2">
-                        <input type="text" name="request_type_id" value="{{ $id }}" hidden>
+                        <input type="text" name="request_id" value="{{ $id }}" hidden>
                         <div class="form-floating ">
                             <input type="text" name="first_name"
                                 class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
@@ -33,7 +33,7 @@
                                 value="@if ($data) {{ $data->first_name }} @endif">
                             <label for="floatingInput">First Name</label>
                             @error('first_name')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating ">
@@ -76,7 +76,7 @@
                                 {{-- value="{{ $data->requestClient->email }}" --}}>
                             <label for="floatingInput">Email</label>
                             @error('email')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                     <div class="grid-2">
                         <div class="form-floating">
                             <textarea class="form-control note" name="present_illness_history" placeholder="injury" id="floatingTextarea2">
-@if ($data)
+    @if ($data)
 {{ $data->present_illness_history }}
 @endif
 </textarea>
@@ -118,19 +118,19 @@
                     <div class="grid-3">
 
                         <div class="form-floating ">
-                            <input type="text" name="temperature" class="form-control" id="floatingInput"
+                            <input type="number" name="temperature" class="form-control" id="floatingInput"
                                 placeholder="Temp"
                                 value="@if ($data) {{ $data->temperature }} @endif">
                             <label for="floatingInput">Temp</label>
                         </div>
                         <div class="form-floating ">
-                            <input type="text" name="heart_rate" class="form-control" id="floatingInput"
+                            <input type="number" name="heart_rate" class="form-control" id="floatingInput"
                                 placeholder="Temp"
                                 value="@if ($data) {{ $data->heart_rate }} @endif">
                             <label for="floatingInput">HR</label>
                         </div>
                         <div class="form-floating ">
-                            <input type="text" name="repository_rate" class="form-control" id="floatingInput"
+                            <input type="number" name="repository_rate" class="form-control" id="floatingInput"
                                 placeholder="Temp"
                                 value="@if ($data) {{ $data->repository_rate }} @endif">
                             <label for="floatingInput">RR</label>
@@ -138,13 +138,13 @@
                         <div class="grid-2 blood-pressure">
 
                             <div class="form-floating ">
-                                <input type="text" name="sis_BP" class="form-control" id="floatingInput"
+                                <input type="number" name="sis_BP" class="form-control" id="floatingInput"
                                     placeholder="blood pressure"
                                     value="@if ($data) {{ $data->sis_BP }} @endif">
                                 <label for="floatingInput">Blood Pressure(systolic)</label>
                             </div>
                             <div class="form-floating ">
-                                <input type="text" name="dia_BP" class="form-control" id="floatingInput"
+                                <input type="number" name="dia_BP" class="form-control" id="floatingInput"
                                     placeholder="blood pressure"
                                     value="@if ($data) {{ $data->dia_BP }} @endif">
                                 <label for="floatingInput">Blood Presure(diastolic)</label>
@@ -152,7 +152,7 @@
                         </div>
 
                         <div class="form-floating ">
-                            <input type="text" name="oxygen" class="form-control" id="floatingInput"
+                            <input type="number" name="oxygen" class="form-control" id="floatingInput"
                                 placeholder="o2" value="@if ($data) {{ $data->oxygen }} @endif">
                             <label for="floatingInput">O2</label>
                         </div>

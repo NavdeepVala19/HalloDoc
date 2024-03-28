@@ -32,14 +32,14 @@
     background-color: rgba(0, 190, 232, 0.647);
 }
 
-.encounter-save-btn{
+.encounter-save-btn {
     display: none;
 }
 
-.houseCallSelected{
+.houseCallSelected {
     display: block;
 }
-.consultCallSelected{
+.consultCallSelected {
     display: block;
 }
 /******************************* Transfer Request Provider - Pending listing Page **************************************/
@@ -50,6 +50,7 @@
 
 .transfer-request .form-floating {
     width: 100%;
+    margin: 18px;
 }
 .transfer-description {
     height: 150px !important;

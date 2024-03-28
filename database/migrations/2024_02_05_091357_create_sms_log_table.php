@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('recipient_name');
             $table->string('sms_template');
-            $table->integer('mobile_number');
+            $table->string('mobile_number');
             $table->integer('confirmation_number')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');

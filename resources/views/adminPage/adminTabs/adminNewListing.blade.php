@@ -64,6 +64,18 @@
         </div>
     @endif
 
+    {{-- Case Blocked Successfully --}}
+    @if (session('CaseBlocked'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('CaseBlocked') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    
+
     {{-- Physician Not selected in Assign Case Action --}}
     @if ($errors->has('physician'))
         <div class="alert alert-danger popup-message ">
@@ -71,6 +83,21 @@
                 {{ $errors->first('physician') }}
             </span>
             <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+
+    {{-- SendLink Validation Error pop-ups --}}
+    @if ($errors->any())
+        <div class="alert alert-danger popup-message ">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>
+                        <span>{{ $error }}</span>
+                        <i class="bi bi-exclamation-circle"></i>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -89,11 +116,15 @@
             <input type="text" class="requestId" name="requestId" value="" hidden>
             <div class="m-3">
                 <div class="form-floating">
-                    <select class="form-select" name="case_tag" class="cancel-options" id="floatingSelect"
+                    <select class="form-select" name="case_tag"
+                        class="cancel-options @error('case_tag') is-invalid @enderror" id="floatingSelect"
                         aria-label="Floating label select example">
                         <option selected>Reasons</option>
                     </select>
                     <label for="floatingSelect">Reasons for Cancellation</label>
+                    @error('case_tag')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-floating">
                     <textarea class="form-control" name="reason" placeholder="notes" id="floatingTextarea2"></textarea>
@@ -137,12 +168,17 @@ to providers based on patient’s region using this pop-up. --}}
                     </select>
                     <label for="floatingSelect">Select Physician</label>
                     @error('physician')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control @error('assign_note')
+                        is-invalid
+                    @enderror"  name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Description</label>
+                    @error('assign_note')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
@@ -169,8 +205,11 @@ can block any case. All blocked cases can be seen in Block history page. --}}
             <div class="m-3">
                 <input type="text" class="requestId" name="requestId" value="" hidden>
                 <div class="form-floating">
-                    <textarea class="form-control" name="block_reason" placeholder="Reason for block request" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control @error('block_reason') is-invalid @enderror" name="block_reason" placeholder="Reason for block request" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Reason for Block Request</label>
+                    @error('block_reason')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
@@ -190,31 +229,36 @@ can block any case. All blocked cases can be seen in Block history page. --}}
             @csrf
             <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
                 <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control" id="floatingInput"
+                    <input type="text" name="first_name"
+                        class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
                         placeholder="First Name">
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput"
-                        placeholder="Last Name">
+                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
+                        id="floatingInput" placeholder="Last Name">
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                <input type="tel" name="phone_number"
+                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
                     placeholder="Phone Number">
                 @error('phone_number')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="text-danger w-100">{{ $message }}</div>
                 @enderror
                 <div class="form-floating ">
-                    <input type="email" name="email" class="form-control" id="floatingInput"
-                        placeholder="name@example.com">
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Email</label>
+                    @error('email')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">

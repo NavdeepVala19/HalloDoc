@@ -49,6 +49,59 @@ by patients. --}}
 patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the
 "Pending" state to the "Active" state. --}}
 
+    {{-- PhoneNumber not entered --}}
+    @if ($errors->has('phone_number'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ $errors->first('phone_number') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Email not entered --}}
+    @if ($errors->has('email'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ $errors->first('email') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Case Cleared Successfully --}}
+    @if (session('caseCleared'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseCleared') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Case Transferred Successfully to another physician --}}
+    @if (session('transferredCase'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('transferredCase') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger popup-message ">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>
+                        <span>{{ $error }}</span>
+                        <i class="bi bi-exclamation-circle"></i>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="overlay"></div>
 
     {{-- Clear Case Pop-up --}}
@@ -97,15 +150,27 @@ can transfer assigned request to another physician. --}}
                     <label for="floatingSelect">Narrow Search by Region</label>
                 </div>
                 <div class="form-floating">
-                    <select class="form-select selectPhysician" id="floatingSelect"
-                        aria-label="Floating label select example" name="physician">
+                    <select
+                        class="form-select selectPhysician @error('physician')
+                    is-invalid
+                    @enderror"
+                        id="floatingSelect" aria-label="Floating label select example" name="physician">
                         <option selected>Select Physician</option>
                     </select>
                     <label for="floatingSelect">Select Physician</label>
+                    @error('physician')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" name="notes" placeholder="Description" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control @error('notes')
+                        is-invalid
+                    @enderror"
+                        name="notes" placeholder="Description" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Description</label>
+                    @error('notes')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
@@ -139,14 +204,22 @@ pending state, providers need to send an agreement link to patients. --}}
                 <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
                 <div>
                     <div class="form-floating ">
-                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
-                            placeholder="Phone Number">
+                        <input type="text" name="phone_number"
+                            class="form-control @error('phone_number') is-invalid @enderror agreement-phone-number"
+                            id="floatingInput" placeholder="Phone Number">
                         <label for="floatingInput">Phone Number</label>
+                        @error('phone_number')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control" id="floatingInput"
+                        <input type="email" name="email"
+                            class="form-control @error('email') is-invalid @enderror agreement-email" id="floatingInput"
                             placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
         </div>
@@ -393,7 +466,11 @@ pending state, providers need to send an agreement link to patients. --}}
                                         {{ $case->requestClient->last_name }}</td>
                                     <td>{{ $case->requestClient->date_of_birth }}</td>
                                     <td>{{ $case->first_name }} {{ $case->last_name }}</td>
-                                    <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
+                                    <td>
+                                        @if ($case->provider)
+                                            {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                        @endif
+                                    </td>
                                     <td>{{ $case->created_at }}</td>
                                     <td>{{ $case->phone_number }}</td>
                                     <td>{{ $case->requestClient->street }},
@@ -410,7 +487,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
                                                     View Uploads
                                                 </a>
-                                                <a href="{{ route('admin.view.note', $case->id) }}"><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
+                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
+                                                        class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button class="transfer-btn assign-case-btn"
                                                     data-id="{{ $case->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
@@ -419,7 +497,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     Case</button>
                                                 <button class="send-agreement-btn" data-id="{{ $case->id }}"
                                                     data-request_type_id={{ $case->request_type_id }}
-                                                    data-phone_number={{ $case->phone_number }}
+                                                    data-phone_number="{{ $case->phone_number }}"
                                                     data-email={{ $case->email }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Send
                                                     Agreement</button>
@@ -490,7 +568,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                 </span>
                                 <br>
                                 <span>
-                                    <i class="bi bi-cash"></i> Transfer :Admin transferred to
+                                    <i class="bi bi-cash"></i> Transfer : Admin transferred to
                                     {{ $case->requestClient->last_name }}
                                 </span>
                                 <br>
@@ -500,8 +578,10 @@ pending state, providers need to send an agreement link to patients. --}}
                                 </span>
                                 <br>
                                 <span>
-                                    <i class="bi bi-person-circle"></i> Physician : Dr.
-                                    {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    <i class="bi bi-person-circle"></i> Physician :
+                                    @if ($case->provider)
+                                        Dr. {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    @endif
                                 </span>
                                 <br>
                                 <span>
@@ -513,13 +593,16 @@ pending state, providers need to send an agreement link to patients. --}}
                                         data-request_type_id={{ $case->request_type_id }}
                                         data-phone_number={{ $case->phone_number }} data-email={{ $case->email }}>
                                         Send Agreement</button>
-                                    <a href="{{ route('admin.view.note', $case->id) }}" class="secondary-btn text-center">View
+                                    <a href="{{ route('admin.view.note', $case->id) }}"
+                                        class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button
-                                        class="secondary-btn-3 text-center transfer-btn assign-case-btn" data-id="{{ $case->id }}">Transfer</button>
-                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}" class="secondary-btn text-center">View
+                                    <button class="secondary-btn-3 text-center transfer-btn assign-case-btn"
+                                        data-id="{{ $case->id }}">Transfer</button>
+                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
+                                        class="secondary-btn text-center">View
                                         Uploads</a>
-                                    <button class="secondary-btn-2 text-center clear-btn" data-id="{{ $case->id }}">Clear
+                                    <button class="secondary-btn-2 text-center clear-btn"
+                                        data-id="{{ $case->id }}">Clear
                                         Case</button>
                                     <a href="/view-notes/{{ $case->id }}" class="secondary-btn text-center">Email</a>
                                 </div>

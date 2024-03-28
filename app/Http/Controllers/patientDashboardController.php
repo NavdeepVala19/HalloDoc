@@ -8,6 +8,7 @@ use App\Models\request_Client;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\RequestNotes;
+use App\Models\RequestStatus;
 use App\Models\Status;
 use App\Models\users;
 use Illuminate\Support\Facades\DB;
@@ -39,10 +40,42 @@ class patientDashboardController extends Controller
         return view("patientSite/patientAgreement", compact('clientData'));
     }
 
+    // Agreement Agreed by Patient
+    public function agreeAgreement(Request $request)
+    {
+        $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
+
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 4,
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 4,
+            'physician_id' => $physicianId,
+        ]);
+
+        return redirect()->back()->with('agreementAgreed', 'Agreement Agreed Successfully');
+    }
+
+    // Agreeemnt Cancelled by Patient
+    public function cancelAgreement(Request $request)
+    {
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 11,
+            'physician_id' => DB::raw("Null"),
+            'declined_by' => 'Patient'
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 11,
+            'physician_id' => DB::raw("Null"),
+            'notes' => $request->cancelReason,
+        ]);
+        return redirect()->back()->with('agreementCancelled', 'Agreement Cancelled Sucessfully');
+    }
+
     public function createNewPatient(Request $request)
     {
-
-
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'min:2|max:30',
@@ -132,8 +165,8 @@ class patientDashboardController extends Controller
             ->where('email', $email)
             ->paginate(10);
 
-       
-            
+
+
 
         // $data = DB::table('request')
         //     ->join('status', 'request.status', '=', 'status.id')

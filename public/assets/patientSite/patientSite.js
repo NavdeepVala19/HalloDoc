@@ -1,80 +1,64 @@
-
-
 $(document).ready(function () {
-    
-    
     // **** This code is for create a new request in patient dashboard page  *****
-    $('.create-btn').click(function () {
-        $('.new-request').show();
-    })
+    $(".create-btn").click(function () {
+        $(".new-request").show();
+    });
 
     //  ********************************************************************************************
-
 
     // ************************** This code is for create new request pop-up  ***********************
 
-    $('.btn-someone').click(function () {
-        $(this).toggleClass('btn-active');
-        $('.btn-me').removeClass('btn-active');
-    })
-    $('.btn-me').click(function () {
-        $(this).toggleClass('btn-active');
-        $('.btn-someone').removeClass('btn-active');
-    })
+    $(".btn-someone").click(function () {
+        $(this).toggleClass("btn-active");
+        $(".btn-me").removeClass("btn-active");
+    });
+    $(".btn-me").click(function () {
+        $(this).toggleClass("btn-active");
+        $(".btn-someone").removeClass("btn-active");
+    });
 
-    $('.continue-btn').click(function () {
-        if ($('.btn-me').hasClass('btn-active')) {
-            $(window).attr('location', '/createPatientRequests');
+    $(".continue-btn").click(function () {
+        if ($(".btn-me").hasClass("btn-active")) {
+            $(window).attr("location", "/createPatientRequests");
         } else {
-            $(window).attr('location', '/createSomeoneRequests');
-
+            $(window).attr("location", "/createSomeoneRequests");
         }
-    })
+    });
 
     //  ********************************************************************************************
-
-
-
 
     // **** This code is for hiding pop-up button in family/concierge/business page ****
-    $('.submit-valid-details-ok-btn').click(function () {
-        $('.submit-valid-details').hide();
-        $('.overlay').hide()
-    })
+    $(".submit-valid-details-ok-btn").click(function () {
+        $(".submit-valid-details").hide();
+        $(".overlay").hide();
+    });
     //  ********************************************************************************************
-    
-
-
-
 
     // **** This code is for showing input password and hide it when click on eye icon ****
 
-    $('.person-eye').click(function () {
-        const passwordField = $('#exampleInputPassword1');
-        if (passwordField.prop('type') === 'password') {
-            passwordField.prop('type', 'text');
-            $(this).removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+    $(".person-eye").click(function () {
+        const passwordField = $("#exampleInputPassword1");
+        if (passwordField.prop("type") === "password") {
+            passwordField.prop("type", "text");
+            $(this).removeClass("bi-eye-fill").addClass("bi-eye-slash-fill");
         } else {
-            passwordField.prop('type', 'password');
-            $(this).removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+            passwordField.prop("type", "password");
+            $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
         }
     });
 
-    $('.person-eye-two').click(function () {
-        const confirmpasswordField = $('#exampleInputPassword2');
-        if (confirmpasswordField.prop('type') === 'password') {
-            confirmpasswordField.prop('type', 'text');
-            $(this).removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+    $(".person-eye-two").click(function () {
+        const confirmpasswordField = $("#exampleInputPassword2");
+        if (confirmpasswordField.prop("type") === "password") {
+            confirmpasswordField.prop("type", "text");
+            $(this).removeClass("bi-eye-fill").addClass("bi-eye-slash-fill");
         } else {
-            confirmpasswordField.prop('type', 'password');
-            $(this).removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+            confirmpasswordField.prop("type", "password");
+            $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
         }
     });
-
-})
+});
 // ***************************************************************************************
-
-
 
 // **** This code is for patient view documents checkboxes ****
 
@@ -88,47 +72,32 @@ $(".master-checkbox").on("click", function () {
 
 // *********************************************************
 
-
-
-
 // **** This code is for show file name********
-// 
-$('.file-input').change(function (e) {
+//
+$(".file-input").change(function (e) {
     const filename = e.target.files[0].name;
     $("#demo").text(filename);
 });
 
 // ********************************************
 
-
-
-
-
-
 // **** This is use for showing agreement cancel pop-up ****
 
 $(document).ready(function () {
-    $('.cancel').click(function () {
-        $('.cancel-pop-up').show();
-    })
-
-})
+    $(".cancel").click(function () {
+        $(".cancel-pop-up").show();
+        $(".overlay").show();
+    });
+});
 
 // *********************************************************
-
-
-
 
 // **** This code is for file uploading in view document and requests pages ****
 
 function openFileSelection() {
-    document.getElementById('fileInput').click();
+    document.getElementById("fileInput").click();
 }
 //   ****************************************************************************
-
-
-
-
 
 // **** This code is for patientDashboard accordion menu ******
 
@@ -147,5 +116,3 @@ for (i = 0; i < acc.length; i++) {
     });
 }
 //   ****************************************************************************
-
-

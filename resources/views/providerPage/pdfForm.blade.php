@@ -4,11 +4,11 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/encounterFormProvider.css') }}">
 @endsection
 
-@section('nav-links')
+{{-- @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">My Schedule</a>
     <a href="">My Profile</a>
-@endsection
+@endsection --}}
 
 @section('content')
     <div class="container form-container">
@@ -71,8 +71,7 @@
                         <div class="form-floating">
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                 id="floatingInput" placeholder="name@example.com"
-                                value="@if ($data) {{ $data->email }} @endif"
-                                {{-- value="{{ $data->requestClient->email }}" --}}>
+                                value="@if ($data) {{ $data->email }} @endif" {{-- value="{{ $data->requestClient->email }}" --}}>
                             <label for="floatingInput">Email</label>
                             @error('email')
                                 <div class="alert alert-danger">{{ $message }}</div>
