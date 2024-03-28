@@ -19,31 +19,36 @@ use Illuminate\Support\Facades\Mail;
 class familyRequestController extends Controller
 {
 
+    public function familyRequests()
+    {
+        return view('patientSite/familyRequest');
+    }
 
     public function create(Request $request)
     {
-   
+
+
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'street' => 'required|min:2|max:30',
+            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6',
             'family_first_name' => 'required|min:2|max:30',
-            'family_last_name' => 'min:2|max:30',
+            'family_last_name' => 'required|min:2|max:30',
             'family_email' => 'required|email|min:2|max:30',
-            'family_phone_number' => 'required',
+            'family_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'family_relation' => 'required',
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
-       
 
-        if($request->email != $isEmailStored){
+        $isEmailStored = users::where('email', $request->email)->first();
+
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -65,6 +70,8 @@ class familyRequestController extends Controller
             $requestUsers->zipcode = $request->zipcode;
             $requestUsers->save();
         }
+
+        $requestEmail = new users();
 
         // family request creating
 
@@ -120,7 +127,9 @@ class familyRequestController extends Controller
             $familyRequest->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        if ($request->email != $isEmailStored) {
+
+        if ($isEmailStored == null) {
+
             // send email
             $emailAddress = $request->email;
             Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
@@ -139,6 +148,12 @@ class familyRequestController extends Controller
             ]);
         }
 
-        return redirect()->route('submitRequest')->with('message','Email for Create Account is Sent');
+        if ($isEmailStored == null) {
+
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        } else {
+
+            return redirect()->route('submitRequest');
+        }
     }
 }

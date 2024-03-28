@@ -21,7 +21,6 @@
             <h1>Create Account</h1>
         </div>
 
-
         <div class="form">
 
             <form action="{{route('patientRegistered')}}" method="post">

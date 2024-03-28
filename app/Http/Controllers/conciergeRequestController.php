@@ -23,36 +23,36 @@ use Illuminate\Support\Facades\Mail;
 class conciergeRequestController extends Controller
 {
 
+    public function conciergeRequests()
+    {
+        return view('patientSite/conciergeRequest');
+    }
 
     public function create(Request $request)
     {
+        // dd($request->all());
 
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'zipcode' => 'digits:6',
             'concierge_first_name' => 'required|min:2|max:30',
-            'concierge_last_name' => 'min:2|max:30',
+            'concierge_last_name' => 'required|min:2|max:30',
             'concierge_email' => 'required|email|min:2|max:30',
-            'concierge_mobile' => 'required',
+            'concierge_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'concierge_hotel_name' => 'required|min:2|max:30',
-            'concierge_street' => 'min:2|max:30',
-            'concierge_state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'concierge_city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'concierge_street' => 'required|min:2|max:30',
+            'concierge_state' => 'required|min:2|max:30',
+            'concierge_city' => 'required|min:2|max:30',
             'concierge_zip_code' => 'digits:6',
         ]);
 
+        $isEmailStored = users::where('email', $request->email)->first();
 
 
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
-
-        if ($request->email != $isEmailStored) {
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -76,7 +76,7 @@ class conciergeRequestController extends Controller
             $requestUsers->save();
         }
 
-
+        $requestEmail = new users();
 
         // concierge request into concierge table
 
@@ -138,7 +138,7 @@ class conciergeRequestController extends Controller
             $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        if ($request->email != $isEmailStored) {
+        if ($isEmailStored == null) {
 
             // send email
             $emailAddress = $request->email;
@@ -156,9 +156,12 @@ class conciergeRequestController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
-
         }
 
-        return redirect()->route('submitRequest');
+        if ($isEmailStored == null) {
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+        } else {
+            return redirect()->route('submitRequest');
+        }
     }
 }

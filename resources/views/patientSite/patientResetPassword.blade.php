@@ -24,9 +24,9 @@
             <h1>Reset Your Password</h1>
         </div>
 
-        @if (Session::has('message'))
-        <div class="alert alert-success popup-message" role="alert">
-            {{ Session::get('message') }}
+        @if (Session::has('error'))
+        <div class="alert alert-danger popup-message" role="alert">
+            {{ Session::get('error') }}
         </div>
         @endif
 

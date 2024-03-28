@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\HealthProfessionalType;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 
@@ -641,6 +642,8 @@ class AdminController extends Controller
             ->paginate(10);
 
 
+        Session::forget('request_status');
+        Session::forget('request_type');
 
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
@@ -648,21 +651,35 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-        $combinedData = $this->exportFilteredSearchRecord($request);
-        $combinedData = $combinedData->paginate(10);
 
-        $session = session(
-            [
-                'request_status' => $request->input('request_status'),
-                'patient_name' => $request->input('patient_name'),
-                'request_type' => $request->input('request_type'),
-                'from_date_of_service' => $request->input('from_date_of_service'),
-                'to_date_of_service' => $request->input('to_date_of_service'),
-                'email' => $request->input('email'),
-                'phone_number' => $request->input('phone_number'),
-                'provider_name' => $request->input('provider_name'),
-            ]
-        );
+        $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
+
+
+
+
+        $session = session([
+            'request_status' => $request->request_status,
+            'patient_name' => $request->patient_name,
+            'request_type' => $request->request_type,
+            'from_date_of_service' => $request->from_date_of_service,
+            'to_date_of_service' => $request->to_date_of_service,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'provider_name' => $request->provider_name,
+        ]);
+
+
+        if (!empty($request->request_status)) {
+            Session::put('request_status', $request->request_status);
+        } else {
+            Session::forget('request_status');
+        }
+
+        if (!empty($request->request_type)) {
+            Session::put('request_type', $request->request_type);
+        } else {
+            Session::forget('request_type');
+        }
 
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
@@ -775,7 +792,7 @@ class AdminController extends Controller
     public function smsRecordsView()
     {
         $sms = SMSLogs::paginate(10);
-
+        Session::forget('role_type');
         return view('adminPage.records.smsLogs', compact('sms'));
     }
 
@@ -810,6 +827,12 @@ class AdminController extends Controller
                 'sent_date' => $request->input('sent_date'),
             ]
         );
+
+        if (!empty($request->role_type)) {
+            Session::put('role_type', $request->role_type);
+        } else {
+            Session::forget('role_type');
+        }
 
         return view('adminPage.records.smsLogs', compact('sms'));
     }
@@ -876,6 +899,14 @@ class AdminController extends Controller
             $blockData = $blockData->orWhere('block_request.created_at', "like", "%" . $request->date . "%");
         }
         $blockData = $blockData->paginate(10);
+
+
+        $session = session([
+            'patient_name' => $request->patient_name,
+            'date' => $request->date,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+        ]);
 
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
@@ -1190,5 +1221,17 @@ class AdminController extends Controller
 
         $data = view('adminPage.adminTabs.regions-filter-unpaid')->with('cases', $formattedData)->render();
         return response()->json(['html' => $data]);
+    }
+
+
+    public function adminAccount()
+    {
+        $regions = Regions::get();
+        return view("adminPage.createAdminAccount", compact('regions'));
+        // return view("adminPage.createAdminAccount");
+    }
+
+    public function createAdminAccount(Request $request)
+    {
     }
 }

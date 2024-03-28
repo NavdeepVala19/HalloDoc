@@ -22,31 +22,35 @@ use Illuminate\Support\Facades\Mail;
 class businessRequestController extends Controller
 {
 
+  public function businessRequests()
+  {
+    return view('patientSite/businessRequest');
+  }
+
   public function create(Request $request)
   {
 
-
     $request->validate([
       'first_name' => 'required|min:2|max:30',
-      'last_name' => 'string|min:2|max:30',
+      'last_name' => 'required|min:2|max:30',
       'date_of_birth' => 'required',
       'email' => 'required|email|min:2|max:30',
       'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-      'street' => 'min:2|max:30',
-      'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-      'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+      'street' => 'required|min:2|max:30',
+      'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+      'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'zipcode' => 'digits:6',
       'business_first_name' => 'required|min:2|max:30',
-      'business_last_name' => 'min:2|max:30',
+      'business_last_name' => 'required|min:2|max:30',
       'business_email' => 'required|email|min:2|max:30',
-      'business_mobile' => 'required',
+      'business_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
       'business_property_name' => 'required|min:2|max:30',
     ]);
 
 
-    $isEmailStored = users::where('email', $request->email)->pluck('email');
+    $isEmailStored = users::where('email', $request->email)->first();
 
-    if ($request->email != $isEmailStored) {
+    if ($isEmailStored == null) {
       // store email and phoneNumber in users table
       $requestEmail = new users();
       $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -67,9 +71,7 @@ class businessRequestController extends Controller
       $requestUsers->zipcode = $request->zipcode;
       $requestUsers->save();
     }
-
-
-
+    $requestEmail = new users();
     // business data store in business field
 
     $business = new Business();
@@ -132,7 +134,7 @@ class businessRequestController extends Controller
     }
 
 
-    if ($request->email != $isEmailStored) {
+    if ($isEmailStored == null) {
       // send email
       $emailAddress = $request->email;
       Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
@@ -151,6 +153,10 @@ class businessRequestController extends Controller
       ]);
     }
 
-    return redirect()->route('submitRequest');
+    if ($isEmailStored == null) {
+      return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+    } else {
+      return redirect()->route('submitRequest');
+    }
   }
 }

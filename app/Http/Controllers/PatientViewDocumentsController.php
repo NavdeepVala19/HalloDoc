@@ -3,38 +3,54 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Http\Request;
+use ZipArchive;
 use App\Models\RequestTable;
+use Illuminate\Http\Request;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\Support\MediaStream;
-use ZipArchive;
 
 class PatientViewDocumentsController extends Controller
 {
-
     public function patientViewDocument($id)
     {
-        $documents = RequestWiseFile::where('request_id', $id)->paginate(10);
+        $documents = RequestWiseFile::select(
+            'request.first_name',
+            'request.confirmation_no',
+            'request_wise_file.file_name',
+            'request_wise_file.created_at',
+            'request_wise_file.id',
+            'request_wise_file.request_id',
+
+        )
+            ->leftJoin('request', 'request.id', 'request_wise_file.request_id')
+            ->where('request_id', $id)
+            ->paginate(10);
+
+
+
         return view('patientSite/patientViewDocument', compact('documents'));
     }
 
     public function uploadDocs(Request $request)
     {
-        $requestData = new RequestTable();
-        $requestData->request_type_id = $request->request_type;
-        $requestData->save();
+        // dd($request->all());
+
+        $userData = Auth::user();
+        $email = $userData["email"];
+        // dd($email);
+
+        $reqestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
 
         // store documents in request_wise_file table
-
         $request_file = new RequestWiseFile();
-        $request_file->request_id = $requestData->id;
+        $request_file->request_id = $reqestWiseData->first()->request_id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->docs->getClientOriginalName());
         $request_file->save();
 
-        return redirect('patientViewDocument');
-
+        return back();
     }
 
 
@@ -67,7 +83,4 @@ class PatientViewDocumentsController extends Controller
         }
         return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
     }
-
-
 }
-

@@ -35,24 +35,24 @@
             @csrf
             <div class="grid-4">
                 <div class="form-floating ">
-                    <input type="text" name="patient_name" class="form-control empty-fields" id="floatingInput" placeholder="Name">
+                    <input type="text" name="patient_name" class="form-control empty-fields" id="floatingInput" placeholder="Name" value="{{old('patient_name' ,request()->input('patient_name'))}}">
                     <label for="floatingInput">Name</label>
                 </div>
                 <div class="form-floating">
-                    <input type="date" name="date" class="form-control empty-fields" id="floatingInput" placeholder="date">
+                    <input type="date" name="date" class="form-control empty-fields" id="floatingInput" placeholder="date" value="{{old('date' ,request()->input('date'))}}">
                     <label for="floatingInput">Date</label>
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" name="email" class="form-control empty-fields" id="floatingInput" placeholder="name@example.com">
+                    <input type="email" name="email" class="form-control empty-fields" id="floatingInput" placeholder="name@example.com" value="{{old('email' ,request()->input('email'))}}">
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone" placeholder="Phone Number">
+                <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone" placeholder="Phone Number" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
             <div class="text-end mb-3">
-                <button type="reset" class="primary-empty clearButton">Clear</button>
                 <button type="submit" class="primary-fill">Search</button>
+                <a href="{{route('admin.block.history.view')}}" type="button" class="primary-empty clearButton">Clear</a>
             </div>
         </form>
 

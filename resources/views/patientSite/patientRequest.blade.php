@@ -179,7 +179,7 @@
                             <input type="file" id="fileInput" class="file-input" name="docs" />
                             <div class="file-button">Upload</div>
                         </div>
-                        <p></p>
+                        <p id="demo"></p>
                     </div>
                 </div>
 
@@ -188,7 +188,7 @@
 
                 <div class="buttons">
                     <button class="primary-fill me-2" type="submit">Submit</button>
-                    <button class="primary-empty " type="reset">Cancel</button>
+                    <a href="{{route('submitRequest')}}" type="button" class="primary-empty">Cancel </a>
                 </div>
 
             </div>
