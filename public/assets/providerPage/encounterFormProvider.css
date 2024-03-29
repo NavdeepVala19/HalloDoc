@@ -48,24 +48,3 @@
     }
 }
 
-@media print {
-    .header {
-        display: none !important;
-    }
-
-    .navbar-section {
-        display: none !important;
-    }
-
-    .heading-container {
-        display: none !important;
-    }
-
-    footer {
-        display: none !important;
-    }
-
-    .button-section {
-        display: none !important;
-    }
-}

@@ -32,8 +32,7 @@
                         <p>Patient Name</p>
                         <span class="patient-name">{{ $data->requestClient->first_name }}
                             {{ $data->requestClient->last_name }}</span>
-                        <span class="confirmation-number">(Confirmation Number)
-                            {{-- {{ $data->confirmation_no }} --}}
+                        <span class="confirmation-number">({{ $data->confirmation_no }})
                         </span>
                     </div>
 
@@ -63,7 +62,7 @@
                                     </td>
                                     <td>{{ $file->created_at }}</td>
                                     <td>
-                                        <a href="{{ route('download') }}" class="primary-empty"><i
+                                        <a href="{{ route('download', $file->id) }}" class="primary-empty"><i
                                                 class="bi bi-cloud-download"></i></a>
                                     </td>
                                 @endforeach

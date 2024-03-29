@@ -22,7 +22,13 @@
                 {{-- Show the name as per request_type_id and with proper color --}}
                 <p class="request-type-{{ $data->request_type_id }} mt-2">{{ $data->requestType->name }}</p>
             </div>
-            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.status', @if ($data->status == 1) 'new' @elseif ($data->status == 3) 'pending'
+            @elseif ($data->status == 4 || $data->status == 5)
+            'active'
+            @elseif ($data->status == 6)
+            'conclude'
+            @endif
+            ) }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         <div class="section">

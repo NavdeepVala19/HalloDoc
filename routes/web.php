@@ -351,6 +351,8 @@ Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name
 
 // Generate Pdf of the medical-form when finalized (IMPLEMENTATION REMAINING - once finalized, generate pdf and then the form should not be visible again, option to download the form)
 Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
+// Download The medical-form when clicked from encounter finalized pop-up from conclude state
+Route::post('/download-medical-form', [ProviderController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 
 // Send Email for creating request through provider
 Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
@@ -512,5 +514,5 @@ Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'provi
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('providerPage.concludeCare');
+    return view('providerPage.pdfForm');
 });

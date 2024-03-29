@@ -21,6 +21,17 @@
     <div class="overlay"></div>
 
     
+
+    {{-- Encounter Form Finalized --}}
+    @if (session('encounterFormFinalized'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('encounterFormFinalized') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     {{-- SendLink Validation Error pop-ups --}}
     @if ($errors->any())
         <div class="alert alert-danger popup-message ">
@@ -95,12 +106,16 @@
             <span>Encounter Form</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="encounter-finalized-container">
-            <p>Encounter Form is finalized successfully!</p>
-            <div class="text-center">
-                <button class="primary-fill download-btn">Download</button>
+        <form action="{{ route('provider.download.encounterForm') }}" method="POST">
+            @csrf
+            <input type="text" name="requestId" class="requestId" value="" hidden>
+            <div class="encounter-finalized-container">
+                <p>Encounter Form is finalized successfully!</p>
+                <div class="text-center">
+                    <button type="submit" class="primary-fill download-btn">Download</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
 
@@ -235,9 +250,14 @@
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
                                             <a href="{{ route('provider.view.notes', $case->id) }}"><i
                                                     class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                            <a href="{{ route('provider.encounter.form', $case->id) }}"
-                                                class="encounter-form-btn"><i
-                                                    class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                            @if ($case->requestWiseFile && $case->requestWiseFile->is_finalize)
+                                                <button class="encounter-popup-btn" data-id={{ $case->id }}> <i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i> Encounter</button>
+                                            @else
+                                                <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                    class="encounter-form-btn"><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>

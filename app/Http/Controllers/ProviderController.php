@@ -35,6 +35,7 @@ use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -177,7 +178,7 @@ class ProviderController extends Controller
             'street' => 'required',
             'city' => 'required',
             'state' => 'required',
-            // 'zipcode' => 'digits:6',
+            'zipcode' => 'digits:6',
         ]);
 
         $isEmailStored = users::where('email', $request->email)->pluck('email');
@@ -310,7 +311,8 @@ class ProviderController extends Controller
     public function encounterFormView(Request $request, $id = "null")
     {
         $data = MedicalReport::where('request_id', $id)->first();
-        return view('providerPage.encounterForm', compact('data', 'id'));
+        $requestData = RequestTable::where('id', $id)->first();
+        return view('providerPage.encounterForm', compact('data', 'id', 'requestData'));
     }
     public function encounterForm(Request $request)
     {
@@ -364,22 +366,42 @@ class ProviderController extends Controller
             $medicalReport->create($array);
         }
 
-        return redirect()->route('provider.status', ['status' => 'conclude']);
+        return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
     }
 
     // Generate pdf on click
-    public function generatePDF(Request $request, $id = null)
+    public function generatePDF(Request $request, $id)
     {
         try {
             $data = MedicalReport::where('request_id', $id)->first();
+            $pdf = PDF::loadView('providerPage.pdfForm', compact('data'));
 
-            // dd($data);
-            $pdf = PDF::loadView('providerPage.pdfForm', ['data' => $data]);
+            // Create the directory if it doesn't exist
+            if (!File::exists(storage_path('app/encounterForm'))) {
+                File::makeDirectory(storage_path('app/encounterForm'));
+            }
+            // $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
 
-            return $pdf->download($data->first_name . "-medical.pdf");
+            $providerId = RequestTable::where('id', $id)->first()->physician_id;
+            $storePdf = $pdf->save(storage_path('app/encounterForm/' . $id . $data->first_name . "-medical.pdf"));
+            RequestWiseFile::create([
+                'request_id' => $id,
+                'file_name' => $id .  $data->first_name . "-medical.pdf",
+                'physician_id' => $providerId,
+                'is_finalize' => true,
+            ]);
+            // $storePdf = $pdf->download( $data->first_name . "-medical.pdf");
+            return redirect()->route('provider.status', 'conclude')->with('encounterFormFinalized', 'Encounter Form Finalized Successfully!');
         } catch (\Throwable $th) {
             dd($th);
         }
+    }
+    // Download MedicalForm - encounterFinalized pop-up action
+    public function downloadMedicalForm(Request $request)
+    {
+        $file = RequestWiseFile::where('request_id', $request->requestId)->where('is_finalize', 1)->first();
+
+        return response()->download(storage_path('app/encounterForm/' . $file->file_name));
     }
 
     // Show MyProfile Provider
@@ -455,7 +477,9 @@ class ProviderController extends Controller
     public function viewNote($id = null)
     {
         $note = RequestNotes::where('request_id', $id)->first();
-        return view('providerPage.pages.viewNotes', compact('id', 'note'));
+        $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+        $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->whereNull('physician_id')->orderByDesc('id')->first();
+        return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase'));
     }
 
     // Store the note in physician_note
@@ -634,14 +658,14 @@ class ProviderController extends Controller
 
         $twilio = new Client($sid, $token);
 
-        $message = $twilio->messages
-            ->create(
-                "+91 99780 71802", // to
-                [
-                    "body" => "Hii " .  $clientData->requestClient->first_name . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
-                    "from" =>  $senderNumber
-                ]
-            );
+        // $message = $twilio->messages
+        //     ->create(
+        //         "+91 99780 71802", // to
+        //         [
+        //             "body" => "Hii " .  $clientData->requestClient->first_name . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
+        //             "from" =>  $senderNumber
+        //         ]
+        //     );
 
         SMSLogs::create(
             [

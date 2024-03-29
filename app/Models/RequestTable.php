@@ -50,7 +50,6 @@ class RequestTable extends Model
     }
 
     // Making relationship with requestClient table
-
     public function requestClient()
     {
         // return $this->belongsTo(request_Client::class);
@@ -75,5 +74,8 @@ class RequestTable extends Model
     public function provider()
     {
         return $this->hasOne(Provider::class, 'id', 'physician_id');
+    }
+    public function requestWiseFile(){
+        return $this->hasOne(RequestWiseFile::class, 'request_id');
     }
 }

@@ -22,7 +22,7 @@ giving service to the patient. --}}
     <div class="overlay"></div>
 
 
-    
+
     {{-- SendLink Validation Error pop-ups --}}
     @if ($errors->any())
         <div class="alert alert-danger popup-message ">
@@ -152,7 +152,8 @@ giving service to the patient. --}}
                     </div>
                 </a>
 
-                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
+                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link"
+                    id="nav-conclude-tab">
                     <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
                             <i class="bi bi-clock-history"></i> CONCLUDE
@@ -254,8 +255,14 @@ giving service to the patient. --}}
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn" data-id={{ $case->id }}><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                @if ($case->call_type && $case->call_type == 'house_call')
+                                                    <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                        class="encounter-form-btn"><i
+                                                            class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                                @else
+                                                    <button class="encounter-btn" data-id={{ $case->id }}><i
+                                                            class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>

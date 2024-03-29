@@ -36,7 +36,14 @@
                     <i class="bi bi-arrow-down-up notes-logo"></i>
                     <div>
                         <h2>Transfer Notes</h2>
-                        <span>Who transfered note and when</span>
+                        @if ($adminAssignedCase)
+                            <span>Admin transferred to Dr. {{ $adminAssignedCase->transferedPhysician->first_name }}
+                                {{ $adminAssignedCase->transferedPhysician->last_name }} on
+                                {{ $adminAssignedCase->created_at->format('d-m-Y') }}
+                                at {{ $adminAssignedCase->created_at->format('H:i:s') }} :
+                                {{ $adminAssignedCase->notes }}
+                            </span>
+                        @endif
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-4">

@@ -287,11 +287,10 @@ class AdminController extends Controller
     public function viewNote($id)
     {
         $note = RequestNotes::where('request_id', $id)->first();
-        // $transferNotes = RequestStatus::where('request_id', $id)->get();
-        $adminAssignedCase = RequestStatus::where('request_id', $id)->where('status', 1)->get();
-        $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->get();
-        // dd($transferNotes);
-        return view('adminPage.pages.viewNotes', compact('id', 'note'));
+        $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+        $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->whereNull('physician_id')->orderByDesc('id')->first();
+        // dd($providerTransferCase);
+        return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase'));
     }
 
     public function storeNote(Request $request)
@@ -433,13 +432,12 @@ class AdminController extends Controller
     public function viewPartners($id = null)
     {
         if ($id == null || $id == '0') {
-            $vendors = HealthProfessional::with('healthProfessionalType')->get();
+            $vendors = HealthProfessional::with('healthProfessionalType')->paginate(5);
         } else if ($id) {
-            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->get();
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->paginate(5);
         }
         $professions = HealthProfessionalType::get();
 
-        // dd($id);
         return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
     }
     // Search Partner as per the input 
@@ -448,10 +446,9 @@ class AdminController extends Controller
         $id = $request->profession;
         // dd($id);
         if ($id == null || $id == '0') {
-            $vendors = HealthProfessional::with('healthProfessionalType')->where('vendor_name', 'LIKE', "%{$request->search}%")->get();
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('vendor_name', 'LIKE', "%{$request->search}%")->paginate(10);
         } else if ($id) {
-            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->where('vendor_name', 'LIKE', "%{$request->search}%")->get();
-            // dd($vendors);
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->where('vendor_name', 'LIKE', "%{$request->search}%")->paginate(10);
         }
         $professions = HealthProfessionalType::get();
         return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
@@ -460,7 +457,6 @@ class AdminController extends Controller
     // Add Business page
     public function addBusinessView()
     {
-
         $types = HealthProfessionalType::get();
         return view('adminPage.partners.addBusiness', compact('types'));
     }
@@ -468,8 +464,19 @@ class AdminController extends Controller
     // Add Business Logic
     public function addBusiness(Request $request)
     {
+        $request->validate([
+            'business_name' => 'required',
+            'profession' => 'required|numeric',
+            'fax_number' => 'required|numeric',
+            'mobile' => 'required',
+            'email' => 'required',
+            'business_contact' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+        ]);
         HealthProfessional::create([
-            'vendor_name' => $request->buisness_name,
+            'vendor_name' => $request->business_name,
             'profession' => $request->profession,
             'fax_number' => $request->fax_number,
             'phone_number' => $request->mobile,
@@ -481,7 +488,7 @@ class AdminController extends Controller
             'address' => $request->street,
         ]);
 
-        return redirect()->route('admin.partners');
+        return redirect()->route('admin.partners')->with('businessAdded', 'Business Added Successfully!');
     }
 
     // update Business Page
@@ -506,7 +513,7 @@ class AdminController extends Controller
             'state' => $request->state,
             'zip' => $request->zip
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('changesSaved', 'Changes Saved Successfully!');
     }
 
     public function viewOrder($id = null)

@@ -44,7 +44,8 @@
                         Documents
                     </h3>
                     <div>
-                        <button type="submit" name="operation" value="download_all" class="primary-empty">Download All</button>
+                        <button type="submit" name="operation" value="download_all" class="primary-empty">Download
+                            All</button>
                         <button type="submit" name="operation" value="delete_all" class="primary-empty">Delete All</button>
                         <button class="primary-empty">Send Mail</button>
                     </div>

@@ -16,6 +16,15 @@
 @endsection
 
 @section('content')
+    {{-- Encounter Form Finalized --}}
+    @if (session('businessAdded'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('businessAdded') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="m-5 spacing">
         <h3>Vendor(s)</h3>
         <div class="section">
@@ -110,6 +119,7 @@
                     </div>
                 @endforeach
             </div>
+            {{ $vendors->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection
