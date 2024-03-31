@@ -272,7 +272,6 @@ class AdminController extends Controller
             'status' => 10,
             'notes' => $request->block_reason,
         ]);
-
         return redirect()->back()->with('CaseBlocked', 'Case Blocked Successfully!');
     }
 
@@ -286,11 +285,12 @@ class AdminController extends Controller
     // View Notes
     public function viewNote($id)
     {
+        $data = RequestTable::where('id', $id)->first();
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->whereNull('physician_id')->orderByDesc('id')->first();
         // dd($providerTransferCase);
-        return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase'));
+        return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'data'));
     }
 
     public function storeNote(Request $request)

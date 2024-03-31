@@ -46,6 +46,7 @@ return new class extends Migration
             $table->string('medication_dispensed')->nullable();
             $table->string('procedure')->nullable();
             $table->string('followUp')->nullable();
+            $table->boolean('is_finalize');
             $table->timestamps();
             $table->softDeletes();
         });

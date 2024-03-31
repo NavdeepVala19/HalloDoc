@@ -404,8 +404,6 @@ pending state, providers need to send an agreement link to patients. --}}
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 <a href="{{ route('admin.close.case', $case->id) }}">
                                                     <i class="bi bi-x-circle me-2 ms-3"></i>Close Case</a>
-                                                <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors
-                                                    Note</button>
                                                 <button class="clear-btn" data-id="{{ $case->id }}"><i
                                                         class="bi
                                                     bi-x-circle me-2 ms-3"></i>Clear
@@ -499,7 +497,6 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <a href="{{ route('admin.view.note', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button class="secondary-btn-1">Doctors Notes</button>
                                     <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
                                         class="secondary-btn">View Uploads</a>
                                     <button class="secondary-btn encounter-btn">Encouter</button>

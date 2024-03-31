@@ -267,7 +267,7 @@ class ProviderController extends Controller
             'email' => $request->email,
         ]);
 
-        return redirect()->route("provider.dashboard");
+        return redirect()->route("provider.dashboard")->withInput();
     }
 
     // Encounter pop-up as per action (consult, hous_call) selected perform particular tasks 
@@ -356,6 +356,7 @@ class ProviderController extends Controller
             'medication_dispensed' => $request->medication_dispensed,
             'procedure' => $request->procedure,
             'followUp' => $request->followUp,
+            'is_finalize' => false
         ];
         $medicalReport = new MedicalReport();
         if ($report) {
@@ -476,10 +477,11 @@ class ProviderController extends Controller
     // show notes page for particular request
     public function viewNote($id = null)
     {
+        $data = RequestTable::where('id', $id)->first();
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->whereNull('physician_id')->orderByDesc('id')->first();
-        return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase'));
+        return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'data'));
     }
 
     // Store the note in physician_note

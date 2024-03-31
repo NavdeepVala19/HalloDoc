@@ -16,11 +16,9 @@
 
 @section('content')
     <div class="overlay"></div>
-
-
     {{-- Assign Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
-to providers based on patient’s region using this pop-up. --}}
+    to providers based on patient’s region using this pop-up. --}}
     <div class="pop-up assign-case">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Assign Request</span>
@@ -72,7 +70,20 @@ to providers based on patient’s region using this pop-up. --}}
                 {{-- Show the name as per request_type_id and with proper color --}}
                 <p class="request-type-{{ $data->request_type_id }} mt-2">{{ $data->requestType->name }}</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.status' , 
+                $data->status == 1 
+                    ? 'new'
+                    : ($data->status == 3 
+                            ? 'pending' 
+                            : (($data->status == 4 || $data->status == 5) 
+                                    ? 'active' 
+                                    : ($data->status == 6 
+                                        ? 'conclude' 
+                                        : (($data->status == 2 || $data->status == 7 || $data->status == 11) 
+                                        ? 'toclose' 
+                                        : 'unpaid'))))
+            ) 
+            }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 

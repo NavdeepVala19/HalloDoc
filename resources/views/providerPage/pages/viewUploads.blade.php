@@ -17,7 +17,17 @@
             <h1 class="heading">
                 Documents
             </h1>
-            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route(
+                'provider.status',
+                $data->status == 1
+                    ? 'new'
+                    : ($data->status == 3
+                        ? 'pending'
+                        : ($data->status == 4 || $data->status == 5
+                            ? 'active'
+                            : 'conclude')),
+            ) }}"
+                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 
