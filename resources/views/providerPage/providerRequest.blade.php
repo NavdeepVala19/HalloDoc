@@ -18,7 +18,7 @@
         </div>
 
         <div class="section">
-            <form action="{{ route('provider.request.data') }}" method="POST">
+            <form action="{{ route('provider.request.data') }}" method="POST" id="providerCreateRequestForm">
                 @csrf
                 <h3>Patient</h3>
                 <div class="mb-4 form-grid">
@@ -42,7 +42,7 @@
                     </div>
 
                     <div>
-                        <div>
+                        <div class="form-floating">
                             <input type="tel" name="phone_number"
                                 class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
                                 placeholder="Phone Number" value="{{ old('phone_number') }}">
@@ -70,7 +70,7 @@
                 <div class="mb-4 form-grid">
                     <div class="form-floating">
                         <input type="text" name="street" class="form-control @error('street') is-invalid @enderror"
-                            id="floatingInput" placeholder="Street" value="{{old('street')}}">
+                            id="floatingInput" placeholder="Street" value="{{ old('street') }}">
                         <label for="floatingInput">Street</label>
                         @error('street')
                             <div class="text-danger">{{ $message }}</div>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="form-floating">
                         <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
-                            id="floatingInput" placeholder="City" value="{{old('city')}}">
+                            id="floatingInput" placeholder="City" value="{{ old('city') }}">
                         <label for="floatingInput">City</label>
                         @error('city')
                             <div class="text-danger">{{ $message }}</div>
@@ -86,18 +86,20 @@
                     </div>
                     <div class="form-floating">
                         <input type="text" name="state" class="form-control @error('state') is-invalid @enderror"
-                            id="floatingInput" placeholder="State" value="{{old('state')}}">
+                            id="floatingInput" placeholder="State" value="{{ old('state') }}">
                         <label for="floatingInput">State</label>
                         @error('state')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code" value="{{old('zip')}}">
+                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code"
+                            value="{{ old('zip') }}">
                         <label for="floatingInput">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room" value="{{old('room')}}">
+                        <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room"
+                            value="{{ old('room') }}">
                         <label for="floatingInput">Room # (Optional)</label>
                     </div>
                 </div>
@@ -109,16 +111,20 @@
                 <h3>Notes</h3>
                 <div class="mb-4">
                     <div class="form-floating">
-                        <textarea class="form-control note" name='note' placeholder="notes" id="floatingTextarea2">{{old('note')}}</textarea>
+                        <textarea class="form-control note" name='note' placeholder="notes" id="floatingTextarea2">{{ old('note') }}</textarea>
                         <label for="floatingTextarea2">Physician Notes (optional)</label>
                     </div>
                 </div>
 
                 <div class="mb-4 d-flex justify-content-end gap-3 ">
-                    <input type="submit" value='Save' class="primary-fill">
+                    <input type="submit" value='Save' class="primary-fill" id="providerSaveButton">
                     <a href="{{ route('provider.dashboard') }}" class="primary-empty">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

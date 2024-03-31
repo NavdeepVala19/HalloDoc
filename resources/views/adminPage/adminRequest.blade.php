@@ -130,8 +130,8 @@
                 </div>
 
                 <div class="mb-4 d-flex justify-content-end gap-3 ">
-                    <input type="submit" value='Save' class="primary-fill">
-                    <a href="{{ route('provider.dashboard') }}" class="primary-empty">Cancel</a>
+                    <input type="submit" value='Save' class="primary-fill" >
+                    <a href="{{ route('admin.dashboard') }}" class="primary-empty">Cancel</a>
                 </div>
             </form>
         </div>

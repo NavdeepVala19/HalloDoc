@@ -6,6 +6,7 @@ $(document).ready(function () {
 
         $(".requestId").val($(this).data("id"));
         $(".displayPatientName").html($(this).data("patient_name"));
+        $("#floatingSelect").empty().append('<option value="" selected disabled>Reasons</option>');
 
         $.ajax({
             url: "/cancel-case",

@@ -92,42 +92,8 @@ pending state, providers need to send an agreement link to patients. --}}
     </div>
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
-                <label for="floatingInput">First Name</label>
-                @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-                @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-            @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
-            </div>
-
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
+    @include('popup.adminSendLink');
+    
     {{-- Transfer Request --}}
     <div class="pop-up transfer-request">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">

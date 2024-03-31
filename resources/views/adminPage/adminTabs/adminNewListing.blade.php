@@ -74,7 +74,7 @@
         </div>
     @endif
 
-    
+
 
     {{-- Physician Not selected in Assign Case Action --}}
     @if ($errors->has('physician'))
@@ -111,12 +111,12 @@
         <div class="m-3">
             <span>Patient Name: </span> <span class="displayPatientName">patient name</span>
         </div>
-        <form action="{{ route('admin.cancel.case') }}" method="POST">
+        <form action="{{ route('admin.cancel.case') }}" method="POST" id="cancelCaseForm">
             @csrf
             <input type="text" class="requestId" name="requestId" value="" hidden>
             <div class="m-3">
                 <div class="form-floating">
-                    <select class="form-select" name="case_tag"
+                    <select class="form-select" name="case_tag" 
                         class="cancel-options @error('case_tag') is-invalid @enderror" id="floatingSelect"
                         aria-label="Floating label select example">
                         <option selected>Reasons</option>
@@ -174,7 +174,8 @@ to providers based on patient’s region using this pop-up. --}}
                 <div class="form-floating">
                     <textarea class="form-control @error('assign_note')
                         is-invalid
-                    @enderror"  name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
+                    @enderror"
+                        name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Description</label>
                     @error('assign_note')
                         <div class="text-danger">{{ $message }}</div>
@@ -205,7 +206,8 @@ can block any case. All blocked cases can be seen in Block history page. --}}
             <div class="m-3">
                 <input type="text" class="requestId" name="requestId" value="" hidden>
                 <div class="form-floating">
-                    <textarea class="form-control @error('block_reason') is-invalid @enderror" name="block_reason" placeholder="Reason for block request" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control @error('block_reason') is-invalid @enderror" name="block_reason"
+                        placeholder="Reason for block request" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Reason for Block Request</label>
                     @error('block_reason')
                         <div class="text-danger">{{ $message }}</div>
@@ -220,53 +222,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
     </div>
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('admin.send.mail') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-                <div class="form-floating ">
-                    <input type="text" name="first_name"
-                        class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
-                        placeholder="First Name">
-                    <label for="floatingInput">First Name</label>
-                    @error('first_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="Last Name">
-                    <label for="floatingInput">Last Name</label>
-                    @error('last_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <input type="tel" name="phone_number"
-                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                    placeholder="Phone Number">
-                @error('phone_number')
-                    <div class="text-danger w-100">{{ $message }}</div>
-                @enderror
-                <div class="form-floating ">
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                        id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email</label>
-                    @error('email')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.adminSendLink');
 
 
     {{-- Request DTY Support pop-up ->  --}}
@@ -592,4 +548,6 @@ can block any case. All blocked cases can be seen in Block history page. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection
