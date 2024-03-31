@@ -26,7 +26,7 @@
                     <div class="form-floating ">
                         <input type="text" name="first_name"
                             class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
-                            placeholder="First Name">
+                            placeholder="First Name" value="{{ old('first_name') }}">
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
-                            id="floatingInput" placeholder="Last Name">
+                            id="floatingInput" placeholder="Last Name" value="{{ old('last_name') }}">
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -45,7 +45,7 @@
                         <div>
                             <input type="tel" name="phone_number"
                                 class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                                placeholder="Phone Number">
+                                placeholder="Phone Number" value="{{ old('phone_number') }}">
                         </div>
                         @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
@@ -54,7 +54,7 @@
 
                     <div class="form-floating ">
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                            id="floatingInput" placeholder="name@example.com">
+                            id="floatingInput" placeholder="name@example.com" value="{{ old('email') }}">
                         <label for="floatingInput">Email address</label>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="form-floating ">
                         <input type="date" name="dob" class="form-control" id="floatingInput"
-                            placeholder="date of birth">
+                            placeholder="date of birth" value="{{ old('dob') }}">
                         <label for="floatingInput">Date Of Birth(Optional)</label>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="mb-4 form-grid">
                     <div class="form-floating">
                         <input type="text" name="street" class="form-control @error('street') is-invalid @enderror"
-                            id="floatingInput" placeholder="Street">
+                            id="floatingInput" placeholder="Street" value="{{old('street')}}">
                         <label for="floatingInput">Street</label>
                         @error('street')
                             <div class="text-danger">{{ $message }}</div>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="form-floating">
                         <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
-                            id="floatingInput" placeholder="City">
+                            id="floatingInput" placeholder="City" value="{{old('city')}}">
                         <label for="floatingInput">City</label>
                         @error('city')
                             <div class="text-danger">{{ $message }}</div>
@@ -86,30 +86,30 @@
                     </div>
                     <div class="form-floating">
                         <input type="text" name="state" class="form-control @error('state') is-invalid @enderror"
-                            id="floatingInput" placeholder="State">
+                            id="floatingInput" placeholder="State" value="{{old('state')}}">
                         <label for="floatingInput">State</label>
                         @error('state')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code">
+                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code" value="{{old('zip')}}">
                         <label for="floatingInput">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room">
+                        <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room" value="{{old('room')}}">
                         <label for="floatingInput">Room # (Optional)</label>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <button class="primary-empty me-3 ">Verify</button>
-                    <button class="primary-empty"><i class="bi bi-geo-alt"></i> Map</button>
+                    <button type="button" class="primary-empty me-3 ">Verify</button>
+                    <button type="button" class="primary-empty"><i class="bi bi-geo-alt"></i> Map</button>
                 </div>
 
                 <h3>Notes</h3>
                 <div class="mb-4">
                     <div class="form-floating">
-                        <textarea class="form-control note" name='note' placeholder="notes" id="floatingTextarea2"></textarea>
+                        <textarea class="form-control note" name='note' placeholder="notes" id="floatingTextarea2">{{old('note')}}</textarea>
                         <label for="floatingTextarea2">Physician Notes (optional)</label>
                     </div>
                 </div>

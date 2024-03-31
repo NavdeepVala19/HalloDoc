@@ -10,4 +10,5 @@ class RequestNotes extends Model
     use HasFactory;
 
     protected $table = 'request_notes';
+    protected $guarded = [];
 }

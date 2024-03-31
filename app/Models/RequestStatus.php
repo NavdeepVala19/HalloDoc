@@ -24,6 +24,9 @@ class RequestStatus extends Model
     {
         return $this->hasOne(Provider::class, 'id', 'physician_id');
     }
+    public function transferedPhysician(){
+        return $this->hasOne(Provider::class, 'id', 'TransToPhysicianId');
+    }
     public function requestClient()
     {
         return $this->hasOne(request_Client::class, 'request_id', 'request_id');

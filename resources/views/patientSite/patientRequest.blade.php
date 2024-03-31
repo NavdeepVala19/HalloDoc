@@ -24,7 +24,6 @@
                     <div class="patient-info-text">
                         <h4>Patient Information</h4>
                     </div>
-                    <input type="hidden" name="request_type" value="1">
 
                     <div class="area-text">
                         <div class="form-floating">

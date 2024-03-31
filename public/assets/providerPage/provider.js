@@ -42,18 +42,11 @@ $(document).ready(function () {
     });
 
     // Conclude Case Encounter Form - Medical Report
-    $(".finalize-btn").click(function () {
-        // let id = $(this).data("id");
-        // window.print();
-        // $(window).attr("location", "/provider/conclude");
-        // $(window).on("afterprint", function () {
-        //     $(window).attr("location", "/provider/conclude");
-        // });
-        // window.addEventListener("afterprint", function (event) {
-        //     // Redirect to specific URL after printing only if the print button was clicked
-        //     window.location.href = "/provider/conclude"; // Replace with your redirect URL
-        // });
-        // console.log("clicked");
+    $(".encounter-popup-btn").click(function () {
+        $(".requestId").val($(this).data("id"));
+
+        $(".encounter-finalized").show();
+        $(".overlay").show();
     });
 
     // for showing transfer-request pop-up on pending listing page
@@ -108,8 +101,6 @@ $(document).ready(function () {
         $(".send-agreement").show();
         $(".overlay").show();
         $(".send-agreement-id").val($(this).data("id"));
-
-        console.log($(this).data("phone_number"));
 
         $(".agreement-phone-number").val($(this).data("phone_number"));
         $(".agreement-email").val($(this).data("email"));

@@ -20,41 +20,73 @@
     {{-- This page will display patient requests for which patients have accepted the service agreement and provider is
 giving service to the patient. --}}
     <div class="overlay"></div>
+
+
+
+    {{-- SendLink Validation Error pop-ups --}}
+    @if ($errors->any())
+        <div class="alert alert-danger popup-message ">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>
+                        <span>
+                            {{ $error }}
+                        </span>
+                        <i class="bi bi-exclamation-circle"></i>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Send mail to patient for submitting request</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
-                <label for="floatingInput">First Name</label>
-                @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-                @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
+        <form action="{{ route('send.mail') }}" method="POST">
+            @csrf
+            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
+                <div class="form-floating ">
+                    <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
+                        id="floatingInput" placeholder="First Name">
+                    <label for="floatingInput">First Name</label>
+                    @error('first_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-floating ">
+                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
+                        id="floatingInput" placeholder="Last Name">
+                    <label for="floatingInput">Last Name</label>
+                    @error('last_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-            @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
+                <input type="tel" name="phone_number"
+                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                    placeholder="Phone Number">
+
+                @error('phone_number')
+                    <div class="text-danger w-100">{{ $message }}</div>
+                @enderror
+
+                <div class="form-floating">
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Email</label>
+                    @error('email')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <input type="submit" value="Send" class="primary-fill">
+                <button class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </form>
     </div>
 
     {{-- Encounter --}}
@@ -120,7 +152,8 @@ giving service to the patient. --}}
                     </div>
                 </a>
 
-                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link" id="nav-conclude-tab">
+                <a href="{{ route('provider.status', ['status' => 'conclude']) }}" class="nav-link"
+                    id="nav-conclude-tab">
                     <div class="case case-conclude p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                         <span>
                             <i class="bi bi-clock-history"></i> CONCLUDE
@@ -222,8 +255,14 @@ giving service to the patient. --}}
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn" data-id={{ $case->id }}><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                @if ($case->call_type && $case->call_type == 'house_call')
+                                                    <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                        class="encounter-form-btn"><i
+                                                            class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                                @else
+                                                    <button class="encounter-btn" data-id={{ $case->id }}><i
+                                                            class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -290,7 +329,8 @@ giving service to the patient. --}}
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-1">Doctors Notes</button>
-                                    <a href="{{ route('provider.view.upload', $case->id) }}" class="secondary-btn text-center">View
+                                    <a href="{{ route('provider.view.upload', $case->id) }}"
+                                        class="secondary-btn text-center">View
                                         Uploads</a>
                                     <button class="secondary-btn encounter-btn"
                                         data-id={{ $case->id }}>Encouter</button>

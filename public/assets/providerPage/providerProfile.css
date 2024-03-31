@@ -40,6 +40,15 @@
     border-radius: 5px;
 }
 
+.notes-logo {
+    font-size: 28px !important;
+}
+
+.notes-section > div {
+    padding: 25px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
 @media (max-width: 550px) {
     .upload-txt {
         display: none;

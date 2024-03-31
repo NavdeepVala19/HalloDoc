@@ -322,8 +322,6 @@ giving service to the patient. --}}
                                                     Notes</a>
                                                 <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors
-                                                    Note</button>
                                                 <button class="encounter-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>

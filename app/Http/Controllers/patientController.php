@@ -77,7 +77,7 @@ class patientController extends Controller
 
         $requestData = new RequestTable();
         $requestData->user_id = $requestEmail->id;
-        $requestData->request_type_id = $request->request_type;
+        $requestData->request_type_id = 1;
         $requestData->first_name = $request->first_name;
         $requestData->last_name = $request->last_name;
         $requestData->email = $request->email;

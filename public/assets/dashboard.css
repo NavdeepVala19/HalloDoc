@@ -234,11 +234,11 @@ tr > td {
 }
 
 .type-3 td {
-    background-color: var(--business-color) !important;
+    background-color: var(--concierge-color) !important;
 }
 
 .type-4 td {
-    background-color: var(--concierge-color) !important;
+    background-color: var(--business-color) !important;
 }
 
 .mobile-listing {
@@ -327,14 +327,14 @@ tr > td {
 }
 
 .request-type-3 {
-    background-color: var(--business-color) !important;
+    background-color: var(--concierge-color) !important;
     border-radius: 45px;
     color: #fff;
     padding: 8px 12px;
 }
 
 .request-type-4 {
-    background-color: var(--concierge-color) !important;
+    background-color: var(--business-color) !important;
     border-radius: 45px;
     color: #fff;
     padding: 8px 12px;
@@ -704,7 +704,7 @@ tr > td {
 }
 
 /******************************* Assign Case ViewCase - Admin **************************************/
-.assign-case{
+.assign-case {
     display: none;
 }
 

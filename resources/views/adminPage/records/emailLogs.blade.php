@@ -99,7 +99,11 @@
                                         @endif
                                     </td>
                                     <td>{{ $email->action }}</td>
-                                    <td>{{ $email->roles->name }}</td>
+                                    <td>
+                                        @if ($email->roles)
+                                            {{ $email->roles->name }}
+                                        @endif
+                                    </td>
                                     <td>{{ $email->email }}</td>
                                     <td>{{ $email->created_at }}</td>
                                     <td>{{ $email->sent_date }}</td>
@@ -152,7 +156,7 @@
                 </div>
                 {{-- @endforeach --}}
             </div>
-
+            {{ $emails->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

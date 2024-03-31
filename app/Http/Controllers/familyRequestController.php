@@ -27,7 +27,6 @@ class familyRequestController extends Controller
     public function create(Request $request)
     {
 
-
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
@@ -77,7 +76,7 @@ class familyRequestController extends Controller
 
         $familyRequest = new RequestTable();
         $familyRequest->user_id = $requestEmail->id;
-        $familyRequest->request_type_id = $request->request_type;
+        $familyRequest->request_type_id = 2;
         $familyRequest->first_name = $request->family_first_name;
         $familyRequest->last_name = $request->family_last_name;
         $familyRequest->email = $request->family_email;
@@ -110,7 +109,7 @@ class familyRequestController extends Controller
             $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
             $request_file->save();
         }
- 
+
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 

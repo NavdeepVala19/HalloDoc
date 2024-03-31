@@ -316,7 +316,6 @@ transferred into conclude state providers can finally conclude care for the pati
                                                     Notes</a>
                                                 <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button><i class="bi bi-text-paragraph me-2 ms-3"></i>Doctors Note</button>
                                                 <button class="encounter-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
                                             </div>
@@ -398,7 +397,6 @@ transferred into conclude state providers can finally conclude care for the pati
                                     <a href={{ route('admin.view.note', $case->id) }}
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button class="secondary-btn-1">Doctors Notes</button>
                                     <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}" class="secondary-btn">View Uploads</a>
                                     <button class="secondary-btn encounter-btn">Encouter</button>
                                     <a href="{{ route('admin.view.order', $case->id) }}" class="secondary-btn-2">Orders</a>

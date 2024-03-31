@@ -140,6 +140,10 @@ route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 
 //  ***************************************************************************************************************************************
 // it will show agreement page
 route::get('/patientAgreement/{data}', [patientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
+// Agreement Agreed by patient
+Route::post('/agree-agreement', [patientDashboardController::class, 'agreeAgreement'])->name('patient.agree.agreement');
+// Agreement Cancelled by patient
+Route::post('/cancel-agreement', [patientDashboardController::class, 'cancelAgreement'])->name('patient.cancel.agreement');
 //  ***************************************************************************************************************************************
 
 
@@ -271,11 +275,13 @@ Route::post('/provider-request', [ProviderController::class, 'createRequest'])->
 // Accept Case by provider
 Route::get('/accept-case/{id}', [ProviderController::class, 'acceptCase'])->name('provider.accept.case');
 
-Route::post('/transfer-case', [ProviderController::class, 'assignCase'])->name('provider.transfer.case');
+Route::post('/transfer-case', [ProviderController::class, 'transferCase'])->name('provider.transfer.case');
 
 // VIEW NOTES PAGE
 // show view notes page as per the id
-Route::get('/provider-view-notes/{id?}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
+Route::get('/provider/view/notes/{id}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
+// Store notes saved by provider
+Route::post('/provider/store/notes', [ProviderController::class, 'storeNote'])->name('provider.store.note');
 
 // VIEW UPLOADS PAGE
 // View Uploads (currently showing all the documents in requestWiseFile table)
@@ -323,6 +329,8 @@ Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name
 
 // Generate Pdf of the medical-form when finalized (IMPLEMENTATION REMAINING - once finalized, generate pdf and then the form should not be visible again, option to download the form)
 Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
+// Download The medical-form when clicked from encounter finalized pop-up from conclude state
+Route::post('/download-medical-form', [ProviderController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 
 // Send Email for creating request through provider
 Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
@@ -482,5 +490,5 @@ Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'provi
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('providerPage.concludeCare');
+    return view('providerPage.pdfForm');
 });
