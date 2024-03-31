@@ -94,7 +94,6 @@
                     </tr>
                     @endforeach
                 </tbody>
-
             </table>
             {{$providersData->links('pagination::bootstrap-5')}}
 

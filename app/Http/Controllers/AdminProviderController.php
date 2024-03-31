@@ -247,13 +247,12 @@ class AdminProviderController extends Controller
         $providerData->address2 = $request->address2;
         $providerData->city = $request->city;
         $providerData->zip = $request->zip;
-        $providerData->status = 'pending';
+        // $providerData->status = 'pending';
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
 
-        $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
-        $path = $request->file('provider_photo')->storeAs('public', $request->file('provider_photo')->getClientOriginalName());
+      
 
         $providerData->save();
 
@@ -298,7 +297,7 @@ class AdminProviderController extends Controller
         $request_file = new RequestWiseFile();
 
         if (isset($request->provider_photo)) {
-            $request_file = new RequestWiseFile();
+            $request_file = new Provider();
             $request_file->physician_id = $providerData->id;
 
             $request_file->file_name = $request->file('provider_photo')->getClientOriginalName();
