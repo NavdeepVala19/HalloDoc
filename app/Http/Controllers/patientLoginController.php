@@ -39,18 +39,17 @@ class patientLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
-
-          
-            // isCredentialStored = users::where('')
-
+        
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
           
-
             if ($userRolesData->role_id == 3) {
                 return redirect()->route('patientDashboardData');
             } else {
                 return back()->with('error', 'Invalid credentials');
             }
+        }
+        else{
+            return back()->with('error', 'Invalid credentials');
         }
     }
 
@@ -59,7 +58,6 @@ class patientLoginController extends Controller
     {
         return view("patientSite/patientResetPassword");
     }
-
 
     public function submitForgetPasswordForm(Request $request)
     {
