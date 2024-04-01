@@ -40,12 +40,11 @@ class patientLoginController extends Controller
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
 
-            dd(Auth::user());
-
+          
             // isCredentialStored = users::where('')
 
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-            dd("here");
+          
 
             if ($userRolesData->role_id == 3) {
                 return redirect()->route('patientDashboardData');

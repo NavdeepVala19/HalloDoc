@@ -66,7 +66,7 @@ $(document).ready(function () {
 
             data.forEach(function (region) {
                 $("#listing-region-admin-provider").append(
-                    '<option value="' + region.id + '" class="regions-name">' + region.region_name + "</option>"
+                    '<option value="' + region.id + '" class="regions-name" >' + region.region_name + "</option>"
                 );
             });
         },
@@ -81,28 +81,26 @@ $(document).ready(function () {
 
     // **** Filtering Data according to selected region from dropdown button in adminProvider Page ****
 
-    $('#listing-region-admin-provider').on('change', function () {
-        var token = $('meta[name="csrf-token"]').attr('content')
-        var selectedId = $(this).val();
+    // $('#listing-region-admin-provider').on('change', function () {
+    //     var token = $('meta[name="csrf-token"]').attr('content')
+    //     var selectedId = $(this).val();
 
-        console.log(selectedId);
-
-        $.ajax({
-            url: "/regions",
-            type: "POST",
-            dataType: 'json',
-            data: {
-                regionId: selectedId,
-                "_token": token
-            },
-            success: function (data) {
-                $('#all-providers-data').html(data.html)
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    })
+    //     $.ajax({
+    //         url: "/admin/providers/regionsFiltering",
+    //         type: "POST",
+    //         dataType: 'json',
+    //         data: {
+    //             regionId: selectedId,
+    //             "_token": token
+    //         },
+    //         success: function (data) {
+    //             $('#all-providers-data').html(data.html)
+    //         },
+    //         error: function (error) {
+    //             console.error(error);
+    //         }
+    //     });
+    // })
 
     // ********************************************************************************
 
@@ -200,6 +198,38 @@ $(document).ready(function () {
     });
 
     // *********************************************************
+
+
+
+
+    // *** This code is for validation in contact provider pop-up
+
+       $('#ContactProviderForm').validate({
+            rules: {
+                contact_msg: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 30,
+                },
+            },
+            messages: {
+                contact_msg: {
+                    required: "Please enter a message",
+                },
+
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('errorMsg');
+                element.closest('.form-floating').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid').addClass('is-valid');
+            }
+        });
 
 })
 
@@ -361,23 +391,26 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+
+    $('.contact-btn[id]').each(function (i, el) {
+        var isChecked = $(el).closest('tr').find('.checkbox1').is(":checked");
+        console.log(isChecked);
+
+        if (isChecked) { 
+            $(el).attr( "disabled" , "true")
+        } else {
+            $(el).removeAttr("disabled");
+        }
+    });
+    
+
+
     $('#all-providers-data').on('change', '.checkbox1', function (e) {
         var token = $('meta[name="csrf-token"]').attr('content')
         var checkbox = $(this);
 
         var stopNotificationsCheckId = checkbox.attr('id').split('_')[1];
         var is_notifications = checkbox.prop('checked') ? 1 : 0; // Ternary operator to set is_notify
-
-
-        // this will check that particular checkbox is check or not
-        var isChecked = $(this).is(':checked');
-
-        // store value in contactBtn as per contactBtn id
-        var contactBtn = $('#contact_btn_' + stopNotificationsCheckId);
-
-        // Update contact button state based on checkbox state
-        contactBtn.prop('disabled', isChecked);
-
 
         $.ajax({
             url: "/admin/providers/stopNotification",
@@ -388,7 +421,12 @@ $(document).ready(function () {
                 "_token": token
             },
             success: function (response) {
-
+                var contactBtn = $('#contact_btn_' + stopNotificationsCheckId)
+                if (is_notifications == 1) {  
+                    contactBtn.prop('disabled','disabled')
+                } else {
+                    contactBtn.removeAttr('disabled')
+                }
             },
             error: function (error) {
                 console.error('Error updating stop notifications:', error);
@@ -396,3 +434,64 @@ $(document).ready(function () {
         });
     });
 });
+
+
+
+
+
+$(document).ready(function () {
+    const fetch_data = (regions, page) => {
+        var token = $('meta[name="csrf-token"]').attr('content')
+
+        $.ajax({
+            url: "/admin/providers/regionsFiltering?page="+page,
+            type: "POST",
+            success: function (data) {
+                $('#adminProviderData').html(data.html)
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
+
+
+    $('#listing-region-admin-provider').on('change',function (e) {
+        e.preventDefault();
+        var page = $('#hidden_page').val();
+        fetch_data(page, regions);
+    });
+
+    $('#listing-region-admin-provider').on('click', '.pager a', function (event) {
+        event.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        $('#hidden_page').val(page);
+        fetch_data(page, regions);
+    });
+})
+
+
+
+$('#listing-region-admin-provider').on('change', function () {
+    var token = $('meta[name="csrf-token"]').attr('content')
+    var selectedId = $(this).val();
+
+    $.ajax({
+        url: "/admin/providers/regionsFiltering",
+        type: "POST",
+        dataType: 'json',
+        data: {
+            regionId: selectedId,
+            "_token": token
+        },
+        success: function (data) {
+            $('#all-providers-data').html(data.html)
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+})
+
+
+

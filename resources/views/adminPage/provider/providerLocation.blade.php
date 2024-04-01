@@ -46,11 +46,7 @@
         <a href="{{ route('admin.dashboard') }}" class="primary-empty"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
-
     <div id="map-container" style="width:100%;height:660px" class="mt-3">
-
-        <!-- <iframe src="https://www.google.com/maps?q=[ADDRESS]&output=embed" style="width:100%;height:660px"></iframe> -->
-
         <iframe id="map-iframe" style="width:100%;height:660px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
     </div>
 
@@ -58,22 +54,10 @@
 </div>
 
 
-
-@endsection
-
-
-@section('script')
 <script>
-  $(document).ready(function() {
-
         function updateMap(providers) {
-
             //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
-
-
-            var addresses = @json(providers);
-
-
+            var addresses = providers; 
             var mapUrl = "https://www.google.com/maps?q=";
 
 
@@ -91,11 +75,12 @@
             document.getElementById('map-iframe').src = mapUrl + "&output=embed";
         }
 
+        
         // Call the function to update the map when the page loads
-        updateMap('{{$providers }}');
+        updateMap(<?php echo json_encode($providers);?>);
 
-    })
 </script>
 
-<script defer src="{{ asset('assets/adminProvider/providerMapLocation.js') }}"></script>
+
+
 @endsection

@@ -31,8 +31,6 @@ class AdminProviderController extends Controller
 
     public function readProvidersInfo()
     {
-
-
         $providersData = Provider::paginate(10);
         return view('/adminPage/provider/adminProvider', compact('providersData'));
     }
@@ -43,7 +41,6 @@ class AdminProviderController extends Controller
 
     public function filterPhysicianThroughRegions(Request $request)
     {
-
         $physicianRegions = PhysicianRegion::where('region_id', $request->regionId)->pluck('provider_id');
 
         $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
@@ -58,7 +55,6 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
-
         $request->validate([
             'contact_msg' => 'required|min:2'
         ]);
@@ -195,7 +191,6 @@ class AdminProviderController extends Controller
     public function newProvider()
     {
         $regions = Regions::get();
-
         return view('/adminPage/provider/adminNewProvider', compact('regions'));
     }
 
@@ -474,8 +469,9 @@ class AdminProviderController extends Controller
 
     public function providerLocation()
     {
-        $providers = Provider::where('id', '<', '4')->get();
+        $providers = Provider::get();
+     
         return view('adminPage/provider/providerLocation', compact('providers'));
-        // return response()->json($providers);
+       
     }
 }

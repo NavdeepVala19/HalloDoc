@@ -193,25 +193,6 @@ class AdminDashboardController extends Controller
     }
 
 
-    public function sendSMS(Request $request)
-    {
-
-        $sid = getenv("TWILIO_SID");
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-        $twilio = new Client($sid, $token);
-
-        $message = $twilio->messages
-            ->create(
-                "+91 99780 71802", // to
-                [
-                    "body" => "har har mahadev",
-                    "from" =>  $senderNumber
-                ]
-            );
-
-        dd('success message');
-    }
+ 
 
 }

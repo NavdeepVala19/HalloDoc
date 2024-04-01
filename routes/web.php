@@ -181,7 +181,7 @@ route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'up
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
-route::post('/regions', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+route::post('/admin/providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 
 route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
 
