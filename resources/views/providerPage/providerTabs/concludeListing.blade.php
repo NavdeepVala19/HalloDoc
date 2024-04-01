@@ -32,91 +32,16 @@
         </div>
     @endif
 
-    {{-- SendLink Validation Error pop-ups --}}
-    @if ($errors->any())
-        <div class="alert alert-danger popup-message ">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>
-                        <span>
-                            {{ $error }}
-                        </span>
-                        <i class="bi bi-exclamation-circle"></i>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('send.mail') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-                <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="First Name">
-                    <label for="floatingInput">First Name</label>
-                    @error('first_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="Last Name">
-                    <label for="floatingInput">Last Name</label>
-                    @error('last_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <input type="tel" name="phone_number"
-                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                    placeholder="Phone Number">
-
-                @error('phone_number')
-                    <div class="text-danger w-100">{{ $message }}</div>
-                @enderror
-
-                <div class="form-floating">
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                        id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email</label>
-                    @error('email')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.providerSendLink')
 
     {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
     {{-- The Encounter form should redirect to conclude page and will show these pop-up --}}
     {{-- The pop-up will give download link of the medical-report(Encounter Form) --}}
-    <div class="pop-up encounter-finalized">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Encounter Form</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('provider.download.encounterForm') }}" method="POST">
-            @csrf
-            <input type="text" name="requestId" class="requestId" value="" hidden>
-            <div class="encounter-finalized-container">
-                <p>Encounter Form is finalized successfully!</p>
-                <div class="text-center">
-                    <button type="submit" class="primary-fill download-btn">Download</button>
-                </div>
-            </div>
-        </form>
-    </div>
+    @include('popup.providerEncounterFinalized')
 
 
     <nav>
@@ -341,4 +266,8 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

@@ -47,8 +47,11 @@
 transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
 
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink');
+    @include('popup.adminSendLink')
 
     {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
     {{-- The Encounter form should redirect to conclude page and will show these pop-up --}}
@@ -67,30 +70,7 @@ transferred into conclude state providers can finally conclude care for the pati
     </div>
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3" id="nav-tab">
@@ -127,8 +107,7 @@ transferred into conclude state providers can finally conclude care for the pati
                 </div>
             </a>
 
-            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link active"
-                id="nav-conclude-tab">
+            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link active" id="nav-conclude-tab">
                 <div
                     class="case case-conclude active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
@@ -283,8 +262,9 @@ transferred into conclude state providers can finally conclude care for the pati
                                                     Notes</a>
                                                 <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn"><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                                    class="encounter-form-btn"><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             </div>
                                         </div>
                                     </td>
@@ -364,9 +344,11 @@ transferred into conclude state providers can finally conclude care for the pati
                                     <a href={{ route('admin.view.note', $case->id) }}
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}" class="secondary-btn">View Uploads</a>
+                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
+                                        class="secondary-btn">View Uploads</a>
                                     <button class="secondary-btn encounter-btn">Encouter</button>
-                                    <a href="{{ route('admin.view.order', $case->id) }}" class="secondary-btn-2">Orders</a>
+                                    <a href="{{ route('admin.view.order', $case->id) }}"
+                                        class="secondary-btn-2">Orders</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>
@@ -383,4 +365,6 @@ transferred into conclude state providers can finally conclude care for the pati
 @endsection
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

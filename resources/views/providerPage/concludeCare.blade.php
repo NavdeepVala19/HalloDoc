@@ -17,9 +17,13 @@
             <h1 class="heading">
                 Conclude Care
             </h1>
-            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.status', 'conclude') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
+                Back</a>
         </div>
 
+        {{-- After concluding the case the request status will change from “Conclude” to
+“Closed” and will be shown in To-close dashboard state. To conclude a case finalizing encounter form is
+required, without finalizing encounter form provider cannot conclude the case. --}}
 
         <div class="section">
             <h6>Patient Name</h6>

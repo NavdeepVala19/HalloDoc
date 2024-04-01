@@ -72,13 +72,30 @@
                     <div>
                         <h2>Transfer Notes</h2>
                         @if ($adminAssignedCase)
-                            <span>Admin transferred to Dr. {{ $adminAssignedCase->transferedPhysician->first_name }}
+                            <div>Admin transferred to Dr. {{ $adminAssignedCase->transferedPhysician->first_name }}
                                 {{ $adminAssignedCase->transferedPhysician->last_name }} on
                                 {{ $adminAssignedCase->created_at->format('d-m-Y') }}
                                 at {{ $adminAssignedCase->created_at->format('H:i:s') }} :
                                 {{ $adminAssignedCase->notes }}
-                            </span>
+                            </div>
                         @endif
+                        @if ($providerTransferedCase && $providerTransferedCase->provider)
+                            <div>Dr. {{ $providerTransferedCase->provider->first_name }}
+                                {{ $providerTransferedCase->provider->last_name }} transferred to Admin on
+                                {{ $providerTransferedCase->created_at->format('d-m-Y') }} at
+                                {{ $providerTransferedCase->created_at->format('H:i:s') }} :
+                                {{ $providerTransferedCase->notes }}
+                            </div>
+                        @endif
+                        @if ($adminTransferedCase && $adminTransferedCase->provider)
+                            <div>Admin transferred to Dr. {{ $adminTransferedCase->provider->first_name }}
+                                {{ $adminTransferedCase->provider->last_name }} on
+                                {{ $adminTransferedCase->created_at->format('d-m-Y') }} at
+                                {{ $adminTransferedCase->created_at->format('H:i:s') }} :
+                                {{ $adminTransferedCase->notes }}
+                            </div>
+                        @endif
+
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-4">

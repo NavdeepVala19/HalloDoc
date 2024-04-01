@@ -53,7 +53,6 @@
         </h6>
     @endif
 
-
     {{-- Case Assigned Successfully --}}
     @if (session('assigned'))
         <div class="alert alert-success popup-message ">
@@ -74,182 +73,29 @@
         </div>
     @endif
 
-
-
-    {{-- Physician Not selected in Assign Case Action --}}
-    @if ($errors->has('physician'))
-        <div class="alert alert-danger popup-message ">
-            <span>
-                {{ $errors->first('physician') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-
-    {{-- SendLink Validation Error pop-ups --}}
-    @if ($errors->any())
-        <div class="alert alert-danger popup-message ">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>
-                        <span>{{ $error }}</span>
-                        <i class="bi bi-exclamation-circle"></i>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Cancel Case Pop-up --}}
     {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}
-    <div class="pop-up cancel-case">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Confirm Cancellation</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="m-3">
-            <span>Patient Name: </span> <span class="displayPatientName">patient name</span>
-        </div>
-        <form action="{{ route('admin.cancel.case') }}" method="POST" id="cancelCaseForm">
-            @csrf
-            <input type="text" class="requestId" name="requestId" value="" hidden>
-            <div class="m-3">
-                <div class="form-floating">
-                    <select class="form-select" name="case_tag" 
-                        class="cancel-options @error('case_tag') is-invalid @enderror" id="floatingSelect"
-                        aria-label="Floating label select example">
-                        <option selected>Reasons</option>
-                    </select>
-                    <label for="floatingSelect">Reasons for Cancellation</label>
-                    @error('case_tag')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating">
-                    <textarea class="form-control" name="reason" placeholder="notes" id="floatingTextarea2"></textarea>
-                    <label for="floatingTextarea2">Provide Additional Notes</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Confirm" class="primary-fill cancel-case">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.adminCancelCase')
 
     {{-- Assign Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
 to providers based on patient’s region using this pop-up. --}}
-    <div class="pop-up assign-case">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Assign Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <p class="m-2">To assign this request, search and select another Physician</p>
-        <form action="{{ route('admin.assign.case') }}" method="POST">
-            @csrf
-            <div class="m-3">
-                <input type="text" class="requestId" name="requestId" value="" hidden>
-                <div class="form-floating">
-                    <select class="form-select physicianRegions" name="region" id="floatingSelect"
-                        aria-label="Floating label select example">
-                        <option selected>Regions</option>
-                    </select>
-                    <label for="floatingSelect">Narrow Search by Region</label>
-                </div>
-                <div class="form-floating">
-                    <select
-                        class="form-select selectPhysician @error('physician')
-                    is-invalid
-                    @enderror"
-                        name="physician" id="floatingSelect" aria-label="Floating label select example" required>
-                        <option>Select Physician</option>
-                    </select>
-                    <label for="floatingSelect">Select Physician</label>
-                    @error('physician')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating">
-                    <textarea class="form-control @error('assign_note')
-                        is-invalid
-                    @enderror"
-                        name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
-                    <label for="floatingTextarea2">Description</label>
-                    @error('assign_note')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill confirm-case">Submit</button>
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.adminAssignCase')
 
     {{-- Block Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Block Case” link from Actions menu. From the new state, admin
 can block any case. All blocked cases can be seen in Block history page. --}}
-    <div class="pop-up block-case">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Confirm Block</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="m-3">
-            <span>Patient Name: </span>
-            <span class="displayPatientName"></span>
-        </div>
-        <form action="{{ route('admin.block.case') }}" method="POST">
-            @csrf
-            <div class="m-3">
-                <input type="text" class="requestId" name="requestId" value="" hidden>
-                <div class="form-floating">
-                    <textarea class="form-control @error('block_reason') is-invalid @enderror" name="block_reason"
-                        placeholder="Reason for block request" id="floatingTextarea2"></textarea>
-                    <label for="floatingTextarea2">Reason for Block Request</label>
-                    @error('block_reason')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Confirm" class="primary-fill">
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.blockCase')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink');
+    @include('popup.adminSendLink')
 
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3 " id="nav-tab">

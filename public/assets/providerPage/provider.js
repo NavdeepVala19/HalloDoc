@@ -70,7 +70,7 @@ $(document).ready(function () {
     });
 
     // for Hiding Encounter pop-up on active listing page
-    $(".hide-popup-btn").on("click", function (event) {
+    $(".hide-popup-btn").click(function (event) {
         event.preventDefault();
         $(".pop-up").hide();
         $(".overlay").hide();

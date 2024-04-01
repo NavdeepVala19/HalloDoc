@@ -8,16 +8,47 @@
 @section('content')
     <div class="overlay"></div>
 
+    <!-- Cancel pop-up -->
+    <form action="{{ route('patient.cancel.agreement') }}" method="POST" id="cancelAgreementPatient">
+        @csrf
+        <input type="text" name="requestId" value="{{ $clientData->id }}" hidden>
+        <div class="pop-up cancel-pop-up">
+            <div class="popup-heading-section d-flex align-items-center justify-content-between">
+                <span>Cancel Confirmation</span>
+                <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="m-2">
+                {{ $clientData->requestClient->first_name }}
+                {{ $clientData->requestClient->last_name }}
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control @error('cancelReason')
+                    is-invalid
+                @enderror"
+                    name="cancelReason" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 120px"></textarea>
+                <label for="floatingTextarea2">Please Provide reason for cancellation</label>
+                @error('cancelReason')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <button type="submit" class="primary-fill" id="cancelAgreementPatientBtn">Confirm</button>
+                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+            </div>
+        </div>
+    </form>
+
     {{-- Agreement Agreed by Patient, these pop-up/alert will be shown --}}
     @if (session('agreementAgreed'))
-    <div class="alert alert-success popup-message ">
-        <span>
-            {{ session('agreementAgreed') }}
-        </span>
-        <i class="bi bi-check-circle-fill"></i>
-    </div>
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('agreementAgreed') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
     @endif
-    
+
     {{-- Agreement Cancelled by Patient, these pop-up/alert will be shown --}}
     @if (session('agreementCancelled'))
         <div class="alert alert-success popup-message ">
@@ -42,37 +73,18 @@
                 <button type="button" class="cancel"> Cancel </button>
             </div>
         </form>
-
-        <!-- Cancel pop-up -->
-        <form action="{{ route('patient.cancel.agreement') }}" method="POST">
-            @csrf
-            <input type="text" name="requestId" value="{{ $clientData->id }}" hidden>
-            <div class="pop-up cancel-pop-up">
-                <div class="popup-heading-section d-flex align-items-center justify-content-between">
-                    <span>Cancel Confirmation</span>
-                    <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-                </div>
-                <p class="mt-4">
-                    {{ $clientData->requestClient->first_name }}
-                    {{ $clientData->requestClient->last_name }}
-                </p>
-
-                <div class="form-floating">
-                    <textarea class="form-control" name="cancelReason" placeholder="Leave a comment here" id="floatingTextarea2"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Please Provide reason for cancellation</label>
-                </div>
-
-                <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                    <button type="submit" class="primary-fill ">Confirm</button>
-                    <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-                </div>
-            </div>
-        </form>
     </div>
 @endsection
 
 
 @section('script')
-    <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+    <script>
+        $(".cancel").click(function() {
+            $(".cancel-pop-up").show();
+            $(".overlay").show();
+        });
+    </script>
+
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

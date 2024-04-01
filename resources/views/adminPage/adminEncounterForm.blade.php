@@ -4,10 +4,39 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/encounterFormProvider.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty($userData) ? $userData->username : '' }}
+@endsection
+
+
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+    </div>
+    <a href="{{ route('admin.partners') }}">Partners</a>
+    <a href="{{ route('admin.access.view') }}">Access</a>
+    <div class="dropdown record-navigation ">
+        <button class="record-btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Records
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+        </ul>
+    </div>
 @endsection
 
 @section('content')
@@ -23,19 +52,25 @@
     <div class="container form-container">
         <div class="heading-container d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Encounter Form</h1>
-            <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
-                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route(
+                'admin.status',
+                $requestData->status == 4 || $requestData->status == 5
+                    ? 'active'
+                    : ($requestData->status == 6
+                        ? 'conclude'
+                        : 'toclose'),
+            ) }}"
+                {{-- 'toclose' => [2, 7, 11], --}} class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         {{-- Form Starts From Here --}}
-        <form action="{{ route('encounter.form.data') }}" method="POST">
+        <form action="{{ route('admin.medical.data') }}" method="POST">
             @csrf
             <div class="section">
                 <h1 class="main-heading">Medical Report-Confidential</h1>
                 <div>
                     <div class="grid-2">
                         <input type="text" name="request_id" value="{{ $id }}" hidden>
-
                         <div class="form-floating ">
                             <input type="text" name="first_name"
                                 class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
@@ -75,11 +110,10 @@
                         <input type="tel" name="mobile" class="form-control phone" id="telephone"
                             placeholder="Phone Number" value="{{ $data->mobile ?? '' }}">
 
-
                         <div class="form-floating">
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                id="floatingInput" placeholder="name@example.com" value="{{ $data->email ?? '' }}"
-                                {{-- value="{{ $data->requestClient->email }}" --}}>
+                            <input type="email" name="email"
+                                class="form-control @error('email') is-invalid @enderror" id="floatingInput"
+                                placeholder="name@example.com" value="{{ $data->email ?? '' }}" {{-- value="{{ $data->requestClient->email }}" --}}>
                             <label for="floatingInput">Email</label>
                             @error('email')
                                 <div class="text-danger">{{ $message }}</div>
@@ -207,10 +241,15 @@
                     {{-- Three buttons at last --}}
                     <div class="button-section">
                         <input type="submit" value="Save Changes" class="primary-fill">
-                        <a href="{{ route('generate.pdf', ['id' => $id]) }}" type="button"
-                            class="finalize-btn">Finalize</a>
 
-                        <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
+                        <a href="{{ route(
+                            'admin.status',
+                            $requestData->status == 4 || $requestData->status == 5
+                                ? 'active'
+                                : ($requestData->status == 6
+                                    ? 'conclude'
+                                    : 'toclose'),
+                        ) }}"
                             class="primary-empty">Cancel</a>
                     </div>
                 </div>

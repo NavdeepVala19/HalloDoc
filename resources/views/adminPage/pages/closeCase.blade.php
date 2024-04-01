@@ -18,7 +18,8 @@
             <h1 class="heading">
                 Close Case
             </h1>
-            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.status', 'toclose') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
+                Back</a>
         </div>
 
 
@@ -37,7 +38,7 @@
                     </div>
 
                     <div>
-                        <button class="primary-empty">Create Invoice Through Quickbooks</button>
+                        {{-- <button class="primary-empty">Create Invoice Through Quickbooks</button> --}}
                     </div>
                 </div>
                 <h3>
@@ -106,7 +107,7 @@
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                        <button class="primary-empty"><i class="bi bi-telephone"></i></button>
+                        <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
                     </div>
                     <div class="form-floating ">
                         <input type="email" name="email" value="{{ $data->requestClient->email }}"
@@ -128,7 +129,7 @@
 
                 <div class="text-end new-buttons">
                     <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn">
-                    <button type="button" class="primary-empty cancel-edit-btn">Cancel</button>
+                    <a type="button" class="primary-empty cancel-edit-btn">Cancel</a>
                 </div>
             </div>
         </form>

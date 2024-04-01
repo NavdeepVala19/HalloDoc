@@ -50,93 +50,14 @@ patient's email address and phone number. Once the patient accepts the agreement
 
     <div class="overlay"></div>
 
-    {{-- Send Agreement Pop-up --}}
-    {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
-pending state, providers need to send an agreement link to patients. --}}
-    <div class="pop-up send-agreement">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send Agreement</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-3">
-            <div>
-                <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
-                    concierge)</span>
-                <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
-                    for
-                    the
-                    responsible party.
-                </p>
-            </div>
-            <form action="{{ route('send.agreement') }}" method="POST">
-                @csrf
-                <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
-                <div>
-                    <div class="form-floating ">
-                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
-                            placeholder="Phone Number">
-                        <label for="floatingInput">Phone Number</label>
-                    </div>
-                    <div class="form-floating ">
-                        <input type="email" name="email" class="form-control" id="floatingInput"
-                            placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
-                    </div>
-                </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <input type="submit" value="Send" class="primary-fill send-case">
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-        </form>
-    </div>
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink');
-    
-    {{-- Transfer Request --}}
-    <div class="pop-up transfer-request">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Transfer Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-            <div class="form-floating">
-                <textarea class="form-control transfer-description" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Description</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Submit</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
+    @include('popup.adminSendLink')
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3 " id="nav-tab">
@@ -420,4 +341,6 @@ pending state, providers need to send an agreement link to patients. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

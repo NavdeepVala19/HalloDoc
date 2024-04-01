@@ -67,6 +67,9 @@ class patientDashboardController extends Controller
     // Agreeemnt Cancelled by Patient
     public function cancelAgreement(Request $request)
     {
+        $request->validate([
+            'cancelReason' => 'required'
+        ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,
             'physician_id' => DB::raw("Null"),
@@ -141,7 +144,8 @@ class patientDashboardController extends Controller
         $request_file->request_id = $newPatient->id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();   $request_file = new RequestWiseFile();
+        $request_file->save();
+        $request_file = new RequestWiseFile();
 
         $request_file->request_id = $newPatient->id;
         $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';

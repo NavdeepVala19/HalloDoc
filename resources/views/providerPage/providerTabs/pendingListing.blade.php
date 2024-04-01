@@ -21,26 +21,6 @@
     {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the "Pending" state to the "Active" state. --}}
     <div class="overlay"></div>
 
-    {{-- PhoneNumber not entered --}}
-    @if ($errors->has('phone_number'))
-        <div class="alert alert-danger popup-message ">
-            <span>
-                {{ $errors->first('phone_number') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- Email not entered --}}
-    @if ($errors->has('email'))
-        <div class="alert alert-danger popup-message ">
-            <span>
-                {{ $errors->first('email') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
     {{-- Error or Success Message Alerts/Pop-ups --}}
     @if (session('caseAccepted'))
         <div class="alert alert-success popup-message ">
@@ -51,147 +31,28 @@
         </div>
     @endif
 
-    {{-- SendLink Validation Error pop-ups --}}
-    @if ($errors->any())
-        <div class="alert alert-danger popup-message ">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>
-                        <span>
-                            {{ $error }}
-                        </span>
-                        <i class="bi bi-exclamation-circle"></i>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    @if (session('transferredCase'))
+    <div class="alert alert-success popup-message ">
+        <span>
+            {{ session('transferredCase') }}
+        </span>
+        <i class="bi bi-check-circle-fill"></i>
+    </div>
+@endif
+
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
 pending state, providers need to send an agreement link to patients. --}}
-    <div class="pop-up send-agreement">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send Agreement</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-3">
-            <div>
-                <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
-                    concierge)</span>
-                <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
-                    for the responsible party. </p>
-            </div>
-            <form action="{{ route('send.agreement') }}" method="POST">
-                @csrf
-                <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
-                <div>
-                    <div class="form-floating ">
-                        <input type="text" name="phone_number"
-                            class="form-control @error('phone_number') is-invalid @enderror agreement-phone-number"
-                            id="floatingInput" placeholder="Phone Number">
-                        <label for="floatingInput">Phone Number</label>
-                        @error('phone_number')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-floating ">
-                        <input type="email" name="email"
-                            class="form-control @error('email') is-invalid @enderror agreement-email" id="floatingInput"
-                            placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
-                        @error('email')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <input type="submit" value="Send" class="primary-fill send-case">
-            <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-        </form>
-    </div>
+    @include('popup.providerSendAgreement')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('send.mail') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-                <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="First Name">
-                    <label for="floatingInput">First Name</label>
-                    @error('first_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="Last Name">
-                    <label for="floatingInput">Last Name</label>
-                    @error('last_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <input type="tel" name="phone_number"
-                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                    placeholder="Phone Number">
-
-                @error('phone_number')
-                    <div class="text-danger w-100">{{ $message }}</div>
-                @enderror
-
-                <div class="form-floating">
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                        id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email</label>
-                    @error('email')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.providerSendLink')
 
     {{-- Transfer Request --}}
-    <div class="pop-up transfer-request">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Transfer Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-2 mt-2">This request will be transferred to admin.</div>
-        <form action="{{ route('provider.transfer.case') }}" method="POST">
-            @csrf
-            <input type="text" class="requestId" name="requestId" hidden>
-            <div class="d-flex align-items-center justify-content-center gap-2">
-                <div class="form-floating">
-                    <textarea name="notes"
-                        class="form-control transfer-description @error('notes')
-                        is-invalid
-                    @enderror"
-                        placeholder="notes" id="floatingTextarea2"></textarea>
-                    <label for="floatingTextarea2">Description</label>
-                    @error('notes')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill">Submit</button>
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.providerTransferRequest')
 
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
@@ -206,10 +67,8 @@ pending state, providers need to send an agreement link to patients. --}}
                 </div>
             </a>
 
-            <a href="{{ route('provider.status', ['status' => 'pending']) }}" class="nav-link active"
-                id="nav-pending-tab">
-                <div
-                    class="case case-pending active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+            <a href="{{ route('provider.status', ['status' => 'pending']) }}" class="nav-link active" id="nav-pending-tab">
+                <div class="case case-pending active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-square"></i> PENDING
                     </span>
@@ -420,4 +279,8 @@ pending state, providers need to send an agreement link to patients. --}}
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

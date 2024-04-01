@@ -152,14 +152,15 @@ class ProviderController extends Controller
         RequestTable::where('id', $request->requestId)->update([
             'physician_id' => DB::raw("NULL"),
         ]);
+        $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         RequestStatus::create([
             'request_id' => $request->requestId,
             'status' => 3,
             'TransToAdmin' => true,
-            'physician_id' => DB::raw('NULL'),
+            'physician_id' => $providerId,
             'notes' => $request->notes
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
     }
 
     public function viewCreateRequest()
@@ -307,7 +308,7 @@ class ProviderController extends Controller
         return redirect()->route('provider.status', ['status' => 'conclude']);
     }
 
-    // show a new medical form or an existing one on clicking encounter button in conclude listing
+    // show a new medical form or an existing one when clicked encounter button in conclude listing
     public function encounterFormView(Request $request, $id = "null")
     {
         $data = MedicalReport::where('request_id', $id)->first();
@@ -480,8 +481,9 @@ class ProviderController extends Controller
         $data = RequestTable::where('id', $id)->first();
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->whereNull('physician_id')->orderByDesc('id')->first();
-        return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'data'));
+        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
+        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+        return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
     // Store the note in physician_note
@@ -565,7 +567,7 @@ class ProviderController extends Controller
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
         ]);
-        return redirect()->back()->withErrors('Enter all Details as Required!!!');
+        return redirect()->back()->with('linkSent', "Link Sent Successfully!");
     }
 
     // View Uploads as per the id 

@@ -49,25 +49,8 @@ by patients. --}}
 patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the
 "Pending" state to the "Active" state. --}}
 
-    {{-- PhoneNumber not entered --}}
-    @if ($errors->has('phone_number'))
-        <div class="alert alert-danger popup-message ">
-            <span>
-                {{ $errors->first('phone_number') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- Email not entered --}}
-    @if ($errors->has('email'))
-        <div class="alert alert-danger popup-message ">
-            <span>
-                {{ $errors->first('email') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Case Cleared Successfully --}}
     @if (session('caseCleared'))
@@ -107,157 +90,23 @@ patient's email address and phone number. Once the patient accepts the agreement
     {{-- Clear Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Clear case” link from Actions menu. From the pending and close
 state, admin can clear the case from the action grid. --}}
-    <div class="pop-up clear-case ">
-        <form action="{{ route('admin.clear.case') }}" method="post">
-            @csrf
-            <input type="text" class="request_id" value="" name="requestId" hidden>
-            <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                <i class="bi bi-exclamation-circle-fill warning-icon"></i>
-                <div>
-                    <h3 class="text-center">Confirmation for clear case</h3>
-                    <p class="text-center">Are you sure, you want to clear this request? Once clear, you are not able to see
-                        this
-                        request!
-                    </p>
-                </div>
-                <div>
-                    <input type="submit" value="Clear" class="primary-fill">
-                    <button class="primary-empty hide-popup-btn">Cancel</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
+    @include('popup.adminClearCase')
 
     {{-- Transfer Request Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Transfer” link from Actions menu. From the pending state, admin
 can transfer assigned request to another physician. --}}
-    <div class="pop-up transfer-case">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Transfer Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <p class="m-2">To transfer this request, search and select another Physician</p>
-        <form action="{{ route('admin.transfer.case') }}" method="POST">
-            @csrf
-            <div class="m-3">
-                <input type="text" class="requestId" name="requestId" value="" hidden>
-                <div class="form-floating">
-                    <select class="form-select physicianRegions" name="region" id="floatingSelect"
-                        aria-label="Floating label select example">
-                        <option selected>Regions</option>
-                    </select>
-                    <label for="floatingSelect">Narrow Search by Region</label>
-                </div>
-                <div class="form-floating">
-                    <select
-                        class="form-select selectPhysician @error('physician')
-                    is-invalid
-                    @enderror"
-                        id="floatingSelect" aria-label="Floating label select example" name="physician">
-                        <option selected>Select Physician</option>
-                    </select>
-                    <label for="floatingSelect">Select Physician</label>
-                    @error('physician')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating">
-                    <textarea class="form-control @error('notes')
-                        is-invalid
-                    @enderror"
-                        name="notes" placeholder="Description" id="floatingTextarea2"></textarea>
-                    <label for="floatingTextarea2">Description</label>
-                    @error('notes')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill confirm-case">Confirm</button>
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.adminTransferRequest')
 
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
 pending state, providers need to send an agreement link to patients. --}}
-    <div class="pop-up send-agreement">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send Agreement</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-3">
-            <div>
-                <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
-                    concierge)</span>
-                <p class="m-2">To send Agreement please make sure you are updating the correct contact information
-                    below
-                    for
-                    the
-                    responsible party.
-                </p>
-            </div>
-            <form action="{{ route('send.agreement') }}" method="POST">
-                @csrf
-                <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
-                <div>
-                    <div class="form-floating ">
-                        <input type="text" name="phone_number"
-                            class="form-control @error('phone_number') is-invalid @enderror agreement-phone-number"
-                            id="floatingInput" placeholder="Phone Number">
-                        <label for="floatingInput">Phone Number</label>
-                        @error('phone_number')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-floating ">
-                        <input type="email" name="email"
-                            class="form-control @error('email') is-invalid @enderror agreement-email" id="floatingInput"
-                            placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
-                        @error('email')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <input type="submit" value="Send" class="primary-fill send-case">
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-        </form>
-    </div>
+    @include('popup.adminSendAgreement')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink');
+    @include('popup.adminSendLink')
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3" id="nav-tab">
@@ -273,8 +122,7 @@ pending state, providers need to send an agreement link to patients. --}}
             </a>
 
             <a href="{{ route('admin.status', ['status' => 'pending']) }}" class="nav-link active" id="nav-pending-tab">
-                <div
-                    class="case case-pending active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
+                <div class="case case-pending active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
                         <i class="bi bi-person-square"></i> PENDING
                     </span>
@@ -586,4 +434,6 @@ pending state, providers need to send an agreement link to patients. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

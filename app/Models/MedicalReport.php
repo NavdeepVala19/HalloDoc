@@ -42,6 +42,7 @@ class MedicalReport extends Model
         'treatment_plan',
         'medication_dispensed',
         'procedure',
-        'followUp'
+        'followUp',
+        'is_finalize'
     ];
 }

@@ -1,12 +1,13 @@
 $(document).ready(function () {
-
     $(".cancel-case-btn").click(function () {
         $(".cancel-case").show();
         $(".overlay").show();
 
         $(".requestId").val($(this).data("id"));
         $(".displayPatientName").html($(this).data("patient_name"));
-        $("#floatingSelect").empty().append('<option value="" selected disabled>Reasons</option>');
+        $("#floatingSelect")
+            .empty()
+            .append('<option value="" selected disabled>Reasons</option>');
 
         $.ajax({
             url: "/cancel-case",
@@ -16,10 +17,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                        reason.id +
-                        '">' +
-                        reason.case_name +
-                        "</option>"
+                            reason.id +
+                            '">' +
+                            reason.case_name +
+                            "</option>"
                     );
                 });
             },
@@ -35,6 +36,9 @@ $(document).ready(function () {
 
         $(".physicianRegions").empty();
         $(".requestId").val($(this).data("id"));
+        $(".physicianRegions")
+            .empty()
+            .append('<option value="" selected disabled>Narrow Search by Region</option>');
 
         // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
@@ -44,10 +48,10 @@ $(document).ready(function () {
                 data.forEach(function (region) {
                     $(".physicianRegions").append(
                         '<option value="' +
-                        region.id +
-                        '">' +
-                        region.region_name +
-                        "</option>"
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
                     );
                 });
             },
@@ -139,10 +143,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                        entry.id +
-                        '">' +
-                        entry.vendor_name +
-                        "</option>"
+                            entry.id +
+                            '">' +
+                            entry.vendor_name +
+                            "</option>"
                     );
                 });
             },
@@ -204,17 +208,12 @@ $(document).ready(function () {
         $(".empty-fields").val("");
     });
 
-
-    $('.request-support-btn').click(function () {
-        $('.request-support').show();
+    $(".request-support-btn").click(function () {
+        $(".request-support").show();
         // $('.overlay').show();
-    })
-
-
+    });
 
     // ************************************* Shivesh *************************************
-
-
 
     $(document).on("click", ".action-btn", function () {
         var sibling = $(this).siblings(".actions-menubar:visible").length;
@@ -226,20 +225,15 @@ $(document).ready(function () {
         }
     });
 
-
-
-
     // ***** This code is for getting filtername in admin dashboard (all,patient,family,concierge,business) *****
 
-
     var pathname = window.location.pathname;
-    var url = pathname.split('/');
+    var url = pathname.split("/");
     var activeCategory = url[3];
 
     if (!activeCategory) {
         $(".btn-all.filter-btn").addClass("active-filter");
     }
-
 
     var filterBtns = $(".filter-btn");
     filterBtns.map(function (index, element) {
@@ -250,37 +244,33 @@ $(document).ready(function () {
 
     // ************************************************************************************
 
-
-
     // ***************** Fetching regions from regions table ******************
     $.ajax({
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-
             data.forEach(function (region) {
                 $(".listing-region").append(
-                    '<option value="' + region.id + '">' + region.region_name + "</option>"
+                    '<option value="' +
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
                 );
             });
         },
         error: function (error) {
             console.error(error);
         },
-
     });
     // ************************************************************************************
 
-
-
-
-
     // ***************** Filtering regions from dropdown button ******************
 
-    $('.listing-region').on('change', function () {
-        var token = $('meta[name="csrf-token"]').attr('content')
+    $(".listing-region").on("change", function () {
+        var token = $('meta[name="csrf-token"]').attr("content");
         // Store the selected option's ID
-        var tab = $(".nav-link.active").attr('id');
+        var tab = $(".nav-link.active").attr("id");
         var words = tab.split("-");
         var activeStatus = words[1];
 
@@ -289,52 +279,46 @@ $(document).ready(function () {
         $.ajax({
             url: "/dropdown-data",
             type: "POST",
-            dataType: 'json',
+            dataType: "json",
             data: {
                 regionId: selectedId,
                 status: activeStatus,
-                "_token": token
+                _token: token,
             },
             success: function (data) {
                 $("#dropdown-data-body").html(data.html);
             },
             error: function (error) {
                 console.error(error);
-            }
+            },
         });
-    })
+    });
     // ************************************************************************************
-
-
-
-
 
     // ********************* Filtering AccountType in User Access Page ***********************
 
-    $('#accountType').on('change', function () {
+    $("#accountType").on("change", function () {
         var accountType = $(this).val();
-        var token = $('meta[name="csrf-token"]').attr('content')
+        var token = $('meta[name="csrf-token"]').attr("content");
 
         $.ajax({
             url: "/user-access/filter",
             method: "POST",
             data: {
                 accountType: accountType,
-                "_token": token
+                _token: token,
             },
             success: function (response) {
-                $('#user-access-table').html(response.html);
+                $("#user-access-table").html(response.html);
             },
             error: function (error) {
                 console.error(error);
-            }
-        })
-    })
+            },
+        });
+    });
 });
 
 // ************************************************************************************
-
-
 
 // Display different roles checkboxes as per the roles selected
 $(".role-selected").on("change", function () {
@@ -359,12 +343,3 @@ $(".role-selected").on("change", function () {
         },
     });
 });
-
-
-
-
-
-
-
-
-

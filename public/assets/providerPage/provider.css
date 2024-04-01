@@ -22,26 +22,6 @@
 }
 
 /******************************* All Pop-ups Styling**************************************/
-/******************************* Encounter - Active listing Page **************************************/
-.encounter {
-    display: none;
-    width: 500px;
-}
-
-.houseCallBtn:hover {
-    background-color: rgba(0, 190, 232, 0.647);
-}
-
-.encounter-save-btn {
-    display: none;
-}
-
-.houseCallSelected {
-    display: block;
-}
-.consultCallSelected {
-    display: block;
-}
 /******************************* Transfer Request Provider - Pending listing Page **************************************/
 .transfer-request {
     display: none;

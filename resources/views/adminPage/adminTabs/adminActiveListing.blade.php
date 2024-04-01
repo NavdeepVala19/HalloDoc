@@ -47,54 +47,15 @@
 giving service to the patient. --}}
     <div class="overlay"></div>
 
-    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink');
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
-    {{-- Encounter --}}
-    {{-- <div class="pop-up encounter">
-    <div class="popup-heading-section d-flex align-items-center justify-content-between">
-        <span>Select Type Of Care</span>
-        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <form action="{{ route('encounter') }}" method="GET">
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-            <button type="button" class="primary-empty housecall-btn">Housecall</button>
-            <button type="button" class="primary-empty consult-btn">Consult</button>
-            <input type="text" name="caseId" class="case-id" value="" hidden>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <input type="submit" class="primary-fill encounter-save-btn" id="save-btn" value="Save">
-            <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </form>
-</div> --}}
+    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
+    @include('popup.adminSendLink')
 
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3" id="nav-tab">
@@ -287,8 +248,9 @@ giving service to the patient. --}}
                                                     Notes</a>
                                                 <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn"><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                                    class="encounter-form-btn"><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             </div>
                                         </div>
                                     </td>
@@ -412,4 +374,6 @@ giving service to the patient. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

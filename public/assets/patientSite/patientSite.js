@@ -1,43 +1,39 @@
 $(document).ready(function () {
-
-
     // **** This code is for create a new request in patient dashboard page  *****
-    $('.create-btn').click(function () {
-        $('.new-request').show();
-        $('.overlay').show();
-    })
+    $(".create-btn").click(function () {
+        $(".new-request").show();
+        $(".overlay").show();
+    });
 
-    $('.create-new-request-btn').click(function () {
-        $('.new-request-create').show();
-        $('.overlay').show();
-    })
+    $(".create-new-request-btn").click(function () {
+        $(".new-request-create").show();
+        $(".overlay").show();
+    });
 
-    $('.hide-popup-btn').click(function () {
-        $('.new-request-create').hide();
-        $('.overlay').hide();
-    })
-
+    // $(".hide-popup-btn").click(function () {
+    //     $(".new-request-create").hide();
+    //     $(".overlay").hide();
+    // });
 
     //  ********************************************************************************************
 
     // ************************** This code is for create new request pop-up  ***********************
 
-    $('.btn-someone').click(function () {
-        $(this).toggleClass('btn-active');
-        $('.btn-me').removeClass('btn-active');
-    })
+    $(".btn-someone").click(function () {
+        $(this).toggleClass("btn-active");
+        $(".btn-me").removeClass("btn-active");
+    });
 
-    $('.btn-me').click(function () {
-        $(this).toggleClass('btn-active');
-        $('.btn-someone').removeClass('btn-active');
-    })
+    $(".btn-me").click(function () {
+        $(this).toggleClass("btn-active");
+        $(".btn-someone").removeClass("btn-active");
+    });
 
-    $('.continue-btn').click(function () {
-        if ($('.btn-me').hasClass('btn-active')) {
-            $(window).attr('location', '/createPatientRequests');
-        }
-        else if ($('.btn-someone').hasClass('btn-active')) {
-            $(window).attr('location', '/createSomeoneRequests');
+    $(".continue-btn").click(function () {
+        if ($(".btn-me").hasClass("btn-active")) {
+            $(window).attr("location", "/createPatientRequests");
+        } else if ($(".btn-someone").hasClass("btn-active")) {
+            $(window).attr("location", "/createSomeoneRequests");
         } else {
             alert('please select "Me" or "SomeOne Else"');
         }
@@ -45,21 +41,14 @@ $(document).ready(function () {
 
     //  ********************************************************************************************
 
-
-
     // **** This code is for hiding pop-up button in family/concierge/business page ****
 
-    $('.submit-valid-details-ok-btn').click(function () {
-        $('.submit-valid-details').show();
-        $('.overlay').show()
-    })
+    $(".submit-valid-details-ok-btn").click(function () {
+        $(".submit-valid-details").show();
+        $(".overlay").show();
+    });
 
     //  ********************************************************************************************
-
-
-
-
-
     // **** This code is for showing input password and hide it when click on eye icon ****
 
     $(".person-eye").click(function () {
@@ -106,18 +95,6 @@ $(".file-input").change(function (e) {
 });
 
 // ********************************************
-
-// **** This is use for showing agreement cancel pop-up ****
-
-$(document).ready(function () {
-    $(".cancel").click(function () {
-        $(".cancel-pop-up").show();
-        $(".overlay").show();
-    });
-});
-
-// *********************************************************
-
 // **** This code is for file uploading in view document and requests pages ****
 
 function openFileSelection() {
@@ -143,15 +120,12 @@ for (i = 0; i < acc.length; i++) {
 }
 //   ****************************************************************************
 
-
-
 $(document).ready(function () {
-
-    $('#back-btn').click(function () {
+    $("#back-btn").click(function () {
         localStorage.setItem("popupShown", "true");
     });
 
-    $('#cancel-btn').click(function () {
+    $("#cancel-btn").click(function () {
         localStorage.setItem("popupShown", "true");
     });
 
@@ -159,34 +133,29 @@ $(document).ready(function () {
     if (localStorage.getItem("popupShown") == "false") {
         // Show the popup if not shown before
         $("#validDetailsPopup").hide();
-        $('.overlay').hide()
-
+        $(".overlay").hide();
     } else {
         $("#validDetailsPopup").show();
-        $('.overlay').show()
+        $(".overlay").show();
     }
 
     // Attach an event listener to the "OK" button in the popup
     $("#closePopupBtn").on("click", function () {
         // When clicked, hide the popup
         $("#validDetailsPopup").hide();
-        $('.overlay').hide()
+        $(".overlay").hide();
 
         // And set a flag in localStorage indicating the popup was shown
         localStorage.setItem("popupShown", "false");
     });
 });
 
-
-
 // ** This code is for client side validation
 // $(document).ready(function () {
-
 
 //     $('#patientProfileEditForm').on('submit', function (e) {
 
 //         var focusSet = false;    // this variable is for set and remove focus on input fields
-
 
 // ** Set email validation
 // if (!$('.email').val()) {
@@ -216,8 +185,7 @@ $(document).ready(function () {
 //     $(".email").next(".validation").remove();
 // }
 
-
-//         // ** Set firstname validation 
+//         // ** Set firstname validation
 //         if (!$('.first_name').val()) {
 //             if ($(".first_name").next(".validation").length == 0) // only add if not added
 //             {
@@ -246,8 +214,7 @@ $(document).ready(function () {
 //             $(".firstname").next(".validation").remove();
 //         }
 
-
-//         // ** Set lastname validation 
+//         // ** Set lastname validation
 //         if (!$('.last_name').val()) {
 //             if ($(".last_name").next(".validation").length == 0) // only add if not added
 //             {
@@ -275,9 +242,7 @@ $(document).ready(function () {
 //             $(".last_name").next(".validation").remove();
 //         }
 
-
-
-//         // ** Set date of birth validation 
+//         // ** Set date of birth validation
 //         if (!$('.date_of_birth').val()) {
 //             if ($(".date_of_birth").next(".validation").length == 0) // only add if not added
 //             {
@@ -290,8 +255,7 @@ $(document).ready(function () {
 //             $(".date_of_birth").next(".validation").remove(); // remove it
 //         }
 
-
-//         // ** Set phone number validation 
+//         // ** Set phone number validation
 //         if (!$('.phone_number').val()) {
 //             if ($(".phone_number").next(".validation").length == 0) // only add if not added
 //             {
@@ -304,8 +268,7 @@ $(document).ready(function () {
 //             $(".phone_number").next(".validation").remove(); // remove it
 //         }
 
-
-//         // ** Set street validation 
+//         // ** Set street validation
 //         if (!$('.street').val()) {
 //             if ($(".street").next(".validation").length == 0) // only add if not added
 //             {
@@ -318,8 +281,7 @@ $(document).ready(function () {
 //             $(".street").next(".validation").remove(); // remove it
 //         }
 
-
-//         // ** Set city validation 
+//         // ** Set city validation
 //         if (!$('.city').val()) {
 //             if ($(".city").next(".validation").length == 0) // only add if not added
 //             {
@@ -332,8 +294,7 @@ $(document).ready(function () {
 //             $(".city").next(".validation").remove(); // remove it
 //         }
 
-
-//         // ** Set state validation 
+//         // ** Set state validation
 //         if (!$('.state').val()) {
 //             if ($(".state").next(".validation").length == 0) // only add if not added
 //             {
@@ -346,8 +307,7 @@ $(document).ready(function () {
 //             $(".state").next(".validation").remove(); // remove it
 //         }
 
-
-//         // ** Set zipcode validation 
+//         // ** Set zipcode validation
 //         if (!$('.zipcode').val()) {
 //             if ($(".zipcode").next(".validation").length == 0) // only add if not added
 //             {
@@ -362,5 +322,3 @@ $(document).ready(function () {
 
 //     })
 // })
-
-

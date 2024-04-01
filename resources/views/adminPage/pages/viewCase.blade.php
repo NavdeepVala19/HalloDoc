@@ -16,50 +16,19 @@
 
 @section('content')
     <div class="overlay"></div>
+    {{-- Case Assigned Successfully --}}
+    @if (session('assigned'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('assigned') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     {{-- Assign Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
     to providers based on patient’s region using this pop-up. --}}
-    <div class="pop-up assign-case">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Assign Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <p class="m-2">To assign this request, search and select another Physician</p>
-        <form action="{{ route('admin.assign.case') }}" method="POST">
-            @csrf
-            <div class="m-3">
-                <input type="text" class="requestId" name="requestId" value="" hidden>
-                <div class="form-floating">
-                    <select class="form-select physicianRegions" name="region" id="floatingSelect"
-                        aria-label="Floating label select example">
-                        <option selected>Regions</option>
-                    </select>
-                    <label for="floatingSelect">Narrow Search by Region</label>
-                </div>
-                <div class="form-floating">
-                    <select
-                        class="form-select selectPhysician @error('physician')
-                is-invalid
-                @enderror"
-                        name="physician" id="floatingSelect" aria-label="Floating label select example" required>
-                        <option>Select Physician</option>
-                    </select>
-                    <label for="floatingSelect">Select Physician</label>
-                    @error('physician')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating">
-                    <textarea class="form-control" name="assign_note" placeholder="Description" id="floatingTextarea2"></textarea>
-                    <label for="floatingTextarea2">Description</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill confirm-case">Submit</button>
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.adminAssignCase')
 
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -70,20 +39,21 @@
                 {{-- Show the name as per request_type_id and with proper color --}}
                 <p class="request-type-{{ $data->request_type_id }} mt-2">{{ $data->requestType->name }}</p>
             </div>
-            <a href="{{ route('admin.status' , 
-                $data->status == 1 
+            <a href="{{ route(
+                'admin.status',
+                $data->status == 1
                     ? 'new'
-                    : ($data->status == 3 
-                            ? 'pending' 
-                            : (($data->status == 4 || $data->status == 5) 
-                                    ? 'active' 
-                                    : ($data->status == 6 
-                                        ? 'conclude' 
-                                        : (($data->status == 2 || $data->status == 7 || $data->status == 11) 
-                                        ? 'toclose' 
-                                        : 'unpaid'))))
-            ) 
-            }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+                    : ($data->status == 3
+                        ? 'pending'
+                        : ($data->status == 4 || $data->status == 5
+                            ? 'active'
+                            : ($data->status == 6
+                                ? 'conclude'
+                                : ($data->status == 2 || $data->status == 7 || $data->status == 11
+                                    ? 'toclose'
+                                    : 'unpaid')))),
+            ) }}"
+                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 
@@ -151,7 +121,8 @@
                         <div class="form-floating w-100">
                             <input type="text" name="business_name" class="form-control" id="floatingInput"
                                 placeholder="business"
-                                value="{{ $data->requestClient->street }}, {{ $data->requestClient->city }}, {{ $data->requestClient->state }}" disabled>
+                                value="{{ $data->requestClient->street }}, {{ $data->requestClient->city }}, {{ $data->requestClient->state }}"
+                                disabled>
                             <label for="floatingInput">Business Name/Address</label>
                         </div>
                         <button type="button" class="primary-empty"><i class="bi bi-geo-alt"></i></button>
@@ -164,12 +135,32 @@
                 </div>
 
                 <div class="text-end">
-                    <button type="button" class="assign-case-btn primary-fill"
-                        data-id="{{ $data->id }}">Assign</button>
+                    @if ($data->status == 1)
+                        <button type="button" class="assign-case-btn primary-fill"
+                            data-id="{{ $data->id }}">Assign</button>
+                    @endif
                     <a href="{{ route('admin.view.note', $data->id) }}" class="primary-fill">View Notes</a>
-                    <a href="{{ route('admin.dashboard') }}" class="primary-red">Cancel</a>
+                    <a href="{{ route(
+                        'admin.status',
+                        $data->status == 1
+                            ? 'new'
+                            : ($data->status == 3
+                                ? 'pending'
+                                : ($data->status == 4 || $data->status == 5
+                                    ? 'active'
+                                    : ($data->status == 6
+                                        ? 'conclude'
+                                        : ($data->status == 2 || $data->status == 7 || $data->status == 11
+                                            ? 'toclose'
+                                            : 'unpaid')))),
+                    ) }}"
+                        class="primary-red">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

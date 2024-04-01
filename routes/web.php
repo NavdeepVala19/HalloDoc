@@ -394,6 +394,16 @@ Route::post('/admin/store/notes', [AdminController::class, 'storeNote'])->name('
 // Admin View Uploads
 Route::get('admin/view/uploads/{id}', [AdminController::class, 'viewUpload'])->name('admin.view.upload');
 
+// ENCOUNTER FORM
+// Show Encounter Form when clicked on Encounter from Conclude State
+Route::get(
+    '/admin-encounter-form/{id?}',
+    [AdminController::class, 'encounterFormView']
+)->name('admin.encounter.form');
+
+Route::post('/admin-medical-form', [AdminController::class, 'encounterForm'])->name('admin.medical.data');
+
+
 // Clear Case by admin pending and close state
 Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');
 

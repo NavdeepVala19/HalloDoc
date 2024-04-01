@@ -17,7 +17,7 @@
 }
 
 .table-responsive {
-    min-height: 350px;
+    min-height: 250px;
 }
 
 .case-new {
@@ -209,6 +209,27 @@
 
 .table {
     margin: 0;
+}
+
+/******************************* Encounter - Active listing Page **************************************/
+.encounter {
+    display: none;
+    width: 500px;
+}
+
+.houseCallBtn:hover {
+    background-color: rgba(0, 190, 232, 0.647);
+}
+
+.houseCallSelected {
+    display: block !important;
+}
+.consultCallSelected {
+    display: block !important;
+}
+
+.encounter-save-btn {
+    display: none;
 }
 
 /* *********************** TABLE DATA ************************************ */
