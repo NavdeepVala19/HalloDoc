@@ -978,7 +978,6 @@ class AdminController extends Controller
 
     public function UserAccess()
     {
-
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
@@ -990,7 +989,6 @@ class AdminController extends Controller
 
     public function UserAccessEdit($id)
     {
-
         $UserAccessRoleName = Roles::select('name')
             ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
             ->where('user_roles.user_id', $id)
@@ -1004,6 +1002,27 @@ class AdminController extends Controller
             return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
         }
     }
+
+    public function FilterUserAccessAccountTypeWise(Request $request)
+    {
+   
+        $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
+
+        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+        ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+        ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
+
+        if (!empty($account) && isset($account)) {
+            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
+        }
+        $userAccessDataFiltering = $userAccessDataFiltering->get();
+
+
+        $data = view('adminPage.access.userAccessFiltering')->with('userAccessData', $userAccessDataFiltering)->render();
+
+        return response()->json(['html' => $data]);
+    }
+
 
     public function sendRequestSupport(Request $request)
     {
@@ -1077,24 +1096,7 @@ class AdminController extends Controller
     }
 
 
-    public function FilterUserAccessAccountTypeWise(Request $request)
-    {
-        $account = $request->accountType == "all" ? '' : $request->accountType;
-
-        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
-            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
-
-        if (!empty($account) && isset($account)) {
-            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
-        }
-        $userAccessDataFiltering = $userAccessDataFiltering->get();
-
-
-        $data = view('adminPage.access.userAccessFiltering')->with('userAccessData', $userAccessDataFiltering)->render();
-
-        return response()->json(['html' => $data]);
-    }
+  
 
 
     public function filterPatientByRegionActiveState($selectedId)

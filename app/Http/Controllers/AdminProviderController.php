@@ -41,9 +41,13 @@ class AdminProviderController extends Controller
 
     public function filterPhysicianThroughRegions(Request $request)
     {
-        $physicianRegions = PhysicianRegion::where('region_id', $request->regionId)->pluck('provider_id');
-
-        $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+       
+        if ($request->selectedId == "All") {
+            $providersData = Provider::paginate(10);
+        } else {
+            $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
+            $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+        }
 
         $data = view('/adminPage/provider/adminProviderFilterData')->with('providersData', $providersData)->render();
         return response()->json(['html' => $data]);
@@ -247,7 +251,7 @@ class AdminProviderController extends Controller
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
 
-      
+
 
         $providerData->save();
 
@@ -470,8 +474,7 @@ class AdminProviderController extends Controller
     public function providerLocation()
     {
         $providers = Provider::get();
-     
+
         return view('adminPage/provider/providerLocation', compact('providers'));
-       
     }
 }

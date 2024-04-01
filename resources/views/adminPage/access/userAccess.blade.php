@@ -42,17 +42,19 @@
     <h3 class="main-heading">User Access</h3>
     <div class="section">
         <div>
-            <div class="form-floating m-3 account-type-drop-down">
-                <select class="form-select role-selected" name="role_name" id="accountType">
-                    <option value="all">All</option>
-                    <option value="admin">Admin</option>
-                    <option value="physician">Physician</option>
-                </select>
-                <label for="floatingSelect">Account Type</label>
-            </div>
+            <form action="" method="post" id="userAccessFilteredData">
+                <div class="form-floating m-3 account-type-drop-down">
+                    <select class="form-select role-selected" name="role_name" id="accountType">
+                        <option value="all">All</option>
+                        <option value="admin">Admin</option>
+                        <option value="physician">Physician</option>
+                    </select>
+                    <label for="floatingSelect">Account Type</label>
+                </div>
+            </form>
         </div>
 
-        <div class="table-responsive table-view">
+        <div class="table-responsive table-view " id="user-access-data">
             <table class="table" id="user-access-table">
                 <thead class="table-secondary text-center align-middle">
                     <td>Account Type <i class="bi bi-arrow-up"></i></td>
@@ -84,7 +86,8 @@
                 <div class="main-section">
                     <h5 class="heading">{{$data->first_name}}</h5>
                     <div class="detail-box">
-                        <span>
+       
+                 <span>
                             Account Type: {{$data->name}}
                         </span>
                     </div>
@@ -104,7 +107,6 @@
             @endforeach
             {{$userAccessData->links('pagination::bootstrap-5')}}
         </div>
-
     </div>
 </div>
 @endsection

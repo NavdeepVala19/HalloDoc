@@ -51,19 +51,21 @@
     <h2>Provider Information</h2>
 
     <div class="main-info-content">
+        <form action="" id="regionsFiltering" method="post">
+            <div class="content-header d-flex flex-row justify-content-between align-items-center">
+                <select class="form-select" id="listing-region-admin-provider" name="regions">
+                    <option selected>All</option>
+                </select>
 
-        <div class="content-header d-flex flex-row justify-content-between align-items-center">
+                <div class="provider-btn">
+                    <a href="{{route('adminNewProvider')}}" type="button" class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
+                </div>
 
-            <select class="form-select" id="listing-region-admin-provider" name="regions">
-                <option selected>All</option>
-            </select>
 
-            <div class="provider-btn">
-                <a href="{{route('adminNewProvider')}}" type="button" class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
             </div>
+        </form>
 
-        </div>
-        <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
+    
         <div class="listing-table mt-3">
             <div id="adminProviderData">
                 <table class="provider-table table" id="all-providers-data">

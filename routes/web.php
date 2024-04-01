@@ -167,7 +167,7 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 // route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 
-route::get('/admin/providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
+route::get('/admin-providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
 route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 

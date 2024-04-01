@@ -20,3 +20,4 @@
                     @endforeach
                 </tbody>
             </table>
+            {{$userAccessData->links('pagination::bootstrap-5')}}
