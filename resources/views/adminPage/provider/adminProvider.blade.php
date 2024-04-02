@@ -6,10 +6,12 @@
 
 @endsection
 
+
+
 @section('nav-links')
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
 <a href="{{route('providerLocation')}}">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
@@ -41,7 +43,7 @@
 <div class="overlay"> </div>
 
 @if(session('message'))
-<h6 class="alert alert-success ">
+<h6 class="alert alert-success popup-message ">
     {{ session('message') }}
 </h6>
 @endif
@@ -51,52 +53,54 @@
     <h2>Provider Information</h2>
 
     <div class="main-info-content">
+        <form action="" id="regionsFiltering" method="post">
+            <div class="content-header d-flex flex-row justify-content-between align-items-center">
+                <select class="form-select" id="listing-region-admin-provider" name="regions">
+                    <option selected>All</option>
+                </select>
 
-        <div class="content-header d-flex flex-row justify-content-between align-items-center">
+                <div class="provider-btn">
+                    <a href="{{route('adminNewProvider')}}" type="button" class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
+                </div>
 
-            <select class="form-select" id="listing-region-admin-provider">
-                <option name="regions" selected>All</option>
-            </select>
 
-            <div class="provider-btn">
-                <a href="{{route('adminNewProvider')}}" type="button" class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
             </div>
+        </form>
 
-        </div>
 
         <div class="listing-table mt-3">
+            <div id="adminProviderData">
+                <table class="provider-table table" id="all-providers-data">
+                    <thead class="table-secondary">
+                        <tr>
+                            <td style="width: 7%;" class="theader">Stop Notification</td>
+                            <td class="theader">Provider Name</td>
+                            <td class="theader">Role</td>
+                            <td class="theader">On Call Status</td>
+                            <td class="theader">Status</td>
+                            <td style="width: 13%;" class="theader">Actions</td>
+                        </tr>
+                    </thead>
 
-            <table class="provider-table table" id="all-providers-data">
-                <thead class="table-secondary">
-                    <tr>
-                        <td style="width: 7%;" class="theader">Stop Notification</td>
-                        <td class="theader">Provider Name</td>
-                        <td class="theader">Role</td>
-                        <td class="theader">On Call Status</td>
-                        <td class="theader">Status</td>
-                        <td style="width: 13%;" class="theader">Actions</td>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach ($providersData as $data)
-                    <tr>
-                        <td class="checks"> <input class="form-check-input" type="checkbox" value="" id="checkbox1">
-                        </td>
-                        <td class="data"> {{$data->first_name}}</td>
-                        <td class="data"> Physician</td>
-                        <td class="data"> Available</td>
-                        <td class="data"> {{$data->status}} </td>
-                        <td class="data gap-1">
-                            <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
-                            <a href="{{route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-
-            </table>
-            {{$providersData->links('pagination::bootstrap-5')}}
+                    <tbody>
+                        @foreach ($providersData as $data)
+                        <tr>
+                            <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1) id="checkbox_{{$data->id}}">
+                            </td>
+                            <td class="data"> {{$data->first_name}}</td>
+                            <td class="data"> Physician</td>
+                            <td class="data"> Available</td>
+                            <td class="data"> {{$data->status}} </td>
+                            <td class="data gap-1">
+                                <button type="button" data-id='{{$data->id}}' class="primary-empty contact-btn mt-2 mb-2" id="contact_btn_{{$data->id}}">Contact</button>
+                                <a href="{{route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{$providersData->links('pagination::bootstrap-5')}}
+            </div>
 
             <!-- contact your provider pop-up -->
 
@@ -135,6 +139,7 @@
                         <div class="form-floating">
                             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
                             <label for="floatingTextarea2">Message</label>
+                            <span id="errorMsg"></span>
                         </div>
 
                 </div>
@@ -212,6 +217,7 @@
                         <div class="form-floating">
                             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
                             <label for="floatingTextarea2">Message</label>
+                            <span id="errorMsg"></span>
                         </div>
 
                 </div>
@@ -231,5 +237,6 @@
 
 
 @section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
 <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
 @endsection

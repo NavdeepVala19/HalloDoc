@@ -1,4 +1,4 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientProfile.css') }}">
@@ -9,7 +9,9 @@
 <a href="" class="active-link">Profile</a>
 @endsection
 
-@section('content')
+@section('patientSiteContent')
+
+
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">User Profile</h2>
@@ -75,8 +77,6 @@
                     @enderror
                     <span class="errorMsg"></span>
                 </div>
-
-
             </div>
 
             <h4>Patient Location</h4>
@@ -141,139 +141,4 @@
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
-<script>
-    $(document).ready(function() {
-
-        // $('#patientProfileEditForm').validate({
-        //     rules: {
-        //         email: {
-        //             required: true,
-        //             email: true,
-        //             minlength: 2,
-        //             maxlength: 30
-        //         },
-        //         first_name: {
-        //             required: true,
-        //             minlength: 2,
-        //             maxlength: 30
-        //         },
-        //         last_name: {
-        //             required: true,
-        //             minlength: 2,
-        //             maxlength: 30
-        //         },
-        //         phone_number: {
-        //             required: true,
-        //             minlength: 2,
-        //             maxlength: 30,
-        //             RegExp: /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/,
-        //         },
-        //         street: {
-        //             required: true,
-        //             minlength: 2,
-        //             maxlength: 30
-        //         },
-        //         city: {
-        //             required: true,
-        //             RegExp: /^[a-zA-Z ,_-]+?$/,
-        //             minlength: 2,
-        //             maxlength: 30
-        //         },
-        //         state: {
-        //             required: true,
-        //             RegExp: /^[a-zA-Z ,_-]+?$/,
-        //             minlength: 2,
-        //             maxlength: 30
-        //         },
-        //         zipcode: {
-        //             required: true,
-
-        //         },
-        //     },
-        //     messages: {
-        //         email: {
-        //             required: "Please enter a valid email format (e.g., user@example.com).",
-        //         },
-        //         first_name: {
-        //             required: "Please enter a firstname between 2 and 30 character",
-        //         },
-        //         last_name: {
-        //             required: "Please enter a lastname between 2 and 30 character",
-        //         },
-        //         phone_number: {
-        //             required: "Please enter a valid mobile",
-        //         },
-        //         street: {
-        //             required: "Please enter a street",
-        //         },
-        //         city: {
-        //             required: "Please enter a city",
-        //         },
-        //         state: {
-        //             required: "Please enter a state",
-        //         },
-        //         zipcode: {
-        //             required: "Please enter a zipcode",
-        //             zipcode: function(element) {
-        //                 return $(element).val().length === 6;
-        //             },
-        //         },
-        //         errorElement: 'span',
-        //         errorPlacement: function(error, element) {
-        //             error.addClass('errorMsg');
-        //             element.closest('.form-floating').append(error);
-        //         },
-        //         highlight: function(element, errorClass, validClass) {
-        //             $(element).addClass('is-invalid').removeClass('is-valid');
-        //         },
-        //         unhighlight: function(element, errorClass, validClass) {
-        //             $(element).removeClass('is-invalid').addClass('is-valid');
-        //         }
-        //     }
-
-        // });
-        $('#patientProfileEditForm').validate({
-            rules: {
-                first_name: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 30,
-                },
-                email: {
-                    required: true,
-                    email: true,
-                },
-                last_name: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 30
-                },
-                
-            },
-            messages: {
-                email: {
-                    required: "Please enter a valid email format (e.g., user@example.com).",
-                },
-                first_name: {
-                    required: "Please enter a firstname between 2 and 30 character",
-                },
-                last_name: {
-                    required: "Please enter a lastname between 2 and 30 character",
-                },
-
-            },
-            errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('errorMsg');
-                element.closest('.form-floating').append(error);
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid').removeClass('is-valid');
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid').addClass('is-valid');
-            }
-        });
-    });
-</script>
 @endsection

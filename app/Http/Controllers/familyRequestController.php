@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\users;
 use App\Models\allusers;
 use App\Models\EmailLog;
+use App\Models\UserRoles;
 use App\Models\RequestWise;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
@@ -68,6 +69,10 @@ class familyRequestController extends Controller
             $requestUsers->state = $request->state;
             $requestUsers->zipcode = $request->zipcode;
             $requestUsers->save();
+
+            $userRolesEntry = new UserRoles();
+            $userRolesEntry->role_id = 3;
+            $userRolesEntry->user_id = $requestEmail->id;
         }
 
         $requestEmail = new users();

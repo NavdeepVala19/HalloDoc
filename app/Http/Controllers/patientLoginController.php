@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\request_Client;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\users;
-use Illuminate\Support\Facades\Session;
+use App\Models\UserRoles;
+use Illuminate\Support\Str;
+use App\Models\RequestTable;
+use Illuminate\Http\Request;
+use App\Models\request_Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 
 class patientLoginController extends Controller
@@ -26,12 +27,10 @@ class patientLoginController extends Controller
 
     public function userLogin(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
 
         $credentials = [
             'email' => $request->email,
@@ -39,8 +38,17 @@ class patientLoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('patientDashboardData');
-        } else {
+            $patientCredentials = Auth::user();
+        
+            $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
+          
+            if ($userRolesData->role_id == 3) {
+                return redirect()->route('patientDashboardData');
+            } else {
+                return back()->with('error', 'Invalid credentials');
+            }
+        }
+        else{
             return back()->with('error', 'Invalid credentials');
         }
     }
@@ -51,7 +59,6 @@ class patientLoginController extends Controller
         return view("patientSite/patientResetPassword");
     }
 
-
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([
@@ -59,8 +66,8 @@ class patientLoginController extends Controller
         ]);
 
         $user = users::where('email', $request->email)->first();
-     
-        if ($user== null) {
+
+        if ($user == null) {
             return back()->with('error', 'no such email is registered');
         }
 
@@ -112,6 +119,6 @@ class patientLoginController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect("loginScreen");
+        return redirect()->route('loginScreen');
     }
 }

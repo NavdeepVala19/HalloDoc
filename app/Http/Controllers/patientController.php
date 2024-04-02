@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserRoles;
 use Carbon\Carbon;
 use App\Models\User;
 use Cron\MonthField;
@@ -38,7 +39,7 @@ class patientController extends Controller
     {
         $request->validate([
             'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
@@ -71,6 +72,11 @@ class patientController extends Controller
             $requestUsers->state = $request->state;
             $requestUsers->zipcode = $request->zipcode;
             $requestUsers->save();
+
+            $userRolesEntry = new UserRoles();
+            $userRolesEntry->role_id = 3;
+            $userRolesEntry->user_id = $requestEmail->id;
+
         }
 
         $requestEmail = new users();

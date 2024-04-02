@@ -8,7 +8,7 @@
                     <td>Actions</td>
                 </thead>
                 <tbody class="text-center align-middle">
-                    @foreach ($userAccessData as $data )
+                    @foreach ($userAccessDataFiltering as $data )
                     <tr>
                         <td>{{$data->name}}</td>
                         <td>{{$data->first_name}}</td>
@@ -20,3 +20,4 @@
                     @endforeach
                 </tbody>
             </table>
+            {{$userAccessDataFiltering->links('pagination::bootstrap-5')}}

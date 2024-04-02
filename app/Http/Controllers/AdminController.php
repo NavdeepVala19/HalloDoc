@@ -39,8 +39,10 @@ use App\Models\RequestClosed;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
 use App\Models\PhysicianRegion;
+use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\RequestConcierge;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
 use App\Exports\SearchRecordExport;
@@ -629,38 +631,6 @@ class AdminController extends Controller
     public function searchRecordsView()
     {
 
-        // Getting Providers Name and status type
-
-        // $searchRecordsData2 = RequestTable::select(
-        //     'provider.first_name',
-        //     'request_status.status',
-        //     'status.status_type'
-        // )
-        //     ->leftJoin('provider', 'request.physician_id', 'provider.id')
-        //     ->leftJoin('request_status', 'request.id', 'request_status.request_id')
-        //     ->leftJoin('status', 'status.id', 'request_status.status')
-        //     ->get();
-
-
-        // Getting Patient Name.email,mobile,address,notes(admin,patient,physician) and request_Type
-
-        // $searchRecordsData = request_Client::select(
-        //     'request.request_type_id',
-        //     'request_client.first_name',
-        //     'request_client.email',
-        //     'request_client.phone_number',
-        //     'request_client.street',
-        //     'request_client.city',
-        //     'request_client.state',
-        //     'request_client.zipcode',
-        //     'request_notes.patient_notes',
-        //     'request_notes.physician_notes',
-        //     'request_notes.admin_notes'
-        // )
-        //     ->leftJoin('request', 'request.id', 'request_client.request_id')
-        //     ->leftJoin('request_notes', 'request_notes.request_id', 'request_client.request_id')
-        //     ->paginate(10);
-
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
 
         $combinedData = request_Client::distinct()->select([
@@ -699,16 +669,11 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-
+        // dd("here");
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
 
-
-
-
         $session = session([
-            'request_status' => $request->request_status,
             'patient_name' => $request->patient_name,
-            'request_type' => $request->request_type,
             'from_date_of_service' => $request->from_date_of_service,
             'to_date_of_service' => $request->to_date_of_service,
             'email' => $request->email,
@@ -734,7 +699,6 @@ class AdminController extends Controller
 
     public function exportFilteredSearchRecord($request)
     {
-
         $combinedData = request_Client::distinct()->select([
             'request_client.first_name',
             'request.request_type_id',
@@ -788,7 +752,6 @@ class AdminController extends Controller
 
     public function downloadFilteredData(Request $request)
     {
-
         $data = $this->exportFilteredSearchRecord($request);
         $export = new SearchRecordExport($data);
 
@@ -800,7 +763,24 @@ class AdminController extends Controller
     public function deleteSearchRecordData($id)
     {
         $deleteData = request_Client::where('id', $id)->forceDelete();
+
+        $getRequestId = request_Client::select('request_id')->where('id', $id)->first();
+
+        $deleteRequestTableData = Request::where('id', $getRequestId)->forceDelete();
+
+        $deleteDocuments = RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
+
+        $deleteRequestStatus = RequestStatus::where('request_id', $getRequestId)->forceDelete();
+
+        $deleteRequestBusiness = RequestBusiness::where('request_id', $getRequestId)->forceDelete();
+
+        $deleteRequestConcierge = RequestConcierge::where('request_id', $getRequestId)->forceDelete();
+
+        $deleteBlockData = BlockRequest::where('request_id', $getRequestId)->forceDelete();
+
         return redirect()->back();
+
+
     }
 
 
@@ -904,7 +884,6 @@ class AdminController extends Controller
 
     public function unBlockPatientInBlockHistoryPage($id)
     {
-
         $unBlockData = BlockRequest::where('id', $id)->delete();
 
         $statusChanges = BlockRequest::with('request_status')->where('request_id');
@@ -1025,7 +1004,6 @@ class AdminController extends Controller
 
     public function UserAccess()
     {
-
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
@@ -1037,7 +1015,6 @@ class AdminController extends Controller
 
     public function UserAccessEdit($id)
     {
-
         $UserAccessRoleName = Roles::select('name')
             ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
             ->where('user_roles.user_id', $id)
@@ -1051,6 +1028,29 @@ class AdminController extends Controller
             return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
         }
     }
+
+    public function FilterUserAccessAccountTypeWise(Request $request)
+    {
+        // dd($request->all());
+
+        $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
+
+        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+        ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+        ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
+
+        if (!empty($account) && isset($account)) {
+            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
+        }
+        $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
+
+
+        $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
+
+        return response()->json(['html' => $data]);
+
+    }
+
 
     public function sendRequestSupport(Request $request)
     {
@@ -1124,24 +1124,7 @@ class AdminController extends Controller
     }
 
 
-    public function FilterUserAccessAccountTypeWise(Request $request)
-    {
-        $account = $request->accountType == "all" ? '' : $request->accountType;
-
-        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
-            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
-
-        if (!empty($account) && isset($account)) {
-            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
-        }
-        $userAccessDataFiltering = $userAccessDataFiltering->get();
-
-
-        $data = view('adminPage.access.userAccessFiltering')->with('userAccessData', $userAccessDataFiltering)->render();
-
-        return response()->json(['html' => $data]);
-    }
+  
 
 
     public function filterPatientByRegionActiveState($selectedId)

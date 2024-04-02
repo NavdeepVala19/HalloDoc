@@ -19,13 +19,11 @@ class patientAccountController extends Controller
 
     public function createAccount(Request $request)
     {
-
         $request->validate([
             "email" => "required",
             "password" => "required|min:8|max:20",
             "confirm_password" => "required|same:password",
         ]);
-
 
         if (isset($request->email)) {
             $user = users::where("email", $request->email)->first();

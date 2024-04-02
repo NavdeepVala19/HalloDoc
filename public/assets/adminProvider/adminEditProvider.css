@@ -27,6 +27,15 @@
     border: 1px solid green;
 }
 
+.primary-fill-1 {
+    border: none;
+    background-color: rgb(34, 140, 32);
+    padding: 8px 20px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+
 table {
     border-collapse: separate;
     border-spacing: 10px;
@@ -118,4 +127,22 @@ input[type="checkbox"] {
     .responsive-btns {
         display: block;
     }
+}
+
+
+#providerAccSaveBtn,#providerAccCancelBtn{
+    display: none;
+}
+
+#providerInfoSaveBtn,#providerInfoCancelBtn{
+    display: none;
+}
+
+
+#providerMailSaveBtn,#providerMailCancelBtn{
+    display: none;
+}
+
+#providerProfileCancelBtn ,#providerProfileSaveBtn{
+    display: none;
 }

@@ -7,7 +7,7 @@
 @section('nav-links')
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
 <a href="{{route('providerLocation')}}">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
@@ -49,16 +49,16 @@
 
             <h3>Account Information</h3>
 
-            <div class="grid-2">
+            <div class="grid-3">
                 <div class="form-floating ">
-                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name">
+                    <input type="text" name="user_name" class="form-control" id="floatingInput" placeholder="User Name" value="{{ old('user_name') }}">
                     <label for="floatingInput">User Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="password" name="password" class="form-control" id="floatingInput" placeholder="password">
+                    <input type="password" name="password" class="form-control" id="floatingInput" placeholder="password" value="{{ old('password') }}">
                     <label for="floatingInput">Password</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -79,12 +79,12 @@
 
 
 
-            <h3>Physician Information</h3>
+            <h3>Administrator Information</h3>
 
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
+                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name" value="{{ old('first_name') }}">
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
+                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name" value="{{ old('last_name') }}">
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -100,31 +100,38 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" value="{{ old('email') }}">
                     <label for="floatingInput">Email</label>
+                    @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-                @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
+                <div class="form-floating" style="height: 58px;">
+                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
+                    @error('phone_number')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="form-floating ">
-                    <input type="number" name="medical_license" class="form-control" id="floatingInput" placeholder="Medical License">
+                    <input type="number" name="medical_license" class="form-control" id="floatingInput" placeholder="Medical License" value="{{ old('medical_license') }}">
                     <label for="floatingInput">Medical license # </label>
+                    @error('medical_license')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <div class="form-floating ">
-                    <input type="number" name="npi_number" class="form-control" id="floatingInput" placeholder="NPI Number">
+                <div class="form-floating">
+                    <input type="number" name="npi_number" class="form-control" id="floatingInput" placeholder="NPI Number" value="{{ old('npi_number') }}">
                     <label for="floatingInput">NPI Number</label>
+                    @error('npi_number')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <div class="form-floating ">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email_alt">
-                    <label for="floatingInput">Alternate Email</label>
-                </div>
 
-                <div class="d-flex gap-4">
+                <div class="d-flex gap-4 flex-wrap">
                     @foreach ($regions as $region)
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="region_id[]" id="region_{{ $region->id }}" value="{{ $region->id }}" @if (in_array($region->id, $selectedRegionIds ?? []))
@@ -138,48 +145,38 @@
                     @endforeach
                 </div>
 
-                <!-- 
-                <div class="d-flex gap-4 ">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            District of Columbia
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            New York
-                        </label>
-                    </div>
-                </div> -->
-
-
-
             </div>
             <h3>Mailing & Billing Information</h3>
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1">
+                    <input type="text" name="address1" class="form-control" id="floatingInput" placeholder="Address 1" value="{{ old('address1') }}">
                     <label for="floatingInput">Address 1</label>
+                    @error('address1')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2">
+                    <input type="text" name="address2" class="form-control" id="floatingInput" placeholder="Address 2" value="{{ old('address2') }}">
                     <label for="floatingInput">Address 2</label>
+                    @error('address2')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city">
+                    <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city" value="{{ old('city') }}">
                     <label for="floatingInput">City</label>
+                    @error('city')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div>
                     {{-- Dropdown State Selection --}}
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="select-state">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="select-state" value="{{ old('select-state') }}">
                             <option selected>State</option>
                             <option value="1">Somnath</option>
                             <option value="2">Dwarka</option>
@@ -192,16 +189,16 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip">
+                    <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip" value="{{ old('zip') }}">
                     <label for="floatingInput">Zip</label>
+                    @error('zip')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <input type="tel" name="phone_number_alt" class="form-control phone" id="telephone" placeholder="Phone Number">
-                @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-
-
+                <div style="height: 58px;">
+                    <input type="tel" name="phone_number_alt" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number_alt') }}">
+                </div>
 
 
             </div>
@@ -209,51 +206,38 @@
             <div class="grid-2">
 
                 <div class="form-floating ">
-                    <input type="text" name="business_name" class="form-control" id="floatingInput" placeholder="Business Name">
+                    <input type="text" name="business_name" class="form-control" id="floatingInput" placeholder="Business Name" value="{{ old('business_name') }}">
                     <label for="floatingInput">Business Name</label>
+                    @error('business_name')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="business_website" class="form-control" id="floatingInput" placeholder="Business Website">
+                    <input type="text" name="business_website" class="form-control" id="floatingInput" placeholder="Business Website" value="{{ old('business_website') }}">
                     <label for="floatingInput">Business Website</label>
+
                 </div>
 
                 <div>
                     {{-- Select Photo --}}
                     <div class="custom-file-input" onclick="openFileSelection()">
-                        <input type="text" placeholder="Select Photo" readonly>
+                        <input type="text" placeholder="Select Photo" readonly name="provider_photo">
                         <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span class="upload-txt">Upload</span> </label>
                         <input type="file" id="file-input" class="file-input-provider_photo" hidden name="provider_photo">
                         <p id="provider_photo"></p>
                     </div>
                 </div>
-
-                <div class="d-flex align-items-center gap-1 ">
-                    {{-- Select Signature --}}
-                    <div class="custom-file-input" onclick="openFileSelection()">
-                        <input type="text" placeholder="Select Signature" readonly>
-                        <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span class="upload-txt">Upload</span></label>
-                        <input type="file" id="signature-input" class="file-input-provider_signature" name="provider_signature" hidden>
-                        <p id="provider_signature"></p>
-                    </div>
-
-                    <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
-                    {{-- <canvas id="signatureCanvas" width="300" height="150"></canvas> --}}
-                </div>
-
-
             </div>
 
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" style="height: 120px"></textarea>
+                <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" style="height: 120px" value="{{ old('admin_notes') }}"></textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
             </div>
 
             <hr>
             <div>
-
                 <h3>Onboarding</h3>
-
                 <div class="table mt-4">
                     <table>
                         <tbody>
@@ -360,29 +344,6 @@
                                 </td>
                             </tr>
 
-                            <tr class="border-bottom-table">
-                                <td>
-                                    <div class="d-flex gap-2 align-items-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="license_check">
-                                        <span class="ms-2">
-                                            License Agreement
-                                        </span>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="ms-4 btns">
-                                        <label for="license-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
-                                        <input type="file" id="license-input" hidden name="license_doc">
-                                        <p class="license"></p>
-                                    </div>
-                                    <div class="ms-4 responsive-btns">
-                                        <button class="primary-fill mt-2 mb-2" name="license_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-                                        <p class="license"></p>
-                                    </div>
-                                </td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>
@@ -391,8 +352,8 @@
             <hr>
 
             <div class="d-flex flex-row justify-content-end gap-3">
-                <button class="primary-fill" type="submit">Save</button>
-                <button class="btn btn-danger" type="cancel">Cancel</button>
+                <button class="primary-fill-1" type="submit">Create Account</button>
+
             </div>
     </div>
     </form>

@@ -214,6 +214,65 @@ $(document).ready(function () {
     // ************************************* Shivesh *************************************
 
 
+    $('#adminResetPassword').on('click', function () {
+        $('.admin-password').removeAttr('disabled')
+    })
+
+
+    $('#admin-info-cancel-btn').on('click', function () {
+        $('.admin_first_name').attr('disabled')
+        $('.admin_last_name').attr('disabled')
+        $('.admin_email').attr('disabled')
+        $('.admin_confirm_email').attr('disabled')
+        $('.phone').attr('disabled')
+
+        $('#adminEditBtn1').show()
+        $('.admin-info-btns').hide()
+
+    })
+
+    $('#admin-mail-cancel-btn').on('click', function () {
+        $('.admin_add1').attr('disabled')
+        $('.admin_add2').attr('disabled')
+        $('.city').attr('disabled')
+        $('.admin_state').attr('disabled')
+        $('.admin_zipcode').attr('disabled')
+        $('.admin_alt_phone').attr('disabled')
+
+
+        $('#adminEditBtn2').show()
+        $('.admin-mail-info-btns').hide()
+
+    })
+
+
+    $('#adminEditBtn1').on('click', function () {
+        $('.admin_first_name').removeAttr('disabled')
+        $('.admin_last_name').removeAttr('disabled')
+        $('.admin_email').removeAttr('disabled')
+        $('.admin_confirm_email').removeAttr('disabled')
+        $('.phone').removeAttr('disabled')
+
+        $('#adminEditBtn1').hide()
+        $('.admin-info-btns').show()
+
+    })
+
+    $('#adminEditBtn2').on('click', function () {
+        $('.admin_add1').removeAttr('disabled')
+        $('.admin_add2').removeAttr('disabled')
+        $('.city').removeAttr('disabled')
+        $('.admin_state').removeAttr('disabled')
+        $('.admin_zipcode').removeAttr('disabled')
+        $('.admin_alt_phone').removeAttr('disabled')
+
+        $('#adminEditBtn2').hide()
+        $('.admin-mail-info-btns').show()
+    })
+
+
+
+
 
     $(document).on("click", ".action-btn", function () {
         var sibling = $(this).siblings(".actions-menubar:visible").length;
@@ -310,26 +369,32 @@ $(document).ready(function () {
 
     // ********************* Filtering AccountType in User Access Page ***********************
 
-    $('#accountType').on('change', function () {
-        var accountType = $(this).val();
-        var token = $('meta[name="csrf-token"]').attr('content')
+    // $('#accountType').on('change', function () {
+    //     var accountType = $(this).val();
+     
+    //     var token = $('meta[name="csrf-token"]').attr('content')
 
-        $.ajax({
-            url: "/user-access/filter",
-            method: "POST",
-            data: {
-                accountType: accountType,
-                "_token": token
-            },
-            success: function (response) {
-                $('#user-access-table').html(response.html);
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        })
-    })
+    //     $.ajax({
+    //         url: "/user-access/filter",
+    //         method: "POST",
+    //         data: {
+    //             accountType: accountType,
+    //             "_token": token
+    //         },
+    //         success: function (response) {
+    //             $('#user-access-table').html(response.html);
+    //         },
+    //         error: function (error) {
+    //             console.error(error);
+    //         }
+    //     })
+    // })
+
+
+
 });
+
+
 
 // ************************************************************************************
 
@@ -340,7 +405,7 @@ $(".role-selected").on("change", function () {
     let role = $(this).val();
     $.ajax({
         url: "/fetch-roles/" + role,
-        type: "GET",
+        method: "GET",
         success: function (data) {
             $(".menu-section").empty();
             data.forEach(function (menu) {
@@ -362,6 +427,35 @@ $(".role-selected").on("change", function () {
 
 
 
+
+
+function fetchPaginatedUserAccessData(selectedAccount, page) {
+    var token = $('meta[name="csrf-token"]').attr('content')
+    $.ajax({
+        url: '/user-access/filter?page=' + page,
+        type: 'POST',
+        data: {
+            selectedAccount: selectedAccount,
+            "_token": token
+        },
+        success: function (data) {
+            $('#user-access-data').html(data.html); // Update results area
+        }
+    });
+}
+
+$(document).on('click', '.pagination .page-link', function (event) {
+    event.preventDefault();
+    var page = $(this).text();
+    var selectedAccount = $("#accountType").val();
+    fetchPaginatedUserAccessData(selectedAccount, page);
+});
+
+$('#accountType').on('change', function (event) {
+    event.preventDefault();
+    var selectedAccount = $(this).val();
+    fetchPaginatedUserAccessData(selectedAccount, 1);
+});
 
 
 

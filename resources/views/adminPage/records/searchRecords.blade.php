@@ -8,7 +8,7 @@
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
 <a href="{{route('providerLocation')}}">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
@@ -40,9 +40,8 @@
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
-        <a href="#" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
+        <a href="" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
     </div>
-
 
     <div class="section">
         <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">

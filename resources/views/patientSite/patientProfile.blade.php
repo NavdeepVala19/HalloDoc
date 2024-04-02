@@ -1,4 +1,4 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientProfile.css') }}">
@@ -9,7 +9,9 @@
 <a href="" class="active-link">Profile</a>
 @endsection
 
-@section('content')
+@section('patientSiteContent')
+
+
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">User Profile</h2>
@@ -24,7 +26,7 @@
         @csrf
         <h3>General Information </h3>
 
-        <!-- <input type="hidden" name="email" value="{{Session::get('email')}}"> -->
+        <input type="hidden" name="email" value="{{Session::get('email')}}">
 
 
         <div class="grid-2">

@@ -1,10 +1,11 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/conciergeRequest.css') }}">
 @endsection
 
-@section('content')
+@section('patientSiteContent')
+
 <div class="container">
 
     <!-- this div is for back button -->
@@ -19,7 +20,7 @@
 
         <!-- Concierge Information -->
 
-        <form action="{{ route('conciergeRequests') }}" method="post">
+        <form action="{{ route('conciergeRequests') }}" method="post" id="patientRequestForm">
             @csrf
 
             <div class="Concierge-inputs">
@@ -30,14 +31,16 @@
                         <h4>Concierge Information</h4>
                     </div>
 
+                    <input type="hidden" name="request_type" value="4">
+
                     <div class="row Concierge-row1">
-                        <div class="col-md family-col1">
+                        <div class="col-md family-col1 patient">
                             <input type="text" placeholder="Your First Name" class="form-control concierge-first-name-text @error('concierge_first_name') is-invalid @enderror" name="concierge_first_name" id="" aria-describedby="emailHelp" value="{{ old('concierge_first_name') }}">
                             @error('concierge_first_name')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md Concierge-col2">
+                        <div class="col-md Concierge-col2 patient">
                             <input type="text" placeholder="Your Last Name" class="form-control concierge-last-name-text @error('concierge_last_name') is-invalid @enderror" name="concierge_last_name" id="" aria-describedby="emailHelp" value="{{ old('concierge_last_name') }}">
                             @error('concierge_last_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -47,13 +50,13 @@
 
 
                     <div class="row Concierge-row2">
-                        <div class="col-md Concierge-col1">
+                        <div class="col-md Concierge-col1 patient">
                             <input type="tel" placeholder="Mobile Number" class="form-control concierge-mobile-text @error('concierge_mobile') is-invalid @enderror" name="concierge_mobile" value="{{ old('concierge_mobile') }}">
                             @error('concierge_mobile')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md Concierge-col2">
+                        <div class="col-md Concierge-col2 patient">
                             <input type="email" placeholder="Your Email" class="form-control concierge-email-text @error('concierge_email') is-invalid @enderror" name="concierge_email" id="" aria-describedby="emailHelp" value="{{ old('concierge_email') }}">
                             @error('concierge_email')
                             <div class="text-danger">{{ $message }}</div>
@@ -64,7 +67,7 @@
 
                     <div class="row Concierge-row3">
 
-                        <div class="col-md Concierge-col3 me-4">
+                        <div class="col-md Concierge-col3 me-4 patient">
                             <input type="text" placeholder="Hotel/Property Name" name="concierge_hotel_name" class="form-control hotel-text w-50 @error('concierge_hotel_name') is-invalid @enderror" id="exampleInputPassword1" value="{{ old('concierge_hotel_name') }}">
                             @error('concierge_hotel_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -87,13 +90,13 @@
                     </div>
 
                     <div class="row patient-location-row1">
-                        <div class="col-md patient-location-col1">
+                        <div class="col-md patient-location-col1 patient">
                             <input type="text" placeholder="Street" class="form-control patient-location-street-text @error('concierge_street') is-invalid @enderror" name="concierge_street" id="concierge_street" value="{{ old('concierge_street') }}">
                             @error('concierge_street')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md patient-location-col2">
+                        <div class="col-md patient-location-col2 patient">
                             <input type="text" placeholder="City" class="form-control patient-location-city-text @error('concierge_city') is-invalid @enderror" name="concierge_city" id="concierge_city" value="{{ old('concierge_city') }}">
                             @error('concierge_city')
                             <div class="text-danger">{{ $message }}</div>
@@ -103,13 +106,13 @@
 
 
                     <div class="row patient-location-row2">
-                        <div class="col-md patient-location-col1">
+                        <div class="col-md patient-location-col1 patient">
                             <input type="text" placeholder="State" class="form-control patient-location-state-text @error('concierge_state') is-invalid @enderror" name="concierge_state" id="concierge_state" value="{{ old('concierge_state') }}">
                             @error('concierge_state')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md patient-location-col2">
+                        <div class="col-md patient-location-col2 patient">
                             <input type="text" placeholder="Zip Code" class="form-control patient-location-zipcode-text @error('concierge_zip_code') is-invalid @enderror" name="concierge_zip_code" id="concierge_zip_code" value="{{ old('concierge_zip_code') }}">
                             @error('concierge_zip_code')
                             <div class="text-danger">{{ $message }}</div>
@@ -144,7 +147,7 @@
                     <!--  Patient FirstName, LastName ,DOB Field  -->
 
                     <div class="row patient-details-row1">
-                        <div class="col-md patient-details-col1">
+                        <div class="col-md patient-details-col1 patient">
                             <input type="text" placeholder="FirstName" class="form-control first-name-text @error('first_name') is-invalid @enderror" id="" aria-describedby="helpId" name="first_name" value="{{ old('first_name') }}">
                             @error('first_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -153,7 +156,7 @@
                         </div>
 
 
-                        <div class="col-md patient-details-col2">
+                        <div class="col-md patient-details-col2 patient">
                             <input type="text" placeholder="LastName" class="form-control last-name-text @error('last_name') is-invalid @enderror" id="" aria-describedby="helpId" name="last_name" value="{{ old('last_name') }}">
                             @error('last_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -165,7 +168,7 @@
 
                     <div class="row patient-details-row2">
 
-                        <div class="col-md patient-details-col3 me-4">
+                        <div class="col-md patient-details-col3 me-4 patient">
                             <label for="">Date of Birth</label>
                             <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 @error('date_of_birth') is-invalid @enderror" id="" name="date_of_birth" value="{{ old('date_of_birth') }}">
                             @error('date_of_birth')
@@ -185,7 +188,7 @@
                         </div>
 
                         <div class="row patient-contact-row1">
-                            <div class="col-md patient-contact-col1">
+                            <div class="col-md patient-contact-col1 patient">
                                 <input type="email" placeholder="Email" class="form-control email-text @error('email') is-invalid @enderror" id="" aria-describedby="helpId" name="email" value="{{ old('email') }}">
                                 @error('email')
                                 <div class="text-danger" role="alert">{{ $message }}</div>
@@ -193,7 +196,7 @@
                             </div>
 
 
-                            <div class="col-md patient-contact-col2">
+                            <div class="col-md patient-contact-col2 patient">
 
                                 <input type="tel" placeholder="Mobile No" class="form-control mobile-text @error('phone_number') is-invalid @enderror" id="" aria-describedby="helpId" name="phone_number" value="{{ old('phone_number') }}">
                                 @error('phone_number')
@@ -256,5 +259,6 @@
 @endsection
 
 @section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

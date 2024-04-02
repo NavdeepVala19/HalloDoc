@@ -14,6 +14,10 @@ class Provider extends Model
     
     protected $table = 'provider';
 
+    protected $fillable = [
+        'is_notifications',
+    ];
+
 
     public function users()
     {

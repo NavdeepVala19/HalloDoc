@@ -2,7 +2,6 @@
 <html lang="en">
 
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,14 +19,17 @@
 </head>
 
 <body>
-    {{-- HEADER SECTION --}}
-    @include('layouts.patientHeader')
+    <div class="wrapper">
+        {{-- HEADER SECTION --}}
+        @include('layouts.patientSiteHeader')
 
+        <div class="main-container">
+            @yield('patientSiteContent')
+        </div>
 
-    @yield('patientContent')
-
-    {{-- FOOTER SECTION --}}
-    @include('layouts.patientFooter')
+        {{-- FOOTER SECTION --}}
+        @include('layouts.footer')
+    </div>
 
 
     {{-- Include script links from links.script blade file --}}

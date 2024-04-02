@@ -9,7 +9,7 @@
 @section('nav-links')
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
 <a href="{{route('providerLocation')}}" class="active-link">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
@@ -46,11 +46,7 @@
         <a href="{{ route('admin.dashboard') }}" class="primary-empty"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
-
     <div id="map-container" style="width:100%;height:660px" class="mt-3">
-
-        <!-- <iframe src="https://www.google.com/maps?q=[ADDRESS]&output=embed" style="width:100%;height:660px"></iframe> -->
-
         <iframe id="map-iframe" style="width:100%;height:660px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
     </div>
 
@@ -58,44 +54,32 @@
 </div>
 
 
-
-@endsection
-
-
-@section('script')
 <script>
-  $(document).ready(function() {
-
-        function updateMap(providers) {
-
-            //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
-
-
-            var addresses = @json(providers);
+    function updateMap(providers) {
+        //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
+        var addresses = providers;
+        var mapUrl = "https://www.google.com/maps?q=";
 
 
-            var mapUrl = "https://www.google.com/maps?q=";
+        // This forEach takes callback function as an argument and 
+        // callback function takes 2 parameters 1st is provider(the current element of array) and 2nd is index(the index of current element)
+
+        addresses.forEach(function(provider, index) {
+            if (index !== 0) {
+                mapUrl += "+";
+            }
+
+            mapUrl += encodeURIComponent(provider.address1 + ", " + provider.address2 + ", " + provider.city + ", " + provider.zipcode);
+        });
+
+        document.getElementById('map-iframe').src = mapUrl + "&output=embed";
+    }
 
 
-            // This forEach takes callback function as an argument and 
-            // callback function takes 2 parameters 1st is provider(the current element of array) and 2nd is index(the index of current element)
-
-            addresses.forEach(function(provider, index) {
-                if (index !== 0) {
-                    mapUrl += "+";
-                }
-
-                mapUrl += encodeURIComponent(provider.address1 + ", " + provider.address2 + ", " + provider.city + ", " + provider.zipcode);
-            });
-
-            document.getElementById('map-iframe').src = mapUrl + "&output=embed";
-        }
-
-        // Call the function to update the map when the page loads
-        updateMap('{{$providers }}');
-
-    })
+    // Call the function to update the map when the page loads
+    updateMap(<?php echo json_encode($providers); ?>);
 </script>
 
-<script defer src="{{ asset('assets/adminProvider/providerMapLocation.js') }}"></script>
+
+
 @endsection

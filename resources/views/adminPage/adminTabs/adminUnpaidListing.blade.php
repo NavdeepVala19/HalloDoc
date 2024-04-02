@@ -10,36 +10,7 @@
     {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
-
-@section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation ">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
-@endsection
+@include('adminPage.adminTabs.adminHeader')
 
 @section('content')
     {{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement
@@ -50,127 +21,14 @@ patient's email address and phone number. Once the patient accepts the agreement
 
     <div class="overlay"></div>
 
-    {{-- Send Agreement Pop-up --}}
-    {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
-pending state, providers need to send an agreement link to patients. --}}
-    <div class="pop-up send-agreement">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send Agreement</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-3">
-            <div>
-                <span class="request-detail">Show the name and color of request (i.e. patinet, family, business,
-                    concierge)</span>
-                <p class="m-2">To send Agreement please make sure you are updating the correct contact information below
-                    for
-                    the
-                    responsible party.
-                </p>
-            </div>
-            <form action="{{ route('send.agreement') }}" method="POST">
-                @csrf
-                <input type="text" class="send-agreement-id" name="request_id" value="" hidden>
-                <div>
-                    <div class="form-floating ">
-                        <input type="text" name="phone_number" class="form-control" id="floatingInput"
-                            placeholder="Phone Number">
-                        <label for="floatingInput">Phone Number</label>
-                    </div>
-                    <div class="form-floating ">
-                        <input type="email" name="email" class="form-control" id="floatingInput"
-                            placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
-                    </div>
-                </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <input type="submit" value="Send" class="primary-fill send-case">
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-        </form>
-    </div>
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
-                <label for="floatingInput">First Name</label>
-                @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-                @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-            @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
-            </div>
-
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
-    {{-- Transfer Request --}}
-    <div class="pop-up transfer-request">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Transfer Request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-            <div class="form-floating">
-                <textarea class="form-control transfer-description" placeholder="injury" id="floatingTextarea2"></textarea>
-                <label for="floatingTextarea2">Description</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Submit</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
+    @include('popup.adminSendLink')
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3 " id="nav-tab">
@@ -304,8 +162,8 @@ pending state, providers need to send an agreement link to patients. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'unpaid']) }}"
-                        data-category="all" class="btn-all filter-btn">All</a>
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'unpaid']) }}" data-category="all"
+                        class="btn-all filter-btn">All</a>
                     <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'unpaid']) }}"
                         data-category="patient" class="d-flex gap-2 filter-btn"> <i
                             class="bi bi-circle-fill green"></i>Patient</a>
@@ -342,7 +200,31 @@ pending state, providers need to send an agreement link to patients. --}}
                                     </td>
                                     <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
                                     <td>{{ $case->created_at }}</td>
-                                    <td>{{ $case->phone_number }}</td>
+                                    <td class="mobile-column">
+                                        @if ($case->request_type_id == 1)
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                        @else
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                            <div class="listing-mobile-container">
+                                                <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                ({{ $case->requestType->name }})
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>
                                         {{ $case->requestClient->street }},
                                         {{ $case->requestClient->city }},{{ $case->requestClient->state }}
@@ -454,4 +336,6 @@ pending state, providers need to send an agreement link to patients. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

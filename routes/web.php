@@ -71,7 +71,7 @@ Route::post('/business_create', [businessRequestController::class, 'create'])->n
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
 route::post('/patientloggedIn', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
 
-route::post('/patient_logout', [patientLoginController::class, 'logout'])->name('logout');
+route::get('/patient_logout', [patientLoginController::class, 'logout'])->name('patientLogOut');
 //  *******************************************************************************************************
 
 
@@ -171,7 +171,7 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 // route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 
-route::get('/admin/providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
+route::get('/admin-providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
 route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 
@@ -183,11 +183,22 @@ route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editPr
 route::post('/admin/provider-updated/{id}', [AdminProviderController::class, 'updateAdminProviderProfile'])->name('adminUpdatedProvider');
 
 
+route::post('/admin/provider-updated-account/{id}', [AdminProviderController::class, 'updateProviderAccountInfo'])->name('updateProviderAccountInfo');
+route::post('/admin/provider-updated-info/{id}', [AdminProviderController::class, 'providerInfoUpdate'])->name('providerInfoUpdate');
+route::post('/admin/provider-updated-mail-info/{id}', [AdminProviderController::class, 'providerMailInfoUpdate'])->name('providerMailInfoUpdate');
+route::post('/admin/provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
+route::post('/admin/provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
+
+
+
+
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
-route::post('/regions', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+route::post('/admin/providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 
+route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
 
+Route::post('/admin/providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 
 
 route::post('admin/new/request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
@@ -216,16 +227,20 @@ route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])
 
 
 
-route::get('/admin/providerLocation', [AdminProviderController::class, 'providerLocation'])->name('providerLocation');
-
-
-
 Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
 Route::get('/user-access-edit/{id}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
 
 
+route::get('/admin/profileEdit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
 route::get('/admin/profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
+
 route::post('/admin/profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
+
+
+
+route::post('/admin/adminChangePassword/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('adminChangePassword');
+route::post('/admin/adminInfoEdit/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('adminInfoUpdate');
+route::post('/admin/adminMailEdit/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('adminMailInfoUpdate');
 
 
 

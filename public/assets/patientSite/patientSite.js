@@ -145,6 +145,26 @@ for (i = 0; i < acc.length; i++) {
 
 
 
+// ***************** Fetching regions from regions table ******************
+$.ajax({
+    url: "/admin-new",
+    type: "GET",
+    success: function (data) {
+
+        data.forEach(function (region) {
+            $(".listing-region").append(
+                '<option value="' + region.id + '">' + region.region_name + "</option>"
+            );
+        });
+    },
+    error: function (error) {
+        console.error(error);
+    },
+
+});
+
+
+
 $(document).ready(function () {
 
     $('#back-btn').click(function () {
@@ -180,187 +200,378 @@ $(document).ready(function () {
 
 
 // ** This code is for client side validation
-// $(document).ready(function () {
+
+$(document).ready(function () {
+
+    $.validator.addMethod("phoneUS", function (phone_number, element) {
+        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
+    }, "Please enter a valid phone number.");
 
 
-//     $('#patientProfileEditForm').on('submit', function (e) {
-
-//         var focusSet = false;    // this variable is for set and remove focus on input fields
-
-
-// ** Set email validation
-// if (!$('.email').val()) {
-//     if ($(".email").next(".validation").length == 0) // only add if not added
-//     {
-//         $(".email").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter email address</div>");
-//     }
-//     e.preventDefault(); // prevent form from POST to server
-//     $('.email').focus();
-//     focusSet = true;
-// } else {
-//     $(".email").next(".validation").remove(); // remove it
-// }
-
-// var emailAddress = $('.email').val();
-
-// if (emailAddress.length < 2 || emailAddress.length > 30) {
-//     if ($(".email").next(".validation").length == 0) {
-//         $(".email").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Email must be between 2 and 30 characters and sholud be </div>");
-//     }
-//     if (!focusSet) {  // Focus on the first failing field
-//         $('.email').focus();
-//         focusSet = true;
-//     }
-//     e.preventDefault();
-// } else {
-//     $(".email").next(".validation").remove();
-// }
+    $.validator.addMethod("city", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid city name.");
 
 
-//         // ** Set firstname validation 
-//         if (!$('.first_name').val()) {
-//             if ($(".first_name").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".first_name").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Firstname must be between 2 and 30 characters</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.first_name').focus();
-//             focusSet = true;
-//         } else {
-//             $(".first_name").next(".validation").remove(); // remove it
-//         }
-
-//         let firstName = $('.firstname').val();
-//         console.log(firstName);
-
-//         if (firstName.length < 2 || firstName.length > 30) {
-//             if ($(".firstname").next(".validation").length == 0) {
-//                 $(".firstname").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Firstname must be between 2 and 30 characters</div>");
-//             }
-//             if (!focusSet) {  // Focus on the first failing field
-//                 $('.firstname').focus();
-//                 focusSet = true;
-//             }
-//             e.preventDefault();
-//         } else {
-//             $(".firstname").next(".validation").remove();
-//         }
+    $.validator.addMethod("state", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid state name.");
 
 
-//         // ** Set lastname validation 
-//         if (!$('.last_name').val()) {
-//             if ($(".last_name").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".last_name").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter last_name</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.last_name').focus();
-//             focusSet = true;
-//         } else {
-//             $(".last_name").next(".validation").remove(); // remove it
-//         }
-
-//         var lastName = $('.last_name').val();
-
-//         if (lastName.length < 2 || lastName.length > 30) {
-//             if ($(".last_name").next(".validation").length == 0) {
-//                 $(".last_name").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Lastname must be between 2 and 30 characters</div>");
-//             }
-//             if (!focusSet) {  // Focus on the first failing field
-//                 $('.last_name').focus();
-//                 focusSet = true;
-//             }
-//             e.preventDefault();
-//         } else {
-//             $(".last_name").next(".validation").remove();
-//         }
+    $.validator.addMethod("zipcode", function (value, element) {
+        return value.length == 6 && /\d/.test(value);
+    }, "Please enter a valid zipcode.");
 
 
-
-//         // ** Set date of birth validation 
-//         if (!$('.date_of_birth').val()) {
-//             if ($(".date_of_birth").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".date_of_birth").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter date of birth</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.date_of_birth').focus();
-//             focusSet = true;
-//         } else {
-//             $(".date_of_birth").next(".validation").remove(); // remove it
-//         }
-
-
-//         // ** Set phone number validation 
-//         if (!$('.phone_number').val()) {
-//             if ($(".phone_number").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".phone_number").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter phone_number</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.phone_number').focus();
-//             focusSet = true;
-//         } else {
-//             $(".phone_number").next(".validation").remove(); // remove it
-//         }
-
-
-//         // ** Set street validation 
-//         if (!$('.street').val()) {
-//             if ($(".street").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".street").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter street</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.street').focus();
-//             focusSet = true;
-//         } else {
-//             $(".street").next(".validation").remove(); // remove it
-//         }
-
-
-//         // ** Set city validation 
-//         if (!$('.city').val()) {
-//             if ($(".city").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".city").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter city</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.city').focus();
-//             focusSet = true;
-//         } else {
-//             $(".city").next(".validation").remove(); // remove it
-//         }
-
-
-//         // ** Set state validation 
-//         if (!$('.state').val()) {
-//             if ($(".state").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".state").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter state</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.state').focus();
-//             focusSet = true;
-//         } else {
-//             $(".state").next(".validation").remove(); // remove it
-//         }
-
-
-//         // ** Set zipcode validation 
-//         if (!$('.zipcode').val()) {
-//             if ($(".zipcode").next(".validation").length == 0) // only add if not added
-//             {
-//                 $(".zipcode").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter zipcode</div>");
-//             }
-//             e.preventDefault(); // prevent form from POST to server
-//             $('.zipcode').focus();
-//             focusSet = true;
-//         } else {
-//             $(".zipcode").next(".validation").remove(); // remove it
-//         }
-
-//     })
-// })
+    $('#patientProfileEditForm').validate({
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30
+            },
+            phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            street: {
+                required: true,
+                minlength: 2,
+                maxlength: 100
+            },
+            city: {
+                required: true,
+                minlength: 2,
+                maxlength: 40,
+                city: true
+            },
+            state: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                state: true
+            },
+            zipcode: {
+                required: true,
+                zipcode: true
+            },
+        },
+        messages: {
+            email: {
+                required: "Please enter a valid email format (e.g., user@example.com).",
+            },
+            first_name: {
+                required: "Please enter a firstname between 2 and 30 character",
+            },
+            last_name: {
+                required: "Please enter a lastname between 2 and 30 character",
+            },
+            phone_number: {
+                required: "Please enter a mobile number",
+                phoneUS: "Please enter valid phone number format...."
+            },
+            street: {
+                required: "Please enter a street",
+            },
+            city: {
+                required: "Please enter a city",
+            },
+            state: {
+                required: "Please enter a state",
+            },
+            zipcode: {
+                required: "Please enter a zipcode",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+    });
+});
 
 
+
+
+// *** Client side validation of patient Request
+
+
+$(document).ready(function () {
+
+    $.validator.addMethod("phoneUS", function (phone_number, element) {
+        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
+    }, "Please enter a valid phone number.");
+
+
+    $.validator.addMethod("city", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid city name.");
+
+
+    $.validator.addMethod("state", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid state name.");
+
+
+    $.validator.addMethod("zipcode", function (value, element) {
+        return value.length == 6 && /\d/.test(value);
+    }, "Please enter a valid zipcode.");
+
+
+    $('#patientRequestForm').validate({
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            date_of_birth: {
+                required: true,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30
+            },
+            phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            street: {
+                required: true,
+                minlength: 2,
+                maxlength: 100
+            },
+            city: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                city: true
+            },
+            state: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                state: true
+            },
+            zipcode: {
+                required: true,
+                zipcode: true
+            },
+            family_first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+
+            family_last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            family_phone_number: {
+                required: true,
+                phoneUS: "Please enter valid phone number format...."
+            },
+            family_email: {
+                required: true,
+                email: true,
+            },
+            family_relation: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            concierge_first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            concierge_last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            concierge_mobile: {
+                required: true,
+                phoneUS: "Please enter valid phone number format...."
+            },
+            concierge_email: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            concierge_hotel_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            concierge_street: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            concierge_city: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                city:true
+            },
+            concierge_state: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                state: true
+            },
+            concierge_zip_code: {
+                required: true,
+                zipcode: true
+            },
+            business_first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            business_last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            business_mobile: {
+                required: true,
+                phoneUS: true
+            },
+            business_email: {
+                required: true,
+                email: true
+            },
+            business_property_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+        },
+        messages: {
+            email: {
+                required: "Please enter a valid email format (e.g., user@example.com).",
+            },
+            first_name: {
+                required: "Please enter a firstname between 2 and 30 character",
+            },
+            last_name: {
+                required: "Please enter a lastname between 2 and 30 character",
+            },
+            date_of_birth: {
+                required: "Please enter a date of birth",
+            },
+            phone_number: {
+                required: "Please enter a mobile number",
+                phoneUS: "Please enter valid phone number format...."
+            },
+            street: {
+                required: "Please enter a street",
+            },
+            city: {
+                required: "Please enter a city",
+            },
+            state: {
+                required: "Please enter a state",
+            },
+            zipcode: {
+                required: "Please enter a zipcode",
+            },
+            family_first_name: {
+                required: "Please enter a firstname between 2 and 30 character",
+            },
+            family_last_name: {
+                required: "Please enter a lastname between 2 and 30 character",
+            },
+            family_phone_number: {
+                required: "Please enter a mobile number",
+                phoneUS: "Please enter valid phone number format...."
+            },
+            family_relation: {
+                required: "Please enter a relation ",
+            },
+            family_email: {
+                required: "Please enter a valid email format (e.g., user@example.com).",
+            },
+            concierge_first_name: {
+                required: "Please enter a firstname between 2 and 30 character",
+            },
+            concierge_mobile: {
+                required: "Please enter a mobile number",
+                phoneUS: "Please enter valid phone number format...."
+            },
+            concierge_email: {
+                required: "Please enter a valid email format (e.g., user@example.com).",
+            },
+            concierge_last_name: {
+                required: "Please enter a lastname between 2 and 30 character",
+            },
+            concierge_hotel_name: {
+                required: "Please enter a hotel name",
+            },
+            concierge_street: {
+                required: "Please enter a street",
+            },
+            concierge_city: {
+                required: "Please enter a city",
+            },
+            concierge_state: {
+                required: "Please enter a state",
+            },
+            concierge_zip_code: {
+                required: "Please enter a zipcode",
+            },
+            business_first_name: {
+             required: "Please enter a firstname between 2 and 30 character",
+            },
+            business_last_name: {
+                required: "Please enter a lastname between 2 and 30 character",
+            },
+            business_mobile: {
+                required: "Please enter a mobile number",
+                phoneUS: "Please enter valid phone number format...."
+            },
+            business_email: {
+                required: "Please enter a valid email format (e.g., user@example.com).",
+            },
+            business_property_name: {
+                required: "Please enter a business/property name",
+            },
+
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.patient').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+    });
+});

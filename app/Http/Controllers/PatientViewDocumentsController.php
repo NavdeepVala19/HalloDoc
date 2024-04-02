@@ -56,7 +56,6 @@ class PatientViewDocumentsController extends Controller
 
     public function downloadOne($id = null)
     {
-
         $file = RequestWiseFile::where('id', $id)->first();
         $path = (public_path() . '/storage/' . $file->file_name);
 

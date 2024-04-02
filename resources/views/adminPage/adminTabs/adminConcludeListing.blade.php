@@ -5,83 +5,26 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
-
-
 @section('username')
     {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
 
-@section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation ">
-        <button class="record-btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
-@endsection
+@include('adminPage.adminTabs.adminHeader')
 
 @section('content')
     {{-- This page will display patient requests for which medical is completed by the provider. Once the request is
 transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
 
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
+
+    {{-- Order Created Successfully Pop-up Message --}}
+    @include('alertMessages.orderPlacedSuccess')
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
-                <label for="floatingInput">First Name</label>
-                @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-                @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-            @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
-    </div>
+    @include('popup.adminSendLink')
 
     {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
     {{-- The Encounter form should redirect to conclude page and will show these pop-up --}}
@@ -100,30 +43,7 @@ transferred into conclude state providers can finally conclude care for the pati
     </div>
 
     {{-- Request DTY Support pop-up ->  --}}
-    <div class="pop-up request-support">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Request Support</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('sendRequestSupport') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-
-                <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to
-                    Requests</p>
-
-                <div class="form-floating ">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
-                        style="height: 120px"></textarea>
-                    <label for="floatingTextarea2">Message</label>
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.requestDTYSupport')
 
     <nav>
         <div class="nav nav-tabs state-grid-3" id="nav-tab">
@@ -160,8 +80,7 @@ transferred into conclude state providers can finally conclude care for the pati
                 </div>
             </a>
 
-            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link active"
-                id="nav-conclude-tab">
+            <a href="{{ route('admin.status', ['status' => 'conclude']) }}" class="nav-link active" id="nav-conclude-tab">
                 <div
                     class="case case-conclude active p-1 ps-3 d-flex flex-column justify-content-between align-items-start">
                     <span>
@@ -244,8 +163,7 @@ transferred into conclude state providers can finally conclude care for the pati
 
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
-                <form
-                    action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
+                <form action="{{ route('searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
                     method="GET" class="d-flex align-items-center filter-section">
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
@@ -297,7 +215,31 @@ transferred into conclude state providers can finally conclude care for the pati
                                     <td>{{ $case->requestClient->date_of_birth }}</td>
                                     <td>{{ $case->first_name }} {{ $case->last_name }}</td>
                                     <td>{{ $case->created_at }}</td>
-                                    <td>{{ $case->phone_number }}</td>
+                                    <td class="mobile-column">
+                                        @if ($case->request_type_id == 1)
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                        @else
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                            <div class="listing-mobile-container">
+                                                <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                ({{ $case->requestType->name }})
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>{{ $case->requestClient->street }},
                                         {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     </td>
@@ -316,8 +258,9 @@ transferred into conclude state providers can finally conclude care for the pati
                                                     Notes</a>
                                                 <a href="{{ route('admin.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <button class="encounter-btn"><i
-                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
+                                                <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                                    class="encounter-form-btn"><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             </div>
                                         </div>
                                     </td>
@@ -397,9 +340,11 @@ transferred into conclude state providers can finally conclude care for the pati
                                     <a href={{ route('admin.view.note', $case->id) }}
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}" class="secondary-btn">View Uploads</a>
+                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
+                                        class="secondary-btn">View Uploads</a>
                                     <button class="secondary-btn encounter-btn">Encouter</button>
-                                    <a href="{{ route('admin.view.order', $case->id) }}" class="secondary-btn-2">Orders</a>
+                                    <a href="{{ route('admin.view.order', $case->id) }}"
+                                        class="secondary-btn-2">Orders</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>
@@ -416,4 +361,6 @@ transferred into conclude state providers can finally conclude care for the pati
 @endsection
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection
