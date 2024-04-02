@@ -236,7 +236,7 @@ class AdminController extends Controller
             'notes' => $request->reason
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('caseCancelled', 'Case Cancelled Successfully!');
     }
 
     // Admin Blocks patient

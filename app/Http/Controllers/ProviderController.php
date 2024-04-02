@@ -788,7 +788,7 @@ class ProviderController extends Controller
     public function viewConcludeCare($id)
     {
         $case = RequestTable::where('id', $id)->first();
-        $docs = RequestWiseFile::get();
+        $docs = RequestWiseFile::where('request_id', $id)->where('is_finalize', true)->get();
         return view('providerPage.concludeCare', compact('case', 'docs'));
     }
 

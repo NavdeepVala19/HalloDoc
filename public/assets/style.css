@@ -204,7 +204,7 @@ form > h3 {
 
 /******************************* COMMON STYLING FOR POP-UPs **************************************/
 .pop-up {
-    max-width: 500px;
+    width: 500px;
     background-color: #fff;
     border-radius: 10px;
     position: fixed;

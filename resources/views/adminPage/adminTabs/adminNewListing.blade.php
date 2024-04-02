@@ -43,6 +43,16 @@
         </div>
     @endif
 
+    {{-- Case Cancelled Successfully --}}
+    @if (session('caseCancelled'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseCancelled') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
 
