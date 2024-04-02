@@ -3,10 +3,7 @@
         font-family: "Poppins", sans-serif;
         font-weight: 400;
         font-style: normal;
-
     }
-
-
     /********************* Header CSS Start***********************/
 
     .footer-section {
@@ -94,8 +91,6 @@
 
 
     }
-
-
     /********************* Main Content CSS End***********************/
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">

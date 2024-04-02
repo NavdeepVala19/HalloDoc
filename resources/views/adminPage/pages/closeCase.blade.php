@@ -7,9 +7,40 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
-    <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="#">Invoicing</a></li>
+        </ul>
+    </div>
+    <a href="{{ route('admin.partners') }}">Partners</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Access
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+        </ul>
+    </div>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Records
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+        </ul>
+    </div>
 @endsection
 
 @section('content')
@@ -18,7 +49,8 @@
             <h1 class="heading">
                 Close Case
             </h1>
-            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.status', 'toclose') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
+                Back</a>
         </div>
 
 
@@ -37,7 +69,7 @@
                     </div>
 
                     <div>
-                        <button class="primary-empty">Create Invoice Through Quickbooks</button>
+                        {{-- <button class="primary-empty">Create Invoice Through Quickbooks</button> --}}
                     </div>
                 </div>
                 <h3>
@@ -106,7 +138,7 @@
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                        <button class="primary-empty"><i class="bi bi-telephone"></i></button>
+                        <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
                     </div>
                     <div class="form-floating ">
                         <input type="email" name="email" value="{{ $data->requestClient->email }}"
@@ -128,7 +160,7 @@
 
                 <div class="text-end new-buttons">
                     <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn">
-                    <button type="button" class="primary-empty cancel-edit-btn">Cancel</button>
+                    <a type="button" class="primary-empty cancel-edit-btn">Cancel</a>
                 </div>
             </div>
         </form>

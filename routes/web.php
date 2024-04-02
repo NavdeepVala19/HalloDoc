@@ -264,7 +264,7 @@ route::get('/admin/createAdmin', [AdminController::class, 'adminAccount']);
 
 
 
-// ******************************* NAVDEEP **********************************************
+// ******************************* NAVDEEP's Work **********************************************
 
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
 // Providers Dashboard page with New Users case listing
@@ -301,7 +301,7 @@ Route::post('/provider/store/notes', [ProviderController::class, 'storeNote'])->
 // VIEW UPLOADS PAGE
 // View Uploads (currently showing all the documents in requestWiseFile table)
 Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('provider.view.upload');
-Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument']);
+Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument'])->name('proivder.upload.doc');
 
 // download document uploaded in view Uploads / Conclude Care
 Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
@@ -320,7 +320,7 @@ Route::get('provider/view/case/{id?}', [ProviderController::class, 'viewCase'])-
 // VIEW SEND ORDER PAGE
 // Send Order active state provider
 Route::get('/view-order/{id?}', [ProviderController::class, 'viewOrder'])->name('provider.view.order');
-
+Route::post('/provider-send-order', [ProviderController::class, 'sendOrder'])->name('provider.send.order');
 
 // SEND LINK DASHBOARD PAGE
 // Send Agreement via email and sms, pending page
@@ -342,8 +342,11 @@ Route::get(
 // Data of the medical-form (encounter-form) -> Create data if no previous entries done, otherwise update form with current data
 Route::post('/medical-form', [ProviderController::class, 'encounterForm'])->name('encounter.form.data');
 
+// Encounter (Medical Form Finalized) by Provider
+Route::get('/encounter-finalized/{id}', [ProviderController::class, 'encounterFinalized'])->name('encounter.finalized');
+
 // Generate Pdf of the medical-form when finalized (IMPLEMENTATION REMAINING - once finalized, generate pdf and then the form should not be visible again, option to download the form)
-Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
+// Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
 // Download The medical-form when clicked from encounter finalized pop-up from conclude state
 Route::post('/download-medical-form', [ProviderController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 
@@ -408,6 +411,17 @@ Route::post('/admin/store/notes', [AdminController::class, 'storeNote'])->name('
 
 // Admin View Uploads
 Route::get('admin/view/uploads/{id}', [AdminController::class, 'viewUpload'])->name('admin.view.upload');
+Route::post('admin/view-uploads/{id?}', [AdminController::class, 'uploadDocument'])->name('admin.upload.doc');
+
+// ENCOUNTER FORM
+// Show Encounter Form when clicked on Encounter from Conclude State
+Route::get(
+    '/admin-encounter-form/{id?}',
+    [AdminController::class, 'encounterFormView']
+)->name('admin.encounter.form');
+
+Route::post('/admin-medical-form', [AdminController::class, 'encounterForm'])->name('admin.medical.data');
+
 
 // Clear Case by admin pending and close state
 Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');

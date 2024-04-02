@@ -5,9 +5,10 @@
 @endsection
 
 @section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="">My Schedule</a>
-    <a href="">My Profile</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="">Invoicing</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
@@ -23,7 +24,8 @@
     <div class="container form-container">
         <div class="heading-container d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Encounter Form</h1>
-            <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
+                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         {{-- Form Starts From Here --}}
@@ -88,19 +90,19 @@
 
                     <div class="grid-2">
                         <div class="form-floating">
-                            <textarea class="form-control note" name="present_illness_history" placeholder="injury" id="floatingTextarea2"> {{ $data->present_illness_history ?? '' }} </textarea>
+                            <textarea class="form-control note" name="present_illness_history" placeholder="injury" id="floatingTextarea2">{{ $data->present_illness_history ?? '' }}</textarea>
                             <label for="floatingTextarea2">History Of Present illness Or injury</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="medical_history" placeholder="Medical History" id="floatingTextarea2">  {{ $data->medical_history ?? '' }} </textarea>
+                            <textarea class="form-control note" name="medical_history" placeholder="Medical History" id="floatingTextarea2">{{ $data->medical_history ?? '' }}</textarea>
                             <label for="floatingTextarea2">Medical History</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="medications" placeholder="Medications" id="floatingTextarea2"> {{ $data->medications ?? '' }} </textarea>
+                            <textarea class="form-control note" name="medications" placeholder="Medications" id="floatingTextarea2">{{ $data->medications ?? '' }}</textarea>
                             <label for="floatingTextarea2">Medications</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="allergies" placeholder="allergies" id="floatingTextarea2"> {{ $data->allergies ?? '' }} </textarea>
+                            <textarea class="form-control note" name="allergies" placeholder="allergies" id="floatingTextarea2">{{ $data->allergies ?? '' }}</textarea>
                             <label for="floatingTextarea2">Allergies</label>
                         </div>
                     </div>
@@ -142,73 +144,72 @@
                         </div>
                         <div class="form-floating ">
                             <input type="text" name="pain" class="form-control" id="floatingInput"
-                                placeholder="pain" value=" {{ $data->pain ?? '' }}">
+                                placeholder="pain" value="{{ $data->pain ?? '' }}">
                             <label for="floatingInput">Pain</label>
                         </div>
                     </div>
 
                     <div class="grid-2">
                         <div class="form-floating">
-                            <textarea class="form-control note" name="heent" placeholder="Heent" id="floatingTextarea2"> {{ $data->heent ?? '' }} </textarea>
+                            <textarea class="form-control note" name="heent" placeholder="Heent" id="floatingTextarea2">{{ $data->heent ?? '' }}</textarea>
                             <label for="floatingTextarea2">Heent</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="cv" placeholder="cv" id="floatingTextarea2"> {{ $data->cv ?? '' }} </textarea>
+                            <textarea class="form-control note" name="cv" placeholder="cv" id="floatingTextarea2">{{ $data->cv ?? '' }}</textarea>
                             <label for="floatingTextarea2">CV</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="chest" placeholder="chest" id="floatingTextarea2"> {{ $data->chest ?? '' }} </textarea>
+                            <textarea class="form-control note" name="chest" placeholder="chest" id="floatingTextarea2">{{ $data->chest ?? '' }}</textarea>
                             <label for="floatingTextarea2">Chest</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="abd" placeholder="abd" id="floatingTextarea2"> {{ $data->abd ?? '' }} </textarea>
+                            <textarea class="form-control note" name="abd" placeholder="abd" id="floatingTextarea2">{{ $data->abd ?? '' }}</textarea>
                             <label for="floatingTextarea2">ABD</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="extr" placeholder="extr" id="floatingTextarea2"> {{ $data->extr ?? '' }} </textarea>
+                            <textarea class="form-control note" name="extr" placeholder="extr" id="floatingTextarea2">{{ $data->extr ?? '' }}</textarea>
                             <label for="floatingTextarea2">Extr</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="skin" placeholder="skin" id="floatingTextarea2"> {{ $data->skin ?? '' }} </textarea>
+                            <textarea class="form-control note" name="skin" placeholder="skin" id="floatingTextarea2">{{ $data->skin ?? '' }}</textarea>
                             <label for="floatingTextarea2">Skin</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="neuro" placeholder="neuro" id="floatingTextarea2"> {{ $data->neuro ?? '' }} </textarea>
+                            <textarea class="form-control note" name="neuro" placeholder="neuro" id="floatingTextarea2">{{ $data->neuro ?? '' }}</textarea>
                             <label for="floatingTextarea2">Neuro</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="other" placeholder="other" id="floatingTextarea2"> {{ $data->other ?? '' }} </textarea>
+                            <textarea class="form-control note" name="other" placeholder="other" id="floatingTextarea2">{{ $data->other ?? '' }}</textarea>
                             <label for="floatingTextarea2">Other</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="diagnosis" placeholder="diagnosis" id="floatingTextarea2"> {{ $data->diagnosis ?? '' }} </textarea>
+                            <textarea class="form-control note" name="diagnosis" placeholder="diagnosis" id="floatingTextarea2">{{ $data->diagnosis ?? '' }}</textarea>
                             <label for="floatingTextarea2">Diagnosis</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="treatment_plan" placeholder="Treatment Plan" id="floatingTextarea2"> {{ $data->treatment_plan ?? '' }} </textarea>
+                            <textarea class="form-control note" name="treatment_plan" placeholder="Treatment Plan" id="floatingTextarea2">{{ $data->treatment_plan ?? '' }}</textarea>
                             <label for="floatingTextarea2">Treatment Plan</label>
                         </div>
                         <div class="form-floating">
                             <textarea class="form-control note" name="medication_dispensed" placeholder="Medications Dispensed"
-                                id="floatingTextarea2"> {{ $data->medication_dispensed ?? '' }} </textarea>
+                                id="floatingTextarea2">{{ $data->medication_dispensed ?? '' }}</textarea>
                             <label for="floatingTextarea2">Medication Dispensed</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control note" name="procedure" placeholder="procedures" id="floatingTextarea2"> {{ $data->procedure ?? '' }} </textarea>
+                            <textarea class="form-control note" name="procedure" placeholder="procedures" id="floatingTextarea2">{{ $data->procedure ?? '' }}</textarea>
                             <label for="floatingTextarea2">Procedures</label>
                         </div>
                     </div>
                     <div class="form-floating">
-                        <textarea class="form-control note" name="followUp" placeholder="followup" id="floatingTextarea2"> {{ $data->followUp ?? '' }} </textarea>
+                        <textarea class="form-control note" name="followUp" placeholder="followup" id="floatingTextarea2">{{ $data->followUp ?? '' }}</textarea>
                         <label for="floatingTextarea2">Followup</label>
                     </div>
 
                     {{-- Three buttons at last --}}
                     <div class="button-section">
                         <input type="submit" value="Save Changes" class="primary-fill">
-                        <a href="{{ route('generate.pdf', ['id' => $id]) }}" type="button"
+                        <a href="{{ route('encounter.finalized', $id) }}" type="button"
                             class="finalize-btn">Finalize</a>
-
                         <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
                             class="primary-empty">Cancel</a>
                     </div>

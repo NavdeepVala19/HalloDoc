@@ -7,11 +7,19 @@
 @section('nav-links')
     <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="">My Profile</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
+    {{-- Document Upload Was Successfully --}}
+    @include('alertMessages.uploadDocSuccess')
+
+    {{-- Mail of All The selected Documents are sent --}}
+    @include('alertMessages.mailDocsSentSuccess')
+
+    {{-- No Records Found Error Message --}}
+    @include('alertMessages.noRecordFound')
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">
@@ -33,34 +41,55 @@
 
         <div class="section">
             <p>Patient Name</p>
-            <span class="patient-name">{{ $data->first_name }}</span>
-            <span class="confirmation-number">({{ $data->confirmation_number }})</span>
+            <span class="patient-name">{{ $data->first_name }} {{ $data->last_name }}</span>
+            <span class="confirmation-number">({{ $data->confirmation_no }})</span>
             <p>Check here to review and add files that you or the Client/Member has attached to the Request.</p>
 
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('proivder.upload.doc', $data->id) }}" method="POST" enctype="multipart/form-data"
+                id="uploadDocValidation">
                 @csrf
                 <div class="custom-file-input mb-4">
-                    <input type="text" class="form-control" placeholder="Select File" readonly>
-                    <label for="file-upload"><i class="bi bi-cloud-arrow-up me-2"></i><span
-                            class="upload-txt">Upload</span></label>
-                    <input type="file" name="document" onchange="this.form.submit()" id="file-upload" hidden>
+                    <input type="file" name="document" id="file-upload" hidden>
+                    <label for="file-upload"
+                        class="upload-label @error('document')
+                        is-invalid
+                    @enderror">
+                        Select File </label>
+                    <button type="submit" class="primary-fill upload-btn" id='uploadDocValidationBtn'>
+                        <i class="bi bi-cloud-arrow-up me-2"></i>
+                        <span class="upload-txt">Upload</span>
+                    </button>
+                    @error('document')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </form>
 
             <form action="{{ route('operations') }}" method="POST">
                 @csrf
+                <input type="text" name="requestId" value="{{ $data->id }}" hidden>
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h3>
                         Documents
                     </h3>
-                    <div>
+                    <div class="large-screen-btn">
                         <button type="submit" name="operation" value="download_all" class="primary-empty">Download
                             All</button>
                         <button type="submit" name="operation" value="delete_all" class="primary-empty">Delete All</button>
-                        <button class="primary-empty">Send Mail</button>
+                        <button type="submit" name="operation" value="send_mail" class="primary-empty">Send Mail</button>
+                    </div>
+                    <div class="small-screen-btn">
+                        <button type="submit" name="operation" value="download_all" class="primary-empty"><i
+                                class="bi bi-cloud-arrow-down-fill"></i></button>
+                        <button type="submit" name="operation" value="delete_all" class="primary-empty"><i
+                                class="bi bi-trash-fill"></i></button>
+                        <button type="submit" name="operation" value="send_mail" class="primary-empty"><i
+                                class="bi bi-envelope"></i></button>
                     </div>
                 </div>
-
+                @error('selected')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
                 <div class="table-responsive">
                     <table class="table table-hover ">
                         <thead class="table-secondary">
@@ -76,26 +105,52 @@
                         </thead>
                         <tbody>
                             @foreach ($documents as $document)
-                                <tr>
-                                    <td>
-                                        <input class="form-check-input child-checkbox" name="selected[]" type="checkbox"
-                                            value="{{ $document->id }}" id="flexCheckDefault">
-                                    </td>
-                                    <td>
-                                        <i class="bi bi-filetype-doc doc-symbol"></i>
-                                        {{ $document->file_name }}
-                                    </td>
-                                    <td>{{ $document->created_at }}</td>
-                                    <td class="d-flex align-items-center justify-content-center gap-2">
-                                        <a href="{{ route('download', ['id' => $document->id]) }}" class="primary-empty"><i
-                                                class="bi bi-cloud-download"></i></a>
-                                        <a href="{{ route('document.delete', ['id' => $document->id]) }}"
-                                            class="primary-empty"><i class="bi bi-trash"></i></a>
-                                    </td>
-                                </tr>
+                                @if ($document)
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input child-checkbox" name="selected[]" type="checkbox"
+                                                value="{{ $document->id }}" id="flexCheckDefault">
+                                        </td>
+                                        <td>
+                                            <i class="bi bi-filetype-doc doc-symbol"></i>
+                                            {{ $document->file_name }}
+                                        </td>
+                                        <td>{{ $document->created_at }}</td>
+                                        <td class="d-flex align-items-center justify-content-center gap-2">
+                                            <a href="{{ route('download', ['id' => $document->id]) }}"
+                                                class="primary-empty"><i class="bi bi-cloud-download"></i></a>
+                                            <a href="{{ route('document.delete', ['id' => $document->id]) }}"
+                                                class="primary-empty"><i class="bi bi-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+
+                <div class="mobile-listing">
+                    @foreach ($documents as $document)
+                        @if ($document)
+                            <div class="list">
+                                <div class="d-flex align-items-center gap-2">
+                                    <input class="form-check-input child-checkbox" name="selected[]" type="checkbox"
+                                        value="{{ $document->id }}" id="flexCheckDefault">
+                                    <span><i class="bi bi-filetype-doc doc-symbol"></i>
+                                        {{ $document->file_name }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    {{ $document->created_at }}
+                                </div>
+                                <div>
+                                    <a href="{{ route('download', ['id' => $document->id]) }}" class="primary-empty"><i
+                                            class="bi bi-cloud-download"></i></a>
+                                    <a href="{{ route('document.delete', ['id' => $document->id]) }}"
+                                        class="primary-empty"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
             </form>
         </div>

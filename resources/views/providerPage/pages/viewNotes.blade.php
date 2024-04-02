@@ -7,8 +7,8 @@
 @section('nav-links')
     <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="">My Profile</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
@@ -53,6 +53,22 @@
                                 at {{ $adminAssignedCase->created_at->format('H:i:s') }} :
                                 {{ $adminAssignedCase->notes }}
                             </span>
+                        @endif
+                        @if ($providerTransferedCase && $providerTransferedCase->provider)
+                            <div>Dr. {{ $providerTransferedCase->provider->first_name }}
+                                {{ $providerTransferedCase->provider->last_name }} transferred to Admin on
+                                {{ $providerTransferedCase->created_at->format('d-m-Y') }} at
+                                {{ $providerTransferedCase->created_at->format('H:i:s') }} :
+                                {{ $providerTransferedCase->notes }}
+                            </div>
+                        @endif
+                        @if ($adminTransferedCase && $adminTransferedCase->provider)
+                            <div>Admin transferred to Dr. {{ $adminTransferedCase->provider->first_name }}
+                                {{ $adminTransferedCase->provider->last_name }} on
+                                {{ $adminTransferedCase->created_at->format('d-m-Y') }} at
+                                {{ $adminTransferedCase->created_at->format('H:i:s') }} :
+                                {{ $adminTransferedCase->notes }}
+                            </div>
                         @endif
                     </div>
                 </div>

@@ -70,7 +70,7 @@ $(document).ready(function () {
     });
 
     // for Hiding Encounter pop-up on active listing page
-    $(".hide-popup-btn").on("click", function (event) {
+    $(".hide-popup-btn").click(function (event) {
         event.preventDefault();
         $(".pop-up").hide();
         $(".overlay").hide();
@@ -123,6 +123,11 @@ $(document).ready(function () {
                 '<i class="bi bi-circle-fill blue me-2"></i>Concierge'
             );
         }
+    });
+    // View Uploads File Upload Functionality
+    $("#file-upload").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(".upload-label").text(fileName);
     });
 });
 

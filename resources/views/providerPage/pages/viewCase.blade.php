@@ -6,16 +6,16 @@
 
 
 @section('nav-links')
-    <a href="{{ route('provider.dashboard') }}">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="">My Profile</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="d-flex align-items-center justify-content-center gap-2">
+            <div class="d-flex align-items-center justify-content-center gap-2 title-container">
                 <div>
                     <h1>New Request</h1>
                 </div>
@@ -32,7 +32,7 @@
                             ? 'active'
                             : 'conclude')),
             ) }}"
-                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+                class="primary-empty back-btn"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         <div class="section">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
 
-                <div class="text-end">
+                <div class="text-end button-section">
                     {{-- <button class="primary-fill">Assign</button> --}}
                     <a href="{{ route('provider.view.notes', $data->id) }}" class="primary-fill">View Notes</a>
                     <a href="{{ route(

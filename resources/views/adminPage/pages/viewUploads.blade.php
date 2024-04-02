@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
+    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
     <div class="dropdown record-navigation">
@@ -15,17 +15,25 @@
         <ul class="dropdown-menu records-menu">
             <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
+            <li><a class="dropdown-item" href="#">Invoicing</a></li>
         </ul>
     </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation ">
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Access
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+        </ul>
+    </div>
+    <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Records
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
@@ -35,6 +43,15 @@
 @endsection
 
 @section('content')
+    {{-- Document Upload Was Successfully --}}
+    @include('alertMessages.uploadDocSuccess')
+
+    {{-- Mail of All The selected Documents are sent --}}
+    @include('alertMessages.mailDocsSentSuccess')
+
+    {{-- No Records Found Error Message --}}
+    @include('alertMessages.noRecordFound')
+
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">
@@ -60,36 +77,54 @@
 
         <div class="section">
             <p>Patient Name</p>
-            <span class="patient-name">{{ $data->first_name }}</span>
-            <span class="confirmation-number">({{ $data->confirmation_number }})</span>
+            <span class="patient-name">{{ $data->first_name }} {{ $data->last_name }}</span>
+            <span class="confirmation-number">({{ $data->confirmation_no }})</span>
             <p>Check here to review and add files that you or the Client/Member has attached to the Request.</p>
 
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.upload.doc', $data->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="custom-file-input mb-4">
-                    <input type="text" class="form-control" placeholder="Select File" readonly>
-                    <label for="file-upload"><i class="bi bi-cloud-arrow-up me-2"></i><span
-                            class="upload-txt">Upload</span></label>
-                    <input type="file" name="document" onchange="this.form.submit()" id="file-upload" hidden>
+                    <input type="file" name="document" id="file-upload" hidden>
+                    <label for="file-upload"
+                        class="upload-label @error('document')
+                    is-invalid
+                @enderror">
+                        Select File </label>
+                    <button type="submit" class="primary-fill upload-btn">
+                        <i class="bi bi-cloud-arrow-up me-2"></i>
+                        <span class="upload-txt">Upload</span>
+                    </button>
+                    @error('document')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </form>
 
             <form action="{{ route('operations') }}" method="POST">
                 @csrf
-
-
+                <input type="text" name="requestId" value="{{ $data->id }}" hidden>
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h3>
                         Documents
                     </h3>
-                    <div>
+                    <div class="large-screen-btn">
                         <button type="submit" name="operation" value="download_all" class="primary-empty">Download
                             All</button>
                         <button type="submit" name="operation" value="delete_all" class="primary-empty">Delete All</button>
-                        <button class="primary-empty">Send Mail</button>
+                        <button type="submit" name="operation" value="send_mail" class="primary-empty">Send Mail</button>
+                    </div>
+                    <div class="small-screen-btn">
+                        <button type="submit" name="operation" value="download_all" class="primary-empty"><i
+                                class="bi bi-cloud-arrow-down-fill"></i></button>
+                        <button type="submit" name="operation" value="delete_all" class="primary-empty"><i
+                                class="bi bi-trash-fill"></i></button>
+                        <button type="submit" name="operation" value="send_mail" class="primary-empty"><i
+                                class="bi bi-envelope"></i></button>
                     </div>
                 </div>
-
+                @error('selected')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
                 <div class="table-responsive">
                     <table class="table table-hover ">
                         <thead class="table-secondary">
@@ -116,8 +151,8 @@
                                     </td>
                                     <td>{{ $document->created_at }}</td>
                                     <td class="d-flex align-items-center justify-content-center gap-2">
-                                        <a href="{{ route('download', ['id' => $document->id]) }}" class="primary-empty"><i
-                                                class="bi bi-cloud-download"></i></a>
+                                        <a href="{{ route('download', ['id' => $document->id]) }}"
+                                            class="primary-empty"><i class="bi bi-cloud-download"></i></a>
                                         <a href="{{ route('document.delete', ['id' => $document->id]) }}"
                                             class="primary-empty"><i class="bi bi-trash"></i></a>
                                     </td>
@@ -125,6 +160,29 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="mobile-listing">
+                    @foreach ($documents as $document)
+                        @if ($document)
+                            <div class="list">
+                                <div class="d-flex align-items-center gap-2">
+                                    <input class="form-check-input child-checkbox" name="selected[]" type="checkbox"
+                                        value="{{ $document->id }}" id="flexCheckDefault">
+                                    <span><i class="bi bi-filetype-doc doc-symbol"></i>
+                                        {{ $document->file_name }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    {{ $document->created_at }}
+                                </div>
+                                <div>
+                                    <a href="{{ route('download', ['id' => $document->id]) }}" class="primary-empty"><i
+                                            class="bi bi-cloud-download"></i></a>
+                                    <a href="{{ route('document.delete', ['id' => $document->id]) }}"
+                                        class="primary-empty"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
             </form>
         </div>

@@ -1,11 +1,13 @@
 $(document).ready(function () {
-
     $(".cancel-case-btn").click(function () {
         $(".cancel-case").show();
         $(".overlay").show();
 
         $(".requestId").val($(this).data("id"));
         $(".displayPatientName").html($(this).data("patient_name"));
+        $("#floatingSelect")
+            .empty()
+            .append('<option value="" selected disabled>Reasons</option>');
 
         $.ajax({
             url: "/cancel-case",
@@ -15,10 +17,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                        reason.id +
-                        '">' +
-                        reason.case_name +
-                        "</option>"
+                            reason.id +
+                            '">' +
+                            reason.case_name +
+                            "</option>"
                     );
                 });
             },
@@ -34,6 +36,11 @@ $(document).ready(function () {
 
         $(".physicianRegions").empty();
         $(".requestId").val($(this).data("id"));
+        $(".physicianRegions")
+            .empty()
+            .append(
+                '<option value="" selected disabled>Narrow Search by Region</option>'
+            );
 
         // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
@@ -43,10 +50,10 @@ $(document).ready(function () {
                 data.forEach(function (region) {
                     $(".physicianRegions").append(
                         '<option value="' +
-                        region.id +
-                        '">' +
-                        region.region_name +
-                        "</option>"
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
                     );
                 });
             },
@@ -128,7 +135,7 @@ $(document).ready(function () {
     // Send Orders Page dynamic data fetching
     $(".profession-menu").on("change", function () {
         let profession = $(this).val();
-        $(".business-menu").html("<option selected>Buisness</option>");
+        $(".business-menu").html("<option selected disabled>Buisness</option>");
         $.ajax({
             url: "/fetch-business/" + profession,
             type: "GET",
@@ -138,10 +145,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                        entry.id +
-                        '">' +
-                        entry.vendor_name +
-                        "</option>"
+                            entry.id +
+                            '">' +
+                            entry.vendor_name +
+                            "</option>"
                     );
                 });
             },
@@ -203,76 +210,62 @@ $(document).ready(function () {
         $(".empty-fields").val("");
     });
 
-
-    $('.request-support-btn').click(function () {
-        $('.request-support').show();
+    $(".request-support-btn").click(function () {
+        $(".request-support").show();
         // $('.overlay').show();
-    })
-
-
+    });
 
     // ************************************* Shivesh *************************************
 
+    $("#adminResetPassword").on("click", function () {
+        $(".admin-password").removeAttr("disabled");
+    });
 
-    $('#adminResetPassword').on('click', function () {
-        $('.admin-password').removeAttr('disabled')
-    })
+    $("#admin-info-cancel-btn").on("click", function () {
+        $(".admin_first_name").attr("disabled");
+        $(".admin_last_name").attr("disabled");
+        $(".admin_email").attr("disabled");
+        $(".admin_confirm_email").attr("disabled");
+        $(".phone").attr("disabled");
 
+        $("#adminEditBtn1").show();
+        $(".admin-info-btns").hide();
+    });
 
-    $('#admin-info-cancel-btn').on('click', function () {
-        $('.admin_first_name').attr('disabled')
-        $('.admin_last_name').attr('disabled')
-        $('.admin_email').attr('disabled')
-        $('.admin_confirm_email').attr('disabled')
-        $('.phone').attr('disabled')
+    $("#admin-mail-cancel-btn").on("click", function () {
+        $(".admin_add1").attr("disabled");
+        $(".admin_add2").attr("disabled");
+        $(".city").attr("disabled");
+        $(".admin_state").attr("disabled");
+        $(".admin_zipcode").attr("disabled");
+        $(".admin_alt_phone").attr("disabled");
 
-        $('#adminEditBtn1').show()
-        $('.admin-info-btns').hide()
+        $("#adminEditBtn2").show();
+        $(".admin-mail-info-btns").hide();
+    });
 
-    })
+    $("#adminEditBtn1").on("click", function () {
+        $(".admin_first_name").removeAttr("disabled");
+        $(".admin_last_name").removeAttr("disabled");
+        $(".admin_email").removeAttr("disabled");
+        $(".admin_confirm_email").removeAttr("disabled");
+        $(".phone").removeAttr("disabled");
 
-    $('#admin-mail-cancel-btn').on('click', function () {
-        $('.admin_add1').attr('disabled')
-        $('.admin_add2').attr('disabled')
-        $('.city').attr('disabled')
-        $('.admin_state').attr('disabled')
-        $('.admin_zipcode').attr('disabled')
-        $('.admin_alt_phone').attr('disabled')
+        $("#adminEditBtn1").hide();
+        $(".admin-info-btns").show();
+    });
 
+    $("#adminEditBtn2").on("click", function () {
+        $(".admin_add1").removeAttr("disabled");
+        $(".admin_add2").removeAttr("disabled");
+        $(".city").removeAttr("disabled");
+        $(".admin_state").removeAttr("disabled");
+        $(".admin_zipcode").removeAttr("disabled");
+        $(".admin_alt_phone").removeAttr("disabled");
 
-        $('#adminEditBtn2').show()
-        $('.admin-mail-info-btns').hide()
-
-    })
-
-
-    $('#adminEditBtn1').on('click', function () {
-        $('.admin_first_name').removeAttr('disabled')
-        $('.admin_last_name').removeAttr('disabled')
-        $('.admin_email').removeAttr('disabled')
-        $('.admin_confirm_email').removeAttr('disabled')
-        $('.phone').removeAttr('disabled')
-
-        $('#adminEditBtn1').hide()
-        $('.admin-info-btns').show()
-
-    })
-
-    $('#adminEditBtn2').on('click', function () {
-        $('.admin_add1').removeAttr('disabled')
-        $('.admin_add2').removeAttr('disabled')
-        $('.city').removeAttr('disabled')
-        $('.admin_state').removeAttr('disabled')
-        $('.admin_zipcode').removeAttr('disabled')
-        $('.admin_alt_phone').removeAttr('disabled')
-
-        $('#adminEditBtn2').hide()
-        $('.admin-mail-info-btns').show()
-    })
-
-
-
-
+        $("#adminEditBtn2").hide();
+        $(".admin-mail-info-btns").show();
+    });
 
     $(document).on("click", ".action-btn", function () {
         var sibling = $(this).siblings(".actions-menubar:visible").length;
@@ -284,20 +277,15 @@ $(document).ready(function () {
         }
     });
 
-
-
-
     // ***** This code is for getting filtername in admin dashboard (all,patient,family,concierge,business) *****
 
-
     var pathname = window.location.pathname;
-    var url = pathname.split('/');
+    var url = pathname.split("/");
     var activeCategory = url[3];
 
     if (!activeCategory) {
         $(".btn-all.filter-btn").addClass("active-filter");
     }
-
 
     var filterBtns = $(".filter-btn");
     filterBtns.map(function (index, element) {
@@ -308,37 +296,33 @@ $(document).ready(function () {
 
     // ************************************************************************************
 
-
-
     // ***************** Fetching regions from regions table ******************
     $.ajax({
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-
             data.forEach(function (region) {
                 $(".listing-region").append(
-                    '<option value="' + region.id + '">' + region.region_name + "</option>"
+                    '<option value="' +
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
                 );
             });
         },
         error: function (error) {
             console.error(error);
         },
-
     });
     // ************************************************************************************
 
-
-
-
-
     // ***************** Filtering regions from dropdown button ******************
 
-    $('.listing-region').on('change', function () {
-        var token = $('meta[name="csrf-token"]').attr('content')
+    $(".listing-region").on("change", function () {
+        var token = $('meta[name="csrf-token"]').attr("content");
         // Store the selected option's ID
-        var tab = $(".nav-link.active").attr('id');
+        var tab = $(".nav-link.active").attr("id");
         var words = tab.split("-");
         var activeStatus = words[1];
 
@@ -347,31 +331,27 @@ $(document).ready(function () {
         $.ajax({
             url: "/dropdown-data",
             type: "POST",
-            dataType: 'json',
+            dataType: "json",
             data: {
                 regionId: selectedId,
                 status: activeStatus,
-                "_token": token
+                _token: token,
             },
             success: function (data) {
                 $("#dropdown-data-body").html(data.html);
             },
             error: function (error) {
                 console.error(error);
-            }
+            },
         });
-    })
+    });
     // ************************************************************************************
-
-
-
-
 
     // ********************* Filtering AccountType in User Access Page ***********************
 
     // $('#accountType').on('change', function () {
     //     var accountType = $(this).val();
-     
+
     //     var token = $('meta[name="csrf-token"]').attr('content')
 
     //     $.ajax({
@@ -389,16 +369,9 @@ $(document).ready(function () {
     //         }
     //     })
     // })
-
-
-
 });
 
-
-
 // ************************************************************************************
-
-
 
 // Display different roles checkboxes as per the roles selected
 $(".role-selected").on("change", function () {
@@ -424,40 +397,30 @@ $(".role-selected").on("change", function () {
     });
 });
 
-
-
-
-
-
 function fetchPaginatedUserAccessData(selectedAccount, page) {
-    var token = $('meta[name="csrf-token"]').attr('content')
+    var token = $('meta[name="csrf-token"]').attr("content");
     $.ajax({
-        url: '/user-access/filter?page=' + page,
-        type: 'POST',
+        url: "/user-access/filter?page=" + page,
+        type: "POST",
         data: {
             selectedAccount: selectedAccount,
-            "_token": token
+            _token: token,
         },
         success: function (data) {
-            $('#user-access-data').html(data.html); // Update results area
-        }
+            $("#user-access-data").html(data.html); // Update results area
+        },
     });
 }
 
-$(document).on('click', '.pagination .page-link', function (event) {
+$(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
     var page = $(this).text();
     var selectedAccount = $("#accountType").val();
     fetchPaginatedUserAccessData(selectedAccount, page);
 });
 
-$('#accountType').on('change', function (event) {
+$("#accountType").on("change", function (event) {
     event.preventDefault();
     var selectedAccount = $(this).val();
     fetchPaginatedUserAccessData(selectedAccount, 1);
 });
-
-
-
-
-

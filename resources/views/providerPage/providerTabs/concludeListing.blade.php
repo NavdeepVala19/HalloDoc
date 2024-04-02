@@ -20,7 +20,7 @@
     {{-- This page will display patient requests for which medical is completed by the provider. Once the request is transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
 
-    
+
 
     {{-- Encounter Form Finalized --}}
     @if (session('encounterFormFinalized'))
@@ -32,92 +32,20 @@
         </div>
     @endif
 
-    {{-- SendLink Validation Error pop-ups --}}
-    @if ($errors->any())
-        <div class="alert alert-danger popup-message ">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>
-                        <span>
-                            {{ $error }}
-                        </span>
-                        <i class="bi bi-exclamation-circle"></i>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    <div class="pop-up send-link">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Send mail to patient for submitting request</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('send.mail') }}" method="POST">
-            @csrf
-            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-                <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="First Name">
-                    <label for="floatingInput">First Name</label>
-                    @error('first_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
-                        id="floatingInput" placeholder="Last Name">
-                    <label for="floatingInput">Last Name</label>
-                    @error('last_name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <input type="tel" name="phone_number"
-                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                    placeholder="Phone Number">
-
-                @error('phone_number')
-                    <div class="text-danger w-100">{{ $message }}</div>
-                @enderror
-
-                <div class="form-floating">
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                        id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email</label>
-                    @error('email')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <input type="submit" value="Send" class="primary-fill">
-                <button class="primary-empty hide-popup-btn">Cancel</button>
-            </div>
-        </form>
-    </div>
+    @include('popup.providerSendLink')
 
     {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
     {{-- The Encounter form should redirect to conclude page and will show these pop-up --}}
     {{-- The pop-up will give download link of the medical-report(Encounter Form) --}}
-    <div class="pop-up encounter-finalized">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Encounter Form</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <form action="{{ route('provider.download.encounterForm') }}" method="POST">
-            @csrf
-            <input type="text" name="requestId" class="requestId" value="" hidden>
-            <div class="encounter-finalized-container">
-                <p>Encounter Form is finalized successfully!</p>
-                <div class="text-center">
-                    <button type="submit" class="primary-fill download-btn">Download</button>
-                </div>
-            </div>
-        </form>
-    </div>
+    @include('popup.providerEncounterFinalized')
 
+
+    {{-- Encounter Form Finalized (Success Message) --}}
+    @include('alertMessages.formFinalizedSuccess')
 
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
@@ -199,7 +127,7 @@
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        <input type="submit" class="primary-fill">
+                        {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -234,7 +162,29 @@
                             <tr class="type-{{ $case->request_type_id }}">
                                 <td>{{ $case->requestClient->first_name }}
                                     {{ $case->requestClient->last_name }}</td>
-                                <td>{{ $case->requestClient->phone_number }}</td>
+                                <td class="mobile-column">
+                                    @if ($case->request_type_id == 1)
+                                        <div class="listing-mobile-container">
+                                            <i class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                        </div>
+                                        <div class="ms-2">
+                                            (patient)
+                                        </div>
+                                    @else
+                                        <div class="listing-mobile-container">
+                                            <i class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                        </div>
+                                        <div class="ms-2">
+                                            (patient)
+                                        </div>
+                                        <div class="listing-mobile-container">
+                                            <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                        </div>
+                                        <div class="ms-2">
+                                            ({{ $case->requestType->name }})
+                                        </div>
+                                    @endif
+                                </td>
                                 <td>{{ $case->requestClient->street }},
                                     {{ $case->requestClient->city }},
                                     {{ $case->requestClient->state }}</td>
@@ -250,7 +200,7 @@
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
                                             <a href="{{ route('provider.view.notes', $case->id) }}"><i
                                                     class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                            @if ($case->requestWiseFile && $case->requestWiseFile->is_finalize)
+                                            @if ($case->medicalReport && $case->medicalReport->is_finalize)
                                                 <button class="encounter-popup-btn" data-id={{ $case->id }}> <i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i> Encounter</button>
                                             @else
@@ -318,18 +268,22 @@
                                 <i class="bi bi-telephone"></i> Patient :
                                 {{ $case->requestClient->phone_number }}
                             </span>
-                            <div class="grid-2-listing ">
+                            <div class="grid-2-listing">
                                 <a href="{{ route('provider.conclude.care.view', $case->id) }}"
                                     class="conclude-care-btn text-center">Conclude Care</a>
                                 <a href="{{ route('provider.view.notes', $case->id) }}"
                                     class="secondary-btn text-center">View
                                     Notes</a>
-                                <button class="secondary-btn-1">Doctors Notes</button>
                                 <a href="{{ route('provider.view.upload', $case->id) }}"
                                     class="secondary-btn text-center">View
                                     Uploads</a>
-                                <a href="{{ route('provider.encounter.form', $case->id) }}"
-                                    class="secondary-btn encounter-form-btn text-center">Encouter</a>
+                                @if ($case->medicalReport && $case->medicalReport->is_finalize)
+                                    <button class="secondary-btn encounter-popup-btn" data-id={{ $case->id }}>
+                                        Encounter</button>
+                                @else
+                                    <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                        class="secondary-btn encounter-form-btn text-center">Encounter</a>
+                                @endif
                                 <button class="secondary-btn">Email</button>
                             </div>
                         </div>
@@ -341,4 +295,8 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

@@ -238,18 +238,7 @@ class AdminController extends Controller
             'notes' => $request->reason
         ]);
 
-        // Check if there is an entry with the specified 'request_id' and 'notes' is null in RequestStatus
-        // $statusEntry = RequestStatus::where('request_id', $request->requestId)->first();
-
-        // if (!empty($statusEntry->notes)) {
-        //     // Entry exists with 'notes' as null, update in RequestStatus
-        //     RequestStatus::where('request_id', $request->requestId)
-        //         ->update(['notes' => $request->reason]);
-        // } else {
-        //     // Entry doesn't exist or 'notes' is not null, perform insert in RequestStatus
-        //     RequestStatus::where('request_id', $request->requestId)->update(['notes' => $request->reason]);
-        // }
-        return redirect()->back();
+        return redirect()->back()->with('caseCancelled', 'Case Cancelled Successfully!');
     }
 
     // Admin Blocks patient
@@ -291,9 +280,10 @@ class AdminController extends Controller
         $data = RequestTable::where('id', $id)->first();
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        $providerTransferCase = RequestStatus::where('request_id', $id)->where('status', 3)->whereNull('physician_id')->orderByDesc('id')->first();
-        // dd($providerTransferCase);
-        return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'data'));
+        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
+        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+        // dd($providerTransferedCase);
+        return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
     public function storeNote(Request $request)
@@ -321,8 +311,89 @@ class AdminController extends Controller
     public function viewUpload($id)
     {
         $data  = requestTable::where('id', $id)->first();
-        $documents = RequestWiseFile::get();
+        $documents = RequestWiseFile::where('request_id', $id)->orderByDesc('id')->get();
         return view('adminPage.pages.viewUploads', compact('data', 'documents'));
+    }
+    public function uploadDocument(Request $request, $id = null)
+    {
+        $request->validate([
+            'document' => 'required'
+        ], [
+            'document.required' => 'Select an File to upload!'
+        ]);
+        // $providerId = RequestTable::where('id', $id)->first()->physician_id;
+        $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+        RequestWiseFile::create([
+            'request_id' => $id,
+            'file_name' => $request->file('document')->getClientOriginalName(),
+            'admin_id' => 1,
+        ]);
+
+        return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
+    }
+
+    // show a new medical form or an existing one when clicked encounter button in conclude listing
+    public function encounterFormView(Request $request, $id = "null")
+    {
+        $data = MedicalReport::where('request_id', $id)->first();
+        $requestData = RequestTable::where('id', $id)->first();
+        return view('adminPage.adminEncounterForm', compact('data', 'id', 'requestData'));
+    }
+
+    public function encounterForm(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        $report = MedicalReport::where("request_id", $request->request_id)->first();
+
+        $array = [
+            'request_id' => $request->request_id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'location' => $request->location,
+            'service_date' => $request->service_date,
+            'date_of_birth' => $request->date_of_birth,
+            'mobile' => $request->mobile,
+            'present_illness_history' => $request->present_illness_history,
+            'medical_history' => $request->medical_history,
+            'medications' => $request->medications,
+            'allergies' => $request->allergies,
+            'temperature' => $request->temperature,
+            'heart_rate' => $request->heart_rate,
+            'repository_rate' => $request->repository_rate,
+            'sis_BP' => $request->sis_BP,
+            'dia_BP' => $request->dia_BP,
+            'oxygen' => $request->oxygen,
+            'pain' => $request->pain,
+            'heent' => $request->heent,
+            'cv' => $request->cv,
+            'chest' => $request->chest,
+            'abd' => $request->abd,
+            'extr' => $request->extr,
+            'skin' => $request->skin,
+            'neuro' => $request->neuro,
+            'other' => $request->other,
+            'diagnosis' => $request->diagnosis,
+            'treatment_plan' => $request->treatment_plan,
+            'medication_dispensed' => $request->medication_dispensed,
+            'procedure' => $request->procedure,
+            'followUp' => $request->followUp,
+            'is_finalize' => false
+        ];
+        $medicalReport = new MedicalReport();
+        if ($report) {
+            // Report Already exists, update report
+            $report->update($array);
+        } else {
+            // Report does'nt exists, insert a new entry
+            $medicalReport->create($array);
+        }
+
+        return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
     }
 
     // ****************** This code is for Sending Link ************************
@@ -348,7 +419,6 @@ class AdminController extends Controller
 
         Mail::to($request->email)->send(new SendLink($request->all()));
 
-
         // send SMS 
         $sid = getenv("TWILIO_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
@@ -364,7 +434,6 @@ class AdminController extends Controller
                     "from" =>  $senderNumber
                 ]
             );
-
 
         EmailLog::create([
             'role_id' => 1,
@@ -390,7 +459,7 @@ class AdminController extends Controller
             ]
         );
 
-        return redirect()->back()->withErrors('Enter all Details as Required!!!');
+        return redirect()->back()->with('linkSent', "Link Sent Successfully!");
     }
 
 
@@ -420,8 +489,14 @@ class AdminController extends Controller
                 'email' => $request->email
             ]);
         } else if ($request->input('closeCaseBtn') == 'Close Case') {
-            RequestStatus::where('request_id', $request->requestId)->update(['status' => 9]);
-            $statusId = RequestStatus::where('request_id', $request->requestId)->pluck('id')->first();
+            $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
+            RequestTable::where('id', $request->requestId)->update(['status' => 9]);
+            RequestStatus::create([
+                'request_id' => $request->requestId,
+                'status' => 9,
+                'physician_id' => $physicianId,
+            ]);
+            $statusId = RequestStatus::where('request_id', $request->requestId)->orderByDesc('id')->first()->id;
             RequestClosed::create([
                 'request_id' => $request->requestId,
                 'request_status_id' => $statusId
@@ -521,13 +596,22 @@ class AdminController extends Controller
 
     public function viewOrder($id = null)
     {
+        $data = RequestTable::where('id', $id)->first();
         $types = HealthProfessionalType::get();
-        return view('adminPage.pages.sendOrder', compact('id', 'types'));
+        return view('adminPage.pages.sendOrder', compact('id', 'types', 'data'));
     }
 
     // Send orders from action menu 
     public function sendOrder(Request $request)
     {
+        $request->validate([
+            'profession' => 'required',
+            'vendor_id' => 'required',
+            'business_contact' => 'required',
+            'email' => 'required|email',
+            'fax_number' => 'required',
+
+        ]);
         Orders::create([
             'vendor_id' => $request->vendor_id,
             'request_id' => $request->requestId,
@@ -538,7 +622,9 @@ class AdminController extends Controller
             'no_of_refill' => $request->refills,
         ]);
 
-        return redirect()->route('admin.status', 'active');
+        $status = RequestTable::where('id', $request->requestId)->first()->status;
+
+        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('orderPlaced', 'Order Created Successfully!');
     }
     public function deleteBusiness($id = null)
     {
@@ -1054,7 +1140,6 @@ class AdminController extends Controller
 
     public function sendRequestSupport(Request $request)
     {
-
         $requestMessage = $request->contact_msg;
         Mail::to('recipient@example.com')->send(new RequestSupportMessage($requestMessage));
         return redirect()->back();

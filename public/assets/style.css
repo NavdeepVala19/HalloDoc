@@ -14,18 +14,12 @@ html,
 body {
     font-family: "Poppins", sans-serif;
     font-style: normal;
-    /* height: 100vh; */
-    /* margin: 0;
-    padding: 0; */
 }
 
 .wrapper {
-    /* Wrap content and footer */
     display: flex;
     flex-direction: column;
-    /* Stack content on top */
     min-height: 100vh;
-    /* Ensure minimum full height */
 }
 
 .main-container {
@@ -98,7 +92,6 @@ nav {
 /* *********************** FOOTER ************************ */
 .footer {
     background-color: #343434;
-    /* position: fixed; */
     bottom: 0;
     color: white;
     width: 100%;
@@ -121,51 +114,6 @@ nav {
     z-index: 999;
 }
 
-/* ********************************MEDIA QUERIES************************************* */
-@media (max-width: 550px) {
-    .navbar-section {
-        display: none;
-    }
-
-    .menu-icon {
-        display: block;
-        margin-right: 10px;
-    }
-
-    .logout-link {
-        display: none;
-    }
-    .logout-link {
-        display: none;
-    }
-
-    .logout-btn {
-        display: block;
-    }
-
-    .welcome-msg {
-        display: none;
-    }
-
-    .mobile-nav {
-        display: flex;
-        flex-direction: column;
-        z-index: 500;
-        align-items: center;
-        gap: 5px !important;
-
-        height: 100vh;
-        width: 50vw;
-        top: 42px;
-        position: absolute;
-    }
-
-    .pop-up {
-        width: 80vw !important;
-        height: 100vh !important;
-    }
-}
-
 /* ****************** Telephone library styling ***************************** */
 .iti--inline-dropdown .iti__dropdown-content {
     z-index: 20 !important;
@@ -182,7 +130,6 @@ nav {
 }
 
 #iti-0__country-listbox {
-    /* position: absolute; */
     z-index: 20 !important;
 }
 
@@ -234,16 +181,10 @@ form > h3 {
     height: 150px;
 }
 
-/* 
-.request-to-admin .form-floating {
-    width: 100%;
-} */
-
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    /* margin-bottom: 24px; */
     margin: 25px 0;
 }
 
@@ -251,7 +192,6 @@ form > h3 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 20px;
-    /* margin-bottom: 24px; */
     margin: 25px 0;
 }
 
@@ -260,30 +200,12 @@ form > h3 {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 20px;
     margin-bottom: 16px;
-    /* margin: 25px 0; */
-}
-
-@media (max-width: 550px) {
-    .grid-2 {
-        grid-template-columns: 1fr !important;
-    }
-
-    .grid-3 {
-        grid-template-columns: 1fr !important;
-    }
-
-    .grid-4 {
-        grid-template-columns: 1fr !important;
-    }
 }
 
 /******************************* COMMON STYLING FOR POP-UPs **************************************/
 .pop-up {
-    /* display: none; */
-    /* Change Width of Pop-up as needed */
     width: 500px;
     background-color: #fff;
-    /* background-color: #cd7e7e; */
     border-radius: 10px;
     position: fixed;
     top: 50%;
@@ -299,11 +221,8 @@ form > h3 {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    /* Adjust the alpha channel for the desired level of opacity */
     backdrop-filter: blur(5px);
-    /* Adjust the blur radius as needed */
     z-index: 998;
-    /* Ensure the overlay is below the popup */
     display: none;
 }
 
@@ -331,4 +250,82 @@ form > h3 {
     color: #fff;
     background: none;
     border: none;
+}
+
+/* ********************************MEDIA QUERIES************************************* */
+@media (max-width: 550px) {
+    p {
+        margin-bottom: 8px !important;
+    }
+    .navbar-section {
+        display: none;
+    }
+
+    .menu-icon {
+        display: block;
+        margin-right: 10px;
+    }
+
+    .logout-link {
+        display: none;
+    }
+    .logout-link {
+        display: none;
+    }
+
+    .logout-btn {
+        display: block;
+    }
+
+    .welcome-msg {
+        display: none;
+    }
+
+    .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        z-index: 500;
+        align-items: center;
+        gap: 5px !important;
+        height: 100vh;
+        width: 50vw;
+        top: 42px;
+        position: absolute;
+    }
+
+    .pop-up {
+        width: 80vw !important;
+        max-height: 100vh !important;
+    }
+    .footer {
+        font-size: 12px;
+    }
+    .confirmationNumber {
+        font-size: 16px;
+    }
+
+    .popup-message {
+        font-size: 12px !important;
+        top: 70px !important;
+        width: 100% !important;
+        right: 0;
+    }
+    .button-section button,
+    .button-section input,
+    .button-section a {
+        font-size: 12px !important;
+        padding: 4px 10px !important;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .grid-4 {
+        grid-template-columns: 1fr !important;
+    }
 }

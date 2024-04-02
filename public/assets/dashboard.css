@@ -17,7 +17,7 @@
 }
 
 .table-responsive {
-    min-height: 350px;
+    min-height: 250px;
 }
 
 .case-new {
@@ -210,6 +210,39 @@
 .table {
     margin: 0;
 }
+.mobile-column {
+    padding: 0 !important;
+}
+
+.listing-mobile-container {
+    margin: 5px;
+    border: 1px solid #fff;
+    padding: 5px 35px;
+    border-radius: 5px;
+    max-width: fit-content;
+    text-wrap: nowrap;
+}
+
+/******************************* Encounter - Active listing Page **************************************/
+.encounter {
+    display: none;
+    width: 500px;
+}
+
+.houseCallBtn:hover {
+    background-color: rgba(0, 190, 232, 0.647);
+}
+
+.houseCallSelected {
+    display: block !important;
+}
+.consultCallSelected {
+    display: block !important;
+}
+
+.encounter-save-btn {
+    display: none;
+}
 
 /* *********************** TABLE DATA ************************************ */
 .table-btn {
@@ -224,7 +257,9 @@ tr > td {
     padding: 16px !important;
     color: #fff !important;
 }
-
+td {
+    vertical-align: middle;
+}
 .type-1 td {
     background-color: var(--patient-color) !important;
 }
@@ -342,6 +377,120 @@ tr > td {
 
 .confirmationNumber {
     color: var(--blue);
+}
+
+/******************************* All Pop-ups Styling**************************************/
+/******************************* Encounter - Active listing Page **************************************/
+.encounter {
+    display: none;
+    width: 500px;
+}
+
+/******************************* Transfer Request Provider - Pending listing Page **************************************/
+.transfer-request {
+    display: none;
+    width: 500px;
+}
+
+.transfer-request .form-floating {
+    width: 100%;
+}
+
+.transfer-description {
+    height: 150px !important;
+}
+
+/******************************* Send Link PopUp - All listing Pages **************************************/
+.send-link {
+    display: none;
+    width: 500px;
+}
+
+.send-link .form-floating {
+    width: 100%;
+    margin: 15px 0;
+}
+
+/******************************* Encounter Form Finalized PopUp - conclude listing Pages **************************************/
+.encounter-finalized {
+    display: none;
+    width: 500px;
+}
+
+.encounter-finalized-container {
+    padding: 15px;
+}
+
+.download-btn {
+    margin: 15px auto;
+}
+
+/******************************* Assign Case ViewCase - Admin **************************************/
+.assign-case {
+    display: none;
+}
+
+/******************************* Request To Admin PopUp - providerProfile **************************************/
+.request-to-admin {
+    display: none;
+    width: 500px;
+    z-index: 20;
+}
+
+.request-to-admin .form-floating {
+    width: 100%;
+}
+
+.request-message {
+    height: 150px !important;
+}
+
+/******************************* Request DTY PopUp - AdminListingPages **************************************/
+
+.request-support {
+    display: none;
+    width: 500px;
+    z-index: 20;
+}
+
+/* ******************************* CSS of ActionMenu button of Regions filter blade file ****************************** */
+
+.actions-menubar {
+    display: flex;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    left: -70px;
+    padding: 10px 0;
+    z-index: 999;
+}
+
+.actions-menubar > button {
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.actions-menubar > a {
+    display: block;
+    width: 200px !important;
+    border: none;
+    background-color: #fff;
+    color: black;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.actions-menubar > button:hover,
+.actions-menubar > a:hover {
+    background-color: rgba(128, 128, 128);
+}
+
+.search-section {
+    margin: 0 15px;
 }
 
 /* ********************** MEDIA QUERIES *********************** */
@@ -640,6 +789,12 @@ tr > td {
         font-size: 12px;
     }
 
+    /* .grid-2-listing .bi::before{
+        border: 1px solid var(--blue) !important;
+        padding: 3px;
+        border-radius: 50%;
+    } */
+
     .map-btn {
         text-wrap: nowrap;
     }
@@ -655,114 +810,20 @@ tr > td {
     .heading-section div:nth-child(2) button {
         margin-right: 5px !important;
     }
-}
 
-/******************************* All Pop-ups Styling**************************************/
-/******************************* Encounter - Active listing Page **************************************/
-.encounter {
-    display: none;
-    width: 500px;
-}
-
-/******************************* Transfer Request Provider - Pending listing Page **************************************/
-.transfer-request {
-    display: none;
-    width: 500px;
-}
-
-.transfer-request .form-floating {
-    width: 100%;
-}
-
-.transfer-description {
-    height: 150px !important;
-}
-
-/******************************* Send Link PopUp - All listing Pages **************************************/
-.send-link {
-    display: none;
-    width: 500px;
-}
-
-.send-link .form-floating {
-    width: 100%;
-    margin: 15px 0;
-}
-
-/******************************* Encounter Form Finalized PopUp - conclude listing Pages **************************************/
-.encounter-finalized {
-    display: none;
-    width: 500px;
-}
-
-.encounter-finalized-container {
-    padding: 15px;
-}
-
-.download-btn {
-    margin: 15px auto;
-}
-
-/******************************* Assign Case ViewCase - Admin **************************************/
-.assign-case {
-    display: none;
-}
-
-/******************************* Request To Admin PopUp - providerProfile **************************************/
-.request-to-admin {
-    display: none;
-    width: 500px;
-    z-index: 20;
-}
-
-.request-to-admin .form-floating {
-    width: 100%;
-}
-
-.request-message {
-    height: 150px !important;
-}
-
-/******************************* Request DTY PopUp - AdminListingPages **************************************/
-
-.request-support {
-    display: none;
-    width: 500px;
-    z-index: 20;
-}
-
-/* ******************************* CSS of ActionMenu button of Regions filter blade file ****************************** */
-
-.actions-menubar {
-    display: flex;
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 30px;
-    left: -70px;
-    padding: 10px 0;
-    z-index: 999;
-}
-
-.actions-menubar > button {
-    width: 200px !important;
-    border: none;
-    background-color: #fff;
-    padding: 5px 0;
-    text-align: left;
-}
-
-.actions-menubar > a {
-    display: block;
-    width: 200px !important;
-    border: none;
-    background-color: #fff;
-    color: black;
-    padding: 5px 0;
-    text-align: left;
-}
-
-.actions-menubar > button:hover,
-.actions-menubar > a:hover {
-    background-color: rgba(128, 128, 128);
+    /* View Case Styling */
+    .back-btn {
+        font-size: 14px;
+        /* padding: 4px 10px; */
+    }
+    .title-container h1 {
+        font-size: 18px;
+    }
+    .title-container p {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+    h3 {
+        font-size: 18px;
+    }
 }

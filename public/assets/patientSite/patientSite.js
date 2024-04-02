@@ -1,43 +1,39 @@
 $(document).ready(function () {
-
-
     // **** This code is for create a new request in patient dashboard page  *****
-    $('.create-btn').click(function () {
-        $('.new-request').show();
-        $('.overlay').show();
-    })
+    $(".create-btn").click(function () {
+        $(".new-request").show();
+        $(".overlay").show();
+    });
 
-    $('.create-new-request-btn').click(function () {
-        $('.new-request-create').show();
-        $('.overlay').show();
-    })
+    $(".create-new-request-btn").click(function () {
+        $(".new-request-create").show();
+        $(".overlay").show();
+    });
 
-    $('.hide-popup-btn').click(function () {
-        $('.new-request-create').hide();
-        $('.overlay').hide();
-    })
-
+    // $(".hide-popup-btn").click(function () {
+    //     $(".new-request-create").hide();
+    //     $(".overlay").hide();
+    // });
 
     //  ********************************************************************************************
 
     // ************************** This code is for create new request pop-up  ***********************
 
-    $('.btn-someone').click(function () {
-        $(this).toggleClass('btn-active');
-        $('.btn-me').removeClass('btn-active');
-    })
+    $(".btn-someone").click(function () {
+        $(this).toggleClass("btn-active");
+        $(".btn-me").removeClass("btn-active");
+    });
 
-    $('.btn-me').click(function () {
-        $(this).toggleClass('btn-active');
-        $('.btn-someone').removeClass('btn-active');
-    })
+    $(".btn-me").click(function () {
+        $(this).toggleClass("btn-active");
+        $(".btn-someone").removeClass("btn-active");
+    });
 
-    $('.continue-btn').click(function () {
-        if ($('.btn-me').hasClass('btn-active')) {
-            $(window).attr('location', '/createPatientRequests');
-        }
-        else if ($('.btn-someone').hasClass('btn-active')) {
-            $(window).attr('location', '/createSomeoneRequests');
+    $(".continue-btn").click(function () {
+        if ($(".btn-me").hasClass("btn-active")) {
+            $(window).attr("location", "/createPatientRequests");
+        } else if ($(".btn-someone").hasClass("btn-active")) {
+            $(window).attr("location", "/createSomeoneRequests");
         } else {
             alert('please select "Me" or "SomeOne Else"');
         }
@@ -45,21 +41,14 @@ $(document).ready(function () {
 
     //  ********************************************************************************************
 
-
-
     // **** This code is for hiding pop-up button in family/concierge/business page ****
 
-    $('.submit-valid-details-ok-btn').click(function () {
-        $('.submit-valid-details').show();
-        $('.overlay').show()
-    })
+    $(".submit-valid-details-ok-btn").click(function () {
+        $(".submit-valid-details").show();
+        $(".overlay").show();
+    });
 
     //  ********************************************************************************************
-
-
-
-
-
     // **** This code is for showing input password and hide it when click on eye icon ****
 
     $(".person-eye").click(function () {
@@ -106,18 +95,6 @@ $(".file-input").change(function (e) {
 });
 
 // ********************************************
-
-// **** This is use for showing agreement cancel pop-up ****
-
-$(document).ready(function () {
-    $(".cancel").click(function () {
-        $(".cancel-pop-up").show();
-        $(".overlay").show();
-    });
-});
-
-// *********************************************************
-
 // **** This code is for file uploading in view document and requests pages ****
 
 function openFileSelection() {
@@ -142,9 +119,6 @@ for (i = 0; i < acc.length; i++) {
     });
 }
 //   ****************************************************************************
-
-
-
 // ***************** Fetching regions from regions table ******************
 $.ajax({
     url: "/admin-new",
@@ -163,15 +137,12 @@ $.ajax({
 
 });
 
-
-
 $(document).ready(function () {
-
-    $('#back-btn').click(function () {
+    $("#back-btn").click(function () {
         localStorage.setItem("popupShown", "true");
     });
 
-    $('#cancel-btn').click(function () {
+    $("#cancel-btn").click(function () {
         localStorage.setItem("popupShown", "true");
     });
 
@@ -179,25 +150,22 @@ $(document).ready(function () {
     if (localStorage.getItem("popupShown") == "false") {
         // Show the popup if not shown before
         $("#validDetailsPopup").hide();
-        $('.overlay').hide()
-
+        $(".overlay").hide();
     } else {
         $("#validDetailsPopup").show();
-        $('.overlay').show()
+        $(".overlay").show();
     }
 
     // Attach an event listener to the "OK" button in the popup
     $("#closePopupBtn").on("click", function () {
         // When clicked, hide the popup
         $("#validDetailsPopup").hide();
-        $('.overlay').hide()
+        $(".overlay").hide();
 
         // And set a flag in localStorage indicating the popup was shown
         localStorage.setItem("popupShown", "false");
     });
 });
-
-
 
 // ** This code is for client side validation
 
