@@ -103,7 +103,7 @@
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        <input type="submit" class="primary-fill">
+                        {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -140,7 +140,31 @@
                                     <td>{{ $case->requestClient->first_name }}
                                         {{ $case->requestClient->last_name }}
                                     </td>
-                                    <td>{{ $case->requestClient->phone_number }}</td>
+                                    <td class="mobile-column">
+                                        @if ($case->request_type_id == 1)
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                        @else
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                            <div class="listing-mobile-container">
+                                                <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                ({{ $case->requestType->name }})
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>{{ $case->requestClient->street }},
                                         {{ $case->requestClient->city }},
                                         {{ $case->requestClient->state }}
@@ -234,12 +258,10 @@
                     @endif
                 @endforeach
             </div>
-
             <div class="page">
                 {{ $cases->links('pagination::bootstrap-5') }}
                 {{-- {{ $users->withQueryString()->links() }} --}}
             </div>
-
         </div>
     </div>
 @endsection

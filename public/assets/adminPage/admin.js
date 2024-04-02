@@ -133,7 +133,7 @@ $(document).ready(function () {
     // Send Orders Page dynamic data fetching
     $(".profession-menu").on("change", function () {
         let profession = $(this).val();
-        $(".business-menu").html("<option selected>Buisness</option>");
+        $(".business-menu").html("<option selected disabled>Buisness</option>");
         $.ajax({
             url: "/fetch-business/" + profession,
             type: "GET",

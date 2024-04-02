@@ -1,6 +1,9 @@
 /* *********************** PROVIDER DASHBOARD ************************ */
 /* Active Listing Encounter Pop-Up */
 
+.houseCallBtn {
+    text-wrap: nowrap;
+}
 /* When house call is selected these dropdown select menu will be shown */
 .time-dropdown {
     display: none;

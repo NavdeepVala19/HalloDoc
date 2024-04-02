@@ -236,17 +236,6 @@ class AdminController extends Controller
             'notes' => $request->reason
         ]);
 
-        // Check if there is an entry with the specified 'request_id' and 'notes' is null in RequestStatus
-        // $statusEntry = RequestStatus::where('request_id', $request->requestId)->first();
-
-        // if (!empty($statusEntry->notes)) {
-        //     // Entry exists with 'notes' as null, update in RequestStatus
-        //     RequestStatus::where('request_id', $request->requestId)
-        //         ->update(['notes' => $request->reason]);
-        // } else {
-        //     // Entry doesn't exist or 'notes' is not null, perform insert in RequestStatus
-        //     RequestStatus::where('request_id', $request->requestId)->update(['notes' => $request->reason]);
-        // }
         return redirect()->back();
     }
 
@@ -320,8 +309,25 @@ class AdminController extends Controller
     public function viewUpload($id)
     {
         $data  = requestTable::where('id', $id)->first();
-        $documents = RequestWiseFile::get();
+        $documents = RequestWiseFile::where('request_id', $id)->orderByDesc('id')->get();
         return view('adminPage.pages.viewUploads', compact('data', 'documents'));
+    }
+    public function uploadDocument(Request $request, $id = null)
+    {
+        $request->validate([
+            'document' => 'required'
+        ], [
+            'document.required' => 'Select an File to upload!'
+        ]);
+        // $providerId = RequestTable::where('id', $id)->first()->physician_id;
+        $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+        RequestWiseFile::create([
+            'request_id' => $id,
+            'file_name' => $request->file('document')->getClientOriginalName(),
+            'admin_id' => 1,
+        ]);
+
+        return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
     }
 
     // show a new medical form or an existing one when clicked encounter button in conclude listing
@@ -596,6 +602,14 @@ class AdminController extends Controller
     // Send orders from action menu 
     public function sendOrder(Request $request)
     {
+        $request->validate([
+            'profession' => 'required',
+            'vendor_id' => 'required',
+            'business_contact' => 'required',
+            'email' => 'required|email',
+            'fax_number' => 'required',
+
+        ]);
         Orders::create([
             'vendor_id' => $request->vendor_id,
             'request_id' => $request->requestId,
@@ -606,7 +620,9 @@ class AdminController extends Controller
             'no_of_refill' => $request->refills,
         ]);
 
-        return redirect()->route('admin.status', 'active');
+        $status = RequestTable::where('id', $request->requestId)->first()->status;
+
+        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('orderPlaced', 'Order Created Successfully!');
     }
     public function deleteBusiness($id = null)
     {
@@ -1124,7 +1140,6 @@ class AdminController extends Controller
 
     public function sendRequestSupport(Request $request)
     {
-
         $requestMessage = $request->contact_msg;
         Mail::to('recipient@example.com')->send(new RequestSupportMessage($requestMessage));
         return redirect()->back();

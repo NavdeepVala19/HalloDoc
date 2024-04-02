@@ -21,14 +21,24 @@
 giving service to the patient. --}}
     <div class="overlay"></div>
 
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.providerSendLink')
 
     {{-- Encounter --}}
     @include('popup.providerEncounter')
+
+    {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
+    {{-- The pop-up will give download link of the medical-report(Encounter Form) --}}
+    @include('popup.providerEncounterFinalized')
+
+    {{-- Encounter Form Finalized (Success Message) --}}
+    @include('alertMessages.formFinalizedSuccess')
+
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
+
+    {{-- Order Created Successfully Pop-up Message --}}
+    @include('alertMessages.orderPlacedSuccess')
 
     <div class="bg-blur">
         <nav>
@@ -109,7 +119,7 @@ giving service to the patient. --}}
                         <div class="input-group mb-3">
                             <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                                 placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                            <input type="submit" class="primary-fill">
+                            {{-- <input type="submit" class="primary-fill"> --}}
                         </div>
                     </form>
                     <div class="src-category d-flex gap-3 align-items-center">
@@ -145,7 +155,31 @@ giving service to the patient. --}}
                                 <tr class="type-{{ $case->request_type_id }}">
                                     <td>{{ $case->requestClient->first_name }}
                                         {{ $case->requestClient->last_name }}</td>
-                                    <td>{{ $case->requestClient->phone_number }}</td>
+                                    <td class="mobile-column">
+                                        @if ($case->request_type_id == 1)
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                        @else
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                            <div class="listing-mobile-container">
+                                                <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                ({{ $case->requestType->name }})
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>{{ $case->requestClient->street }},
                                         {{ $case->requestClient->city }},
                                         {{ $case->requestClient->state }}</td>
@@ -170,9 +204,15 @@ giving service to the patient. --}}
                                                 <a href="{{ route('provider.view.order', $case->id) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 @if ($case->call_type && $case->call_type == 'house_call')
-                                                    <a href="{{ route('provider.encounter.form', $case->id) }}"
-                                                        class="encounter-form-btn"><i
-                                                            class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                                    @if ($case->medicalReport && $case->medicalReport->is_finalize)
+                                                        <button class="encounter-popup-btn" data-id={{ $case->id }}>
+                                                            <i class="bi bi-text-paragraph me-2 ms-3"></i>
+                                                            Encounter</button>
+                                                    @else
+                                                        <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                            class="encounter-form-btn"><i
+                                                                class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                                    @endif
                                                 @else
                                                     <button class="encounter-btn" data-id={{ $case->id }}><i
                                                             class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</button>
@@ -238,19 +278,31 @@ giving service to the patient. --}}
                                     <i class="bi bi-telephone"></i> Patient :
                                     {{ $case->requestClient->phone_number }}
                                 </span>
-                                <div class="grid-2-listing ">
+                                <div class="grid-2-listing">
                                     <a href="{{ route('provider.view.notes', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button class="secondary-btn-1">Doctors Notes</button>
                                     <a href="{{ route('provider.view.upload', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Uploads</a>
-                                    <button class="secondary-btn encounter-btn"
-                                        data-id={{ $case->id }}>Encouter</button>
+                                    @if ($case->call_type && $case->call_type == 'house_call')
+                                        @if ($case->medicalReport && $case->medicalReport->is_finalize)
+                                            <button class="encounter-popup-btn secondary-btn" data-id={{ $case->id }}>
+                                                Encounter</button>
+                                        @else
+                                            <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                class="encounter-form-btn secondary-btn text-center"> Encounter</a>
+                                        @endif
+                                    @else
+                                        <button class="secondary-btn encounter-btn"
+                                            data-id={{ $case->id }}>Encounter</button>
+                                    @endif
                                     <a href="{{ route('provider.view.order', $case->id) }}"
                                         class="secondary-btn-2 text-center">orders</a>
-                                    <button class="secondary-btn-3">House Call</button>
+                                    @if ($case->call_type && $case->call_type == 'house_call')
+                                        <a href="{{ route('provider.houseCall.encounter', $case->id) }}"
+                                            class="secondary-btn-3 houseCallBtn text-center"> House Call </a>
+                                    @endif
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>

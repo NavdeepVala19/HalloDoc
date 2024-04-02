@@ -75,7 +75,10 @@ class RequestTable extends Model
     {
         return $this->hasOne(Provider::class, 'id', 'physician_id');
     }
-    public function requestWiseFile(){
-        return $this->hasOne(RequestWiseFile::class, 'request_id');
+    // public function requestWiseFile(){
+    //     return $this->hasOne(RequestWiseFile::class, 'request_id');
+    // }
+    public function medicalReport(){
+        return $this->hasOne(MedicalReport::class, 'request_id');
     }
 }

@@ -5,10 +5,10 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('provider.dashboard') }}">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
-    <a href="">My Schedule</a>
-    <a href="" class="active-link">My Profile</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')

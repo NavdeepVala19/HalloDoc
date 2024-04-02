@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\users;
 use App\Mail\SendMail;
+use App\Models\Orders;
 use App\Models\Regions;
 use App\Models\SMSLogs;
 use Twilio\Rest\Client;
@@ -18,26 +19,28 @@ use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
 use App\Models\RequestNotes;
-use App\Models\requestTable;
 // For sending Mails
+use App\Models\requestTable;
 use Illuminate\Http\Request;
 use App\Mail\ProviderRequest;
 use App\Models\MedicalReport;
 use App\Models\RequestStatus;
 use App\Mail\sendEmailAddress;
 use App\Models\request_Client;
-use App\Models\PhysicianRegion;
 // DomPDF package used for the creation of pdf from the form
-use App\Models\RequestWiseFile;
+use App\Models\PhysicianRegion;
 
 
 // To create zip, used to download multiple documents at once
+use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\DocsAttachmentMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Models\HealthProfessionalType;
 
 
 class ProviderController extends Controller
@@ -370,11 +373,13 @@ class ProviderController extends Controller
 
         return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
     }
-
-    // Generate pdf on click
-    public function generatePDF(Request $request, $id)
+    // Encounter Form (Medical Form Finalized) By provider (Generate PDF and Store in RequestWiseFile)
+    public function encounterFinalized($id)
     {
         try {
+            $status = RequestTable::where('id', $id)->first()->status;
+            MedicalReport::where('request_id', $id)->update(['is_finalize' => true]);
+
             $data = MedicalReport::where('request_id', $id)->first();
             $pdf = PDF::loadView('providerPage.pdfForm', compact('data'));
 
@@ -382,22 +387,22 @@ class ProviderController extends Controller
             if (!File::exists(storage_path('app/encounterForm'))) {
                 File::makeDirectory(storage_path('app/encounterForm'));
             }
-            // $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
 
             $providerId = RequestTable::where('id', $id)->first()->physician_id;
-            $storePdf = $pdf->save(storage_path('app/encounterForm/' . $id . $data->first_name . "-medical.pdf"));
+            $pdf->save(storage_path('app/encounterForm/' . $id . $data->first_name . "-medical.pdf"));
             RequestWiseFile::create([
                 'request_id' => $id,
                 'file_name' => $id .  $data->first_name . "-medical.pdf",
                 'physician_id' => $providerId,
                 'is_finalize' => true,
             ]);
-            // $storePdf = $pdf->download( $data->first_name . "-medical.pdf");
-            return redirect()->route('provider.status', 'conclude')->with('encounterFormFinalized', 'Encounter Form Finalized Successfully!');
+
+            return redirect()->route('provider.status', $status == 6 ? 'conclude' : 'active')->with('formFinalized', "Form Finalized Successfully");
         } catch (\Throwable $th) {
             dd($th);
         }
     }
+
     // Download MedicalForm - encounterFinalized pop-up action
     public function downloadMedicalForm(Request $request)
     {
@@ -574,16 +579,26 @@ class ProviderController extends Controller
     public function viewUpload(Request $request, $id = null)
     {
         $data  = requestTable::where('id', $id)->first();
-        $documents = RequestWiseFile::get();
+        $documents = RequestWiseFile::where('request_id', $id)->orderByDesc('id')->get();
 
         return view('providerPage.pages.viewUploads', compact('data', 'documents'));
     }
     public function uploadDocument(Request $request, $id = null)
     {
+        $request->validate([
+            'document' => 'required'
+        ], [
+            'document.required' => 'Select an File to upload!'
+        ]);
+        $providerId = RequestTable::where('id', $id)->first()->physician_id;
         $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
-        RequestWiseFile::create(['request_id' => $id, 'file_name' => $request->file('document')->getClientOriginalName()]);
+        RequestWiseFile::create([
+            'request_id' => $id,
+            'file_name' => $request->file('document')->getClientOriginalName(),
+            'physician_id' => $providerId,
+        ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
     }
     public function download($id = null)
     {
@@ -602,13 +617,31 @@ class ProviderController extends Controller
 
     public function operations(Request $request)
     {
+
+        $email = request_Client::where('request_id', $request->requestId)->first()->email;
         if ($request->input('operation') == 'delete_all') {
-            $ids = $request->input('selected');
+            if (empty($request->input('selected'))) {
+                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+                if ($data->isEmpty()) {
+                    return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
+                }
+                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+            } else {
+                $ids = $request->input('selected');
+            }
             RequestWiseFile::whereIn('id', $ids)->delete();
 
             return redirect()->back();
         } else if ($request->input('operation') == 'download_all') {
-            $ids = $request->input('selected');
+            if (empty($request->input('selected'))) {
+                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+                if ($data->isEmpty()) {
+                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+                }
+                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+            } else {
+                $ids = $request->input('selected');
+            }
 
             $zip = new ZipArchive;
             $zipFile = 'documents.zip';
@@ -623,12 +656,78 @@ class ProviderController extends Controller
                 $zip->close();
             }
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+        } else if ($request->input('operation') == 'send_mail') {
+
+            $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+            if ($data->isEmpty()) {
+                return redirect()->back()->with('noRecordFound', 'There are no records to Send Mail!');
+            }
+
+            $request->validate([
+                'selected' => 'required'
+            ], [
+                'selected.required' => 'Please select at least one record.'
+            ]);
+
+            $ids = $request->input('selected');
+
+            $zip = new ZipArchive;
+            $zipFile = $email . '.zip';
+
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+                foreach ($ids as $id) {
+                    $file = RequestWiseFile::where('id', $id)->first();
+                    $path = (public_path() . '/storage/' . $file->file_name);
+
+                    $zip->addFile($path, $file->file_name);
+                }
+                $zip->close();
+            }
+            EmailLog::create([
+                'role_id' => 1,
+                'is_email_sent' => true,
+                'sent_tries' => 1,
+                'sent_date' => now(),
+                'email_template' => 'mail.blade.php',
+                'subject_name' => 'Documets Link Sent',
+                'email' => $email,
+            ]);
+            Mail::to($email)->send(new DocsAttachmentMail($email, $zipFile));
+            // return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+
+            return redirect()->back()->with('mailDocsSent', 'Mail of all the selected documents is sent!');
         }
     }
 
     public function viewOrder(Request $request, $id = null)
     {
-        return view('providerPage.pages.sendOrder', compact('id'));
+        $data = RequestTable::where('id', $id)->first();
+        $types = HealthProfessionalType::get();
+        return view('providerPage.pages.sendOrder',  compact('id', 'types', 'data'));
+    }
+
+    // Send orders from action menu 
+    public function sendOrder(Request $request)
+    {
+        $request->validate([
+            'profession' => 'required',
+            'vendor_id' => 'required',
+            'business_contact' => 'required',
+            'email' => 'required|email',
+            'fax_number' => 'required',
+
+        ]);
+        Orders::create([
+            'vendor_id' => $request->vendor_id,
+            'request_id' => $request->requestId,
+            'fax_number' => $request->fax_number,
+            'business_contact' => $request->business_contact,
+            'email' => $request->email,
+            'prescription' => $request->prescription,
+            'no_of_refill' => $request->refills,
+        ]);
+
+        return redirect()->route('provider.status', 'active')->with('orderPlaced', 'Order Created Successfully!');
     }
 
 

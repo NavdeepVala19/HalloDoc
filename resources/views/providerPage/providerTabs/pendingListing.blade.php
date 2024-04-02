@@ -32,13 +32,13 @@
     @endif
 
     @if (session('transferredCase'))
-    <div class="alert alert-success popup-message ">
-        <span>
-            {{ session('transferredCase') }}
-        </span>
-        <i class="bi bi-check-circle-fill"></i>
-    </div>
-@endif
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('transferredCase') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
 
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
@@ -133,7 +133,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        <input type="submit" class="primary-fill">
+                        {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -169,7 +169,31 @@ pending state, providers need to send an agreement link to patients. --}}
                                 <tr class="type-{{ $case->request_type_id }}">
                                     <td>{{ $case->requestClient->first_name }}
                                         {{ $case->requestClient->last_name }}</td>
-                                    <td>{{ $case->requestClient->phone_number }}</td>
+                                    <td class="mobile-column">
+                                        @if ($case->request_type_id == 1)
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                        @else
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                            <div class="listing-mobile-container">
+                                                <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                ({{ $case->requestType->name }})
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>{{ $case->requestClient->street }},
                                         {{ $case->requestClient->city }},
                                         {{ $case->requestClient->state }}</td>
@@ -206,11 +230,11 @@ pending state, providers need to send an agreement link to patients. --}}
                     @if (!empty($case) && !empty($case->requestClient))
                         <div class="mobile-list d-flex justify-content-between">
                             <div class="d-flex flex-column">
-                                <p>{{ $case->requestClient->first_name }} </p>
+                                <p>{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }} </p>
                                 <span>
                                     @if ($case->requestClient)
-                                        {{ $case->requestClient->address }}
-                                    @endif Address
+                                        {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
+                                    @endif
                                 </span>
                             </div>
                             <div class="d-flex flex-column align-items-center justify-content-around">
@@ -243,18 +267,22 @@ pending state, providers need to send an agreement link to patients. --}}
                                 Case</a>
                             <div>
                                 <span>
-                                    <i class="bi bi-envelope"></i> Email : example@xyz.com
-                                    {{-- {{$case->requestClient->email}} --}}
+                                    <i class="bi bi-envelope"></i> Email :
+                                    @if ($case->requestClient)
+                                        {{ $case->requestClient->email }}
+                                    @endif
                                 </span>
                                 <br>
                                 <span>
                                     <i class="bi bi-geo-alt"></i> Address :
-                                    {{-- {{$case->requestClient->email}} --}}
+                                    @if ($case->requestClient)
+                                        {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
+                                    @endif
                                 </span>
                                 <br>
                                 <span>
-                                    <i class="bi bi-telephone"></i> Patient : +91 123456789
-                                    {{-- {{$case->requestClient->phone_number}} --}}
+                                    <i class="bi bi-telephone"></i> Patient :
+                                    {{ $case->requestClient->phone_number }}
                                 </span>
                                 <div class="grid-2-listing ">
                                     <button class="agreement-btn">Send Agreement</button>
@@ -264,11 +292,6 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <button class="secondary-btn">View Uploads</button>
                                     <button class="secondary-btn">Email</button>
                                 </div>
-                            </div>
-                            <div>
-                                Chat With:
-                                <button class="more-info-btn"><i class="bi bi-person me-2"></i>Patient</button>
-                                <button class="more-info-btn"><i class="bi bi-person-check me-2"></i>Admin</button>
                             </div>
                         </div>
                     @endif

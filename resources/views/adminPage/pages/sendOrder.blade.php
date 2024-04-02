@@ -6,12 +6,40 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
-    <a href="">Provider Location</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
     <a href="">My Profile</a>
-    <a href="">Providers</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="#">Invoicing</a></li>
+        </ul>
+    </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="">Access</a>
-    <a href="">Records</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Access
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+        </ul>
+    </div>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Records
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+        </ul>
+    </div>
 @endsection
 
 @section('content')
@@ -33,36 +61,53 @@
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">
-                        <select class="form-select profession-menu" id="floatingSelect"
+                        <select name="profession" class="form-select profession-menu @error('profession') is-invalid @enderror" id="floatingSelect"
                             aria-label="Floating label select example">
-                            <option selected>Open this select menu</option>
+                            <option selected disabled>Open this select menu</option>
                             @foreach ($types as $type)
                                 <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
                             @endforeach
                         </select>
                         <label for="floatingSelect">Select Profession</label>
+                        @error('profession')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <select name="vendor_id" class="form-select business-menu" id="floatingSelect"
+                        <select name="vendor_id" class="form-select business-menu @error('vendor_id')
+                            is-invalid
+                        @enderror" id="floatingSelect"
                             aria-label="Floating label select example">
                             <option selected>Buisness</option>
                         </select>
                         <label for="floatingSelect">Select Business</label>
+                        @error('vendor_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="business_contact" class="form-control business_contact"
-                            id="floatingInput" placeholder="Business Contact">
+                        <input type="text" name="business_contact" class="form-control business_contact @error('business_contact') is-invalid @enderror"
+                            id="floatingInput" placeholder="Business Contact" value="{{ old('business_contact') }}">
                         <label for="floatingInput">Business Contact</label>
+                        @error('business_contact')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control email" id="floatingInput"
-                            placeholder="email">
+                        <input type="email" name="email" class="form-control email @error('email') is-invalid @enderror" id="floatingInput"
+                            placeholder="email" value="{{ old('email') }}">
                         <label for="floatingInput">Email</label>
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="fax_number" class="form-control fax_number" id="floatingInput"
-                            placeholder="Fax Number">
+                        <input type="text" name="fax_number" class="form-control fax_number @error('fax_number') is-invalid @enderror" id="floatingInput"
+                            placeholder="Fax Number" value="{{ old('fax_number') }}">
                         <label for="floatingInput">Fax Number</label>
+                        @error('fax_number')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-floating">
@@ -71,11 +116,10 @@
                 </div>
 
                 <div class="grid-2">
-
                     <div class="form-floating">
                         <select class="form-select" name="refills" id="floatingSelect"
                             aria-label="Floating label select example">
-                            <option selected>Not Required</option>
+                            <option selected disabled>Not Required</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>
                             <option value="3">Three</option>

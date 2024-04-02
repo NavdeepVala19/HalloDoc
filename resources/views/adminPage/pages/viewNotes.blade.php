@@ -15,11 +15,19 @@
         <ul class="dropdown-menu records-menu">
             <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
+            <li><a class="dropdown-item" href="#">Invoicing</a></li>
         </ul>
     </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Access
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+        </ul>
+    </div>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Records

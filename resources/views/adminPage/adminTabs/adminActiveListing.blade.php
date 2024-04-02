@@ -5,42 +5,11 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
-
-
 @section('username')
     {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
-
-@section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation ">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
-@endsection
+@include('adminPage.adminTabs.adminHeader')
 
 @section('content')
     {{-- This page will display patient requests for which patients have accepted the service agreement and provider is
@@ -50,9 +19,11 @@ giving service to the patient. --}}
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
 
+    {{-- Order Created Successfully Pop-up Message --}}
+    @include('alertMessages.orderPlacedSuccess')
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.adminSendLink')
-
 
     {{-- Request DTY Support pop-up ->  --}}
     @include('popup.requestDTYSupport')
@@ -186,8 +157,8 @@ giving service to the patient. --}}
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
-                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'active']) }}"
-                        data-category="all" class="btn-all filter-btn">All</a>
+                    <a href="{{ route('admin.listing', ['category' => 'all', 'status' => 'active']) }}" data-category="all"
+                        class="btn-all filter-btn">All</a>
                     <a href="{{ route('admin.listing', ['category' => 'patient', 'status' => 'active']) }}"
                         data-category="patient" class="d-flex gap-2 filter-btn"> <i
                             class="bi bi-circle-fill green"></i>Patient</a>
@@ -227,7 +198,31 @@ giving service to the patient. --}}
                                     <td>{{ $case->first_name }} {{ $case->last_name }}</td>
                                     <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
                                     <td>{{ $case->created_at }}</td>
-                                    <td>{{ $case->phone_number }}</td>
+                                    <td class="mobile-column">
+                                        @if ($case->request_type_id == 1)
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                        @else
+                                            <div class="listing-mobile-container">
+                                                <i
+                                                    class="bi bi-telephone me-2"></i>{{ $case->requestClient->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                (patient)
+                                            </div>
+                                            <div class="listing-mobile-container">
+                                                <i class="bi bi-telephone me-2"></i>{{ $case->phone_number }}
+                                            </div>
+                                            <div class="ms-2">
+                                                ({{ $case->requestType->name }})
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>{{ $case->requestClient->street }},
                                         {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     </td>

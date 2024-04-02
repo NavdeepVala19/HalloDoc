@@ -124,6 +124,11 @@ $(document).ready(function () {
             );
         }
     });
+    // View Uploads File Upload Functionality
+    $("#file-upload").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(".upload-label").text(fileName);
+    });
 });
 
 // var canvas = document.getElementById('signatureCanvas');

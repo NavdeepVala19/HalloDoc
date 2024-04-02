@@ -248,7 +248,7 @@ $(document).ready(function () {
     });
 
     // Patient Cancel Agreement Pop-up
-    $('#cancelAgreementPatient').validate({
+    $("#cancelAgreementPatient").validate({
         rules: {
             cancelReason: "required",
         },
@@ -267,9 +267,36 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-    $('#cancelAgreementPatientBtn').click(function(){
+    $("#cancelAgreementPatientBtn").click(function () {
         if ($("#cancelAgreementPatient").valid()) {
             $("#cancelAgreementPatient").submit();
         }
-    })
+    });
+
+    // View Uploads (When no files are selected and upload button is clicked, it should give an error message)
+    // $("#uploadDocValidation").validate({
+    //     rules: {
+    //         document: "required",
+    //     },
+    //     messages: {
+    //         document: "Select An File to Upload!",
+    //     },
+    //     errorPlacement: function (error, element) {
+    //         let errorBox = $("<div class='text-danger'></div>");
+    //         errorBox.append(error);
+    //         element.closest(".form-floating").append(errorBox);
+    //     },
+    //     highlight: function (element) {
+    //         $(element).addClass("is-invalid").removeClass("is-valid");
+    //     },
+    //     unhighlight: function (element) {
+    //         $(element).removeClass("is-invalid").addClass("is-valid");
+    //     },
+    // });
+    // $("#uploadDocValidationBtn").click(function () {
+    //     console.log('Button Clicked')
+    //     if ($("#uploadDocValidation").valid()) {
+    //         $("#uploadDocValidation").submit();
+    //     }
+    // });
 });

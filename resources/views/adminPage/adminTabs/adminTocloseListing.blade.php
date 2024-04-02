@@ -9,35 +9,7 @@
     {{ !empty($userData) ? $userData->username : '' }}
 @endsection
 
-@section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="{{ route('admin.access.view') }}">Access</a>
-    <div class="dropdown record-navigation ">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
-@endsection
+@include('adminPage.adminTabs.adminHeader')
 
 @section('content')
     {{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement
@@ -45,6 +17,7 @@ by patients. --}}
     {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the
 patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the
 "Pending" state to the "Active" state. --}}
+    <div class="overlay"></div>
 
     {{-- Case Cleared Successfully --}}
     @if (session('caseCleared'))
@@ -56,7 +29,9 @@ patient's email address and phone number. Once the patient accepts the agreement
         </div>
     @endif
 
-    <div class="overlay"></div>
+    {{-- Order Created Successfully Pop-up Message --}}
+    @include('alertMessages.orderPlacedSuccess')
+
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
 

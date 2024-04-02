@@ -5,9 +5,10 @@
 @endsection
 
 @section('nav-links')
-    <a href="" class="active-link">Dashboard</a>
-    <a href="">My Schedule</a>
-    <a href="">My Profile</a>
+    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="">Invoicing</a>
+    <a href="{{ route('provider.scheduling') }}">My Schedule</a>
+    <a href="{{ route('provider.profile') }}">My Profile</a>
 @endsection
 
 @section('content')
@@ -207,9 +208,8 @@
                     {{-- Three buttons at last --}}
                     <div class="button-section">
                         <input type="submit" value="Save Changes" class="primary-fill">
-                        <a href="{{ route('generate.pdf', ['id' => $id]) }}" type="button"
+                        <a href="{{ route('encounter.finalized', $id) }}" type="button"
                             class="finalize-btn">Finalize</a>
-
                         <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
                             class="primary-empty">Cancel</a>
                     </div>
