@@ -128,3 +128,21 @@ input[type="checkbox"] {
         display: block;
     }
 }
+
+
+#providerAccSaveBtn,#providerAccCancelBtn{
+    display: none;
+}
+
+#providerInfoSaveBtn,#providerInfoCancelBtn{
+    display: none;
+}
+
+
+#providerMailSaveBtn,#providerMailCancelBtn{
+    display: none;
+}
+
+#providerProfileCancelBtn ,#providerProfileSaveBtn{
+    display: none;
+}

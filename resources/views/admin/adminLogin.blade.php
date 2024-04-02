@@ -21,7 +21,7 @@
         </div>
 
         @if (Session::has('message'))
-        <div class="alert alert-danger popup-message" role="alert">
+        <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
         </div>
         @endif

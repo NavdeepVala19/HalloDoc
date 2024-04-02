@@ -18,10 +18,30 @@ $(document).ready(function () {
         $(".provider-username-field").removeAttr("disabled");
         $("#provider-status").removeAttr("disabled");
         $("#provider-role").removeAttr("disabled");
+
+        $('#providerAccSaveBtn').show();
+        $('#providerAccCancelBtn').show();
+        $("#provider-credentials-edit-btn").hide();
+    
+    });
+
+    $("#providerAccCancelBtn").click(function () {
+        $(".provider-username-field").attr("disabled");
+        $("#provider-status").attr("disabled");
+        $("#provider-role").attr("disabled");
+
+        $('#providerAccSaveBtn').hide();
+        $('#providerAccCancelBtn').hide();
+        $("#provider-credentials-edit-btn").show();
+
     });
 
     $('#provider-reset-password-btn').click(function () {
         $('.provider-password-field').removeAttr("disabled");
+
+        $('#providerAccSaveBtn').show();
+        $('#providerAccCancelBtn').show();
+        $("#provider-credentials-edit-btn").hide();
     })
 
     $('#provider-info-btn').click(function () {
@@ -32,6 +52,24 @@ $(document).ready(function () {
         $(".provider-license").removeAttr("disabled");
         $(".provider-npi").removeAttr("disabled");
         $(".provider-alt-email").removeAttr("disabled");
+
+        $('#providerInfoSaveBtn').show();
+        $('#providerInfoCancelBtn').show();
+        $('#provider-info-btn').hide();
+    })
+
+    $('#providerInfoCancelBtn').click(function () {
+        $(".provider-firstname").attr("disabled");
+        $(".provider-lastname").attr("disabled");
+        $(".provider-email").attr("disabled");
+        $("#telephone").attr("disabled");
+        $(".provider-license").attr("disabled");
+        $(".provider-npi").attr("disabled");
+        $(".provider-alt-email").attr("disabled");
+
+        $('#providerInfoSaveBtn').hide();
+        $('#providerInfoCancelBtn').hide();
+        $('#provider-info-btn').show();
     })
 
     $('#provider-bill-edit-btn').click(function () {
@@ -41,6 +79,23 @@ $(document).ready(function () {
         $(".provider-bill-zip").removeAttr("disabled");
         $(".alt-phone-provider").removeAttr("disabled");
         $(".listing-region").removeAttr("disabled");
+
+        $('#providerMailSaveBtn').show()
+        $('#providerMailCancelBtn').show()
+        $('#provider-bill-edit-btn').hide()
+    })
+
+    $('#providerMailCancelBtn').click(function () {
+        $(".provider-bill-add1").attr("disabled");
+        $(".provider-bill-add2").attr("disabled");
+        $(".provider-bill-city").attr("disabled");
+        $(".provider-bill-zip").attr("disabled");
+        $(".alt-phone-provider").attr("disabled");
+        $(".listing-region").attr("disabled");
+
+        $('#providerMailSaveBtn').hide()
+        $('#providerMailCancelBtn').hide()
+        $('#provider-bill-edit-btn').show()
     })
 
 
@@ -48,6 +103,32 @@ $(document).ready(function () {
         $(".business-name").removeAttr("disabled");
         $(".business-web").removeAttr("disabled");
         $(".admin-notes").removeAttr("disabled");
+
+        $('#providerProfileSaveBtn').show()
+        $('#providerProfileCancelBtn').show()
+        $('#provider-profile-edit-btn').hide()
+    })
+
+
+    $('#provider-profile-edit-btn').click(function () {
+        $(".business-name").removeAttr("disabled");
+        $(".business-web").removeAttr("disabled");
+        $(".admin-notes").removeAttr("disabled");
+
+        $('#providerProfileSaveBtn').show()
+        $('#providerProfileCancelBtn').show()
+        $('#provider-profile-edit-btn').hide()
+    })
+
+
+    $('#providerProfileCancelBtn').click(function () {
+        $(".business-name").removeAttr("disabled");
+        $(".business-web").removeAttr("disabled");
+        $(".admin-notes").removeAttr("disabled");
+
+        $('#providerProfileSaveBtn').hid()
+        $('#providerProfileCancelBtn').hide()
+        $('#provider-profile-edit-btn').show()
     })
 
 
@@ -102,14 +183,102 @@ $(document).ready(function () {
     //     });
     // })
 
+    function fetchPaginatedResults(selectedId, page) {
+        var token = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajax({
+            url: '/admin/providers/regionsFiltering?page=' + page,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                selectedId: selectedId,
+                _token: token
+            },
+            success: function (response) { 
+                $('#adminProviderData').html(data.html); // Update results area
+
+                // Now that data.html is populated, process the contact buttons
+                // $('.contact-btn[id]').each(function (i, el) {
+                //     var isChecked = $(el).closest('tr').find('.checkbox1').is(":checked");
+
+                //     if (isChecked) {
+                //         $(el).attr("disabled", "true");
+                //     } else {
+                //         $(el).removeAttr("disabled");
+                //     }
+                // });
+
+            }
+
+        })
+       
+    }
+
+    $(document).on('click', '.pagination .page-link', function (event) {
+        event.preventDefault();
+        var page = $(this).text();
+        var selectedId = $("#listing-region-admin-provider").val();
+        fetchPaginatedResults(selectedId, page);
+    });
+
+    $('#listing-region-admin-provider').on('change', function (event) {
+        event.preventDefault();
+        var selectedId = $(this).val();
+        fetchPaginatedResults(selectedId, 1);
+      
+    });
+
     // ********************************************************************************
 
+
+
+    $('.contact-btn[id]').each(function (i, el) {
+        var isChecked = $(el).closest('tr').find('.checkbox1').is(":checked");
+
+        if (isChecked) {
+            $(el).attr("disabled", "true")
+        } else {
+            $(el).removeAttr("disabled");
+        }
+    });
+
+
+
+    $(document).on('change', '.checkbox1', function (e) {
+        var token = $('meta[name="csrf-token"]').attr('content')
+        var checkbox = $(this);
+
+        var stopNotificationsCheckId = checkbox.attr('id').split('_')[1];
+        var is_notifications = checkbox.prop('checked') ? 1 : 0; // Ternary operator to set is_notify
+
+        $.ajax({
+            url: "/admin/providers/stopNotification",
+            type: 'POST',
+            data: {
+                stopNotificationsCheckId: stopNotificationsCheckId,
+                is_notifications: is_notifications,
+                "_token": token
+            },
+            success: function (response) {
+                var contactBtn = $('#contact_btn_' + stopNotificationsCheckId)
+                if (is_notifications == 1) {
+                    contactBtn.prop('disabled', 'disabled')
+                } else {
+                    contactBtn.removeAttr('disabled')
+                }
+            },
+            error: function (error) {
+                console.error('Error updating stop notifications:', error);
+            }
+        });
+    });
 
 
 
 
     //***  This code is showing contact your provider pop-up ****
-    $('.contact-btn').click(function () {
+
+    $(document).on('click', '.contact-btn',function () {
         $('.new-provider-pop-up').show();
         $('.overlay').show();
     })
@@ -234,205 +403,10 @@ $(document).ready(function () {
 })
 
 
-$(document).ready(function () {
-    $.validator.addMethod("phoneUS", function (phone_number, element) {
-        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
-    }, "Please enter a valid phone number.");
-
-    $.validator.addMethod("city", function (value, element) {
-        return value.match(/^[a-zA-Z ,_-]+?$/);
-    }, "Please enter a valid city name.");
-
-    $.validator.addMethod("zipcode", function (value, element) {
-        return value.length == 6 && /\d/.test(value);
-    }, "Please enter a valid zipcode.");
-
-    $('#adminEditProviderForm').validate({
-        rules: {
-            user_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            },
-            password: {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            },
-            first_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            },
-            last_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            },
-            email: {
-                required: true,
-                email: true,
-            },
-            phone_number: {
-                required: true,
-                phoneUS: true
-            },
-            medical_license: {
-                required: true,
-            },
-            npi_number: {
-                required: true,
-            },
-            alt_email: {
-                required: true,
-                email: true
-            },
-            address1: {
-                required: true,
-                minlength: 3,
-                maxlength: 50
-            },
-            address2: {
-                required: true,
-            },
-            city: {
-                required: true,
-                city: true
-            },
-            zip: {
-                required: true,
-                zipcode: true
-            },
-            alt_phone_number: {
-                required: true,
-                phoneUS: true
-            },
-            business_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            },
-            business_website: {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            },
-            Admin_Notes: {
-                required: true,
-            },
-        },
-        message: {
-            user_name: {
-                required: "Please enter a valid username",
-            },
-            password: {
-                required: "Please enter a valid password",
-            },
-            first_name: {
-                required: "Please enter a valid first_name",
-            },
-            last_name: {
-                required: "Please enter a valid last_name",
-            },
-            email: {
-                required: "Please enter a valid email",
-            },
-            phone_number: {
-                required: "Please enter a valid phone_number",
-            },
-            medical_license: {
-                required: "Please enter a valid medical_license",
-            },
-            npi_number: {
-                required: "Please enter a valid npi_number",
-            },
-            alt_email: {
-                required: "Please enter a valid alt_email",
-            },
-            address1: {
-                required: "Please enter a valid address1",
-            },
-            address2: {
-                required: "Please enter a valid address2",
-            },
-            city: {
-                required: "Please enter a valid city",
-            },
-            zip: {
-                required: "Please enter a valid zipcode",
-            },
-            alt_phone_number: {
-                required: "Please enter a valid alt_phone_number",
-            },
-            business_name: {
-                required: "Please enter a valid business_name",
-            },
-            business_website: {
-                required: "Please enter a valid business_website",
-            },
-            Admin_Notes: {
-                required: "Please enter a valid Admin_Notes",
-            },
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('errorMsg');
-            element.closest('.form-floating').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid').addClass('is-valid');
-        }
-    })
-})
 
 
 
-$(document).ready(function () {
 
-    $('.contact-btn[id]').each(function (i, el) {
-        var isChecked = $(el).closest('tr').find('.checkbox1').is(":checked");
-
-        if (isChecked) {
-            $(el).attr("disabled", "true")
-        } else {
-            $(el).removeAttr("disabled");
-        }
-    });
-
-
-
-    $('#all-providers-data').on('change', '.checkbox1', function (e) {
-        var token = $('meta[name="csrf-token"]').attr('content')
-        var checkbox = $(this);
-
-        var stopNotificationsCheckId = checkbox.attr('id').split('_')[1];
-        var is_notifications = checkbox.prop('checked') ? 1 : 0; // Ternary operator to set is_notify
-
-        $.ajax({
-            url: "/admin/providers/stopNotification",
-            type: 'POST',
-            data: {
-                stopNotificationsCheckId: stopNotificationsCheckId,
-                is_notifications: is_notifications,
-                "_token": token
-            },
-            success: function (response) {
-                var contactBtn = $('#contact_btn_' + stopNotificationsCheckId)
-                if (is_notifications == 1) {
-                    contactBtn.prop('disabled', 'disabled')
-                } else {
-                    contactBtn.removeAttr('disabled')
-                }
-            },
-            error: function (error) {
-                console.error('Error updating stop notifications:', error);
-            }
-        });
-    });
-});
 
 
 
@@ -492,34 +466,213 @@ $(document).ready(function () {
 // })
 
 
-function fetchPaginatedResults(selectedId, page) {
-    var token = $('meta[name="csrf-token"]').attr('content')
-    $.ajax({
-        url: '/admin/providers/regionsFiltering?page=' + page,
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            selectedId: selectedId,
-            "_token": token
+
+
+
+
+$(document).ready(function () {
+    $('#adminEditProviderForm1').validate({
+        rules: {
+            user_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
         },
-        success: function (data) {
-            $('#adminProviderData').html(data.html) // Update results area
+        message: {
+            user_name: {
+                required: "Please enter a valid username",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
         }
-    });
-}
-
-$(document).on('click', '.pagination .page-link', function (event) {
-    event.preventDefault();
-    var page = $(this).text();
-    var selectedId = $("#listing-region-admin-provider").val();
-    fetchPaginatedResults(selectedId, page);
-});
-
-$('#listing-region-admin-provider').on('change', function (event) {
-    event.preventDefault();
-    var selectedId = $(this).val();
-    fetchPaginatedResults(selectedId, 1);
-});
+    })
+})
 
 
+$(document).ready(function () {
+    $.validator.addMethod("phoneUS", function (phone_number, element) {
+        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
+    }, "Please enter a valid phone number.");
+
+    $('#adminEditProviderForm2').validate({
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            last_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            medical_license: {
+                required: true,
+            },
+            npi_number: {
+                required: true,
+            },
+        },
+        message: {
+            first_name: {
+                required: "Please enter a valid first_name",
+            },
+            last_name: {
+                required: "Please enter a valid last_name",
+            },
+            email: {
+                required: "Please enter a valid email",
+            },
+            phone_number: {
+                required: "Please enter a valid phone_number",
+            },
+            medical_license: {
+                required: "Please enter a valid medical_license",
+            },
+            npi_number: {
+                required: "Please enter a valid npi_number",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+    })
+})
+
+$(document).ready(function () {
+    $.validator.addMethod("phoneUS", function (phone_number, element) {
+        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
+    }, "Please enter a valid phone number.");
+
+    $.validator.addMethod("city", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid city name.");
+
+    $.validator.addMethod("zipcode", function (value, element) {
+        return value.length == 6 && /\d/.test(value);
+    }, "Please enter a valid zipcode.");
+
+    $('#adminEditProviderForm3').validate({
+        rules: {
+            address1: {
+                required: true,
+                minlength: 3,
+                maxlength: 50
+            },
+            address2: {
+                required: true,
+            },
+            city: {
+                required: true,
+                city: true
+            },
+            zip: {
+                required: true,
+                zipcode: true
+            },
+            alt_phone_number: {
+                required: true,
+                phoneUS: true
+            },
+        },
+        message: {
+            
+            address1: {
+                required: "Please enter a valid address1",
+            },
+            address2: {
+                required: "Please enter a valid address2",
+            },
+            city: {
+                required: "Please enter a valid city",
+            },
+            zip: {
+                required: "Please enter a valid zipcode",
+            },
+            alt_phone_number: {
+                required: "Please enter a valid alt_phone_number",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+    })
+})
+
+
+$(document).ready(function () {
+    $('#adminEditProviderForm4').validate({
+        rules: {        
+            business_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            business_website: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            Admin_Notes: {
+                required: true,
+            },
+        },
+        message: {
+            business_name: {
+                required: "Please enter a valid business_name",
+            },
+            business_website: {
+                required: "Please enter a valid business_website",
+            },
+            Admin_Notes: {
+                required: "Please enter a valid Admin_Notes",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+    })
+})
 

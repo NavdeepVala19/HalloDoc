@@ -80,14 +80,14 @@
             {{$userAccessData->links('pagination::bootstrap-5')}}
         </div>
 
-        <div class="mobile-listing">
+        <div class="mobile-listing mt-3">
             @foreach ($userAccessData as $data )
             <div class="mobile-list">
                 <div class="main-section">
                     <h5 class="heading">{{$data->first_name}}</h5>
                     <div class="detail-box">
-       
-                 <span>
+
+                        <span>
                             Account Type: {{$data->name}}
                         </span>
                     </div>
@@ -111,7 +111,3 @@
 </div>
 @endsection
 
-
-@section('script')
-<script defer src="{{ URL::asset('assets/adminPage/admin.js') }}"></script>
-@endsection

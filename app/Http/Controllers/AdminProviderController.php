@@ -31,7 +31,7 @@ class AdminProviderController extends Controller
 
     public function readProvidersInfo()
     {
-        $providersData = Provider::paginate(10);
+        $providersData = Provider::orderBy('created_at', 'desc')->paginate(10);
         return view('/adminPage/provider/adminProvider', compact('providersData'));
     }
 
@@ -41,7 +41,7 @@ class AdminProviderController extends Controller
 
     public function filterPhysicianThroughRegions(Request $request)
     {
-       
+
         if ($request->selectedId == "All") {
             $providersData = Provider::paginate(10);
         } else {
@@ -180,9 +180,6 @@ class AdminProviderController extends Controller
         return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
     }
 
-
-
-
     public function stopNotifications(Request $request)
     {
         $stopNotification = Provider::find($request->stopNotificationsCheckId);
@@ -200,6 +197,8 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
+        // dd($request->file('provider_photo')->getClientOriginalName());
+
         $request->validate([
             'user_name' => 'required',
             'password' => 'required',
@@ -246,25 +245,23 @@ class AdminProviderController extends Controller
         $providerData->address2 = $request->address2;
         $providerData->city = $request->city;
         $providerData->zip = $request->zip;
-        // $providerData->status = 'pending';
+        $providerData->status = 'pending';
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
 
-
-
         $providerData->save();
-
 
 
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([
-                [
-                    'provider_id' => $providerData->id,
-                    'region_id' => $region
-                ]
+
+                'provider_id' => $providerData->id,
+                'region_id' => $region
+
             ]);
         }
+
         $data = PhysicianRegion::where('provider_id', $providerData->id)->pluck('id')->toArray();
         $ids = implode(',', $data);
 
@@ -296,89 +293,65 @@ class AdminProviderController extends Controller
         $request_file = new RequestWiseFile();
 
         if (isset($request->provider_photo)) {
-            $request_file = new Provider();
-            $request_file->physician_id = $providerData->id;
-
-            $request_file->file_name = $request->file('provider_photo')->getClientOriginalName();
-
-            $providerData->photo = $request_file->file_name;
-
-            $path = $request->file('provider_photo')->storeAs('public', $request->file('provider_photo')->getClientOriginalName());
-            $request_file->save();
+            $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
+            $path = $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
             $providerData->save();
         }
 
 
         if (isset($request->independent_contractor)) {
-            $request_file = new RequestWiseFile();
-            $request_file->physician_id = $providerData->id;
-
-            $request_file->file_name = $request->file('independent_contractor')->getClientOriginalName();
-
             $providerData->IsAgreementDoc = 1;
 
-
-            $path = $request->file('independent_contractor')->storeAs('public', $request->file('independent_contractor')->getClientOriginalName());
-            $request_file->save();
+            $file = $request->file('independent_contractor');
+            $filename = $providerData->id . '_ICA' . '.' . "pdf";
+            $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
 
         if (isset($request->background_doc)) {
-            $request_file = new RequestWiseFile();
-            $request_file->physician_id = $providerData->id;
-
-            $request_file->file_name = $request->file('background_doc')->getClientOriginalName();
-
             $providerData->IsBackgroundDoc = 1;
 
-            $path = $request->file('background_doc')->storeAs('public', $request->file('background_doc')->getClientOriginalName());
-            $request_file->save();
+            $file = $request->file('background_doc');
+            $filename = $providerData->id . '_BC' . '.' ."pdf";
+            $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
 
         if (isset($request->hipaa_docs)) {
-            $request_file = new RequestWiseFile();
-            $request_file->physician_id = $providerData->id;
-
-            $request_file->file_name = $request->file('hipaa_docs')->getClientOriginalName();
-
             $providerData->IsTrainingDoc = 1;
 
-            $path = $request->file('hipaa_docs')->storeAs('public', $request->file('hipaa_docs')->getClientOriginalName());
-            $request_file->save();
+            $file = $request->file('hipaa_docs');
+            $filename = $providerData->id . '_HCA' . '.' ."pdf";
+            $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
 
         if (isset($request->non_disclosure_doc)) {
-            $request_file = new RequestWiseFile();
-            $request_file->physician_id = $providerData->id;
-
-            $request_file->file_name = $request->file('non_disclosure_doc')->getClientOriginalName();
-
             $providerData->IsNonDisclosureDoc = 1;
 
-            $path = $request->file('non_disclosure_doc')->storeAs('public', $request->file('non_disclosure_doc')->getClientOriginalName());
-            $request_file->save();
+            $file = $request->file('non_disclosure_doc');
+            $filename = $providerData->id . '_NDD' . '.' . "pdf";
+            $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
 
-        if (isset($request->license_doc)) {
-            $request_file = new RequestWiseFile();
-            $request_file->physician_id = $providerData->id;
+        // if (isset($request->license_doc)) {
+        //     $request_file = new RequestWiseFile();
+        //     $request_file->physician_id = $providerData->id;
 
-            $request_file->file_name = $request->file('license_doc')->getClientOriginalName();
+        //     $request_file->file_name = $request->file('license_doc')->getClientOriginalName();
 
 
-            $providerData->IsLicenseDoc = 1;
+        //     $providerData->IsLicenseDoc = 1;
 
-            $path = $request->file('license_doc')->storeAs('public', $request->file('license_doc')->getClientOriginalName());
-            $request_file->save();
-            $providerData->save();
-        }
+        //     $path = $request->file('license_doc')->storeAs('public', $request->file('license_doc')->getClientOriginalName());
+        //     $request_file->save();
+        //     $providerData->save();
+        // }
 
         return redirect()->route('adminProvidersInfo');
     }
@@ -445,8 +418,6 @@ class AdminProviderController extends Controller
 
         $getProviderInformation->save();
 
-
-
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
 
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
@@ -455,6 +426,180 @@ class AdminProviderController extends Controller
         $updateProviderInfoUsers->save();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');
+    }
+
+
+    public function updateProviderAccountInfo(Request $request, $id)
+    {
+
+
+        // update data of providers in users table
+
+        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
+
+
+
+        $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
+
+
+        if (!empty($request->password)) {
+            $updateProviderInfoUsers->password = Hash::make($request->password);
+            $updateProviderInfoUsers->save();
+        } else {
+            $updateProviderInfoUsers->username = $request->user_name;
+            $updateProviderInfoUsers->save();
+        }
+
+        $getProviderData = Provider::where('id',$id)->first();
+
+        $getProviderData->status = $request->status_type;
+        $getProviderData->save();     
+
+        return back()->with('message', 'account information is updated');
+    }
+
+
+    public function providerInfoUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'medical_license' => 'required',
+            'npi_number' => 'required',
+        ]);
+        $getProviderInformation = Provider::with('users')->where('id', $id)->first();
+
+        $getProviderInformation->first_name = $request->first_name;
+        $getProviderInformation->last_name = $request->last_name;
+        $getProviderInformation->email = $request->email;
+        $getProviderInformation->syncEmailAddress = $request->alt_email;
+        $getProviderInformation->mobile = $request->phone_number;
+        $getProviderInformation->medical_license = $request->medical_license;
+        $getProviderInformation->npi_number = $request->npi_number;
+
+        $getProviderInformation->save();
+
+        // update data in allusers table 
+
+        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
+
+        $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
+
+
+
+        $updateProviderDataAllUsers->first_name = $request->first_name;
+        $updateProviderDataAllUsers->last_name = $request->last_name;
+        $updateProviderDataAllUsers->email = $request->email;
+        $updateProviderDataAllUsers->mobile = $request->phone_number;
+        $updateProviderDataAllUsers->save();
+
+        return back()->with('message', 'Physician information is updated');
+    }
+
+
+    public function providerMailInfoUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'address1' => 'required',
+            'address2' => 'required',
+            'city' => 'required',
+            'zip' => 'required',
+        ]);
+
+        $getProviderInformation = Provider::with('users')->where('id', $id)->first();
+
+        $getProviderInformation->city = $request->city;
+        $getProviderInformation->address1 = $request->address1;
+        $getProviderInformation->address2 = $request->address2;
+        $getProviderInformation->zip = $request->zip;
+        $getProviderInformation->alt_phone = $request->alt_phone_number;
+        $getProviderInformation->save();
+
+
+        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
+
+        $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
+
+        $updateProviderDataAllUsers->street = $request->address1;
+        $updateProviderDataAllUsers->city = $request->city;
+        $updateProviderDataAllUsers->zipcode = $request->zip;
+        $updateProviderDataAllUsers->save();
+
+        return back()->with('message', 'Mailing and Billing information is updated');
+    }
+
+    public function providerProfileUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'business_name' => 'required',
+            'business_website' => 'required',
+            'admin_notes' => 'required',
+        ]);
+
+        $getProviderInformation = Provider::where('id', $id)->first();
+
+        $getProviderInformation->business_name = $request->business_name;
+        $getProviderInformation->business_website = $request->business_website;
+        $getProviderInformation->admin_notes = $request->admin_notes;
+
+
+        if (isset($request->provider_photo)) {
+            $getProviderInformation->photo = $request->file('provider_photo')->getClientOriginalName();
+            $path = $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
+            $getProviderInformation->save();
+        }
+
+        $getProviderInformation->save();
+
+        return back()->with('message', 'Provider Profile information is updated');
+    }
+
+    public function providerDocumentsUpdate(Request $request, $id)
+    {
+
+        $getProviderInformation = Provider::where('id', $id)->first();
+
+        if (isset($request->independent_contractor)) {
+            $getProviderInformation->IsAgreementDoc = 1;
+
+            $file = $request->file('independent_contractor');
+            $filename = $getProviderInformation->id . '_ICA' . '.' . "pdf";
+            $path = $file->storeAs('public/provider', $filename);
+            $getProviderInformation->save();
+        }
+
+
+        if (isset($request->background_doc)) {
+            $getProviderInformation->IsBackgroundDoc = 1;
+            $file = $request->file('background_doc');
+            $filename = $getProviderInformation->id . '_BC' . '.' . "pdf";
+            $path = $file->storeAs('public/provider', $filename);
+            $getProviderInformation->save();
+        }
+
+
+        if (isset($request->hipaa_docs)) {
+            $getProviderInformation->IsTrainingDoc = 1;
+            $file = $request->file('hipaa_docs');
+            $filename = $getProviderInformation->id . '_HCA' . '.' . "pdf";
+            $path = $file->storeAs('public/provider', $filename);
+            $getProviderInformation->save();
+        }
+
+
+        if (isset($request->non_disclosure_doc)) {
+            $getProviderInformation->IsNonDisclosureDoc = 1;
+
+            $file = $request->file('non_disclosure_doc');
+            $filename = $getProviderInformation->id . '_NDD' . '.' . "pdf";
+            $path = $file->storeAs('public/provider', $filename);
+            $getProviderInformation->save();
+        }
+
+
+        return back()->with('message', 'Document is uploaded');
     }
 
 

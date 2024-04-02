@@ -1,4 +1,4 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 
@@ -6,7 +6,7 @@
 
 @endsection
 
-@section('content')
+@section('patientSiteContent')
 
 <div class="container">
 
@@ -220,12 +220,8 @@
 
 
                     <div class="row patient-location-row3">
-
                         <div class="col-md patient-location-col3 me-4">
-                            <input type="number" placeholder="Room/Suite(optional)" name="room" class="form-control patient-location-room-text w-50  @error('room') is-invalid @enderror" id="room" name="room" value="{{ old('room') }}">
-                            @error('room')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
+                            <input type="number" placeholder="Room/Suite(optional)" name="room" class="form-control patient-location-room-text w-50  " id="room" name="room" value="{{ old('room') }}">
                         </div>
 
 

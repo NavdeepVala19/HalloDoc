@@ -119,6 +119,6 @@ class patientLoginController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect("loginScreen");
+        return redirect()->route('loginScreen');
     }
 }

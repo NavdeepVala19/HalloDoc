@@ -19,8 +19,6 @@ use Illuminate\Support\Str;
 
 class AdminLoginController extends Controller
 {
-
-
     // this code is for login input credentials
 
     public function adminLogin()

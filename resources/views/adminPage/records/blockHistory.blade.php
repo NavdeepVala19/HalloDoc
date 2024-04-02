@@ -7,8 +7,8 @@
 
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-<a href="">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('providerLocation')}}" >Provider Location</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <a href="">Providers</a>
 <a href="{{ route('admin.partners') }}">Partners</a>
 <a href="">Access</a>

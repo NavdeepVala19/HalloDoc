@@ -1,12 +1,13 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
 @endsection
 
 
+@section('patientSiteContent')
 
-@section('content')
+
 <div class="container">
     <!-- this div is for heading and back button -->
     <div class="header_part">
@@ -153,9 +154,8 @@
 
 
                     <div class="row patient-location-row3">
-
                         <div class="col-md patient-location-col3 me-4">
-                            <input type="number" placeholder="Room/Suite(optional)" name="room" value="{{ old('room') }}" class="form-control patient-location-room-text w-50  @error('room') is-invalid @enderror" id="room" name="room">
+                            <input type="number" placeholder="Room/Suite(optional)" name="room" value="{{ old('room') }}" class="form-control patient-location-room-text w-50 " id="room" name="room">
                         </div>
 
 

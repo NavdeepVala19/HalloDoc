@@ -1,4 +1,4 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 
@@ -16,7 +16,8 @@
 
 @endsection
 
-@section('content')
+@section('patientSiteContent')
+
 
 <div class="container content">
 
@@ -83,7 +84,6 @@
 
             @foreach ($documents as $document)
             <div class=" patient-content mt-4">
-
                 <div class="check-docs">
                     <input class="form-check-input" type="checkbox" id="flexCheckDefault">
                     <p>{{$document->file_name}}</p>

@@ -9,7 +9,7 @@
 @section('nav-links')
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
 <a href="{{route('providerLocation')}}" class="active-link">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
@@ -55,30 +55,29 @@
 
 
 <script>
-        function updateMap(providers) {
-            //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
-            var addresses = providers; 
-            var mapUrl = "https://www.google.com/maps?q=";
+    function updateMap(providers) {
+        //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
+        var addresses = providers;
+        var mapUrl = "https://www.google.com/maps?q=";
 
 
-            // This forEach takes callback function as an argument and 
-            // callback function takes 2 parameters 1st is provider(the current element of array) and 2nd is index(the index of current element)
+        // This forEach takes callback function as an argument and 
+        // callback function takes 2 parameters 1st is provider(the current element of array) and 2nd is index(the index of current element)
 
-            addresses.forEach(function(provider, index) {
-                if (index !== 0) {
-                    mapUrl += "+";
-                }
+        addresses.forEach(function(provider, index) {
+            if (index !== 0) {
+                mapUrl += "+";
+            }
 
-                mapUrl += encodeURIComponent(provider.address1 + ", " + provider.address2 + ", " + provider.city + ", " + provider.zipcode);
-            });
+            mapUrl += encodeURIComponent(provider.address1 + ", " + provider.address2 + ", " + provider.city + ", " + provider.zipcode);
+        });
 
-            document.getElementById('map-iframe').src = mapUrl + "&output=embed";
-        }
+        document.getElementById('map-iframe').src = mapUrl + "&output=embed";
+    }
 
-        
-        // Call the function to update the map when the page loads
-        updateMap(<?php echo json_encode($providers);?>);
 
+    // Call the function to update the map when the page loads
+    updateMap(<?php echo json_encode($providers); ?>);
 </script>
 
 

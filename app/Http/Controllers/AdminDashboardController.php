@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\users;
+use App\Models\Regions;
+use Twilio\Rest\Client;
 use App\Models\allusers;
+use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\RequestStatus;
+use App\Mail\sendEmailAddress;
 use App\Models\request_Client;
 use App\Models\RequestWiseFile;
 use App\Services\TwilioService;
 use App\Exports\PendingStatusExport;
-use App\Mail\sendEmailAddress;
-use App\Models\EmailLog;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
-use Twilio\Rest\Client;
 
 class AdminDashboardController extends Controller
 {
@@ -145,36 +148,79 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+
+ 
+
     public function adminProfile($id)
     {
         $adminProfileData = Admin::with('users')->where('user_id', $id)->first();
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 
-    public function adminProfileEdit(Request $request, $id)
+   
+
+
+    public function adminProfilePage()
     {
-        $request->validate([
-            'user_name' => 'required',
-            'first_name' => 'required',
-            'email' => 'required|email',
-        ]);
+        $adminData = Auth::user();
+
+        // $adminProfileData = Admin::with('users')->where('user_id', $adminData->id)->first();
+
+
+        $adminProfileData = Admin::select(
+            'admin.first_name',
+            'admin.last_name',
+            'admin.email',
+            'admin.mobile',
+            'admin.address1',
+            'admin.address2',
+            'admin.city',
+            'admin.zip',
+            'admin.status',
+            'admin.user_id',
+            'role_menu.menu_id',
+            'menu.name',
+            'users.id'
+        )
+        ->leftJoin('role_menu','role_menu.role_id','admin.role_id')
+        ->leftJoin('menu','menu.id','role_menu.menu_id')
+        ->leftJoin('users','users.id','admin.user_id')
+        ->where('user_id', $adminData->id)
+        ->first();
+
+        // dd($adminProfileData);
+       
+        return view('adminPage/adminProfile', compact('adminProfileData'));
+
+    }
+
+    public function adminChangePassword(Request $request, $id){
+
+        // Update data in users table
+        $updateUserData = [
+            'password' => Hash::make($request->password),
+        ];
+        $updateAdminInfoInUsers = users::where('id', $id)->first()->update($updateUserData);
+
+        return back()->with('message', 'Your profile is updated successfully');
+
+    }
+
+
+    public function adminInfoUpdate(Request $request, $id){
+
+        // Update in admin table
+
         $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
 
         $updateAdminInformation->first_name = $request->first_name;
         $updateAdminInformation->last_name = $request->last_name;
         $updateAdminInformation->email = $request->email;
         $updateAdminInformation->mobile = $request->phone_number;
-        $updateAdminInformation->address1 = $request->address1;
-        $updateAdminInformation->address2 = $request->address2;
-        $updateAdminInformation->city = $request->city;
-        $updateAdminInformation->zip = $request->zip;
-        $updateAdminInformation->alt_phone = $request->alt_mobile;
+
         $updateAdminInformation->save();
 
-        $updateAdminInfoInUsers = users::where('id', $id)->first();
-        $updateAdminInfoInUsers->username = $request->user_name;
-        $updateAdminInfoInUsers->password = $request->password;
-        $updateAdminInfoInUsers->save();
+        // update Data in allusers table 
 
         $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
 
@@ -182,17 +228,35 @@ class AdminDashboardController extends Controller
         $updateAdminInfoAllUsers->last_name = $request->last_name;
         $updateAdminInfoAllUsers->email = $request->email;
         $updateAdminInfoAllUsers->mobile = $request->phone_number;
-        $updateAdminInfoAllUsers->street = $request->address1;
-        $updateAdminInfoAllUsers->city = $request->city;
-        $updateAdminInfoAllUsers->zipcode = $request->zip;
-
         $updateAdminInfoAllUsers->save();
 
-
-        return redirect()->route('admin.user.access');
+        return back()->with('message', 'Your profile is updated successfully');
     }
 
+    public function adminMailInfoUpdate(Request $request, $id){
 
+        $updatedData = [
+            'city' => $request->input('city'),
+            'address1' => $request->input('address1'),
+            'address2' => $request->input('address2'),
+            'zip' => $request->input('zip'),
+            'alt_phone' => $request->input('alt_mobile'),
+        ];
+
+        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first()->update($updatedData);
+
+
+        // update Data in allusers table 
+
+        $updateAllUser = [
+            'city' => $request->input('city'),
+            'street' => $request->input('address1'),
+            'zipcode' => $request->input('zip')
+        ];
+        $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first()->update($updateAllUser);
+        return back()->with('message', 'Your profile is updated successfully');
+
+    }
  
 
 }

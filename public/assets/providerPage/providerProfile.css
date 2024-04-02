@@ -54,3 +54,12 @@
         padding: 4px 6px;
     }
 }
+
+
+.admin-info-btns{
+    display: none;
+}
+
+.admin-mail-info-btns{
+    display: none;
+}

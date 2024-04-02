@@ -1,10 +1,11 @@
-@extends('index')
+@extends('patientSiteIndex')
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/conciergeRequest.css') }}">
 @endsection
 
-@section('content')
+@section('patientSiteContent')
+
 <div class="container">
 
     <!-- this div is for back button -->

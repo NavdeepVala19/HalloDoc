@@ -30,7 +30,7 @@
     </div>
 
     <div class="section">
-        <form action="{{ route('adminCreatedPatientRequest') }}" method="POST">
+        <form action="{{ route('adminCreatedPatientRequest') }}" method="POST" id="patientProfileEditForm">
             @csrf
             <h3>Patient</h3>
             <div class="mb-4 form-grid">
@@ -42,6 +42,7 @@
                     @error('first_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
+                    <span id="errorMsg"></span>
                 </div>
                 <div class="form-floating ">
                     <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" id="floatingInput" placeholder="Last Name" value="{{ old('last_name') }}">
@@ -52,7 +53,7 @@
                 </div>
 
                 <div>
-                    <div>
+                    <div class="form-floating" style="height: 58px;">
                         <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
                     </div>
                     @error('phone_number')
@@ -124,4 +125,10 @@
         </form>
     </div>
 </div>
+@endsection
+
+
+@section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

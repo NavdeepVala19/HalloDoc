@@ -272,7 +272,7 @@ $(document).ready(function () {
             city: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 40,
                 city: true
             },
             state: {

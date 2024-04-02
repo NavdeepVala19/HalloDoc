@@ -50,8 +50,6 @@ return new class extends Migration
             //add these 
             $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
 
-
-
             $table->string('business_name')->nullable();
             $table->string('business_website')->nullable();
 

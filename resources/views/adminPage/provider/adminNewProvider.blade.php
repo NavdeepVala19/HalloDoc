@@ -7,7 +7,7 @@
 @section('nav-links')
 <a href="{{route('admin.dashboard')}}">Dashboard</a>
 <a href="{{route('providerLocation')}}">Provider Location</a>
-<a href="">My Profile</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
@@ -222,7 +222,7 @@
                 <div>
                     {{-- Select Photo --}}
                     <div class="custom-file-input" onclick="openFileSelection()">
-                        <input type="text" placeholder="Select Photo" readonly>
+                        <input type="text" placeholder="Select Photo" readonly name="provider_photo">
                         <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span class="upload-txt">Upload</span> </label>
                         <input type="file" id="file-input" class="file-input-provider_photo" hidden name="provider_photo">
                         <p id="provider_photo"></p>
