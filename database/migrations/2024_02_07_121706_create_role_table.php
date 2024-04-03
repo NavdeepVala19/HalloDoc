@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('account_type', ['admin', 'physician']);
 
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
             $table->string('modified_by')->nullable();
 
             $table->softDeletes();

@@ -160,6 +160,31 @@ $(document).ready(function () {
 
 
 
+
+    // ***************** Fetching role from role table ******************
+    $.ajax({
+        url: "/admin/provider/role",
+        type: "GET",
+        success: function (data) {
+
+            data.forEach(function (role) {
+                $("#provider-role").append(
+                    '<option value="' + role.id + '" class="role_name" >' + role.name + "</option>"
+                );
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+
+    });
+    // ********************************************************************************
+
+
+
+
+
+
     // **** Filtering Data according to selected region from dropdown button in adminProvider Page ****
 
     // $('#listing-region-admin-provider').on('change', function () {

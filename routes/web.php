@@ -168,6 +168,7 @@ route::post('/admin/provider-updated-profile-data/{id}', [AdminProviderControlle
 route::post('/admin/provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
 
 
+route::get('/admin/provider/role', [AdminProviderController::class, 'fetchRolesName']);
 
 
 route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
@@ -201,6 +202,7 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
+
 route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
 
 
@@ -213,7 +215,6 @@ route::get('/admin/profileEdit', [AdminDashboardController::class, 'adminProfile
 route::get('/admin/profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
 
 route::post('/admin/profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
-
 
 
 route::post('/admin/adminChangePassword/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('adminChangePassword');

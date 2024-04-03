@@ -124,10 +124,7 @@
                     <label for="floatingInput">Room # (Optional)</label>
                 </div>
             </div>
-            <div class="mb-3">
-                <button class="primary-empty me-3 ">Verify</button>
-                <button class="primary-empty"><i class="bi bi-geo-alt"></i> Map</button>
-            </div>
+    
 
             <h3>Notes</h3>
             <div class="mb-4">

@@ -129,6 +129,9 @@ class conciergeRequestController extends Controller
         $conciergeRequest->save();
 
 
+
+
+
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -154,6 +157,7 @@ class conciergeRequestController extends Controller
                 'confirmation_number' => $confirmationNumber,
                 'role_id' => 3,
                 'is_email_sent' => 1,
+                'recipient_name' => $request->first_name,
                 'sent_tries' => 1,
                 'create_date' => now(),
                 'sent_date' => now(),

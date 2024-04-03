@@ -17,10 +17,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                            reason.id +
-                            '">' +
-                            reason.case_name +
-                            "</option>"
+                        reason.id +
+                        '">' +
+                        reason.case_name +
+                        "</option>"
                     );
                 });
             },
@@ -50,10 +50,10 @@ $(document).ready(function () {
                 data.forEach(function (region) {
                     $(".physicianRegions").append(
                         '<option value="' +
-                            region.id +
-                            '">' +
-                            region.region_name +
-                            "</option>"
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
                     );
                 });
             },
@@ -145,10 +145,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                            entry.id +
-                            '">' +
-                            entry.vendor_name +
-                            "</option>"
+                        entry.id +
+                        '">' +
+                        entry.vendor_name +
+                        "</option>"
                     );
                 });
             },
@@ -217,9 +217,7 @@ $(document).ready(function () {
 
     // ************************************* Shivesh *************************************
 
-    $("#adminResetPassword").on("click", function () {
-        $(".admin-password").removeAttr("disabled");
-    });
+
 
     $("#admin-info-cancel-btn").on("click", function () {
         $(".admin_first_name").attr("disabled");
@@ -244,6 +242,15 @@ $(document).ready(function () {
         $(".admin-mail-info-btns").hide();
     });
 
+    $("#adminAccEditBtn").on("click", function () {
+        $(".admin_user_name").removeAttr("disabled");
+        $("#status-select").removeAttr("disabled");
+        $("#listing_role_admin_Account").removeAttr("disabled");
+
+        $("#adminAccEditBtn").hide();
+        $(".admin-acc-btns").show();
+    });
+
     $("#adminEditBtn1").on("click", function () {
         $(".admin_first_name").removeAttr("disabled");
         $(".admin_last_name").removeAttr("disabled");
@@ -262,6 +269,7 @@ $(document).ready(function () {
         $(".admin_state").removeAttr("disabled");
         $(".admin_zipcode").removeAttr("disabled");
         $(".admin_alt_phone").removeAttr("disabled");
+        $('#listing_state_admin_account').removeAttr("disabled");
 
         $("#adminEditBtn2").hide();
         $(".admin-mail-info-btns").show();
@@ -304,10 +312,10 @@ $(document).ready(function () {
             data.forEach(function (region) {
                 $(".listing-region").append(
                     '<option value="' +
-                        region.id +
-                        '">' +
-                        region.region_name +
-                        "</option>"
+                    region.id +
+                    '">' +
+                    region.region_name +
+                    "</option>"
                 );
             });
         },

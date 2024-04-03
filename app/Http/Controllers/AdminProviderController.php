@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\users;
 use App\Models\Regions;
 use App\Models\SMSLogs;
@@ -246,9 +247,11 @@ class AdminProviderController extends Controller
         $providerData->city = $request->city;
         $providerData->zip = $request->zip;
         $providerData->status = 'pending';
+        $providerData->regions_id = $request->select_state;
         $providerData->business_name = $request->business_name;
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
+        $providerData->role_id = $request->role;
 
         $providerData->save();
 
@@ -265,7 +268,7 @@ class AdminProviderController extends Controller
         $data = PhysicianRegion::where('provider_id', $providerData->id)->pluck('id')->toArray();
         $ids = implode(',', $data);
 
-        Provider::where('id', $providerData->id)->update(['regions_id' => $ids]);
+
 
 
         // make entry in user_roles table to identify the user(whether it is admin or physician)
@@ -357,14 +360,14 @@ class AdminProviderController extends Controller
     }
 
 
-    // **************** This code is for edit provider profile *********************
-
+  
     public function regionName()
     {
         $regions = Regions::get();
         dd($regions);
         return view('/adminPage/provider/adminEditProvider', compact('regions'));
     }
+
 
     public function editProvider($id)
     {
@@ -558,9 +561,7 @@ class AdminProviderController extends Controller
 
     public function providerDocumentsUpdate(Request $request, $id)
     {
-
         $getProviderInformation = Provider::where('id', $id)->first();
-
         if (isset($request->independent_contractor)) {
             $getProviderInformation->IsAgreementDoc = 1;
 
@@ -570,7 +571,6 @@ class AdminProviderController extends Controller
             $getProviderInformation->save();
         }
 
-
         if (isset($request->background_doc)) {
             $getProviderInformation->IsBackgroundDoc = 1;
             $file = $request->file('background_doc');
@@ -579,7 +579,6 @@ class AdminProviderController extends Controller
             $getProviderInformation->save();
         }
 
-
         if (isset($request->hipaa_docs)) {
             $getProviderInformation->IsTrainingDoc = 1;
             $file = $request->file('hipaa_docs');
@@ -587,7 +586,6 @@ class AdminProviderController extends Controller
             $path = $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
-
 
         if (isset($request->non_disclosure_doc)) {
             $getProviderInformation->IsNonDisclosureDoc = 1;
@@ -619,7 +617,12 @@ class AdminProviderController extends Controller
     public function providerLocation()
     {
         $providers = Provider::get();
-
         return view('adminPage/provider/providerLocation', compact('providers'));
+    }
+
+  
+    public function fetchRolesName(){
+        $fetchRoleName = Role::select('id', 'name')->where('account_type','physician')->get();
+        return response()->json($fetchRoleName);
     }
 }

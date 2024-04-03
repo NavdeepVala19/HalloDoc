@@ -148,16 +148,11 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
-
- 
-
     public function adminProfile($id)
     {
         $adminProfileData = Admin::with('users')->where('user_id', $id)->first();
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
-
-   
 
 
     public function adminProfilePage()
@@ -165,8 +160,6 @@ class AdminDashboardController extends Controller
         $adminData = Auth::user();
 
         // $adminProfileData = Admin::with('users')->where('user_id', $adminData->id)->first();
-
-
         $adminProfileData = Admin::select(
             'admin.first_name',
             'admin.last_name',
@@ -178,12 +171,10 @@ class AdminDashboardController extends Controller
             'admin.zip',
             'admin.status',
             'admin.user_id',
-            'role_menu.menu_id',
-            'menu.name',
-            'users.id'
+            'alt_phone',
+            'role.name',
         )
-        ->leftJoin('role_menu','role_menu.role_id','admin.role_id')
-        ->leftJoin('menu','menu.id','role_menu.menu_id')
+        ->leftJoin('role','role.id','admin.role_id')
         ->leftJoin('users','users.id','admin.user_id')
         ->where('user_id', $adminData->id)
         ->first();
@@ -195,6 +186,10 @@ class AdminDashboardController extends Controller
     }
 
     public function adminChangePassword(Request $request, $id){
+
+        $request->validate([
+            'password' =>'required|min:8|max:30'
+        ]);
 
         // Update data in users table
         $updateUserData = [
@@ -209,9 +204,19 @@ class AdminDashboardController extends Controller
 
     public function adminInfoUpdate(Request $request, $id){
 
+        
+        $request->validate([
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
+            'email' => 'required|email',
+            'confirm_email' => 'required|email',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+        ]);
+
         // Update in admin table
 
         $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
+    
 
         $updateAdminInformation->first_name = $request->first_name;
         $updateAdminInformation->last_name = $request->last_name;
@@ -235,25 +240,38 @@ class AdminDashboardController extends Controller
 
     public function adminMailInfoUpdate(Request $request, $id){
 
-        $updatedData = [
-            'city' => $request->input('city'),
-            'address1' => $request->input('address1'),
-            'address2' => $request->input('address2'),
-            'zip' => $request->input('zip'),
-            'alt_phone' => $request->input('alt_mobile'),
-        ];
+        $request->validate([
+            'address1' => 'required|min:2|max:30',
+            'address2' => 'min:2|max:30',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'zip' => 'digits:6',
+            'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+        ]);
 
-        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first()->update($updatedData);
+
+        // Update in admin table
+        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
+
+        $updateAdminInformation->city = $request->city;
+        $updateAdminInformation->address1 = $request->address1;
+        $updateAdminInformation->address2 = $request->address2;
+        $updateAdminInformation->zip = $request->zip;
+        $updateAdminInformation->alt_phone = $request->alt_mobile;
+        $updateAdminInformation->region_id = $request->select_state;
+        $updateAdminInformation->save();
 
 
         // update Data in allusers table 
 
-        $updateAllUser = [
-            'city' => $request->input('city'),
-            'street' => $request->input('address1'),
-            'zipcode' => $request->input('zip')
-        ];
-        $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first()->update($updateAllUser);
+        $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
+
+
+        $updateAdminInfoAllUsers->city = $request->city;
+        $updateAdminInfoAllUsers->street = $request->address1;
+        $updateAdminInfoAllUsers->zipcode = $request->zip;
+        $updateAdminInfoAllUsers->save();
+        
+      
         return back()->with('message', 'Your profile is updated successfully');
 
     }

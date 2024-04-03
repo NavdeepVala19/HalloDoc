@@ -15,6 +15,8 @@ class PatientViewDocumentsController extends Controller
 {
     public function patientViewDocument($id)
     {
+        // dd($id);
+
         $documents = RequestWiseFile::select(
             'request.first_name',
             'request.confirmation_no',
@@ -28,8 +30,8 @@ class PatientViewDocumentsController extends Controller
             ->where('request_id', $id)
             ->paginate(10);
 
-
-
+        // dd($documents);
+        
         return view('patientSite/patientViewDocument', compact('documents'));
     }
 

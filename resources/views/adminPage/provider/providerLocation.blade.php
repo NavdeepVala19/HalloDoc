@@ -64,21 +64,11 @@
 
     </div>
 
-    <div id="map-container" style="width:100%;height:660px" class="mt-3">
-        <iframe id="map-iframe" style="width:100%;height:660px" frameborder="0" scrolling="no" marginheight="0"
-            marginwidth="0"></iframe>
-    </div>
-
-
-    </div>
-
-
     <script>
         function updateMap(providers) {
             //var addresses retrieves JSON representation of the providers from adminProviderController ,it is an array contains address details
             var addresses = providers;
             var mapUrl = "https://www.google.com/maps?q=";
-
 
             // This forEach takes callback function as an argument and 
             // callback function takes 2 parameters 1st is provider(the current element of array) and 2nd is index(the index of current element)
@@ -99,4 +89,5 @@
         // Call the function to update the map when the page loads
         updateMap(<?php echo json_encode($providers); ?>);
     </script>
+    
 @endsection

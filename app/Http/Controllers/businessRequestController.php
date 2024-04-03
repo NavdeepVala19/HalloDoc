@@ -149,6 +149,7 @@ class businessRequestController extends Controller
         'request_id' => $requestBusiness->id,
         'confirmation_number' => $confirmationNumber,
         'role_id' => 3,
+        'recipient_name' => $request->first_name,
         'is_email_sent' => 1,
         'sent_tries' => 1,
         'create_date' => now(),

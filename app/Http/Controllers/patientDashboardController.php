@@ -67,9 +67,6 @@ class patientDashboardController extends Controller
     // Agreeemnt Cancelled by Patient
     public function cancelAgreement(Request $request)
     {
-        $request->validate([
-            'cancelReason' => 'required'
-        ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,
             'physician_id' => DB::raw("Null"),
@@ -145,8 +142,7 @@ class patientDashboardController extends Controller
         $request_file->request_id = $newPatient->id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();
-        $request_file = new RequestWiseFile();
+        $request_file->save();   $request_file = new RequestWiseFile();
 
         $request_file->request_id = $newPatient->id;
         $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';
@@ -352,6 +348,22 @@ class patientDashboardController extends Controller
             ->where('email', $email)
             ->paginate(10);
 
+
+
+        // $data = RequestTable::select(
+        //     'request.id',
+        //     'request_wise_file.request_id',
+        //     'status.status_type',
+        //     DB::raw('DATE(request.created_at) as created_date'),
+        // )
+        //     ->leftJoin('status', 'status.id', 'request.status')
+        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request.id')
+        //     ->where('email', $email)
+        //     ->paginate(10);
+
         return view('patientSite/patientDashboard', compact('data'));
+
+
+        
     }
 }

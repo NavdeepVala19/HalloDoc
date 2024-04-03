@@ -175,7 +175,7 @@
                         </div>
 
                         <div class="col-md patient-location-col4">
-                            <button type="button" class="primary-empty" id="maps"> <i class="bi bi-geo-alt"></i> Map </button>
+                         
                         </div>
 
                     </div>

@@ -105,6 +105,8 @@ class familyRequestController extends Controller
         $patientRequest->save();
 
 
+        
+
         // store documents in request_wise_file table
 
         if (isset($request->docs)) {
@@ -143,6 +145,7 @@ class familyRequestController extends Controller
                 'request_id' => $familyRequest->id,
                 'confirmation_number' => $confirmationNumber,
                 'is_email_sent' => 1,
+                'recipient_name' => $request->first_name,
                 'sent_tries' => 1,
                 'create_date' => now(),
                 'sent_date' => now(),

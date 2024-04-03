@@ -6,41 +6,41 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="#">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Access
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
-        </ul>
-    </div>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
+<a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
+<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="">My Profile</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Providers
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+        <li><a class="dropdown-item" href="#">Invoicing</a></li>
+    </ul>
+</div>
+<a href="{{ route('admin.partners') }}">Partners</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Access
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+    </ul>
+</div>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Records
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+    </ul>
+</div>
 @endsection
 
 @section('content')
@@ -48,6 +48,12 @@
     <h3>Block History</h3>
     <div class="section">
 
+        @if (Session::has('message'))
+        <div class="alert alert-success popup-message" role="alert">
+            {{ Session::get('message') }}
+        </div>
+        @endif
+        
         <form action="{{route('admin.block.history.search')}}" method="POST">
             @csrf
             <div class="grid-4">
@@ -94,7 +100,7 @@
                         <td>{{$data->reason}}</td>
                         <td><input class="form-check-input me-3" type="checkbox" value="1" @checked($data->is_active === 1) id="checkbox_{{$data->id}}"></td>
                         <td>
-                            <a href="{{route('admin.block.history.unblock',$data->id)}}" class="primary-empty"> Unblock </a>
+                            <a href="{{route('admin.block.history.unblock',$data->request_id)}}" class="primary-empty"> Unblock </a>
                         </td>
                     </tr>
                     @endforeach
@@ -134,7 +140,7 @@
                     </span>
                     <br>
                     <div class="d-flex justify-content-end">
-                        <a href="{{route('admin.block.history.unblock',$data->id)}}" class="primary-empty"> Unblock </a>
+                        <a href="{{route('admin.block.history.unblock',$data->request_id)}}" class="primary-empty"> Unblock </a>
                     </div>
                 </div>
             </div>

@@ -11,21 +11,16 @@
 @section('patientSiteContent')
 
 <div class="container">
-
     <!-- this div is for heading and back button -->
-
     <div class="header_part">
         <a href="{{route('patientDashboardData')}}" type="button" class="primary-empty">
             < Back</a>
     </div>
 
-
     <div class="patient-container">
-
 
         <form action="{{route('createdPatientRequests')}}" method="post" enctype="multipart/form-data" id="patientRequestForm">
             @csrf
-
             <div class="patient-details">
 
                 <!-- Symptoms Detail Field -->
@@ -35,9 +30,7 @@
                         <h4>Patient Information</h4>
                     </div>
 
-
                     <input type="hidden" name="request_type" value="1">
-
 
                     <div class="area-text">
                         <div class="form-floating">
@@ -46,7 +39,6 @@
                                 Symptoms(optional)</label>
                         </div>
                     </div>
-
                 </div>
 
                 <!--  Patient FirstName, LastName ,DOB Field  -->
@@ -59,19 +51,15 @@
                         @enderror
                     </div>
 
-
                     <div class="col-md patient-details-col2 patient">
                         <input type="text" placeholder="LastName" class="form-control last-name-text @error('last_name') is-invalid @enderror" id="" aria-describedby="helpId" name="last_name" value="{{ old('last_name') }}">
                         @error('last_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
-
                 </div>
 
                 <div class="row patient-details-row2">
-
                     <div class="col-md patient-details-col3 me-4 patient">
                         <label for="">Date of Birth</label>
                         <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 @error('date_of_birth') is-invalid @enderror" id="" name="date_of_birth" value="{{ old('date_of_birth') }}">
@@ -79,14 +67,12 @@
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                 </div>
 
 
                 <!--     Patient Contact Information    -->
 
                 <div class="patient-contact-inputs">
-
                     <div class="patient-contact-text">
                         <h4>Patient Contact Information</h4>
                     </div>
@@ -94,7 +80,6 @@
                     <div class="row patient-contact-row1">
                         <div class="col-md patient-contact-col1 patient">
                             <input type="email" placeholder="Email" disabled class="form-control email-text @error('email') is-invalid @enderror" id="" value="{{ $email }}" name="email">
-
                             @error('email')
                             <div class="text-danger" role="alert">{{ $message }}</div>
                             @enderror
@@ -102,7 +87,6 @@
 
 
                         <div class="col-md patient-contact-col2 patient">
-
                             <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}" class="form-control mobile-text mobile @error('phone_number') is-invalid @enderror" id="" name="phone_number">
 
                             <!-- <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number"> -->
@@ -111,9 +95,7 @@
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-
                     </div>
-
                 </div>
 
                 <!--   Patient Location Information   -->
@@ -133,7 +115,6 @@
                             @enderror
                         </div>
 
-
                         <div class="col-md patient-location-col2 patient">
                             <input type="text" placeholder="City" value="{{ old('city') }}" class="form-control patient-location-city-text @error('city') is-invalid @enderror" id="city" name="city">
                             @error('city')
@@ -141,9 +122,7 @@
                             @enderror
                         </div>
 
-
                     </div>
-
 
                     <div class="row patient-location-row2">
                         <div class="col-md patient-location-col1 patient">
@@ -153,7 +132,6 @@
                             @enderror
                         </div>
 
-
                         <div class="col-md patient-location-col2 patient">
                             <input type="text" placeholder="Zip Code" value="{{ old('zipcode') }}" class="form-control patient-location-zipcode-text @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode">
                             @error('zipcode')
@@ -161,23 +139,15 @@
                             @enderror
                         </div>
 
-
                     </div>
-
-
                     <div class="row patient-location-row3">
-
                         <div class="col-md patient-location-col3 ">
                             <input type="number" placeholder="Room/Suite(optional)" name="room" value="{{ old('room') }}" class="form-control patient-location-room-text  @error('room') is-invalid @enderror" id="room" name="room">
                             @error('room')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-
-                        <div class="col-md patient-location-col4">
-                            <button type="button" class="primary-empty" id="maps"> <i class="bi bi-geo-alt"></i> Map </button>
-                        </div>
-
+                        <div class="col-md patient-location-col4"></div>
                     </div>
                 </div>
 

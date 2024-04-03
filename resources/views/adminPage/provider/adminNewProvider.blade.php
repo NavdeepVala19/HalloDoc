@@ -55,8 +55,6 @@
 
                 <h3>Account Information</h3>
 
-                <h3>Account Information</h3>
-
                 <div class="grid-3">
                     <div class="form-floating ">
                         <input type="text" name="user_name" class="form-control" id="floatingInput"
@@ -78,15 +76,10 @@
                     <div class="form-floating role-select">
                         <select class="form-select" id="provider-role" name="role">
                             <option selected>Role</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
                         </select>
-                        </input>
                     </div>
 
                 </div>
-
 
 
                 <h3>Administrator Information</h3>
@@ -195,7 +188,7 @@
                         {{-- Dropdown State Selection --}}
                         <div class="form-floating">
                             <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
-                                name="select-state" value="{{ old('select-state') }}">
+                                name="select_state" value="{{ old('select-state') }}">
                                 <option selected>State</option>
                                 <option value="1">Somnath</option>
                                 <option value="2">Dwarka</option>
@@ -243,7 +236,7 @@
 
                     </div>
 
-                    <hr>
+               
                     <div>
                         {{-- Select Photo --}}
                         <div class="custom-file-input" onclick="openFileSelection()">

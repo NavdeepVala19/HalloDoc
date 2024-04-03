@@ -106,6 +106,9 @@ class patientController extends Controller
         $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
+      
+        
+
 
         // store documents in request_wise_file table
 
@@ -145,6 +148,7 @@ class patientController extends Controller
                 'request_id' =>  $requestData->id,
                 'confirmation_number' => $confirmationNumber,
                 'is_email_sent' => 1,
+                'recipient_name' => $request->first_name,
                 'sent_tries' => 1,
                 'create_date' => now(),
                 'sent_date' => now(),

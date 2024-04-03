@@ -759,7 +759,7 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-        // dd("here");
+      
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
 
         $session = session([
@@ -853,24 +853,15 @@ class AdminController extends Controller
     public function deleteSearchRecordData($id)
     {
         $deleteData = request_Client::where('id', $id)->forceDelete();
-
         $getRequestId = request_Client::select('request_id')->where('id', $id)->first();
-
         $deleteRequestTableData = Request::where('id', $getRequestId)->forceDelete();
-
         $deleteDocuments = RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
-
         $deleteRequestStatus = RequestStatus::where('request_id', $getRequestId)->forceDelete();
-
         $deleteRequestBusiness = RequestBusiness::where('request_id', $getRequestId)->forceDelete();
-
         $deleteRequestConcierge = RequestConcierge::where('request_id', $getRequestId)->forceDelete();
-
         $deleteBlockData = BlockRequest::where('request_id', $getRequestId)->forceDelete();
 
         return redirect()->back();
-
-
     }
 
 
@@ -954,6 +945,7 @@ class AdminController extends Controller
             'block_request.email',
             'block_request.id',
             'block_request.is_active',
+            'block_request.request_id',
             DB::raw('DATE(block_request.created_at) as created_date'),
             'block_request.reason',
             'request_client.first_name as patient_name',
@@ -974,11 +966,11 @@ class AdminController extends Controller
 
     public function unBlockPatientInBlockHistoryPage($id)
     {
-        $unBlockData = BlockRequest::where('id', $id)->delete();
-
-        $statusChanges = BlockRequest::with('request_status')->where('request_id');
-
-        return redirect()->back();
+        $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status'=>1]);
+        $statusUpdateRequestStatus = RequestStatus::where('request_id',$id)->update(['status'=>1]);
+        
+        $unBlockData = BlockRequest::where('request_id', $id)->delete();
+        return redirect()->back()->with('message','patient is unblock');
     }
 
     public function blockHistroySearchData(Request $request)
@@ -1211,9 +1203,6 @@ class AdminController extends Controller
         $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $formattedData)->render();
         return response()->json(['html' => $data]);
     }
-
-
-  
 
 
     public function filterPatientByRegionActiveState($selectedId)
