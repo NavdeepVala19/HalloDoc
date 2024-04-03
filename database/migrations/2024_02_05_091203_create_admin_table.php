@@ -15,14 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-
-
-            // $table->unsignedBigInteger('region_id')->nullable();
-            // $table->foreign('region_id')->references('id')->on('regions');
-
-            $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
-
-
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions');
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->foreign('role_id')->references('id')->on('role');
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('email');
@@ -30,12 +26,10 @@ return new class extends Migration
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
             $table->string('city')->nullable();
-            $table->text('regions_id')->nullable();
             $table->string('zip')->nullable();
+            $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
             $table->string('alt_phone')->nullable();
 
-            $table->unsignedBigInteger('role_id')->nullable();
-            $table->foreign('role_id')->references('id')->on('role');
 
             // $table->unsignedBigInteger('created_by');
             // $table->foreign('created_by')->references('users');

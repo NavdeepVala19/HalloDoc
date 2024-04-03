@@ -29,7 +29,7 @@ return new class extends Migration
             $table->text('physician_notes')->nullable();
             $table->text('admin_notes')->nullable();
 
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
             $table->string('modified_by')->nullable();
 
             // Check These

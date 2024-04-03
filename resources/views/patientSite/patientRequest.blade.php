@@ -8,6 +8,7 @@
 @section('patientSiteContent')
 
 
+
 <div class="container">
     <!-- this div is for heading and back button -->
     <div class="header_part">

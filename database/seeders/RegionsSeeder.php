@@ -15,7 +15,6 @@ class RegionsSeeder extends Seeder
     {
         Regions::insert(
             [
-
                 ['id' => 1, 'region_name' => 'Somnath'],
                 ['id' => 2, 'region_name' => 'Dwarka'],
                 ['id' => 3, 'region_name' => 'Rajkot'],

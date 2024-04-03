@@ -12,6 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        Schema::defaultStringLength(191);
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username')->nullable();

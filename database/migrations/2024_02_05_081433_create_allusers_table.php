@@ -23,9 +23,12 @@ return new class extends Migration
             $table->string('street')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
+            $table->integer('zipcode')->nullable();
             $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions');
-            $table->integer('zipcode')->nullable();
+     
+            $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
+            $table->date('date_of_birth')->nullable();
 
             $table->string('str_month')->nullable();
             $table->integer('int_year')->nullable();
@@ -36,7 +39,6 @@ return new class extends Migration
             $table->string('modified_by')->nullable();
 
 
-            $table->enum('status', ['pending', 'active', 'inactive'])->nullable();
             // $table->foreign('status')->references('id')->on('status');
             $table->boolean('is_request_with_email')->nullable();
 

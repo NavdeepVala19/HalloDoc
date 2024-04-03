@@ -68,22 +68,20 @@ route::post('/patientRegistered', [patientAccountController::class, 'createAccou
 
 //  ******  Patient login page *********
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
+route::post('/patientloggedIn', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
+
+//  ******** Reset password of patient **********
+route::get('/forgot_password', [patientLoginController::class, 'resetpassword'])->name('forgot_password');
+route::post('/forgot_password_link', [patientLoginController::class, 'submitForgetPasswordForm'])->name('forgot.password');
+
+Route::get('reset-password/{token}', [patientLoginController::class, 'showResetPasswordForm'])->name('reset.password');
+Route::post('reset-password', [patientLoginController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
+
 
 route::middleware('CheckPatientLogin')->group(function () {
 
-    route::post('/patientloggedIn', [patientLoginController::class, 'userLogin'])->name('patient_logged_in');
     route::get('/patient_logout', [patientLoginController::class, 'logout'])->name('patientLogOut');
-
-
-
-
-    //  ******** Reset password of patient **********
-    route::get('/forgot_password', [patientLoginController::class, 'resetpassword'])->name('forgot_password');
-    route::post('/forgot_password_link', [patientLoginController::class, 'submitForgetPasswordForm'])->name('forgot.password');
-
-    Route::get('reset-password/{token}', [patientLoginController::class, 'showResetPasswordForm'])->name('reset.password');
-    Route::post('reset-password', [patientLoginController::class, 'submitResetPasswordForm'])->name('reset.password.post');
-
 
     //  ******* Patient Dashboard **********
     route::get('/patientDashboard', [patientDashboardController::class, 'read'])->name('patientDashboardData');
@@ -234,7 +232,11 @@ route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAcc
 route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
 
 
-route::get('/admin/createAdmin', [AdminController::class, 'adminAccount']);
+route::get('/admin/createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
+route::post('/admin/adminAccountCreated',[AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
+
+route::get('/admin-account-state', [AdminController::class, 'fetchRegionsForState'])->name('fetchStates');
+route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetchRole');
 
 // ****************************************************************************************************************************
 
