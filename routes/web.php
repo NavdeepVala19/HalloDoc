@@ -434,7 +434,7 @@ Route::post('/close-case', [AdminController::class, 'closeCaseData'])->name('adm
 // Partners Page in Admin
 Route::get('/partners/{id?}', [AdminController::class, 'viewPartners'])->name('admin.partners');
 // Search Vendors/Partners
-Route::post('/search-partners', [AdminController::class, 'searchPartners'])->name('search.partners');
+Route::get('/search-partners', [AdminController::class, 'searchPartners'])->name('search.partners');
 
 // Add Business Page
 Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
@@ -459,6 +459,7 @@ Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('f
 Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
 Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
 Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
+Route::post('/edit-access-data', [AdminController::class, 'editAccessData'])->name('admin.edit.access.data');
 
 
 // Records Page 
@@ -519,5 +520,5 @@ Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'provi
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('providerPage.pdfForm');
+    return view('adminPage.records.cancelHistory');
 });

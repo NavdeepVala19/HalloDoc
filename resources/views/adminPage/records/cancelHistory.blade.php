@@ -57,21 +57,23 @@
                         <td>Cancelled By Physician Note</td>
                     </thead>
                     <tbody>
-                        @foreach ($cancelCases as $cancelCase)
-                            @if (!empty($cancelCase->request))
-                                <tr>
-                                    <td>
-                                        {{ $cancelCase->request->requestClient->first_name }}
-                                        {{ $cancelCase->request->requestClient->last_name }}
-                                    </td>
-                                    <td>{{ $cancelCase->request->requestClient->phone_number }}</td>
-                                    <td>{{ $cancelCase->request->requestClient->email }}</td>
-                                    <td>{{ $cancelCase->updated_at }}</td>
-                                    <td>{{ $cancelCase->notes }}</td>
-                                    <td>notes</td>
-                                </tr>
-                            @endif
-                        @endforeach
+                        @if (!empty($cancelCases))
+                            @foreach ($cancelCases as $cancelCase)
+                                @if (!empty($cancelCase->request))
+                                    <tr>
+                                        <td>
+                                            {{ $cancelCase->request->requestClient->first_name }}
+                                            {{ $cancelCase->request->requestClient->last_name }}
+                                        </td>
+                                        <td>{{ $cancelCase->request->requestClient->phone_number }}</td>
+                                        <td>{{ $cancelCase->request->requestClient->email }}</td>
+                                        <td>{{ $cancelCase->updated_at }}</td>
+                                        <td>{{ $cancelCase->notes }}</td>
+                                        <td>notes</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>

@@ -4,10 +4,15 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
+    <a href="{{route('admin.profile.editing')}}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers

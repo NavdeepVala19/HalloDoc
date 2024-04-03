@@ -5,10 +5,15 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/partners.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
-    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
+    <a href="{{route('admin.profile.editing')}}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -19,7 +24,7 @@
             <li><a class="dropdown-item" href="#">Invoicing</a></li>
         </ul>
     </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
+    <a href="{{ route('admin.partners') }}" class="active-link">Partners</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Access
@@ -70,7 +75,7 @@
                     <div class="form-floating">
                         <select id="floatingSelect" name="profession"
                             class="form-select @error('profession') is-invalid @enderror">
-                            <option selected>Select Profession</option>
+                            <option selected disabled>Select Profession</option>
                             @foreach ($types as $type)
                                 <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
                             @endforeach

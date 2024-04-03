@@ -4,16 +4,22 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
-    <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}" >Dashboard</a>
     <a href="">Invoicing</a>
     <a href="{{ route('provider.scheduling') }}">My Schedule</a>
-    <a href="{{ route('provider.profile') }}">My Profile</a>
+    <a href="{{ route('provider.profile') }}" class="active-link">My Profile</a>
 @endsection
 
 @section('content')
     <div class="overlay"></div>
 
+    {{-- Password Reset Successfull alert message --}}
     @if (session('success'))
         <div class="alert alert-success popup-message ">
             <span>
@@ -22,10 +28,19 @@
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
+    {{-- Mail sent to admin for required changes --}}
+    @if (session('mailSentToAdmin'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('mailSentToAdmin') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
 
     {{-- Request To Admin --}}
     <div class="pop-up request-to-admin">
-        <form action="{{ route('provider.edit.profile') }}" method="POST">
+        <form action="{{ route('provider.edit.profile') }}" method="POST" id="profileEditMailForm">
             @csrf
             <input type="text" name="providerId" value="{{ $provider->id }}" hidden>
             <div class="popup-heading-section d-flex align-items-center justify-content-between">
@@ -40,7 +55,7 @@
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                <button type="submit" class="primary-fill">Send</button>
+                <button type="submit" class="primary-fill" id='profileEditMailFormBtn'>Send</button>
                 <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
             </div>
         </form>
@@ -199,7 +214,7 @@
                         <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span
                                 class="upload-txt">Upload</span>
                         </label>
-                        <input type="file" id="file-input" hidden>
+                        <input type="file" id="file-input" hidden disabled>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-1 ">
@@ -208,7 +223,7 @@
                         <input type="text" placeholder="Select Signature" readonly disabled>
                         <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span
                                 class="upload-txt">Upload</span></label>
-                        <input type="file" id="signature-input" hidden>
+                        <input type="file" id="signature-input" hidden disabled>
                     </div>
                     <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
                     {{-- <canvas id="signatureCanvas" width="300" height="150"></canvas> --}}
@@ -221,16 +236,21 @@
                     <span>
                         Provider Agreement
                     </span>
-                    <button class="primary-fill">View</button>
+                    <button type="button" class="primary-fill">View</button>
                 </div>
                 <div class="d-flex gap-2 align-items-center">
                     <span>
                         HIPPA Compliance
                     </span>
-                    <button class="primary-fill">View</button>
+                    <button type="button" class="primary-fill">View</button>
                 </div>
             </div>
         </div>
 
     </div>
+@endsection
+
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

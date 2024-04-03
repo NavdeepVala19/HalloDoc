@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\HealthProfessionalType;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProviderController extends Controller
@@ -177,7 +178,7 @@ class ProviderController extends Controller
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'string|min:2|max:30',
-            'phone_number' => 'required',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required|email',
             'street' => 'required',
             'city' => 'required',
@@ -376,6 +377,10 @@ class ProviderController extends Controller
     // Encounter Form (Medical Form Finalized) By provider (Generate PDF and Store in RequestWiseFile)
     public function encounterFinalized($id)
     {
+        $data = MedicalReport::where('request_id', $id)->first();
+        if (empty($data)) {
+            return redirect()->back()->with('saveFormToFinalize', 'First Create and Save Form to Finalize it!')->withInput();
+        }
         try {
             $status = RequestTable::where('id', $id)->first()->status;
             MedicalReport::where('request_id', $id)->update(['is_finalize' => true]);
@@ -426,7 +431,7 @@ class ProviderController extends Controller
         $request->validate([
             'password' => 'required|min:5'
         ]);
-        $userId = Provider::where('id', $request->providerId)->first()->id;
+        $userId = Provider::where('id', $request->providerId)->first()->user_id;
 
         User::where('id', $userId)->update([
             'password' => Hash::make($request->password),
@@ -449,14 +454,14 @@ class ProviderController extends Controller
             'is_email_sent' => 1,
             'action' => 3,
             'recipient_name' => $admin->first_name . " " . $admin->last_name,
-            // 'email_template' => ,
+            'email_template' => 'email.providerRequest',
             'email' => $admin->email,
             'sent_tries' => 1,
         ]);
 
         Mail::to($admin->email)->send(new ProviderRequest($admin, $provider, $request));
 
-        return redirect()->back();
+        return redirect()->back()->with('mailSentToAdmin', 'Email Sent to Admin - to make requested changes!');
     }
 
     // Accept Case 
@@ -561,7 +566,7 @@ class ProviderController extends Controller
         Mail::to($request->email)->send(new SendMail($request->all()));
         EmailLog::create([
             'role_id' => 2,
-            'provider_id' => Auth::user()->id,
+            // 'provider_id' => Auth::user()->id,
             'recipient_name' => $name,
             'subject_name' => 'Send mail to patient for submitting request',
             'is_email_sent' => true,
@@ -604,6 +609,15 @@ class ProviderController extends Controller
     {
         $file = RequestWiseFile::where('id', $id)->first();
         $path = (public_path() . '/storage/' . $file->file_name);
+
+        // if ($file->isEmpty()) {
+        //     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
+        // }
+
+        if (!Storage::exists($path)) {
+            // Handle case where file not found on disk
+            return redirect()->back()->with('FileDoesNotExists', "File You are trying to download doesn't exists");
+        }
 
         return response()->download($path);
     }
@@ -788,29 +802,37 @@ class ProviderController extends Controller
     public function viewConcludeCare($id)
     {
         $case = RequestTable::where('id', $id)->first();
-        $docs = RequestWiseFile::where('request_id', $id)->where('is_finalize', true)->get();
+        $docs = RequestWiseFile::where('request_id', $id)->get();
         return view('providerPage.concludeCare', compact('case', 'docs'));
     }
 
     public function concludeCare(Request $request)
     {
-        RequestStatus::where('request_id', $request->caseId)->update(['status' => 7]);
+        $providerId = RequestTable::where('id', $request->caseId)->first()->physician_id;
+        RequestTable::where('id', $request->caseId)->update([
+            'status' => 7,
+            'completed_by_physician' => true,
+        ]);
+
+        RequestStatus::create([
+            'request_id' => $request->caseId,
+            'status' => 7,
+            'physician_id' => $providerId
+        ]);
         RequestNotes::where('request_id', $request->caseId)->update(['physician_notes' => $request->providerNotes]);
 
-        // RequestTable::where('id', $request->caseId)->update(['status' => 7]);
-        // RequestStatus::create(['request_id' => $request->caseId, 'status' => 7]);
-
-        return redirect()->route('provider.status', 'conclude');
+        return redirect()->route('provider.status', 'conclude')->with('CaseConcluded', 'Case Concluded Successfully!');
     }
     public function uploadDocsConcludeCare(Request $request)
     {
+        $providerId = RequestTable::where('id', $request->caseId)->first()->physician_id;
         $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
         RequestWiseFile::create([
             'request_id' => $request->caseId,
             'file_name' => $request->file('document')->getClientOriginalName(),
-            'physician_id' => Auth::user()->id,
+            'physician_id' => $providerId,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('fileUploaded', 'File Uploaded Successfully!');
     }
 }

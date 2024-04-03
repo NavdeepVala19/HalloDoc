@@ -478,12 +478,16 @@ class AdminController extends Controller
     public function closeCase(Request $request, $id = null)
     {
         $data = RequestTable::where('id', $id)->first();
-        $files = RequestWiseFile::where('id', $id)->get();
+        $files = RequestWiseFile::where('request_id', $id)->get();
         return view('adminPage.pages.closeCase', compact('data', 'files'));
     }
     public function closeCaseData(Request $request)
     {
         if ($request->input('closeCaseBtn') == 'Save') {
+            $request->validate([
+                'phone_number' => 'required',
+                'email' => 'required|email'
+            ]);
             request_Client::where('request_id', $request->requestId)->update([
                 'phone_number' => $request->phone_number,
                 'email' => $request->email
@@ -501,7 +505,7 @@ class AdminController extends Controller
                 'request_id' => $request->requestId,
                 'request_status_id' => $statusId
             ]);
-            return redirect()->route('admin.status', 'unpaid');
+            return redirect()->route('admin.status', 'unpaid')->with('caseClosed', 'Case Closed Successfully!');
         }
         return redirect()->back();
     }
@@ -510,25 +514,40 @@ class AdminController extends Controller
     public function viewPartners($id = null)
     {
         if ($id == null || $id == '0') {
-            $vendors = HealthProfessional::with('healthProfessionalType')->paginate(5);
+            $vendors = HealthProfessional::with('healthProfessionalType')->orderByDesc('id')->paginate(10);
         } else if ($id) {
-            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->paginate(5);
+            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->orderByDesc('id')->paginate(10);
         }
         $professions = HealthProfessionalType::get();
 
         return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
     }
-    // Search Partner as per the input 
+
+    // For Searching and filtering Partners
     public function searchPartners(Request $request)
     {
-        $id = $request->profession;
-        // dd($id);
-        if ($id == null || $id == '0') {
-            $vendors = HealthProfessional::with('healthProfessionalType')->where('vendor_name', 'LIKE', "%{$request->search}%")->paginate(10);
-        } else if ($id) {
-            $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->where('vendor_name', 'LIKE', "%{$request->search}%")->paginate(10);
+        $search = $request->get('search');
+        $id = $request->get('profession');
+        $page = $request->query('page') ?? 1; // Default to page 1 if no page number provided
+
+        // dd($request->page);
+
+        $query = HealthProfessional::with('healthProfessionalType');
+
+        if ($search) {
+            $query->where('vendor_name', 'like', "%$search%");
         }
+
+        if ($id != 0) {
+            $query->where('profession', $id);
+            if ($search) {
+                $query->where('profession', $id)->where('vendor_name', 'like', "%$search%");
+            }
+        }
+
+        $vendors = $query->orderByDesc('id')->paginate(10, ['*'], 'page', $page);
         $professions = HealthProfessionalType::get();
+
         return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
     }
 
@@ -649,7 +668,7 @@ class AdminController extends Controller
     // Access Page
     public function accessView()
     {
-        $roles = Role::get();
+        $roles = Role::orderByDesc('id')->get();
         return view('adminPage.access.access', compact('roles'));
     }
     public function createRoleView()
@@ -674,12 +693,10 @@ class AdminController extends Controller
 
     public function createAccess(Request $request)
     {
-        $this->validate($request, [
-            'role_name' => 'required|in:1,2,3', [
-                'role_name.required' => 'Please select a menu from the dropdown list.',
-                'role_name.in' => 'Invalid menu selection. Please choose a valid role option.'
-            ],
-            'role' => 'required'
+        $request->validate([
+            'role_name' => 'required',
+            'role' => 'required',
+            'menu_checkbox' => 'required'
         ]);
         if ($request->role_name == 1) {
             $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
@@ -706,9 +723,26 @@ class AdminController extends Controller
     {
         $role = Role::where('id', $id)->first();
         $roleMenus = RoleMenu::where('role_id', $id)->get();
-        $menus = Menu::get();
-        // dd($role, $menus);
+        $menus = Menu::where('account_type', $role->account_type)->get();
         return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
+    }
+    public function editAccessData(Request $request)
+    {
+        $request->validate([
+            'role_name' => 'required',
+            'role' => 'required',
+            'menu_checkbox' => 'required'
+        ]);
+
+        RoleMenu::where('role_id', $request->roleId)->delete();
+
+        foreach ($request->input('menu_checkbox') as $key => $value) {
+            RoleMenu::create([
+                'role_id' => $request->roleId,
+                'menu_id' => $value
+            ]);
+        }
+        return redirect()->route('admin.access.view')->with('accessEdited', 'Your Changes Are successfully Saved!');
     }
 
 
@@ -865,35 +899,60 @@ class AdminController extends Controller
         $deleteBlockData = BlockRequest::where('request_id', $getRequestId)->forceDelete();
 
         return redirect()->back();
-
-
     }
 
 
 
     public function emailRecordsView()
     {
-        $emails = EmailLog::with(['roles'])->paginate(10);
-        return view('adminPage.records.emailLogs', compact('emails'));
+        $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
+        $roleId = null; // Initialize with null
+        $receiverName = null; // Initialize with null
+        $email = null; // Initialize with null
+        $createdDate = null; // Initialize with null
+        $sentDate = null; // Initialize with null
+        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
     }
     public function searchEmail(Request $request)
     {
-        $emails = EmailLog::when($request->role_id, function ($query) use ($request) {
-            $query->where('role_id', $request->role_id);
-        })->when($request->receiver_name, function ($query) use ($request) {
-            $query->where('recipient_name', 'LIKE', "%$request->reciever_name%");
-        })
-            ->when($request->email, function ($query) use ($request) {
-                $query->where('email', 'LIKE',  "%$request->email%");
-            })
-            ->when($request->created_date, function ($query) use ($request) {
-                $query->where('created_at', "LIKE", "%$request->created_date%");
-                // Carbon::parse($request->created_at)->format('Y-m-d')
-            })->when($request->sent_date, function ($query) use ($request) {
-                $query->where('sent_date', $request->sent_date);
-            })->paginate(10);
+        $roleId = $request->get('role_id');
+        $receiverName = $request->get('receiver_name');
+        $email = $request->get('email');
+        $createdDate = $request->get('created_date');
+        $sentDate = $request->get('sent_date');
 
-        return view('adminPage.records.emailLogs', compact('emails'));
+
+        $emails = EmailLog::query();
+
+        // Filter based on role_id (if provided)
+        if ($roleId) {
+            $emails->where('role_id', $roleId);
+        }
+
+        // Filter based on receiver_name (like operator)
+        if ($receiverName) {
+            $emails->where('recipient_name', 'LIKE', "%{$receiverName}%");
+        }
+
+        // Filter based on email (like operator)
+        if ($email) {
+            $emails->where('email', 'LIKE', "%{$email}%");
+        }
+
+        // Filter based on created_date (exact match)
+        if ($createdDate) {
+            $emails->where('created_at', 'Like',  "%$createdDate%");
+        }
+
+        // Filter based on sent_date (exact match)
+        if ($sentDate) {
+            $emails->where('sent_date', 'Like',  "%$sentDate%");
+        }
+
+        // Paginate results (10 items per page)
+        $emails = $emails->paginate(10);
+
+        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
     }
     public function smsRecordsView()
     {
@@ -904,7 +963,6 @@ class AdminController extends Controller
 
     public function searchSMSLogs(Request $request)
     {
-
         $sms = SMSLogs::select();
 
         if (!empty($request->receiver_name)) {
@@ -1050,7 +1108,6 @@ class AdminController extends Controller
     public function viewCancelHistory()
     {
         $cancelCases = RequestStatus::with('request')->where('status', 2)->get();
-        // dd($cancelCases);
         return view('adminPage.records.cancelHistory', compact('cancelCases'));
     }
     // search cancel case in Cancel History Page
@@ -1078,7 +1135,6 @@ class AdminController extends Controller
         });
 
         $cancelCases = $query->get();
-        // dd($cancelCases);
 
         return view('adminPage.records.cancelHistory', compact('cancelCases'));
     }
@@ -1122,8 +1178,8 @@ class AdminController extends Controller
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
-        ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-        ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
+            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
 
         if (!empty($account) && isset($account)) {
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
@@ -1134,7 +1190,6 @@ class AdminController extends Controller
         $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
 
         return response()->json(['html' => $data]);
-
     }
 
 
@@ -1209,7 +1264,7 @@ class AdminController extends Controller
     }
 
 
-  
+
 
 
     public function filterPatientByRegionActiveState($selectedId)

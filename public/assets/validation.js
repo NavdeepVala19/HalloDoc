@@ -85,25 +85,33 @@ $(document).ready(function () {
         rules: {
             first_name: "required",
             last_name: "required",
-            phone_number: "required",
+            phone_number: {
+                required: true,
+                minlength: 10,
+            },
             email: {
                 required: true,
                 email: true,
             },
         },
         messages: {
-            first_name: "Enter your First Name",
-            last_name: "Enter your Last Name",
-            phone_number: "We need your Phone Number to send you a link.",
+            first_name: { required: "Enter your First Name" },
+            last_name: { required: "Enter your Last Name" },
+            phone_number: {
+                required: "Enter Phone Number to send a link.",
+                minlength: "Phone number should atleast have 10 digits",
+            },
             email: {
-                required: "We need your email address to send you a link.",
+                required: "Enter Email address to send a link.",
                 email: "Your email address must be in the format of name@domain.com",
             },
         },
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            var errorDiv = $('<div class="text-danger"></div>');
-            errorDiv.append(error);
-            element.closest(".form-floating").append(errorDiv);
+            // var errorDiv = $('<div class="text-danger"></div>');
+            // errorDiv.append(error);
+            error.addClass("text-danger");
+            element.closest(".form-floating").append(error);
             // element.parent().append(errorDiv);
         },
         highlight: function (element, errorClass, validClass) {
@@ -260,10 +268,10 @@ $(document).ready(function () {
             errorBox.append(error);
             element.closest(".form-floating").append(errorBox);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -273,30 +281,29 @@ $(document).ready(function () {
         }
     });
 
-    // View Uploads (When no files are selected and upload button is clicked, it should give an error message)
-    // $("#uploadDocValidation").validate({
-    //     rules: {
-    //         document: "required",
-    //     },
-    //     messages: {
-    //         document: "Select An File to Upload!",
-    //     },
-    //     errorPlacement: function (error, element) {
-    //         let errorBox = $("<div class='text-danger'></div>");
-    //         errorBox.append(error);
-    //         element.closest(".form-floating").append(errorBox);
-    //     },
-    //     highlight: function (element) {
-    //         $(element).addClass("is-invalid").removeClass("is-valid");
-    //     },
-    //     unhighlight: function (element) {
-    //         $(element).removeClass("is-invalid").addClass("is-valid");
-    //     },
-    // });
-    // $("#uploadDocValidationBtn").click(function () {
-    //     console.log('Button Clicked')
-    //     if ($("#uploadDocValidation").valid()) {
-    //         $("#uploadDocValidation").submit();
-    //     }
-    // });
+    // Provider Profile Email pop-up for requesting changes in profile
+    $("#profileEditMailForm").validate({
+        rules: {
+            message: "required",
+        },
+        messages: {
+            message: "Specify the changes you want to make in your profile",
+        },
+        errorPlacement: function (error, element) {
+            let errorBox = $("<div class='text-danger'></div>");
+            errorBox.append(error);
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+    $("#profileEditMailFormBtn").click(function () {
+        if ($("#profileEditMailForm").valid()) {
+            $("#profileEditMailForm").submit();
+        }
+    });
 });

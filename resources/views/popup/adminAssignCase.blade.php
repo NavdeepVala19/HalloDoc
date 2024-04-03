@@ -12,21 +12,21 @@ to providers based on patient’s region using this pop-up. --}}
         <div class="m-3">
             <input type="text" class="requestId" name="requestId" value="" hidden>
             <div class="form-floating">
-                <select class="form-select physicianRegions" name="region" id="floatingSelect"
+                <select class="form-select physicianRegions" name="region" id="floatingSelect1"
                     aria-label="Floating label select example">
                     <option selected>Regions</option>
                 </select>
-                <label for="floatingSelect">Narrow Search by Region</label>
+                <label for="floatingSelect1">Narrow Search by Region</label>
             </div>
             <div class="form-floating">
                 <select
                     class="form-select selectPhysician @error('physician')
                 is-invalid
                 @enderror"
-                    name="physician" id="floatingSelect" aria-label="Floating label select example" required>
+                    name="physician" id="floatingSelect2" aria-label="Floating label select example" required>
                     <option disabled selected>Select Physician</option>
                 </select>
-                <label for="floatingSelect">Select Physician</label>
+                <label for="floatingSelect2">Select Physician</label>
                 @error('physician')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

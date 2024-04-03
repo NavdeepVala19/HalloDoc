@@ -30,6 +30,16 @@ patient's email address and phone number. Once the patient accepts the agreement
     {{-- Request DTY Support pop-up ->  --}}
     @include('popup.requestDTYSupport')
 
+    {{-- Case Cancelled Successfully --}}
+    @if (session('caseClosed'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseClosed') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     <nav>
         <div class="nav nav-tabs state-grid-3 " id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">

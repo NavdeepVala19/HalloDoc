@@ -4,6 +4,11 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/encounterFormProvider.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
     <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
@@ -17,6 +22,16 @@
         <div class="alert alert-success popup-message ">
             <span>
                 {{ session('encounterChangesSaved') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Enter Data first then finalize it --}}
+    @if (session('saveFormToFinalize'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('saveFormToFinalize') }}
             </span>
             <i class="bi bi-check-circle-fill"></i>
         </div>

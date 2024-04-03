@@ -5,10 +5,14 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/access.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
 @section('nav-links')
-    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
+    <a href="{{route('admin.profile.editing')}}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -21,7 +25,7 @@
     </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Access
         </button>
         <ul class="dropdown-menu records-menu">
@@ -55,26 +59,25 @@
                 <h4>Details</h4>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="role" class="form-control" id="floatingInput"
-                            placeholder="Role Name">
+                        <input type="text" name="role" class="form-control" id="floatingInput" placeholder="Role Name"
+                            value="{{ old('role') }}">
                         <label for="floatingInput">Role Name</label>
                         @error('role')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
                         <select class="form-select role-selected" name="role_name" id="floatingSelect">
                             <option value="0">All</option>
-                            <option value="1">Admin</option>
-                            <option value="2">Physician</option>
-                            <option value="3">Patient</option>
+                            <option value="1" @if (old('role_name') == 1) selected @endif>Admin</option>
+                            <option value="2" @if (old('role_name') == 2) selected @endif>Physician</option>
+                            <option value="3" @if (old('role_name') == 3) selected @endif>Patient</option>
                         </select>
                         <label for="floatingSelect">Account Type</label>
                         @error('role_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                 </div>
 
                 <div class="menu-section">
@@ -89,6 +92,9 @@
                             </div>
                         @endif
                     @endforeach
+                    @error('menu_checkbox')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="text-end m-3">
                     <button type="submit" class="primary-fill">Save</button>

@@ -20,13 +20,21 @@
     {{-- This page will display patient requests for which medical is completed by the provider. Once the request is transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
 
-
-
     {{-- Encounter Form Finalized --}}
     @if (session('encounterFormFinalized'))
         <div class="alert alert-success popup-message ">
             <span>
                 {{ session('encounterFormFinalized') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Case Concluded Successfully --}}
+    @if (session('CaseConcluded'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('CaseConcluded') }}
             </span>
             <i class="bi bi-check-circle-fill"></i>
         </div>
