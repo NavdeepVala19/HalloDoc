@@ -20,40 +20,82 @@
     {{-- This page will display patient requests for which medical is completed by the provider. Once the request is transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
 
+    
+
+    {{-- Encounter Form Finalized --}}
+    @if (session('encounterFormFinalized'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('encounterFormFinalized') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- SendLink Validation Error pop-ups --}}
+    @if ($errors->any())
+        <div class="alert alert-danger popup-message ">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>
+                        <span>
+                            {{ $error }}
+                        </span>
+                        <i class="bi bi-exclamation-circle"></i>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     <div class="pop-up send-link">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Send mail to patient for submitting request</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="First Name">
-                <label for="floatingInput">First Name</label>
-                @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
+        <form action="{{ route('send.mail') }}" method="POST">
+            @csrf
+            <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
+                <div class="form-floating ">
+                    <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
+                        id="floatingInput" placeholder="First Name">
+                    <label for="floatingInput">First Name</label>
+                    @error('first_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-floating ">
+                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
+                        id="floatingInput" placeholder="Last Name">
+                    <label for="floatingInput">Last Name</label>
+                    @error('last_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <input type="tel" name="phone_number"
+                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                    placeholder="Phone Number">
+
+                @error('phone_number')
+                    <div class="text-danger w-100">{{ $message }}</div>
                 @enderror
+
+                <div class="form-floating">
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Email</label>
+                    @error('email')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-                @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
+            <div class="p-2 d-flex align-items-center justify-content-end gap-2">
+                <input type="submit" value="Send" class="primary-fill">
+                <button class="primary-empty hide-popup-btn">Cancel</button>
             </div>
-            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number">
-            @error('phone_number')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-floating ">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email</label>
-            </div>
-        </div>
-        <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-            <button class="primary-fill">Send</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
-        </div>
+        </form>
     </div>
 
     {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
@@ -64,12 +106,16 @@
             <span>Encounter Form</span>
             <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="encounter-finalized-container">
-            <p>Encounter Form is finalized successfully!</p>
-            <div class="text-center">
-                <button class="primary-fill download-btn">Download</button>
+        <form action="{{ route('provider.download.encounterForm') }}" method="POST">
+            @csrf
+            <input type="text" name="requestId" class="requestId" value="" hidden>
+            <div class="encounter-finalized-container">
+                <p>Encounter Form is finalized successfully!</p>
+                <div class="text-center">
+                    <button type="submit" class="primary-fill download-btn">Download</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
 
@@ -204,9 +250,14 @@
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
                                             <a href="{{ route('provider.view.notes', $case->id) }}"><i
                                                     class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                            <a href="{{ route('provider.encounter.form', $case->id) }}"
-                                                class="encounter-form-btn"><i
-                                                    class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                            @if ($case->requestWiseFile && $case->requestWiseFile->is_finalize)
+                                                <button class="encounter-popup-btn" data-id={{ $case->id }}> <i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i> Encounter</button>
+                                            @else
+                                                <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                    class="encounter-form-btn"><i
+                                                        class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
@@ -274,7 +325,8 @@
                                     class="secondary-btn text-center">View
                                     Notes</a>
                                 <button class="secondary-btn-1">Doctors Notes</button>
-                                <a href="{{ route('provider.view.upload', $case->id) }}" class="secondary-btn text-center">View
+                                <a href="{{ route('provider.view.upload', $case->id) }}"
+                                    class="secondary-btn text-center">View
                                     Uploads</a>
                                 <a href="{{ route('provider.encounter.form', $case->id) }}"
                                     class="secondary-btn encounter-form-btn text-center">Encouter</a>

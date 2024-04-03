@@ -90,7 +90,7 @@ class businessRequestController extends Controller
     $requestBusiness = new RequestTable();
     $requestBusiness->status = 1;
     $requestBusiness->user_id = $requestEmail->id;
-    $requestBusiness->request_type_id = $request->request_type;
+    $requestBusiness->request_type_id = 4;
     $requestBusiness->first_name = $request->business_first_name;
     $requestBusiness->last_name = $request->business_last_name;
     $requestBusiness->email = $request->business_email;

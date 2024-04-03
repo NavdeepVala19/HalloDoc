@@ -47,6 +47,40 @@ class patientDashboardController extends Controller
         return view("patientSite/patientAgreement", compact('clientData'));
     }
 
+    // Agreement Agreed by Patient
+    public function agreeAgreement(Request $request)
+    {
+        $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
+
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 4,
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 4,
+            'physician_id' => $physicianId,
+        ]);
+
+        return redirect()->back()->with('agreementAgreed', 'Agreement Agreed Successfully');
+    }
+
+    // Agreeemnt Cancelled by Patient
+    public function cancelAgreement(Request $request)
+    {
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 11,
+            'physician_id' => DB::raw("Null"),
+            'declined_by' => 'Patient'
+        ]);
+        RequestStatus::create([
+            'request_id' => $request->requestId,
+            'status' => 11,
+            'physician_id' => DB::raw("Null"),
+            'notes' => $request->cancelReason,
+        ]);
+        return redirect()->back()->with('agreementCancelled', 'Agreement Cancelled Sucessfully');
+    }
+
     public function createNewPatient(Request $request)
     {
         $userData = Auth::user();

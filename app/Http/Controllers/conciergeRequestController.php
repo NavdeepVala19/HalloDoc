@@ -99,7 +99,7 @@ class conciergeRequestController extends Controller
         $requestConcierge = new RequestTable();
         $requestConcierge->status = 1;
         $requestConcierge->user_id = $requestEmail->id;
-        $requestConcierge->request_type_id = $request->request_type;
+        $requestConcierge->request_type_id = 3;
         $requestConcierge->first_name = $request->concierge_first_name;
         $requestConcierge->last_name = $request->concierge_last_name;
         $requestConcierge->email = $request->concierge_email;

@@ -40,7 +40,21 @@
             <h1 class="heading">
                 Documents
             </h1>
-            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route(
+                'admin.status',
+                $data->status == 1
+                    ? 'new'
+                    : ($data->status == 3
+                        ? 'pending'
+                        : ($data->status == 4 || $data->status == 5
+                            ? 'active'
+                            : ($data->status == 6
+                                ? 'conclude'
+                                : ($data->status == 2 || $data->status == 7 || $data->status == 11
+                                    ? 'toclose'
+                                    : 'unpaid')))),
+            ) }}"
+                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
 

@@ -35,34 +35,68 @@
 @endsection
 
 @section('content')
+    {{-- Note added Successfully --}}
+    @if (session('adminNoteAdded'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('adminNoteAdded') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">
                 Notes
             </h1>
-            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route(
+                'admin.status',
+                $data->status == 1
+                    ? 'new'
+                    : ($data->status == 3
+                        ? 'pending'
+                        : ($data->status == 4 || $data->status == 5
+                            ? 'active'
+                            : ($data->status == 6
+                                ? 'conclude'
+                                : ($data->status == 2 || $data->status == 7 || $data->status == 11
+                                    ? 'toclose'
+                                    : 'unpaid')))),
+            ) }}"
+                class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
-            <div class="grid-2">
+            <div class="grid-2 notes-section">
                 <div class="d-flex align-items-center gap-4">
-                    <i class="bi bi-arrow-down-up"></i>
+                    <i class="bi bi-arrow-down-up notes-logo"></i>
                     <div>
                         <h2>Transfer Notes</h2>
-                        <span>Who transfered note and when</span>
+                        @if ($adminAssignedCase)
+                            <span>Admin transferred to Dr. {{ $adminAssignedCase->transferedPhysician->first_name }}
+                                {{ $adminAssignedCase->transferedPhysician->last_name }} on
+                                {{ $adminAssignedCase->created_at->format('d-m-Y') }}
+                                at {{ $adminAssignedCase->created_at->format('H:i:s') }} :
+                                {{ $adminAssignedCase->notes }}
+                            </span>
+                        @endif
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-4">
-                    <i class="bi bi-person"></i>
+                    <i class="bi bi-person notes-logo"></i>
                     <div>
                         <h2>Physician Notes</h2>
-                        <span>Who transfered note and when</span>
+                        @if (!empty($note))
+                            <span>{{ $note->physician_notes }}</span>
+                        @endif
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-4">
-                    <i class="bi bi-person-check"></i>
+                    <i class="bi bi-person-check notes-logo"></i>
                     <div>
                         <h2>Admin Notes</h2>
-                        <span>Who transfered note and when</span>
+                        @if (!empty($note))
+                            <span>{{ $note->admin_notes }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -70,8 +104,12 @@
                 @csrf
                 <input type="text" value="{{ $id }}" name="requestId" hidden>
                 <div class="form-floating mb-3">
-                    <textarea class="form-control" name="admin_note" placeholder="injury" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control @error('admin_note') is-invalid @enderror" name="admin_note" placeholder="injury"
+                        id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Additional Notes</label>
+                    @error('admin_note')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="text-end">
                     <button type="submit" class="primary-fill">Save Changes</button>

@@ -1,33 +1,33 @@
 @extends('index')
 @section('css')
-<link rel="stylesheet" href="{{ URL::asset('assets/admin/adminRequest.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/admin/adminRequest.css') }}">
 @endsection
 
 @section('nav-links')
-<a href="" class="active-link">Dashboard</a>
-<a href="">Provider Location</a>
-<a href="">My Profile</a>
-<div class="dropdown record-navigation">
-    <button class="record-btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Providers
-    </button>
-    <ul class="dropdown-menu records-menu">
-        <li><a class="dropdown-item" href="">Provider</a></li>
-        <li><a class="dropdown-item" href="">Scheduling</a></li>
-        <li><a class="dropdown-item" href="">Invoicing</a></li>
-    </ul>
-</div>
-<a href="">Partners</a>
-<a href="">Access</a>
-<a href="">Records</a>
+    <a href="" class="active-link">Dashboard</a>
+    <a href="">Provider Location</a>
+    <a href="">My Profile</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="">Provider</a></li>
+            <li><a class="dropdown-item" href="">Scheduling</a></li>
+            <li><a class="dropdown-item" href="">Invoicing</a></li>
+        </ul>
+    </div>
+    <a href="">Partners</a>
+    <a href="">Access</a>
+    <a href="">Records</a>
 @endsection
 
 @section('content')
-<div class="container form-container">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="heading">Submit Information</h1>
-        <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
-    </div>
+    <div class="container form-container">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h1 class="heading">Submit Information</h1>
+            <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+        </div>
 
     <div class="section">
         <form action="{{ route('adminCreatedPatientRequest') }}" method="POST" id="patientProfileEditForm">
@@ -116,13 +116,13 @@
                     <textarea class="form-control note" name='adminNote' placeholder="notes" id="floatingTextarea2" value="{{ old('adminNote') }}"></textarea>
                     <label for="floatingTextarea2">Admin Notes (optional)</label>
                 </div>
-            </div>
 
-            <div class="mb-4 d-flex justify-content-end gap-3 ">
-                <input type="submit" value='Save' class="primary-fill">
-                <a href="{{ route('provider.dashboard') }}" class="primary-empty">Cancel</a>
-            </div>
-        </form>
+                <div class="mb-4 d-flex justify-content-end gap-3 ">
+                    <input type="submit" value='Save' class="primary-fill">
+                    <a href="{{ route('provider.dashboard') }}" class="primary-empty">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

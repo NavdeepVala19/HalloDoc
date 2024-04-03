@@ -16,6 +16,16 @@
 @endsection
 
 @section('content')
+    {{-- Changes in The Details of business are saved successfully --}}
+    @if (session('changesSaved'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('changesSaved') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h2 class="heading">Update Business</h2>

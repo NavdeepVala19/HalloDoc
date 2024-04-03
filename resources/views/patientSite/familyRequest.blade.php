@@ -31,11 +31,6 @@
                     <h4> Family/Friend Information</h4>
                 </div>
 
-                <input type="hidden" name="request_type" value="2">
-
-
-
-
                 <div class="row family-row1">
                     <div class="col-md family-col1 patient">
                         <input type="text" placeholder="Your First Name" class="form-control family-first-name-text @error('family_first_name') is-invalid @enderror" value="{{ old('family_first_name') }}" name="family_first_name">

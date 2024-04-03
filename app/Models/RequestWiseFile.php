@@ -14,7 +14,7 @@ class RequestWiseFile extends Model
     protected $table = "request_wise_file";
 
     protected $fillable = [
-        'request_id ',
+        'request_id',
         'file_name',
         'physician_id',
         'admin_id',
