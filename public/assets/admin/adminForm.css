@@ -4,3 +4,12 @@
 }
 
 @media(max-width:1400px) {}
+
+
+.primary-fill-1 {
+    border: none;
+    background-color: rgb(34, 140, 32);
+    padding: 8px 20px;
+    color: #fff;
+    border-radius: 5px;
+}

@@ -20,29 +20,27 @@ return new class extends Migration
             // will store who created request
             $table->unsignedBigInteger('request_id');
             $table->foreign('request_id')->references('id')->on('request');
-            $table->unsignedBigInteger('region_id')->nullable();
-            $table->foreign('region_id')->references('id')->on('regions');
-            $table->text('notes')->nullable();
             $table->string('first_name');
             $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->integer('room')->nullable();
-            $table->string('location')->nullable();
-            $table->string('address')->nullable();
-            $table->string('noti_mobile')->nullable();
-            $table->string('noti_email')->nullable();
-            $table->string('email')->nullable() ;
-            $table->string('str_month')->nullable();
-            $table->integer('int_year')->nullable();
-            $table->integer('int_date')->nullable();
-            $table->boolean('is_mobile')->nullable();
-
             $table->string('street')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zipcode')->nullable();
-
+            $table->integer('room')->nullable();
+            $table->text('notes')->nullable();
+            $table->string('location')->nullable();
+            $table->string('address')->nullable();
+            $table->string('noti_mobile')->nullable();
+            $table->string('noti_email')->nullable();
+            $table->string('str_month')->nullable();
+            $table->integer('int_year')->nullable();
+            $table->integer('int_date')->nullable();
+            $table->boolean('is_mobile')->nullable();
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions');
             $table->string('CommunicationType')->nullable();
             $table->string('RemindReservationCount')->nullable();
             $table->string('RemindHouseCallCount')->nullable();

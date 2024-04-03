@@ -397,30 +397,46 @@ $(".role-selected").on("change", function () {
     });
 });
 
-function fetchPaginatedUserAccessData(selectedAccount, page) {
-    var token = $('meta[name="csrf-token"]').attr("content");
-    $.ajax({
-        url: "/user-access/filter?page=" + page,
-        type: "POST",
-        data: {
-            selectedAccount: selectedAccount,
-            _token: token,
-        },
-        success: function (data) {
-            $("#user-access-data").html(data.html); // Update results area
-        },
-    });
-}
 
-$(document).on("click", ".pagination .page-link", function (event) {
-    event.preventDefault();
-    var page = $(this).text();
-    var selectedAccount = $("#accountType").val();
-    fetchPaginatedUserAccessData(selectedAccount, page);
+
+
+// **** Fetching regions from regions table ****
+$.ajax({
+    url: "/admin-account-state",
+    type: "GET",
+    success: function (data) {
+
+        data.forEach(function (region) {
+            $("#listing_state_admin_account").append(
+                '<option value="' + region.id + '" class="state-name" >' + region.region_name + "</option>"
+            );
+        });
+    },
+    error: function (error) {
+        console.error(error);
+    },
+
 });
 
-$("#accountType").on("change", function (event) {
-    event.preventDefault();
-    var selectedAccount = $(this).val();
-    fetchPaginatedUserAccessData(selectedAccount, 1);
+// *** End of fetching regions from regions table ***
+
+
+// **** Fetching roles from role table ****
+$.ajax({
+    url: "/admin-account-role",
+    type: "GET",
+    success: function (data) {
+
+        data.forEach(function (role) {
+            $("#listing_role_admin_Account").append(
+                '<option value="' + role.id + '" class="role_name" >' + role.name + "</option>"
+            );
+        });
+    },
+    error: function (error) {
+        console.error(error);
+    },
+
 });
+
+// *** End of Fetching roles from role table ***

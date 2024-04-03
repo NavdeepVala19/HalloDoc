@@ -4,33 +4,36 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 use Carbon\Carbon;
+use App\Models\Menu;
 
 // Different Models used in these Controller
-use App\Models\Menu;
 use App\Models\Role;
+use App\Models\Admin;
 use App\Models\Roles;
 
 // Different Models used in these Controller
+use App\Models\users;
 use App\Mail\SendLink;
 use App\Mail\SendMail;
 use App\Models\Orders;
 use App\Models\caseTag;
+
 use App\Models\Regions;
 
-use App\Models\SMSLogs;
-
 // For sending Mails
+use App\Models\SMSLogs;
 use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RoleMenu;
 use App\Models\UserRoles;
-use App\Mail\SendAgreement;
 
 // DomPDF package used for the creation of pdf from the form
-use App\Models\BlockRequest;
+use App\Mail\SendAgreement;
 // To create zip, used to download multiple documents at once
+use App\Models\AdminRegion;
+use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -48,6 +51,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\SearchRecordExport;
 use App\Mail\RequestSupportMessage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\HealthProfessionalType;
@@ -1341,5 +1345,93 @@ class AdminController extends Controller
 
     public function createAdminAccount(Request $request)
     {
+        $request->validate([
+            'user_name' => 'required',
+            'password' => 'required',
+            'first_name' => 'required|min:2|max:30',
+            'last_name' => 'required|min:2|max:30',
+            'email' => 'required|email|',
+            'confirm-email' => 'required|email|',
+            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'address1' => 'min:2|max:30',
+            'address2' => 'min:2|max:30',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'zip' => 'digits:6',
+            'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+        ]);
+
+        // Store Data in users table
+
+        $adminCredentialsData = new users();
+        $adminCredentialsData->username = $request->user_name;
+        $adminCredentialsData->password = Hash::make($request->password);
+        $adminCredentialsData->email = $request->email;
+        $adminCredentialsData->phone_number = $request->phone_number;
+        $adminCredentialsData->save();
+
+        // Store Data in Admin Table
+
+        $storeAdminData = new Admin();
+        $storeAdminData->user_id = $adminCredentialsData->id;
+        $storeAdminData->first_name = $request->first_name;
+        $storeAdminData->last_name = $request->last_name;
+        $storeAdminData->email = $request->email;
+        $storeAdminData->mobile = $request->phone_number;
+        $storeAdminData->address1 = $request->address1;
+        $storeAdminData->address2 = $request->address2;
+        $storeAdminData->city = $request->city;
+        $storeAdminData->zip = $request->zip;
+        $storeAdminData->alt_phone = $request->alt_mobile;
+        $storeAdminData->status ='pending';
+        $storeAdminData->role_id = $request->role;
+        $storeAdminData->regions_id = $request->state;
+
+        $storeAdminData->save();
+
+        // foreach ($request->region_id as $region) {
+        //     AdminRegion::create([
+        //         'admin_id' => $storeAdminData->id,
+        //         'region_id' => $region
+        //     ]);
+        // }
+
+        // $data = AdminRegion::where('admin_id', $storeAdminData->id)->pluck('id')->toArray();
+        // $ids = implode(',', $data);
+
+
+        // make entry in user_roles table to identify the user(whether it is admin or physician)
+        $user_roles = new UserRoles();
+        $user_roles->user_id = $adminCredentialsData->id;
+        $user_roles->role_id = 1;
+        $user_roles->save();
+
+
+        // store data in allusers table 
+        $adminAllUserData = new allusers();
+        $adminAllUserData->user_id = $adminCredentialsData->id;
+        $adminAllUserData->first_name = $request->first_name;
+        $adminAllUserData->last_name = $request->last_name;
+        $adminAllUserData->email = $request->email;
+        $adminAllUserData->street = $request->address1;
+        $adminAllUserData->city = $request->city;
+        $adminAllUserData->zipcode = $request->zip;
+        $adminAllUserData->status = 'pending';
+        $adminAllUserData->save();
+
+        return redirect()->route('admin.user.access');
+
     }
+
+
+    public function fetchRegionsForState()
+    {
+        $fetchedRegions = Regions::get();
+        return response()->json($fetchedRegions);
+    }
+
+    public function fetchRolesForAdminAccountCreate(){
+        $fetchedRoles = Role::select('id','name')->where('account_type', 'admin')->get();
+        return response()->json($fetchedRoles);
+    }
+
 }

@@ -140,6 +140,7 @@ class patientDashboardController extends Controller
 
         // store documents in request_wise_file table
 
+        if (isset($request->docs)) {
         $request_file = new RequestWiseFile();
         $request_file->request_id = $newPatient->id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
@@ -151,6 +152,8 @@ class patientDashboardController extends Controller
         $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';
         $request_file->file_name = $fileName;
         $request_file->save();
+
+        }
 
         // store symptoms in request_notes table
 
@@ -198,7 +201,7 @@ class patientDashboardController extends Controller
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6',
             'docs' => 'nullable',
-            'relation' => 'alpha|nullable'
+            'relation' => 'nullable'
         ]);
 
 
@@ -270,11 +273,13 @@ class patientDashboardController extends Controller
 
         // store documents in request_wise_file table
 
+        if(isset($request->docs)){
         $request_file = new RequestWiseFile();
         $request_file->request_id = $newPatient->id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
         $request_file->save();
+        }
 
         // store symptoms in request_notes table
 
@@ -300,8 +305,6 @@ class patientDashboardController extends Controller
         if (!empty($newPatient->id)) {
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
-
-
 
 
         if ($isEmailStored == null) {
