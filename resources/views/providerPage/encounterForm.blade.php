@@ -44,19 +44,18 @@
         </div>
 
         {{-- Form Starts From Here --}}
-        <form action="{{ route('encounter.form.data') }}" method="POST">
+        <form action="{{ route('encounter.form.data') }}" method="POST" id="providerEncounterForm">
             @csrf
             <div class="section">
                 <h1 class="main-heading">Medical Report-Confidential</h1>
                 <div>
                     <div class="grid-2">
                         <input type="text" name="request_id" value="{{ $id }}" hidden>
-
                         <div class="form-floating ">
                             <input type="text" name="first_name"
-                                class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
+                                class="form-control @error('first_name') is-invalid @enderror" id="floatingInput1"
                                 placeholder="First Name" value="{{ $data->first_name ?? '' }}">
-                            <label for="floatingInput">First Name</label>
+                            <label for="floatingInput1">First Name</label>
                             @error('first_name')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -65,38 +64,40 @@
                             <input type="text" name="last_name" class="form-control" id="floatingInput"
                                 placeholder="Last Name" value={{ $data->last_name ?? '' }}>
                             <label for="floatingInput">Last Name</label>
-
                         </div>
                     </div>
+
                     <div class="form-floating ">
                         <input type="text" name="location" class="form-control" id="floatingInput" placeholder="location"
                             value="{{ $data->location ?? '' }}">
                         <label for="floatingInput">Location</label>
-
                     </div>
 
                     <div class="grid-2">
                         <div class="form-floating ">
-                            <input type="date" name="date_of_birth" class="form-control" id="floatingInput"
-                                placeholder="date of birth" value="{{ $data->date_of_birth ?? '' }}" {{-- value="@if {{ \Illuminate\Support\Carbon::parse($data->date_of_birth)->format('Y-m-d') }} @endif" --}}
-                                {{-- value={{ $data->requestClient->dob }} --}} {{-- value="{{\Illuminate\Support\Carbon::parse($data->requestClient->dob)->format("Y-m-d")}}"  --}} {{-- value="{{ $shipment->date->format('Y-m-d') }}" --}}>
-                            <label for="floatingInput">Date Of Birth</label>
+                            <input type="date" name="date_of_birth" class="form-control" id="floatingInput4"
+                                placeholder="date of birth" value="{{ $data->date_of_birth ?? '' }}">
+                            <label for="floatingInput4">Date Of Birth</label>
                         </div>
                         <div class="form-floating ">
-                            <input type="date" name="service_date" class="form-control" id="floatingInput"
-                                placeholder="date" {{-- Displays current Date --}} value="{{ $data->service_date ?? '' }}">
-                            <label for="floatingInput">Date</label>
+                            <input type="date" name="service_date" class="form-control" id="floatingInput5"
+                                placeholder="date" value="{{ $data->service_date ?? '' }}">
+                            <label for="floatingInput5">Date</label>
                         </div>
-
-                        <input type="tel" name="mobile" class="form-control phone" id="telephone"
-                            placeholder="Phone Number" value="{{ $data->mobile ?? '' }}">
-
-
+                        <div class="form-floating">
+                            <div>
+                                <input type="tel" name="mobile"
+                                    class="form-control phone @error('mobile') is-invalid @enderror " id="telephone"
+                                    placeholder="Phone Number" value="{{ $data->mobile ?? '' }}">
+                            </div>
+                            @error('mobile')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <div class="form-floating">
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                id="floatingInput" placeholder="name@example.com" value="{{ $data->email ?? '' }}"
-                                {{-- value="{{ $data->requestClient->email }}" --}}>
-                            <label for="floatingInput">Email</label>
+                                id="floatingInput2" placeholder="name@example.com" value="{{ $data->email ?? '' }}">
+                            <label for="floatingInput2">Email</label>
                             @error('email')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -124,38 +125,38 @@
 
                     <div class="grid-3">
                         <div class="form-floating ">
-                            <input type="number" name="temperature" class="form-control" id="floatingInput"
+                            <input type="number" name="temperature" class="form-control" id="floatingInput6"
                                 placeholder="Temp" value={{ $data->temperature ?? '' }}>
-                            <label for="floatingInput">Temp</label>
+                            <label for="floatingInput6">Temp</label>
                         </div>
                         <div class="form-floating ">
-                            <input type="number" name="heart_rate" class="form-control" id="floatingInput"
+                            <input type="number" name="heart_rate" class="form-control" id="floatingInput7"
                                 placeholder="Temp" value={{ $data->heart_rate ?? '' }}>
-                            <label for="floatingInput">HR</label>
+                            <label for="floatingInput7">HR</label>
                         </div>
                         <div class="form-floating ">
-                            <input type="number" name="repository_rate" class="form-control" id="floatingInput"
+                            <input type="number" name="repository_rate" class="form-control" id="floatingInput8"
                                 placeholder="Temp" value={{ $data->repository_rate ?? '' }}>
-                            <label for="floatingInput">RR</label>
+                            <label for="floatingInput8">RR</label>
                         </div>
                         <div class="grid-2 blood-pressure">
 
                             <div class="form-floating ">
-                                <input type="number" name="sis_BP" class="form-control" id="floatingInput"
+                                <input type="number" name="sis_BP" class="form-control" id="floatingInput9"
                                     placeholder="blood pressure" value={{ $data->sis_BP ?? '' }}>
-                                <label for="floatingInput">Blood Pressure(systolic)</label>
+                                <label for="floatingInput9" style="font-size: 12px">Blood Pressure(systolic)</label>
                             </div>
                             <div class="form-floating ">
-                                <input type="number" name="dia_BP" class="form-control" id="floatingInput"
+                                <input type="number" name="dia_BP" class="form-control" id="floatingInput10"
                                     placeholder="blood pressure" value={{ $data->dia_BP ?? '' }}>
-                                <label for="floatingInput">Blood Presure(diastolic)</label>
+                                <label for="floatingInput10" style="font-size: 12px">Blood Presure(diastolic)</label>
                             </div>
                         </div>
 
                         <div class="form-floating ">
-                            <input type="number" name="oxygen" class="form-control" id="floatingInput"
+                            <input type="number" name="oxygen" class="form-control" id="floatingInput11"
                                 placeholder="o2" value={{ $data->oxygen ?? '' }}>
-                            <label for="floatingInput">O2</label>
+                            <label for="floatingInput11">O2</label>
                         </div>
                         <div class="form-floating ">
                             <input type="text" name="pain" class="form-control" id="floatingInput"
@@ -222,7 +223,7 @@
 
                     {{-- Three buttons at last --}}
                     <div class="button-section">
-                        <input type="submit" value="Save Changes" class="primary-fill">
+                        <input type="submit" value="Save Changes" class="primary-fill" id="providerEncounterFormBtn">
                         <a href="{{ route('encounter.finalized', $id) }}" type="button"
                             class="finalize-btn">Finalize</a>
                         <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
@@ -232,4 +233,8 @@
             </div>
         </form>
     </div>
+@endsection
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

@@ -74,6 +74,8 @@ $(document).ready(function () {
         event.preventDefault();
         $(".pop-up").hide();
         $(".overlay").hide();
+        $(".pop-up").reset();
+        $(".pop-up").validate().resetForm();
     });
 
     // for Provider Transfer Request pop-up - Pending Page

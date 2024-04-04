@@ -1,49 +1,108 @@
 $(document).ready(function () {
+    // Phone Number Validation
+    $.validator.addMethod(
+        "phoneUS",
+        function (phone_number, element) {
+            return (
+                this.optional(element) ||
+                phone_number.match(
+                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
+                )
+            );
+        },
+        "Please enter a valid phone number."
+    );
+    // Validation for city input field
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid city name."
+    );
+
+    // Validation for state input field
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid state name."
+    );
+
+    // Provider Create Request Client Side Validation
     $("#providerCreateRequestForm").validate({
         rules: {
-            first_name: "required",
-            last_name: "required",
-            phone_number: "required",
+            first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+            },
+            phone_number: {
+                required: true,
+                phoneUS: true,
+            },
             email: {
                 required: true,
                 email: true,
             },
-            street: "required",
-            city: "required",
-            state: "required",
-            zip: {
-                required: false,
-                digits: true,
+            street: {
+                required: true,
+                minlength: 2,
+                maxlength: 100,
             },
-            room: {
-                required: false,
-                digits: true,
+            city: {
+                required: true,
+                minlength: 2,
+                maxlength: 40,
+                city: true,
+            },
+            state: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                state: true,
             },
         },
         messages: {
-            first_name: "Please enter your first name",
-            last_name: "Please enter your last name",
-            phone_number: "Please enter your phone number",
+            first_name: {
+                required: "Please enter first name",
+                minlength: "First Name should have at least 2 characters",
+                maxlength: "First Name should not have more than 30 characters",
+            },
+            first_name: {
+                required: "Please enter last name",
+                minlength: "Last Name should have at least 2 characters",
+                maxlength: "Last Name should not have more than 30 characters",
+            },
+            phone_number: {
+                required: "Please enter mobile number",
+                phoneUS: "Please enter a valid phone number",
+            },
             email: {
-                required: "Please enter your email address",
+                required: "Please enter email address",
                 email: "Please enter a valid email address",
             },
             street: "Please enter your street",
             city: "Please enter your city",
             state: "Please enter your state",
-            zip: "Please enter a valid zip code",
-            room: "Please enter a valid room number",
         },
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            var errorDiv = $('<div class="text-danger"></div>');
-
-            // Append the error message to the error div
-            errorDiv.append(error);
-
-            // Insert the error div after the form-floating element
-            $(".form-floating").forEach((element) => {
-                element.closest(".form-floating").append(errorDiv);
-            });
+            // var errorDiv = $('<div class="text-danger"></div>');
+            error.addClass("text-danger");
+            element.closest(".form-floating").append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
     $("#providerSaveButton").click(function () {
@@ -304,6 +363,47 @@ $(document).ready(function () {
     $("#profileEditMailFormBtn").click(function () {
         if ($("#profileEditMailForm").valid()) {
             $("#profileEditMailForm").submit();
+        }
+    });
+
+    // Encounter Form Client Side Validation
+    $("#providerEncounterForm, #adminEncounterForm").validate({
+        rules: {
+            first_name: "required",
+            mobile: {
+                phoneUS: true,
+                required: false,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+        },
+        messages: {
+            first_name: "First Name field is required",
+            mobile: {
+                phoneUS: "Phone Number should have valid format",
+            },
+            email: {
+                required: "Email Field is required",
+                email: "Please provide a valid Email Address",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorBox = $("<div class='text-danger'></div>");
+            errorBox.append(error);
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+    $("#providerEncounterFormBtn, #adminEncounterFormBtn").click(function () {
+        if ($("#providerEncounterForm, #adminEncounterForm").valid()) {
+            $("#providerEncounterForm, #adminEncounterForm").submit();
         }
     });
 });
