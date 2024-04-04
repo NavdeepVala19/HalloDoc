@@ -208,7 +208,7 @@ route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])
 
 
 Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
-Route::get('/user-access-edit/{id}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
+Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
 
 
 route::get('/admin/profileEdit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');

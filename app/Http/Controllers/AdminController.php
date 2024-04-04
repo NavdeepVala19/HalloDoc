@@ -1089,7 +1089,6 @@ class AdminController extends Controller
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->where('user_roles.id', '>', '13')
             ->paginate(10);
 
         return view('adminPage.access.userAccess', compact('userAccessData'));
@@ -1100,7 +1099,6 @@ class AdminController extends Controller
         $UserAccessRoleName = Roles::select('name')
             ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
             ->where('user_roles.user_id', $id)
-            ->whereBetween('user_roles.id', [14, 25])
             ->get();
 
         if ($UserAccessRoleName->first()->name == 'admin') {
