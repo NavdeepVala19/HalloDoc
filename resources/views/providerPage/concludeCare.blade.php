@@ -4,6 +4,11 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/commonpage/viewUploads.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
     <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>
@@ -12,6 +17,25 @@
 @endsection
 
 @section('content')
+    {{-- Case Cancelled Successfully --}}
+    @if (session('fileUploaded'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('fileUploaded') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- File doesn't exists to download --}}
+    @if (session('FileDoesNotExists'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('FileDoesNotExists') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">

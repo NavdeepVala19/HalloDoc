@@ -25,6 +25,11 @@ class ProviderSchedulingController extends Controller
     }
     public function providerShiftData(Request $request)
     {
+        $request->validate([
+            'shiftDate' => 'required',
+            'shiftStartTime' => 'required',
+            'shiftEndTime' => 'required|after:shiftStartTime',
+        ]);
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
         } else {
@@ -87,6 +92,11 @@ class ProviderSchedulingController extends Controller
 
     public function providerEditShift(Request $request)
     {
+        $request->validate([
+            'shiftDate' => 'required',
+            'shiftStartTime' => 'required',
+            'shiftEndTime' => 'required|after:shiftStartTime',
+        ]);
         if ($request['action'] == 'save') {
             Shift::where('id', $request->shiftId)->update([
                 'start_date' => $request->shiftDate,

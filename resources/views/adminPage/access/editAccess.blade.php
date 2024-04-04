@@ -5,10 +5,15 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/access.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
-    <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
+    <a href="{{route('admin.profile.editing')}}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -21,7 +26,7 @@
     </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
     <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Access
         </button>
         <ul class="dropdown-menu records-menu">
@@ -50,8 +55,9 @@
             <a href="{{ route('admin.access.view') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
-            <form action="{{ route('admin.create.access') }}" method="POST">
+            <form action="{{ route('admin.edit.access.data') }}" method="POST">
                 @csrf
+                <input type="text" name="roleId" value="{{ $role->id }}" hidden>
                 <h4>Details</h4>
                 <div class="grid-2">
                     <div class="form-floating ">
@@ -59,7 +65,7 @@
                             id="floatingInput" placeholder="Role Name">
                         <label for="floatingInput">Role Name</label>
                         @error('role')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
@@ -72,7 +78,7 @@
                         </select>
                         <label for="floatingSelect">Account Type</label>
                         @error('role_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>

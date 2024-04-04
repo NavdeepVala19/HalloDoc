@@ -5,10 +5,15 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="">My Profile</a>
+    <a href="{{route('admin.profile.editing')}}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -44,6 +49,15 @@
 @endsection
 
 @section('content')
+    {{-- File doesn't exists to download --}}
+    @if (session('FileDoesNotExists'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('FileDoesNotExists') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">
@@ -52,9 +66,6 @@
             <a href="{{ route('admin.status', 'toclose') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
                 Back</a>
         </div>
-
-
-
         <form action="{{ route('admin.close.case.save') }}" method="POST" id="closeCase">
             @csrf
             <input type="text" class="request_id" value="{{ $data->id }}" name="requestId" hidden>
@@ -67,7 +78,6 @@
                         <span class="confirmation-number">({{ $data->confirmation_no }})
                         </span>
                     </div>
-
                     <div>
                         {{-- <button class="primary-empty">Create Invoice Through Quickbooks</button> --}}
                     </div>
@@ -75,8 +85,6 @@
                 <h3>
                     Documents
                 </h3>
-
-
                 <div class="table-responsive">
                     <table class="table table-hover ">
                         <thead class="table-secondary">
@@ -87,8 +95,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                @foreach ($files as $file)
+                            @foreach ($files as $file)
+                                <tr>
                                     <td>
                                         <i class="bi bi-filetype-doc doc-symbol"></i> {{ $file->file_name }}
                                     </td>
@@ -97,32 +105,23 @@
                                         <a href="{{ route('download', $file->id) }}" class="primary-empty"><i
                                                 class="bi bi-cloud-download"></i></a>
                                     </td>
-                                @endforeach
-                            </tr>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
-
                 <h3>Patient</h3>
                 <div class="mb-4 grid-2">
                     <input type="text" name="request_type_id" value="1" hidden>
                     <div class="form-floating ">
                         <input type="text" name="first_name" value="{{ $data->requestClient->first_name }}"
-                            class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
-                            placeholder="First Name" disabled>
+                            class="form-control" id="floatingInput" placeholder="First Name" disabled>
                         <label for="floatingInput">First Name</label>
-                        @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="last_name" value="{{ $data->requestClient->last_name }}"
-                            class="form-control @error('last_name') is-invalid @enderror" id="floatingInput"
-                            placeholder="Last Name" disabled>
+                            class="form-control" id="floatingInput" placeholder="Last Name" disabled>
                         <label for="floatingInput">Last Name</label>
-                        @error('last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="form-floating ">
@@ -133,12 +132,12 @@
 
                     <div class="d-flex gap-2 align-items-center">
                         <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                            class="form-control phone @error('last_name') is-invalid @enderror" id="telephone"
+                            class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
                             placeholder="Phone Number" disabled>
-                        @error('phone_number')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
                         <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
+                        @error('phone_number')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
                         <input type="email" name="email" value="{{ $data->requestClient->email }}"
@@ -146,10 +145,9 @@
                             placeholder="name@example.com" disabled>
                         <label for="floatingInput">Email address</label>
                         @error('email')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                 </div>
 
                 <div class="text-end default-buttons">

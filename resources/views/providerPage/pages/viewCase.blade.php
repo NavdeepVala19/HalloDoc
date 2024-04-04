@@ -4,6 +4,10 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
 
 @section('nav-links')
     <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>

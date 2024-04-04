@@ -144,6 +144,13 @@ class SchedulingController extends Controller
     }
     public function createShiftData(Request $request)
     {
+        $request->validate([
+            'region' => 'required',
+            'physician' => 'required',
+            'shiftDate' => 'required',
+            'shiftStartTime' => 'required',
+            'shiftEndTime' => 'required|after:shiftStartTime'
+        ]);
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
         } else {

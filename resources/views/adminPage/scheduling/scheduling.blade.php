@@ -5,19 +5,42 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/scheduling.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
+
+
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="">Provider Location</a>
-    <a href="">My Profile</a>
-    <a href="" class="active-link">Providers</a>
+    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
+    <div class="dropdown record-navigation">
+        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Providers
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+            <li><a class="dropdown-item" href="#">Invoicing</a></li>
+        </ul>
+    </div>
     <a href="{{ route('admin.partners') }}">Partners</a>
-    <a href="">Access</a>
-    <div class="dropdown record-navigation ">
+    <div class="dropdown record-navigation">
+        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Access
+        </button>
+        <ul class="dropdown-menu records-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+        </ul>
+    </div>
+    <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Records
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item " href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
@@ -25,6 +48,7 @@
         </ul>
     </div>
 @endsection
+
 
 @section('content')
     <div class="overlay"></div>
@@ -37,37 +61,55 @@
         <form action="{{ route('admin.scheduling.data') }}" method="POST" class="m-4">
             @csrf
             <div class="">
-                <select name="region" class="form-select region physicianRegions" id="floatingSelect">
-                    <option selected>Region</option>
+                <select name="region" class="form-select region physicianRegions @error('region') is-invalid @enderror"
+                    id="floatingSelect">
+                    <option selected disabled>Region</option>
                     @foreach ($regions as $region)
-                        <option value="{{ $region->id }}" id="region_{{ $region->id }}">{{ $region->region_name }}
+                        <option value="{{ $region->id }}" id="region_{{ $region->id }}"
+                            @if (old('region') == $region->id) selected @endif>{{ $region->region_name }}
                         </option>
                     @endforeach
                 </select>
                 @error('region')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                 @enderror
                 <div class="form-floating">
-                    <select name="physician" class="form-select physicianSelection" id="floatingSelect">
+                    <select name="physician" class="form-select physicianSelection @error('physician') is-invalid @enderror"
+                        id="floatingSelect">
                         <option selected>Select</option>
                     </select>
                     <label for="floatingSelect">Physician</label>
+                    @error('physician')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control shiftDate" id="floatingInput"
-                        placeholder="Created Date">
+                    <input type="date" name="shiftDate"
+                        class="form-control shiftDate @error('shiftDate') is-invalid @enderror" id="floatingInput"
+                        placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput">Shift Date</label>
+                    @error('shiftDate')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="time" name="shiftStartTime" class="form-control shiftStartTime" id="floatingInput"
-                            placeholder="Created Date">
+                        <input type="time" name="shiftStartTime"
+                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror"
+                            id="floatingInput" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput">Start</label>
+                        @error('shiftStartTime')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="time" name="shiftEndTime" class="form-control shiftEndTime" id="floatingInput"
-                            placeholder="Created Date">
+                        <input type="time" name="shiftEndTime"
+                            class="form-control shiftEndTime @error('shiftEndTime') is-invalid @enderror" id="floatingInput"
+                            placeholder="Created Date" value="{{ old('shiftEndTime') }}">
                         <label for="floatingInput">End</label>
+                        @error('shiftEndTime')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-check form-switch">
@@ -78,22 +120,22 @@
                 <div class="checkboxes-section">
                     <p>Repeat Days</p>
                     <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="0" id="defaultCheck1"
-                            disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="0"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Sunday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="1" id="defaultCheck1"
-                            disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="1"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Monday
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2" id="defaultCheck1"
-                            disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Tuesday
                         </label>

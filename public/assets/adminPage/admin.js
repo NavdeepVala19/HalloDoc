@@ -176,17 +176,18 @@ $(document).ready(function () {
     // Partners page filter partners based on profession selected
     $(".select-profession").on("change", function () {
         let profession = $(this).val();
-        console.log(profession);
+        // console.log(profession);
 
-        $(this).val(profession);
+        // $(this).val(profession);
 
-        if (profession === "0") {
-            // Redirect to all professions URL
-            window.location.href = "/partners";
-        } else {
-            // Redirect based on selected profession
-            window.location.href = "/partners/" + profession;
-        }
+        // if (profession === "0") {
+        //     // Redirect to all professions URL
+        //     window.location.href = "/partners";
+        // } else {
+        //     // Redirect based on selected profession
+        //     window.location.href = "/partners/" + profession;
+        // }
+        $(this).closest("form").submit();
     });
 
     // Search Vendor based on name

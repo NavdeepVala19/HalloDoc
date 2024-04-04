@@ -28,30 +28,34 @@
                 <select name="region" class="form-select region physicianRegions" id="floatingSelect"
                     aria-label="Floating label select example">
                     <option selected>Region</option>
-                    {{-- @foreach ($regions as $region)
-                        <option value="{{ $region->id }}" id="region_{{ $region->id }}">{{ $region->region_name }}
-                        </option>
-                    @endforeach --}}
                 </select>
-
-                {{-- @error('region')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror --}}
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control shiftDate" id="floatingInput"
-                        placeholder="Created Date">
+                    <input type="date" name="shiftDate"
+                        class="form-control shiftDate @error('shiftDate') is-invalid @enderror" id="floatingInput"
+                        placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput">Shift Date</label>
+                    @error('shiftDate')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="time" name="shiftStartTime" class="form-control shiftStartTime" id="floatingInput"
-                            placeholder="Created Date">
+                        <input type="time" name="shiftStartTime"
+                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror"
+                            id="floatingInput" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput">Start</label>
+                        @error('shiftStartTime')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="time" name="shiftEndTime" class="form-control shiftEndTime" id="floatingInput"
-                            placeholder="Created Date">
+                        <input type="time" name="shiftEndTime"
+                            class="form-control shiftEndTime @error('shiftEndTime') is-invalid @enderror" id="floatingInput"
+                            placeholder="Created Date" value="{{ old('shiftEndTime') }}">
                         <label for="floatingInput">End</label>
+                        @error('shiftEndTime')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-check form-switch">
@@ -90,8 +94,8 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="4" id="defaultCheck1"
-                            disabled>
+                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
+                            id="defaultCheck1" disabled>
                         <label class="form-check-label" for="defaultCheck1">
                             Every Thursday
                         </label>
@@ -143,21 +147,32 @@
                     aria-label="Floating label select example" disabled>
                 </select>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control shiftDate shiftDateInput"
-                        id="floatingInput" placeholder="Created Date" disabled>
+                    <input type="date" name="shiftDate"
+                        class="form-control shiftDate shiftDateInput @error('shiftDate') is-invalid @enderror"
+                        id="floatingInput" placeholder="Created Date" disabled value="{{ old('shiftDate') }}">
                     <label for="floatingInput">Shift Date</label>
+                    @error('shiftDate')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeStart"
-                            class="form-control shiftStartTime shiftStartTimeInput" id="floatingInput"
-                            placeholder="Created Date" disabled>
+                            class="form-control shiftStartTime shiftStartTimeInput @error('shiftTimeStart') is-invalid @enderror"
+                            id="floatingInput" placeholder="Created Date" disabled value="{{ old('shiftTimeStart') }}">
                         <label for="floatingInput">Start</label>
+                        @error('shiftTimeStart')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="time" name="shiftTimeEnd" class="form-control shiftEndTime shiftEndTimeInput"
-                            id="floatingInput" placeholder="Created Date" disabled>
+                        <input type="time" name="shiftTimeEnd"
+                            class="form-control shiftEndTime shiftEndTimeInput @error('shiftTimeEnd') is-invalid @enderror"
+                            id="floatingInput" placeholder="Created Date" disabled value="{{ old('shiftTimeEnd') }}">
                         <label for="floatingInput">End</label>
+                        @error('shiftTimeEnd')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -173,7 +188,8 @@
     <div class="m-5 spacing">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h2>My Schedule</h2>
-            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('provider.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
+                Back</a>
         </div>
         <div class="section">
             <div class="d-flex align-items-center justify-content-between">
