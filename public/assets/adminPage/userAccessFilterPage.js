@@ -1,5 +1,3 @@
-
-
 function fetchPaginatedUserAccessData(selectedAccount, page) {
     var token = $('meta[name="csrf-token"]').attr('content')
     $.ajax({

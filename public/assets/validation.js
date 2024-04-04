@@ -75,7 +75,7 @@ $(document).ready(function () {
                 minlength: "First Name should have at least 2 characters",
                 maxlength: "First Name should not have more than 30 characters",
             },
-            first_name: {
+            last_name: {
                 required: "Please enter last name",
                 minlength: "Last Name should have at least 2 characters",
                 maxlength: "Last Name should not have more than 30 characters",

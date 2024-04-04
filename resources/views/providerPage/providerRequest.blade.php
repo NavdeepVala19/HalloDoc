@@ -47,7 +47,7 @@
                     </div>
 
                     <div>
-                        <div class="form-floating">
+                        <div class="form-floating" style="height: 58px;">
                             <input type="tel" name="phone_number"
                                 class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
                                 placeholder="Phone Number" value="{{ old('phone_number') }}">
@@ -129,7 +129,7 @@
         </div>
     </div>
 @endsection
-@section('script')
+{{-- @section('script')
     <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/validation.js') }}"></script>
-@endsection
+@endsection --}}

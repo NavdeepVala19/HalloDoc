@@ -193,7 +193,7 @@
                         </td>
                         <td>{{$data->physician_first_name}}</td>
                         <td>{{$data->physician_notes}}</td>
-                        <td>Note</td>
+                        <td></td>
                         <td>{{$data->admin_notes}}</td>
                         <td>{{$data->patient_notes}}</td>
 

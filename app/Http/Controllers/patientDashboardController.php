@@ -100,14 +100,13 @@ class patientDashboardController extends Controller
         ]);
 
         $newPatient = new RequestTable();
-        $requestStatus = new RequestStatus();
-
         $newPatient->request_type_id = $request->request_type;
         $newPatient->first_name = $request->first_name;
         $newPatient->last_name = $request->last_name;
         $newPatient->email = $email;
         $newPatient->phone_number = $request->phone_number;
         $newPatient->relation_name = $request->relation;
+        $newPatient->status = 1;
         $newPatient->save();
 
         $newPatientRequest = new request_Client();
@@ -122,18 +121,8 @@ class patientDashboardController extends Controller
         $newPatientRequest->state = $request->state;
         $newPatientRequest->zipcode = $request->zipcode;
         $newPatientRequest->room = $request->room;
-
         $newPatientRequest->save();
 
-
-        $requestStatus->request_id = $newPatient->id;
-        $requestStatus->status = 1;
-        $requestStatus->save();
-
-
-        if (!empty($requestStatus)) {
-            $newPatient->update(['status' => $requestStatus->id]);
-        }
 
         // store documents in request_wise_file table
 
@@ -142,13 +131,8 @@ class patientDashboardController extends Controller
         $request_file->request_id = $newPatient->id;
         $request_file->file_name = $request->file('docs')->getClientOriginalName();
         $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();   $request_file = new RequestWiseFile();
-
-        $request_file->request_id = $newPatient->id;
-        $fileName = isset($request->docs) ? $request->file('docs')->store('public') : '';
-        $request_file->file_name = $fileName;
-        $request_file->save();
-
+        $request_file->save();  
+        
         }
 
         // store symptoms in request_notes table
@@ -230,7 +214,6 @@ class patientDashboardController extends Controller
 
 
         $newPatient = new RequestTable();
-        $requestStatus = new RequestStatus();
 
         $newPatient->request_type_id = $request->request_type;
         $newPatient->first_name = $request->first_name;
@@ -238,6 +221,7 @@ class patientDashboardController extends Controller
         $newPatient->email = $request->email;
         $newPatient->phone_number = $request->phone_number;
         $newPatient->relation_name = $request->relation;
+        $newPatient->status = 1;
         $newPatient->save();
 
         $newPatientRequest = new request_Client();
@@ -255,17 +239,7 @@ class patientDashboardController extends Controller
 
         $newPatientRequest->save();
 
-
-
-        $requestStatus->request_id = $newPatient->id;
-        $requestStatus->status = 1;
-        $requestStatus->save();
-
-
-        if (!empty($requestStatus)) {
-            $newPatient->update(['status' => $requestStatus->id]);
-        }
-
+    
 
         // store documents in request_wise_file table
 
@@ -335,31 +309,31 @@ class patientDashboardController extends Controller
         $userData = Auth::user();
         $email = $userData["email"];
 
-        $data = request_Client::select(
-            'request_status.status',
-            'request_client.request_id',
-            'request_wise_file.id',
-            'status.status_type',
-            DB::raw('DATE(request_client.created_at) as created_date'),
-        )
-            ->leftJoin('request_status', 'request_status.request_id', 'request_client.request_id')
-            ->leftJoin('status', 'status.id', 'request_status.status')
-            ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request_client.request_id')
-            ->where('email', $email)
-            ->paginate(10);
-
-
-
-        // $data = RequestTable::select(
-        //     'request.id',
-        //     'request_wise_file.request_id',
+        // $data = request_Client::select(
+        //     'request_status.status',
+        //     'request_client.request_id',
+        //     'request_wise_file.id',
         //     'status.status_type',
-        //     DB::raw('DATE(request.created_at) as created_date'),
+        //     DB::raw('DATE(request_client.created_at) as created_date'),
         // )
-        //     ->leftJoin('status', 'status.id', 'request.status')
-        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request.id')
+        //     ->leftJoin('request_status', 'request_status.request_id', 'request_client.request_id')
+        //     ->leftJoin('status', 'status.id', 'request_status.status')
+        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request_client.request_id')
         //     ->where('email', $email)
         //     ->paginate(10);
+
+
+
+        $data = RequestTable::select(
+            'request.id',
+            'request_wise_file.request_id',
+            'status.status_type',
+            DB::raw('DATE(request.created_at) as created_date'),
+        )
+            ->leftJoin('status', 'status.id', 'request.status')
+            ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request.id')
+            ->where('email', $email)
+            ->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data'));
 

@@ -1036,7 +1036,6 @@ class AdminController extends Controller
 
     public function blockHistroySearchData(Request $request)
     {
-
         $blockData = BlockRequest::select(
             'request_client.first_name as patient_name',
             'block_request.id',
@@ -1148,8 +1147,7 @@ class AdminController extends Controller
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->where('user_roles.role_id','=',2)
-            ->orWhere('user_roles.role_id','=',1)
+            ->whereIn('user_roles.role_id', [1, 2])
             ->paginate(10);
 
         return view('adminPage.access.userAccess', compact('userAccessData'));
@@ -1172,13 +1170,12 @@ class AdminController extends Controller
 
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
-        // dd($request->all());
-
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id');
+            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
+            ->whereIn('user_roles.role_id', [1, 2]);
 
         if (!empty($account) && isset($account)) {
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);

@@ -110,8 +110,8 @@
         <h3>Provider Name: {{ $provider->first_name }} {{ $provider->last_name }}</h3>
         <div class="case">
             <h2>Profile Changes requested by Provider: </h2>
-            <p>{{ $data->message }}</p>
         </div>
+        <p>{{ $data->message }}</p>
     </div>
 </div>
 

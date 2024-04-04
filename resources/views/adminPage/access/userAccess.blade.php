@@ -90,7 +90,7 @@
                     </tbody>
                 </table>
                 {{ $userAccessData->links('pagination::bootstrap-5') }}
-            </div>
+            </div>  
 
             <div class="mobile-listing mt-3">
                 @foreach ($userAccessData as $data)

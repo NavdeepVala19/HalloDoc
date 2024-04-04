@@ -376,74 +376,13 @@ class AdminProviderController extends Controller
         return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
 
-    public function updateAdminProviderProfile(Request $request, $id)
-    {
-
-        $request->validate([
-            'user_name' => 'required',
-            'password' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
-            'medical_license' => 'required',
-            'npi_number' => 'required',
-            'email_alt' => 'required|email',
-            'address1' => 'required',
-            'address2' => 'required',
-            'city' => 'required',
-            'zip' => 'required',
-            'phone_number_alt' => 'required',
-            'business_name' => 'required',
-            'business_website' => 'required',
-            'admin_notes' => 'required',
-        ]);
-
-
-        $getProviderInformation = Provider::with('users')->where('id', $id)->first();
-
-        $getProviderInformation->first_name = $request->first_name;
-        $getProviderInformation->last_name = $request->last_name;
-        $getProviderInformation->email = $request->email;
-        $getProviderInformation->syncEmailAddress = $request->alt_email;
-        $getProviderInformation->mobile = $request->phone_number;
-        $getProviderInformation->medical_license = $request->medical_license;
-        $getProviderInformation->npi_number = $request->npi_number;
-        $getProviderInformation->city = $request->city;
-        $getProviderInformation->address1 = $request->address1;
-        $getProviderInformation->address2 = $request->address2;
-        $getProviderInformation->zip = $request->zip;
-        $getProviderInformation->alt_phone = $request->alt_phone_number;
-        $getProviderInformation->business_name = $request->business_name;
-        $getProviderInformation->business_website = $request->business_website;
-        $getProviderInformation->admin_notes = $request->admin_notes;
-        $getProviderInformation->status = $request->status_type;
-
-        $getProviderInformation->save();
-
-        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
-
-        $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
-        $updateProviderInfoUsers->username = $request->user_name;
-        $updateProviderInfoUsers->password = Hash::make($request->password);
-        $updateProviderInfoUsers->save();
-
-        return redirect()->route('adminProvidersInfo')->with('message', 'account is updated');
-    }
-
+   
 
     public function updateProviderAccountInfo(Request $request, $id)
     {
-
-
         // update data of providers in users table
-
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
-
-
-
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
-
 
         if (!empty($request->password)) {
             $updateProviderInfoUsers->password = Hash::make($request->password);
@@ -452,11 +391,17 @@ class AdminProviderController extends Controller
             $updateProviderInfoUsers->username = $request->user_name;
             $updateProviderInfoUsers->save();
         }
-
         $getProviderData = Provider::where('id',$id)->first();
 
         $getProviderData->status = $request->status_type;
-        $getProviderData->save();     
+        $getProviderData->role_id = $request->role;
+        $getProviderData->save();
+
+
+        $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
+        $updateProviderDataAllUsers->status = $request->status_type;
+
+        $updateProviderDataAllUsers->save();
 
         return back()->with('message', 'account information is updated');
     }
@@ -489,14 +434,19 @@ class AdminProviderController extends Controller
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
 
         $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
-
-
-
         $updateProviderDataAllUsers->first_name = $request->first_name;
         $updateProviderDataAllUsers->last_name = $request->last_name;
         $updateProviderDataAllUsers->email = $request->email;
         $updateProviderDataAllUsers->mobile = $request->phone_number;
         $updateProviderDataAllUsers->save();
+
+        // update data in users table
+        
+        $updateProviderInfoUsers = users::where('id',$getUserIdFromProvider)->first();
+        $updateProviderInfoUsers->email = $request->email;
+        $updateProviderInfoUsers->phone_number = $request->phone_number;
+        $updateProviderInfoUsers->save();
+
 
         return back()->with('message', 'Physician information is updated');
     }

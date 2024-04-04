@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('sms_log', function (Blueprint $table) {
             $table->id();
-            $table->string('recipient_name');
-            $table->string('sms_template');
-            $table->string('mobile_number');
+            $table->string('recipient_name')->nullable();
+            $table->string('sms_template')->nullable();
+            $table->string('mobile_number')->nullable();
             $table->integer('confirmation_number')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles');
