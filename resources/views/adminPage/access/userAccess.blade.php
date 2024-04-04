@@ -122,6 +122,7 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/userAccessFilterPage.js') }}"></script>
