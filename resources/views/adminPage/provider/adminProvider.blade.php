@@ -230,8 +230,9 @@
                 </div>
             </div>
         </div>
-    @endsection
-    @section('script')
-        <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-        <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
-    @endsection
+    </div>
+@endsection
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
+@endsection

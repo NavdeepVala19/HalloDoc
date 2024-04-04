@@ -69,14 +69,29 @@ $(document).ready(function () {
         $(".overlay").show();
     });
 
-    // for Hiding Encounter pop-up on active listing page
+    // for Hiding Encounter pop-up on active listing page pop-up assign-case
     $(".hide-popup-btn").click(function (event) {
         event.preventDefault();
+        // $(".pop-up form").trigger("reset");
+        // $(".pop-up form")[0].reset();
+        $("#adminAssignCase").trigger("reset");
+        // $("#adminAssignCase").resetForm();
+        $("#adminAssignCase").validate().resetForm();
+
         $(".pop-up").hide();
         $(".overlay").hide();
-        $(".pop-up").reset();
-        $(".pop-up").validate().resetForm();
     });
+
+    //hide check  primary-empty hide-popup-btn
+    // $(".hide-popup-btn").click(function () {
+    //     $("#adminAssignCase").trigger("reset");
+    //     $("#adminAssignCase").validate().resetForm();
+    // });
+
+    // $("#adminAssignCase").on("hidden.bs.modal", function () {
+    //     $("#adminAssignCase").trigger("reset");
+    //     $("#adminAssignCase").validate().resetForm();
+    // });
 
     // for Provider Transfer Request pop-up - Pending Page
 
@@ -118,11 +133,11 @@ $(document).ready(function () {
             );
         } else if ($(this).data("request_type_id") == 3) {
             $(".request-detail").html(
-                '<i class="bi bi-circle-fill red me-2"></i>Business'
+                '<i class="bi bi-circle-fill red me-2"></i>Concierge'
             );
         } else if ($(this).data("request_type_id") == 4) {
             $(".request-detail").html(
-                '<i class="bi bi-circle-fill blue me-2"></i>Concierge'
+                '<i class="bi bi-circle-fill blue me-2"></i>Buisness'
             );
         }
     });
@@ -132,55 +147,3 @@ $(document).ready(function () {
         $(".upload-label").text(fileName);
     });
 });
-
-// var canvas = document.getElementById('signatureCanvas');
-//     var context = canvas.getContext('2d');
-//     var drawing = false;
-
-//     // Start drawing when mouse is pressed
-//     $('#signatureCanvas').mousedown(function (e) {
-//         drawing = true;
-//         draw(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
-//     });
-
-//     // Stop drawing when mouse is released
-//     $(document).mouseup(function () {
-//         drawing = false;
-//         context.beginPath();
-//     });
-
-//     // Draw as mouse moves
-//     $('#signatureCanvas').mousemove(function (e) {
-//         if (drawing) {
-//             draw(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-//         }
-//     });
-
-//     // Clear the canvas
-//     $('#clearCanvas').click(function () {
-//         context.clearRect(0, 0, canvas.width, canvas.height);
-//     });
-
-//     // Handle the creation of the signature
-//     $('.create-signature-btn').click(function () {
-//         // You can save the signature as an image or any other desired format
-//         var signatureImage = canvas.toDataURL("image/png");
-//         // You can then handle the image as needed, such as uploading it to the server
-//         console.log(signatureImage);
-//     });
-
-//     // Helper function to draw on the canvas
-//     function draw(x, y, isDown) {
-//         if (isDown) {
-//             context.beginPath();
-//             context.strokeStyle = 'black';
-//             context.lineWidth = 2;
-//             context.lineJoin = 'round';
-//             context.moveTo(lastX, lastY);
-//             context.lineTo(x, y);
-//             context.closePath();
-//             context.stroke();
-//         }
-//         lastX = x;
-//         lastY = y;
-//     }

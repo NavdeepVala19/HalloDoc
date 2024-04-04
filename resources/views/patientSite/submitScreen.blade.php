@@ -1,65 +1,36 @@
 @extends('patientSiteIndex')
 
 @section('css')
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/submitScreen.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/submitScreen.css') }}">
 @endsection
 
 @section('patientSiteContent')
+    @if (Session::has('message'))
+        <div class="alert alert-success popup-message" role="alert">
+            {{ Session::get('message') }}
+        </div>
+    @endif
 
-
-@if (Session::has('message'))
-<div class="alert alert-success popup-message" role="alert">
-    {{ Session::get('message') }}
-</div>
-@endif
-
-<!-- main content of submit request screen -->
-
-<div class="container">
-
-
-    <!-- this div is for heading and back button -->
-
-    <div class="header_part">
-        <h1 class="heading">I am a..</h1>
-        <a href="{{route('patientSite')}}" type="button" class="primary-empty d-flex justify-content-center align-items-center"> <i class="bi bi-chevron-left"></i> Back</a>
-    </div>
-
-
-
-    <!-- this div is for main content -->
-
-    <div class=" main-container d-flex flex-column justify-content-evenly align-items-center ">
-
-        <div class="case active ps-3 d-flex flex-column justify-content-between patient">
-
-            <a href="{{route('patient')}}" class="submitType" type="button" id="patient">PATIENT</a>
-
+    <!-- main content of submit request screen -->
+    <div class="container">
+        <!-- this div is for heading and back button -->
+        <div class="header_part">
+            <h1 class="heading">I am a..</h1>
+            <a href="{{ route('patientSite') }}" type="button"
+                class="primary-empty d-flex justify-content-center align-items-center"> <i class="bi bi-chevron-left"></i>
+                Back</a>
         </div>
 
-        <div class="case active ps-3 d-flex flex-column justify-content-between family">
-
-            <a href="{{route('family')}}" class="submitType" type="button" id="family">FAMILY/FRIEND</a>
-
-        </div>
-
-        <div class="case active ps-3 d-flex flex-column justify-content-between conceirge">
-
-            <a href="{{route('concierge')}}" class="submitType" type="button" id="conceirge">CONCEIRGE</a>
-
-        </div>
-
-        <div class="case active ps-3 d-flex flex-column justify-content-between  business">
-
-
-            <a href="{{route('business')}}" class="submitType" type="button" id="business">BUSINESS PARTNERS</a>
+        <!-- this div is for main content -->
+        <div class=" main-container d-flex flex-column justify-content-evenly align-items-center ">
+            <a href="{{ route('patient') }}" class="case patient submitType" type="button">PATIENT</a>
+            <a href="{{ route('family') }}" class="case family submitType" type="button">FAMILY/FRIEND</a>
+            <a href="{{ route('concierge') }}" class="case conceirge submitType" type="button" id="conceirge">CONCEIRGE</a>
+            <a href="{{ route('business') }}" class="case business submitType" type="button" id="business">BUSINESS
+                PARTNERS</a>
         </div>
     </div>
-
-</div>
-
 @endsection
-
 @section('script')
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+    <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

@@ -4,7 +4,7 @@
     display: block;
 }
 
-@media(max-width:550px) {
+@media (max-width: 550px) {
     .logout-link {
         display: none;
     }
@@ -12,12 +12,10 @@
 
 /******************************** Header CSS End ************************************** */
 
-
-
 /******************************** Main Content CSS Start ************************************** */
 
 .content {
-    margin-top: 100px;
+    /* margin-top: 100px; */
     /* border: 1px solid blue; */
 }
 
@@ -67,13 +65,13 @@
     background-color: #3c9eff;
 }
 
-@media(min-width:550px) {
+@media (min-width: 550px) {
     .btn-down {
         display: none;
     }
 }
 
-@media(max-width:550px) {
+@media (max-width: 550px) {
     .down-button {
         display: none;
     }
@@ -97,13 +95,11 @@
     }
 }
 
-@media(min-width:550px) {
+@media (min-width: 550px) {
     .table-content {
         display: none;
     }
 }
-
-
 
 /********************************  Main Content CSS End ************************************** */
 
@@ -180,10 +176,6 @@
     background-color: #0056b3;
 }
 
-
-
-
-
 @media (max-width: 550px) {
     .upload-txt {
         display: none;
@@ -200,21 +192,6 @@
     }
 }
 
-
-
 /******************************** Footer CSS Start ************************************** */
-
-.footer {
-    background-color: #343434;
-    position: fixed; 
-    bottom: 0;
-    color: white;
-    width: 100%;
-    text-align: end;
-}
-
-.footer div {
-    padding: 20px;
-}
 
 /********************************  Footer CSS End ************************************** */

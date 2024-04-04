@@ -31,7 +31,7 @@ return new class extends Migration
             $table->foreign('regions_id')->references('id')->on('regions');
 
             $table->unsignedBigInteger('role_id')->nullable();
-            $table->foreign('role_id')->references('id')->on('user_roles');
+            $table->foreign('role_id')->references('id')->on('role');
             
             $table->string('photo')->nullable();
             $table->string('npi_number')->nullable();
