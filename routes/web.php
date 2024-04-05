@@ -379,6 +379,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->name('physician.regions');
     Route::get('/physician/{id}', [AdminController::class, 'getPhysicians'])->name('get.physician');
 
+    Route::get('/newPhysicians/{requestId}/{regionId}', [AdminController::class, 'getNewPhysicians'])->name('get.new.physician');
+
     Route::post('/assign-case', [AdminController::class, 'assignCase'])->name('admin.assign.case');
     Route::post('/transfer-case-admin', [AdminController::class, 'transferCase'])->name('admin.transfer.case');
 

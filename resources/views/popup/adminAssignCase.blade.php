@@ -4,7 +4,7 @@ to providers based on patient’s region using this pop-up. --}}
 <div class="pop-up assign-case">
     <div class="popup-heading-section d-flex align-items-center justify-content-between">
         <span>Assign Request</span>
-        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        <button class="hide-popup-btn adminAssignCancel"><i class="bi bi-x-lg"></i></button>
     </div>
     <p class="m-2">To assign this request, search and select another Physician</p>
     <form action="{{ route('admin.assign.case') }}" method="POST" id="adminAssignCase">
@@ -44,7 +44,7 @@ to providers based on patient’s region using this pop-up. --}}
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
             <button type="submit" class="primary-fill confirm-case" id="adminAssignCaseBtn">Submit</button>
-            <button class="primary-empty hide-popup-btn">Cancel</button>
+            <button class="primary-empty hide-popup-btn adminAssignCancel">Cancel</button>
         </div>
     </form>
 </div>

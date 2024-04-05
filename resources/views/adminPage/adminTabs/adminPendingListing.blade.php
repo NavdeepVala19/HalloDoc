@@ -303,8 +303,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     Case</button>
                                                 <button class="send-agreement-btn" data-id="{{ $case->id }}"
                                                     data-request_type_id={{ $case->request_type_id }}
-                                                    data-phone_number="{{ $case->phone_number }}"
-                                                    data-email={{ $case->email }}><i
+                                                    data-phone_number="{{ $case->requestClient->phone_number }}"
+                                                    data-email={{ $case->requestClient->email }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Send
                                                     Agreement</button>
                                             </div>

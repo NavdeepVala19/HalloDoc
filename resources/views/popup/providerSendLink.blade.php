@@ -2,7 +2,7 @@
 <div class="pop-up send-link">
     <div class="popup-heading-section d-flex align-items-center justify-content-between">
         <span>Send mail to patient for submitting request</span>
-        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        <button class="hide-popup-btn providerSendLinkCancel"><i class="bi bi-x-lg"></i></button>
     </div>
     <form action="{{ route('send.mail') }}" method="POST" id="providerSendLinkForm">
         @csrf
@@ -46,7 +46,7 @@
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
             <input type="submit" value="Send" class="primary-fill" id="providerSendLinkButton">
-            <button class="primary-empty hide-popup-btn">Cancel</button>
+            <button class="primary-empty hide-popup-btn providerSendLinkCancel">Cancel</button>
         </div>
     </form>
 </div>

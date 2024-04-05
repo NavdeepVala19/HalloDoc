@@ -56,11 +56,26 @@ $(document).ready(function () {
 
         $(".requestId").val($(this).data("id"));
     });
+    // Reset Form when pop-up is closed
+    $(".providerTransferCancel").click(function () {
+        $("#providerTransferCase").trigger("reset");
+        $("#providerTransferCase").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
 
     // for showing send-link pop-up on every listing page
     $(".send-link-btn").click(function (event) {
         $(".send-link").show();
         $(".overlay").show();
+    });
+
+    // Reset Provider Send Link form on Closing pop-up
+    $(".providerSendLinkCancel").click(function () {
+        $("#providerSendLinkForm").trigger("reset");
+        $("#providerSendLinkForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     // for showing request-to-admin pop-up on providerProfile Page
@@ -72,28 +87,10 @@ $(document).ready(function () {
     // for Hiding Encounter pop-up on active listing page pop-up assign-case
     $(".hide-popup-btn").click(function (event) {
         event.preventDefault();
-        // $(".pop-up form").trigger("reset");
-        // $(".pop-up form")[0].reset();
-        $("#adminAssignCase").trigger("reset");
-        // $("#adminAssignCase").resetForm();
-        $("#adminAssignCase").validate().resetForm();
 
         $(".pop-up").hide();
         $(".overlay").hide();
     });
-
-    //hide check  primary-empty hide-popup-btn
-    // $(".hide-popup-btn").click(function () {
-    //     $("#adminAssignCase").trigger("reset");
-    //     $("#adminAssignCase").validate().resetForm();
-    // });
-
-    // $("#adminAssignCase").on("hidden.bs.modal", function () {
-    //     $("#adminAssignCase").trigger("reset");
-    //     $("#adminAssignCase").validate().resetForm();
-    // });
-
-    // for Provider Transfer Request pop-up - Pending Page
 
     // Mobile Listing view
     $(".mobile-list").on("click", function () {
