@@ -27,9 +27,7 @@ use Illuminate\Support\Facades\Mail;
 
 class patientController extends Controller
 {
-
     // this controller is responsible for creating/storing the patient
-
     public function patientRequests()
     {
         return view('patientSite/patientRequest');
@@ -50,8 +48,6 @@ class patientController extends Controller
         ]);
 
         $isEmailStored = users::where('email', $request->email)->first();
-
-
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
@@ -76,7 +72,7 @@ class patientController extends Controller
             $userRolesEntry = new UserRoles();
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
-
+            $userRolesEntry->save();
         }
 
         $requestEmail = new users();
@@ -106,12 +102,7 @@ class patientController extends Controller
         $patientRequest->notes = $request->symptoms;
         $patientRequest->save();
 
-      
-        
-
-
         // store documents in request_wise_file table
-
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $requestData->id;
@@ -156,9 +147,6 @@ class patientController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
-        }
-
-        if ($isEmailStored == null) {
             return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
         } else {
             return redirect()->route('submitRequest');

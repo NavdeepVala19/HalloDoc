@@ -3,7 +3,7 @@
  <div class="pop-up cancel-case">
      <div class="popup-heading-section d-flex align-items-center justify-content-between">
          <span>Confirm Cancellation</span>
-         <button type="button" class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+         <button type="button" class="hide-popup-btn cancleCaseClose"><i class="bi bi-x-lg"></i></button>
      </div>
      <div class="m-3">
          <span>Patient Name: </span> <span class="displayPatientName">patient name</span>
@@ -30,7 +30,7 @@
          </div>
          <div class="p-2 d-flex align-items-center justify-content-end gap-2">
              <input type="submit" value="Confirm" class="primary-fill cancel-case" id='cancel-case'>
-             <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+             <button type="button" class="primary-empty hide-popup-btn cancleCaseClose">Cancel</button>
          </div>
      </form>
  </div>

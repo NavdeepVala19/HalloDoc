@@ -51,28 +51,48 @@
                     <i class="bi bi-arrow-down-up notes-logo"></i>
                     <div>
                         <h2>Transfer Notes</h2>
-                        @if ($adminAssignedCase)
-                            <span>Admin transferred to Dr. {{ $adminAssignedCase->transferedPhysician->first_name }}
-                                {{ $adminAssignedCase->transferedPhysician->last_name }} on
-                                {{ $adminAssignedCase->created_at->format('d-m-Y') }}
+                        @if ($adminAssignedCase && $adminAssignedCase->transferedPhysician)
+                            <div>
+                                <span class='fs-5 fw-bold'>
+                                    1. Admin transferred to Dr. {{ $adminAssignedCase->transferedPhysician->first_name }}
+                                    {{ $adminAssignedCase->transferedPhysician->last_name }}
+                                </span>
+                                <br>
+                                on {{ $adminAssignedCase->created_at->format('d-m-Y') }}
                                 at {{ $adminAssignedCase->created_at->format('H:i:s') }} :
-                                {{ $adminAssignedCase->notes }}
-                            </span>
-                        @endif
-                        @if ($providerTransferedCase && $providerTransferedCase->provider)
-                            <div>Dr. {{ $providerTransferedCase->provider->first_name }}
-                                {{ $providerTransferedCase->provider->last_name }} transferred to Admin on
-                                {{ $providerTransferedCase->created_at->format('d-m-Y') }} at
-                                {{ $providerTransferedCase->created_at->format('H:i:s') }} :
-                                {{ $providerTransferedCase->notes }}
+                                <span class="fw-bold fst-italic">
+                                    {{ $adminAssignedCase->notes }}
+                                </span>
                             </div>
                         @endif
-                        @if ($adminTransferedCase && $adminTransferedCase->provider)
-                            <div>Admin transferred to Dr. {{ $adminTransferedCase->provider->first_name }}
-                                {{ $adminTransferedCase->provider->last_name }} on
-                                {{ $adminTransferedCase->created_at->format('d-m-Y') }} at
+                        @if ($providerTransferedCase && $providerTransferedCase->provider)
+                            <div>
+                                <span class="fs-5 fw-bold">
+                                    2. Dr. {{ $providerTransferedCase->provider->first_name }}
+                                    {{ $providerTransferedCase->provider->last_name }} transferred to Admin
+                                </span>
+                                <br>
+                                on
+                                {{ $providerTransferedCase->created_at->format('d-m-Y') }} at
+                                {{ $providerTransferedCase->created_at->format('H:i:s') }} :
+                                <span class="fw-bold fst-italic">
+                                    {{ $providerTransferedCase->notes }}
+                                </span>
+                            </div>
+                        @endif
+                        @if ($adminTransferedCase && $adminTransferedCase->transferedPhysician)
+                            <div>
+                                <span class="fs-5 fw-bold">
+                                    3. Admin transferred to Dr.
+                                    {{ $adminTransferedCase->transferedPhysician->first_name }}
+                                    {{ $adminTransferedCase->transferedPhysician->last_name }}
+                                </span>
+                                <br>
+                                on {{ $adminTransferedCase->created_at->format('d-m-Y') }} at
                                 {{ $adminTransferedCase->created_at->format('H:i:s') }} :
-                                {{ $adminTransferedCase->notes }}
+                                <span class="fw-bold fst-italic">
+                                    {{ $adminTransferedCase->notes }}
+                                </span>
                             </div>
                         @endif
                     </div>

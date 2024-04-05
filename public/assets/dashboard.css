@@ -450,7 +450,7 @@ td {
 .request-support {
     display: none;
     width: 500px;
-    z-index: 20;
+    /* z-index: 20; */
 }
 
 /* ******************************* CSS of ActionMenu button of Regions filter blade file ****************************** */

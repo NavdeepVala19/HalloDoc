@@ -6,7 +6,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -57,19 +57,20 @@
 
                 <div class="grid-3">
                     <div class="form-floating ">
-                        <input type="text" name="user_name" class="form-control" id="floatingInput"
-                            placeholder="User Name" value="{{ old('user_name') }}">
+                        <input type="text" name="user_name"
+                            class="form-control @error('user_name') is-invalid @enderror"
+                            id="floatingInput" placeholder="User Name" value="{{ old('user_name') }}">
                         <label for="floatingInput">User Name</label>
                         @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="password" name="password" class="form-control" id="floatingInput"
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="floatingInput"
                             placeholder="password" value="{{ old('password') }}">
                         <label for="floatingInput">Password</label>
                         @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -87,55 +88,55 @@
                 <div class="grid-2">
 
                     <div class="form-floating ">
-                        <input type="text" name="first_name" class="form-control" id="floatingInput"
+                        <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
                             placeholder="First Name" value="{{ old('first_name') }}">
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="last_name" class="form-control" id="floatingInput"
+                        <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" id="floatingInput"
                             placeholder="Last Name" value="{{ old('last_name') }}">
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="floatingInput" placeholder="name@example.com"
                             name="email" value="{{ old('email') }}">
                         <label for="floatingInput">Email</label>
                         @error('email')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating" style="height: 58px;">
-                        <input type="tel" name="phone_number" class="form-control phone" id="telephone"
+                        <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
                             placeholder="Phone Number" value="{{ old('phone_number') }}">
                         @error('phone_number')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="number" name="medical_license" class="form-control" id="floatingInput"
+                        <input type="number" name="medical_license" class="form-control @error('medical_license') is-invalid @enderror" id="floatingInput"
                             placeholder="Medical License" value="{{ old('medical_license') }}">
                         <label for="floatingInput">Medical license # </label>
                         @error('medical_license')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating">
-                        <input type="number" name="npi_number" class="form-control" id="floatingInput"
+                        <input type="number" name="npi_number" class="form-control @error('npi_number') is-invalid @enderror" id="floatingInput"
                             placeholder="NPI Number" value="{{ old('npi_number') }}">
                         <label for="floatingInput">NPI Number</label>
                         @error('npi_number')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -158,29 +159,29 @@
                 <div class="grid-2">
 
                     <div class="form-floating ">
-                        <input type="text" name="address1" class="form-control" id="floatingInput"
+                        <input type="text" name="address1" class="form-control @error('address1') is-invalid @enderror" id="floatingInput"
                             placeholder="Address 1" value="{{ old('address1') }}">
                         <label for="floatingInput">Address 1</label>
                         @error('address1')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="address2" class="form-control" id="floatingInput"
+                        <input type="text" name="address2" class="form-control @error('address2') is-invalid @enderror" id="floatingInput"
                             placeholder="Address 2" value="{{ old('address2') }}">
                         <label for="floatingInput">Address 2</label>
                         @error('address2')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="city" class="form-control" id="floatingInput" placeholder="city"
+                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" id="floatingInput" placeholder="city"
                             value="{{ old('city') }}">
                         <label for="floatingInput">City</label>
                         @error('city')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -202,11 +203,11 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip"
+                        <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror" id="floatingInput" placeholder="zip"
                             value="{{ old('zip') }}">
                         <label for="floatingInput">Zip</label>
                         @error('zip')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -221,11 +222,11 @@
                 <div class="grid-2">
 
                     <div class="form-floating ">
-                        <input type="text" name="business_name" class="form-control" id="floatingInput"
+                        <input type="text" name="business_name" class="form-control @error('business_name') is-invalid @enderror" id="floatingInput"
                             placeholder="Business Name" value="{{ old('business_name') }}">
                         <label for="floatingInput">Business Name</label>
                         @error('business_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -236,7 +237,7 @@
 
                     </div>
 
-               
+
                     <div>
                         {{-- Select Photo --}}
                         <div class="custom-file-input" onclick="openFileSelection()">

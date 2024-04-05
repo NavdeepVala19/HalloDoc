@@ -12,27 +12,29 @@ use App\Models\Admin;
 use App\Models\Roles;
 
 // Different Models used in these Controller
+use App\Models\Shift;
 use App\Models\users;
 use App\Mail\SendLink;
 use App\Mail\SendMail;
 use App\Models\Orders;
+
 use App\Models\caseTag;
 
-use App\Models\Regions;
-
 // For sending Mails
+use App\Models\Regions;
 use App\Models\SMSLogs;
 use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RoleMenu;
-use App\Models\UserRoles;
 
 // DomPDF package used for the creation of pdf from the form
-use App\Mail\SendAgreement;
+use App\Models\UserRoles;
 // To create zip, used to download multiple documents at once
+use App\Mail\SendAgreement;
 use App\Models\AdminRegion;
+use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
@@ -178,6 +180,14 @@ class AdminController extends Controller
         $physicians = Provider::whereIn('id', $physiciansId)->get()->toArray();
         return response()->json($physicians);
     }
+
+    public function getNewPhysicians($requestId, $regionId)
+    {
+        $oldPhysicianId = RequestStatus::where('request_id', $requestId)->where('TransToAdmin', 1)->where('status', 3)->orderByDesc('id')->first()->physician_id;
+        $physiciansId = PhysicianRegion::where('region_id', $regionId)->pluck('provider_id')->toArray();
+        $physicians = Provider::whereIn('id', $physiciansId)->whereNot('id', $oldPhysicianId)->get()->toArray();
+        return response()->json($physicians);
+    }
     // assign Case login 
     public function assignCase(Request $request)
     {
@@ -206,16 +216,19 @@ class AdminController extends Controller
             'physician' => 'required|numeric',
             'notes' => 'required'
         ]);
-        RequestTable::where('id', $request->requestId)->update([
-            'status' => 1,
-            'physician_id' => $request->physician
-        ]);
+
+        $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         RequestStatus::create([
             'request_id' => $request->requestId,
+            'physician_id' => $providerId,
             'TransToPhysicianId' => $request->physician,
-            'status' => "1",
+            'status' => "3",
             'admin_id' => '1',
             'notes' => $request->notes
+        ]);
+        RequestTable::where('id', $request->requestId)->update([
+            'status' => 3,
+            'physician_id' => $request->physician
         ]);
         return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
     }
@@ -285,8 +298,9 @@ class AdminController extends Controller
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
-        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        // dd($providerTransferedCase);
+        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+        // dd($adminAssignedCase, $providerTransferedCase, $adminTransferedCase);
+        // dd($adminTransferedCase);
         return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
@@ -794,7 +808,7 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-      
+
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
 
         $session = session([
@@ -1027,11 +1041,11 @@ class AdminController extends Controller
 
     public function unBlockPatientInBlockHistoryPage($id)
     {
-        $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status'=>1]);
-        $statusUpdateRequestStatus = RequestStatus::where('request_id',$id)->update(['status'=>1]);
-        
+        $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
+        $statusUpdateRequestStatus = RequestStatus::where('request_id', $id)->update(['status' => 1]);
+
         $unBlockData = BlockRequest::where('request_id', $id)->delete();
-        return redirect()->back()->with('message','patient is unblock');
+        return redirect()->back()->with('message', 'patient is unblock');
     }
 
     public function blockHistroySearchData(Request $request)
@@ -1191,8 +1205,24 @@ class AdminController extends Controller
 
     public function sendRequestSupport(Request $request)
     {
+
+        $currentDate = now()->toDateString();
+        $currentTime = now()->format('H:i');
+
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)
+            ->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+
+        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
+        $onCallPhysicians = Provider::whereIn('id', $onCallPhysicianIds)->get();
+
+        $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
+        $offDutyPhysicians = Provider::whereIn('id', $offDutyPhysicianIds)->pluck('email')->toArray();
+
         $requestMessage = $request->contact_msg;
-        Mail::to('recipient@example.com')->send(new RequestSupportMessage($requestMessage));
+        foreach ($offDutyPhysicians as $offDutyPhysician) {
+            Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+        }
+
         return redirect()->back();
     }
 
@@ -1427,7 +1457,7 @@ class AdminController extends Controller
         $storeAdminData->city = $request->city;
         $storeAdminData->zip = $request->zip;
         $storeAdminData->alt_phone = $request->alt_mobile;
-        $storeAdminData->status ='pending';
+        $storeAdminData->status = 'pending';
         $storeAdminData->role_id = $request->role;
         $storeAdminData->regions_id = $request->state;
 
@@ -1464,7 +1494,6 @@ class AdminController extends Controller
         $adminAllUserData->save();
 
         return redirect()->route('admin.user.access');
-
     }
 
 
@@ -1474,9 +1503,9 @@ class AdminController extends Controller
         return response()->json($fetchedRegions);
     }
 
-    public function fetchRolesForAdminAccountCreate(){
-        $fetchedRoles = Role::select('id','name')->where('account_type', 'admin')->get();
+    public function fetchRolesForAdminAccountCreate()
+    {
+        $fetchedRoles = Role::select('id', 'name')->where('account_type', 'admin')->get();
         return response()->json($fetchedRoles);
     }
-
 }

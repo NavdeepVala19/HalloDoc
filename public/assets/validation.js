@@ -279,7 +279,7 @@ $(document).ready(function () {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass("is-invalid").addClass("is-valid");
+            $(element).removeClass("is-invalid").addClass('is-valid');
         },
     });
     $("#adminAssignCaseBtn, #adminTransferRequestBtn").click(function () {

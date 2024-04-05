@@ -17,10 +17,10 @@ $(document).ready(function () {
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
-                        reason.id +
-                        '">' +
-                        reason.case_name +
-                        "</option>"
+                            reason.id +
+                            '">' +
+                            reason.case_name +
+                            "</option>"
                     );
                 });
             },
@@ -28,6 +28,17 @@ $(document).ready(function () {
                 console.error(error);
             },
         });
+    });
+    // Reset Cancel Case Form when pop-up is closed
+    $(".cancleCaseClose").click(function () {
+        $("#cancelCaseForm").trigger("reset");
+        $("#cancelCaseForm").validate().resetForm();
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-invalid"
+        );
     });
 
     $(".assign-case-btn").click(function () {
@@ -50,10 +61,10 @@ $(document).ready(function () {
                 data.forEach(function (region) {
                     $(".physicianRegions").append(
                         '<option value="' +
-                        region.id +
-                        '">' +
-                        region.region_name +
-                        "</option>"
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
                     );
                 });
             },
@@ -63,11 +74,54 @@ $(document).ready(function () {
         });
     });
 
+    $(".adminAssignCancel").click(function () {
+        $(".pop-up .selectPhysician")
+            .empty()
+            .append(
+                '<option value="" selected disabled>Select Physician</option>'
+            );
+        $("#adminAssignCase").trigger("reset");
+        $("#adminAssignCase").validate().resetForm();
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-invalid"
+        );
+    });
+
     $(".physicianRegions").on("change", function () {
         $physician = $(this).val();
         $(".selectPhysician").empty();
         $.ajax({
             url: "/physician/" + $physician,
+            type: "GET",
+            success: function (data) {
+                data.forEach(function (physician) {
+                    $(".selectPhysician").append(
+                        $("<option>", {
+                            value: physician.id,
+                            text:
+                                physician.first_name +
+                                " " +
+                                physician.last_name,
+                        })
+                    );
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
+
+    // don't show the physician who transfered case to admin (as we do not want to assign the case again to him/her)
+    $(".physicianRegionsTransferCase").on("change", function () {
+        $region = $(this).val();
+        $requestId = $(".requestId").val();
+        $(".selectPhysician").empty();
+        $.ajax({
+            url: "/newPhysicians/" + $requestId + "/" + $region,
             type: "GET",
             success: function (data) {
                 data.forEach(function (physician) {
@@ -99,6 +153,57 @@ $(document).ready(function () {
     $(".transfer-btn").click(function () {
         $(".transfer-case").show();
         $(".overlay").show();
+
+        $(".physicianRegionsTransferCase").empty();
+        $(".requestId").val($(this).data("id"));
+        $(".physicianRegionsTransferCase")
+            .empty()
+            .append(
+                '<option value="" selected disabled>Narrow Search by Region</option>'
+            );
+
+        // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
+        $.ajax({
+            url: "/physician-regions",
+            type: "GET",
+            success: function (data) {
+                data.forEach(function (region) {
+                    $(".physicianRegionsTransferCase").append(
+                        '<option value="' +
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
+                    );
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+    });
+    // Reset Form when Transfer case pop-up is closed
+    $(".adminTransferCancel").click(function () {
+        $(".pop-up .selectPhysician")
+            .empty()
+            .append(
+                '<option value="" selected disabled>Select Physician</option>'
+            );
+        $("#adminTransferRequest").trigger("reset");
+        $("#adminTransferRequest").validate().resetForm();
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-invalid"
+        );
+    });
+    // Reset Form when block case pop-up is closed
+    $(".blockCaseCancel").click(function () {
+        $("#adminBlockCase").trigger("reset");
+        $("#adminBlockCase").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     $(".clear-btn").click(function () {
@@ -132,6 +237,14 @@ $(document).ready(function () {
         $(".default-buttons").show();
     });
 
+    // Reset Admin Send Link form on Closing pop-up
+    $(".adminSendLinkClose").click(function () {
+        $("#adminSendLinkForm").trigger("reset");
+        $("#adminSendLinkForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
     // Send Orders Page dynamic data fetching
     $(".profession-menu").on("change", function () {
         let profession = $(this).val();
@@ -145,10 +258,10 @@ $(document).ready(function () {
                     // entry -> single business
                     $(".business-menu").append(
                         '<option value="' +
-                        entry.id +
-                        '">' +
-                        entry.vendor_name +
-                        "</option>"
+                            entry.id +
+                            '">' +
+                            entry.vendor_name +
+                            "</option>"
                     );
                 });
             },
@@ -213,12 +326,10 @@ $(document).ready(function () {
 
     $(".request-support-btn").click(function () {
         $(".request-support").show();
-        // $('.overlay').show();
+        $(".overlay").show();
     });
 
     // ************************************* Shivesh *************************************
-
-
 
     $("#admin-info-cancel-btn").on("click", function () {
         $(".admin_first_name").attr("disabled");
@@ -270,7 +381,7 @@ $(document).ready(function () {
         $(".admin_state").removeAttr("disabled");
         $(".admin_zipcode").removeAttr("disabled");
         $(".admin_alt_phone").removeAttr("disabled");
-        $('#listing_state_admin_account').removeAttr("disabled");
+        $("#listing_state_admin_account").removeAttr("disabled");
 
         $("#adminEditBtn2").hide();
         $(".admin-mail-info-btns").show();
@@ -313,10 +424,10 @@ $(document).ready(function () {
             data.forEach(function (region) {
                 $(".listing-region").append(
                     '<option value="' +
-                    region.id +
-                    '">' +
-                    region.region_name +
-                    "</option>"
+                        region.id +
+                        '">' +
+                        region.region_name +
+                        "</option>"
                 );
             });
         },
@@ -406,46 +517,46 @@ $(".role-selected").on("change", function () {
     });
 });
 
-
-
-
 // **** Fetching regions from regions table ****
 $.ajax({
     url: "/admin-account-state",
     type: "GET",
     success: function (data) {
-
         data.forEach(function (region) {
             $("#listing_state_admin_account").append(
-                '<option value="' + region.id + '" class="state-name" >' + region.region_name + "</option>"
+                '<option value="' +
+                    region.id +
+                    '" class="state-name" >' +
+                    region.region_name +
+                    "</option>"
             );
         });
     },
     error: function (error) {
         console.error(error);
     },
-
 });
 
 // *** End of fetching regions from regions table ***
-
 
 // **** Fetching roles from role table ****
 $.ajax({
     url: "/admin-account-role",
     type: "GET",
     success: function (data) {
-
         data.forEach(function (role) {
             $("#listing_role_admin_Account").append(
-                '<option value="' + role.id + '" class="role_name" >' + role.name + "</option>"
+                '<option value="' +
+                    role.id +
+                    '" class="role_name" >' +
+                    role.name +
+                    "</option>"
             );
         });
     },
     error: function (error) {
         console.error(error);
     },
-
 });
 
 // *** End of Fetching roles from role table ***
