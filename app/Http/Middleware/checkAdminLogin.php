@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\UserRoles;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,11 +17,21 @@ class checkAdminLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $data = Auth::user();
-        // dd($data);
         if (Auth::check()) {
-            return $next($request);
+            $userId = Auth::user()->id;
+            $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
+            if ($roleId == 1) {
+                return $next($request);
+            } else {
+                return redirect()->route('adminLogin');
+            }
         }
+
+        // if ($roleId == 1) {
+        //     return $next($request);
+        // } else {
+        //     return redirect()->route('adminLogin');
+        // }
         return redirect()->route('adminLogin');
     }
 }

@@ -57,6 +57,10 @@
     display: none;
 }
 
+.phone-number-container {
+    height: 100%;
+}
+
 @media (max-width: 550px) {
     .large-screen-btn {
         display: none;

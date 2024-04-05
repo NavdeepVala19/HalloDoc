@@ -193,5 +193,22 @@ $(document).ready(function () {
         );
         $(".save-btn").hide();
         $(".edit-btn").show();
+
+        
+        // $("#providerEditShiftForm").trigger("reset");
+        $("#providerEditShiftForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
+    $(".providerAddShiftCancel").click(function () {
+        $("#providerAddShiftForm").trigger("reset");
+        $("#providerAddShiftForm").validate().resetForm();
+        $(
+            ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
+        ).removeClass("is-valid");
+        $(
+            ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
+        ).removeClass("is-invalid");
     });
 });

@@ -9,8 +9,6 @@
     {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
 @endsection
 
-
-
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
@@ -51,43 +49,91 @@
 
 
 @section('content')
+    {{-- Shift Added/Create Successfully --}}
+    @if (session('shiftAdded'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('shiftAdded') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+    {{-- Shift Deleted Successfully --}}
+    @if (session('shiftDeleted'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('shiftDeleted') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+    {{-- Shift Edited Successfully --}}
+    @if (session('shiftEdited'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('shiftEdited') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+    {{-- Shift Status Changed from Pending to Approved --}}
+    @if (session('shiftApproved'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('shiftApproved') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+    {{-- Shift Status Changed from Approved to Pending --}}
+    @if (session('shiftPending'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('shiftPending') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="overlay"></div>
     {{-- Create Shift pop-up  --}}
     <div class="pop-up create-shift ">
         <div class="popup-heading-section d-flex align-items-center justify-content-between">
             <span>Create Shift</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+            <button class="hide-popup-btn addShiftCancel"><i class="bi bi-x-lg"></i></button>
         </div>
-        <form action="{{ route('admin.scheduling.data') }}" method="POST" class="m-4">
+        <form action="{{ route('admin.scheduling.data') }}" method="POST" id="adminAddShiftForm" class="m-4">
             @csrf
             <div class="">
-                <select name="region" class="form-select region physicianRegions @error('region') is-invalid @enderror"
-                    id="floatingSelect">
-                    <option selected disabled>Region</option>
-                    @foreach ($regions as $region)
-                        <option value="{{ $region->id }}" id="region_{{ $region->id }}"
-                            @if (old('region') == $region->id) selected @endif>{{ $region->region_name }}
-                        </option>
-                    @endforeach
-                </select>
+                <div class="form-floating">
+                    <select name="region" class="form-select region physicianRegions @error('region') is-invalid @enderror"
+                        id="floatingSelect1">
+                        <option selected disabled>Select Region</option>
+                        @foreach ($regions as $region)
+                            <option value="{{ $region->id }}" id="region_{{ $region->id }}"
+                                @if (old('region') == $region->id) selected @endif>{{ $region->region_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <label for="floatingSelect1">Region</label>
+                </div>
                 @error('region')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
                 <div class="form-floating">
                     <select name="physician" class="form-select physicianSelection @error('physician') is-invalid @enderror"
-                        id="floatingSelect">
-                        <option selected>Select</option>
+                        id="floatingSelect2">
+                        <option selected disabled>Select</option>
                     </select>
-                    <label for="floatingSelect">Physician</label>
+                    <label for="floatingSelect2">Physician</label>
                     @error('physician')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
                     <input type="date" name="shiftDate"
-                        class="form-control shiftDate @error('shiftDate') is-invalid @enderror" id="floatingInput"
+                        class="form-control @error('shiftDate') is-invalid @enderror" id="floatingInput3"
                         placeholder="Created Date" value="{{ old('shiftDate') }}">
-                    <label for="floatingInput">Shift Date</label>
+                    <label for="floatingInput3">Shift Date</label>
                     @error('shiftDate')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -95,18 +141,18 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror"
-                            id="floatingInput" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
-                        <label for="floatingInput">Start</label>
+                            class="form-control @error('shiftStartTime') is-invalid @enderror"
+                            id="floatingInput2" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
+                        <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
                         <input type="time" name="shiftEndTime"
-                            class="form-control shiftEndTime @error('shiftEndTime') is-invalid @enderror" id="floatingInput"
-                            placeholder="Created Date" value="{{ old('shiftEndTime') }}">
-                        <label for="floatingInput">End</label>
+                            class="form-control @error('shiftEndTime') is-invalid @enderror"
+                            id="floatingInput5" placeholder="Created Date" value="{{ old('shiftEndTime') }}">
+                        <label for="floatingInput5">End</label>
                         @error('shiftEndTime')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -128,61 +174,60 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="checkbox[]" type="checkbox" value="1"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
+                            id="defaultCheck2" disabled>
+                        <label class="form-check-label" for="defaultCheck2">
                             Every Monday
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
+                            id="defaultCheck3" disabled>
+                        <label class="form-check-label" for="defaultCheck3">
                             Every Tuesday
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="checkbox[]" type="checkbox" value="3"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
+                            id="defaultCheck4" disabled>
+                        <label class="form-check-label" for="defaultCheck4">
                             Every Wednesday
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
+                            id="defaultCheck5" disabled>
+                        <label class="form-check-label" for="defaultCheck5">
                             Every Thursday
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="checkbox[]" type="checkbox" value="5"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
+                            id="defaultCheck6" disabled>
+                        <label class="form-check-label" for="defaultCheck6">
                             Every Friday
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="checkbox[]" type="checkbox" value="6"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
+                            id="defaultCheck7" disabled>
+                        <label class="form-check-label" for="defaultCheck7">
                             Every Saturday
                         </label>
                     </div>
                 </div>
                 <div class="form-floating">
                     <select class="form-select repeat-end-selection" name="repeatEnd" class="cancel-options"
-                        id="floatingSelect" aria-label="Floating label select example" disabled>
+                        id="floatingSelect8" aria-label="Floating label select example" disabled>
                         <option selected value="2">2-times</option>
                         <option value="3">3-times</option>
                         <option value="4">4-times</option>
                     </select>
-                    <label for="floatingSelect">Repeat End</label>
+                    <label for="floatingSelect8">Repeat End</label>
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                {{-- <button type="submit" class="primary-fill save-shift-btn">Save</button> --}}
-                <button type="submit" class="primary-fill save-shift-btn">Save</button>
-                <button type="button" class="primary-empty hide-popup-btn">Cancel</button>
+                <button type="submit" class="primary-fill save-shift-btn" id="adminAddShiftBtn">Save</button>
+                <button type="button" class="primary-empty hide-popup-btn addShiftCancel">Cancel</button>
             </div>
         </form>
     </div>
@@ -192,7 +237,7 @@
             <span>View Shift</span>
             <button class="hide-popup-btn view-shift-close"><i class="bi bi-x-lg"></i></button>
         </div>
-        <form action="{{ route('admin.edit.shift') }}" method="POST" class="m-4">
+        <form action="{{ route('admin.edit.shift') }}" method="POST" id="adminEditShiftForm" class="m-4">
             @csrf
             <input type="text" name="shiftId" class="shiftId" hidden>
             <div>
@@ -206,20 +251,20 @@
                 </div>
                 <div class="form-floating ">
                     <input type="date" name="shiftDate" class="form-control shiftDate shiftDateInput"
-                        id="floatingInput" placeholder="Created Date" disabled>
-                    <label for="floatingInput">Shift Date</label>
+                        id="floatingInput1" placeholder="Created Date" disabled>
+                    <label for="floatingInput1">Shift Date</label>
                 </div>
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeStart"
-                            class="form-control shiftStartTime shiftStartTimeInput" id="floatingInput"
+                            class="form-control shiftStartTime shiftStartTimeInput" id="floatingInput2"
                             placeholder="Created Date" disabled>
-                        <label for="floatingInput">Start</label>
+                        <label for="floatingInput2">Start</label>
                     </div>
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeEnd" class="form-control shiftEndTime shiftEndTimeInput"
-                            id="floatingInput" placeholder="Created Date" disabled>
-                        <label for="floatingInput">End</label>
+                            id="floatingInput3" placeholder="Created Date" disabled>
+                        <label for="floatingInput3">End</label>
                     </div>
                 </div>
             </div>
@@ -275,4 +320,7 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
     {{-- Custom Script for Implementation of Scheduling --}}
     <script src="{{ URL::asset('assets/adminPage/scheduling.js') }}"></script>
+    {{-- Validation JQuery Files --}}
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

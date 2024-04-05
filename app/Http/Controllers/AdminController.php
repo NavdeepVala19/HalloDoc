@@ -1184,8 +1184,6 @@ class AdminController extends Controller
 
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
-        // dd($request->all());
-
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
@@ -1196,7 +1194,6 @@ class AdminController extends Controller
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
         }
         $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
-
 
         $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
 

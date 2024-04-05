@@ -135,10 +135,8 @@ class SchedulingController extends Controller
     }
     public function shiftsReviewView()
     {
-        // $shifts = ShiftDetail::get();
         $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
         $regions = Regions::get();
-        // dd($shiftDetails);
 
         return view('adminPage.scheduling.shiftsForReview', compact('shiftDetails', 'regions'));
     }
@@ -182,7 +180,7 @@ class SchedulingController extends Controller
             'region_id' => $request['region']
         ]);
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
-        return redirect()->back();
+        return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
 
     public function eventsData()
@@ -217,10 +215,10 @@ class SchedulingController extends Controller
             $status = ShiftDetail::where('shift_id', $request->shiftId)->first();
             if ($status->status == 'approved') {
                 ShiftDetail::where('shift_id', $request->shiftId)->update(['status' => 1]);
-                return redirect()->back();
+                return redirect()->back()->with('shiftPending', 'Shift Status changed from Approved to Pending');
             } else {
                 ShiftDetail::where('shift_id', $request->shiftId)->update(['status' => 2]);
-                return redirect()->back();
+                return redirect()->back()->with('shiftApproved', 'Shift Status changed from Pending to Approved');
             }
         } else if ($request['action'] == 'save') {
             Shift::where('id', $request->shiftId)->update([
@@ -234,11 +232,11 @@ class SchedulingController extends Controller
                 // 'modified_by' => Auth::user()->id
             ]);
 
-            return redirect()->back();
+            return redirect()->back()->with('shiftEdited', 'Shift Edited Successfully!');
         } else {
             Shift::where('id', $request->shiftId)->delete();
 
-            return redirect()->back();
+            return redirect()->back()->with("shiftDeleted", "Shift Deleted Successfully!");
         }
     }
     public function shiftAction(Request $request)
@@ -254,12 +252,19 @@ class SchedulingController extends Controller
             return redirect()->back();
         }
     }
-    public function filterRegions($regionId)
+    public function filterRegions(Request $request)
     {
-        $allShifts = ShiftDetailRegion::where('region_id', $regionId)->pluck('shift_detail_id')->toArray();
-        $shiftDetails = ShiftDetail::whereIn('id', $allShifts)->get();
-        $regions = Regions::get();
+        $allShifts = ShiftDetailRegion::where('region_id', $request->regionId)->pluck('shift_detail_id')->toArray();
+        $shiftDetails = ShiftDetail::whereHas('getShiftData')->whereIn('id', $allShifts)->where('status', 'pending')->paginate(10);
+        // dd($shiftDetails);
+        if($request->regionId == 0){
+            $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
+            $data = view('adminPage.scheduling.filteredShifts')->with('shiftDetails', $shiftDetails)->render();
+        } else {
+            $data = view('adminPage.scheduling.filteredShifts')->with('shiftDetails', $shiftDetails)->render();
+        }
 
-        return view('adminPage.scheduling.shiftsForReview', compact('shiftDetails', 'regions'));
+        return response()->json(['html' => $data]);
+        // return response()->json($shiftDetails);
     }
 }

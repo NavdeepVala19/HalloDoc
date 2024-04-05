@@ -191,6 +191,7 @@ $(document).ready(function () {
         rules: {
             phone_number: {
                 required: true,
+                phoneUS: true,
             },
             email: {
                 required: true,
@@ -198,7 +199,10 @@ $(document).ready(function () {
             },
         },
         messages: {
-            phone_number: { required: "Enter Phone Number to Send Agreement" },
+            phone_number: {
+                required: "Enter Phone Number to Send Agreement",
+                phoneUS: "Enter Phone Number in proper format",
+            },
             email: {
                 required: "Enter Email to Send Agreement.",
                 email: "Your email address must be in the format of name@domain.com",
@@ -279,7 +283,7 @@ $(document).ready(function () {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass("is-invalid").addClass('is-valid');
+            $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
     $("#adminAssignCaseBtn, #adminTransferRequestBtn").click(function () {
@@ -404,6 +408,187 @@ $(document).ready(function () {
     $("#providerEncounterFormBtn, #adminEncounterFormBtn").click(function () {
         if ($("#providerEncounterForm, #adminEncounterForm").valid()) {
             $("#providerEncounterForm, #adminEncounterForm").submit();
+        }
+    });
+
+    // Close Case Page Client Side Validation for phone-number and email
+    // Provider and Admin Send Agreement Pop-Up Validation
+    $("#closeCase").validate({
+        rules: {
+            phone_number: {
+                required: true,
+                phoneUS: true,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+        },
+        messages: {
+            phone_number: {
+                required: "Enter Phone Number to Send Agreement",
+                phoneUS: "Enter Phone Number in proper format",
+            },
+            email: {
+                required: "Enter Email to Send Agreement.",
+                email: "Your email address must be in the format of name@domain.com",
+            },
+        },
+        // errorElement: "span",
+        errorPlacement: function (error, element) {
+            let errorBox = $("<span class='text-danger'></span>");
+            errorBox.append(error);
+
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+    $("#saveCloseCase").click(function () {
+        if ($("#closeCase").valid()) {
+            $("#closeCase").submit();
+        } else {
+            $(".default-buttons").hide();
+            $(".new-buttons").show();
+        }
+    });
+
+    // ------------ PROVIDER SCHEDULING -----------
+    // Validation added for shiftEndTime to be greater than shiftStartTime
+    $.validator.addMethod(
+        "greaterThan",
+        function (value, element, params) {
+            var startTime = $("#floatingInput2").val();
+            if (value < startTime) {
+                return false;
+            }
+            var startTime = $(params).val();
+            return value > startTime;
+        },
+        "Shift End Time must be greater than Shift Start Time."
+    );
+    //  Validate Provider Scheduling Edit Shift Pop-up
+    $("#providerEditShiftForm, #adminEditShiftForm").validate({
+        rules: {
+            shiftDate: {
+                required: true,
+            },
+            shiftTimeStart: {
+                required: true,
+            },
+            shiftTimeEnd: {
+                required: true,
+                greaterThan: "#floatingInput2", // ShiftStartTime input element
+            },
+        },
+        messages: {
+            shiftDate: {
+                required: "Shift Date is required to create shift",
+            },
+            shiftTimeStart: {
+                required: "Shift Start Time is required",
+            },
+            shiftTimeEnd: {
+                required: "Shift End Time is required.",
+                greaterThan:
+                    "Shift End Time must be greater than Shift Start Time.",
+            },
+        },
+        // errorElement: "span",
+        errorPlacement: function (error, element) {
+            let errorBox = $("<span class='text-danger'></span>");
+            errorBox.append(error);
+
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+    $("#saveProviderEditShiftBtn").click(function () {
+        if ($("#providerEditShiftForm, #adminEditShiftForm").valid()) {
+            $("#providerEditShiftForm, #adminEditShiftForm").submit();
+        }
+    });
+
+    // ----------- ADMIN SCHEDULING ---------
+    $("#adminAddShiftForm, #providerAddShiftForm").validate({
+        rules: {
+            region: {
+                required: true,
+            },
+            physician: {
+                required: true,
+            },
+            shiftDate: {
+                required: true,
+            },
+            shiftStartTime: {
+                required: true,
+            },
+            shiftEndTime: {
+                required: true,
+                greaterThan: "#floatingInput2", // ShiftStartTime input element
+            },
+            // Add a custom validation rule for checkbox selection
+            "checkbox[]": {
+                required: {
+                    depends: function (element) {
+                        return $(".repeat-switch").is(":checked");
+                    },
+                },
+            },
+        },
+        messages: {
+            region: {
+                required: "Select Region to filter physician",
+            },
+            physician: {
+                required: "Select Physician to create a Shift",
+            },
+            shiftDate: {
+                required: "Shift Date is required to create shift",
+            },
+            shiftTimeStart: {
+                required: "Shift Start Time is required",
+            },
+            shiftTimeEnd: {
+                required: "Shift End Time is required.",
+                greaterThan:
+                    "Shift End Time must be greater than Shift Start Time.",
+            },
+            "checkbox[]": {
+                required: "Please select at least one day for repeat.",
+            },
+        },
+        // errorElement: "span",
+        errorPlacement: function (error, element) {
+            let errorBox = $("<span class='text-danger'></span>");
+            errorBox.append(error);
+
+            if (element.is(":checkbox")) {
+                element.closest(".checkboxes-section").before(errorBox);
+            } else {
+                element.closest(".form-floating").append(errorBox);
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+    $("#adminAddShiftBtn").click(function () {
+        if ($("#adminAddShiftForm, #providerAddShiftForm").valid()) {
+            $("#adminAddShiftForm, #providerAddShiftForm").submit();
         }
     });
 });

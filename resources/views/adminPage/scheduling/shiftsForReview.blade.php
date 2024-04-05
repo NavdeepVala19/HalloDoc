@@ -61,7 +61,7 @@
             <div class="section">
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="region-dropdown">
-                        <select name="role_id" class="form-select region-filter" id="floatingSelect">
+                        <select name="role_id" class="form-select filterReviewShifts" id="floatingSelect">
                             <option value="0" selected>All Regions</option>
                             @foreach ($regions as $region)
                                 <option value="{{ $region->id }}">{{ $region->region_name }}</option>
@@ -90,7 +90,7 @@
                                 <th>Region</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="filtered-shifts">
                             @foreach ($shiftDetails as $shiftDetail)
                                 @if ($shiftDetail)
                                     <tr>
@@ -122,21 +122,26 @@
     <script>
         $(document).ready(function() {
             // Shifts Review Page filtering based on regions
-            $(".region-filter").on("change", function() {
+            $(".filterReviewShifts").on("change", function() {
                 let regionId = $(this).val();
+                console.log(regionId);
 
+                var token = $('meta[name="csrf-token"]').attr("content");
                 $.ajax({
-                    url: '/filter-regions/' + regionId,
-                    type: "GET",
-                    success: function() {},
+                    url: '/filter-regions',
+                    type: "POST",
+                    data: {
+                        regionId: regionId,
+                        _token: token
+                    },
+                    success: function(data) {
+                        $('.filtered-shifts').html(data.html);
+                    },
                     error: function(error) {
                         console.error(error);
                     },
                 })
             });
-
-
-
         })
     </script>
 @endsection

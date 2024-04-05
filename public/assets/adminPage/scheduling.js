@@ -256,6 +256,11 @@ $(document).ready(function () {
         );
         $(".save-btn").hide();
         $(".edit-btn").show();
+
+        $("#adminEditShiftForm").trigger("reset");
+        $("#adminEditShiftForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     $(".region-filter").on("change", function () {
@@ -360,4 +365,16 @@ $(document).ready(function () {
             },
         });
     });
+
+    $(".addShiftCancel").click(function () {
+        $("#adminAddShiftForm").trigger("reset");
+        $("#adminAddShiftForm").validate().resetForm();
+        $(
+            ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
+        ).removeClass("is-valid");
+        $(
+            ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
+        ).removeClass("is-invalid");
+    });
+
 });

@@ -4,7 +4,7 @@ pending state, providers need to send an agreement link to patients. --}}
 <div class="pop-up send-agreement">
     <div class="popup-heading-section d-flex align-items-center justify-content-between">
         <span>Send Agreement</span>
-        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        <button class="hide-popup-btn adminSendAgreementClose"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="p-3">
         <div>
@@ -43,7 +43,7 @@ pending state, providers need to send an agreement link to patients. --}}
     </div>
     <div class="p-2 d-flex align-items-center justify-content-end gap-2">
         <input type="submit" value="Send" class="primary-fill send-case" id="adminSendAgreementBtn">
-        <button class="primary-empty hide-popup-btn">Cancel</button>
+        <button class="primary-empty hide-popup-btn adminSendAgreementClose">Cancel</button>
     </div>
     </form>
 </div>

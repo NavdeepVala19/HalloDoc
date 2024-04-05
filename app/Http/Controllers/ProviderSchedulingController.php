@@ -62,7 +62,7 @@ class ProviderSchedulingController extends Controller
         ]);
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
-        return redirect()->back();
+        return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
     public function providerShift()
     {
@@ -92,16 +92,10 @@ class ProviderSchedulingController extends Controller
 
     public function providerEditShift(Request $request)
     {
-        $request->validate([
-            'shiftDate' => 'required',
-            'shiftStartTime' => 'required',
-            'shiftEndTime' => 'required|after:shiftStartTime',
-        ]);
         if ($request['action'] == 'save') {
             Shift::where('id', $request->shiftId)->update([
                 'start_date' => $request->shiftDate,
             ]);
-
             ShiftDetail::where('shift_id', $request->shiftId)->update([
                 'shift_date' => $request->shiftDate,
                 'start_time' => $request->shiftTimeStart,
@@ -109,10 +103,10 @@ class ProviderSchedulingController extends Controller
                 'modified_by' => Auth::user()->id
             ]);
 
-            return redirect()->back();
-        } else {
+            return redirect()->back()->with('shiftEdited', 'Shift Edited Successfully!');
+        } else if ($request['action'] == 'delete') {
             Shift::where('id', $request->shiftId)->delete();
-            return redirect()->back();
+            return redirect()->back()->with("shiftDeleted", "Shift Deleted Successfully!");
         }
     }
 }
