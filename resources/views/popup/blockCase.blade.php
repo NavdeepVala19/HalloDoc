@@ -4,7 +4,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
 <div class="pop-up block-case">
     <div class="popup-heading-section d-flex align-items-center justify-content-between">
         <span>Confirm Block</span>
-        <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+        <button class="hide-popup-btn blockCaseCancel"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="m-3">
         <span>Patient Name: </span>
@@ -25,7 +25,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
         </div>
         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
             <input type="submit" value="Confirm" class="primary-fill" id="adminBlockCaseBtn">
-            <button class="primary-empty hide-popup-btn">Cancel</button>
+            <button class="primary-empty hide-popup-btn blockCaseCancel">Cancel</button>
         </div>
     </form>
 </div>

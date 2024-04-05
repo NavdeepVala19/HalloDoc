@@ -4,7 +4,7 @@ can transfer assigned request to another physician. --}}
  <div class="pop-up transfer-case">
      <div class="popup-heading-section d-flex align-items-center justify-content-between">
          <span>Transfer Request</span>
-         <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
+         <button class="hide-popup-btn adminTransferCancel"><i class="bi bi-x-lg"></i></button>
      </div>
      <p class="m-2">To transfer this request, search and select another Physician</p>
      <form action="{{ route('admin.transfer.case') }}" method="POST" id="adminTransferRequest">
@@ -12,7 +12,7 @@ can transfer assigned request to another physician. --}}
          <div class="m-3">
              <input type="text" class="requestId" name="requestId" value="" hidden>
              <div class="form-floating">
-                 <select class="form-select physicianRegions" name="region" id="floatingSelect1"
+                 <select class="form-select select physicianRegionsTransferCase" name="region" id="floatingSelect1"
                      aria-label="Floating label select example">
                      <option selected>Regions</option>
                  </select>
@@ -44,7 +44,7 @@ can transfer assigned request to another physician. --}}
          </div>
          <div class="p-2 d-flex align-items-center justify-content-end gap-2">
              <button type="submit" class="primary-fill confirm-case" id="adminTransferRequestBtn">Confirm</button>
-             <button class="primary-empty hide-popup-btn">Cancel</button>
+             <button class="primary-empty hide-popup-btn adminTransferCancel">Cancel</button>
          </div>
      </form>
  </div>

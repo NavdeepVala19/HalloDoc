@@ -79,6 +79,7 @@ class conciergeRequestController extends Controller
             $userRolesEntry = new UserRoles();
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
+            $userRolesEntry->save();
         }
 
         $requestEmail = new users();

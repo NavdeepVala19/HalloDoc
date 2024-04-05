@@ -2,26 +2,35 @@
 .logout-btn {
     display: none;
 }
-
 .welcome-msg {
     display: none;
 }
-
-
-.footer{
+.footer {
     position: relative;
     bottom: 0;
 }
-
 /********************* Header CSS End***********************/
-
-
-
-
+/* File Input Styling */
+.custom-file-input {
+    width: 100%;
+    height: 40px;
+}
+.upload-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 7px 20px !important;
+}
+.upload-label {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid grey;
+    height: 40px;
+    border-radius: 5px;
+}
 /********************************** main content CSS start *********************************/
-
-
-.patient-container{
+.patient-container {
     border: 1px solid rgb(207, 205, 205);
     padding: 25px;
     margin-top: 10px;
@@ -31,13 +40,10 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    /* border: 1px dashed slateblue; */
 }
-
 
 .patient-details {
     /* border: 1px solid red; */
-
 }
 
 .area-text,
@@ -54,12 +60,10 @@
     margin-top: 20px;
 }
 
-#telephone{
+#telephone {
     height: 100%;
     width: 100%;
 }
-
-
 
 .buttons {
     margin-top: 20px;
@@ -68,32 +72,27 @@
     justify-content: flex-end;
 }
 
-#button-addon2{
+#button-addon2 {
     background-color: rgb(32, 181, 250);
     color: white;
 }
 
-
-.btn-upload{
+.btn-upload {
     background-color: rgb(32, 181, 250);
     z-index: -2 !important;
 }
 
-.select-file-text{
+.select-file-text {
     z-index: -2 !important;
-
 }
 
-.input-file{
+.input-file {
     background: none;
 }
 
 .patient-location-room-text {
     width: 100%;
 }
-
-
-
 
 .file-selection-container {
     position: relative;
@@ -105,27 +104,25 @@
     align-items: right;
     justify-content: right;
     cursor: pointer;
-  }
-  
-  .file-input {
+}
+
+.file-input {
     position: absolute;
     left: 0;
     top: 0;
     opacity: 0;
     width: 0px;
-  }
-  
-  .file-button {
+}
+
+.file-button {
     padding: 8px 16px;
     background-color: #007bff;
     color: white;
-  }
-  
-  .file-button:hover {
+}
+
+.file-button:hover {
     background-color: #0056b3;
-  }
-
-
+}
 
 @media (max-width: 550px) {
     .menu-icon {
@@ -135,31 +132,23 @@
     .container {
         margin-top: 30px;
     }
-
 }
 
-@media(max-width:768px) {
-
+@media (max-width: 768px) {
     .patient-details-col2,
     .mobile-text,
     .patient-location-city-text,
     .patient-location-zipcode-text {
         margin-top: 20px;
     }
-    
-    .patient-location-col4{
+    .patient-location-col4 {
         margin-top: 20px;
     }
-    #maps{
+    #maps {
         width: 100%;
     }
-
     .patient-location-room-text,
     .date-of-birth {
         width: 100% !important;
     }
-
-   
-
 }
-

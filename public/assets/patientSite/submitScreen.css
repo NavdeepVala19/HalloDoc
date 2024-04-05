@@ -1,25 +1,20 @@
-
 /********************* Header CSS Start***********************/
 .logout-btn {
     display: none;
 }
 
-.welcome-msg{
+.welcome-msg {
     display: none;
 }
 
-.footer{
+.footer {
     position: fixed;
     bottom: 0;
 }
-
 /********************* Header CSS End***********************/
 
-
-
 /********************* Main Content CSS Start***********************/
-
-.header_part{
+.header_part {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -28,95 +23,93 @@
     width: 100%;
 }
 
-
-
-.heading{
-    /* border: 1px solid black; */
+.heading {
     margin-left: 42%;
-    /* position: absolute; */
 }
 
-
-.container{
+.container {
     height: 400px;
-    /* border: 1px solid red; */
 }
 
-.main-container{
+.main-container {
     height: 300px;
-    /* border: 1px solid black; */
 }
 
 .case {
     width: 280px;
     height: 50px;
+    padding-left: 15px;
 
     border-radius: 10px;
-    color: white;
-    background-color: orange;
-    border: 1px solid black;
 }
 
-
-.submitType{
+.submitType {
     font-size: 1.5rem;
 }
 
-.patient{
+.patient {
     background-color: rgb(222, 225, 253);
-    border-color: rgb(76, 76, 255);
-}
-#patient{
     color: rgb(76, 76, 255);
+    border: 1px solid rgb(76, 76, 255);
 }
-.family{
+
+.patient:hover {
+    background-color: rgb(76, 76, 255);
+    color: rgb(222, 225, 253);
+}
+
+.family {
     background-color: rgb(227, 255, 255);
-    border-color: rgb(0, 174, 255);
+    color: rgb(0, 174, 255);
+    border: 1px solid rgb(0, 174, 255);
 }
-#family{
-        color: rgb(0, 174, 255);
+.family:hover {
+    color: rgb(227, 255, 255);
+    background-color: rgb(0, 174, 255);
 }
-.conceirge
-{
+
+.conceirge {
     background-color: rgb(217, 248, 217);
-    border-color:green ;
-}
-#conceirge{
     color: green;
+    border: 1px solid green;
 }
-.business{
+.conceirge:hover {
+    color: rgb(217, 248, 217);
+    background-color: green;
+}
+
+.business {
     background-color: rgb(247, 216, 253);
-    border-color:rgb(223, 37, 207)  ;
+    color: rgb(223, 37, 207);
+    border: 1px solid rgb(223, 37, 207);
 }
-#business{
-    color:rgb(223, 37, 207) ;
-}
-
-@media (max-width: 550px){
-        .menu-icon{
-            display: none;
-        }
-        .container{
-            margin-top: 30px;
-        }
+.business:hover {
+    color: rgb(247, 216, 253);
+    background-color: rgb(223, 37, 207);
 }
 
-@media(max-width:1399px){
-    .heading{
+@media (max-width: 550px) {
+    .menu-icon {
+        display: none;
+    }
+    .container {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 1399px) {
+    .heading {
         margin-left: 40%;
     }
 }
-@media(max-width:1199px){
-    .heading{
+@media (max-width: 1199px) {
+    .heading {
         margin-left: 38%;
     }
 }
 
-@media(max-width:769px){
-    .heading{
+@media (max-width: 769px) {
+    .heading {
         margin-left: 34%;
     }
 }
-
-
-/********************* Main Content CSS End***********************/

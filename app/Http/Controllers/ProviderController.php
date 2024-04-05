@@ -153,9 +153,6 @@ class ProviderController extends Controller
         $request->validate([
             'notes' => 'required',
         ]);
-        RequestTable::where('id', $request->requestId)->update([
-            'physician_id' => DB::raw("NULL"),
-        ]);
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         RequestStatus::create([
             'request_id' => $request->requestId,
@@ -163,6 +160,9 @@ class ProviderController extends Controller
             'TransToAdmin' => true,
             'physician_id' => $providerId,
             'notes' => $request->notes
+        ]);
+        RequestTable::where('id', $request->requestId)->update([
+            'physician_id' => DB::raw("NULL"),
         ]);
         return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
     }
@@ -493,7 +493,7 @@ class ProviderController extends Controller
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
-        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
