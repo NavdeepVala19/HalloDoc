@@ -82,84 +82,9 @@ $(document).ready(function () {
             $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
         }
     });
-});
-// ***************************************************************************************
 
-// **** This code is for patient view documents checkboxes ****
+    // *** This code is for showing request submit pop in family/concierge/business
 
-$(".master-checkbox").on("click", function () {
-    if ($(this).is(":checked", true)) {
-        $(".child-checkbox").prop("checked", true);
-    } else {
-        $(".child-checkbox").prop("checked", false);
-    }
-});
-
-
-var isChecked = $('.master-checkbox').is(":checked");
-console.log(isChecked);
-if (isChecked == false) {
-    $('#docs_download').attr('disabled')
-} else {
-    $('#docs_download').removeAttr('disabled')
-}
-
-
-// *********************************************************
-
-// **** This code is for show file name********
-//
-$(".file-input").change(function (e) {
-    const filename = e.target.files[0].name;
-    $("#demo").text(filename);
-});
-
-// ********************************************
-// **** This code is for file uploading in view document and requests pages ****
-
-function openFileSelection() {
-    document.getElementById("fileInput").click();
-}
-//   ****************************************************************************
-
-// **** This code is for patientDashboard accordion menu ******
-
-var acc = document.getElementsByClassName("accordion");
-var i;
-
-for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function () {
-        this.classList.toggle("active");
-        var panel = this.nextElementSibling;
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
-        } else {
-            panel.style.display = "block";
-        }
-    });
-}
-//   ****************************************************************************
-// ***************** Fetching regions from regions table ******************
-$.ajax({
-    url: "/admin-new",
-    type: "GET",
-    success: function (data) {
-        data.forEach(function (region) {
-            $(".listing-region").append(
-                '<option value="' +
-                    region.id +
-                    '">' +
-                    region.region_name +
-                    "</option>"
-            );
-        });
-    },
-    error: function (error) {
-        console.error(error);
-    },
-});
-
-$(document).ready(function () {
     $("#back-btn").click(function () {
         localStorage.setItem("popupShown", "true");
     });
@@ -187,11 +112,11 @@ $(document).ready(function () {
         // And set a flag in localStorage indicating the popup was shown
         localStorage.setItem("popupShown", "false");
     });
-});
 
-// ** This code is for client side validation
 
-$(document).ready(function () {
+
+    // ** This code is for client side validation of patientProfileEdit
+
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {
@@ -311,11 +236,9 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-});
 
-// *** Client side validation of patient Request
+    // ** This code is for client side validation in all request form
 
-$(document).ready(function () {
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {
@@ -587,7 +510,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".patient").append(error);
+            element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -596,4 +519,93 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
+
+
+
+
 });
+
+
+// ***************************************************************************************
+
+
+
+// **** This code is for patient view documents checkboxes ****
+
+$(".master-checkbox").on("click", function () {
+    if ($(this).is(":checked", true)) {
+        $(".child-checkbox").prop("checked", true);
+    } else {
+        $(".child-checkbox").prop("checked", false);
+    }
+});
+
+
+var isChecked = $('.master-checkbox').is(":checked");
+console.log(isChecked);
+if (isChecked == false) {
+    $('#docs_download').attr('disabled')
+} else {
+    $('#docs_download').removeAttr('disabled')
+}
+
+
+// *********************************************************
+
+// **** This code is for show file name********
+//
+$(".file-input").change(function (e) {
+    const filename = e.target.files[0].name;
+    $("#demo").text(filename);
+});
+
+// ********************************************
+
+
+
+
+// **** This code is for patientDashboard accordion menu ******
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function () {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    });
+}
+
+
+
+//   ****************************************************************************
+// ***************** Fetching regions from regions table ******************
+$.ajax({
+    url: "/admin-new",
+    type: "GET",
+    success: function (data) {
+        data.forEach(function (region) {
+            $(".listing-region").append(
+                '<option value="' +
+                    region.id +
+                    '">' +
+                    region.region_name +
+                    "</option>"
+            );
+        });
+    },
+    error: function (error) {
+        console.error(error);
+    },
+});
+
+        // View Uploads File Upload Functionality
+    $("#file-upload").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(".upload-label").text(fileName);
+    });

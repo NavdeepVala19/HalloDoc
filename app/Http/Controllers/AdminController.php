@@ -47,15 +47,21 @@ use App\Models\PhysicianRegion;
 use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\NewStatusExport;
 use App\Models\RequestConcierge;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
+use App\Exports\ActiveStatusExport;
 use App\Exports\SearchRecordExport;
+use App\Exports\UnPaidStatusExport;
 use App\Mail\RequestSupportMessage;
+use App\Exports\PendingStatusExport;
+use App\Exports\ToCloseStatusExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ConcludeStatusExport;
 use App\Models\HealthProfessionalType;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -769,9 +775,7 @@ class AdminController extends Controller
     // Records Page
     public function searchRecordsView()
     {
-
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
-
         $combinedData = request_Client::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
@@ -808,7 +812,6 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
 
         $session = session([
@@ -1508,4 +1511,64 @@ class AdminController extends Controller
         $fetchedRoles = Role::select('id', 'name')->where('account_type', 'admin')->get();
         return response()->json($fetchedRoles);
     }
+
+
+    public function exportNew(Request $request){
+        $status = 'new';
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $exportNewData = $this->buildQuery($status,$category,$search);
+       
+        $exportNew = new NewStatusExport($exportNewData);
+        return Excel::download($exportNew, 'NewData.xls');
+    }
+    public function exportPending(Request $request){
+        $status = 'pending';
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $exportPendingData = $this->buildQuery($status,$category,$search);
+       
+        $exportPending = new PendingStatusExport($exportPendingData);
+        return Excel::download($exportPending, 'PendingData.xls');
+    }
+
+    public function exportActive(Request $request){
+        $status = 'active';
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $exportActiveData = $this->buildQuery($status,$category,$search);
+        
+        $exportActive = new ActiveStatusExport($exportActiveData);
+        return Excel::download($exportActive, 'ActiveData.xls');
+    }
+
+    public function exportConclude(Request $request){
+        $status = 'conclude';
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $exportConcludeData = $this->buildQuery($status,$category,$search);
+        
+        $exportConclude = new ConcludeStatusExport($exportConcludeData);
+        return Excel::download($exportConclude, 'ConcludeData.xls');
+    }
+    public function exportToClose(Request $request){
+        $status = 'toclose';
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $exportToCloseData = $this->buildQuery($status,$category,$search);
+        
+        $exportToClose = new ToCloseStatusExport($exportToCloseData);
+        return Excel::download($exportToClose, 'ToCloseData.xls');
+    }
+
+    public function exportUnpaid(Request $request){
+        $status = 'unpaid';
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $exportUnpaidData = $this->buildQuery($status,$category,$search);
+        
+        $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
+        return Excel::download($exportUnpaid, 'UnPaidData.xls');
+    }
+
 }

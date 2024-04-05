@@ -97,7 +97,6 @@
                 @error('state')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-
             </div>
 
             <div class="d-flex gap-4 align-items-center">
@@ -108,7 +107,6 @@
                     @error('zipcode')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-
                 </div>
                 <a href="{{route('patientLocationOnMap')}}" class="primary-empty d-flex gap-2"> <i class="bi bi-geo-alt"></i> Map</a>
             </div>

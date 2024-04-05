@@ -26,7 +26,7 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth','PhysicianName', 'RequestedDate','PatientMobile','RequestorMobile', 'Address'];
     }
 
     /**
@@ -37,37 +37,39 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
         $adminConcludeData = $this->data->get();
 
         return collect($adminConcludeData)->map(function ($adminConclude) {
-
             $patientName = null;
             $dateOfBirth = null;
             $street = null;
             $city = null;
             $state = null;
+            $PatientMobile = null;
 
-            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
-                $patientName = $adminConclude->request->requestClient->first_name;
+            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $patientName = $adminConclude->requestClient->first_name;
             }
-
-            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
-                $dateOfBirth = $adminConclude->request->requestClient->date_of_birth;
+            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $dateOfBirth = $adminConclude->requestClient->date_of_birth;
             }
-
-            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
-                $street = $adminConclude->request->requestClient->street;
+            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $PatientMobile = $adminConclude->requestClient->phone_number;
             }
-            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
-                $city = $adminConclude->request->requestClient->city;
+            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $street = $adminConclude->requestClient->street;
             }
-            if (isset($adminConclude->request) && $adminConclude->request->requestClient) {
-                $state = $adminConclude->request->requestClient->state;
+            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $city = $adminConclude->requestClient->city;
+            }
+            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $state = $adminConclude->requestClient->state;
             }
 
             return [
                 'PatientName' => $patientName,
                 'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminConclude->request->first_name,
-                'RequestedDate' => $adminConclude->request->created_at,
-                'Mobile' => $adminConclude->request->phone_number,
+                'PhysicianName' => $adminConclude->provider->first_name.' '.$adminConclude->provider->last_name,
+                'RequestedDate' => $adminConclude->created_at,
+                'PatientMobile'=>$PatientMobile,
+                'RequestorMobile'=>$adminConclude->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
             ];
         });

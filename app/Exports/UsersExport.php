@@ -12,8 +12,6 @@ use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
 class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
-    
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];

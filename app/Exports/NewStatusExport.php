@@ -27,7 +27,7 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'PatientMobile', 'RequestorMobile','Address','Notes'];
     }
 
     /**
@@ -36,39 +36,47 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
     public function collection()
     {
         $adminNewData = $this->data->get();
-
         return collect($adminNewData)->map(function ($adminNew) {
+            // dd($adminNew);
             $patientName = null;
+            $patientLastName = null;
             $dateOfBirth = null;
             $street = null;
             $city = null;
             $state = null;
+            $patientMobile = null;
 
-            if (isset($adminNew->request) && $adminNew->request->requestClient) {
-                $patientName = $adminNew->request->requestClient->first_name;
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $patientName = $adminNew->requestClient->first_name;
             }
-
-            if (isset($adminNew->request) && $adminNew->request->requestClient) {
-                $dateOfBirth = $adminNew->request->requestClient->date_of_birth;
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $patientLastName = $adminNew->requestClient->last_name;
             }
-
-            if (isset($adminNew->request) && $adminNew->request->requestClient) {
-                $street = $adminNew->request->requestClient->street;
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $patientMobile = $adminNew->requestClient->phone_number;
             }
-            if (isset($adminNew->request) && $adminNew->request->requestClient) {
-                $city = $adminNew->request->requestClient->city;
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $dateOfBirth = $adminNew->requestClient->date_of_birth;
             }
-            if (isset($adminNew->request) && $adminNew->request->requestClient) {
-                $state = $adminNew->request->requestClient->state;
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $street = $adminNew->requestClient->street;
+            }
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $city = $adminNew->requestClient->city;
+            }
+            if (isset($adminNew) && $adminNew->requestClient) {
+                $state = $adminNew->requestClient->state;
             }
            
             return [
-                'PatientName' => $patientName,
+                'PatientName' => $patientName.' '.$patientLastName,
                 'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminNew->request->first_name,
-                'RequestedDate' => $adminNew->request->created_at,
-                'Mobile' => $adminNew->request->phone_number,
+                'Requestor' => $adminNew->first_name.' '.$adminNew->last_name,
+                'RequestedDate' => $adminNew->created_at,
+                'PatientMobile' => $patientMobile,
+                'RequestorMobile'=>$adminNew->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
+                'Notes'=>$adminNew->requestClient->notes,
             ];
         });
     }

@@ -1,182 +1,154 @@
 @extends('patientSiteIndex')
 
 @section('css')
-    <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
 @endsection
 
 @section('patientSiteContent')
-    <div class="container">
-        <!-- this div is for heading and back button -->
-        <div class="header_part">
-            <a href="{{ route('submitRequest') }}" type="button" class="primary-empty">
-                < Back</a>
-        </div>
-
-        <div class="patient-container">
-            <form action="{{ route('patientRequests') }}" method="post" enctype="multipart/form-data"
-                id="patientRequestForm">
-                @csrf
-                <div class="patient-details">
-                    <!-- Symptoms Detail Field -->
-                    <div class="symp-details">
-                        <div class="patient-info-text">
-                            <h4>Patient Information</h4>
-                        </div>
-                        <div class="area-text">
-                            <div class="form-floating">
-                                <textarea class="form-control text-area-box" name="symptoms" id="floatingTextarea3" style="height: 150px"></textarea>
-                                <label>Enter Brief Details of
-                                    Symptoms(optional)</label>
-                            </div>
-                        </div>
+<div class="container">
+    <!-- this div is for heading and back button -->
+    <div class="header_part">
+        <a href="{{ route('submitRequest') }}" type="button" class="primary-empty">
+            < Back</a>
+    </div>
+    <div class="patient-container">
+        <form action="{{ route('patientRequests') }}" method="post" enctype="multipart/form-data" id="patientRequestForm">
+            @csrf
+            <div class="patient-details">
+                <!-- Symptoms Detail Field -->
+                <div class="symp-details">
+                    <div class="patient-info-text">
+                        <h4>Patient Information</h4>
                     </div>
-
-                    <!--  Patient FirstName, LastName ,DOB Field  -->
-                    <div class="row patient-details-row1">
-                        <div class="col-md patient-details-col1 patient">
-                            <input type="text" placeholder="FirstName"
-                                class="form-control first-name-text @error('first_name') is-invalid @enderror"
-                                id="" aria-describedby="helpId" name="first_name" value="{{ old('first_name') }}">
-                            @error('first_name')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                            <span id="errorMsg"></span>
-                        </div>
-                        <div class="col-md patient-details-col2 patient">
-                            <input type="text" placeholder="LastName"
-                                class="form-control last-name-text @error('last_name') is-invalid @enderror "
-                                aria-describedby="helpId" name="last_name" value="{{ old('last_name') }}">
-                            @error('last_name')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                            <span id="errorMsg"></span>
-                        </div>
-                    </div>
-
-                    <div class="row patient-details-row2">
-                        <div class="col-md patient-details-col3 me-4 patient">
-                            <label for="">Date of Birth</label>
-                            <input type="date" placeholder="Date-Of-Birth"
-                                class="form-control date-of-birth w-50 @error('date_of_birth') is-invalid @enderror "
-                                id="" name="date_of_birth" value="{{ old('date_of_birth') }}">
-                            @error('date_of_birth')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-
-                    <!--     Patient Contact Information    -->
-                    <div class="patient-contact-inputs">
-                        <div class="patient-contact-text">
-                            <h4>Patient Contact Information</h4>
-                        </div>
-                        <div class="row patient-contact-row1">
-                            <div class="col-md patient-contact-col1 patient">
-                                <input type="email" placeholder="Email"
-                                    class="form-control email-text @error('email') is-invalid @enderror" id=""
-                                    value="{{ old('email') }}" name="email">
-                                @error('email')
-                                    <div class="text-danger" role="alert">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md patient-contact-col2 patient">
-                                <input type="tel" placeholder="Mobile Number" value="{{ old('phone_number') }}"
-                                    class="form-control mobile-text mobile @error('phone_number') is-invalid @enderror"
-                                    id="" name="phone_number">
-                                <!-- <input type="tel" class="form-control phone" id="telephone" placeholder="Phone Number"> -->
-                                @error('phone_number')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--   Patient Location Information   -->
-                    <div class="patient-location-inputs">
-                        <div class="patient-location-text">
-                            <h4> Patient Location</h4>
-                        </div>
-                        <div class="row patient-location-row1">
-                            <div class="col-md patient-location-col1 patient">
-                                <input type="text" placeholder="Street" value="{{ old('street') }}"
-                                    class="form-control patient-location-street-text @error('street') is-invalid @enderror"
-                                    id="street" name="street">
-                                @error('street')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md patient-location-col2 patient">
-                                <input type="text" placeholder="City" value="{{ old('city') }}"
-                                    class="form-control patient-location-city-text @error('city') is-invalid @enderror"
-                                    id="city" name="city">
-                                @error('city')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row patient-location-row2">
-                            <div class="col-md patient-location-col1 patient">
-                                <input type="text" placeholder="State" value="{{ old('state') }}"
-                                    class="form-control patient-location-state-text @error('state') is-invalid @enderror"
-                                    id="state" name="state">
-                                @error('state')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md patient-location-col2 patient">
-                                <input type="text" placeholder="Zip Code" value="{{ old('zipcode') }}"
-                                    class="form-control patient-location-zipcode-text @error('zipcode') is-invalid @enderror"
-                                    id="zipcode" name="zipcode">
-                                @error('zipcode')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-
-                        <div class="row patient-location-row3">
-                            <div class="col-md patient-location-col3 me-4">
-                                <input type="number" placeholder="Room/Suite(optional)" name="room"
-                                    value="{{ old('room') }}" class="form-control patient-location-room-text w-50 "
-                                    id="room" name="room">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--  photo upload or documents -->
-                    <div class="docs-upload">
-                        <div class="patient-doc-text">
-                            <h4>Upload Photo or document (optional)</h4>
-                        </div>
-                        <div class="custom-file-input mb-4">
-                            <input type="file" name="docs" id="file-upload-request" hidden>
-                            <label for="file-upload-request" class="upload-label">
-                                <div class="p-2 file-label">
-                                    Select File
-                                </div>
-                                <span class="primary-fill upload-btn">
-                                    <i class="bi bi-cloud-arrow-up me-2"></i>
-                                    <span class="upload-txt">Upload</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-
-                    <!--  SUBMIT and CANCEL Buttons -->
-                    <div class="buttons">
-                        <button class="primary-fill me-2" type="submit">Submit</button>
-                        <a href="{{ route('submitRequest') }}" type="button" class="primary-empty">Cancel</a>
+                    <div class="form-floating">
+                        <textarea class="form-control note" name='patient_note' placeholder="notes" id="floatingTextarea2" value="{{ old('patient_note') }}" style="height: 150px"></textarea>
+                        <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
                     </div>
                 </div>
-            </form>
-        </div>
+
+                <!--  Patient FirstName, LastName ,DOB Field  -->
+                <div class=" grid-2">
+                    <div class="form-floating">
+                        <input type="text" name="first_name" class="form-control first_name" id="floatingInput" value="" placeholder="First Name" value="{{ old('first_name') }}">
+                        <label for="floatingInput">First Name</label>
+                        @error('first_name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" name="last_name" class="form-control last_name" id="floatingInput" value="" placeholder="Last Name" value="{{ old('last_name') }}">
+                        <label for="floatingInput">Last Name</label>
+                        @error('last_name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth" placeholder="date of birth" value="{{ old('date_of_birth') }}">
+                        <label for="floatingInput">Date Of Birth</label>
+                        @error('date_of_birth')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!--     Patient Contact Information    -->
+                <div class="patient-contact-inputs">
+                    <div class="patient-contact-text">
+                        <h4>Patient Contact Information</h4>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-floating ">
+                            <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{ old('email') }}">
+                            <label for="floatingInput">Email</label>
+                            @error('email')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="" style="height: 58px;">
+                            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
+                            @error('phone_number')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!--   Patient Location Information   -->
+                <div class="patient-location-inputs">
+                    <div class="patient-location-text">
+                        <h4> Patient Location</h4>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-floating ">
+                            <input type="text" name="street" class="form-control street" id="floatingInput" placeholder="Street" value="{{ old('street') }}">
+                            <label for="floatingInput">Street</label>
+                            @error('street')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-floating ">
+                            <input type="text" name="city" class="form-control city" id="floatingInput" placeholder="City" value="{{ old('city') }}">
+                            <label for="floatingInput">City</label>
+                            @error('city')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-floating ">
+                            <input type="text" name="state" class="form-control state" id="floatingInput" placeholder="State" value="{{ old('state') }}">
+                            <label for="floatingInput">State</label>
+                            @error('state')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-floating w-100">
+                            <input type="number" name="zipcode" class="form-control zipcode" id="floatingInput" placeholder="Zipcode" value="{{ old('zipcode') }}">
+                            <label for="floatingInput">Zipcode</label>
+                            @error('zipcode')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-floating ">
+                            <input type="number" name="room" class="form-control room" id="floatingInput" placeholder="room" value="{{ old('room') }}">
+                            <label for="floatingInput">Room</label>
+                            @error('room')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <!--  photo upload or documents -->
+                <div class="docs-upload">
+                    <div class="patient-doc-text">
+                        <h4>Upload Photo or document (optional)</h4>
+                    </div>
+                    <div class="custom-file-input mb-4">
+                        <input type="file" name="docs" id="file-upload-request" hidden>
+                        <label for="file-upload-request" class="upload-label">
+                            <div class="p-2 file-label">
+                                Select File
+                            </div>
+                            <span class="primary-fill upload-btn">
+                                <i class="bi bi-cloud-arrow-up me-2"></i>
+                                <span class="upload-txt">Upload</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <!--  SUBMIT and CANCEL Buttons -->
+                <div class="buttons">
+                    <button class="primary-fill me-2" type="submit">Submit</button>
+                    <a href="{{ route('submitRequest') }}" type="button" class="primary-empty">Cancel</a>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 @endsection
 
 @section('script')
-    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-    <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

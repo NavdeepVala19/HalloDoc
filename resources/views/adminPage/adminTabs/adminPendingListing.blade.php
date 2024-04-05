@@ -201,7 +201,7 @@ pending state, providers need to send an agreement link to patients. --}}
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{ old('search', request()->input('search')) }}">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                     <select class="form-select listing-region">

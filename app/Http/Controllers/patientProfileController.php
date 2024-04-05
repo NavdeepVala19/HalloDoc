@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\users;
 use App\Models\allusers;
+use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\request_Client;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,15 @@ class patientProfileController extends Controller
             'zipcode' => $request->input('zipcode')
         ];
 
+        // update Data in RequestTable
+
+        $updatedRequestTableData = [
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'phone_number' => $request->input('phone_number'),
+           ];
+
         // Update data in users table
         $updateUserData = [
             'email' => $request->input('email'),
@@ -83,6 +93,8 @@ class patientProfileController extends Controller
         $updateUser = users::where('email', $userData['email'])->update($updateUserData);
 
         $updateAllUserData = allusers::where('email', $userData['email'])->update($updateAllUser);
+
+        $updateRequestTableData = RequestTable::where('email', $userData['email'])->update($updatedRequestTableData);
 
 
         return redirect()->route('patientDashboardData');

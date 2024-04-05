@@ -25,7 +25,8 @@ class ExcelController extends Controller
 
     public function exportNewData(Request $request)
     {
-
+        dd($request->all());
+        
         if (!empty($request->filter_search)) {
             $cases = RequestStatus::where('status', 1)
                 ->whereHas('request', function ($q) use ($request) {

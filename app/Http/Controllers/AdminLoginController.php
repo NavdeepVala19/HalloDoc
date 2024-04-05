@@ -41,7 +41,6 @@ class AdminLoginController extends Controller
 
 
         if (Auth::attempt($credentials)) {
-            
             $userData = Auth::user();
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
 

@@ -2,13 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
-
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
@@ -19,7 +15,7 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
     {
         $this->data = $data;
     }
-    
+
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -27,7 +23,7 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Physician Name', 'RequestedDate', 'PatientMobile','RequestorMobile', 'Mobile', 'Address'];
     }
 
     /**
@@ -39,13 +35,51 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
         return collect($adminUnpaidData)->map(function ($adminUnpaid) {
 
+            $patientName = null;
+            $patientLastName = null; 
+            $PhysicianFirstName = null;
+            $PhysicianLastName = null; 
+            $street = null;
+            $city = null;
+            $patientMobile = null;
+            $state = null;
+
+
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $patientName = $adminUnpaid->requestClient->first_name;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $patientLastName = $adminUnpaid->requestClient->last_name;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $dateOfBirth = $adminUnpaid->requestClient->date_of_birth;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $patientMobile = $adminUnpaid->requestClient->phone_number;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $street = $adminUnpaid->requestClient->street;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $city = $adminUnpaid->requestClient->city;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $state = $adminUnpaid->requestClient->state;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $PhysicianFirstName = $adminUnpaid->provider->first_name;
+            }
+            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
+                $PhysicianLastName = $adminUnpaid->provider->last_name;
+            }
+
             return [
-                'PatientName' => $adminUnpaid->request->requestClient->first_name,
-                'Date of Birth' => $adminUnpaid->request->requestClient->date_of_birth,
-                'Requestor' => $adminUnpaid->request->first_name,
-                'RequestedDate' => $adminUnpaid->request->created_at,
-                'Mobile' => $adminUnpaid->request->phone_number,
-                'Address' => $adminUnpaid->request->requestClient->street . ',' . $adminUnpaid->request->requestClient->city . ',' . $adminUnpaid->request->requestClient->state,
+                'PatientName' => $patientName.' '.$patientLastName,
+                'Physician Name' => $PhysicianFirstName.' '.$PhysicianLastName,
+                'RequestedDate' => $adminUnpaid->created_at,
+                'PatientMobile' => $patientMobile,
+                'RequestorMobile' => $adminUnpaid->phone_number,
+                'Address' => $street . ',' . $city . ',' . $state,
             ];
         });
     }

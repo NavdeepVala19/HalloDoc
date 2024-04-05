@@ -25,7 +25,7 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'PhysicianName','RequestedDate', 'PatientMobile','RequestorMobile', 'Address','Notes'];
     }
     /**
      * @return \Illuminate\Support\Collection
@@ -35,39 +35,48 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
         $adminActiveData = $this->data->get();
 
         return collect($adminActiveData)->map(function ($adminActive) {
-
+  
             $patientName = null;
+            $patientLastName = null;
             $dateOfBirth = null;
             $street = null;
             $city = null;
+            $patientMobile = null;
             $state = null;
 
-            if (isset($adminActive->request) && $adminActive->request->requestClient) {
-                $patientName = $adminActive->request->requestClient->first_name;
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $patientName = $adminActive->requestClient->first_name;
             }
-
-            if (isset($adminActive->request) && $adminActive->request->requestClient) {
-                $dateOfBirth = $adminActive->request->requestClient->date_of_birth;
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $patientLastName = $adminActive->requestClient->last_name;
             }
-
-            if (isset($adminActive->request) && $adminActive->request->requestClient) {
-                $street = $adminActive->request->requestClient->street;
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $dateOfBirth = $adminActive->requestClient->date_of_birth;
             }
-            if (isset($adminActive->request) && $adminActive->request->requestClient) {
-                $city = $adminActive->request->requestClient->city;
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $patientMobile = $adminActive->requestClient->phone_number;
             }
-            if (isset($adminActive->request) && $adminActive->request->requestClient) {
-                $state = $adminActive->request->requestClient->state;
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $street = $adminActive->requestClient->street;
+            }
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $city = $adminActive->requestClient->city;
+            }
+            if (isset($adminActive) && $adminActive->requestClient) {
+                $state = $adminActive->requestClient->state;
             }
 
 
             return [
-                'PatientName' => $patientName,
+                'PatientName' => $patientName.' '.$patientLastName,
                 'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminActive->request->first_name,
-                'RequestedDate' => $adminActive->request->created_at,
-                'Mobile' => $adminActive->request->phone_number,
+                'Requestor' => $adminActive->first_name.' '.$adminActive->last_name,
+                'PhysicianName'=>$adminActive->provider->first_name.' '.$adminActive->provider->last_name,
+                'RequestedDate' => $adminActive->created_at,
+                'PatientMobile' => $patientMobile,
+                'RequestorMobile'=>$adminActive->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
+                'Notes'=>$adminActive->requestClient->notes,
             ];
         });
     }

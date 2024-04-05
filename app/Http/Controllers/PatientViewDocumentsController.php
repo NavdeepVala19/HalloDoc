@@ -37,19 +37,18 @@ class PatientViewDocumentsController extends Controller
 
     public function uploadDocs(Request $request)
     {
-        // dd($request->all());
-
+    
+       
         $userData = Auth::user();
         $email = $userData["email"];
-        // dd($email);
 
         $reqestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
 
         // store documents in request_wise_file table
         $request_file = new RequestWiseFile();
         $request_file->request_id = $reqestWiseData->first()->request_id;
-        $request_file->file_name = $request->file('docs')->getClientOriginalName();
-        $path = $request->file('docs')->storeAs('public', $request->docs->getClientOriginalName());
+        $request_file->file_name = $request->file('document')->getClientOriginalName();
+        $path = $request->file('document')->storeAs('public', $request->document->getClientOriginalName());
         $request_file->save();
 
         return back();

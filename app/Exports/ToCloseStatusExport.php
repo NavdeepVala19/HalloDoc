@@ -2,12 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
@@ -18,7 +15,7 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
     {
         $this->data = $data;
     }
-    
+
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -26,7 +23,7 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'Mobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'Date of Service', 'Address', 'Notes'];
     }
 
     /**
@@ -38,13 +35,41 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
 
         return collect($adminToCloseData)->map(function ($adminToClose) {
 
+            $patientName = null;
+            $patientLastName = null;
+            $dateOfBirth = null;
+            $street = null;
+            $city = null;
+            $state = null;
+            $providerFirstName = null;
+            $providerLastName = null;
+
+            if (isset($adminToClose) && $adminToClose->requestClient) {
+                $patientName = $adminToClose->requestClient->first_name;
+            }
+            if (isset($adminToClose) && $adminToClose->requestClient) {
+                $patientLastName = $adminToClose->requestClient->last_name;
+            }
+            if (isset($adminToClose) && $adminToClose->requestClient) {
+                $dateOfBirth = $adminToClose->requestClient->date_of_birth;
+            }
+            if (isset($adminToClose) && $adminToClose->requestClient) {
+                $street = $adminToClose->requestClient->street;
+            }
+            if (isset($adminToClose) && $adminToClose->requestClient) {
+                $city = $adminToClose->requestClient->city;
+            }
+            if (isset($adminToClose) && $adminToClose->requestClient) {
+                $state = $adminToClose->requestClient->state;
+            }
+        
+
             return [
-                'PatientName' => $adminToClose->request->requestClient->first_name,
-                'Date of Birth' => $adminToClose->request->requestClient->date_of_birth,
-                'Requestor' => $adminToClose->request->first_name,
-                'RequestedDate' => $adminToClose->request->created_at,
-                'Mobile' => $adminToClose->request->phone_number,
-                'Address' => $adminToClose->request->requestClient->street . ',' . $adminToClose->request->requestClient->city . ',' . $adminToClose->request->requestClient->state,
+                'PatientName' => $patientName. " ". $patientLastName,
+                'Date of Birth' => $dateOfBirth,
+                'Date of Service' => $adminToClose->created_at,
+                'Address' => $street . ',' . $city . ',' . $state,
+                'Notes' => $adminToClose->requestClient->notes,
             ];
         });
     }

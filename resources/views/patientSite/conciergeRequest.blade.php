@@ -31,109 +31,93 @@
                         <h4>Concierge Information</h4>
                     </div>
 
-                    <input type="hidden" name="request_type" value="4">
+                    <input type="hidden" name="request_type" value="3">
 
-                    <div class="row Concierge-row1">
-                        <div class="col-md family-col1 patient">
-                            <input type="text" placeholder="Your First Name" class="form-control concierge-first-name-text @error('concierge_first_name') is-invalid @enderror" name="concierge_first_name" id="" aria-describedby="emailHelp" value="{{ old('concierge_first_name') }}">
+                    <div class="grid-2">
+                        <div class="form-floating">
+                            <input type="text" name="concierge_first_name" class="form-control concierge_first_name" id="floatingInput" value="{{ old('concierge_first_name') }}" placeholder="Your First Name">
+                            <label for="floatingInput">Your First Name</label>
                             @error('concierge_first_name')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md Concierge-col2 patient">
-                            <input type="text" placeholder="Your Last Name" class="form-control concierge-last-name-text @error('concierge_last_name') is-invalid @enderror" name="concierge_last_name" id="" aria-describedby="emailHelp" value="{{ old('concierge_last_name') }}">
+                        <div class="form-floating">
+                            <input type="text" name="concierge_first_name" class="form-control concierge_last_name" id="floatingInput" value="{{ old('concierge_last_name') }}" placeholder="Your Last Name">
+                            <label for="floatingInput">Your Last Name</label>
                             @error('concierge_last_name')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-
-
-                    <div class="row Concierge-row2">
-                        <div class="col-md Concierge-col1 patient">
-                            <input type="tel" placeholder="Mobile Number" class="form-control concierge-mobile-text @error('concierge_mobile') is-invalid @enderror" name="concierge_mobile" value="{{ old('concierge_mobile') }}">
+                        <div class="form-floating" style="height: 58px;">
+                            <input type="tel" name="concierge_mobile" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('concierge_mobile') }}">
                             @error('concierge_mobile')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md Concierge-col2 patient">
-                            <input type="email" placeholder="Your Email" class="form-control concierge-email-text @error('concierge_email') is-invalid @enderror" name="concierge_email" id="" aria-describedby="emailHelp" value="{{ old('concierge_email') }}">
+
+                        <div class="form-floating ">
+                            <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="concierge_email" value="{{ old('concierge_email') }}">
+                            <label for="floatingInput">Email</label>
                             @error('concierge_email')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
 
-
-                    <div class="row Concierge-row3">
-
-                        <div class="col-md Concierge-col3 me-4 patient">
-                            <input type="text" placeholder="Hotel/Property Name" name="concierge_hotel_name" class="form-control hotel-text w-50 @error('concierge_hotel_name') is-invalid @enderror" id="exampleInputPassword1" value="{{ old('concierge_hotel_name') }}">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" value="{{ old('concierge_hotel_name') }}" name="concierge_hotel_name" placeholder="Hotel/Property Name">
+                            <label for="floatingInput">Hotel/Property Name</label>
                             @error('concierge_hotel_name')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-
                     </div>
                 </div>
 
-
-
-
                 <!--  Concierge Location Information   -->
-
-
                 <div class="patient-location-inputs">
-
                     <div class="patient-location-text">
                         <h4>Concierge location</h4>
                     </div>
-
-                    <div class="row patient-location-row1">
-                        <div class="col-md patient-location-col1 patient">
-                            <input type="text" placeholder="Street" class="form-control patient-location-street-text @error('concierge_street') is-invalid @enderror" name="concierge_street" id="concierge_street" value="{{ old('concierge_street') }}">
+                    <div class="grid-2">
+                        <div class="form-floating ">
+                            <input type="text" name="concierge_street" class="form-control concierge_street" id="floatingInput" placeholder="Street" value="{{ old('concierge_street') }}">
+                            <label for="floatingInput">Street</label>
                             @error('concierge_street')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md patient-location-col2 patient">
-                            <input type="text" placeholder="City" class="form-control patient-location-city-text @error('concierge_city') is-invalid @enderror" name="concierge_city" id="concierge_city" value="{{ old('concierge_city') }}">
+                        <div class="form-floating ">
+                            <input type="text" name="concierge_city" class="form-control concierge_city" id="floatingInput" placeholder="City" value="{{ old('concierge_city') }}">
+                            <label for="floatingInput">City</label>
                             @error('concierge_city')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-
-
-                    <div class="row patient-location-row2">
-                        <div class="col-md patient-location-col1 patient">
-                            <input type="text" placeholder="State" class="form-control patient-location-state-text @error('concierge_state') is-invalid @enderror" name="concierge_state" id="concierge_state" value="{{ old('concierge_state') }}">
+                        <div class="form-floating ">
+                            <input type="text" name="concierge_state" class="form-control concierge_state" id="floatingInput" placeholder="State" value="{{ old('concierge_state') }}">
+                            <label for="floatingInput">State</label>
                             @error('concierge_state')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md patient-location-col2 patient">
-                            <input type="text" placeholder="Zip Code" class="form-control patient-location-zipcode-text @error('concierge_zip_code') is-invalid @enderror" name="concierge_zip_code" id="concierge_zip_code" value="{{ old('concierge_zip_code') }}">
+                        <div class="form-floating w-100">
+                            <input type="number" name="concierge_zip_code" class="form-control zipcode" id="floatingInput" placeholder="Zipcode" value="{{ old('concierge_zip_code') }}">
+                            <label for="floatingInput">Zipcode</label>
                             @error('concierge_zip_code')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-
                 </div>
-
 
                 <!-- patient details -->
 
                 <div class="patient-details">
-
                     <!-- Symptoms Detail Field -->
-
                     <div class="symp-details">
                         <div class="patient-info-text">
                             <h4>Patient Information</h4>
                         </div>
-
                         <div class="area-text">
                             <div class="form-floating">
                                 <textarea class="form-control text-area-box" placeholder="Leave a comment here" name="symptoms" id="floatingTextarea3" style="height: 150px" value="{{ old('symptoms') }}"></textarea>
@@ -141,43 +125,33 @@
                                     Symptoms(optional)</label>
                             </div>
                         </div>
-
                     </div>
 
                     <!--  Patient FirstName, LastName ,DOB Field  -->
-
-                    <div class="row patient-details-row1">
-                        <div class="col-md patient-details-col1 patient">
-                            <input type="text" placeholder="FirstName" class="form-control first-name-text @error('first_name') is-invalid @enderror" id="" aria-describedby="helpId" name="first_name" value="{{ old('first_name') }}">
+                    <div class=" grid-2">
+                        <div class="form-floating">
+                            <input type="text" name="first_name" class="form-control first_name" id="floatingInput" value="{{ old('first_name') }}" placeholder="First Name">
+                            <label for="floatingInput">First Name</label>
                             @error('first_name')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
-
                         </div>
-
-
-                        <div class="col-md patient-details-col2 patient">
-                            <input type="text" placeholder="LastName" class="form-control last-name-text @error('last_name') is-invalid @enderror" id="" aria-describedby="helpId" name="last_name" value="{{ old('last_name') }}">
+                        <div class="form-floating">
+                            <input type="text" name="last_name" class="form-control last_name" id="floatingInput" value="{{ old('last_name') }}" placeholder="Last Name">
+                            <label for="floatingInput">Last Name</label>
                             @error('last_name')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
-
-                    </div>
-
-                    <div class="row patient-details-row2">
-
-                        <div class="col-md patient-details-col3 me-4 patient">
-                            <label for="">Date of Birth</label>
-                            <input type="date" placeholder="Date-Of-Birth" class="form-control date-of-birth w-50 @error('date_of_birth') is-invalid @enderror" id="" name="date_of_birth" value="{{ old('date_of_birth') }}">
+                        <div class="form-floating">
+                            <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth" placeholder="date of birth" value="{{ old('date_of_birth') }}">
+                            <label for="floatingInput">Date Of Birth</label>
                             @error('date_of_birth')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-
                     </div>
-
 
                     <!--     Patient Contact Information    -->
 
@@ -186,56 +160,37 @@
                         <div class="patient-contact-text">
                             <h4>Patient Contact Information</h4>
                         </div>
-
-                        <div class="row patient-contact-row1">
-                            <div class="col-md patient-contact-col1 patient">
-                                <input type="email" placeholder="Email" class="form-control email-text @error('email') is-invalid @enderror" id="" aria-describedby="helpId" name="email" value="{{ old('email') }}">
+                        <div class="grid-2">
+                            <div class="form-floating ">
+                                <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{ old('email') }}">
+                                <label for="floatingInput">Email</label>
                                 @error('email')
-                                <div class="text-danger" role="alert">{{ $message }}</div>
+                                <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-
-
-                            <div class="col-md patient-contact-col2 patient">
-
-                                <input type="tel" placeholder="Mobile No" class="form-control mobile-text @error('phone_number') is-invalid @enderror" id="" aria-describedby="helpId" name="phone_number" value="{{ old('phone_number') }}">
+                            <div class="" style="height: 58px;">
+                                <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
                                 @error('phone_number')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-
-
+                            <div class="form-floating ">
+                                <input type="number" name="room" class="form-control room" id="floatingInput" placeholder="room" value="{{ old('room') }}">
+                                <label for="floatingInput">Room</label>
+                                @error('room')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-
-                    </div>
-
-                    <!--   Patient Location Information   -->
-
-                    <div class="row patient-location-row3">
-
-                        <div class="col-md patient-location-col3 me-4">
-                            <input type="number" placeholder="Room/Suite(optional)" name="room" class="form-control patient-location-room-text w-50 " id="room" name="room" value="{{ old('room') }}">
-
-                        </div>
-
-
                     </div>
                 </div>
-
-
                 <!--  SUBMIT and CANCEL Buttons -->
-
                 <div class="buttons">
                     <button class="primary-fill btn-submit" type="submit">Submit</button>
                     <a href="{{route('submitRequest')}}" type="button" class="primary-empty">Cancel </a>
                 </div>
-
-
-
-
         </form>
     </div>
-
 
     <div class="overlay" style="display: none;"></div>
     <div class="pop-up submit-valid-details" id="validDetailsPopup" style="display: none;">
