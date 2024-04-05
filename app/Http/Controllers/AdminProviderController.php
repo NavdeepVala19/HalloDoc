@@ -553,8 +553,13 @@ class AdminProviderController extends Controller
 
     public function deleteProviderAccount($id)
     {
+        // soft delete in providers table
         $ProviderInfo = Provider::with('users')->where('id', $id)->first();
         $ProviderInfo->delete();
+
+        //Soft delete in allusers table
+        $providerDataAllUserDelete = allusers::where('user_id', $ProviderInfo->user_id)->first();
+        $providerDataAllUserDelete->delete();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
     }

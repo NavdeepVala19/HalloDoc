@@ -85,6 +85,16 @@ $(".master-checkbox").on("click", function () {
     }
 });
 
+
+var isChecked = $('.master-checkbox').is(":checked");
+console.log(isChecked);
+if (isChecked == false) {
+    $('#docs_download').attr('disabled')
+} else {
+    $('#docs_download').removeAttr('disabled')
+}
+
+
 // *********************************************************
 
 // **** This code is for show file name********
@@ -403,7 +413,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
-                city:true
+                city: true
             },
             concierge_state: {
                 required: true,
@@ -513,7 +523,7 @@ $(document).ready(function () {
                 required: "Please enter a zipcode",
             },
             business_first_name: {
-             required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 2 and 30 character",
             },
             business_last_name: {
                 required: "Please enter a lastname between 2 and 30 character",

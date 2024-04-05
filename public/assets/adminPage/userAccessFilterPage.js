@@ -25,3 +25,26 @@ $('#accountType').on('change', function (event) {
     var selectedAccount = $(this).val();
     fetchPaginatedUserAccessData(selectedAccount, 1);
 });
+
+
+
+
+
+$(document).ready(function () { 
+
+    $('#accountType').on('click', function () {
+        if ($('#accountType').val() == 'admin') {
+            $('#createAdmin').show();
+            $('#createPhysician').hide();
+        }
+        else if ($('#accountType').val() == 'physician') {
+            $('#createPhysician').show();
+            $('#createAdmin').hide();
+        }
+        else if ($('#accountType').val() == 'all'){
+            $('#createAdmin').hide();
+            $('#createPhysician').hide();
+        }
+    })
+
+})

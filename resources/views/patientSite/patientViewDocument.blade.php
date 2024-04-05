@@ -45,7 +45,7 @@
         @csrf
         <div class="docs-download">
             <h3>Documents</h3>
-            <input type="submit" value="Download" class="primary-empty btn down-button">
+            <input type="submit" value="Download" class="primary-empty btn down-button" id="docs_download">
         </div>
 
         <table class="table">
@@ -59,7 +59,6 @@
                     <td>Actions</td>
                 </tr>
             </thead>
-
             <tbody>
                 <tr>
                     @foreach ($documents as $document)

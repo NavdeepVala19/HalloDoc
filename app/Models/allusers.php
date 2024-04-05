@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class allusers extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
     protected $table = 'allusers';
+
 
     protected $fillable = [
         'first_name',

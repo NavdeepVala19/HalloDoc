@@ -448,15 +448,15 @@ class AdminController extends Controller
             'email_template' => 'mail.blade.php',
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
+            'recipient_name'=>$request->first_name . ' ' . $request->last_name,
         ]);
 
-        SMSLogs::create(
-            [
+        SMSLogs::create([
+                'role_id' => 1,
                 'mobile_number' => $request->phone_number,
                 'created_date' => now(),
                 'sent_date' => now(),
-                'role_id' => 1,
-                'recipient_name' => $request->first_name,
+                'recipient_name' => $request->first_name  . ' ' . $request->last_name,
                 'sent_tries' => 1,
                 'is_sms_sent' => 1,
                 'action' => 1,
@@ -1384,7 +1384,6 @@ class AdminController extends Controller
     {
         $regions = Regions::get();
         return view("adminPage.createAdminAccount", compact('regions'));
-        // return view("adminPage.createAdminAccount");
     }
 
     public function createAdminAccount(Request $request)
@@ -1395,14 +1394,16 @@ class AdminController extends Controller
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
             'email' => 'required|email|',
-            'confirm-email' => 'required|email|',
+            'confirm_email' => 'required|email|',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'address1' => 'min:2|max:30',
-            'address2' => 'min:2|max:30',
+            'address1' => 'min:2|max:50',
+            'address2' => 'min:2|max:50',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
             'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'role'=>'required',
         ]);
+        dd('ss');
 
         // Store Data in users table
 

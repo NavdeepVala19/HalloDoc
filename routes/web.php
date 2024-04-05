@@ -156,9 +156,7 @@ route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailTo
 route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
 route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
-
 route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
-
 
 
 route::post('/admin/provider-updated-account/{id}', [AdminProviderController::class, 'updateProviderAccountInfo'])->name('updateProviderAccountInfo');
