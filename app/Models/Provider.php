@@ -24,4 +24,8 @@ class Provider extends Model
         return $this->belongsTo(users::class, 'user_id');
     }
 
+    public function role(){
+        return $this->belongsTo(Role::class);
+    }
+
 }

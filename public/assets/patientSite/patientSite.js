@@ -542,7 +542,7 @@ $(".master-checkbox").on("click", function () {
 
 
 var isChecked = $('.master-checkbox').is(":checked");
-console.log(isChecked);
+
 if (isChecked == false) {
     $('#docs_download').attr('disabled')
 } else {

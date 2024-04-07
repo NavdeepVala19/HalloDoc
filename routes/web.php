@@ -24,6 +24,7 @@ use App\Http\Controllers\ProviderSchedulingController;
 // ******************************* SHIVESH **********************************************
 
 
+
 //  ******* First page of patient site *********
 route::get('/', [Controller::class, 'patientSite'])->name('patientSite');
 
@@ -191,7 +192,6 @@ route::post('/admin/new/exportUnPaid', [AdminController::class, 'exportUnpaid'])
 route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
 
-route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
 
 
 route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
@@ -201,7 +201,7 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
 
-route::POST('/dropdown-data', [AdminController::class, 'filterPatientByRegion'])->name("filterByRegion");
+route::POST('/dropdown-data', [AdminController::class, 'filterPatientNew'])->name("filterByRegion");
 
 
 
@@ -240,10 +240,14 @@ route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAc
 
 // Records Page 
 Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
-Route::post('/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
+Route::match(['get', 'post'], '/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
+
+route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
 Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
+
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
 Route::post('/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
 Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
 Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');

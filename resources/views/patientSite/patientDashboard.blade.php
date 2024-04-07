@@ -16,7 +16,7 @@
             {{ Session::get('message') }}
         </div>
     @endif
-    <div class="overlay"></div>
+   
 
     <div class="container-fluid">
         <h2>Medical History</h2>
@@ -41,9 +41,9 @@
                                 <td style="height: 5%;"> {{ $patientData->created_date }}</td>
                                 <td style="height: 5%;"> {{ $patientData->status_type }}</td>
                                 <td style="height: 5%;">
-                                    @if ($patientData->id == null)
+                                    @if ($patientData->request_id == null)
                                     @else
-                                        <a href="{{ route('patientViewDocsFile', $patientData->request_id) }}"
+                                        <a href="{{ route('patientViewDocsFile', $patientData->id) }}"
                                             type="button" class="primary-empty btn ">Documents</a>
                                     @endif
                                 </td>
@@ -55,7 +55,8 @@
             </div>
             <div class="accordions">
                 <!-- create a new request pop-up -->
-                <div class="overlay"></div>
+               {{-- <div class="overlay"></div> 
+                    --}}
                 <div class="pop-up-accordion new-request-create">
                     <div class="popup-heading-section d-flex align-items-center justify-content-between">
                         <span>Create new Request</span>
@@ -83,11 +84,11 @@
                         <div class="m-2">
                             <i class="bi bi-check-circle"></i> Current Status:{{ $patientData->status_type }}
                         </div>
-                        @if ($patientData->id == null)
+                        @if ($patientData->request_id == null)
                             -
                         @else
                             <div>
-                                <a href="{{ route('patientViewDocsFile', $patientData->request_id) }}" type="button"
+                                <a href="{{ route('patientViewDocsFile', $patientData->id) }}" type="button"
                                     class="primary-empty btn ">Documents</a>
                             </div>
                         @endif
@@ -97,7 +98,9 @@
             </div>
 
             <!-- create a new request pop-up -->
-            <!-- <div class="overlay"></div> -->
+
+            {{-- <div class="overlay"></div> 
+                --}}
             <div class="pop-up new-request">
                 <div class="popup-heading-section d-flex align-items-center justify-content-between">
                     <span>Create new Request</span>

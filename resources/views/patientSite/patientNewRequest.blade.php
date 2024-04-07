@@ -18,7 +18,7 @@
 
     <div class="patient-container">
 
-        <form action="{{route('createdPatientRequests')}}" method="post" enctype="multipart/form-data" id="patientRequestForm">
+        <form action="{{route('createdPatientRequests')}}" method="post" enctype="multipart/form-data" id="patientNewRequest">
             @csrf
             <div class="patient-details">
                 <!-- Symptoms Detail Field -->
@@ -160,5 +160,6 @@
 
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientNewRequest.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

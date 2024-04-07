@@ -398,6 +398,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/RequestSupport.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

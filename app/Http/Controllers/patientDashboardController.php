@@ -100,7 +100,7 @@ class patientDashboardController extends Controller
         ]);
 
         $newPatient = new RequestTable();
-        $newPatient->request_type_id = $request->request_type;
+        $newPatient->request_type_id = 1;
         $newPatient->first_name = $request->first_name;
         $newPatient->last_name = $request->last_name;
         $newPatient->email = $email;
@@ -215,7 +215,7 @@ class patientDashboardController extends Controller
 
         $newPatient = new RequestTable();
 
-        $newPatient->request_type_id = $request->request_type;
+        $newPatient->request_type_id = 1;
         $newPatient->first_name = $request->first_name;
         $newPatient->last_name = $request->last_name;
         $newPatient->email = $request->email;

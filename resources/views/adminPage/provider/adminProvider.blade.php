@@ -45,6 +45,7 @@
 @endsection
 
 @section('content')
+
 <div class="overlay"> </div>
 
 @if (session('message'))
@@ -60,14 +61,13 @@
             <form action="" id="regionsFiltering" method="post">
                 <div class="content-header d-flex flex-row justify-content-between align-items-center">
                     <select class="form-select" id="listing-region-admin-provider" name="regions">
-                        <option selected>All</option>
+                        <option selected value="all">All</option>
                     </select>
                     <div class="provider-btn">
                         <a href="{{ route('adminNewProvider') }}" type="button" class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
                     </div>
                 </div>
             </form>
-
             <div class="listing-table mt-3">
                 <div id="adminProviderData">
                     <table class="provider-table table" id="all-providers-data">

@@ -48,15 +48,19 @@
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
-        <a href="" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
-    </div>
-
+        <a href="#" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
+    </div>  
     <div class="section">
         <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">
-
             @csrf
-            <div class="grid-4">
 
+            {{--  The currentPage() method retrieves the current page number of the paginator. --}}
+            <input type="hidden" name="page" value="{{ $combinedData->currentPage() }}">
+
+            {{--  The perPage() method retrieves the number of items per page in the paginator. --}}
+            <input type="hidden" name="per_page" value="{{ $combinedData->perPage() }}"> 
+
+            <div class="grid-4">
                 <div class="form-floating request-status-select">
                     <select class="form-select status-type" name="request_status">
                         <option selected>Select Request Status</option>
@@ -113,8 +117,6 @@
 
                 <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" placeholder="Phone Number" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
-
-
             <div class=" mt-4 d-flex justify-content-end gap-2">
                 <button class="primary-fill" type="submit">
                     Search
@@ -202,7 +204,10 @@
                     @endforeach
                 </tbody>
             </table>
-            {{$combinedData->links('pagination::bootstrap-5')}}
+
+            {{-- This ensures that the search criteria are preserved in the pagination links. --}}
+            {{ $combinedData->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+
 
         </div>
 
@@ -292,7 +297,9 @@
                 </div>
                 @endforeach
             </div>
-            {{$combinedData->links('pagination::bootstrap-5')}}
+
+            {{ $combinedData->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+
         </div>
     </div>
 </div>
@@ -301,7 +308,6 @@
 
 @endsection
 
-
 @section('script')
-<script defer src="{{ URL::asset('assets/adminPage/searchRecords.js') }}"></script>
+<script defer src="{{ asset('assets/adminPage/searchRecords.js') }}"></script>
 @endsection

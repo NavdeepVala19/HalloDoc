@@ -32,7 +32,7 @@ class AdminProviderController extends Controller
 
     public function readProvidersInfo()
     {
-        $providersData = Provider::orderBy('created_at', 'desc')->paginate(10);
+        $providersData = Provider::orderBy('created_at', 'asc')->paginate(10);
         return view('/adminPage/provider/adminProvider', compact('providersData'));
     }
 
@@ -42,8 +42,8 @@ class AdminProviderController extends Controller
 
     public function filterPhysicianThroughRegions(Request $request)
     {
-
-        if ($request->selectedId == "All") {
+        // dd($request->all());
+        if ($request->selectedId == "all") {
             $providersData = Provider::paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
@@ -371,8 +371,7 @@ class AdminProviderController extends Controller
 
     public function editProvider($id)
     {
-        $getProviderData = Provider::with('users')->where('id', $id)->first();
-
+        $getProviderData = Provider::with('users','role')->where('id', $id)->first();
         return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
     }
 

@@ -468,10 +468,11 @@ class AdminController extends Controller
             'email_template' => 'mail.blade.php',
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
-            'recipient_name'=>$request->first_name . ' ' . $request->last_name,
+            'recipient_name' => $request->first_name . ' ' . $request->last_name,
         ]);
 
-        SMSLogs::create([
+        SMSLogs::create(
+            [
                 'role_id' => 1,
                 'mobile_number' => $request->phone_number,
                 'created_date' => now(),
@@ -775,7 +776,7 @@ class AdminController extends Controller
     // Records Page
     public function searchRecordsView()
     {
-        // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
+         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
         $combinedData = request_Client::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
@@ -812,7 +813,12 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-        $combinedData = $this->exportFilteredSearchRecord($request)->paginate(10);
+      
+        // Retrieve pagination parameters from the request
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 10);
+
+        $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
 
         $session = session([
             'patient_name' => $request->patient_name,
@@ -1024,9 +1030,9 @@ class AdminController extends Controller
             'block_request.id',
             'block_request.is_active',
             'block_request.request_id',
-            DB::raw('DATE(block_request.created_at) as created_date'),
             'block_request.reason',
             'request_client.first_name as patient_name',
+            DB::raw('DATE(block_request.created_at) as created_date'),
         )
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
             ->paginate(10);
@@ -1034,22 +1040,6 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-    public function updateBlockHistoryIsActive(Request $request)
-    {
-        $block = BlockRequest::find($request->blockId);
-
-        $block->update(['is_active' => $request->is_active]);
-    }
-
-
-    public function unBlockPatientInBlockHistoryPage($id)
-    {
-        $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
-        $statusUpdateRequestStatus = RequestStatus::where('request_id', $id)->update(['status' => 1]);
-
-        $unBlockData = BlockRequest::where('request_id', $id)->delete();
-        return redirect()->back()->with('message', 'patient is unblock');
-    }
 
     public function blockHistroySearchData(Request $request)
     {
@@ -1060,6 +1050,7 @@ class AdminController extends Controller
             'block_request.email',
             'block_request.is_active',
             'block_request.reason',
+            'block_request.request_id',
             DB::raw('DATE(block_request.created_at) as created_date'),
         )
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
@@ -1088,6 +1079,24 @@ class AdminController extends Controller
 
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
+
+    public function updateBlockHistoryIsActive(Request $request)
+    {
+        $block = BlockRequest::find($request->blockId);
+
+        $block->update(['is_active' => $request->is_active]);
+    }
+
+
+    public function unBlockPatientInBlockHistoryPage($id)
+    {
+        $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
+        $statusUpdateRequestStatus = RequestStatus::where('request_id', $id)->update(['status' => 1]);
+
+        $unBlockData = BlockRequest::where('request_id', $id)->delete();
+        return redirect()->back()->with('message', 'patient is unblock');
+    }
+
 
     public function patientHistoryView()
     {
@@ -1208,6 +1217,9 @@ class AdminController extends Controller
 
     public function sendRequestSupport(Request $request)
     {
+        $request->validate([
+            'contact_msg' => 'required',
+        ]);
 
         $currentDate = now()->toDateString();
         $currentTime = now()->format('H:i');
@@ -1246,7 +1258,7 @@ class AdminController extends Controller
 
         $cases = [];
         if ($status == 'new') {
-            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
+            $cases = RequestTable::with('requestClient')->whereHas('requestClient', function ($query) use ($regionName) {
                 $query->where('state', 'like', '%' . $regionName . '%');
             })->where('status', 1)->get();
         } else if ($status == 'pending') {
@@ -1434,7 +1446,7 @@ class AdminController extends Controller
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
             'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'role'=>'required',
+            'role' => 'required',
         ]);
         dd('ss');
 
@@ -1512,63 +1524,122 @@ class AdminController extends Controller
         return response()->json($fetchedRoles);
     }
 
+    public function fetchQuery($status, $category, $searchTerm, $region)
+    {
+        if (is_array($this->getStatusId($status))) {
+            $query = RequestTable::with('requestClient')->whereIn('status', $this->getStatusId($status));
+        } else {
+            $query = RequestTable::with('requestClient')->where('status', $this->getStatusId($status));
+        }
 
-    public function exportNew(Request $request){
+        // Filter by Category if not 'all'
+        if ($category !== 'all') {
+            $query->where('request_type_id', $this->getCategoryId($category));
+        }
+
+        // Apply search condition
+        if ($searchTerm) {
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('first_name', 'like', "%$searchTerm%")
+                    ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
+                        $q->where('first_name', 'like', "%$searchTerm%");
+                    });
+            });
+        }
+        // Filter Regions 
+        if ($region) {
+            $query = RequestTable::with('requestClient')->whereHas('requestClient', function ($query) use ($region) {
+                $query->where('state', 'like', '%' . $region . '%');
+            })->where('status', $this->getStatusId($status))->get();
+        }
+
+        return $query;
+    }
+
+    public function filterPatientNew(Request $request){
+        
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $category = "all";
+        $search = "";
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        dd($regionId);
+        $cases = $this->fetchQuery($status,$category,$search,$regionName);
+       
+
+        $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $cases)->render();
+        return response()->json(['html' => $data]);
+
+
+    }
+
+    public function exportNew(Request $request)
+    {
         $status = 'new';
         $category = $request->filter_category;
         $search = $request->filter_search;
-        $exportNewData = $this->buildQuery($status,$category,$search);
-       
+        $region = $request->filter_region;
+        $exportNewData = $this->fetchQuery($status, $category, $search, $region);
+
         $exportNew = new NewStatusExport($exportNewData);
         return Excel::download($exportNew, 'NewData.xls');
     }
-    public function exportPending(Request $request){
+    public function exportPending(Request $request)
+    {
         $status = 'pending';
         $category = $request->filter_category;
         $search = $request->filter_search;
-        $exportPendingData = $this->buildQuery($status,$category,$search);
-       
+        $region = $request->filter_region;
+        $exportPendingData = $this->fetchQuery($status, $category, $search, $region);
+
         $exportPending = new PendingStatusExport($exportPendingData);
         return Excel::download($exportPending, 'PendingData.xls');
     }
 
-    public function exportActive(Request $request){
+    public function exportActive(Request $request)
+    {
         $status = 'active';
         $category = $request->filter_category;
         $search = $request->filter_search;
-        $exportActiveData = $this->buildQuery($status,$category,$search);
-        
+        $region = $request->filter_region;
+        $exportActiveData = $this->fetchQuery($status, $category, $search, $region);
+
         $exportActive = new ActiveStatusExport($exportActiveData);
         return Excel::download($exportActive, 'ActiveData.xls');
     }
 
-    public function exportConclude(Request $request){
+    public function exportConclude(Request $request)
+    {
         $status = 'conclude';
         $category = $request->filter_category;
         $search = $request->filter_search;
-        $exportConcludeData = $this->buildQuery($status,$category,$search);
-        
+        $region = $request->filter_region;
+        $exportConcludeData = $this->fetchQuery($status, $category, $search, $region);
+
         $exportConclude = new ConcludeStatusExport($exportConcludeData);
         return Excel::download($exportConclude, 'ConcludeData.xls');
     }
-    public function exportToClose(Request $request){
+    public function exportToClose(Request $request)
+    {
         $status = 'toclose';
         $category = $request->filter_category;
         $search = $request->filter_search;
-        $exportToCloseData = $this->buildQuery($status,$category,$search);
-        
+        $region = $request->filter_region;
+        $exportToCloseData = $this->fetchQuery($status, $category, $search, $region);
+
         $exportToClose = new ToCloseStatusExport($exportToCloseData);
         return Excel::download($exportToClose, 'ToCloseData.xls');
     }
 
-    public function exportUnpaid(Request $request){
+    public function exportUnpaid(Request $request)
+    {
         $status = 'unpaid';
         $category = $request->filter_category;
         $search = $request->filter_search;
-        $exportUnpaidData = $this->buildQuery($status,$category,$search);
-        
+        $region = $request->filter_region;
+        $exportUnpaidData = $this->fetchQuery($status, $category, $search, $region);
+
         $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
         return Excel::download($exportUnpaid, 'UnPaidData.xls');
     }
-
 }

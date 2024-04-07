@@ -12,21 +12,14 @@
 <div class="container">
 
     <!-- this div is for heading and back button -->
-
     <div class="header_part">
         <a href="{{route('patientDashboardData')}}" type="button" class="primary-empty">
             < Back</a>
     </div>
-
-
     <div class="patient-container">
-
-
-        <form action="{{route('createdSomeoneRequests')}}" method="post" enctype="multipart/form-data" id="patientRequestForm">
+        <form action="{{route('createdSomeoneRequests')}}" method="post" enctype="multipart/form-data" id="patientSomeOneRequest">
             @csrf
-
             <div class="patient-details">
-
                 <!-- Symptoms Detail Field -->
                 <div class="symp-details">
                     <div class="patient-info-text">
@@ -183,5 +176,6 @@
 
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ URL::asset('assets/patientSite/patientSomeOneRequest.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

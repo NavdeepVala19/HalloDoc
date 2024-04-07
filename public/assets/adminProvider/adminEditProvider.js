@@ -22,7 +22,7 @@ $(document).ready(function () {
         $('#providerAccSaveBtn').show();
         $('#providerAccCancelBtn').show();
         $("#provider-credentials-edit-btn").hide();
-    
+
     });
 
     $("#providerAccCancelBtn").click(function () {
@@ -131,9 +131,6 @@ $(document).ready(function () {
         $('#provider-profile-edit-btn').show()
     })
 
-
-
-
     // ********************************************************************************
 
 
@@ -208,51 +205,7 @@ $(document).ready(function () {
     //     });
     // })
 
-    function fetchPaginatedResults(selectedId, page) {
-        var token = $('meta[name="csrf-token"]').attr('content');
-
-        $.ajax({
-            url: '/admin/providers/regionsFiltering?page=' + page,
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                selectedId: selectedId,
-                _token: token
-            },
-            success: function (response) { 
-                $('#adminProviderData').html(data.html); // Update results area
-
-                // Now that data.html is populated, process the contact buttons
-                // $('.contact-btn[id]').each(function (i, el) {
-                //     var isChecked = $(el).closest('tr').find('.checkbox1').is(":checked");
-
-                //     if (isChecked) {
-                //         $(el).attr("disabled", "true");
-                //     } else {
-                //         $(el).removeAttr("disabled");
-                //     }
-                // });
-
-            }
-
-        })
-       
-    }
-
-    $(document).on('click', '.pagination .page-link', function (event) {
-        event.preventDefault();
-        var page = $(this).text();
-        var selectedId = $("#listing-region-admin-provider").val();
-        fetchPaginatedResults(selectedId, page);
-    });
-
-    $('#listing-region-admin-provider').on('change', function (event) {
-        event.preventDefault();
-        var selectedId = $(this).val();
-        fetchPaginatedResults(selectedId, 1);
-      
-    });
-
+    
     // ********************************************************************************
 
 
@@ -269,6 +222,7 @@ $(document).ready(function () {
 
 
 
+    // This code is for enable/disable contact button as per checkbox
     $(document).on('change', '.checkbox1', function (e) {
         var token = $('meta[name="csrf-token"]').attr('content')
         var checkbox = $(this);
@@ -303,7 +257,7 @@ $(document).ready(function () {
 
     //***  This code is showing contact your provider pop-up ****
 
-    $(document).on('click', '.contact-btn',function () {
+    $(document).on('click', '.contact-btn', function () {
         $('.new-provider-pop-up').show();
         $('.overlay').show();
     })
@@ -425,6 +379,152 @@ $(document).ready(function () {
         }
     });
 
+
+    // client side validation in adminProviderCreateForm
+
+    $.validator.addMethod("phoneUS", function (phone_number, element) {
+        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
+    }, "Please enter a valid phone number.");
+
+    $.validator.addMethod("city", function (value, element) {
+        return value.match(/^[a-zA-Z ,_-]+?$/);
+    }, "Please enter a valid city name.");
+
+    $.validator.addMethod("zipcode", function (value, element) {
+        return value.length == 6 && /\d/.test(value);
+    }, "Please enter a valid zipcode.");
+
+    $('#createAdminProvider').validate({
+        rules: {
+            user_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            password: {
+                required: true,
+            },
+            first_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            last_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            medical_license: {
+                required: true,
+            },
+            npi_number: {
+                required: true,
+            },
+            address1: {
+                required: true,
+                minlength: 3,
+                maxlength: 50
+            },
+            address2: {
+                required: true,
+            },
+            city: {
+                required: true,
+                city: true
+            },
+            zip: {
+                required: true,
+                zipcode: true
+            },
+            alt_phone_number: {
+                required: true,
+                phoneUS: true
+            },
+            business_name: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            business_website: {
+                required: true,
+                minlength: 3,
+                maxlength: 30
+            },
+            Admin_Notes: {
+                required: true,
+            },
+        },
+        message: {
+            user_name: {
+                required: "Please enter a valid username",
+            },
+            password: {
+                required: "Please enter a password",
+            },
+            first_name: {
+                required: "Please enter a valid first_name",
+            },
+            last_name: {
+                required: "Please enter a valid last_name",
+            },
+            email: {
+                required: "Please enter a valid email",
+            },
+            phone_number: {
+                required: "Please enter a valid phone_number",
+            },
+            medical_license: {
+                required: "Please enter a valid medical_license",
+            },
+            npi_number: {
+                required: "Please enter a valid npi_number",
+            },
+            address1: {
+                required: "Please enter a valid address1",
+            },
+            address2: {
+                required: "Please enter a valid address2",
+            },
+            city: {
+                required: "Please enter a valid city",
+            },
+            zip: {
+                required: "Please enter a valid zipcode",
+            },
+            alt_phone_number: {
+                required: "Please enter a valid alt_phone_number",
+            },
+            business_name: {
+                required: "Please enter a valid business_name",
+            },
+            business_website: {
+                required: "Please enter a valid business_website",
+            },
+            Admin_Notes: {
+                required: "Please enter a valid Admin_Notes",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('errorMsg');
+            element.closest('.form-floating').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+
+    })  
 })
 
 
@@ -503,11 +603,17 @@ $(document).ready(function () {
                 minlength: 3,
                 maxlength: 30
             },
+            password: {
+                required: true,
+            }
         },
         message: {
             user_name: {
                 required: "Please enter a valid username",
             },
+            password: {
+                required: "Please enter a password",
+            }
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {
@@ -522,7 +628,6 @@ $(document).ready(function () {
         }
     })
 })
-
 
 $(document).ready(function () {
     $.validator.addMethod("phoneUS", function (phone_number, element) {
@@ -627,7 +732,7 @@ $(document).ready(function () {
             },
         },
         message: {
-            
+
             address1: {
                 required: "Please enter a valid address1",
             },
@@ -661,7 +766,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $('#adminEditProviderForm4').validate({
-        rules: {        
+        rules: {
             business_name: {
                 required: true,
                 minlength: 3,
@@ -701,3 +806,35 @@ $(document).ready(function () {
     })
 })
 
+
+function fetchPaginatedResults(selectedId, page) {
+    var token = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+        url: '/admin/providers/regionsFiltering?page=' + page,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            selectedId: selectedId,
+            _token: token
+        },
+        success: function (response) {
+            $('#adminProviderData').html(response.html); // Update results area
+        }
+
+    })
+
+}
+
+$(document).on('click', '.pagination .page-link', function (event) {
+    event.preventDefault();
+    var page = $(this).text();
+    var selectedId = $("#listing-region-admin-provider").val();
+    fetchPaginatedResults(selectedId, page);
+});
+
+$('#listing-region-admin-provider').on('change', function (event) {
+    event.preventDefault();
+    var selectedId = $(this).val();
+    fetchPaginatedResults(selectedId, 1);
+});
