@@ -13,7 +13,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -69,7 +69,7 @@
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <select class="form-select role-selected" name="role_name" id="floatingSelect">
+                        <select class="form-select role-selected" name="role_name" id="floatingSelect" disabled>
                             <option value="0">All</option>
                             <option value="1" {{ $role->account_type == 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="2" {{ $role->account_type == 'physician' ? 'selected' : '' }}>Physician
@@ -80,6 +80,7 @@
                         @error('role_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                        <input type="text" name="role_name" value="{{ $role->account_type }}" hidden>
                     </div>
                 </div>
                 <div class="menu-section">

@@ -130,9 +130,8 @@
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate"
-                        class="form-control @error('shiftDate') is-invalid @enderror" id="floatingInput3"
-                        placeholder="Created Date" value="{{ old('shiftDate') }}">
+                    <input type="date" name="shiftDate" class="form-control @error('shiftDate') is-invalid @enderror"
+                        id="floatingInput3" placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput3">Shift Date</label>
                     @error('shiftDate')
                         <div class="text-danger">{{ $message }}</div>
@@ -141,8 +140,8 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control @error('shiftStartTime') is-invalid @enderror"
-                            id="floatingInput2" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
+                            class="form-control @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
+                            placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')
                             <div class="text-danger">{{ $message }}</div>
@@ -150,8 +149,8 @@
                     </div>
                     <div class="form-floating ">
                         <input type="time" name="shiftEndTime"
-                            class="form-control @error('shiftEndTime') is-invalid @enderror"
-                            id="floatingInput5" placeholder="Created Date" value="{{ old('shiftEndTime') }}">
+                            class="form-control @error('shiftEndTime') is-invalid @enderror" id="floatingInput5"
+                            placeholder="Created Date" value="{{ old('shiftEndTime') }}">
                         <label for="floatingInput5">End</label>
                         @error('shiftEndTime')
                             <div class="text-danger">{{ $message }}</div>
@@ -285,7 +284,7 @@
             <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between filter-section">
                 <div class="region-dropdown">
                     <select name="role_id" class="form-select region-filter" id="floatingSelect">
                         <option value="0" selected>All Regions</option>
@@ -294,14 +293,14 @@
                         @endforeach
                     </select>
                 </div>
-                <div>
+                <div class="link-container">
                     <a href="{{ route('providers.on.call') }}" class="primary-fill">Providers On Call</a>
                     <a href="{{ route('shifts.review') }}" class="primary-fill">Shifts For Review</a>
                     <button class="primary-fill new-shift-btn">Add New Shift</button>
                 </div>
             </div>
             <h2 class="date-title m-3">Date</h2>
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end status-container">
                 <span class="d-flex align-items-center">
                     <div class="pending-shift m-2"></div>Pending Shifts
                 </span>

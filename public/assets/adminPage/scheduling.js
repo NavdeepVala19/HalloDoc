@@ -49,7 +49,14 @@ $(document).ready(function () {
             right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
         },
         selectable: true,
-        aspectRatio: 1.5,
+        // aspectRatio: 1.5,
+        windowResize: function (view) {
+            if (window.innerWidth < 600) {
+                view.setOption("aspectRatio", 1);
+            } else {
+                view.setOption("aspectRatio", 1.5);
+            }
+        },
         resourceAreaWidth: "20%",
         dayHeaderFormat: {
             day: "numeric",
@@ -376,5 +383,4 @@ $(document).ready(function () {
             ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
         ).removeClass("is-invalid");
     });
-
 });

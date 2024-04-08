@@ -5,10 +5,6 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/provider.css') }}">
 @endsection
 
-@section('username')
-    {{ !empty($userData) ? $userData->username : '' }}
-@endsection
-
 @section('nav-links')
     <a href="" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>

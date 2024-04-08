@@ -56,7 +56,7 @@
         </div>
         {{-- d-flex align-items-center justify-content-between gap-3 --}}
         <div class="section">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between filter-section">
                 <div class="region-dropdown">
                     <select name="role_id" class="form-select providerOnCallRegionFilter" id="floatingSelect"
                         aria-label="Floating label select example">
@@ -67,7 +67,7 @@
                     </select>
                     {{-- <label for="floatingSelect">All Regions</label> --}}
                 </div>
-                <div>
+                <div class="link-container">
                     <a href="{{ route('admin.scheduling') }}" class="primary-fill">Calendar View</a>
                     <a href="{{ route('shifts.review') }}" class="primary-fill">Shifts For Review</a>
                 </div>

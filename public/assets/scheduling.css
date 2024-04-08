@@ -157,3 +157,60 @@ thead tr .fc-datagrid-cell-cushion {
 .fc-h-event {
     border: none;
 }
+
+@media (max-width: 900px) {
+    .filter-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 550px) {
+    .link-container {
+        display: flex;
+        gap: 15px;
+    }
+    .link-container a,
+    .link-container button {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+    .spacing {
+        margin: 12px !important;
+    }
+    .status-container span {
+        font-size: 12px;
+        text-wrap: nowrap;
+    }
+    .pending-shift {
+        width: 35px;
+        height: 25px !important;
+    }
+    .approved-shift {
+        width: 35px;
+        height: 25px !important;
+    }
+
+    .fc-header-toolbar {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    #calendar {
+        margin: 0 auto !important;
+        width: 100%;
+    }
+    .fc-toolbar-chunk .fc-resourceTimelineDay-button,
+    .fc-toolbar-chunk .fc-resourceTimelineWeek-button,
+    .fc-toolbar-chunk .fc-dayGridMonth-button {
+        padding: 4px 10px !important;
+    }
+
+    .provider {
+        text-wrap: nowrap;
+    }
+    .button-section a{
+        margin: 0;
+    }
+}

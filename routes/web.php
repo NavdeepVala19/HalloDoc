@@ -448,10 +448,14 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Records Page 
     Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
-    Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+    // Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+    Route::get('/search-email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
     Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
-    Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
+    Route::get('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
     Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
+
+    // Download Encounter form on clicking view button
+    Route::get('/download-encounter-form/{requestId}', [AdminController::class, 'downloadEncounterForm'])->name('download.encounter.form');
 
     // ---------------------------- SCHEDULING ----------------------------
     // Admin Scheduling
@@ -477,6 +481,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Filter Shifts review page as per the region selected
     Route::post('/filter-regions', [SchedulingController::class, 'filterRegions'])->name('filter-regions-shifts');
 });
+
+
 
 // Provider Scheduling
 // Scheduling Calendar view 

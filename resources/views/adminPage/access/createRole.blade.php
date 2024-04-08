@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -68,7 +68,7 @@
                     </div>
                     <div class="form-floating">
                         <select class="form-select role-selected" name="role_name" id="floatingSelect">
-                            <option value="0">All</option>
+                            <option value="0" disabled>All</option>
                             <option value="1" @if (old('role_name') == 1) selected @endif>Admin</option>
                             <option value="2" @if (old('role_name') == 2) selected @endif>Physician</option>
                             <option value="3" @if (old('role_name') == 3) selected @endif>Patient</option>

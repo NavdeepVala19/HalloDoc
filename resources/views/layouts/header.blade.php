@@ -1,5 +1,5 @@
 {{-- HEADER SECTION --}}
-<header class="header d-flex align-items-center justify-content-between px-3 border-bottom shadow bg-body-tertiary">
+<header class="header d-flex align-items-center justify-content-between px-3 border-bottom shadow">
     <div class="d-flex align-items-center">
         <a href="" class="primary-empty menu-icon">
             <i class="bi bi-list"></i>
@@ -9,7 +9,7 @@
     <div class="d-flex align-items-center  gap-3">
         <span class="welcome-msg align-self-center">welcome,
             {{-- Admin UserName or Provider UserName will be fetched and showed here --}}
-            <strong> @yield('username') </strong>
+            <strong> {{ Auth::user()->username }} </strong>
         </span>
         <a href="{{ route('logout') }}" class="logout-btn primary-empty">
             <i class="bi bi-box-arrow-right"></i>
@@ -21,7 +21,7 @@
     </div>
 </header>
 
-<nav class="navbar-section shadow bg-body-tertiary ">
+<nav class="navbar-section shadow">
     @yield('nav-links')
     {{-- <a href="">Dashboard</a>
     <a href="">Provider Location</a>

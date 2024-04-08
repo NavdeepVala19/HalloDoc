@@ -59,7 +59,7 @@
         <form action="{{ route('admin.shifts.review') }}" method="POST">
             @csrf
             <div class="section">
-                <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-4 filter-section">
                     <div class="region-dropdown">
                         <select name="role_id" class="form-select filterReviewShifts" id="floatingSelect">
                             <option value="0" selected>All Regions</option>
@@ -68,7 +68,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="button-section">
+                    <div class="button-section link-container">
                         <a href="{{ route('admin.scheduling') }}" class="current-shift-btn">View Current Month Shifts</a>
                         <button type="submit" name="action" value="approve" class="approved-selected-btn">Approved
                             Selected</button>

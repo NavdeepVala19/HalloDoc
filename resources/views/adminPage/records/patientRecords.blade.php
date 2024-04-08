@@ -71,13 +71,26 @@
                                     <td>{{ $record->created_at }}</td>
                                     <td>{{ $record->request->confirmation_no }}</td>
                                     <td>
-                                        @if ($status->provider)
-                                            Dr. {{ $status->provider->first_name }}
+                                        @if ($status)
+                                            @if ($status->provider)
+                                                Dr. {{ $status->provider->first_name }}
+                                            @endif
                                         @endif
                                     </td>
                                     <td>Concluded date</td>
-                                    <td>{{ $status->statusTable->status_type }}</td>
-                                    <td><button class="primary-empty">View</button></td>
+                                    <td>
+                                        @if ($status)
+                                            {{ $status->statusTable->status_type }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($isFinalize)
+                                            <a href="{{ route('download.encounter.form', $status->request_id) }}"
+                                                class="primary-empty">View</a>
+                                        @else
+                                            {{-- <button class="primary-empty">View</button> --}} -
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown ">
                                             <button class="primary-empty" type="button" data-bs-toggle="dropdown"
@@ -88,7 +101,9 @@
                                                 <li><a href="{{ route('admin.view.case', $record->id) }}"
                                                         class="dropdown-item" href="">View
                                                         Case</a></li>
-                                                <li><a class="dropdown-item" href="">(Count) Documents</a>
+                                                <li><a href="{{ route('admin.view.upload', $record->id) }}"
+                                                        class="dropdown-item" href="">({{ $documentCount }})
+                                                        Documents</a>
                                                 </li>
                                             </ul>
                                         </div>
