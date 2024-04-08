@@ -1,4 +1,3 @@
-
     <table class="provider-table table" id="all-providers-data">
         <thead class="table-secondary">
             <tr>

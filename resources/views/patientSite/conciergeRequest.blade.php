@@ -38,20 +38,20 @@
                             <input type="text" name="concierge_first_name" class="form-control concierge_first_name" id="floatingInput" value="{{ old('concierge_first_name') }}" placeholder="Your First Name">
                             <label for="floatingInput">Your First Name</label>
                             @error('concierge_first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating">
-                            <input type="text" name="concierge_first_name" class="form-control concierge_last_name" id="floatingInput" value="{{ old('concierge_last_name') }}" placeholder="Your Last Name">
+                            <input type="text" name="concierge_last_name" class="form-control concierge_last_name" id="floatingInput" value="{{ old('concierge_last_name') }}" placeholder="Your Last Name">
                             <label for="floatingInput">Your Last Name</label>
                             @error('concierge_last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating" style="height: 58px;">
                             <input type="tel" name="concierge_mobile" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('concierge_mobile') }}">
                             @error('concierge_mobile')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -59,7 +59,7 @@
                             <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="concierge_email" value="{{ old('concierge_email') }}">
                             <label for="floatingInput">Email</label>
                             @error('concierge_email')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -67,7 +67,7 @@
                             <input type="text" class="form-control" id="floatingInput" value="{{ old('concierge_hotel_name') }}" name="concierge_hotel_name" placeholder="Hotel/Property Name">
                             <label for="floatingInput">Hotel/Property Name</label>
                             @error('concierge_hotel_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -83,28 +83,28 @@
                             <input type="text" name="concierge_street" class="form-control concierge_street" id="floatingInput" placeholder="Street" value="{{ old('concierge_street') }}">
                             <label for="floatingInput">Street</label>
                             @error('concierge_street')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating ">
                             <input type="text" name="concierge_city" class="form-control concierge_city" id="floatingInput" placeholder="City" value="{{ old('concierge_city') }}">
                             <label for="floatingInput">City</label>
                             @error('concierge_city')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating ">
                             <input type="text" name="concierge_state" class="form-control concierge_state" id="floatingInput" placeholder="State" value="{{ old('concierge_state') }}">
                             <label for="floatingInput">State</label>
                             @error('concierge_state')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating w-100">
                             <input type="number" name="concierge_zip_code" class="form-control zipcode" id="floatingInput" placeholder="Zipcode" value="{{ old('concierge_zip_code') }}">
                             <label for="floatingInput">Zipcode</label>
                             @error('concierge_zip_code')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -133,14 +133,14 @@
                             <input type="text" name="first_name" class="form-control first_name" id="floatingInput" value="{{ old('first_name') }}" placeholder="First Name">
                             <label for="floatingInput">First Name</label>
                             @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating">
                             <input type="text" name="last_name" class="form-control last_name" id="floatingInput" value="{{ old('last_name') }}" placeholder="Last Name">
                             <label for="floatingInput">Last Name</label>
                             @error('last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -148,7 +148,7 @@
                             <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth" placeholder="date of birth" value="{{ old('date_of_birth') }}">
                             <label for="floatingInput">Date Of Birth</label>
                             @error('date_of_birth')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -165,20 +165,20 @@
                                 <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{ old('email') }}">
                                 <label for="floatingInput">Email</label>
                                 @error('email')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="" style="height: 58px;">
                                 <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
                                 @error('phone_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-floating ">
                                 <input type="number" name="room" class="form-control room" id="floatingInput" placeholder="room" value="{{ old('room') }}">
                                 <label for="floatingInput">Room</label>
                                 @error('room')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>

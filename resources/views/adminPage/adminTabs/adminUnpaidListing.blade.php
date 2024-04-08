@@ -338,7 +338,7 @@ patient's email address and phone number. Once the patient accepts the agreement
         </div>
 
     </div>
-    <div class="page">
+    <div class="page adminNewListingPages">
         {{ $cases->links('pagination::bootstrap-5') }}
     </div>
 @endsection

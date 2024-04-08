@@ -9,7 +9,8 @@
     <div class="d-flex align-items-center gap-3">
         <span class="welcome-msg align-self-center">welcome,
             {{-- Admin UserName or Provider UserName will be fetched and showed here --}}
-            <strong> @yield('username') </strong>
+            {{--           <strong> {{Auth::user()->username}} </strong> --}}
+  
         </span>
         <a href="{{ route('patientLogOut') }}" class="logout-link primary-empty logout-btn">Logout</a>
         <button class="primary-empty toggle-mode" id="toggle-mode">

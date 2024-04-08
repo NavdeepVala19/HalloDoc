@@ -31,7 +31,6 @@ class conciergeRequestController extends Controller
 
     public function create(Request $request)
     {
-        // dd($request->all());
 
         $request->validate([
             'first_name' => 'required|min:2|max:30',
@@ -115,10 +114,10 @@ class conciergeRequestController extends Controller
         $patientRequest->date_of_birth = $request->date_of_birth;
         $patientRequest->email = $request->email;
         $patientRequest->phone_number = $request->phone_number;
-        $patientRequest->street = $request->street;
-        $patientRequest->city = $request->city;
-        $patientRequest->state = $request->state;
-        $patientRequest->zipcode = $request->zipcode;
+        $patientRequest->street = $request->concierge_street;
+        $patientRequest->city = $request->concierge_city;
+        $patientRequest->state = $request->concierge_state;
+        $patientRequest->zipcode = $request->concierge_zip_code;
         $patientRequest->room = $request->room;
         $patientRequest->notes = $request->symptoms;
         $patientRequest->save();

@@ -2,7 +2,9 @@
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/adminProvider/adminEditProvider.css') }}">
 @endsection
-
+@section('username')
+{{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
 <a href="{{ route('providerLocation') }}">Provider Location</a>
@@ -223,16 +225,18 @@
                     @enderror
                 </div>
 
-
-                <div>
-                    {{-- Select Photo --}}
-                    <div class="custom-file-input" onclick="openFileSelection()">
-                        <input type="text" placeholder="Select Photo" readonly name="provider_photo">
-                        <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span class="upload-txt">Upload</span> </label>
-                        <input type="file" id="file-input" class="file-input-provider_photo" hidden name="provider_photo">
-                        <p id="provider_photo"></p>
+            </div>
+            <div class="custom-file-input mb-4">
+                <input type="file" name="docs" id="file-upload-request" hidden>
+                <label for="file-upload-request" class="upload-label">
+                    <div class="p-2 file-label">
+                        Select File
                     </div>
-                </div>
+                    <span class="primary-fill upload-btn">
+                        <i class="bi bi-cloud-arrow-up me-2"></i>
+                        <span class="upload-txt">Upload</span>
+                    </span>
+                </label>
             </div>
 
             <div class="form-floating">
@@ -249,7 +253,7 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="independent_contract_check">
+                        
                                         <span class="ms-2">
                                             Independent Contractor Agreement
                                         </span>
@@ -259,9 +263,7 @@
                                 <td>
                                     <div class="ms-4 btns" onclick="openFileSelection()">
                                         <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
-
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
-
                                         <p id="Contractor"></p>
                                     </div>
 
@@ -278,7 +280,7 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="background_check">
+    
                                         <span class="ms-2">
                                             Background Check
                                         </span>
@@ -304,7 +306,7 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="HIPAA_check">
+
                                         <span class="ms-2">
                                             HIPAA Compliance
                                         </span>
@@ -329,7 +331,7 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="non_disclosure_doc">
+
                                         <span class="ms-2">
                                             Non-disclosure Agreement
                                         </span>

@@ -335,7 +335,7 @@ class patientDashboardController extends Controller
             ->where('email', $email)
             ->paginate(10);
 
-        return view('patientSite/patientDashboard', compact('data'));
+        return view('patientSite/patientDashboard', compact('data','userData'));
 
 
         

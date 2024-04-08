@@ -10,13 +10,13 @@
     <a href="{{ route('patientProfile') }}" class="">Profile</a>
 @endsection
 
+
 @section('patientSiteContent')
     @if (Session::has('message'))
         <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
         </div>
-    @endif
-   
+    @endif 
 
     <div class="container-fluid">
         <h2>Medical History</h2>
@@ -55,8 +55,8 @@
             </div>
             <div class="accordions">
                 <!-- create a new request pop-up -->
-               {{-- <div class="overlay"></div> 
-                    --}}
+             <div class="overlay"></div> 
+                 
                 <div class="pop-up-accordion new-request-create">
                     <div class="popup-heading-section d-flex align-items-center justify-content-between">
                         <span>Create new Request</span>
@@ -99,8 +99,8 @@
 
             <!-- create a new request pop-up -->
 
-            {{-- <div class="overlay"></div> 
-                --}}
+         <div class="overlay"></div> 
+            
             <div class="pop-up new-request">
                 <div class="popup-heading-section d-flex align-items-center justify-content-between">
                     <span>Create new Request</span>
@@ -121,6 +121,7 @@
                 </div>
             </div>
         </div>
+    </div>
     @endsection
 
     @section('script')

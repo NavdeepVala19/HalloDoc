@@ -419,7 +419,7 @@ pending state, providers need to send an agreement link to patients. --}}
             </div>
         </div>
     </div>
-    <div class="page">
+    <div class="page adminNewListingPages">
         {{ $cases->links('pagination::bootstrap-5') }}
     </div>
 @endsection

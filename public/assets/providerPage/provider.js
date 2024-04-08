@@ -4,7 +4,7 @@ $(document).ready(function () {
     });
 
     // for showing action menu in new listing page
-    $(".action-btn").click(function (event) {
+    $(document).on('click',".action-btn",function (event) {
         $(this).siblings(".action-menu").toggle();
         $(".action-menu").not($(this).next(".action-menu")).hide();
         $(".case-id").val($(this).data("id"));

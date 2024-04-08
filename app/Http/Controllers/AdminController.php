@@ -776,13 +776,12 @@ class AdminController extends Controller
     // Records Page
     public function searchRecordsView()
     {
-         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
+        // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
         $combinedData = request_Client::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
             'request_client.id',
             'request_client.email',
-            DB::raw('DATE(request_client.created_at) as created_date'),
             'request_client.phone_number',
             'request_client.street',
             'request_client.city',
@@ -793,6 +792,8 @@ class AdminController extends Controller
             'request_notes.admin_notes',
             'request_status.status',
             'provider.first_name as physician_first_name',
+            DB::raw('DATE(request_client.created_at) as created_date'),
+            DB::raw('DATE(request_closed.created_at) as closed_date'),
         ])
             ->join('request', 'request.id', '=', 'request_client.request_id')
             ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
@@ -801,7 +802,10 @@ class AdminController extends Controller
                 $join->on('request.physician_id', '=', 'provider.id');
             })
             ->leftJoin('status', 'status.id', '=', 'request_status.status')
+            ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
             ->paginate(10);
+
+
 
 
         Session::forget('request_status');
@@ -813,7 +817,6 @@ class AdminController extends Controller
 
     public function searchRecordSearching(Request $request)
     {
-      
         // Retrieve pagination parameters from the request
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
@@ -863,6 +866,7 @@ class AdminController extends Controller
             'request_notes.admin_notes',
             'request_notes.patient_notes',
             'request_client.id',
+            DB::raw('DATE(request_closed.created_at) as closed_date'),
         ])
             ->join('request', 'request.id', '=', 'request_client.request_id')
             ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
@@ -870,7 +874,8 @@ class AdminController extends Controller
             ->leftJoin('provider', function ($join) {
                 $join->on('request.physician_id', '=', 'provider.id');
             })
-            ->leftJoin('status', 'status.id', '=', 'request_status.status');
+            ->leftJoin('status', 'status.id', '=', 'request_status.status')
+            ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id');
 
         if (!empty($request->patient_name)) {
             $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
@@ -892,6 +897,9 @@ class AdminController extends Controller
         }
         if (!empty($request->from_date_of_service)) {
             $combinedData = $combinedData->orWhere('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
+        }
+        if (!empty($request->to_date_of_service)) {
+            $combinedData = $combinedData->orWhere('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
         }
 
         return $combinedData;
@@ -984,6 +992,11 @@ class AdminController extends Controller
 
     public function searchSMSLogs(Request $request)
     {
+
+        // Retrieve pagination parameters from the request
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 10);
+
         $sms = SMSLogs::select();
 
         if (!empty($request->receiver_name)) {
@@ -1001,7 +1014,7 @@ class AdminController extends Controller
         if (!empty($request->role_type)) {
             $sms = $sms->orWhere('sms_log.role_id', "like", "%" . $request->role_type . "%");
         }
-        $sms = $sms->paginate(10);
+        $sms = $sms->paginate($perPage, ['*'], 'page', $page);
 
 
         $session = session(
@@ -1524,6 +1537,7 @@ class AdminController extends Controller
         return response()->json($fetchedRoles);
     }
 
+
     public function fetchQuery($status, $category, $searchTerm, $region)
     {
         if (is_array($this->getStatusId($status))) {
@@ -1550,28 +1564,146 @@ class AdminController extends Controller
         if ($region) {
             $query = RequestTable::with('requestClient')->whereHas('requestClient', function ($query) use ($region) {
                 $query->where('state', 'like', '%' . $region . '%');
-            })->where('status', $this->getStatusId($status))->get();
+            })->where('status', $this->getStatusId($status));
         }
 
         return $query;
     }
 
-    public function filterPatientNew(Request $request){
-        
+    public function filterPatientNew(Request $request)
+    {
         $status = $request->status;
         $regionId = $request->regionId;
         $category = "all";
         $search = "";
+
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        dd($regionId);
-        $cases = $this->fetchQuery($status,$category,$search,$regionName);
-       
+        
+        if ($regionId == 'all_regions') {
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+        } else {
+            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+        
+        }
+        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $cases)->render();
+        // dd($data,$cases);
         return response()->json(['html' => $data]);
-
-
     }
+
+    public function filterPatientPending(Request $request)
+    {
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $category = "all";
+        $search = "";
+
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        
+        if ($regionId == 'all_regions') {
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+        } else {
+            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+        
+        }
+        // dd($cases);
+
+        $data = view('adminPage.adminTabs.regions-filter-pending')->with('cases', $cases)->render();
+        // dd($data,$cases);
+        return response()->json(['html' => $data]);
+    }
+
+    
+    public function filterPatientActive(Request $request)
+    {
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $category = "all";
+        $search = "";
+
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        
+        if ($regionId == 'all_regions') {
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+        } else {
+            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+        
+        }
+        // dd($cases);
+
+        $data = view('adminPage.adminTabs.regions-filter-active')->with('cases', $cases)->render();
+        // dd($data,$cases);
+        return response()->json(['html' => $data]);
+    }
+
+    public function filterPatientConclude(Request $request)
+    {
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $category = "all";
+        $search = "";
+
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        
+        if ($regionId == 'all_regions') {
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+        } else {
+            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+        
+        }
+        // dd($cases);
+
+        $data = view('adminPage.adminTabs.regions-filter-conclude')->with('cases', $cases)->render();
+        // dd($data,$cases);
+        return response()->json(['html' => $data]);
+    }
+
+    public function filterPatientToClose(Request $request)
+    {
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $category = "all";
+        $search = "";
+
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        
+        if ($regionId == 'all_regions') {
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+        } else {
+            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+        
+        }
+        // dd($cases);
+
+        $data = view('adminPage.adminTabs.regions-filter-to-close')->with('cases', $cases)->render();
+        // dd($data,$cases);
+        return response()->json(['html' => $data]);
+    }
+
+    public function filterPatientUnpaid(Request $request)
+    {
+        $status = $request->status;
+        $regionId = $request->regionId;
+        $category = "all";
+        $search = "";
+
+        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        
+        if ($regionId == 'all_regions') {
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+        } else {
+            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+        
+        }
+        // dd($cases);
+
+        $data = view('adminPage.adminTabs.regions-filter-unpaid')->with('cases', $cases)->render();
+        // dd($data,$cases);
+        return response()->json(['html' => $data]);
+    }
+
+
 
     public function exportNew(Request $request)
     {

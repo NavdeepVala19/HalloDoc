@@ -1,9 +1,7 @@
 @extends('patientSiteIndex')
 
 @section('css')
-
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
-
+<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientNewRequest.css') }}">
 @endsection
 
 

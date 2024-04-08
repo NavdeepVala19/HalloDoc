@@ -201,7 +201,13 @@ route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdm
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
 
-route::POST('/dropdown-data', [AdminController::class, 'filterPatientNew'])->name("filterByRegion");
+route::post('/dropdown-data', [AdminController::class, 'filterPatientNew'])->name("filterByRegion");
+route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name("filterByRegionPending");
+route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name("filterByRegionActive");
+route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name("filterByRegionConclude");
+route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name("filterByRegionToClose");
+route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name("filterByRegionUnpaid");
+
 
 
 
@@ -246,7 +252,7 @@ route::post('/search-records/export', [AdminController::class, 'downloadFiltered
 Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
-Route::post('/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+Route::match(['get', 'post'],'/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
 
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
 Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');

@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/records.css') }}">
 @endsection
 
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
+
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
@@ -53,8 +57,15 @@
         <div class="section">
 
             <form action="{{ route('admin.sms.records.search') }}" method="post">
-
                 @csrf
+
+                 {{--  The currentPage() method retrieves the current page number of the paginator. --}}
+                 <input type="hidden" name="page" value="{{ $sms->currentPage() }}">
+
+                 {{--  The perPage() method retrieves the number of items per page in the paginator. --}}
+                 <input type="hidden" name="per_page" value="{{ $sms->perPage() }}"> 
+
+
                 <div class="grid-6 email-search-box">
                     <div class="form-floating">
                         <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
@@ -140,7 +151,9 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{ $sms->links('pagination::bootstrap-5') }}
+             {{-- This ensures that the search criteria are preserved in the pagination links. --}}
+            {{ $sms->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+
             </div>
 
             <div class="mobile-listing">

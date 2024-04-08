@@ -355,7 +355,7 @@ transferred into conclude state providers can finally conclude care for the pati
         </div>
     </div>
 
-    <div class="page">
+    <div class="page adminNewListingPages">
         {{ $cases->links('pagination::bootstrap-5') }}
     </div>
 @endsection

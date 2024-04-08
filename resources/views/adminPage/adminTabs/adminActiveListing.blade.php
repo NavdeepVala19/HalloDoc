@@ -361,7 +361,7 @@ giving service to the patient. --}}
         </div>
 
     </div>
-    <div class="page">
+    <div class="page adminNewListingPages">
         {{ $cases->links('pagination::bootstrap-5') }}
     </div>
 @endsection

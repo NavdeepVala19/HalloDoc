@@ -28,4 +28,8 @@ class Provider extends Model
         return $this->belongsTo(Role::class);
     }
 
+    public function Regions(){
+        return $this->hasOne(Regions::class,'id','regions_id');
+    }
+
 }

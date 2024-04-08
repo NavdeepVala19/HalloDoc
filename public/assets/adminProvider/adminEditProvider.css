@@ -52,56 +52,45 @@ input[type="checkbox"] {
     border-radius: 0px;
 }
 
+
+/* File Input Styling */
 .custom-file-input {
-    position: relative;
     width: 100%;
     height: 40px;
+    position: relative;
 }
 
-/* .custom-file-input input[type="file"] {
-    display: none;
-    position: absolute;
-} */
-
-.custom-file-input input[type="text"] {
-    width: 100%;
-    height: 100%;
-}
-
-.custom-file-input label {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px;
-    height: 100%;
-    background-color: var(--blue);
-    color: white;
+.upload-label {
+    /* position: relative; */
     cursor: pointer;
-}
-
-.custom-file-input label:hover {
-    background-color: #4560a0;
-}
-
-.create-signature-btn {
-    border: none;
-    display: flex;
-    height: 100%;
-    align-items: center;
-    background-color: var(--blue);
-    padding: 0 15px;
-    color: #fff;
+    width: 100%;
+    border: 1px solid grey;
+    height: 40px;
     border-radius: 5px;
 }
 
+.upload-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px 20px !important;
+}
 .responsive-btns {
     display: none;
 }
 
-
+.mobile-icons{
+    display: none;
+}
+.upload{
+    cursor: pointer;
+}
 @media (max-width: 550px) {
     .upload-txt {
         display: none;
+    }
+    .mobile-icons{
+        display: block;
     }
 }
 
@@ -117,7 +106,11 @@ input[type="checkbox"] {
 
 @media(max-width:768px) {
     .btns {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
     }
 
     table {

@@ -23,10 +23,19 @@ $(document).ready(function () {
         }
     });
     
-    $("#requestDTYSupportForm").click(function () {
-        if ($("#requestDTYSupportForm").valid()) {
-            $("#requestDTYSupportForm").submit();
-        }
-    });
+    // $("#requestDTYSupportForm").click(function () {
+    //     if ($("#requestDTYSupportForm").valid()) {
+    //         $("#requestDTYSupportForm").submit();
+    //     }
+    // });
   
+
+    $('.requestDTYClose').click(function (e) {
+        e.preventDefault();
+        console.log("here");
+         $("#requestDTYSupportForm").trigger("reset");
+        $("#requestDTYSupportForm").validate().resetForm();
+        $(".pop-up-request-support.form-control").removeClass("is-valid");
+        $(".pop-up-request-support .form-control").removeClass("is-invalid");
+    })
 });

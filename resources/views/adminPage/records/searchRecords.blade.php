@@ -4,7 +4,9 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/searchRecords.css') }}">
 @endsection
-
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
@@ -53,7 +55,6 @@
     <div class="section">
         <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">
             @csrf
-
             {{--  The currentPage() method retrieves the current page number of the paginator. --}}
             <input type="hidden" name="page" value="{{ $combinedData->currentPage() }}">
 
@@ -165,7 +166,10 @@
                             @endif
                         </td>
                         <td>{{date_format(date_create($data->created_date), 'd-m-Y')}}</td>
-                        <td>Oct 10,2023</td>
+                        <td> @if ($data->closed_date)
+                            {{date_format(date_create($data->closed_date), 'd-m-Y')}}
+                            @else 
+                        @endif </td>
                         <td>{{$data->email}}</td>
                         <td>{{$data->phone_number}}</td>
                         <td>{{$data->street}},{{$data->city}},{{$data->state}}</td>

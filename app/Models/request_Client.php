@@ -56,4 +56,8 @@ class request_Client extends Model
     public function request_wise_file(){
         return $this->belongsTo(RequestWiseFile::class,'request_id','request_id');
     }
+
+    public function requestClosed(){
+        return $this->belongsTo(RequestClosed::class, 'request_id', 'request_id');
+    }
 }

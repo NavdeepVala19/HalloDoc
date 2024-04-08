@@ -105,6 +105,16 @@
 .custom-file-input {
     width: 100%;
     height: 40px;
+    position: relative;
+}
+
+.upload-label {
+    /* position: relative; */
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid grey;
+    height: 40px;
+    border-radius: 5px;
 }
 
 .upload-btn {
@@ -114,14 +124,8 @@
     padding: 8px 20px !important;
 }
 
-.upload-label {
-    position: relative;
-    cursor: pointer;
-    width: 100%;
-    border: 1px solid grey;
-    height: 40px;
-    border-radius: 5px;
-}
+
+
 
 
 @media (max-width: 550px) {
@@ -140,24 +144,6 @@
     }
 }
 
-.custom-file-input {
-    position: relative;
-    width: 100%;
-    height: 40px;
-}
 
-.upload-label {
-    cursor: pointer;
-    width: 100%;
-    border: 1px solid grey;
-    padding: 6px;
-    height: 40px;
-    border-radius: 5px;
-}
 
-.upload-btn {
-    position: absolute;
-    right: 0;
-    border-top-right-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
-}
+

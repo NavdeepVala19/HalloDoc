@@ -5,7 +5,9 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/records.css') }}">
 <link rel="stylesheet" href="{{ URL::asset('assets/adminProvider/providerLocation.css') }}">
 @endsection
-
+@section('username')
+    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+@endsection
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
 <a href="{{ route('providerLocation') }}" class="active-link">Provider Location</a>
@@ -77,6 +79,8 @@
         // Call the function to update the map when the page loads
         updateMap();
     </script>
+</body>
+</html>
 </body>
 </html>
 

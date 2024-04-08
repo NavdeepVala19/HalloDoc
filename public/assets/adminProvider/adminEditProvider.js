@@ -1,5 +1,16 @@
 $(document).ready(function () {
 
+
+      // Create Request Upload file, show file name in label
+    $("#file-upload-request").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        if (fileName) {
+            $(".file-label").text(fileName);
+        } else {
+            $(".file-label").text("Select File");
+        }
+    });
+
     // **** This code is for sending throug pop-up to sendMailToContactProvider Function in adminProvider Page **** 
 
     $('.contact-btn').on("click", function () {
@@ -293,7 +304,7 @@ $(document).ready(function () {
 
     // *************************** This code is for show independent contractor agreement ******************************
 
-    $('.independent-contractor-input').change(function (e) {
+    $('#independent_contractor').change(function (e) {
         const filename = e.target.files[0].name;
         $("#Contractor").text(filename);
     });
