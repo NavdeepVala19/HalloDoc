@@ -2,18 +2,30 @@
 :root.light {
     --blue: rgb(0, 190, 232);
     --red: red;
+    --color-bg: #ffffff;
+    --color-fg: #121212;
+    --box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+        rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+        rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    --bs-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 :root.dark {
-    --color-bg: #263238;
-    --color-fg: #ffffff;
+    --color-bg: #121212 !important;
+    --color-fg: #ffffff !important;
     --blue: rgb(0, 190, 232);
+    --box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+        rgba(255, 255, 255, 0.842) 0px 0.125em 0.5em,
+        rgba(255, 255, 255, 0.63) 0px 0px 0px 1px inset;
+    --bs-box-shadow: 0 0.5rem 1rem rgba(170, 170, 170, 0.419);
 }
 
 html,
 body {
     font-family: "Poppins", sans-serif;
     font-style: normal;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
 }
 
 .wrapper {
@@ -29,15 +41,27 @@ body {
 a {
     text-decoration: none;
 }
-
 /* *********************** HEADER ************************ */
-
-nav {
-    padding-left: 25px;
+.header,
+.navbar-section {
+    background-color: var(--color-bg);
+    color: var(--color-fg) !important;
 }
+.navbar-section a,
+.navbar-section button {
+    color: var(--color-fg);
+}
+/* nav {
+    padding-left: 25px;
+} */
 
 .logo {
     width: 50%;
+}
+
+.mobile-message {
+    display: none;
+    color: #000;
 }
 
 nav a {
@@ -168,9 +192,7 @@ nav {
     border-radius: 8px;
     padding: 18px;
     margin-bottom: 24px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
-        rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
-        rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    box-shadow: var(--box-shadow);
 }
 
 form > h3 {
@@ -280,17 +302,39 @@ form > h3 {
     .welcome-msg {
         display: none;
     }
-
     .mobile-nav {
+        position: absolute;
+        top: 50px;
+        width: 50vw;
+        height: 100vh;
         display: flex;
         flex-direction: column;
-        z-index: 500;
-        align-items: center;
+        z-index: 999;
         gap: 5px !important;
-        height: 100vh;
-        width: 50vw;
-        top: 42px;
-        position: absolute;
+        border-left: 1px solid #dee2e6; /* add a border to separate it from the header */
+    }
+    .navbar-section a,
+    .navbar-section button {
+        font-size: 14px;
+    }
+    .active-link {
+        background-color: rgb(79, 198, 225);
+        border-bottom: none !important;
+    }
+    .mobile-message {
+        color: var(--color-fg);
+        display: block;
+    }
+
+    header {
+        height: 50px !important;
+    }
+    .blur-container.blur-active {
+        z-index: 998 !important;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(15px);
     }
 
     .pop-up {

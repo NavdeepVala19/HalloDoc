@@ -49,7 +49,14 @@ $(document).ready(function () {
             right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
         },
         selectable: true,
-        aspectRatio: 1.5,
+        // aspectRatio: 1.5,
+        windowResize: function (view) {
+            if (window.innerWidth < 600) {
+                view.setOption("aspectRatio", 1);
+            } else {
+                view.setOption("aspectRatio", 1.5);
+            }
+        },
         resourceAreaWidth: "20%",
         dayHeaderFormat: {
             day: "numeric",
@@ -256,6 +263,11 @@ $(document).ready(function () {
         );
         $(".save-btn").hide();
         $(".edit-btn").show();
+
+        $("#adminEditShiftForm").trigger("reset");
+        $("#adminEditShiftForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     $(".region-filter").on("change", function () {
@@ -359,5 +371,16 @@ $(document).ready(function () {
                 calendar.addEventSource(events);
             },
         });
+    });
+
+    $(".addShiftCancel").click(function () {
+        $("#adminAddShiftForm").trigger("reset");
+        $("#adminAddShiftForm").validate().resetForm();
+        $(
+            ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
+        ).removeClass("is-valid");
+        $(
+            ".pop-up form .form-control, .pop-up form .form-select, .pop-up form .form-check-input"
+        ).removeClass("is-invalid");
     });
 });

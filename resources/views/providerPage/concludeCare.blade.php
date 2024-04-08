@@ -80,7 +80,7 @@ required, without finalizing encounter form provider cannot conclude the case. -
                             @if ($doc)
                                 <tr>
                                     <td>{{ $doc->file_name }}</td>
-                                    <td class="action-column"><a href="{{ route('download', $doc->id) }}"
+                                    <td class="action-column m-2"><a href="{{ route('download', $doc->id) }}"
                                             class="primary-empty"><i class="bi bi-cloud-download"></i></a></td>
                                 </tr>
                             @endif

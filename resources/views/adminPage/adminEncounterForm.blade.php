@@ -4,10 +4,6 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/providerPage/encounterFormProvider.css') }}">
 @endsection
 
-@section('username')
-    {{ !empty($userData) ? $userData->username : '' }}
-@endsection
-
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>

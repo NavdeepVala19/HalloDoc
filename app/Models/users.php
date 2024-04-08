@@ -30,6 +30,10 @@ class users extends Model
     {
         return $this->hasMany(allusers::class);
     }
+    public function userRoles()
+    {
+        return $this->hasOne(UserRoles::class, 'user_id', 'id');
+    }
 
 
 

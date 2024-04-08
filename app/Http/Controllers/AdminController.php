@@ -345,11 +345,14 @@ class AdminController extends Controller
         ], [
             'document.required' => 'Select an File to upload!'
         ]);
+        $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
+        // dd($fileName);
         // $providerId = RequestTable::where('id', $id)->first()->physician_id;
-        $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+        $path = $request->file('document')->storeAs('public', $fileName);
         RequestWiseFile::create([
             'request_id' => $id,
-            'file_name' => $request->file('document')->getClientOriginalName(),
+            // 'file_name' => $request->file('document')->getClientOriginalName(),
+            'file_name' => $fileName,
             'admin_id' => 1,
         ]);
 
@@ -591,7 +594,7 @@ class AdminController extends Controller
             'business_name' => 'required',
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
-            'mobile' => 'required',
+            'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required',
             'business_contact' => 'required',
             'city' => 'required',
@@ -624,6 +627,18 @@ class AdminController extends Controller
     }
     public function updateBusiness(Request $request)
     {
+        $request->validate([
+            'business_name' => 'required',
+            'profession' => 'required|numeric',
+            'fax_number' => 'required|numeric',
+            'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'email' => 'required',
+            'business_contact' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+        ]);
+
         HealthProfessional::where('id', $request->vendor_id)->update([
             'vendor_name' => $request->buisness_name,
             'profession' => $request->profession,
@@ -758,6 +773,11 @@ class AdminController extends Controller
             'role_name' => 'required',
             'role' => 'required',
             'menu_checkbox' => 'required'
+        ]);
+
+        Role::where('id', $request->roleId)->update([
+            'name' => $request->role,
+            // 'account_type' => $request->role,
         ]);
 
         RoleMenu::where('role_id', $request->roleId)->delete();
@@ -935,12 +955,8 @@ class AdminController extends Controller
     public function emailRecordsView()
     {
         $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
-        $roleId = null; // Initialize with null
-        $receiverName = null; // Initialize with null
-        $email = null; // Initialize with null
-        $createdDate = null; // Initialize with null
-        $sentDate = null; // Initialize with null
-        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
+
+        return view('adminPage.records.emailLogs', compact('emails'));
     }
     public function searchEmail(Request $request)
     {
@@ -950,6 +966,9 @@ class AdminController extends Controller
         $createdDate = $request->get('created_date');
         $sentDate = $request->get('sent_date');
 
+        // Retrieve pagination parameters from the request
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 10);
 
         $emails = EmailLog::query();
 
@@ -979,7 +998,8 @@ class AdminController extends Controller
         }
 
         // Paginate results (10 items per page)
-        $emails = $emails->paginate(10);
+        $emails = $emails->paginate($perPage, ['*'], 'page', $page);
+        $emails->appends(request()->query());
 
         return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
     }
@@ -1118,27 +1138,47 @@ class AdminController extends Controller
     }
     public function searchPatientData(Request $request)
     {
-        $patients = request_Client::where('first_name', 'LIKE',  "%$request->first_name%")
-            ->when($request->last_name, function ($query) use ($request) {
-                $query->where('last_name', 'LIKE', "%$request->last_name%");
-            })
-            ->when($request->email, function ($query) use ($request) {
-                $query->where('email', 'LIKE',  "%$request->email%");
-            })
-            ->when($request->phone_number, function ($query) use ($request) {
-                $query->where('phone_number', 'LIKE', "%$request->phone_number%");
-            })->paginate(10);
+        $firstName = $request->first_name;
+        $lastName = $request->last_name;
+        $email = $request->email;
+        $phoneNumber = $request->phone_number;
 
-        return view('adminPage.records.patientHistory', compact('patients'));
+        $patients = request_Client::query();
+
+        if ($firstName) {
+            $patients->where('first_name', 'LIKE', "%$firstName%");
+        }
+        if ($lastName) {
+            $patients->where('last_name', 'LIKE', "%$lastName%");
+        }
+        if ($email) {
+            $patients->where('email', 'LIKE', "%$email%");
+        }
+        if ($phoneNumber) {
+            $patients->where('phone_number', 'LIKE', "%$phoneNumber%");
+        }
+
+        $patients = $patients->paginate(10);
+
+        return view('adminPage.records.patientHistory', compact('patients', 'firstName', 'lastName', 'email', 'phoneNumber'));
     }
     public function patientRecordsView($id = null)
     {
-
+        $requestId = request_Client::where('id', $id)->first()->request_id;
+        $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
+        $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
         $email = request_Client::where('id', $id)->pluck('email')->first();
         $data = request_Client::where('email', $email)->get();
         $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
         // dd($status);
-        return view('adminPage.records.patientRecords', compact('data', 'status'));
+        return view('adminPage.records.patientRecords', compact('data', 'status', 'documentCount', 'isFinalize'));
+    }
+    public function downloadEncounterForm($requestId)
+    {
+        $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first()->file_name;
+
+        $path = (storage_path() . '/app/encounterForm/' . $encounterFile);
+        return  response()->download($path);
     }
 
     // Cancel History Page
@@ -1220,7 +1260,6 @@ class AdminController extends Controller
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
         }
         $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
-
 
         $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
 

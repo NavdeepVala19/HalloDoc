@@ -143,4 +143,12 @@ $(document).ready(function () {
         var fileName = $(this).val().split("\\").pop();
         $(".upload-label").text(fileName);
     });
+
+    // Provider Send Agreement reset form when pop-up is closed
+    $(".providerSendAgreementClose").click(function () {
+        // $("#providerSendLinkForm").trigger("reset");
+        $("#providerSendAgreement").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
 });

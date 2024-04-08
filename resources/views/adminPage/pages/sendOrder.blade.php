@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -66,11 +66,14 @@
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">
-                        <select name="profession" class="form-select profession-menu @error('profession') is-invalid @enderror" id="floatingSelect"
-                            aria-label="Floating label select example">
+                        <select name="profession"
+                            class="form-select profession-menu @error('profession') is-invalid @enderror"
+                            id="floatingSelect" aria-label="Floating label select example">
                             <option selected disabled>Open this select menu</option>
                             @foreach ($types as $type)
-                                <option value="{{ $type->id }}">{{ $type->profession_name }}</option>
+                                <option value="{{ $type->id }}"
+                                    @if ($type->id == old('profession')) selected @endif>
+                                    {{ $type->profession_name }}</option>
                             @endforeach
                         </select>
                         <label for="floatingSelect">Select Profession</label>
@@ -79,10 +82,11 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <select name="vendor_id" class="form-select business-menu @error('vendor_id')
+                        <select name="vendor_id"
+                            class="form-select business-menu @error('vendor_id')
                             is-invalid
-                        @enderror" id="floatingSelect"
-                            aria-label="Floating label select example">
+                        @enderror"
+                            id="floatingSelect" aria-label="Floating label select example">
                             <option selected>Buisness</option>
                         </select>
                         <label for="floatingSelect">Select Business</label>
@@ -91,7 +95,8 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="business_contact" class="form-control business_contact @error('business_contact') is-invalid @enderror"
+                        <input type="text" name="business_contact"
+                            class="form-control business_contact @error('business_contact') is-invalid @enderror"
                             id="floatingInput" placeholder="Business Contact" value="{{ old('business_contact') }}">
                         <label for="floatingInput">Business Contact</label>
                         @error('business_contact')
@@ -99,15 +104,16 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control email @error('email') is-invalid @enderror" id="floatingInput"
-                            placeholder="email" value="{{ old('email') }}">
+                        <input type="email" name="email" class="form-control email @error('email') is-invalid @enderror"
+                            id="floatingInput" placeholder="email" value="{{ old('email') }}">
                         <label for="floatingInput">Email</label>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="fax_number" class="form-control fax_number @error('fax_number') is-invalid @enderror" id="floatingInput"
+                        <input type="text" name="fax_number"
+                            class="form-control fax_number @error('fax_number') is-invalid @enderror" id="floatingInput"
                             placeholder="Fax Number" value="{{ old('fax_number') }}">
                         <label for="floatingInput">Fax Number</label>
                         @error('fax_number')

@@ -302,15 +302,6 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('provider.view.upload');
     Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument'])->name('proivder.upload.doc');
 
-    // download document uploaded in view Uploads / Conclude Care
-    Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
-
-    // Delete document
-    Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->name('document.delete');
-
-    // Operations on ViewUploads page (Download All, Delete All)
-    Route::post('/operations', [ProviderController::class, 'operations'])->name('operations');
-
     // VIEW CASE PAGE  
     // show view case page as per the id
     // Route::get('provider-view-case/{id?}', [ProviderController::class, 'viewCase'])->name('provider-view-case');
@@ -465,10 +456,14 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Records Page 
     Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
-    Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+    // Route::post('/email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+    Route::get('/search-email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
     Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
-    Route::post('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
+    Route::get('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
     Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
+
+    // Download Encounter form on clicking view button
+    Route::get('/download-encounter-form/{requestId}', [AdminController::class, 'downloadEncounterForm'])->name('download.encounter.form');
 
     // ---------------------------- SCHEDULING ----------------------------
     // Admin Scheduling
@@ -492,8 +487,10 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Approve or Delete Selected shifts from shifts-review Page
     Route::post('/shift-action', [SchedulingController::class, 'shiftAction'])->name('admin.shifts.review');
     // Filter Shifts review page as per the region selected
-    Route::get('/filter-regions/{regionId}', [SchedulingController::class, 'filterRegions'])->name('filter-regions-shifts');
+    Route::post('/filter-regions', [SchedulingController::class, 'filterRegions'])->name('filter-regions-shifts');
 });
+
+
 
 // Provider Scheduling
 // Scheduling Calendar view 
@@ -512,6 +509,15 @@ Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'provi
 // These page is removed from SRS
 Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
 Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+
+// download document uploaded in view Uploads / Conclude Care
+Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
+
+// Delete document
+Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->name('document.delete');
+
+// Operations on ViewUploads page (Download All, Delete All)
+Route::post('/operations', [ProviderController::class, 'operations'])->name('operations');
 
 // For Testing Purpose only
 Route::get('/test', function () {

@@ -226,8 +226,6 @@ $(document).ready(function () {
 
         $(".new-buttons").hide();
         $(".default-buttons").show();
-
-        // $("#closeCase").submit();
     });
 
     $(".cancel-edit-btn").click(function () {
@@ -327,6 +325,14 @@ $(document).ready(function () {
     $(".request-support-btn").click(function () {
         $(".request-support").show();
         $(".overlay").show();
+    });
+
+    // Admin Send Agreement reset form when pop-up is closed
+    $(".adminSendAgreementClose").click(function () {
+        // $("#providerSendLinkForm").trigger("reset");
+        $("#adminSendAgreement").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     // ************************************* Shivesh *************************************

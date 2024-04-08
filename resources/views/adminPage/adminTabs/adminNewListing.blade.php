@@ -5,11 +5,6 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
 @endsection
 
-
-@section('username')
-{{ !empty($userData) ? $userData->username : '' }}
-@endsection
-
 @include('adminPage.adminTabs.adminHeader')
 
 @section('content')

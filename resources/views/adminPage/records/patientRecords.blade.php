@@ -8,7 +8,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -47,7 +47,8 @@
     <div class="m-5 spacing">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h3>Patient Record</h3>
-            <a href="" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('admin.patient.records.view') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
+                Back</a>
         </div>
         <div class="section">
             <div class="table-responsive">
@@ -70,13 +71,26 @@
                                     <td>{{ $record->created_at }}</td>
                                     <td>{{ $record->request->confirmation_no }}</td>
                                     <td>
-                                        @if ($status->provider)
-                                            Dr. {{ $status->provider->first_name }}
+                                        @if ($status)
+                                            @if ($status->provider)
+                                                Dr. {{ $status->provider->first_name }}
+                                            @endif
                                         @endif
                                     </td>
                                     <td>Concluded date</td>
-                                    <td>{{ $status->statusTable->status_type }}</td>
-                                    <td><button class="primary-empty">View</button></td>
+                                    <td>
+                                        @if ($status)
+                                            {{ $status->statusTable->status_type }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($isFinalize)
+                                            <a href="{{ route('download.encounter.form', $status->request_id) }}"
+                                                class="primary-empty">View</a>
+                                        @else
+                                            {{-- <button class="primary-empty">View</button> --}} -
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown ">
                                             <button class="primary-empty" type="button" data-bs-toggle="dropdown"
@@ -87,7 +101,9 @@
                                                 <li><a href="{{ route('admin.view.case', $record->id) }}"
                                                         class="dropdown-item" href="">View
                                                         Case</a></li>
-                                                <li><a class="dropdown-item" href="">(Count) Documents</a>
+                                                <li><a href="{{ route('admin.view.upload', $record->id) }}"
+                                                        class="dropdown-item" href="">({{ $documentCount }})
+                                                        Documents</a>
                                                 </li>
                                             </ul>
                                         </div>

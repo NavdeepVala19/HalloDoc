@@ -13,7 +13,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -130,16 +130,18 @@
                         <label for="floatingInput">Date Of Birth</label>
                     </div>
 
-                    <div class="d-flex gap-2 align-items-center">
-                        <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                            class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                            placeholder="Phone Number" disabled>
-                        <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
+                    <div class="form-floating">
+                        <div class="d-flex gap-2 align-items-center phone-number-container">
+                            <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
+                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                                placeholder="Phone Number" disabled>
+                            <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
+                        </div>
                         @error('phone_number')
-                            <div class="text-danger">{{ $message }}</div>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="form-floating ">
+                    <div class="form-floating">
                         <input type="email" name="email" value="{{ $data->requestClient->email }}"
                             class="form-control email @error('email') is-invalid @enderror" id="floatingInput"
                             placeholder="name@example.com" disabled>
@@ -157,10 +159,15 @@
                 </div>
 
                 <div class="text-end new-buttons">
-                    <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn">
+                    <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn" id="saveCloseCase">
                     <a type="button" class="primary-empty cancel-edit-btn">Cancel</a>
                 </div>
             </div>
         </form>
     </div>
+@endsection
+
+@section('script')
+    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection
