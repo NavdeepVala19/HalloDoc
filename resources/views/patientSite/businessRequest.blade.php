@@ -1,4 +1,4 @@
-@extends('patientSiteIndex')
+@extends('patientRequests')
 
 @section('css')
 
@@ -6,7 +6,7 @@
 
 @endsection
 
-@section('patientSiteContent')
+@section('patientRequests')
 
 <div class="container">
 
