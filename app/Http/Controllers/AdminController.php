@@ -339,11 +339,14 @@ class AdminController extends Controller
         ], [
             'document.required' => 'Select an File to upload!'
         ]);
+        $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
+        // dd($fileName);
         // $providerId = RequestTable::where('id', $id)->first()->physician_id;
-        $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+        $path = $request->file('document')->storeAs('public', $fileName);
         RequestWiseFile::create([
             'request_id' => $id,
-            'file_name' => $request->file('document')->getClientOriginalName(),
+            // 'file_name' => $request->file('document')->getClientOriginalName(),
+            'file_name' => $fileName,
             'admin_id' => 1,
         ]);
 
@@ -584,7 +587,7 @@ class AdminController extends Controller
             'business_name' => 'required',
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
-            'mobile' => 'required',
+            'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required',
             'business_contact' => 'required',
             'city' => 'required',
@@ -617,6 +620,18 @@ class AdminController extends Controller
     }
     public function updateBusiness(Request $request)
     {
+        $request->validate([
+            'business_name' => 'required',
+            'profession' => 'required|numeric',
+            'fax_number' => 'required|numeric',
+            'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'email' => 'required',
+            'business_contact' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+        ]);
+
         HealthProfessional::where('id', $request->vendor_id)->update([
             'vendor_name' => $request->buisness_name,
             'profession' => $request->profession,

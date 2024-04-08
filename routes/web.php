@@ -294,15 +294,6 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::get('/view-uploads/{id?}', [ProviderController::class, 'viewUpload'])->name('provider.view.upload');
     Route::post('/view-uploads/{id?}', [ProviderController::class, 'uploadDocument'])->name('proivder.upload.doc');
 
-    // download document uploaded in view Uploads / Conclude Care
-    Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
-
-    // Delete document
-    Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->name('document.delete');
-
-    // Operations on ViewUploads page (Download All, Delete All)
-    Route::post('/operations', [ProviderController::class, 'operations'])->name('operations');
-
     // VIEW CASE PAGE  
     // show view case page as per the id
     // Route::get('provider-view-case/{id?}', [ProviderController::class, 'viewCase'])->name('provider-view-case');
@@ -504,6 +495,15 @@ Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'provi
 // These page is removed from SRS
 Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
 Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+
+// download document uploaded in view Uploads / Conclude Care
+Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
+
+// Delete document
+Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->name('document.delete');
+
+// Operations on ViewUploads page (Download All, Delete All)
+Route::post('/operations', [ProviderController::class, 'operations'])->name('operations');
 
 // For Testing Purpose only
 Route::get('/test', function () {

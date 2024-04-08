@@ -615,10 +615,10 @@ class ProviderController extends Controller
         //     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
         // }
 
-        if (!Storage::exists($path)) {
-            // Handle case where file not found on disk
-            return redirect()->back()->with('FileDoesNotExists', "File You are trying to download doesn't exists");
-        }
+        // if (!Storage::exists($path)) {
+        //     return redirect()->back()->with('FileDoesNotExists', "File You are trying to download doesn't exists");
+        //     // Handle case where file not found on disk
+        // }
 
         return response()->download($path);
     }

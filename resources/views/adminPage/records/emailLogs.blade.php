@@ -89,7 +89,7 @@
                     </div>
                     <div class="button-section">
                         <button type="submit" class="primary-fill">Search</button>
-                        <button type="button" class="primary-empty clearButton">Clear</button>
+                        <a href="{{route('admin.email.records.view')}}" type="button" class="primary-empty clearButton">Clear</a>
                     </div>
                 </div>
             </form>
