@@ -13,7 +13,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/new/exportNew");
+        $('#filterExport').attr('action', "/admin-new-exportNew");
         $('#filterExport').submit();
 
     })
@@ -31,7 +31,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/pending/exportPending");
+        $('#filterExport').attr('action', "/admin-pending-exportPending");
         $('#filterExport').submit();
 
     })
@@ -49,7 +49,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/active/exportActive");
+        $('#filterExport').attr('action', "/admin-active-exportActive");
         $('#filterExport').submit();
 
     })
@@ -66,7 +66,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/conclude/exportConclude");
+        $('#filterExport').attr('action', "/admin-conclude-exportConclude");
         $('#filterExport').submit();
 
     })
@@ -84,7 +84,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/toclose/exportToClose");
+        $('#filterExport').attr('action', "/admin-toclose-exportToClose");
         $('#filterExport').submit();
 
     })
@@ -102,7 +102,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin/new/exportUnPaid");
+        $('#filterExport').attr('action', "/admin-new-exportUnPaid");
         $('#filterExport').submit();
 
     })

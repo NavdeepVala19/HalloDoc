@@ -173,9 +173,11 @@ class AdminDashboardController extends Controller
             'admin.user_id',
             'alt_phone',
             'role.name',
+            'regions.region_name'
         )
         ->leftJoin('role','role.id','admin.role_id')
         ->leftJoin('users','users.id','admin.user_id')
+        ->leftJoin('regions','regions.id','admin.region_id')
         ->where('user_id', $adminData->id)
         ->first();
 

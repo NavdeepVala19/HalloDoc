@@ -33,4 +33,8 @@ class Admin extends Model
     public function RoleMenu(){
         return $this->belongs(RoleMenu::class, 'role_id', 'role_id');
     }
+
+    public function Regions(){
+        return $this->belongsTo(Regions::class, 'regions_id', 'id');
+    }
 }

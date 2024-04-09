@@ -33,6 +33,7 @@ $(document).ready(function () {
         $('#providerAccSaveBtn').show();
         $('#providerAccCancelBtn').show();
         $("#provider-credentials-edit-btn").hide();
+        $("#provider-reset-password-btn").hide();
 
     });
 
@@ -52,6 +53,7 @@ $(document).ready(function () {
 
         $('#providerAccSaveBtn').show();
         $('#providerAccCancelBtn').show();
+        $("#provider-reset-password-btn").hide();
         $("#provider-credentials-edit-btn").hide();
     })
 
@@ -171,7 +173,7 @@ $(document).ready(function () {
 
     // **** Fetching role from role table ****
     $.ajax({
-        url: "/admin/provider/role",
+        url: "/admin-provider/role",
         type: "POST",
         success: function (data) {
             data.forEach(function (role) {
@@ -239,7 +241,7 @@ $(document).ready(function () {
         var is_notifications = checkbox.prop('checked') ? 1 : 0; // Ternary operator to set is_notify
 
         $.ajax({
-            url: "/admin/providers/stopNotification",
+            url: "/admin-providers/stopNotification",
             type: 'POST',
             data: {
                 stopNotificationsCheckId: stopNotificationsCheckId,
@@ -805,7 +807,7 @@ function fetchPaginatedResults(selectedId, page) {
     var token = $('meta[name="csrf-token"]').attr('content');
 
     $.ajax({
-        url: '/admin/providers/regionsFiltering?page=' + page,
+        url: '/admin-providers/regionsFiltering?page=' + page,
         type: 'POST',
         dataType: 'json',
         data: {

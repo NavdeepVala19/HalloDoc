@@ -345,6 +345,8 @@ class AdminProviderController extends Controller
 
     public function updateProviderAccountInfo(Request $request, $id)
     {
+      
+
         // update data of providers in users table
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
@@ -363,9 +365,11 @@ class AdminProviderController extends Controller
         $getProviderData->save();
 
         $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
-        $updateProviderDataAllUsers->status = $request->status_type;
+        if(!empty($updateProviderDataAllUsers)){
+            $updateProviderDataAllUsers->status = $request->status_type;
+            $updateProviderDataAllUsers->save();
+        }
 
-        $updateProviderDataAllUsers->save();
 
         return back()->with('message', 'account information is updated');
     }

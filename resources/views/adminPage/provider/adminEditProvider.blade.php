@@ -103,7 +103,7 @@
                             </select> -->
 
                         <select class="form-select" id="provider-role" name="role" disabled>
-                            <option selected>{{$getProviderData->role->name}}</option>
+                            <option selected value="{{$getProviderData->role->id}}">{{$getProviderData->role->name}}</option>
                         </select>
                     </div>
 

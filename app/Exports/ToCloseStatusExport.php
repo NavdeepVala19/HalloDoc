@@ -62,12 +62,18 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
             if (isset($adminToClose) && $adminToClose->requestClient) {
                 $state = $adminToClose->requestClient->state;
             }
+            if (isset($adminToClose) && $adminToClose->provider) {
+                $providerFirstName = $adminToClose->provider->first_name;
+            }
+            if (isset($adminToClose) && $adminToClose->provider) {
+                $providerLastName = $adminToClose->requestClient->last_name;
+            }
         
 
             return [
                 'PatientName' => $patientName. " ". $patientLastName,
                 'Date of Birth' => $dateOfBirth,
-                'Date of Service' => $adminToClose->created_at,
+                 'PhysicianName' => $providerFirstName.' '.$providerLastName,
                 'Address' => $street . ',' . $city . ',' . $state,
                 'Notes' => $adminToClose->requestClient->notes,
             ];

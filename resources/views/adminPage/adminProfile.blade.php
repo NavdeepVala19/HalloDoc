@@ -172,7 +172,7 @@
                     {{-- Dropdown State Selection --}}
                     <div class="form-floating">
                         <select class="form-select" id="listing_state_admin_account" aria-label="Floating label select example" disabled name="select_state">
-                            <option selected>Select State</option>
+                            <option selected>{{ $adminProfileData->region_name }}</option>
                         </select>
                         <label for="floatingSelect">State</label>
                     </div>

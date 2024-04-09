@@ -393,39 +393,39 @@ route::get('/admin-providers', [AdminProviderController::class, 'readProvidersIn
 
 route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 
-route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
-route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
+route::get('/admin-new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
+route::post('/admin-new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
-route::get('/admin/edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
+route::get('/admin-edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
 
-route::post('/admin/provider-updated-account/{id}', [AdminProviderController::class, 'updateProviderAccountInfo'])->name('updateProviderAccountInfo');
-route::post('/admin/provider-updated-info/{id}', [AdminProviderController::class, 'providerInfoUpdate'])->name('providerInfoUpdate');
-route::post('/admin/provider-updated-mail-info/{id}', [AdminProviderController::class, 'providerMailInfoUpdate'])->name('providerMailInfoUpdate');
-route::post('/admin/provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
-route::post('/admin/provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
+route::post('/admin-provider-updated-account/{id}', [AdminProviderController::class, 'updateProviderAccountInfo'])->name('updateProviderAccountInfo');
+route::post('/admin-provider-updated-info/{id}', [AdminProviderController::class, 'providerInfoUpdate'])->name('providerInfoUpdate');
+route::post('/admin-provider-updated-mail-info/{id}', [AdminProviderController::class, 'providerMailInfoUpdate'])->name('providerMailInfoUpdate');
+route::post('/admin-provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
+route::post('/admin-provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
 
-route::post('/admin/provider/role', [AdminProviderController::class, 'fetchRolesName']);
+route::post('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
 
-route::get('/admin/providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
+route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
-route::post('/admin/providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 
-route::get('/admin/providersLocations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
+route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
 
-Route::post('/admin/providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
+Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 
-route::post('admin/new/request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
+route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
 
-route::post('/admin/new/exportNew', [AdminController::class, 'exportNew'])->name('exportNewData');
-route::post('/admin/pending/exportPending', [AdminController::class, 'exportPending'])->name('exportPending');
-route::post('/admin/active/exportActive', [AdminController::class, 'exportActive'])->name('exportActive');
-route::post('/admin/conclude/exportConclude', [AdminController::class, 'exportConclude'])->name('exportConclude');
-route::post('/admin/toclose/exportToClose', [AdminController::class, 'exportToClose'])->name('exportToClose');
-route::post('/admin/new/exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('exportUnPaid');
-route::get('/admin/new/exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
+route::post('/admin-new-exportNew', [AdminController::class, 'exportNew'])->name('exportNewData');
+route::post('/admin-pending-exportPending', [AdminController::class, 'exportPending'])->name('exportPending');
+route::post('/admin-active-exportActive', [AdminController::class, 'exportActive'])->name('exportActive');
+route::post('/admin-conclude-exportConclude', [AdminController::class, 'exportConclude'])->name('exportConclude');
+route::post('/admin-toclose-exportToClose', [AdminController::class, 'exportToClose'])->name('exportToClose');
+route::post('/admin-new-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('exportUnPaid');
+route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
-route::get('/admin/createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
-route::post('/admin/createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
+route::get('/admin-createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
+route::post('/admin-createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
 
 route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
@@ -440,16 +440,16 @@ Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.
 Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
 
 route::get('/adminProfile/my-profile/Edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
-route::get('/admin/profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
+route::get('/admin-profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
 
-route::post('/admin/profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
+route::post('/admin-profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
 
-route::post('/admin/adminChangePassword/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('adminChangePassword');
-route::post('/admin/adminInfoEdit/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('adminInfoUpdate');
-route::post('/admin/adminMailEdit/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('adminMailInfoUpdate');
+route::post('/admin-adminChangePassword/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('adminChangePassword');
+route::post('/admin-adminInfoEdit/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('adminInfoUpdate');
+route::post('/admin-adminMailEdit/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('adminMailInfoUpdate');
 
-route::get('/admin/provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
-route::post('/admin/provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
+route::get('/admin-provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
+route::post('/admin-provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
 
 route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
 
