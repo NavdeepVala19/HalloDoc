@@ -11,8 +11,8 @@
 }
 
 :root.dark {
-    --color-bg: #121212 !important;
-    --color-fg: #ffffff !important;
+    --color-bg: #121212;
+    --color-fg: #ffffff;
     --blue: rgb(0, 190, 232);
     --box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
         rgba(255, 255, 255, 0.842) 0px 0.125em 0.5em,
@@ -40,6 +40,10 @@ body {
 
 a {
     text-decoration: none;
+}
+
+label{
+    color: #000;
 }
 /* *********************** HEADER ************************ */
 .header,
@@ -88,6 +92,9 @@ nav {
     color: #343434;
     background: none;
     border: none;
+}
+.records-menu{
+    background-color: var(--color-bg);
 }
 
 .records-menu a:hover {
@@ -228,6 +235,8 @@ form > h3 {
 .pop-up {
     width: 500px;
     background-color: #fff;
+    color: #000;
+    /* color: var(--color-fg); */
     border-radius: 10px;
     position: fixed;
     top: 50%;
@@ -265,11 +274,11 @@ form > h3 {
 }
 
 .popup-heading-section span {
-    color: #fff;
+    color: var(--color-fg);
 }
 
 .popup-heading-section button {
-    color: #fff;
+    color: var(--color-fg);
     background: none;
     border: none;
 }

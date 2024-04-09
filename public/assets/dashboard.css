@@ -1,5 +1,6 @@
 /* *********************** COMMON STYLING FOR ADMIN/PROVIDER DASHBOARD ************************ */
-:root {
+:root,
+:root.light {
     --primary-color: rgb(0, 190, 232);
     --patient-color: green;
     --family-color: rgb(186, 186, 99);
@@ -7,6 +8,12 @@
     --concierge-color: rgb(129, 129, 206);
     --vip-color: purple;
     --mobile-list-color: rgba(36, 178, 245, 0.463);
+    --listing-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+        rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+:root.dark {
+    --listing-shadow: rgba(255, 255, 255, 0.12) 0px 2px 4px 0px,
+        rgba(255, 255, 255, 0.32) 0px 2px 16px 0px;
 }
 
 .case {
@@ -203,8 +210,7 @@
 }
 
 .listing {
-    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
-        rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    box-shadow: var(--listing-shadow);
 }
 
 .table {
