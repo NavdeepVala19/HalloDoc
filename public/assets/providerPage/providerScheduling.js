@@ -147,31 +147,31 @@ $(document).ready(function () {
                                 : "pending-shift-style",
                     };
                     events.push(eventData);
+                } else {
+                    eventData = {
+                        title: event.title,
+                        start: startTime,
+                        end: endTime,
+                        resourceId: event.resourceId,
+                        textColor: "#000",
+                        extendedProps: {
+                            shiftId: event.shiftId,
+                            physicianId: event.physician_id,
+                            physicianName: event.title,
+                            regionId: event.region_id,
+                            regionName: event.region_name,
+                        },
+                        backgroundColor:
+                            event.status == "approved"
+                                ? "rgb(167, 204, 163)"
+                                : "rgb(240, 173, 212)",
+                        className:
+                            event.status == "approved"
+                                ? "approved-shift-style"
+                                : "pending-shift-style",
+                    };
+                    events.push(eventData);
                 }
-
-                eventData = {
-                    title: event.title,
-                    start: startTime,
-                    end: endTime,
-                    resourceId: event.resourceId,
-                    textColor: "#000",
-                    extendedProps: {
-                        shiftId: event.shiftId,
-                        physicianId: event.physician_id,
-                        physicianName: event.title,
-                        regionId: event.region_id,
-                        regionName: event.region_name,
-                    },
-                    backgroundColor:
-                        event.status == "approved"
-                            ? "rgb(167, 204, 163)"
-                            : "rgb(240, 173, 212)",
-                    className:
-                        event.status == "approved"
-                            ? "approved-shift-style"
-                            : "pending-shift-style",
-                };
-                events.push(eventData);
                 return events;
             });
             calendar.addEventSource(events);
@@ -194,7 +194,6 @@ $(document).ready(function () {
         $(".save-btn").hide();
         $(".edit-btn").show();
 
-        
         // $("#providerEditShiftForm").trigger("reset");
         $("#providerEditShiftForm").validate().resetForm();
         $(".pop-up form .form-control").removeClass("is-valid");

@@ -98,7 +98,6 @@
             </div>
 
             <!-- create a new request pop-up -->
-
          <div class="overlay"></div> 
             
             <div class="pop-up new-request">

@@ -1,41 +1,40 @@
 $(document).ready(function () {
-    $('#requestDTYSupportForm').validate({
+    $("#requestDTYSupportForm").validate({
         rules: {
             contact_msg: {
                 required: true,
-            },       
+            },
         },
         messages: {
             contact_msg: {
                 required: "Please enter a message",
             },
         },
-        errorElement: 'span',
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass('text-danger');
-            element.closest('.form-floating').append(error);
+            error.addClass("text-danger");
+            element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid').addClass('is-valid');
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+
+    $("#requestDTYSupportForm").click(function () {
+        if ($("#requestDTYSupportForm").valid()) {
+            $("#requestDTYSupportForm").submit();
         }
     });
-    
-    // $("#requestDTYSupportForm").click(function () {
-    //     if ($("#requestDTYSupportForm").valid()) {
-    //         $("#requestDTYSupportForm").submit();
-    //     }
-    // });
-  
 
-    $('.requestDTYClose').click(function (e) {
+    $(".requestDTYClose").click(function (e) {
         e.preventDefault();
         console.log("here");
-         $("#requestDTYSupportForm").trigger("reset");
+        $("#requestDTYSupportForm").trigger("reset");
         $("#requestDTYSupportForm").validate().resetForm();
         $(".pop-up-request-support.form-control").removeClass("is-valid");
         $(".pop-up-request-support .form-control").removeClass("is-invalid");
-    })
+    });
 });

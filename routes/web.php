@@ -252,7 +252,7 @@ route::post('/search-records/export', [AdminController::class, 'downloadFiltered
 Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 
 Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
-Route::match(['get', 'post'],'/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+Route::match(['get', 'post'], '/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
 
 Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
 Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
@@ -312,10 +312,6 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::get('/view-order/{id?}', [ProviderController::class, 'viewOrder'])->name('provider.view.order');
     Route::post('/provider-send-order', [ProviderController::class, 'sendOrder'])->name('provider.send.order');
 
-    // SEND LINK DASHBOARD PAGE
-    // Send Agreement via email and sms, pending page
-    Route::post('/send-agreement', [ProviderController::class, 'sendAgreementLink'])->name('send.agreement');
-
     // when consult is selected from the encounter of active listing perform operation
     Route::get('/provider-encounter', [ProviderController::class, 'encounter'])->name("provider.active.encounter");
 
@@ -356,6 +352,18 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::post('/conclude-care', [ProviderController::class, 'concludeCare'])->name('provider.conclude.care');
     // conclude Care upload docs
     Route::post('/upload-document-conclude-care', [ProviderController::class, 'uploadDocsConcludeCare'])->name('upload.conclude.care.docs');
+
+    // Provider Scheduling
+    // Scheduling Calendar view 
+    Route::get('/provider-scheduling', [ProviderSchedulingController::class, 'providerCalendarView'])->name('provider.scheduling');
+    // Provider information for add new shift
+    Route::get('/provider-information', [ProviderSchedulingController::class, 'providerInformation'])->name('provider.information');
+    // Provider created Shift data
+    Route::post('/provider-create-shift', [ProviderSchedulingController::class, 'providerShiftData'])->name('physician.scheduling.data');
+    // Provider shift data 
+    Route::get('/provider-shift', [ProviderSchedulingController::class, 'providerShift'])->name('provider.shift');
+    // Provider Edit Shift
+    Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'providerEditShift'])->name('provider.edit.shift');
 });
 
 // ************** ADMIN DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
@@ -423,7 +431,6 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::get('/close-case/{id}', [AdminController::class, 'closeCase'])->name('admin.close.case');
     Route::post('/close-case', [AdminController::class, 'closeCaseData'])->name('admin.close.case.save');
 
-
     // Partners Page in Admin
     Route::get('/partners/{id?}', [AdminController::class, 'viewPartners'])->name('admin.partners');
     // Search Vendors/Partners
@@ -490,26 +497,6 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::post('/filter-regions', [SchedulingController::class, 'filterRegions'])->name('filter-regions-shifts');
 });
 
-
-
-// Provider Scheduling
-// Scheduling Calendar view 
-Route::get('/provider-scheduling', [ProviderSchedulingController::class, 'providerCalendarView'])->name('provider.scheduling');
-// Provider information for add new shift
-Route::get('/provider-information', [ProviderSchedulingController::class, 'providerInformation'])->name('provider.information');
-// Provider created Shift data
-Route::post('/provider-create-shift', [ProviderSchedulingController::class, 'providerShiftData'])->name('physician.scheduling.data');
-// Provider shift data 
-Route::get('/provider-shift', [ProviderSchedulingController::class, 'providerShift'])->name('provider.shift');
-// Provider Edit Shift
-Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'providerEditShift'])->name('provider.edit.shift');
-
-
-// Cancel History Page
-// These page is removed from SRS
-Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
-Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
-
 // download document uploaded in view Uploads / Conclude Care
 Route::get('/download/{id}', [ProviderController::class, 'download'])->name('download');
 
@@ -518,6 +505,17 @@ Route::get('/delete-document/{id?}', [ProviderController::class, 'deleteDoc'])->
 
 // Operations on ViewUploads page (Download All, Delete All)
 Route::post('/operations', [ProviderController::class, 'operations'])->name('operations');
+
+// SEND LINK DASHBOARD PAGE
+// Send Agreement via email and sms, pending page
+Route::post('/send-agreement', [ProviderController::class, 'sendAgreementLink'])->name('send.agreement');
+
+
+// ---------------- REMOVED FROM SRS -----------------
+// Cancel History Page
+// These page is removed from SRS
+Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
+Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
 
 // For Testing Purpose only
 Route::get('/test', function () {

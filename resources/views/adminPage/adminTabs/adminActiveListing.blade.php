@@ -145,7 +145,8 @@ giving service to the patient. --}}
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{ old('search', request()->input('search')) }}">
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search"
+                            value="{{ old('search', request()->input('search')) }}">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                     <select class="form-select listing-region">
@@ -317,7 +318,7 @@ giving service to the patient. --}}
                                 <span>
                                     <i class="bi bi-cash"></i> Transfer :Admin transferred to
                                     @isset($case->requestClient)
-                                        {{ $case->requestClient->last_name }}
+                                        {{ $case->provider->first_name }} {{ $case->provider->last_name }}
                                     @endisset
                                 </span>
                                 <br>
@@ -341,12 +342,12 @@ giving service to the patient. --}}
                                     <a href="{{ route('admin.view.note', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button class="secondary-btn-1">Doctors Notes</button>
                                     <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
-                                        class="secondary-btn">View Uploads</a>
-                                    <button class="secondary-btn encounter-btn">Encouter</button>
+                                        class="secondary-btn text-center">View Uploads</a>
+                                    <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                        class="secondary-btn text-center">Encouter</a>
                                     <a href="{{ route('admin.view.order', $case->id) }}"
-                                        class="secondary-btn-2">orders</a>
+                                        class="secondary-btn-2 text-center">orders</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>

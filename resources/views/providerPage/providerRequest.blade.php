@@ -129,7 +129,7 @@
         </div>
     </div>
 @endsection
-{{-- @section('script')
+@section('script')
     <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/validation.js') }}"></script>
-@endsection --}}
+@endsection

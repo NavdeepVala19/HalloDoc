@@ -92,11 +92,9 @@ $(document).ready(function () {
             city: "Please enter your city",
             state: "Please enter your state",
         },
-        errorElement: "span",
         errorPlacement: function (error, element) {
-            // var errorDiv = $('<div class="text-danger"></div>');
-            error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            var errorDiv = $('<div class="text-danger"></div>');
+            element.closest(".form-floating").append(errorDiv);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

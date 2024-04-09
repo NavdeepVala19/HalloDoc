@@ -49,8 +49,16 @@
     </div>
 @endsection
 
-
 @section('content')
+    {{-- Case Cancelled Successfully --}}
+    @if (session('selectOption'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('selectOption') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="m-5 spacing">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h3>Requested Shifts</h3>
@@ -136,6 +144,7 @@
                     },
                     success: function(data) {
                         $('.filtered-shifts').html(data.html);
+                        $(".master-checkbox").prop("checked", false);
                     },
                     error: function(error) {
                         console.error(error);

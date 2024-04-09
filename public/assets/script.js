@@ -19,19 +19,12 @@ $(document).ready(function () {
         // Update body class and local storage
         $("html").removeClass(currentTheme).addClass(newTheme);
         localStorage.setItem("theme", newTheme);
-
-        // Update styles based on new theme (same logic as before)
     });
 
     $("nav > a").click(function (e) {
-        // e.preventDefault();
         $("nav > a").removeClass("active-link");
         $(this).addClass("active-link");
     });
-
-    // $("#toggle-mode").click(function () {
-    //     $("html").toggleClass("dark");
-    // });
 
     $(".menu-icon").click(function (e) {
         e.preventDefault();
@@ -42,6 +35,7 @@ $(document).ready(function () {
         );
         $(".navbar-section").toggleClass("mobile-nav");
         $(".blur-container").toggleClass("blur-active");
+        $("html, body").toggleClass("stop-scrolling");
     });
 
     $("#telephone").intlTelInput({

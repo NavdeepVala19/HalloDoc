@@ -61,6 +61,17 @@
     height: 100%;
 }
 
+.conclude-care-docs td {
+    padding: 15px;
+}
+.download-column {
+    width: 50px !important;
+    padding: 15px !important;
+}
+.date-column {
+    width: 300px !important;
+}
+
 @media (max-width: 550px) {
     .large-screen-btn {
         display: none;
@@ -90,6 +101,9 @@
     }
     .table-responsive {
         display: none;
+    }
+    .conclude-care-docs {
+        display: block !important;
     }
     .mobile-listing {
         display: block;

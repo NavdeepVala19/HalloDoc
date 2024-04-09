@@ -21,22 +21,6 @@ transferred into conclude state providers can finally conclude care for the pati
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.adminSendLink')
 
-    {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
-    {{-- The Encounter form should redirect to conclude page and will show these pop-up --}}
-    {{-- The pop-up will give download link of the medical-report(Encounter Form) --}}
-    <div class="pop-up encounter-finalized">
-        <div class="popup-heading-section d-flex align-items-center justify-content-between">
-            <span>Encounter Form</span>
-            <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="encounter-finalized-container">
-            <p>Encounter Form is finalized successfully!</p>
-            <div class="text-center">
-                <button class="primary-fill download-btn">Download</button>
-            </div>
-        </div>
-    </div>
-
     {{-- Request DTY Support pop-up ->  --}}
     @include('popup.requestDTYSupport')
 
@@ -163,7 +147,8 @@ transferred into conclude state providers can finally conclude care for the pati
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{ old('search', request()->input('search')) }}">
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search"
+                            value="{{ old('search', request()->input('search')) }}">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                     <select class="form-select listing-region" id="listing-region">
@@ -336,10 +321,11 @@ transferred into conclude state providers can finally conclude care for the pati
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
-                                        class="secondary-btn">View Uploads</a>
-                                    <button class="secondary-btn encounter-btn">Encouter</button>
+                                        class="secondary-btn text-center">View Uploads</a>
+                                    <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                        class="secondary-btn text-center">Encouter</a>
                                     <a href="{{ route('admin.view.order', $case->id) }}"
-                                        class="secondary-btn-2">Orders</a>
+                                        class="secondary-btn-2 text-center">Orders</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>

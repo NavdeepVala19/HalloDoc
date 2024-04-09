@@ -89,19 +89,19 @@
                     <table class="table table-hover ">
                         <thead class="table-secondary">
                             <tr>
-                                <th class="w-50"></th>
-                                <th class="w-25">Upload Date <i class="bi bi-arrow-up"></i></th>
-                                <th class="w-25">Actions</th>
+                                <th></th>
+                                <th class="date-column">Upload Date <i class="bi bi-arrow-up"></i></th>
+                                <th class="download-column">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($files as $file)
                                 <tr>
                                     <td>
-                                        <i class="bi bi-filetype-doc doc-symbol"></i> {{ $file->file_name }}
+                                        <i class="bi bi-filetype-doc doc-symbol"></i> {{ substr($file->file_name, 14) }}
                                     </td>
                                     <td>{{ $file->created_at }}</td>
-                                    <td>
+                                    <td class="download-column">
                                         <a href="{{ route('download', $file->id) }}" class="primary-empty"><i
                                                 class="bi bi-cloud-download"></i></a>
                                     </td>
@@ -159,7 +159,8 @@
                 </div>
 
                 <div class="text-end new-buttons">
-                    <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn" id="saveCloseCase">
+                    <input type="submit" value="Save" name="closeCaseBtn" class="primary-fill save-edit-btn"
+                        id="saveCloseCase">
                     <a type="button" class="primary-empty cancel-edit-btn">Cancel</a>
                 </div>
             </div>

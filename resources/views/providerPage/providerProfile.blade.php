@@ -10,7 +10,7 @@
 
 
 @section('nav-links')
-    <a href="{{ route('provider.dashboard') }}" >Dashboard</a>
+    <a href="{{ route('provider.dashboard') }}">Dashboard</a>
     <a href="">Invoicing</a>
     <a href="{{ route('provider.scheduling') }}">My Schedule</a>
     <a href="{{ route('provider.profile') }}" class="active-link">My Profile</a>
@@ -207,44 +207,33 @@
                         class="form-control" id="floatingInput" placeholder="Business Website" disabled>
                     <label for="floatingInput">Business Website</label>
                 </div>
-                <div>
-                    {{-- Select Photo --}}
-                    <div class="custom-file-input">
+                {{-- <div> --}}
+                {{-- Select Photo --}}
+                {{-- <div class="custom-file-input">
                         <input type="text" placeholder="Select Photo" readonly disabled>
                         <label for="file-input"><i class="bi bi-cloud-arrow-up me-2 "></i> <span
                                 class="upload-txt">Upload</span>
                         </label>
                         <input type="file" id="file-input" hidden disabled>
                     </div>
-                </div>
-                <div class="d-flex align-items-center gap-1 ">
-                    {{-- Select Signature --}}
-                    <div class="custom-file-input">
-                        <input type="text" placeholder="Select Signature" readonly disabled>
-                        <label for="signature-input"><i class="bi bi-cloud-arrow-up me-2"></i><span
-                                class="upload-txt">Upload</span></label>
-                        <input type="file" id="signature-input" hidden disabled>
-                    </div>
-                    <button class="create-signature-btn"><i class="bi bi-pencil me-2 "></i>Create</button>
-                    {{-- <canvas id="signatureCanvas" width="300" height="150"></canvas> --}}
-                </div>
+                </div> --}}
             </div>
             </form>
-            <hr>
-            <div>
+            {{-- <hr> --}}
+            {{-- <div>
                 <div class="d-flex gap-2 align-items-center mb-3 ">
                     <span>
                         Provider Agreement
                     </span>
-                    <button type="button" class="primary-fill">View</button>
+                    <a href="" type="button" class="primary-fill">View</a>
                 </div>
                 <div class="d-flex gap-2 align-items-center">
                     <span>
                         HIPPA Compliance
                     </span>
-                    <button type="button" class="primary-fill">View</button>
+                    <a href="" type="button" class="primary-fill">View</a>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
     </div>

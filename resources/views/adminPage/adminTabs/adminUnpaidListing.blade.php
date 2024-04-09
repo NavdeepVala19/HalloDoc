@@ -321,7 +321,8 @@ patient's email address and phone number. Once the patient accepts the agreement
                                     <a href="{{ route('admin.view.note', $case->id) }}"
                                         class="secondary-btn text-center">
                                         View Notes</a>
-                                    <a href="{{ route('provider.view.notes', $case->id) }}" class="secondary-btn">View
+                                    <a href="{{ route('admin.view.upload', $case->id) }}"
+                                        class="secondary-btn text-center">View
                                         Uploads</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>

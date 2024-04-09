@@ -340,8 +340,9 @@ pending state, providers need to send an agreement link to patients. --}}
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
-                                        class="secondary-btn">View Uploads</a>
-                                    <button class="secondary-btn encounter-btn">Encouter</button>
+                                        class="secondary-btn text-center">View Uploads</a>
+                                    <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                        class="secondary-btn text-center">Encouter</a>
                                     <button class="secondary-btn-2 clear-btn" data-id="{{ $case->id }}">Clear
                                         Case</button>
                                     <button class="secondary-btn">Email</button>

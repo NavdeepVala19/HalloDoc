@@ -36,6 +36,15 @@
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
+    {{-- Encounter Form need to be finalized --}}
+    @if (session('encounterFormRequired'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('encounterFormRequired') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">
@@ -61,13 +70,13 @@ required, without finalizing encounter form provider cannot conclude the case. -
                     <input type="text" value="{{ $case->id }}" name="caseId" hidden>
                     <div>
                         <input type="file" name="document" id="document" hidden>
-                        <label for="document" class="primary-empty upload-label"><i class="bi bi-cloud-upload"></i>
-                            Upload</label>
+                        <label for="document" class="primary-empty "><i class="bi bi-cloud-upload"></i>
+                          <span class="upload-txt">Upload</span> </label>
                     </div>
                 </form>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive conclude-care-docs">
                 <table class="table table-hover ">
                     <thead class="table-secondary">
                         <tr>
@@ -95,7 +104,7 @@ required, without finalizing encounter form provider cannot conclude the case. -
                         <h5>Provider Notes</h5>
                         <div class="form-floating mt-2 mb-4">
                             <textarea class="form-control" name="providerNotes" placeholder="notes" id="floatingTextarea2"></textarea>
-                            <label for="floatingTextarea2">Provide Notes</label>
+                            <label for="floatingTextarea2">Provider Notes</label>
                         </div>
                         <div class="text-end">
                             <button type="submit" class="primary-fill">Conclude Care</button>

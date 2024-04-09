@@ -196,7 +196,8 @@ pending state, providers need to send an agreement link to patients. --}}
                     {{-- @csrf --}}
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{ old('search', request()->input('search')) }}">
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search"
+                            value="{{ old('search', request()->input('search')) }}">
                         {{-- <input type="submit" class="primary-fill"> --}}
                     </div>
                     <select class="form-select listing-region">
@@ -290,8 +291,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                                 </a>
                                                 <a href="{{ route('admin.view.note', $case->id) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                                                <button class="transfer-btn assign-case-btn"
-                                                    data-id="{{ $case->id }}"><i
+                                                <button class="transfer-btn" data-id="{{ $case->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
                                                 <button class="clear-btn" data-id="{{ $case->id }}"><i
                                                         class="bi bi-x-circle me-2 ms-3"></i>Clear
@@ -389,15 +389,16 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <i class="bi bi-person-plus-fill"></i> Requestor:
                                     {{ $case->first_name }} {{ $case->last_name }}
                                 </span>
-                                <div class="grid-2-listing send-agreement-btn">
-                                    <button class="secondary-btn-2 text-center" data-id="{{ $case->id }}"
-                                        data-request_type_id={{ $case->request_type_id }}
-                                        data-phone_number={{ $case->phone_number }} data-email={{ $case->email }}>
+                                <div class="grid-2-listing ">
+                                    <button class="secondary-btn-2 text-center send-agreement-btn"
+                                        data-id="{{ $case->id }}" data-request_type_id={{ $case->request_type_id }}
+                                        data-phone_number="{{ $case->requestClient->phone_number }}"
+                                        data-email={{ $case->requestClient->email }}>
                                         Send Agreement</button>
                                     <a href="{{ route('admin.view.note', $case->id) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button class="secondary-btn-3 text-center transfer-btn assign-case-btn"
+                                    <button class="secondary-btn-3 text-center transfer-btn"
                                         data-id="{{ $case->id }}">Transfer</button>
                                     <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
                                         class="secondary-btn text-center">View

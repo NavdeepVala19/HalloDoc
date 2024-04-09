@@ -286,18 +286,6 @@ $(document).ready(function () {
 
     // Partners page filter partners based on profession selected
     $(".select-profession").on("change", function () {
-        let profession = $(this).val();
-        // console.log(profession);
-
-        // $(this).val(profession);
-
-        // if (profession === "0") {
-        //     // Redirect to all professions URL
-        //     window.location.href = "/partners";
-        // } else {
-        //     // Redirect based on selected profession
-        //     window.location.href = "/partners/" + profession;
-        // }
         $(this).closest("form").submit();
     });
 
@@ -545,8 +533,6 @@ $.ajax({
 
 // *** End of fetching regions from regions table ***
 
-
-
 // **** Fetching roles from role table ****
 $.ajax({
     url: "/admin-account-role",
@@ -568,5 +554,3 @@ $.ajax({
 });
 
 // *** End of Fetching roles from role table ***
-
-

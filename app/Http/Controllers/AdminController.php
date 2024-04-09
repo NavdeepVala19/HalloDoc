@@ -120,7 +120,6 @@ class AdminController extends Controller
 
         $cases = $query->orderByDesc('id')->paginate(10);
 
-        // dd($query->get());
         $viewName = 'adminPage.adminTabs.admin' . ucfirst($status) . 'Listing';
         return view($viewName, compact('cases', 'count', 'userData'));
     }
@@ -305,8 +304,6 @@ class AdminController extends Controller
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
         $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        // dd($adminAssignedCase, $providerTransferedCase, $adminTransferedCase);
-        // dd($adminTransferedCase);
         return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
@@ -346,7 +343,6 @@ class AdminController extends Controller
             'document.required' => 'Select an File to upload!'
         ]);
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-        // dd($fileName);
         // $providerId = RequestTable::where('id', $id)->first()->physician_id;
         $path = $request->file('document')->storeAs('public', $fileName);
         RequestWiseFile::create([
@@ -558,8 +554,6 @@ class AdminController extends Controller
         $search = $request->get('search');
         $id = $request->get('profession');
         $page = $request->query('page') ?? 1; // Default to page 1 if no page number provided
-
-        // dd($request->page);
 
         $query = HealthProfessional::with('healthProfessionalType');
 
@@ -1170,7 +1164,6 @@ class AdminController extends Controller
         $email = request_Client::where('id', $id)->pluck('email')->first();
         $data = request_Client::where('email', $email)->get();
         $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
-        // dd($status);
         return view('adminPage.records.patientRecords', compact('data', 'status', 'documentCount', 'isFinalize'));
     }
     public function downloadEncounterForm($requestId)
@@ -1194,7 +1187,6 @@ class AdminController extends Controller
         $email = $request->email;
         $date = $request->date;
         $phone_number = $request->phone_number;
-        // dd($request->name);
         $query = RequestStatus::where('status', 2);
 
         $query->whereHas('request', function ($query) use ($request) {
@@ -1500,7 +1492,6 @@ class AdminController extends Controller
             'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'role' => 'required',
         ]);
-        dd('ss');
 
         // Store Data in users table
 
@@ -1624,10 +1615,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         
         }
-        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $cases)->render();
-        // dd($data,$cases);
         return response()->json(['html' => $data]);
     }
 
@@ -1646,10 +1635,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         
         }
-        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-pending')->with('cases', $cases)->render();
-        // dd($data,$cases);
         return response()->json(['html' => $data]);
     }
 
@@ -1669,10 +1656,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         
         }
-        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-active')->with('cases', $cases)->render();
-        // dd($data,$cases);
         return response()->json(['html' => $data]);
     }
 
@@ -1691,10 +1676,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         
         }
-        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-conclude')->with('cases', $cases)->render();
-        // dd($data,$cases);
         return response()->json(['html' => $data]);
     }
 
@@ -1713,10 +1696,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         
         }
-        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-to-close')->with('cases', $cases)->render();
-        // dd($data,$cases);
         return response()->json(['html' => $data]);
     }
 
@@ -1735,10 +1716,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         
         }
-        // dd($cases);
 
         $data = view('adminPage.adminTabs.regions-filter-unpaid')->with('cases', $cases)->render();
-        // dd($data,$cases);
         return response()->json(['html' => $data]);
     }
 

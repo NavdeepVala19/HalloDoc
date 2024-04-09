@@ -61,7 +61,6 @@ class SchedulingController extends Controller
         $shiftDetailIds = ShiftDetailRegion::where('region_id', $id)->pluck('shift_detail_id')->toArray();
         // $shifts = ShiftDetail::where('id', $shiftDetailIds)->pluck('shift_id');
         $filteredShift = ShiftDetail::whereIn('id', $shiftDetailIds)->pluck('shift_id');
-        // dd($shiftDetailIds, $shifts);
         $shifts = Shift::with('shiftDetail')->whereIn('id', $filteredShift)->get();
 
         $formattedShift = $shifts->map(function ($event) {
@@ -166,7 +165,7 @@ class SchedulingController extends Controller
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
-            // 'created_by' => Auth::user()->id
+            'created_by' => Auth::user()->id
         ]);
         $shiftDetail = ShiftDetail::create([
             'shift_id' => $shift->id,
@@ -241,8 +240,11 @@ class SchedulingController extends Controller
     }
     public function shiftAction(Request $request)
     {
+        if (empty($request->selected)){
+            return redirect()->back()->with('selectOption', "Select Atleast one shift for performing operation!");   
+        }
         if ($request->action == 'approve') {
-            ShiftDetail::whereIn('id', $request->selected)->update(['status' => 2]);
+                ShiftDetail::whereIn('id', $request->selected)->update(['status' => 2]);
             return redirect()->back();
         } else {
             $shifts = ShiftDetail::whereIn('id', $request->selected)->get();
@@ -256,8 +258,7 @@ class SchedulingController extends Controller
     {
         $allShifts = ShiftDetailRegion::where('region_id', $request->regionId)->pluck('shift_detail_id')->toArray();
         $shiftDetails = ShiftDetail::whereHas('getShiftData')->whereIn('id', $allShifts)->where('status', 'pending')->paginate(10);
-        // dd($shiftDetails);
-        if($request->regionId == 0){
+        if ($request->regionId == 0) {
             $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
             $data = view('adminPage.scheduling.filteredShifts')->with('shiftDetails', $shiftDetails)->render();
         } else {
@@ -265,6 +266,5 @@ class SchedulingController extends Controller
         }
 
         return response()->json(['html' => $data]);
-        // return response()->json($shiftDetails);
     }
 }

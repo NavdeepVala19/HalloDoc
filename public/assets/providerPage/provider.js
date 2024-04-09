@@ -4,7 +4,7 @@ $(document).ready(function () {
     });
 
     // for showing action menu in new listing page
-    $(document).on('click',".action-btn",function (event) {
+    $(document).on("click", ".action-btn", function (event) {
         $(this).siblings(".action-menu").toggle();
         $(".action-menu").not($(this).next(".action-menu")).hide();
         $(".case-id").val($(this).data("id"));
@@ -110,6 +110,23 @@ $(document).ready(function () {
         }
     });
 
+    // Uncheck master checkbox when child-checkbox is changed from selected to unselected
+    $(document).on("click", ".child-checkbox", function () {
+        if (
+            $(".child-checkbox:not(:checked)").length > 0 &&
+            $(".master-checkbox").is(":checked")
+        ) {
+            $(".master-checkbox").prop("checked", false);
+        }
+        if (
+            $(".child-checkbox:checked").length ==
+                $(".child-checkbox").length &&
+            $(".master-checkbox:not(:checked)").length > 0
+        ) {
+            $(".master-checkbox").prop("checked", true);
+        }
+    });
+
     // For Send Aggrement Pop-up in pending listing page
     $(".send-agreement-btn").on("click", function () {
         $(".send-agreement").show();
@@ -119,7 +136,6 @@ $(document).ready(function () {
         $(".agreement-phone-number").val($(this).data("phone_number"));
         $(".agreement-email").val($(this).data("email"));
 
-        // console.log($(this).data("request_type_id"));
         if ($(this).data("request_type_id") == 1) {
             $(".request-detail").html(
                 '<i class="bi bi-circle-fill green me-2"></i>Patient'
@@ -130,11 +146,11 @@ $(document).ready(function () {
             );
         } else if ($(this).data("request_type_id") == 3) {
             $(".request-detail").html(
-                '<i class="bi bi-circle-fill red me-2"></i>Concierge'
+                '<i class="bi bi-circle-fill blue me-2"></i>Concierge'
             );
         } else if ($(this).data("request_type_id") == 4) {
             $(".request-detail").html(
-                '<i class="bi bi-circle-fill blue me-2"></i>Buisness'
+                '<i class="bi bi-circle-fill red  me-2"></i>Buisness'
             );
         }
     });

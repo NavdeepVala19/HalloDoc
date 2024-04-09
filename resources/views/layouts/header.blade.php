@@ -1,10 +1,11 @@
 {{-- HEADER SECTION --}}
 <header class="header d-flex align-items-center justify-content-between px-3 border-bottom shadow">
     <div class="d-flex align-items-center">
-        <a href="" class="primary-empty menu-icon">
+        <button class="primary-empty menu-icon">
             <i class="bi bi-list"></i>
-        </a>
-        <a href=""><img class="logo img-fluid" src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
+        </button>
+        <a href=""><img class="logo img-fluid" src="{{ URL::asset('/assets/logo.png') }}"
+                alt="HalloDoc Project Logo"></a>
     </div>
     <div class="d-flex align-items-center  gap-3">
         <span class="welcome-msg align-self-center">welcome,
@@ -23,11 +24,4 @@
 
 <nav class="navbar-section shadow">
     @yield('nav-links')
-    {{-- <a href="">Dashboard</a>
-    <a href="">Provider Location</a>
-    <a href="">My Profile</a>
-    <a href="">Providers</a>
-    <a href="">Partners</a>
-    <a href="">Access</a>
-    <a href="">Records</a> --}}
 </nav>

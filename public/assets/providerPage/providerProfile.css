@@ -1,3 +1,13 @@
+:root,
+:root.light {
+    --notes-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+        rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+:root.dark {
+    --notes-shadow: rgba(156, 156, 156, 0.221) 0px 10px 36px 0px,
+        rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
 .custom-file-input {
     position: relative;
     width: 100%;
@@ -46,7 +56,7 @@
 
 .notes-section > div {
     padding: 25px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    box-shadow: var(--notes-shadow) !important;
 }
 
 @media (max-width: 550px) {
@@ -64,15 +74,14 @@
     }
 }
 
-
-.admin-info-btns{
+.admin-info-btns {
     display: none;
 }
 
-.admin-mail-info-btns{
+.admin-mail-info-btns {
     display: none;
 }
 
-.admin-acc-btns{
+.admin-acc-btns {
     display: none;
 }

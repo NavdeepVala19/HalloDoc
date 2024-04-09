@@ -21,17 +21,16 @@
 
 <body>
     <div class="wrapper">
+        <div class="blur-container"></div>
         {{-- HEADER SECTION --}}
         @include('layouts.header')
 
-        <div class="blur-container">
-            <div class="main-container">
-                @yield('content')
-            </div>
-
-            {{-- FOOTER SECTION --}}
-            @include('layouts.footer')
+        <div class="main-container">
+            @yield('content')
         </div>
+
+        {{-- FOOTER SECTION --}}
+        @include('layouts.footer')
     </div>
 
 

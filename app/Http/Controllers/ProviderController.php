@@ -95,7 +95,6 @@ class ProviderController extends Controller
 
         $cases = $query->orderByDesc('id')->paginate(10);
 
-        // dd($query->get());
         $viewName = 'providerPage.providerTabs.' . $status . 'Listing';
         return view($viewName, compact('cases', 'count', 'userData'));
     }
@@ -809,6 +808,10 @@ class ProviderController extends Controller
 
     public function concludeCare(Request $request)
     {
+        $encounterForm = RequestWiseFile::where('request_id', $request->caseId)->where('is_finalize', true)->first();
+        if (empty($encounterForm)) {
+            return redirect()->back()->with('encounterFormRequired', 'Encounter Form need to be finalized to conclude Case!');
+        }
         $providerId = RequestTable::where('id', $request->caseId)->first()->physician_id;
         RequestTable::where('id', $request->caseId)->update([
             'status' => 7,
