@@ -455,7 +455,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::get('/admin-provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
     route::post('/admin-provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
 
-    route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
+route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
+route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('FilterUserAccessAccountTypeWiseMobileView');
 
     route::get('/admin/createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
     route::post('/admin/adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
