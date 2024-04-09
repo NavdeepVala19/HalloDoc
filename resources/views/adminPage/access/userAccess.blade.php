@@ -56,7 +56,7 @@
     <div class="section">
         <div>
             <form action="" method="post" id="userAccessFilteredData">
-                <div class="d-flex flex-row justify-content-between">
+                <div class="" id="accountType-CreateBtns">
                     <div class="form-floating m-3 account-type-drop-down">
                         <select class="form-select" name="role_name" id="accountType">
                             <option value="all">All</option>
@@ -64,9 +64,16 @@
                             <option value="physician" id="accountPhysician">Physician</option>
                         </select>
                         <label for="floatingSelect">Account Type</label>
+
+                        <select class="form-select" name="role_name" id="accountTypeMobile">
+                            <option value="all">All</option>
+                            <option value="admin" id="accountAdmin">Admin</option>
+                            <option value="physician" id="accountPhysician">Physician</option>
+                        </select>
+                        <label for="floatingSelect">Account Type</label>
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4" id="createAccBtns">
                         <a href="{{route('createAdminAccount')}}" class="primary-fill" id="createAdmin">Create Admin</a>
                         <a href="{{route('adminNewProvider')}}" class="primary-fill" id="createPhysician">Create Physician</a>
                     </div>

@@ -44,6 +44,22 @@ class AdminProviderController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    public function filterPhysicianThroughRegionsMobileView(Request $request)
+    {
+        dd($request->all());
+        
+        if ($request->selectedId == "all") {
+            $providersData = Provider::paginate(10);
+        } else {
+            $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
+            $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+        }
+
+        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with('providersData', $providersData)->render();
+        return response()->json(['html' => $data]);
+    }
+
     // ****************** This code is for Sending Mail ************************
 
     public function sendMailToContactProvider(Request $request, $id)

@@ -1259,6 +1259,7 @@ class AdminController extends Controller
 
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
+        
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')

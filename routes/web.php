@@ -409,6 +409,7 @@ route::post('/admin-provider/role', [AdminProviderController::class, 'fetchRoles
 route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
 route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
 route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
 

@@ -46,39 +46,55 @@ $(document).ready(function () {
         }
     })
 
+
+    $('#accountTypeMobile').on('click', function () {
+        if ($('#accountTypeMobile').val() == 'admin') {
+            $('#createAdmin').show();
+            $('#createPhysician').hide();
+        }
+        else if ($('#accountTypeMobile').val() == 'physician') {
+            $('#createPhysician').show();
+            $('#createAdmin').hide();
+        }
+        else if ($('#accountTypeMobile').val() == 'all'){
+            $('#createAdmin').hide();
+            $('#createPhysician').hide();
+        }
+    })
+
 })
 
 
 
 
 
-// function fetchPaginatedUserAccessMobileData(selectedAccount, page) {
-//     var token = $('meta[name="csrf-token"]').attr("content");
-//     $.ajax({
-//         url: "/user-access-mobile-filter?page=" + page,
-//         type: "POST",
-//         data: {
-//             selectedAccount: selectedAccount,
-//             _token: token,
-//         },
-//         success: function (data) {
-//             $(".mobile-listing").html(data.html); // Update results area
-//         },
-//     });
-// }
+function fetchPaginatedUserAccessMobileData(selectedAccount, page) {
+    var token = $('meta[name="csrf-token"]').attr("content");
+    $.ajax({
+        url: "/user-access-mobile-filter?page=" + page,
+        type: "POST",
+        data: {
+            selectedAccount: selectedAccount,
+            _token: token,
+        },
+        success: function (data) {
+            $(".mobile-listing").html(data.html); // Update results area
+        },
+    });
+}
 
-// $(document).on("click", ".pagination .page-link", function (event) {
-//     event.preventDefault();
-//     var page = $(this).text();
-//     var selectedAccount = $("#accountType").val();
-//     fetchPaginatedUserAccessData(selectedAccount, page);
-// });
+$(document).on("click", ".pagination .page-link", function (event) {
+    event.preventDefault();
+    var page = $(this).text();
+    var selectedAccount = $("#accountTypeMobile").val();
+    fetchPaginatedUserAccessMobileData(selectedAccount, page);
+});
 
-// $("#accountType").on("change", function (event) {
-//     event.preventDefault();
-//     var selectedAccount = $(this).val();
-//     fetchPaginatedUserAccessData(selectedAccount, 1);
-// });
+$("#accountTypeMobile").on("change", function (event) {
+    event.preventDefault();
+    var selectedAccount = $(this).val();
+    fetchPaginatedUserAccessMobileData(selectedAccount, 1);
+});
 
 
 

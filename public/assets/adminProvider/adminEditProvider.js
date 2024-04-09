@@ -834,3 +834,39 @@ $('#listing-region-admin-provider').on('change', function (event) {
     var selectedId = $(this).val();
     fetchPaginatedResults(selectedId, 1);
 });
+
+
+
+
+function fetchPaginatedResultsMobileView(selectedId, page) {
+    var token = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+        url: '/admin-providers-regionsFiltering-mobile?page=' + page,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            selectedId: selectedId,
+            _token: token
+        },
+        success: function (response) {
+            $('.mobile-listing').html(response.html); // Update results area
+        }
+
+    })
+
+}
+
+$(document).on('click', '.pagination .page-link', function (event) {
+    event.preventDefault();
+    var page = $(this).text();
+    console.log(page);
+    var selectedId = $("#listing-region-admin-provider").val();
+    fetchPaginatedResultsMobileView(selectedId, page);
+});
+
+$('#listing-region-admin-provider').on('change', function (event) {
+    event.preventDefault();
+    var selectedId = $(this).val();
+    fetchPaginatedResultsMobileView(selectedId, 1);
+});
