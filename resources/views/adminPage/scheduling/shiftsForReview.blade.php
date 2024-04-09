@@ -9,8 +9,6 @@
     {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
 @endsection
 
-
-
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
