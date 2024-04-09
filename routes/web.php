@@ -286,7 +286,6 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Send Link
     Route::post('/admin/send-mail', [AdminController::class, 'sendMail'])->name('admin.send.mail');
 
-
     // Cancel Case by admin
     Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
     Route::post('cancel-case-data', [AdminController::class, 'cancelCase'])->name('admin.cancel.case');
@@ -308,13 +307,10 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // ENCOUNTER FORM
     // Show Encounter Form when clicked on Encounter from Conclude State
-    Route::get(
-        '/admin-encounter-form/{id?}',
-        [AdminController::class, 'encounterFormView']
-    )->name('admin.encounter.form');
+    Route::get('/admin-encounter-form/{id?}', [AdminController::class, 'encounterFormView'])->name('admin.encounter.form');
 
+    // Changes Saved from admin on Medical Form(Encounter Form)
     Route::post('/admin-medical-form', [AdminController::class, 'encounterForm'])->name('admin.medical.data');
-
 
     // Clear Case by admin pending and close state
     Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');
@@ -339,10 +335,6 @@ Route::middleware('checkAdminLogin')->group(function () {
     // send orders admin page 
     Route::get('/admin-view-order/{id}', [AdminController::class, 'viewOrder'])->name('admin.view.order');
     Route::post('/admin-send-order', [AdminController::class, 'sendOrder'])->name('admin.send.order');
-    // Dynamically update data of business dropdown based on selection of profession
-    Route::get('/fetch-business/{id}', [AdminController::class, 'fetchBusiness'])->name('fetch.business');
-    // Dynamically fetch data of business based on selection in dropdown
-    Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessData'])->name('fetch.business.data');
 
     // Account Roles Access Page
     Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
@@ -430,6 +422,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::get('/admin-createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
     route::post('/admin-createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
 
+    route::get('/admin-new', [AdminController::class, 'fetchRegions']);
+
     route::post('/dropdown-data', [AdminController::class, 'filterPatientNew'])->name("filterByRegion");
     route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name("filterByRegionPending");
     route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name("filterByRegionActive");
@@ -457,11 +451,12 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
 
-    route::get('/admin/createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
-    route::post('/admin/adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
-
     route::get('/admin-createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
     route::post('/admin-adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
+
+    route::get('/admin-account-state', [AdminController::class, 'fetchRegionsForState'])->name('fetchStates');
+    route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetchRole');
+
 
     // Records Page
     Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
@@ -491,6 +486,12 @@ Route::post('/operations', [ProviderController::class, 'operations'])->name('ope
 // SEND LINK DASHBOARD PAGE
 // Send Agreement via email and sms, pending page
 Route::post('/send-agreement', [ProviderController::class, 'sendAgreementLink'])->name('send.agreement');
+
+// Dynamically update data of business dropdown based on selection of profession
+Route::get('/fetch-business/{id}', [AdminController::class, 'fetchBusiness'])->name('fetch.business');
+
+// Dynamically fetch data of business based on selection in dropdown
+Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessData'])->name('fetch.business.data');
 
 
 // ---------------- REMOVED FROM SRS -----------------

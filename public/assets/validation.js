@@ -436,7 +436,6 @@ $(document).ready(function () {
         errorPlacement: function (error, element) {
             let errorBox = $("<span class='text-danger'></span>");
             errorBox.append(error);
-
             element.closest(".form-floating").append(errorBox);
         },
         highlight: function (element, errorClass, validClass) {
@@ -452,6 +451,62 @@ $(document).ready(function () {
         } else {
             $(".default-buttons").hide();
             $(".new-buttons").show();
+        }
+    });
+    // Send Order Validation
+    $("#adminSendOrderForm, #providerSendOrderForm").validate({
+        rules: {
+            profession: {
+                required: true,
+            },
+            vendor_id: {
+                required: true,
+            },
+            business_contact: {
+                required: true,
+            },
+            fax_number: {
+                required: true,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+        },
+        messages: {
+            profession: {
+                required: "Select Profession to get Vendors option",
+            },
+            vendor_id: {
+                required: "Select Particular Vendor to have it's details",
+            },
+            business_contact: {
+                required: "Enter Business Contact to send Order",
+            },
+            fax_number: {
+                required: "Enter Fax number to send order",
+            },
+            email: {
+                required: "Enter Email to Send Order.",
+                email: "Your email address must be in the format of name@domain.com",
+            },
+        },
+        // errorElement: "span",
+        errorPlacement: function (error, element) {
+            let errorBox = $("<span class='text-danger'></span>");
+            errorBox.append(error);
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+    $("#adminSendOrderSubmit, #providerSendOrderSubmit").click(function () {
+        if ($("#adminSendOrderForm, #providerSendOrderForm").valid()) {
+            $("#adminSendOrderForm, #providerSendOrderForm").submit();
         }
     });
 
