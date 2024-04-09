@@ -1257,6 +1257,27 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+    public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
+    {
+        $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
+
+        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
+            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
+            ->whereIn('user_roles.role_id', [1, 2]);
+
+        if (!empty($account) && isset($account)) {
+            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
+        }
+        $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
+
+        $data = view('adminPage.access.userAccessFilterMobileView')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
+
+        return response()->json(['html' => $data]);
+    }
+
+
+
 
     public function sendRequestSupport(Request $request)
     {

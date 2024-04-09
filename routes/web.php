@@ -452,6 +452,7 @@ route::get('/admin-provider-profile/{id}', [AdminDashboardController::class, 'ad
 route::post('/admin-provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
 
 route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
+route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('FilterUserAccessAccountTypeWiseMobileView');
 
 route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
 

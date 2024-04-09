@@ -47,9 +47,7 @@ a {
     text-decoration: none;
 }
 
-label {
-    color: #000;
-}
+
 
 .toggle-mode {
     background-color: var(--color-bg) !important;
