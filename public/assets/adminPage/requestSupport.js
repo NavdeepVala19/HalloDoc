@@ -23,11 +23,11 @@ $(document).ready(function () {
         }
     });
     
-    // $("#requestDTYSupportForm").click(function () {
-    //     if ($("#requestDTYSupportForm").valid()) {
-    //         $("#requestDTYSupportForm").submit();
-    //     }
-    // });
+    $("#requestDTYSupportForm").click(function () {
+        if ($("#requestDTYSupportForm").valid()) {
+            $("#requestDTYSupportForm").submit();
+        }
+    });
   
 
     $('.requestDTYClose').click(function (e) {

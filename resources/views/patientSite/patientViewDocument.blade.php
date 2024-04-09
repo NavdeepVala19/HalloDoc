@@ -42,6 +42,7 @@
 
     <form action="{{route('downloadAllFiles')}}" method="post">
         @csrf
+        <input type="text" name="requestId" value="{{$documents->first()->request_id}}" hidden>
         <div class="docs-download">
             <h3>Documents</h3>
             <input type="submit" value="Download" class="primary-empty btn down-button" id="docs_download">

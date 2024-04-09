@@ -114,6 +114,7 @@
     width: 100%;
     border: 1px solid grey;
     height: 40px;
+    padding: 6px;
     border-radius: 5px;
 }
 
@@ -123,8 +124,6 @@
     right: 0;
     padding: 8px 20px !important;
 }
-
-
 
 
 

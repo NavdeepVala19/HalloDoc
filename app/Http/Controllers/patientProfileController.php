@@ -72,6 +72,7 @@ class patientProfileController extends Controller
         // Update data in users table
         $updateUserData = [
             'email' => $request->input('email'),
+            'username' =>$request->input('first_name') . $request->input('last_name'),
         ];
 
         // update Data in allusers table 

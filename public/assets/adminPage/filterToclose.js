@@ -1,10 +1,11 @@
 
-// Filter Patient by Region in NEW
+// Filter Patient by Region in toclose
+
 function fetchPaginatedResults(selectedId,activeStatus, page) {
     var token = $('meta[name="csrf-token"]').attr('content');
 
     $.ajax({
-        url: '/dropdown-data?page=' + page,
+        url: '/filter-toclose?page=' + page,
         type: 'POST',
         dataType: 'json',
         data: {
@@ -21,7 +22,6 @@ function fetchPaginatedResults(selectedId,activeStatus, page) {
         },
     })
 }
-
 
 $(document).on('click', '.pagination .page-link', function (event) {
     event.preventDefault();
@@ -40,26 +40,9 @@ $(document).on('click', '.pagination .page-link', function (event) {
 
 $('.listing-region').on('change', function (event) {
     event.preventDefault();
-
     var tab = $(".nav-link.active").attr("id");
     var words = tab.split("-");
     var selectedId = $(this).val();
     var activeStatus = words[1];
     fetchPaginatedResults(selectedId,activeStatus, 1);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

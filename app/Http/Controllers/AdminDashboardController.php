@@ -179,7 +179,6 @@ class AdminDashboardController extends Controller
         ->where('user_id', $adminData->id)
         ->first();
 
-        // dd($adminProfileData);
        
         return view('adminPage/adminProfile', compact('adminProfileData'));
 

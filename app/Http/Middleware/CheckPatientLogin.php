@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckPatientLogin
 {
@@ -17,8 +18,15 @@ class CheckPatientLogin
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            return $next($request);
+            $userId = Auth::user()->id;
+            $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
+            if ($roleId == 3) {
+                return $next($request);
+            } else {
+                return redirect()->route('loginScreen');
+            }
         }
+
         return redirect()->route('loginScreen');
     }
 }

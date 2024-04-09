@@ -217,7 +217,7 @@
                         {{-- Dropdown State Selection --}}
                         <div class="form-floating">
                             <select class="form-select listing-region" id="floatingSelect" aria-label="Floating label select example" disabled name="regions">
-                                <option name="regions" selected>{{$getProviderData->Regions->region_name}}</option>
+                                <option name="regions" selected  value="{{$getProviderData->Regions->id}}">{{$getProviderData->Regions->region_name}}</option>
                             </select>
                         </div>
                     </div>

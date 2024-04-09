@@ -43,9 +43,7 @@
 
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Reset Password</button>
-                    <div class="back-login"> <a href="{{route('loginScreen')}}"> <i class="bi bi-chevron-left"></i> Back
-                            To
-                            Login</a> </div>
+                    <div class="back-login"> <a href="{{route('loginScreen')}}"> <i class="bi bi-chevron-left"></i> Back To Login</a> </div>
                 </div>
             </form>
         </div>

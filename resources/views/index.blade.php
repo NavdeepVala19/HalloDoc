@@ -24,14 +24,20 @@
         {{-- HEADER SECTION --}}
         @include('layouts.header')
 
-        <div class="blur-container">
+     {{--   <div class="blur-container"> 
+        --}}
             <div class="main-container">
                 @yield('content')
             </div>
 
             {{-- FOOTER SECTION --}}
             @include('layouts.footer')
+
+            {{--
         </div>
+            --}}
+
+
     </div>
 
 

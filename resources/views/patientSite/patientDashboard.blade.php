@@ -17,13 +17,14 @@
             {{ Session::get('message') }}
         </div>
     @endif 
+    
 
     <div class="container-fluid">
         <h2>Medical History</h2>
         <div class="content shadow">
             <div class="button">
                 <button class="btn primary-empty create-btn mt-2 me-2 mb-2">Create new Request</button>
-                <button class="btn primary-empty plus create-new-request-btn"><i class="bi bi-plus"></i></buttonref=>
+                <button class="btn primary-empty plus create-new-request-btn"><i class="bi bi-plus"></i></button>
             </div>
 
             <div class="listing-table patient-history-table">
@@ -53,10 +54,12 @@
                 </table>
                 {{ $data->links('pagination::bootstrap-5') }}
             </div>
+
+           
+
             <div class="accordions">
                 <!-- create a new request pop-up -->
-             <div class="overlay"></div> 
-                 
+           
                 <div class="pop-up-accordion new-request-create">
                     <div class="popup-heading-section d-flex align-items-center justify-content-between">
                         <span>Create new Request</span>
@@ -98,10 +101,10 @@
             </div>
 
             <!-- create a new request pop-up -->
+  
 
-         <div class="overlay"></div> 
-            
             <div class="pop-up new-request">
+                
                 <div class="popup-heading-section d-flex align-items-center justify-content-between">
                     <span>Create new Request</span>
                     <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>

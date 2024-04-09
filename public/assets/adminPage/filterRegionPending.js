@@ -1,10 +1,10 @@
 
-// Filter Patient by Region in NEW
+// Filter Patient by Region in Pending
 function fetchPaginatedResults(selectedId,activeStatus, page) {
     var token = $('meta[name="csrf-token"]').attr('content');
 
     $.ajax({
-        url: '/dropdown-data?page=' + page,
+        url: '/filter-pending?page=' + page,
         type: 'POST',
         dataType: 'json',
         data: {
@@ -21,7 +21,6 @@ function fetchPaginatedResults(selectedId,activeStatus, page) {
         },
     })
 }
-
 
 $(document).on('click', '.pagination .page-link', function (event) {
     event.preventDefault();
@@ -47,19 +46,4 @@ $('.listing-region').on('change', function (event) {
     var activeStatus = words[1];
     fetchPaginatedResults(selectedId,activeStatus, 1);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

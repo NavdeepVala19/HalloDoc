@@ -274,11 +274,11 @@ form > h3 {
 }
 
 .popup-heading-section span {
-    color: var(--color-fg);
+    color: #fff;
 }
 
 .popup-heading-section button {
-    color: var(--color-fg);
+    color: #fff;
     background: none;
     border: none;
 }
