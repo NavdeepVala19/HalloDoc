@@ -115,6 +115,9 @@ class AdminController extends Controller
     public function cases(Request $request, $status = 'new', $category = "all")
     {
         $searchTerm = $request->search;
+        // $searchTerm = $request->session()->get('searchTerm', null);
+        // $category = $request->session()->get('category', 'all');
+
         $userData = Auth::user();
         $count = $this->totalCasesCount();
         $query = $this->buildQuery($status, $category, $searchTerm);
@@ -133,17 +136,22 @@ class AdminController extends Controller
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+        // Session::forget(['searchTerm', 'category']);
         return $this->cases($request, $status);
     }
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
     public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
+        // $request->session()->put('category', $category);
+
         return $this->cases($request, $status, $category);
     }
     // Search for specific keyword in first_name of requestTable and requestclient
     public function search(Request $request, $status = 'new', $category = 'all')
     {
+        // $request->session()->put('searchTerm', $request->search);
+
         return $this->cases($request, $status, $category);
     }
 
@@ -1565,7 +1573,7 @@ class AdminController extends Controller
         $adminAllUserData->street = $request->address1;
         $adminAllUserData->city = $request->city;
         $adminAllUserData->zipcode = $request->zip;
-        $adminAllUserData->mobile =$request->phone_number;
+        $adminAllUserData->mobile = $request->phone_number;
         $adminAllUserData->status = 'pending';
         $adminAllUserData->save();
 

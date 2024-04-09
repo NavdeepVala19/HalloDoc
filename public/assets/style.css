@@ -49,10 +49,6 @@ a {
     text-decoration: none;
 }
 
-label {
-    color: var(--label-text-color);
-}
-
 .toggle-mode {
     background-color: var(--color-bg) !important;
     color: var(--toggle-primary-fg-color) !important;
@@ -184,15 +180,15 @@ nav {
 /* ****************** COMMON STYLING **************************************** */
 .primary-empty {
     border: 1px solid var(--blue);
-    background-color: var(--color-bg);
+    background-color: #fff;
     padding: 8px 12px;
-    color: var(--toggle-primary-fg-color);
+    color: var(--blue);
     border-radius: 8px;
 }
 
 .primary-fill {
-    border: none;
     background-color: var(--blue);
+    border: none;
     padding: 8px 20px;
     color: #fff;
     border-radius: 5px;
