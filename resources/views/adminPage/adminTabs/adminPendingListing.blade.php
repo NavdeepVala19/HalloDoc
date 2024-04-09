@@ -422,6 +422,8 @@ pending state, providers need to send an agreement link to patients. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/RequestSupport.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/filterRegionPending.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

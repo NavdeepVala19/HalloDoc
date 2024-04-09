@@ -366,6 +366,8 @@ giving service to the patient. --}}
 
 @section('script')
     <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/RequestSupport.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/filterRegionActive.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

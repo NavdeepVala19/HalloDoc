@@ -59,28 +59,54 @@ class PatientViewDocumentsController extends Controller
     {
         $file = RequestWiseFile::where('id', $id)->first();
         $path = (public_path() . '/storage/' . $file->file_name);
-
         return response()->download($path);
     }
 
 
-
     public function downloadSelectedFiles(Request $request)
     {
-        $ids = $request->input('selected_files');
 
-        $zip = new ZipArchive;
-        $zipFile = 'documents.zip';
-
-        if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
-            foreach ($ids as $id) {
-                $file = RequestWiseFile::where('id', $id)->first();
-                $path = (public_path() . '/storage/' . $file->file_name);
-
-                $zip->addFile($path, $file->file_name);
+         if (empty($request->input('selected_files'))) {
+                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+                if ($data->isEmpty()) {
+                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+                }
+                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+            } else {
+                $ids = $request->input('selected_files');
             }
-            $zip->close();
-        }
-        return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+
+            $zip = new ZipArchive;
+            $zipFile = 'documents.zip';
+
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+                foreach ($ids as $id) {
+                    $file = RequestWiseFile::where('id', $id)->first();
+                    $path = (public_path() . '/storage/' . $file->file_name);
+
+                    $zip->addFile($path, $file->file_name);
+                }
+                $zip->close();
+            }
+            return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+
+
+            // -------------------------------------
+
+        // $ids = $request->input('selected_files');
+
+        // $zip = new ZipArchive;
+        // $zipFile = 'documents.zip';
+
+        // if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+        //     foreach ($ids as $id) {
+        //         $file = RequestWiseFile::where('id', $id)->first();
+        //         $path = (public_path() . '/storage/' . $file->file_name);
+
+        //         $zip->addFile($path, $file->file_name);
+        //     }
+        //     $zip->close();
+        // }
+        // return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
     }
 }

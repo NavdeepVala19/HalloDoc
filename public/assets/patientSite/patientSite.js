@@ -541,7 +541,8 @@ $(".master-checkbox").on("click", function () {
 });
 
 
-var isChecked = $('.master-checkbox').is(":checked");
+let isChecked = $('.master-checkbox').is(":checked",true);
+
 
 if (isChecked == false) {
     $('#docs_download').attr('disabled')
@@ -582,27 +583,6 @@ for (i = 0; i < acc.length; i++) {
 }
 
 
-
-//   ****************************************************************************
-// ***************** Fetching regions from regions table ******************
-$.ajax({
-    url: "/admin-new",
-    type: "GET",
-    success: function (data) {
-        data.forEach(function (region) {
-            $(".listing-region").append(
-                '<option value="' +
-                    region.id +
-                    '">' +
-                    region.region_name +
-                    "</option>"
-            );
-        });
-    },
-    error: function (error) {
-        console.error(error);
-    },
-});
 
         // View Uploads File Upload Functionality
     $("#file-upload").on("change", function () {

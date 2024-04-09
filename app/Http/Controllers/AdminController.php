@@ -119,7 +119,6 @@ class AdminController extends Controller
         $query = $this->buildQuery($status, $category, $searchTerm);
 
         $cases = $query->orderByDesc('id')->paginate(10);
-
         $viewName = 'adminPage.adminTabs.admin' . ucfirst($status) . 'Listing';
         return view($viewName, compact('cases', 'count', 'userData'));
     }
@@ -1608,12 +1607,11 @@ class AdminController extends Controller
         $search = "";
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        
         }
 
         $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $cases)->render();
@@ -1628,19 +1626,18 @@ class AdminController extends Controller
         $search = "";
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        
         }
 
         $data = view('adminPage.adminTabs.regions-filter-pending')->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
     }
 
-    
+
     public function filterPatientActive(Request $request)
     {
         $status = $request->status;
@@ -1649,12 +1646,11 @@ class AdminController extends Controller
         $search = "";
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        
         }
 
         $data = view('adminPage.adminTabs.regions-filter-active')->with('cases', $cases)->render();
@@ -1669,12 +1665,11 @@ class AdminController extends Controller
         $search = "";
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        
         }
 
         $data = view('adminPage.adminTabs.regions-filter-conclude')->with('cases', $cases)->render();
@@ -1689,12 +1684,11 @@ class AdminController extends Controller
         $search = "";
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        
         }
 
         $data = view('adminPage.adminTabs.regions-filter-to-close')->with('cases', $cases)->render();
@@ -1709,14 +1703,12 @@ class AdminController extends Controller
         $search = "";
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        
         }
-
         $data = view('adminPage.adminTabs.regions-filter-unpaid')->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
     }
@@ -1725,11 +1717,17 @@ class AdminController extends Controller
 
     public function exportNew(Request $request)
     {
+
         $status = 'new';
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $exportNewData = $this->fetchQuery($status, $category, $search, $region);
+
+        if ($region = "All Regions") {
+            $exportNewData = $this->buildQuery($status, $category, $search,);
+        } else {
+            $exportNewData = $this->fetchQuery($status, $category, $search, $region);
+        }
 
         $exportNew = new NewStatusExport($exportNewData);
         return Excel::download($exportNew, 'NewData.xls');
@@ -1740,7 +1738,12 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $exportPendingData = $this->fetchQuery($status, $category, $search, $region);
+
+        if ($region = "All Regions") {
+            $exportPendingData = $this->buildQuery($status, $category, $search,);
+        } else {
+            $exportPendingData = $this->fetchQuery($status, $category, $search, $region);
+        }
 
         $exportPending = new PendingStatusExport($exportPendingData);
         return Excel::download($exportPending, 'PendingData.xls');
@@ -1752,7 +1755,12 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $exportActiveData = $this->fetchQuery($status, $category, $search, $region);
+
+        if ($region = "All Regions") {
+            $exportActiveData = $this->buildQuery($status, $category, $search);
+        } else {
+            $exportActiveData = $this->fetchQuery($status, $category, $search, $region);
+        }
 
         $exportActive = new ActiveStatusExport($exportActiveData);
         return Excel::download($exportActive, 'ActiveData.xls');
@@ -1764,8 +1772,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $exportConcludeData = $this->fetchQuery($status, $category, $search, $region);
 
+        if ($region = "All Regions") {
+            $exportConcludeData = $this->buildQuery($status, $category, $search);
+        } else {
+            $exportConcludeData = $this->fetchQuery($status, $category, $search, $region);
+        }
+        
         $exportConclude = new ConcludeStatusExport($exportConcludeData);
         return Excel::download($exportConclude, 'ConcludeData.xls');
     }
@@ -1775,7 +1788,12 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $exportToCloseData = $this->fetchQuery($status, $category, $search, $region);
+
+        if ($region = "All Regions") {
+            $exportToCloseData = $this->buildQuery($status, $category, $search);
+        } else {
+            $exportToCloseData = $this->fetchQuery($status, $category, $search, $region);
+        }
 
         $exportToClose = new ToCloseStatusExport($exportToCloseData);
         return Excel::download($exportToClose, 'ToCloseData.xls');
@@ -1787,7 +1805,12 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $exportUnpaidData = $this->fetchQuery($status, $category, $search, $region);
+
+        if ($region = "All Regions") {
+            $exportUnpaidData = $this->buildQuery($status, $category, $search);
+        } else {
+            $exportUnpaidData = $this->fetchQuery($status, $category, $search, $region);
+        }
 
         $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
         return Excel::download($exportUnpaid, 'UnPaidData.xls');

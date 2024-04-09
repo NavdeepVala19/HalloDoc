@@ -28,6 +28,13 @@ $(document).ready(function () {
             $("#requestDTYSupportForm").submit();
         }
     });
+    
+    $("#requestDTYSupportForm").click(function () {
+        if ($("#requestDTYSupportForm").valid()) {
+            $("#requestDTYSupportForm").submit();
+        }
+    });
+  
 
     $(".requestDTYClose").click(function (e) {
         e.preventDefault();

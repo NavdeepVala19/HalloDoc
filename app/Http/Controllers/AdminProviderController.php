@@ -420,6 +420,7 @@ class AdminProviderController extends Controller
 
     public function providerMailInfoUpdate(Request $request, $id)
     {
+ 
         $request->validate([
             'address1' => 'required',
             'address2' => 'required',
@@ -531,9 +532,10 @@ class AdminProviderController extends Controller
         return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
     }
 
-    // **************** Show Provider Location *************
 
-    public function providerLocation()
+
+    // *** Show Provider Location ***
+    public function providerLocations()
     {
         $providers = Provider::get();
         return view('adminPage/provider/providerLocation', compact('providers'));

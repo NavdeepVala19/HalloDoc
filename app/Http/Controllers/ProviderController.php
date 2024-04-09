@@ -631,7 +631,6 @@ class ProviderController extends Controller
 
     public function operations(Request $request)
     {
-
         $email = request_Client::where('request_id', $request->requestId)->first()->email;
         if ($request->input('operation') == 'delete_all') {
             if (empty($request->input('selected'))) {

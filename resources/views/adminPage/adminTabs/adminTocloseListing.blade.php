@@ -216,7 +216,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                         {{ $case->requestClient->last_name }}
                                     </td>
                                     <td>{{ $case->requestClient->date_of_birth }}</td>
-                                    <td>Region</td>
+                                    <td>{{$case->requestClient->state}}</td>
                                     <td>
                                         @if ($case->provider)
                                             {{ $case->provider->first_name }} {{ $case->provider->last_name }}
@@ -360,7 +360,9 @@ pending state, providers need to send an agreement link to patients. --}}
 @endsection
 
 @section('script')
-    <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/RequestSupport.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/filterToclose.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

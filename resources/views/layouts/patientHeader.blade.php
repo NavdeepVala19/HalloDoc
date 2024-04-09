@@ -7,7 +7,7 @@
         </div>
     </nav>
     <div class="mt-5">
-        <a href="" class="primary-empty toggle-mode">
+        <a href="" class="primary-empty toggle-mode" id="toggle-mode">
             <i class="bi bi-moon"></i>
         </a>
     </div>

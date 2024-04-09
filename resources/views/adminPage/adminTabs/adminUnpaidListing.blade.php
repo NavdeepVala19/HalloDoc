@@ -333,15 +333,17 @@ patient's email address and phone number. Once the patient accepts the agreement
             </div>
         </div>
 
-    </div>
-    <div class="page adminNewListingPages">
-        {{ $cases->links('pagination::bootstrap-5') }}
+        <div class="page adminNewListingPages">
+            {{ $cases->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 @endsection
 
 
 @section('script')
-    <script defer src="{{ URL::asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/adminExportExcelData.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/RequestSupport.js') }}"></script>
+    <script defer src="{{ asset('assets/adminPage/filterUnpaid.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection
