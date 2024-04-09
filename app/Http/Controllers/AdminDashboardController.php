@@ -47,25 +47,25 @@ class AdminDashboardController extends Controller
 
         if ($request->email != $isEmailStored) {
 
-        // store email and phoneNumber in users table
-        $requestEmail = new users();
-        $requestEmail->username = $request->first_name . " " . $request->last_name;
-        $requestEmail->email = $request->email;
-        $requestEmail->phone_number = $request->phone_number;
-        $requestEmail->save();
+            // store email and phoneNumber in users table
+            $requestEmail = new users();
+            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->email = $request->email;
+            $requestEmail->phone_number = $request->phone_number;
+            $requestEmail->save();
 
-        // store all details of patient in allUsers table
-        $requestUsers = new allusers();
-        $requestUsers->user_id = $requestEmail->id;
-        $requestUsers->first_name = $request->first_name;
-        $requestUsers->last_name = $request->last_name;
-        $requestUsers->email = $request->email;
-        $requestUsers->mobile = $request->phone_number;
-        $requestUsers->street = $request->street;
-        $requestUsers->city = $request->city;
-        $requestUsers->state = $request->state;
-        $requestUsers->zipcode = $request->zipcode;
-        $requestUsers->save();
+            // store all details of patient in allUsers table
+            $requestUsers = new allusers();
+            $requestUsers->user_id = $requestEmail->id;
+            $requestUsers->first_name = $request->first_name;
+            $requestUsers->last_name = $request->last_name;
+            $requestUsers->email = $request->email;
+            $requestUsers->mobile = $request->phone_number;
+            $requestUsers->street = $request->street;
+            $requestUsers->city = $request->city;
+            $requestUsers->state = $request->state;
+            $requestUsers->zipcode = $request->zipcode;
+            $requestUsers->save();
         }
 
         $requestData = new RequestTable();
@@ -150,7 +150,27 @@ class AdminDashboardController extends Controller
 
     public function adminProfile($id)
     {
-        $adminProfileData = Admin::with('users')->where('user_id', $id)->first();
+        $adminProfileData = Admin::select(
+            'admin.first_name',
+            'admin.last_name',
+            'admin.email',
+            'admin.mobile',
+            'admin.address1',
+            'admin.address2',
+            'admin.city',
+            'admin.zip',
+            'admin.status',
+            'admin.user_id',
+            'alt_phone',
+            'role.name',
+            'regions.region_name'
+        )
+            ->leftJoin('role', 'role.id', 'admin.role_id')
+            ->leftJoin('users', 'users.id', 'admin.user_id')
+            ->leftJoin('regions', 'regions.id', 'admin.region_id')
+            ->where('user_id', $id)
+            ->first();
+            
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 
@@ -175,21 +195,21 @@ class AdminDashboardController extends Controller
             'role.name',
             'regions.region_name'
         )
-        ->leftJoin('role','role.id','admin.role_id')
-        ->leftJoin('users','users.id','admin.user_id')
-        ->leftJoin('regions','regions.id','admin.region_id')
-        ->where('user_id', $adminData->id)
-        ->first();
+            ->leftJoin('role', 'role.id', 'admin.role_id')
+            ->leftJoin('users', 'users.id', 'admin.user_id')
+            ->leftJoin('regions', 'regions.id', 'admin.region_id')
+            ->where('user_id', $adminData->id)
+            ->first();
 
-       
+
         return view('adminPage/adminProfile', compact('adminProfileData'));
-
     }
 
-    public function adminChangePassword(Request $request, $id){
+    public function adminChangePassword(Request $request, $id)
+    {
 
         $request->validate([
-            'password' =>'required|min:8|max:30'
+            'password' => 'required|min:8|max:30'
         ]);
 
         // Update data in users table
@@ -199,13 +219,13 @@ class AdminDashboardController extends Controller
         $updateAdminInfoInUsers = users::where('id', $id)->first()->update($updateUserData);
 
         return back()->with('message', 'Your profile is updated successfully');
-
     }
 
 
-    public function adminInfoUpdate(Request $request, $id){
+    public function adminInfoUpdate(Request $request, $id)
+    {
 
-        
+
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
@@ -217,7 +237,7 @@ class AdminDashboardController extends Controller
         // Update in admin table
 
         $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
-    
+
 
         $updateAdminInformation->first_name = $request->first_name;
         $updateAdminInformation->last_name = $request->last_name;
@@ -239,7 +259,8 @@ class AdminDashboardController extends Controller
         return back()->with('message', 'Your profile is updated successfully');
     }
 
-    public function adminMailInfoUpdate(Request $request, $id){
+    public function adminMailInfoUpdate(Request $request, $id)
+    {
 
         $request->validate([
             'address1' => 'required|min:2|max:30',
@@ -271,11 +292,8 @@ class AdminDashboardController extends Controller
         $updateAdminInfoAllUsers->street = $request->address1;
         $updateAdminInfoAllUsers->zipcode = $request->zip;
         $updateAdminInfoAllUsers->save();
-        
-      
+
+
         return back()->with('message', 'Your profile is updated successfully');
-
     }
- 
-
 }
