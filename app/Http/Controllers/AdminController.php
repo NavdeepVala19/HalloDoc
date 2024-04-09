@@ -1476,6 +1476,7 @@ class AdminController extends Controller
 
     public function createAdminAccount(Request $request)
     {
+
         $request->validate([
             'user_name' => 'required',
             'password' => 'required',
@@ -1516,16 +1517,16 @@ class AdminController extends Controller
         $storeAdminData->alt_phone = $request->alt_mobile;
         $storeAdminData->status = 'pending';
         $storeAdminData->role_id = $request->role;
-        $storeAdminData->regions_id = $request->state;
+        $storeAdminData->region_id = $request->state;
 
         $storeAdminData->save();
 
-        // foreach ($request->region_id as $region) {
-        //     AdminRegion::create([
-        //         'admin_id' => $storeAdminData->id,
-        //         'region_id' => $region
-        //     ]);
-        // }
+        foreach ($request->region_id as $region) {
+            AdminRegion::create([
+                'admin_id' => $storeAdminData->id,
+                'region_id' => $region
+            ]);
+        }
 
         // $data = AdminRegion::where('admin_id', $storeAdminData->id)->pluck('id')->toArray();
         // $ids = implode(',', $data);
@@ -1547,6 +1548,7 @@ class AdminController extends Controller
         $adminAllUserData->street = $request->address1;
         $adminAllUserData->city = $request->city;
         $adminAllUserData->zipcode = $request->zip;
+        $adminAllUserData->mobile =$request->phone_number;
         $adminAllUserData->status = 'pending';
         $adminAllUserData->save();
 

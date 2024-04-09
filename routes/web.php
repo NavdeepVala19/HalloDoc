@@ -455,8 +455,8 @@ route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAcc
 
 route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
 
-route::get('/admin/createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
-route::post('/admin/adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
+route::get('/admin-createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
+route::post('/admin-adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
 
 route::get('/admin-account-state', [AdminController::class, 'fetchRegionsForState'])->name('fetchStates');
 route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetchRole');
