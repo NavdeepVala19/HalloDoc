@@ -1,10 +1,10 @@
-@extends('patientSiteIndex')
+@extends('patientRequests')
 
 @section('css')
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/conciergeRequest.css') }}">
 @endsection
 
-@section('patientSiteContent')
+@section('patientRequests')
 
 <div class="container">
 

@@ -1,10 +1,10 @@
-@extends('patientSiteIndex')
+@extends('patientRequests')
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/submitScreen.css') }}">
 @endsection
 
-@section('patientSiteContent')
+@section('patientRequests')
     @if (Session::has('message'))
         <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
