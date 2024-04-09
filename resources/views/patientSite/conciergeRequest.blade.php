@@ -6,7 +6,7 @@
 
 @section('patientRequests')
 
-<div class="container">
+<div class="container mb-3">
 
     <!-- this div is for back button -->
 
