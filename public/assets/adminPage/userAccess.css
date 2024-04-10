@@ -7,14 +7,43 @@
     display: none;
 }
 
-@media (max-width: 750px) {
-    .account-type-drop-down {
-        width: 50% !important;
+#accountTypeMobile{
+    display: none;
+}
+
+#accountType-CreateBtns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 820px) {
+    #accountType {
+        display: none;
+    }
+    .account-type-drop-down{
+        width: 60% !important;
+    }
+    #accountTypeMobile{
+        display: block;
     }
 }
 
-@media (max-width: 470px) {
-    .account-type-drop-down {
-        width: 40% !important;
+
+@media (max-width: 570px) {
+    #accountType {
+        display: none;
+    }
+    .account-type-drop-down{
+        width: 100% !important;
+    }
+    #accountTypeMobile{
+        display: block;
+    }
+    #accountType-CreateBtns{
+        display: flex;
+        flex-direction: column;
     }
 }
+

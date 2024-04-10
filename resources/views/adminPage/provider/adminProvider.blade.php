@@ -86,8 +86,7 @@
                         <tbody>
                             @foreach ($providersData as $data)
                             <tr>
-                                <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1)
-                                    id="checkbox_{{ $data->id }}">
+                                <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
                                 </td>
                                 <td class="data"> {{ $data->first_name }}</td>
                                 <td class="data"> Physician</td>
@@ -151,7 +150,7 @@
                 @foreach ($providersData as $data)
                 <div class="mobile-list">
                     <div class="main-section mt-3">
-                        <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox"> {{ $data->first_name }}</h5>
+                        <h5 class="heading"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}"> {{ $data->first_name }}</h5>
                         <div class="detail-box">
                             <span>
                                 On Call Status: <strong>Available</strong>
@@ -163,7 +162,7 @@
                         <br>
                         <span><i class="bi bi-check2"></i>Status : {{ $data->status }} </span>
                         <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                            <button type="button" data-id='{{ $data->id }}' class="primary-empty contact-btn mt-2 mb-2">Contact</button>
+                            <button type="button" data-id='{{ $data->id }}' class="primary-empty contact-btn mt-2 mb-2" id="contact_btn_{{ $data->id }}">Contact</button>
                             <a href="{{ route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                         </div>
                     </div>

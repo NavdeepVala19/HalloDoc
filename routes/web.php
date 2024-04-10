@@ -27,6 +27,7 @@ use App\Http\Controllers\ProviderSchedulingController;
 
 //  ******* First page of patient site *********
 route::get('/', [Controller::class, 'patientSite'])->name('patientSite');
+route::get('/loader', [Controller::class, 'loader'])->name('loader');
 
 
 
@@ -90,7 +91,7 @@ route::middleware('CheckPatientLogin')->group(function () {
 
     //  ********* Edit profile of patient ***********
     route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
-    route::get('/patientProfileEdit/{id}', [patientProfileController::class, 'patientprofileEdit'])->name('patientProfileEditData');
+    route::get('/patient-profile-edit/{id}', [patientProfileController::class, 'patientprofileEdit'])->name('patientProfileEditData');
     route::post('/patientProfileUpdated', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
     route::get('/patientMapLocation', [patientProfileController::class, 'patientMapLocation'])->name('patientLocationOnMap');
 
@@ -403,7 +404,8 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
-    route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
     route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
 
