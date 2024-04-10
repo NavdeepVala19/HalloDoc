@@ -27,6 +27,13 @@ $(document).ready(function () {
 
     //  ********************************************************************************************
 
+    $('#patientRequestForm').submit(function(){
+        $('.loader').show();
+    })
+
+
+
+
     // ************************** This code is for create new request pop-up  ***********************
 
     $(".btn-someone").click(function () {
@@ -239,6 +246,12 @@ $(document).ready(function () {
 
     
 });
+
+
+
+$(window).on('load',function(){
+    $('#loading-icon').hide();
+})
 
 
 // ***************************************************************************************

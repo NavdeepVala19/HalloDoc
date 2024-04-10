@@ -134,7 +134,7 @@ class patientController extends Controller
         if ($isEmailStored == null) {
             // send email
             $emailAddress = $request->email;
-            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+            // Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
             EmailLog::create([
                 'role_id' => 3,

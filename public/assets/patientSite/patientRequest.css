@@ -167,9 +167,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    display: none !important;
 }
 
+#loading-icon{
+    display: none;
+}
 
 .bi-arrow-repeat{
   animation: spin 1s linear infinite;
