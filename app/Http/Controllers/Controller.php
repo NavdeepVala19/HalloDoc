@@ -21,5 +21,12 @@ class Controller extends BaseController
         return view('patientSite.submitScreen');
     }
 
+    public function loader()
+    {
+        return view('patientSite.loader');
+    }
+
+
+
 
 }

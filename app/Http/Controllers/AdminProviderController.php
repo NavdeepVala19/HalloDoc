@@ -47,8 +47,7 @@ class AdminProviderController extends Controller
 
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
-        dd($request->all());
-        
+           
         if ($request->selectedId == "all") {
             $providersData = Provider::paginate(10);
         } else {

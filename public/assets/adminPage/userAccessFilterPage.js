@@ -26,47 +26,33 @@ $("#accountType").on("change", function (event) {
     fetchPaginatedUserAccessData(selectedAccount, 1);
 });
 
-
-
-
-$(document).ready(function () { 
-
-    $('#accountType').on('click', function () {
-        if ($('#accountType').val() == 'admin') {
-            $('#createAdmin').show();
-            $('#createPhysician').hide();
+$(document).ready(function () {
+    $("#accountType").on("click", function () {
+        if ($("#accountType").val() == "admin") {
+            $("#createAdmin").show();
+            $("#createPhysician").hide();
+        } else if ($("#accountType").val() == "physician") {
+            $("#createPhysician").show();
+            $("#createAdmin").hide();
+        } else if ($("#accountType").val() == "all") {
+            $("#createAdmin").hide();
+            $("#createPhysician").hide();
         }
-        else if ($('#accountType').val() == 'physician') {
-            $('#createPhysician').show();
-            $('#createAdmin').hide();
+    });
+
+    $("#accountTypeMobile").on("click", function () {
+        if ($("#accountTypeMobile").val() == "admin") {
+            $("#createAdmin").show();
+            $("#createPhysician").hide();
+        } else if ($("#accountTypeMobile").val() == "physician") {
+            $("#createPhysician").show();
+            $("#createAdmin").hide();
+        } else if ($("#accountTypeMobile").val() == "all") {
+            $("#createAdmin").hide();
+            $("#createPhysician").hide();
         }
-        else if ($('#accountType').val() == 'all'){
-            $('#createAdmin').hide();
-            $('#createPhysician').hide();
-        }
-    })
-
-
-    $('#accountTypeMobile').on('click', function () {
-        if ($('#accountTypeMobile').val() == 'admin') {
-            $('#createAdmin').show();
-            $('#createPhysician').hide();
-        }
-        else if ($('#accountTypeMobile').val() == 'physician') {
-            $('#createPhysician').show();
-            $('#createAdmin').hide();
-        }
-        else if ($('#accountTypeMobile').val() == 'all'){
-            $('#createAdmin').hide();
-            $('#createPhysician').hide();
-        }
-    })
-
-})
-
-
-
-
+    });
+});
 
 function fetchPaginatedUserAccessMobileData(selectedAccount, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
@@ -79,6 +65,15 @@ function fetchPaginatedUserAccessMobileData(selectedAccount, page) {
         },
         success: function (data) {
             $(".mobile-listing").html(data.html); // Update results area
+
+            $(".main-section").click(function () {
+                // Target the next sibling .more-info element specifically
+                $(this).next(".details").toggleClass("active");
+
+                $(".details")
+                    .not($(this).next(".details"))
+                    .removeClass("active");
+            });
         },
     });
 }
@@ -95,7 +90,3 @@ $("#accountTypeMobile").on("change", function (event) {
     var selectedAccount = $(this).val();
     fetchPaginatedUserAccessMobileData(selectedAccount, 1);
 });
-
-
-
-

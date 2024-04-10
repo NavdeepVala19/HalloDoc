@@ -113,7 +113,7 @@
         </div>
 
         <div class="text-end">
-            <a href="{{ route('patientProfileEditData', $getEmailData->id) }}" class="primary-fill">Edit</a>
+            <a href="{{ route('patientProfileEditData', Crypt::encrypt($getEmailData->id)) }}" class="primary-fill">Edit</a>
         </div>
 
     </div>

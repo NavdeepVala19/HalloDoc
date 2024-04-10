@@ -26,8 +26,16 @@ class patientProfileController extends Controller
 
     public function patientprofileEdit($id)
     {
-        $getPatientData = allusers::where('id', '=', $id)->first();
-        return view("patientSite/patientProfileEdit", compact('getPatientData'));
+        try {
+            $id = Crypt::decrypt($id);
+            $getPatientData = allusers::where('id', '=', $id)->first();
+            if (!empty($getPatientData)) {
+                return view("patientSite/patientProfileEdit", compact('getPatientData'));
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+        }
     }
 
     public function patientUpdate(Request $request)
@@ -67,12 +75,12 @@ class patientProfileController extends Controller
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),
-           ];
+        ];
 
         // Update data in users table
         $updateUserData = [
             'email' => $request->input('email'),
-            'username' =>$request->input('first_name') . $request->input('last_name'),
+            'username' => $request->input('first_name') . $request->input('last_name'),
         ];
 
         // update Data in allusers table 

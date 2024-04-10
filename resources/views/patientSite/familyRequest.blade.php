@@ -21,38 +21,38 @@
                 </div>
                 <div class=" grid-2">
                     <div class="form-floating">
-                        <input type="text" class="form-control " id="floatingInput" value="{{ old('family_first_name') }}" name="family_first_name" placeholder="Your First Name">
-                        <label for="floatingInput">Your First Name</label>
+                        <input type="text" class="form-control @error('family_first_name') is-invalid @enderror" id="floatingInput1" value="{{ old('family_first_name') }}" name="family_first_name" placeholder="Your First Name">
+                        <label for="floatingInput1">Your First Name</label>
                         @error('family_first_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="text" class="form-control " id="floatingInput" value="{{ old('family_last_name') }}" name="family_last_name" placeholder="Your Last Name">
-                        <label for="floatingInput">Your Last Name</label>
+                        <input type="text" class="form-control @error('family_last_name') is-invalid @enderror" id="floatingInput2" value="{{ old('family_last_name') }}" name="family_last_name" placeholder="Your Last Name">
+                        <label for="floatingInput2">Your Last Name</label>
                         @error('family_last_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating" style="height: 58px;">
-                        <input type="tel" name="family_phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('family_phone_number') }}">
+                        <input type="tel" name="family_phone_number" class="form-control phone @error('family_phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('family_phone_number') }}">
                         @error('family_phone_number')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="family_email">
-                        <label for="floatingInput">Email</label>
+                        <input type="email" class="form-control email @error('family_email') is-invalid @enderror" id="floatingInput3" placeholder="name@example.com" name="family_email">
+                        <label for="floatingInput3">Email</label>
                         @error('family_email')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" value="{{ old('family_relation') }}" name="family_relation" placeholder="Relation with Patient">
-                        <label for="floatingInput">Relation with Patient</label>
+                        <input type="text" class="form-control @error('family_relation') is-invalid @enderror" id="floatingInput4" value="{{ old('family_relation') }}" name="family_relation" placeholder="Relation with Patient">
+                        <label for="floatingInput4">Relation with Patient</label>
                         @error('family_relation')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -81,23 +81,23 @@
 
                 <div class=" grid-2">
                     <div class="form-floating">
-                        <input type="text" name="first_name" class="form-control first_name" id="floatingInput" value="" placeholder="First Name" value="{{ old('first_name') }}">
-                        <label for="floatingInput">First Name</label>
+                        <input type="text" name="first_name" class="form-control first_name @error('first_name') is-invalid @enderror" id="floatingInput5" value="" placeholder="First Name" value="{{ old('first_name') }}">
+                        <label for="floatingInput5">First Name</label>
                         @error('first_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="text" name="last_name" class="form-control last_name" id="floatingInput" value="" placeholder="Last Name" value="{{ old('last_name') }}">
-                        <label for="floatingInput">Last Name</label>
+                        <input type="text" name="last_name" class="form-control last_name @error('last_name') is-invalid @enderror" id="floatingInput6" value="" placeholder="Last Name" value="{{ old('last_name') }}">
+                        <label for="floatingInput6">Last Name</label>
                         @error('last_name')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating">
-                        <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth" placeholder="date of birth" value="{{ old('date_of_birth') }}">
-                        <label for="floatingInput">Date Of Birth</label>
+                        <input type="date" class="form-control date_of_birth @error('date_of_birth') is-invalid @enderror" id="floatingInput7" name="date_of_birth" placeholder="date of birth" value="{{ old('date_of_birth') }}">
+                        <label for="floatingInput7">Date Of Birth</label>
                         @error('date_of_birth')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -112,14 +112,14 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-floating ">
-                            <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{ old('email') }}">
-                            <label for="floatingInput">Email</label>
+                            <input type="email" class="form-control email @error('email') is-invalid @enderror" id="floatingInput8" placeholder="name@example.com" name="email" value="{{ old('email') }}">
+                            <label for="floatingInput8">Email</label>
                             @error('email')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="" style="height: 58px;">
-                            <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
+                            <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
                             @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -134,36 +134,36 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-floating ">
-                            <input type="text" name="street" class="form-control street" id="floatingInput" placeholder="Street" value="{{ old('street') }}">
-                            <label for="floatingInput">Street</label>
+                            <input type="text" name="street" class="form-control street @error('street') is-invalid @enderror" id="floatingInput9" placeholder="Street" value="{{ old('street') }}">
+                            <label for="floatingInput9">Street</label>
                             @error('street')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating ">
-                            <input type="text" name="city" class="form-control city" id="floatingInput" placeholder="City" value="{{ old('city') }}">
-                            <label for="floatingInput">City</label>
+                            <input type="text" name="city" class="form-control city @error('city') is-invalid @enderror" id="floatingInput10" placeholder="City" value="{{ old('city') }}">
+                            <label for="floatingInput10">City</label>
                             @error('city')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating ">
-                            <input type="text" name="state" class="form-control state" id="floatingInput" placeholder="State" value="{{ old('state') }}">
-                            <label for="floatingInput">State</label>
+                            <input type="text" name="state" class="form-control state @error('state') is-invalid @enderror" id="floatingInput11" placeholder="State" value="{{ old('state') }}">
+                            <label for="floatingInput11">State</label>
                             @error('state')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating w-100">
-                            <input type="number" name="zipcode" class="form-control zipcode" id="floatingInput" placeholder="Zipcode" value="{{ old('zipcode') }}">
-                            <label for="floatingInput">Zipcode</label>
+                            <input type="number" name="zipcode" class="form-control zipcode @error('zipcode') is-invalid @enderror" id="floatingInput12" placeholder="Zipcode" value="{{ old('zipcode') }}">
+                            <label for="floatingInput12">Zipcode</label>
                             @error('zipcode')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-floating ">
-                            <input type="number" name="room" class="form-control room" id="floatingInput" placeholder="room" value="{{ old('room') }}">
-                            <label for="floatingInput">Room</label>
+                            <input type="number" name="room" class="form-control room @error('room') is-invalid @enderror" id="floatingInput13" placeholder="room" value="{{ old('room') }}">
+                            <label for="floatingInput13">Room (optional)</label>
                             @error('room')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -187,6 +187,9 @@
                                     <span class="upload-txt">Upload</span>
                                 </span>
                             </label>
+                            @error('docs')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -222,5 +225,5 @@
 
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ URL::asset('assets/patientSite/familyRequestFormValidation.js') }}"></script>
 @endsection

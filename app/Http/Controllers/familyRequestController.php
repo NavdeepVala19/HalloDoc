@@ -43,6 +43,7 @@ class familyRequestController extends Controller
             'family_email' => 'required|email|min:2|max:30',
             'family_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'family_relation' => 'required',
+            'docs'=>'required|file|mimes:jpg,png,pdf,doc|max:2048',
         ]);
 
 

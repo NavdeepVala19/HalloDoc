@@ -851,6 +851,15 @@ function fetchPaginatedResultsMobileView(selectedId, page) {
         },
         success: function (response) {
             $('.mobile-listing').html(response.html); // Update results area
+            
+               $(".main-section").click(function () {
+                // Target the next sibling .more-info element specifically
+                $(this).next(".details").toggleClass("active");
+
+                $(".details")
+                    .not($(this).next(".details"))
+                    .removeClass("active");
+            });
         }
 
     })
