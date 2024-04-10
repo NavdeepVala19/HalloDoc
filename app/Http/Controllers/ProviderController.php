@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\HealthProfessionalType;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -79,7 +80,7 @@ class ProviderController extends Controller
         // Apply search condition(Enter condition only when any search query is requested)
         if ($searchTerm) {
             $query->whereHas('requestClient', function ($q) use ($searchTerm) {
-                $q->where('first_name', 'like', "%$searchTerm%");
+                $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
             });
         }
 
@@ -89,7 +90,12 @@ class ProviderController extends Controller
     // Method to retrieve cases based on status, category, and search term
     public function cases(Request $request, $status = 'new', $category = "all")
     {
-        $searchTerm = $request->search;
+        // $searchTerm = $request->search;
+
+        // Use Session to filter by category and searchTerm
+        $searchTerm = $request->session()->get('searchTerm', null);
+        $category = $request->session()->get('category', 'all');
+
         $userData = Auth::user();
         $providerId = Provider::where('user_id', $userData->id)->first()->id;
         $count = $this->totalCasesCount($providerId);
@@ -110,18 +116,29 @@ class ProviderController extends Controller
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+        // Forget from session whenever a new status is opened
+        Session::forget(['searchTerm', 'category']);
+
         return $this->cases($request, $status);
     }
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
     public function filter(Request $request, $status = 'new', $category = 'all')
     {
+
+        // Store category in the session
+        $request->session()->put('category', $category);
+
         return $this->cases($request, $status, $category);
     }
 
     // Search for specific keyword in first_name of requestTable and requestclient
     public function search(Request $request, $status = 'new', $category = 'all')
     {
+
+        // store searchTerm in session
+        $request->session()->put('searchTerm', $request->search);
+
         return $this->cases($request, $status, $category);
     }
 
@@ -153,7 +170,7 @@ class ProviderController extends Controller
     public function transferCase(Request $request)
     {
         $request->validate([
-            'notes' => 'required',
+            'notes' => 'required|max:100|min:5|alpha_num',
         ]);
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         RequestStatus::create([
@@ -179,8 +196,8 @@ class ProviderController extends Controller
     public function createRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'first_name' => 'required|min:2|max:30|alpha',
+            'last_name' => 'string|min:2|max:30|alpha',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required|email',
             'street' => 'required',
@@ -326,7 +343,7 @@ class ProviderController extends Controller
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
+            'first_name' => 'required|alpha|min:2|max:30',
             'email' => 'required|email',
             'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
@@ -810,7 +827,7 @@ class ProviderController extends Controller
                 'sms_template' => "Hii ,Click on the below link to create request"
             ]
         );
-        return redirect()->back()->withErrors('email', 'phone_number');
+        return redirect()->back()->with('agreementSent', 'Agreement sent to patient successfully!');
     }
 
     // View Conclude Care Page -> Display page and show data

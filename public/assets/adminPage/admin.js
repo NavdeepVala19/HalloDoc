@@ -400,6 +400,7 @@ $(document).ready(function () {
     if (!activeCategory) {
         $(".btn-all.filter-btn").addClass("active-filter");
     }
+    console.log(url, activeCategory);
 
     var filterBtns = $(".filter-btn");
     filterBtns.map(function (index, element) {

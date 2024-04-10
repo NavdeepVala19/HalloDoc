@@ -30,6 +30,15 @@ $(document).ready(function () {
         "Please enter a valid state name."
     );
 
+    // Only Letters(alpabets allowed), no numeric value will be allowed
+    $.validator.addMethod(
+        "lettersonly",
+        function (value, element) {
+            return this.optional(element) || /^[a-z]+$/i.test(value);
+        },
+        "Letters only please"
+    );
+
     // Provider Create Request Client Side Validation
     $("#providerCreateRequestForm").validate({
         rules: {
@@ -37,11 +46,13 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
+                lettersonly: true,
             },
             last_name: {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
+                lettersonly: true,
             },
             phone_number: {
                 required: true,
@@ -72,13 +83,15 @@ $(document).ready(function () {
         messages: {
             first_name: {
                 required: "Please enter first name",
-                minlength: "First Name should have at least 2 characters",
-                maxlength: "First Name should not have more than 30 characters",
+                minlength: "First name should have at least 2 characters",
+                maxlength: "First name should not have more than 30 characters",
+                lettersonly: "Only alphabets allowed",
             },
             last_name: {
                 required: "Please enter last name",
-                minlength: "Last Name should have at least 2 characters",
-                maxlength: "Last Name should not have more than 30 characters",
+                minlength: "Last name should have at least 2 characters",
+                maxlength: "Last name should not have more than 30 characters",
+                lettersonly: "Only alphabets allowed",
             },
             phone_number: {
                 required: "Please enter mobile number",
@@ -140,8 +153,24 @@ $(document).ready(function () {
     // Admin Send Link Pop-Up Validation
     $("#adminSendLinkForm, #providerSendLinkForm").validate({
         rules: {
-            first_name: "required",
-            last_name: "required",
+            first_name: {
+                required: true,
+                minlength: 5,
+                maxlength: 15,
+                normalizer: function (value) {
+                    return $.trim(value);
+                },
+                lettersonly: true,
+            },
+            last_name: {
+                required: true,
+                minlength: 5,
+                maxlength: 15,
+                normalizer: function (value) {
+                    return $.trim(value);
+                },
+                lettersonly: true,
+            },
             phone_number: {
                 required: true,
                 minlength: 10,
@@ -152,8 +181,18 @@ $(document).ready(function () {
             },
         },
         messages: {
-            first_name: { required: "Enter your First Name" },
-            last_name: { required: "Enter your Last Name" },
+            first_name: {
+                required: "Please enter first name",
+                minlength: "First name should have at least 5 characters",
+                maxlength: "First name should not have more than 15 characters",
+                lettersonly: "Only alphabets allowed",
+            },
+            last_name: {
+                required: "Please enter last name",
+                minlength: "Last name should have at least 5 characters",
+                maxlength: "Last name should not have more than 15 characters",
+                lettersonly: "Only alphabets allowed",
+            },
             phone_number: {
                 required: "Enter Phone Number to send a link.",
                 minlength: "Phone number should atleast have 10 digits",

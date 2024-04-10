@@ -126,12 +126,12 @@
             <div class="search-section d-flex align-items-center  justify-content-between ">
                 <form
                     action="{{ route('provider.searching', ['status' => 'conclude', 'category' => request('category', 'all')]) }}"
-                    method="GET">
-                    {{-- @csrf --}}
+                    method="POST">
+                    @csrf
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search" value="{{ old('search', request()->input('search')) }}">
-                        {{-- <input type="submit" class="primary-fill"> --}}
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search"
+                            value="{{ session('searchTerm') }}">
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -162,6 +162,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($cases->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Cases Found</td>
+                            </tr>
+                        @endif
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request_type_id }}">
                                 <td>{{ $case->requestClient->first_name }}
@@ -222,6 +227,11 @@
             </div>
 
             <div class="mobile-listing">
+                @if ($cases->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Cases Found</sp>
+                    </div>
+                @endif
                 @foreach ($cases as $case)
                     <div class="mobile-list d-flex justify-content-center align-items-between flex-column">
                         <div class="d-flex align-items-center justify-content-between">

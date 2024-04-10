@@ -71,7 +71,7 @@ required, without finalizing encounter form provider cannot conclude the case. -
                     <div>
                         <input type="file" name="document" id="document" hidden>
                         <label for="document" class="primary-empty "><i class="bi bi-cloud-upload"></i>
-                          <span class="upload-txt">Upload</span> </label>
+                            <span class="upload-txt">Upload</span> </label>
                     </div>
                 </form>
             </div>
@@ -85,6 +85,11 @@ required, without finalizing encounter form provider cannot conclude the case. -
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($docs->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Documents Found</td>
+                            </tr>
+                        @endif
                         @foreach ($docs as $doc)
                             @if ($doc)
                                 <tr>

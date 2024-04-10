@@ -102,9 +102,9 @@ class AdminController extends Controller
         // Apply search condition
         if ($searchTerm) {
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('first_name', 'like', "%$searchTerm%")
+                $query->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%")
                     ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', "%$searchTerm%");
+                        $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
                     });
             });
         }
@@ -114,9 +114,10 @@ class AdminController extends Controller
     // Method to retrieve cases based on status, category, and search term
     public function cases(Request $request, $status = 'new', $category = "all")
     {
-        $searchTerm = $request->search;
-        // $searchTerm = $request->session()->get('searchTerm', null);
-        // $category = $request->session()->get('category', 'all');
+        // $searchTerm = $request->search;
+        // Use Session to filter by category and searchTerm
+        $searchTerm = $request->session()->get('searchTerm', null);
+        $category = $request->session()->get('category', 'all');
 
         $userData = Auth::user();
         $count = $this->totalCasesCount();
@@ -136,21 +137,34 @@ class AdminController extends Controller
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
-        // Session::forget(['searchTerm', 'category']);
-        return $this->cases($request, $status);
+        // Forget from session whenever a new status is opened
+        Session::forget(['searchTerm', 'category']);
+        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
+            return $this->cases($request, $status);
+        } else {
+            return view('errors.404');
+        }
     }
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
     public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
-        // $request->session()->put('category', $category);
+        // Store category in the session
+        $request->session()->put('category', $category);
 
-        return $this->cases($request, $status, $category);
+        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
+            if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
+                return $this->cases($request, $status, $category);
+            }
+        } else {
+            return view('errors.404');
+        }
     }
     // Search for specific keyword in first_name of requestTable and requestclient
     public function search(Request $request, $status = 'new', $category = 'all')
     {
-        // $request->session()->put('searchTerm', $request->search);
+        // store searchTerm in session
+        $request->session()->put('searchTerm', $request->search);
 
         return $this->cases($request, $status, $category);
     }
@@ -209,7 +223,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'assign_note' => 'required'
+            'assign_note' => 'required|max:100'
 
         ]);
         RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
@@ -231,7 +245,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'notes' => 'required'
+            'notes' => 'required|max:100'
         ]);
 
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -279,7 +293,7 @@ class AdminController extends Controller
     public function blockCase(Request $request)
     {
         $request->validate([
-            'block_reason' => 'required'
+            'block_reason' => 'required|max:100'
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
@@ -323,7 +337,7 @@ class AdminController extends Controller
     public function storeNote(Request $request)
     {
         $request->validate([
-            'admin_note' => 'required'
+            'admin_note' => 'required|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         if (!empty($requestNote)) {
@@ -354,7 +368,7 @@ class AdminController extends Controller
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
-            'document' => 'required'
+            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf'
         ], [
             'document.required' => 'Select an File to upload!'
         ]);
@@ -382,7 +396,7 @@ class AdminController extends Controller
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
+            'first_name' => 'required|alpha|max:50',
             'email' => 'required|email',
             'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
@@ -441,8 +455,8 @@ class AdminController extends Controller
     {
 
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|alpha|min:5|max:30',
+            'last_name' => 'required|alpha|min:5|max:30',
             'phone_number' => 'required',
             'email' => 'required|email'
         ]);
@@ -606,7 +620,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'email' => 'required',
+            'email' => 'required|email',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -645,7 +659,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'email' => 'required',
+            'email' => 'required|email',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
