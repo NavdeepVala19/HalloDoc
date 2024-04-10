@@ -1,11 +1,11 @@
-@extends('index')
+@extends('patientRequests')
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientAgreement.css') }}">
 @endsection
 
 
-@section('content')
+@section('patientRequests')
     <div class="overlay"></div>
 
     <!-- Cancel pop-up -->

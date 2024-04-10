@@ -168,7 +168,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider.status");
 
     // For Searching Request
-    Route::get('/provider/search/{status?}/{category?}', [ProviderController::class, 'search'])->name('provider.searching');
+    Route::post('/provider/{status?}/{category?}', [ProviderController::class, 'search'])->name('provider.searching');
 
     // ************** PROVIDER CREATE REQUEST PAGE ***************
     // show Create request page for provider
@@ -272,7 +272,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.status");
 
     // For Searching Request
-    Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
+    // Route::post('admin/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
+    Route::post('admin/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
 
     // Assign Case pop-up, populate select menu with all physician regions (AJAX)
     Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->name('physician.regions');

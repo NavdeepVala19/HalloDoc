@@ -141,13 +141,12 @@ giving service to the patient. --}}
         <div class="listing">
             <div class="search-section d-flex align-items-center  justify-content-between ">
                 <form action="{{ route('searching', ['status' => 'active', 'category' => request('category', 'all')]) }}"
-                    method="GET" class="d-flex align-items-center filter-section">
-                    {{-- @csrf --}}
+                    method="POST" class="d-flex align-items-center filter-section">
+                    @csrf
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
                             placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search"
-                            value="{{ old('search', request()->input('search')) }}">
-                        {{-- <input type="submit" class="primary-fill"> --}}
+                            value="{{ session('searchTerm') }}">
                     </div>
                     <select class="form-select listing-region">
                         <option name="regions" selected>All Regions</option>
@@ -186,6 +185,11 @@ giving service to the patient. --}}
                         </tr>
                     </thead>
                     <tbody id="dropdown-data-body">
+                        @if ($cases->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Cases Found</td>
+                            </tr>
+                        @endif
                         @foreach ($cases as $case)
                             @if (!empty($case->requestClient))
                                 <tr class="type-{{ $case->request_type_id }}">
@@ -253,6 +257,11 @@ giving service to the patient. --}}
                 </table>
             </div>
             <div class="mobile-listing">
+                @if ($cases->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Cases Found</sp>
+                    </div>
+                @endif
                 @foreach ($cases as $case)
                     @if (!empty($case->requestClient))
                         <div class="mobile-list d-flex justify-content-center align-items-between flex-column">

@@ -75,7 +75,7 @@
                     <button type="submit" class="primary-fill">Search</button>
                 </div>
             </form>
-            <div class="table-responsive">
+            <div class="table-responsive table-view">
                 <table class="table">
                     <thead class="table-secondary">
                         <td>First Name</td>
@@ -99,6 +99,32 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="mobile-listing">
+                @foreach ($patients as $patient)
+                    <div class="mobile-list">
+                        <div class="main-section">
+                            <h5 class="heading">{{ $patient->first_name }} {{ $patient->last_name }}</h5>
+                            <div class="detail-box">
+                                <span>
+                                    <strong>{{ $patient->phone_number }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <span>
+                                <i class="bi bi-person"></i> Email:
+                                {{ $patient->email }}
+                            </span>
+                            <br>
+                            <span><i class="bi bi-calendar3"></i> Phone: {{ $patient->phone_number }}</span>
+                            <div class="text-end">
+                                <a href="{{ route('patient.records', $patient->id) }}" class="primary-empty">Explore</a>
+                                </td>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
             {{ $patients->links('pagination::bootstrap-5') }}
         </div>

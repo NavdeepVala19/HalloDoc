@@ -202,6 +202,15 @@ nav {
     border-radius: 5px;
 }
 
+.no-record {
+    color: #000 !important;
+    font-size: 20px;
+    background-color: #fde1e1 !important;
+    font-weight: bolder;
+    font-style: italic;
+    text-align: center;
+}
+
 /* ****************** ALL FORM COMMON STYLING **************************************** */
 .form-container {
     margin-top: 20px;
