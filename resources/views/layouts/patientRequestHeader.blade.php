@@ -1,5 +1,5 @@
 {{-- HEADER SECTION --}}
-<header class="header d-flex align-items-center justify-content-between px-3 border-bottom shadow bg-body-tertiary">
+<header class="header d-flex align-items-center justify-content-between px-3 border-bottom shadow ">
     <div class="d-flex align-items-center">
         <a href="" class="primary-empty menu-icon">
             <i class="bi bi-list"></i>
@@ -14,7 +14,7 @@
 </header>
 
 
-<nav class="navbar-section shadow bg-body-tertiary ">
+<nav class="navbar-section shadow ">
     @yield('nav-links')
     {{-- <a href="">Dashboard</a>
     <a href="">Provider Location</a>

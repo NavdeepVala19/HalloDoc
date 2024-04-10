@@ -23,7 +23,7 @@
         <input type="hidden" name="request_type" value="1">
         <div class="container main-content">
             <p>Patient Name</p>
-            <p class="user-name">{{$documents->first()->first_name}} <span class="confirmation-no">{{$documents->first()->confirmation_no}} </span> </p>
+            <p class="user-name">{{$documents->first()->first_name}} <span class="confirmation-no ">{{$documents->first()->confirmation_no}} </span> </p>
             <p>Check Here for any files that you or doctors of your subsequents requestors have attached for you to review.</p>
 
             <div class="custom-file-input mb-4">
@@ -65,7 +65,7 @@
                     <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault" name="selected_files[]" value="{{ $document->id }}"></td>
                     <td><i class="bi bi-filetype-doc"></i> {{ $document->file_name }}</td>
                     <td>{{ $document->first_name }}</td>
-                    <td>{{ $document->created_at }}</td>
+                    <td>{{date_format(date_create($document->created_date), 'd-m-Y')}}</td>
                     <td> <a href="{{ route('downloadOne', $document->id) }}" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
                 </tr>
                 @endforeach

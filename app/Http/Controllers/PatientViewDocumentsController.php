@@ -15,16 +15,14 @@ class PatientViewDocumentsController extends Controller
 {
     public function patientViewDocument($id)
     {
-        // dd($id);
-
+            
         $documents = RequestWiseFile::select(
             'request.first_name',
             'request.confirmation_no',
             'request_wise_file.file_name',
-            'request_wise_file.created_at',
             'request_wise_file.id',
             'request_wise_file.request_id',
-
+            DB::raw('DATE(request_wise_file.created_at) as created_date'),
         )
             ->leftJoin('request', 'request.id', 'request_wise_file.request_id')
             ->where('request_id', $id)
