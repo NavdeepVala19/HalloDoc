@@ -25,16 +25,9 @@ $(document).ready(function () {
     //     $(".overlay").hide();
     // });
 
-    //  ********************************************************************************************
+    //  *********
 
-    $('#patientRequestForm').submit(function(){
-        $('.loader').show();
-    })
-
-
-
-
-    // ************************** This code is for create new request pop-up  ***********************
+    // *** This code is for create new request pop-up  ****
 
     $(".btn-someone").click(function () {
         $(this).toggleClass("btn-active");
@@ -56,7 +49,7 @@ $(document).ready(function () {
         }
     });
 
-    //  ********************************************************************************************
+    //  ****
 
     // **** This code is for hiding pop-up button in family/concierge/business page ****
 
@@ -65,7 +58,8 @@ $(document).ready(function () {
         $(".overlay").show();
     });
 
-    //  ********************************************************************************************
+    //  *****
+
     // **** This code is for showing input password and hide it when click on eye icon ****
 
     $(".person-eye").click(function () {
@@ -119,8 +113,6 @@ $(document).ready(function () {
         // And set a flag in localStorage indicating the popup was shown
         localStorage.setItem("popupShown", "false");
     });
-
-
 
     // ** This code is for client side validation of patientProfileEdit
 
@@ -244,17 +236,23 @@ $(document).ready(function () {
         },
     });
 
-    
+    // *** This code is for showing loader when form get submitted ***
+    $("#patientRequestForm").submit(function () {
+        $(".loader").show();
+    });
+    // ***
+
+
 });
 
 
-
+//  ** This code is for hide loader after page load **
 $(window).on('load',function(){
     $('#loading-icon').hide();
 })
 
 
-// ***************************************************************************************
+// ***
 
 
 
@@ -268,18 +266,8 @@ $(".master-checkbox").on("click", function () {
     }
 });
 
+// ***
 
-let isChecked = $('.master-checkbox').is(":checked",true);
-
-
-if (isChecked == false) {
-    $('#docs_download').attr('disabled')
-} else {
-    $('#docs_download').removeAttr('disabled')
-}
-
-
-// *********************************************************
 
 // **** This code is for show file name********
 //
@@ -288,7 +276,7 @@ $(".file-input").change(function (e) {
     $("#demo").text(filename);
 });
 
-// ********************************************
+// ****
 
 
 

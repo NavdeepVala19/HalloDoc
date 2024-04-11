@@ -22,11 +22,11 @@
         </div>
         <div class="form">
 
-            <form action="{{ route('reset.password.post')}}" method="post">
+            <form action="{{ route('reset.password.post')}}" method="post" id="patientRegister">
                 @csrf
                 <input type="hidden" name="token" value="{{ $token }}">
 
-                <div class="mb-4 password">
+                <div class="mb-4 password register">
                     <i class="bi bi-eye-fill person-eye"></i>
                     <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="exampleInputPassword1" placeholder="New Password" name="new_password">
                     @error('new_password')
@@ -34,7 +34,7 @@
                     @enderror
                 </div>
 
-                <div class="mb-3 confirm-password">
+                <div class="mb-3 confirm-password register">
                     <i class="bi bi-eye-fill person-eye-two"></i>
                     <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" id="exampleInputPassword2" placeholder="Confirm Password" name="confirm_password">
                     @error('confirm_password')
@@ -58,5 +58,7 @@
 
 
 @section('script')
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientRegister.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

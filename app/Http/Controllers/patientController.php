@@ -36,8 +36,8 @@ class patientController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:10|alpha',
-            'last_name' => 'required|min:2|max:10|alpha',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:30',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
@@ -46,6 +46,8 @@ class patientController extends Controller
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6',
             'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'symptoms' => 'nullable|min:5|max:200|',
+            'room'=>'gte:1|nullable'
         ]);
 
 
@@ -134,7 +136,7 @@ class patientController extends Controller
         if ($isEmailStored == null) {
             // send email
             $emailAddress = $request->email;
-            // Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
             EmailLog::create([
                 'role_id' => 3,

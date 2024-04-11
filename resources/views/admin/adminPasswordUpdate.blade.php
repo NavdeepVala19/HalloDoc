@@ -25,33 +25,27 @@
         @endif
 
         <div class="form">
-
-            <form action="{{route('updatePasswordPost')}}" method="post">
+            <form action="{{route('updatePasswordPost')}}" method="post" id="adminLogin">
                 @csrf
-
                 <input type="hidden" name="token" value="{{ $token }}">
-
-                <div class="mb-4 password">
+                <div class="mb-4 password adminLogin">
                     <i class="bi bi-eye-fill person-eye"></i>
                     <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="exampleInputPassword1" placeholder="New Password" name="new_password">
                     @error('new_password')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
-                <div class="mb-3 confirm-password">
+                <div class="mb-3 confirm-password adminLogin">
                     <i class="bi bi-eye-fill person-eye-two"></i>
                     <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" id="exampleInputPassword2" placeholder="Confirm Password" name="confirm_password">
                     @error('confirm_password')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">
                         Update Password
                     </button>
-
                 </div>
             </form>
         </div>
@@ -63,5 +57,7 @@
 
 
 @section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ URL::asset('assets/admin/adminLogin.js') }}"></script>
 @endsection

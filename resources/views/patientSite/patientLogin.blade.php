@@ -38,10 +38,10 @@
 
         <div class="form">
 
-            <form action="{{route('patient_logged_in')}}" method="post">
+            <form action="{{route('patient_logged_in')}}" method="post" id="patientLogin">
                 @csrf
 
-                <div class="mb-4 email">
+                <div class="mb-4 email patientLogin">
                     <i class="bi bi-person-circle person-logo"></i>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
                     @error('email')
@@ -49,7 +49,7 @@
                     @enderror
                 </div>
 
-                <div class="mb-3 password">
+                <div class="mb-3 password patientLogin">
                     <i class="bi bi-eye-fill person-eye"></i>
                     <input type="password" class="form-control @error('password') is-invalid @enderror" id="exampleInputPassword1" placeholder="password" name="password">
                     @error('password')
@@ -71,5 +71,7 @@
 @endsection
 
 @section('script')
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientLogin.js') }}"></script>
 @endsection
