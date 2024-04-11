@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="form-floating" style="height: 58px;">
-                    <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
+                    <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" value="{{ old('phone_number') }}">
                     @error('phone_number')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -198,7 +198,7 @@
                 </div>
 
                 <div style="height: 58px;">
-                    <input type="tel" name="phone_number_alt" class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number_alt') }}">
+                    <input type="tel" name="phone_number_alt" class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="telephone" value="{{ old('phone_number_alt') }}">
                     @error('phone_number_alt')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

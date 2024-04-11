@@ -99,7 +99,7 @@
                 </div>
                 <div class="d-flex align-items-center gap-4">
                     <i class="bi bi-person notes-logo"></i>
-                    <div>
+                    <div class="notes">
                         <h2>Physician Notes</h2>
                         @if (!empty($note))
                             <span>{{ $note->physician_notes }}</span>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="d-flex align-items-center gap-4">
                     <i class="bi bi-person-check notes-logo"></i>
-                    <div>
+                    <div class="notes">
                         <h2>Admin Notes</h2>
                         @if (!empty($note))
                             <span>{{ $note->admin_notes }}</span>
@@ -116,12 +116,12 @@
                     </div>
                 </div>
             </div>
-            <form action="{{ route('provider.store.note') }}" method="POST">
+            <form action="{{ route('provider.store.note') }}" method="POST" id="providerNoteForm">
                 @csrf
                 <input type="text" value="{{ $id }}" name="requestId" hidden>
                 <div class="form-floating mb-3">
                     <textarea class="form-control @error('physician_note') is-invalid @enderror" name="physician_note" placeholder="injury"
-                        id="floatingTextarea2"></textarea>
+                        id="floatingTextarea2">{{ $note->physician_notes ?? '' }}</textarea>
                     <label for="floatingTextarea2">Additional Notes</label>
                     @error('physician_note')
                         <div class="text-danger">{{ $message }}</div>
@@ -133,4 +133,9 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

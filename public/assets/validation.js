@@ -1,17 +1,18 @@
 $(document).ready(function () {
-    // Phone Number Validation
-    $.validator.addMethod(
-        "phoneUS",
-        function (phone_number, element) {
-            return (
-                this.optional(element) ||
-                phone_number.match(
-                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
-                )
-            );
-        },
-        "Please enter a valid phone number."
-    );
+    // Validation for city input field
+    // $.validator.addMethod(
+    //     "mobileValidation",
+    //     function (value, element) {
+    //         console.log(element);
+    //         if (element.intlTelInput("isValidNumber")) {
+    //             console.log("valide");
+    //             return true;
+    //         }
+    //         // $(element).intlTelInput("isValidNumber");
+    //     },
+    //     "Please enter a valid phone number."
+    // );
+
     // Validation for city input field
     $.validator.addMethod(
         "city",
@@ -39,28 +40,127 @@ $(document).ready(function () {
         "Letters only please"
     );
 
+    // Email Validation method
+    $.validator.addMethod(
+        "email",
+        function (value, element) {
+            var regex =
+                /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+            return this.optional(element) || regex.test(value);
+        },
+        "Please enter a valid email address (alphanumeric characters, periods, common symbols, and @ followed by a domain name)"
+    );
+
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+
+            console.log(enteredDate, minDate, maxDate);
+
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
+
+    // ------------- Common Rules and Message functions repeated uses: ------------------
+    // First Name and Last Name Rules and messages
+    function nameRules(fieldName) {
+        return {
+            required: true,
+            minlength: 3,
+            maxlength: 15,
+            lettersonly: true,
+            normalizer: function (value) {
+                return $.trim(value);
+            },
+        };
+    }
+
+    function nameMessages(fieldName) {
+        return {
+            required: `Please enter ${fieldName}.`,
+            minlength: `${fieldName} should have at least 3 characters`,
+            maxlength: `${fieldName} should not have more than 15 characters`,
+            lettersonly: `Only alphabets allowed`,
+        };
+    }
+
+    // Email Validation Rule and Message
+    function emailRules(fieldName) {
+        return {
+            required: true,
+            email: true,
+        };
+    }
+    function emailMessages(fieldName) {
+        return {
+            required: "Please enter email address",
+            email: "Please enter a valid email address {ex. a@b.c}",
+        };
+    }
+    // Mobile Number Rule and Message
+    function mobileRules(fieldName) {
+        return {
+            required: true,
+            minlength: 12,
+            maxlength: 12,
+            // mobileValidation: true,
+
+            // minlength: function (value, element) {
+            //     // Remove spaces before counting length
+            //     const trimmedValue = value.replace(/\s/g, "");
+            //     return trimmedValue.length === 10;
+            // },
+            // maxlength: function (value, element) {
+            //     // Remove spaces before counting length
+            //     const trimmedValue = value.replace(/\s/g, "");
+            //     return trimmedValue.length === 10;
+            // },
+        };
+    }
+    function mobileMessages(fieldName) {
+        return {
+            required: "Please enter phone number",
+            minlength: "Phone number should have exact 10 digits",
+            maxlength: "Phone number should have exact 10 digits",
+            // mobileValidation: "Please enter a valid phone number",
+        };
+    }
+    // TextArea Rule and Message
+    function noteRules(fieldName) {
+        return {
+            required: true,
+            minlength: 5,
+            maxlength: 200,
+        };
+    }
+    function noteMessages(fieldName) {
+        return {
+            required: `${fieldName} field is required`,
+            minlength: `${fieldName} field should have atleast 5 characters`,
+            maxlength: `${fieldName} field should not have more than 200 characters`,
+        };
+    }
+
     // Provider Create Request Client Side Validation
     $("#providerCreateRequestForm").validate({
         rules: {
-            first_name: {
-                required: true,
-                minlength: 2,
-                maxlength: 30,
-                lettersonly: true,
-            },
-            last_name: {
-                required: true,
-                minlength: 2,
-                maxlength: 30,
-                lettersonly: true,
-            },
-            phone_number: {
-                required: true,
-                phoneUS: true,
-            },
-            email: {
-                required: true,
-                email: true,
+            first_name: nameRules("First name"),
+            last_name: nameRules("Last name"),
+            phone_number: mobileRules(),
+            email: emailRules(),
+            dob: {
+                required: false,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
             },
             street: {
                 required: true,
@@ -81,25 +181,12 @@ $(document).ready(function () {
             },
         },
         messages: {
-            first_name: {
-                required: "Please enter first name",
-                minlength: "First name should have at least 2 characters",
-                maxlength: "First name should not have more than 30 characters",
-                lettersonly: "Only alphabets allowed",
-            },
-            last_name: {
-                required: "Please enter last name",
-                minlength: "Last name should have at least 2 characters",
-                maxlength: "Last name should not have more than 30 characters",
-                lettersonly: "Only alphabets allowed",
-            },
-            phone_number: {
-                required: "Please enter mobile number",
-                phoneUS: "Please enter a valid phone number",
-            },
-            email: {
-                required: "Please enter email address",
-                email: "Please enter a valid email address",
+            first_name: nameMessages("First name"),
+            last_name: nameMessages("Last name"),
+            phone_number: mobileMessages(),
+            email: emailMessages(),
+            dob: {
+                date: "Date should have an proper format",
             },
             street: "Please enter your street",
             city: "Please enter your city",
@@ -107,12 +194,13 @@ $(document).ready(function () {
         },
         errorPlacement: function (error, element) {
             var errorDiv = $('<div class="text-danger"></div>');
+            errorDiv.append(error);
             element.closest(".form-floating").append(errorDiv);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -126,11 +214,11 @@ $(document).ready(function () {
     $("#cancelCaseForm").validate({
         rules: {
             case_tag: "required",
-            reason: "required",
+            reason: noteRules(),
         },
         messages: {
             case_tag: "Select A Case Tag To Cancel the Case",
-            reason: "Provide Cancellation Notes",
+            reason: noteMessages("Notes"),
         },
         errorPlacement: function (error, element) {
             var errorDiv = $('<div class="text-danger"></div>');
@@ -153,73 +241,32 @@ $(document).ready(function () {
     // Admin Send Link Pop-Up Validation
     $("#adminSendLinkForm, #providerSendLinkForm").validate({
         rules: {
-            first_name: {
-                required: true,
-                minlength: 5,
-                maxlength: 15,
-                normalizer: function (value) {
-                    return $.trim(value);
-                },
-                lettersonly: true,
-            },
-            last_name: {
-                required: true,
-                minlength: 5,
-                maxlength: 15,
-                normalizer: function (value) {
-                    return $.trim(value);
-                },
-                lettersonly: true,
-            },
-            phone_number: {
-                required: true,
-                minlength: 10,
-            },
-            email: {
-                required: true,
-                email: true,
-            },
+            first_name: nameRules("First name"),
+            last_name: nameRules("Last name"),
+            phone_number: mobileRules(),
+            email: emailRules(),
         },
         messages: {
-            first_name: {
-                required: "Please enter first name",
-                minlength: "First name should have at least 5 characters",
-                maxlength: "First name should not have more than 15 characters",
-                lettersonly: "Only alphabets allowed",
-            },
-            last_name: {
-                required: "Please enter last name",
-                minlength: "Last name should have at least 5 characters",
-                maxlength: "Last name should not have more than 15 characters",
-                lettersonly: "Only alphabets allowed",
-            },
-            phone_number: {
-                required: "Enter Phone Number to send a link.",
-                minlength: "Phone number should atleast have 10 digits",
-            },
-            email: {
-                required: "Enter Email address to send a link.",
-                email: "Your email address must be in the format of name@domain.com",
-            },
+            first_name: nameMessages("First name"),
+            last_name: nameMessages("Last name"),
+            phone_number: mobileMessages(),
+            email: emailMessages(),
         },
-        errorElement: "span",
         errorPlacement: function (error, element) {
-            // var errorDiv = $('<div class="text-danger"></div>');
-            // errorDiv.append(error);
-            error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
-            // element.parent().append(errorDiv);
+            var errorDiv = $('<div class="text-danger"></div>');
+            errorDiv.append(error);
+            element.closest(".form-floating").append(errorDiv);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
     $("#adminSendLinkButton, .providerSendLinkButton").click(function () {
-        if ($("#adminSendLinkForm").valid()) {
-            $("#adminSendLinkForm").submit();
+        if ($("#adminSendLinkForm, #providerSendLinkForm").valid()) {
+            $("#adminSendLinkForm, #providerSendLinkForm").submit();
         }
     });
 
@@ -245,17 +292,10 @@ $(document).ready(function () {
                 email: "Your email address must be in the format of name@domain.com",
             },
         },
-        // errorElement: "span",
         errorPlacement: function (error, element) {
-            let errorBox = $("<div class='text-danger'></div>");
-            errorBox.append(error);
-            // error.addClass("text-danger");
-
-            if (element.attr("name") == "phone_number") {
-                element.closest(".form-floating .form-control").after(errorBox);
-            } else if (element.attr("name") == "email") {
-                element.closest(".form-floating .form-control").after(errorBox);
-            }
+            let errorDiv = $("<div class='text-danger'></div>");
+            errorDiv.append(error);
+            element.closest(".form-floating").append(errorDiv);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -273,20 +313,20 @@ $(document).ready(function () {
     // Provider Transfer Request
     $("#providerTransferCase").validate({
         rules: {
-            notes: "required",
+            notes: noteRules(),
         },
         messages: {
-            notes: "Please provide a note for this transfer request.",
+            notes: noteMessages("Transfer Note"),
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
             errorBox.append(error);
             element.closest(".form-floating").append(errorBox);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -301,25 +341,25 @@ $(document).ready(function () {
         rules: {
             region: "required",
             physician: "required",
-            assign_note: "required",
-            notes: "required",
+            assign_note: noteRules(),
+            notes: noteRules(),
         },
         messages: {
             region: "Select at least one region.",
             physician:
-                "Select Physician Whom you want to assign these case to.",
-            assign_note: "Provide Note for the assigned case.",
-            notes: "Enter Transfer Note for these case.",
+                "Select physician whom you want to assign these case to.",
+            assign_note: noteMessages("Assign case note"),
+            notes: noteMessages("Transfer note"),
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
             errorBox.append(error);
             element.closest(".form-floating").append(errorBox);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -332,20 +372,20 @@ $(document).ready(function () {
     // Admin Block Case Pop-Up Validation
     $("#adminBlockCase").validate({
         rules: {
-            block_reason: "required",
+            block_reason: noteRules(),
         },
         messages: {
-            block_reason: "Provide reason for Blocking the Case!",
+            block_reason: noteMessages("Block reason"),
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
             errorBox.append(error);
             element.closest(".form-floating").append(errorBox);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -358,10 +398,10 @@ $(document).ready(function () {
     // Patient Cancel Agreement Pop-up
     $("#cancelAgreementPatient").validate({
         rules: {
-            cancelReason: "required",
+            cancelReason: noteRules(),
         },
         messages: {
-            cancelReason: "Provide reason for Cancelling the Agreement!",
+            cancelReason: noteMessages("Cancel reason"),
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -384,10 +424,10 @@ $(document).ready(function () {
     // Provider Profile Email pop-up for requesting changes in profile
     $("#profileEditMailForm").validate({
         rules: {
-            message: "required",
+            message: noteRules(),
         },
         messages: {
-            message: "Specify the changes you want to make in your profile",
+            message: noteMessages("Message"),
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -410,25 +450,19 @@ $(document).ready(function () {
     // Encounter Form Client Side Validation
     $("#providerEncounterForm, #adminEncounterForm").validate({
         rules: {
-            first_name: "required",
+            first_name: nameRules("First Name"),
             mobile: {
                 phoneUS: true,
                 required: false,
             },
-            email: {
-                required: true,
-                email: true,
-            },
+            email: emailRules(),
         },
         messages: {
-            first_name: "First Name field is required",
+            first_name: nameMessages("First Name"),
             mobile: {
                 phoneUS: "Phone Number should have valid format",
             },
-            email: {
-                required: "Email Field is required",
-                email: "Please provide a valid Email Address",
-            },
+            email: emailMessages("Email"),
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -452,35 +486,22 @@ $(document).ready(function () {
     // Provider and Admin Send Agreement Pop-Up Validation
     $("#closeCase").validate({
         rules: {
-            phone_number: {
-                required: true,
-                phoneUS: true,
-            },
-            email: {
-                required: true,
-                email: true,
-            },
+            phone_number: mobileRules(),
+            email: emailRules(),
         },
         messages: {
-            phone_number: {
-                required: "Enter Phone Number to Send Agreement",
-                phoneUS: "Enter Phone Number in proper format",
-            },
-            email: {
-                required: "Enter Email to Send Agreement.",
-                email: "Your email address must be in the format of name@domain.com",
-            },
+            phone_number: mobileMessages("Phone number"),
+            email: emailMessages("Email"),
         },
-        // errorElement: "span",
         errorPlacement: function (error, element) {
             let errorBox = $("<span class='text-danger'></span>");
             errorBox.append(error);
             element.closest(".form-floating").append(errorBox);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -507,10 +528,7 @@ $(document).ready(function () {
             fax_number: {
                 required: true,
             },
-            email: {
-                required: true,
-                email: true,
-            },
+            email: emailRules(),
         },
         messages: {
             profession: {
@@ -525,10 +543,7 @@ $(document).ready(function () {
             fax_number: {
                 required: "Enter Fax number to send order",
             },
-            email: {
-                required: "Enter Email to Send Order.",
-                email: "Your email address must be in the format of name@domain.com",
-            },
+            email: emailMessages("Email"),
         },
         // errorElement: "span",
         errorPlacement: function (error, element) {
@@ -597,10 +612,10 @@ $(document).ready(function () {
 
             element.closest(".form-floating").append(errorBox);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
@@ -682,5 +697,31 @@ $(document).ready(function () {
         if ($("#adminAddShiftForm, #providerAddShiftForm").valid()) {
             $("#adminAddShiftForm, #providerAddShiftForm").submit();
         }
+    });
+
+    // Admin View Notes (Store note form validation)
+    $("#adminNoteForm, #providerNoteForm").validate({
+        rules: {
+            admin_note: noteRules(),
+            physician_note: noteRules(),
+        },
+        messages: {
+            admin_note: noteMessages("Admin Note"),
+            physician_note: noteMessages("Physician Note"),
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<span class='text-danger'></span>");
+            errorDiv.append(error);
+            element.closest(".form-floating").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 });

@@ -198,7 +198,7 @@ class ProviderController extends Controller
         $request->validate([
             'first_name' => 'required|min:2|max:30|alpha',
             'last_name' => 'string|min:2|max:30|alpha',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'phone_number' => 'required',
             'email' => 'required|email',
             'street' => 'required',
             'city' => 'required',
@@ -345,7 +345,7 @@ class ProviderController extends Controller
         $request->validate([
             'first_name' => 'required|alpha|min:2|max:30',
             'email' => 'required|email',
-            'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
+            // 'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
 
         $report = MedicalReport::where("request_id", $request->request_id)->first();

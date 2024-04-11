@@ -38,13 +38,16 @@ $(document).ready(function () {
         $("html, body").toggleClass("stop-scrolling");
     });
 
-    $("#telephone").intlTelInput({
-        initialCountry: "in",
-    });
-
     setTimeout(function () {
         $(".popup-message").fadeOut("slow");
     }, 2000);
+
+    let telephone = document.querySelector("#telephone");
+    window.intlTelInput(telephone, {
+        initialCountry: "in",
+        strictMode: true,
+        // utilsScript: "/intl-tel-input/js/utils.js?1712785596628",
+    });
 
     // No space are allowed directly when input field is empty
     $(

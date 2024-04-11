@@ -157,7 +157,7 @@
                         <span id="errorMsg"></span>
                     </div>
 
-                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->mobile }}" placeholder="Phone Number" disabled>
+                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $getProviderData->mobile }}" disabled>
                     @error('phone_number')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -228,7 +228,7 @@
                         <span id="errorMsg"></span>
                     </div>
 
-                    <input type="tel" name="alt_phone_number" class="form-control phone alt-phone-provider" id="telephone" value="{{ $getProviderData->alt_phone }}" placeholder="Phone Number" disabled>
+                    <input type="tel" name="alt_phone_number" class="form-control phone alt-phone-provider" id="telephone" value="{{ $getProviderData->alt_phone }}" disabled>
                     @error('phone_number')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror

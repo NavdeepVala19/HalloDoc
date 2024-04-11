@@ -38,8 +38,7 @@
                         <label for="floatingInput">Email</label>
                     </div>
 
-                    <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone"
-                        placeholder="Phone Number">
+                    <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone">
                 </div>
                 <div class="text-end mb-3">
                     <button class="primary-empty clearButton">Clear</button>

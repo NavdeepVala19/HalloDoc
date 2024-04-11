@@ -25,8 +25,7 @@
             </div>
             <div class="form-floating">
                 <input type="tel" name="phone_number"
-                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                    placeholder="Phone Number">
+                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone">
                 @error('phone_number')
                     <div class="text-danger w-100">{{ $message }}</div>
                 @enderror

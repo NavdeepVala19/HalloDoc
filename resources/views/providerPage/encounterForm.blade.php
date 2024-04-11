@@ -88,7 +88,7 @@
                             <div>
                                 <input type="tel" name="mobile"
                                     class="form-control phone @error('mobile') is-invalid @enderror " id="telephone"
-                                    placeholder="Phone Number" value="{{ $data->mobile ?? '' }}">
+                                 value="{{ $data->mobile ?? '' }}">
                             </div>
                             @error('mobile')
                                 <div class="text-danger">{{ $message }}</div>

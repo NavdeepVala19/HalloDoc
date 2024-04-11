@@ -109,7 +109,7 @@
                             <div>
                                 <input type="tel" name="mobile"
                                     class="form-control phone @error('mobile') is-invalid @enderror " id="telephone"
-                                    placeholder="Phone Number" value="{{ $data->mobile ?? '' }}">
+                                    value="{{ $data->mobile ?? '' }}">
                             </div>
                             @error('mobile')
                                 <div class="text-danger">{{ $message }}</div>
@@ -146,34 +146,38 @@
                     <div class="grid-3">
                         <div class="form-floating ">
                             <input type="number" name="temperature" class="form-control" id="floatingInput"
-                                placeholder="Temp" value={{ $data->temperature ?? '' }}>
-                            <label for="floatingInput">Temp</label>
+                                placeholder="Temp" value={{ $data->temperature ?? '' }} min='-50' max='50'>
+                            <label for="floatingInput">Temp (degree C)</label>
                         </div>
                         <div class="form-floating ">
                             <input type="number" name="heart_rate" class="form-control" id="floatingInput"
-                                placeholder="Temp" value={{ $data->heart_rate ?? '' }}>
+                                placeholder="heart_rate" value={{ $data->heart_rate ?? '' }} min='30'
+                                max='220'>
                             <label for="floatingInput">HR</label>
                         </div>
                         <div class="form-floating ">
                             <input type="number" name="repository_rate" class="form-control" id="floatingInput"
-                                placeholder="Temp" value={{ $data->repository_rate ?? '' }}>
+                                placeholder="repository_rate" value={{ $data->repository_rate ?? '' }} min='12'
+                                max='40'>
                             <label for="floatingInput">RR</label>
                         </div>
                         <div class="grid-2 blood-pressure">
                             <div class="form-floating ">
                                 <input type="number" name="sis_BP" class="form-control" id="floatingInput"
-                                    placeholder="blood pressure" value={{ $data->sis_BP ?? '' }}>
+                                    placeholder="blood pressure" value={{ $data->sis_BP ?? '' }} min='40'
+                                    max='250'>
                                 <label for="floatingInput" style="font-size: 12px">Blood Pressure(systolic)</label>
                             </div>
                             <div class="form-floating ">
                                 <input type="number" name="dia_BP" class="form-control" id="floatingInput"
-                                    placeholder="blood pressure" value={{ $data->dia_BP ?? '' }}>
+                                    placeholder="blood pressure" value={{ $data->dia_BP ?? '' }} min='40'
+                                    max='150'>
                                 <label for="floatingInput" style="font-size: 12px">Blood Presure(diastolic)</label>
                             </div>
                         </div>
                         <div class="form-floating ">
                             <input type="number" name="oxygen" class="form-control" id="floatingInput"
-                                placeholder="o2" value={{ $data->oxygen ?? '' }}>
+                                placeholder="o2" value={{ $data->oxygen ?? '' }} min='70' max='100'>
                             <label for="floatingInput">O2</label>
                         </div>
                         <div class="form-floating ">

@@ -81,8 +81,7 @@
                     <div>
                         <div class="form-floating" style="height: 58px;">
                             <input type="tel" name="phone_number"
-                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                                placeholder="Phone Number" value="{{ old('phone_number') }}">
+                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" value="{{ old('phone_number') }}">
                         </div>
                         @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>

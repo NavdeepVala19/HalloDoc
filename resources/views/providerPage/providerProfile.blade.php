@@ -124,7 +124,7 @@
                 </div>
 
                 <input type="tel" name="phone_number" value="{{ $provider->mobile }}" class="form-control phone"
-                    id="telephone" placeholder="Phone Number" disabled>
+                    id="telephone" disabled>
                 @error('phone_number')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
