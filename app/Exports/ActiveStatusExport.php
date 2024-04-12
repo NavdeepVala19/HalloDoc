@@ -25,7 +25,7 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'PhysicianName','RequestedDate', 'PatientMobile','RequestorMobile', 'Address','Notes'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'PhysicianName', 'RequestedDate', 'PatientMobile', 'RequestorMobile', 'Address', 'Notes'];
     }
     /**
      * @return \Illuminate\Support\Collection
@@ -35,7 +35,7 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
         $adminActiveData = $this->data->get();
 
         return collect($adminActiveData)->map(function ($adminActive) {
-  
+
             $patientName = null;
             $patientLastName = null;
             $dateOfBirth = null;
@@ -68,15 +68,15 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
 
             return [
-                'PatientName' => $patientName.' '.$patientLastName,
+                'PatientName' => $patientName . ' ' . $patientLastName,
                 'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminActive->first_name.' '.$adminActive->last_name,
-                'PhysicianName'=>$adminActive->provider->first_name.' '.$adminActive->provider->last_name,
+                'Requestor' => $adminActive->first_name . ' ' . $adminActive->last_name,
+                'PhysicianName' => $adminActive->provider->first_name . ' ' . $adminActive->provider->last_name,
                 'RequestedDate' => $adminActive->created_at,
                 'PatientMobile' => $patientMobile,
-                'RequestorMobile'=>$adminActive->phone_number,
+                'RequestorMobile' => $adminActive->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
-                'Notes'=>$adminActive->requestClient->notes,
+                'Notes' => $adminActive->requestClient->notes,
             ];
         });
     }

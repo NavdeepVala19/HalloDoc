@@ -67,7 +67,7 @@
                         <label for="floatingInput">Email</label>
                     </div>
                     <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone"
-                        placeholder="Phone Number" value="@if (isset($phoneNumber)) {{ $phoneNumber }} @endif">
+                        value="@if (isset($phoneNumber)) {{ $phoneNumber }} @endif">
                 </div>
                 <div class="text-end mb-3">
                     <a href="{{ route('admin.patient.records.view') }}" type="button"

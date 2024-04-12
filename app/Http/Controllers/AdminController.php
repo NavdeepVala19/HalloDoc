@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
-use Carbon\Carbon;
 use App\Models\Menu;
 
 // Different Models used in these Controller
@@ -15,7 +13,6 @@ use App\Models\Roles;
 use App\Models\Shift;
 use App\Models\users;
 use App\Mail\SendLink;
-use App\Mail\SendMail;
 use App\Models\Orders;
 
 use App\Models\caseTag;
@@ -32,7 +29,6 @@ use App\Models\RoleMenu;
 // DomPDF package used for the creation of pdf from the form
 use App\Models\UserRoles;
 // To create zip, used to download multiple documents at once
-use App\Mail\SendAgreement;
 use App\Models\AdminRegion;
 use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
@@ -64,7 +60,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
 use App\Models\HealthProfessionalType;
 use Illuminate\Support\Facades\Session;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 
 class AdminController extends Controller
@@ -155,6 +150,8 @@ class AdminController extends Controller
         if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
             if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
                 return $this->cases($request, $status, $category);
+            } else {
+                return view('errors.404');
             }
         } else {
             return view('errors.404');
@@ -319,6 +316,9 @@ class AdminController extends Controller
     public function viewCase($id)
     {
         $data = RequestTable::where('id', $id)->first();
+        if (empty($data)) {
+            return redirect()->back()->with('wrongCase', "Case doesn't exist");
+        }
         return view('adminPage.pages.viewCase', compact('data'));
     }
 
@@ -326,6 +326,9 @@ class AdminController extends Controller
     public function viewNote($id)
     {
         $data = RequestTable::where('id', $id)->first();
+        if (empty($data)) {
+            return redirect()->back()->with('wrongCase', "Case doesn't exist");
+        }
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
@@ -1298,7 +1301,7 @@ class AdminController extends Controller
 
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
-        
+
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')

@@ -39,16 +39,15 @@ class patientLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
-        
+
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-          
+
             if ($userRolesData->role_id == 3) {
                 return redirect()->route('patientDashboardData');
             } else {
                 return back()->with('error', 'Invalid credentials');
             }
-        }
-        else{
+        } else {
             return back()->with('error', 'Invalid credentials');
         }
     }

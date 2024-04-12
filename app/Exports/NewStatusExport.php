@@ -27,7 +27,7 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'PatientMobile', 'RequestorMobile','Address','Notes'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'PatientMobile', 'RequestorMobile', 'Address', 'Notes'];
     }
 
     /**
@@ -37,7 +37,6 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
     {
         $adminNewData = $this->data->get();
         return collect($adminNewData)->map(function ($adminNew) {
-            // dd($adminNew);
             $patientName = null;
             $patientLastName = null;
             $dateOfBirth = null;
@@ -67,16 +66,16 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
             if (isset($adminNew) && $adminNew->requestClient) {
                 $state = $adminNew->requestClient->state;
             }
-           
+
             return [
-                'PatientName' => $patientName.' '.$patientLastName,
+                'PatientName' => $patientName . ' ' . $patientLastName,
                 'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminNew->first_name.' '.$adminNew->last_name,
+                'Requestor' => $adminNew->first_name . ' ' . $adminNew->last_name,
                 'RequestedDate' => $adminNew->created_at,
                 'PatientMobile' => $patientMobile,
-                'RequestorMobile'=>$adminNew->phone_number,
+                'RequestorMobile' => $adminNew->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
-                'Notes'=>$adminNew->requestClient->notes,
+                'Notes' => $adminNew->requestClient->notes,
             ];
         });
     }

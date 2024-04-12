@@ -52,7 +52,7 @@
         <div class="grid-2">
 
             <div class="form-floating" style="height: 58px;">
-                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{$getEmailData->mobile}}" disabled placeholder="Phone Number">
+                <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{$getEmailData->mobile}}" disabled>
                 @error('phone_number')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror

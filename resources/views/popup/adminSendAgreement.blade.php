@@ -24,9 +24,9 @@ pending state, providers need to send an agreement link to patients. --}}
                 <div class="form-floating ">
                     <input type="text" name="phone_number"
                         class="form-control @error('phone_number') is-invalid @enderror agreement-phone-number"
-                        id="floatingInput1" placeholder="Phone Number" disabled>
+                        id="floatingInput1" disabled>
                     <input type="text" name="phone_number" class="form-control agreement-phone-number"
-                        id="floatingInput1" placeholder="Phone Number" hidden>
+                        id="floatingInput1" hidden>
                     <label for="floatingInput1">Phone Number</label>
                     @error('phone_number')
                         <div class="text-danger">{{ $message }}</div>

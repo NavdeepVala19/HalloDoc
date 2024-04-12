@@ -23,7 +23,7 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
     public function headings(): array
     {
-        return ['PatientName', 'Physician Name', 'RequestedDate', 'PatientMobile','RequestorMobile', 'Mobile', 'Address'];
+        return ['PatientName', 'Physician Name', 'RequestedDate', 'PatientMobile', 'RequestorMobile', 'Mobile', 'Address'];
     }
 
     /**
@@ -36,9 +36,9 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
         return collect($adminUnpaidData)->map(function ($adminUnpaid) {
 
             $patientName = null;
-            $patientLastName = null; 
+            $patientLastName = null;
             $PhysicianFirstName = null;
-            $PhysicianLastName = null; 
+            $PhysicianLastName = null;
             $street = null;
             $city = null;
             $patientMobile = null;
@@ -74,8 +74,8 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
             }
 
             return [
-                'PatientName' => $patientName.' '.$patientLastName,
-                'Physician Name' => $PhysicianFirstName.' '.$PhysicianLastName,
+                'PatientName' => $patientName . ' ' . $patientLastName,
+                'Physician Name' => $PhysicianFirstName . ' ' . $PhysicianLastName,
                 'RequestedDate' => $adminUnpaid->created_at,
                 'PatientMobile' => $patientMobile,
                 'RequestorMobile' => $adminUnpaid->phone_number,

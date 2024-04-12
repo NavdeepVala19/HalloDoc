@@ -5,24 +5,16 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\users;
-use App\Models\Regions;
-use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
-use App\Models\Provider;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
-use App\Models\RequestStatus;
 use App\Mail\sendEmailAddress;
 use App\Models\request_Client;
-use App\Models\RequestWiseFile;
-use App\Services\TwilioService;
-use App\Exports\PendingStatusExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
 
 class AdminDashboardController extends Controller
 {
@@ -173,7 +165,7 @@ class AdminDashboardController extends Controller
             ->leftJoin('regions', 'regions.id', 'admin.region_id')
             ->where('user_id', $id)
             ->first();
-            
+
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 

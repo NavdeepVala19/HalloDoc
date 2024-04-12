@@ -55,7 +55,7 @@
                 <div class="grid-2">
                     <div class="form-floating" style="height: 58px;">
                         <input type="tel" name="phone_number" class="form-control phone_number" id="telephone"
-                            value="{{ $getPatientData->mobile }}" placeholder="Phone Number">
+                            value="{{ $getPatientData->mobile }}">
                         @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror

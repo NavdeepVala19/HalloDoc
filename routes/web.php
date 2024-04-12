@@ -188,7 +188,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     // show view notes page as per the id
     Route::get('/provider/view/notes/{id}', [ProviderController::class, 'viewNote'])->name('provider.view.notes');
     // Store notes saved by provider
-    Route::post('/provider/store/notes', [ProviderController::class, 'storeNote'])->name('provider.store.note');
+    Route::post('/provider/view/notes/store', [ProviderController::class, 'storeNote'])->name('provider.store.note');
 
     // VIEW UPLOADS PAGE
     // View Uploads (currently showing all the documents in requestWiseFile table)
@@ -230,7 +230,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::post('/download-medical-form', [ProviderController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 
     // Send Email for creating request through provider
-    Route::post('/provider/send-mail', [ProviderController::class, 'sendMail'])->name('send.mail');
+    Route::post('/provider/send/mail', [ProviderController::class, 'sendMail'])->name('send.mail');
 
     // Provider Profile page (MyProfile)
     Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
@@ -286,7 +286,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::post('/transfer-case-admin', [AdminController::class, 'transferCase'])->name('admin.transfer.case');
 
     // Send Link
-    Route::post('/admin/send-mail', [AdminController::class, 'sendMail'])->name('admin.send.mail');
+    Route::post('/admin/send/mail/patient', [AdminController::class, 'sendMail'])->name('admin.send.mail');
 
     // Cancel Case by admin
     Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
@@ -301,11 +301,11 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Admin View Notes
     Route::get('admin/view/notes/{id}', [AdminController::class, 'viewNote'])->name('admin.view.note');
     // Store Additional Note entered by Admin 
-    Route::post('/admin/store/notes', [AdminController::class, 'storeNote'])->name('admin.store.note');
+    Route::post('/admin/view/notes/store', [AdminController::class, 'storeNote'])->name('admin.store.note');
 
     // Admin View Uploads
     Route::get('admin/view/uploads/{id}', [AdminController::class, 'viewUpload'])->name('admin.view.upload');
-    Route::post('admin/view-uploads/{id?}', [AdminController::class, 'uploadDocument'])->name('admin.upload.doc');
+    Route::post('admin/view/uploads/{id?}', [AdminController::class, 'uploadDocument'])->name('admin.upload.doc');
 
     // ENCOUNTER FORM
     // Show Encounter Form when clicked on Encounter from Conclude State
@@ -405,8 +405,8 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
-route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
-route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
+    route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
+    route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
     route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
 
@@ -452,8 +452,8 @@ route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController
     route::get('/admin-provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
     route::post('/admin-provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
 
-route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
-route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('FilterUserAccessAccountTypeWiseMobileView');
+    route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
+    route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('FilterUserAccessAccountTypeWiseMobileView');
 
     route::get('/admin-createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
     route::post('/admin-adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');

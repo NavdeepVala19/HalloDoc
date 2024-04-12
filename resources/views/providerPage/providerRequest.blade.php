@@ -50,7 +50,7 @@
                         <div class="form-floating" style="height: 58px;">
                             <input type="tel" name="phone_number"
                                 class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                                placeholder="Phone Number" value="{{ old('phone_number') }}">
+                                value="{{ old('phone_number') }}">
                         </div>
                         @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
@@ -99,12 +99,12 @@
                     </div>
                     <div class="form-floating">
                         <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code"
-                            value="{{ old('zip') }}">
+                            value="{{ old('zip') }}" min="0" max="999999">
                         <label for="floatingInput">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">
                         <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room"
-                            value="{{ old('room') }}">
+                            value="{{ old('room') }}" min="0" max="100">
                         <label for="floatingInput">Room # (Optional)</label>
                     </div>
                 </div>

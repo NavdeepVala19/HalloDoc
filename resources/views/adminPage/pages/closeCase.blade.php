@@ -139,7 +139,7 @@
                         <div class="d-flex gap-2 align-items-center phone-number-container">
                             <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
                                 class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
-                                placeholder="Phone Number" disabled>
+                                disabled>
                             <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
                         </div>
                         @error('phone_number')

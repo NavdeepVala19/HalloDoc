@@ -55,6 +55,6 @@ class patientAccountController extends Controller
         //     ->paginate(10);
 
         // return view('patientSite/patientDashboard', compact('data'));
-        
+
     }
 }

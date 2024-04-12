@@ -51,8 +51,7 @@ class AdminLoginController extends Controller
             } else if ($userRolesData->role_id == 3) {
                 return back()->with('error', 'invalid credentials');
             }
-        }
-        else {
+        } else {
             return back()->with('error', 'invalid credentials');
         }
     }

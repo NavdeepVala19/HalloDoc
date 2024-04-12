@@ -98,7 +98,6 @@
                     </thead>
                     <tbody>
                         @foreach ($vendors as $vendor)
-                            {{-- {{ dd($vendor->healthProfessionalType->profession_name) }} --}}
                             @if (!empty($vendor->healthProfessionalType))
                                 <tr>
                                     <td>{{ $vendor->healthProfessionalType->profession_name }}</td>
