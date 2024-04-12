@@ -54,14 +54,14 @@
             @csrf
             <h3>Account Information</h3>
             <div class="grid-3">
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="user_name" class="form-control" id="floatingInput1" placeholder="User Name" value="{{ old('user_name') }}">
                     <label for="floatingInput1">User Name</label>
                     @error('user_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="password" name="password" class="form-control" id="floatingInput2" placeholder="password" value="{{ old('password') }}">
                     <label for="floatingInput2">Password</label>
                     @error('password')
@@ -74,31 +74,30 @@
                     </select>
                 </div>
             </div>
-
             <h3>Administrator Information</h3>
             <div class="grid-2">
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="first_name" class="form-control" id="floatingInput3" placeholder="First Name" value="{{ old('first_name') }}">
                     <label for="floatingInput3">First Name</label>
                     @error('first_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="last_name" class="form-control" id="floatingInput4" placeholder="Last Name" value="{{ old('last_name') }}">
                     <label for="floatingInput4">Last Name</label>
                     @error('last_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="email" class="form-control" id="floatingInput5" name="email" placeholder="name@example.com" value="{{ old('email') }}">
                     <label for="floatingInput5">Email</label>
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="email" class="form-control" id="floatingInput6" name="confirm_email" placeholder="name@example.com" value="{{ old('confirm_email') }}">
                     <label for="floatingInput6">Confirm Email</label>
                     @error('confirm_email')
@@ -123,21 +122,21 @@
             </div>
             <h3>Mailing & Billing Information</h3>
             <div class="grid-2">
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="address1" class="form-control" id="floatingInput6" placeholder="Address 1" value="{{ old('address1') }}">
                     <label for="floatingInput6">Address 1</label>
                     @error('address1')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="address2" class="form-control" id="floatingInput7" placeholder="Address 2" value="{{ old('address2') }}">
                     <label for="floatingInput7">Address 2</label>
                     @error('address2')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="city" class="form-control" id="floatingInput8" placeholder="city" value="{{ old('city') }}">
                     <label for="floatingInput8">City</label>
                     @error('city')
@@ -151,7 +150,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-floating ">
+                <div class="form-floating">
                     <input type="text" name="zip" class="form-control" id="floatingInput9" placeholder="zip" value="{{ old('zip') }}">
                     <label for="floatingInput9">Zip</label>
                     @error('zip')

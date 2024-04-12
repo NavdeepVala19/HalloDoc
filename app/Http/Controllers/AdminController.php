@@ -1289,8 +1289,7 @@ class AdminController extends Controller
         $currentDate = now()->toDateString();
         $currentTime = now()->format('H:i');
 
-        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)
-            ->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
 
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         $onCallPhysicians = Provider::whereIn('id', $onCallPhysicianIds)->get();
@@ -1498,23 +1497,24 @@ class AdminController extends Controller
 
     public function createAdminAccount(Request $request)
     {
-
         $request->validate([
-            'user_name' => 'required',
-            'password' => 'required',
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'required|min:2|max:30',
-            'email' => 'required|email|',
-            'confirm_email' => 'required|email|',
+            'user_name' => 'required|alpha|min:3|max:40',
+            'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
+            'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'confirm_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'address1' => 'min:2|max:50',
-            'address2' => 'min:2|max:50',
+            'address1' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9-, ]+$/',
+            'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
             'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'role' => 'required',
+            'state'=>'required',
         ]);
 
+        dd("here");
         // Store Data in users table
 
         $adminCredentialsData = new users();

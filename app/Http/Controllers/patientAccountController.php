@@ -20,7 +20,7 @@ class patientAccountController extends Controller
     public function createAccount(Request $request)
     {
         $request->validate([
-            "email" => "required|unique:App\Models\users,email",
+            "email" => "required|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/",
             "password" => "required|min:8|max:20|regex:/^\S(.*\S)?$/",
             "confirm_password" => "required|same:password",
         ]);

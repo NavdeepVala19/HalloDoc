@@ -34,9 +34,7 @@ $(document).ready(function () {
         function (email, element) {
             return (
                 this.optional(element) ||
-                email.match(
-                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*$/
-                )
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
             );
         },
         "Please enter a valid email (format: alphanum@alpha.domain)."
@@ -58,13 +56,13 @@ $(document).ready(function () {
         "Please enter a valid state name."
     );
 
-    $.validator.addMethod(
-        "zipcode",
-        function (value, element) {
-            return value.length == 6 && /\d/.test(value);
-        },
-        "Please enter a valid zipcode."
-    );
+     $.validator.addMethod(
+         "zipcode",
+         function (value, element) {
+             return value.length == 6 && /\d/.test(value);
+         },
+         "Please enter a valid zipcode."
+     );
 
     $.validator.addMethod(
         "nonNegativeOptional",
@@ -136,7 +134,7 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
-                // emailAddress:true
+                emailAddress:true
             },
             last_name: {
                 required: true,
@@ -185,7 +183,7 @@ $(document).ready(function () {
             email: {
                 required:
                     "Please enter a valid email format (e.g., user@example.com).",
-                // emailAddress:"Please enter a valid email (format: alphanum@alpha.domain)."
+                emailAddress:"Please enter a valid email (format: alphanum@alpha.domain)."
             },
             first_name: {
                 required: "Please enter a firstname between 2 and 10 character",
