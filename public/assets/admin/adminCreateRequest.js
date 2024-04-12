@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    
     $.validator.addMethod(
         "lettersFirstName",
         function (value, element) {
@@ -30,17 +29,6 @@ $(document).ready(function () {
     );
 
     $.validator.addMethod(
-        "emailAddress",
-        function (email, element) {
-            return (
-                this.optional(element) ||
-                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
-            );
-        },
-        "Please enter a valid email (format: alphanum@alpha.domain)."
-    );
-
-    $.validator.addMethod(
         "city",
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
@@ -55,14 +43,14 @@ $(document).ready(function () {
         },
         "Please enter a valid state name."
     );
-
-     $.validator.addMethod(
-         "zipcode",
-         function (value, element) {
-             return value.length == 6 && /\d/.test(value);
-         },
-         "Please enter a valid zipcode."
-     );
+    
+    $.validator.addMethod(
+        "zipcode",
+        function (value, element) {
+            return value.length == 6 && /\d/.test(value);
+        },
+        "Please enter a valid zipcode."
+    );
 
     $.validator.addMethod(
         "nonNegativeOptional",
@@ -83,56 +71,26 @@ $(document).ready(function () {
             const regex = value.match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter valid notes."
     );
-
-     $.validator.addMethod(
-         "relation",
-         function (value, element) {
-             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
-         },
-         "Please enter only letters."
-     );
 
     $.validator.addMethod(
-        "customFile",
-        function (value, element, param) {
-            // Check if a file is selected
-            if (element.files.length === 0) {
-                return true; // Allow if no file is selected (optional)
-            }
-
-            // Get the file extension
-            var extension = element.files[0].name
-                .split(".")
-                .pop()
-                .toLowerCase();
-
-            // Allowed extensions
-            var allowedExtensions = ["jpg", "jpeg", "png", "pdf", "doc"];
-
-            // Check extension
-            if ($.inArray(extension, allowedExtensions) === -1) {
-                return false; // Invalid extension
-            }
-
-            // Check file size (2MB in bytes)
-            var maxSize = 2 * 1024 * 1024;
-            if (element.files[0].size > maxSize) {
-                return false; // File size too large
-            }
-
-            return true; // Valid file
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
         },
-        "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
+        "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
-    $("#patientSomeOneRequest").validate({
+    $("#adminCreateRequestForm").validate({
         rules: {
             first_name: {
                 required: true,
-                minlength: 3,
-                maxlength: 15,
+                minlength: 2,
+                maxlength: 10,
                 lettersFirstName: true,
             },
             email: {
@@ -141,12 +99,9 @@ $(document).ready(function () {
             },
             last_name: {
                 required: true,
-                minlength: 3,
-                maxlength: 15,
+                minlength: 2,
+                maxlength: 10,
                 lettersLastName: true,
-            },
-            date_of_birth: {
-                required: true,
             },
             phone_number: {
                 required: true,
@@ -177,30 +132,23 @@ $(document).ready(function () {
                 minlength: 0,
                 nonNegativeOptional: true,
             },
-            symptoms: {
+            adminNote: {
                 diseaseSymptoms: true,
-                maxlength: 200,
-            },
-            docs: {
-                customFile: true,
-            },
-            relation: {
-                relation: true,
+                maxlength: 255,
             },
         },
         messages: {
             email: {
                 required:
                     "Please enter a valid email format (e.g., user@example.com).",
+                emailAddress:
+                    "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 2 and 10 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
-            },
-            date_of_birth: {
-                required: "Please enter a date of birth",
+                required: "Please enter a lastname between 2 and 10 character",
             },
             phone_number: {
                 required: "Please enter a mobile number",
@@ -221,16 +169,9 @@ $(document).ready(function () {
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
-            patient_note: {
+            adminNote: {
                 diseaseSymptoms: "Please enter valid symptoms.",
                 maxlength: "Symptoms details cannot exceed 255 characters.", // Optional: Message for exceeding limit
-            },
-            docs: {
-                customFile:
-                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
-            },
-            relation: {
-                relation: "Please enter only letters",
             },
         },
         errorElement: "span",
@@ -245,7 +186,4 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-
-    
-    console.log("here");
-})
+});

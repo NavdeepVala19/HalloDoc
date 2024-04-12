@@ -20,8 +20,8 @@ class patientAccountController extends Controller
     public function createAccount(Request $request)
     {
         $request->validate([
-            "email" => "required",
-            "password" => "required|min:8|max:20",
+            "email" => "required|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/",
+            "password" => "required|min:8|max:20|regex:/^\S(.*\S)?$/",
             "confirm_password" => "required|same:password",
         ]);
 
@@ -37,7 +37,6 @@ class patientAccountController extends Controller
                 $create_account->save();
             }
         }
-
         return redirect()->route('patientDashboardData');
 
         // $data = request_Client::select(

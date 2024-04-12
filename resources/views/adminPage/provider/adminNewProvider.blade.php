@@ -74,9 +74,12 @@
                 </div>
 
                 <div class="form-floating role-select">
-                    <select class="form-select" id="provider-role" name="role">
+                    <select class="form-select @error('role') is-invalid @enderror" id="provider-role" name="role">
                         <option selected>Role</option>
                     </select>
+                    @error('role')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
             </div>
@@ -174,10 +177,9 @@
                 </div>
 
                 <div>
-                    {{-- Dropdown State Selection --}}
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="select_state" value="{{ old('select-state') }}">
-                            <option selected>State</option>
+                        <select class="form-select @error('select_state') is-invalid @enderror" id="floatingSelect" aria-label="Floating label select example" name="select_state" value="{{ old('select-state') }}">
+                            <option value="select">State</option>
                             <option value="1">Somnath</option>
                             <option value="2">Dwarka</option>
                             <option value="3">Rajkot</option>
@@ -186,7 +188,6 @@
                         </select>
                         </input>
                     </div>
-
                 </div>
 
                 <div class="form-floating ">
@@ -218,7 +219,7 @@
                 </div>
 
                 <div class="form-floating ">
-                    <input type="text" name="business_website" class="form-control" id="floatingInput" placeholder="Business Website" value="{{ old('business_website') }}">
+                    <input type="url" name="business_website" class="form-control @error('business_website') is-invalid @enderror" id="floatingInput" placeholder="Business Website" value="{{ old('business_website') }}">
                     <label for="floatingInput">Business Website</label>
                     @error('business_website')
                     <div class="text-danger">{{ $message }}</div>
@@ -227,7 +228,7 @@
 
             </div>
             <div class="custom-file-input mb-4">
-                <input type="file" name="docs" id="file-upload-request" hidden>
+                <input type="file" name="provider_photo" id="file-upload-request" hidden>
                 <label for="file-upload-request" class="upload-label">
                     <div class="p-2 file-label">
                         Select File
@@ -237,11 +238,17 @@
                         <span class="upload-txt">Upload</span>
                     </span>
                 </label>
+                @error('provider_photo')
+                <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" style="height: 120px" value="{{ old('admin_notes') }}"></textarea>
+                <textarea class="form-control @error('admin_notes') is-invalid @enderror" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" style="height: 120px">{{ old('admin_notes') }}</textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
+                @error('admin_notes')
+                <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <hr>
@@ -253,7 +260,6 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-                        
                                         <span class="ms-2">
                                             Independent Contractor Agreement
                                         </span>
@@ -265,14 +271,17 @@
                                         <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
                                         <p id="Contractor"></p>
+                                        @error('independent_contractor')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="ms-4 responsive-btns">
                                         <label for="independent_contractor" class="upload primary-fill"> <i class="bi bi-cloud-arrow-up"></i> </label>
-                                        <input type="file" id="fileInput-independent_contractor-agreement" class="independent-contractor-input" name="independent_contractor-btn" hidden>
-
-
                                         <p id="Contractor"></p>
+                                        @error('independent_contractor')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </td>
                             </tr>
@@ -280,7 +289,6 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-    
                                         <span class="ms-2">
                                             Background Check
                                         </span>
@@ -291,14 +299,19 @@
                                     <div class="ms-4 btns">
                                         <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="background-input" name="background_doc" hidden>
-
                                         <p id="Background"></p>
+                                        @error('background_doc')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-
+                                        <input type="file" id="background-input" name="background_doc" hidden>
                                         <p id="Background"></p>
+                                        @error('background_doc')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </td>
                             </tr>
@@ -306,7 +319,6 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-
                                         <span class="ms-2">
                                             HIPAA Compliance
                                         </span>
@@ -317,13 +329,17 @@
                                     <div class="ms-4 btns">
                                         <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="hipaa-input" hidden name="hipaa_docs">
-
                                         <p id="HIPAA"></p>
+                                        @error('hipaa_docs')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-
                                         <p id="HIPAA"></p>
+                                        @error('hipaa_docs')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </td>
                             </tr>
@@ -331,22 +347,26 @@
                             <tr class="border-bottom-table">
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-
                                         <span class="ms-2">
                                             Non-disclosure Agreement
                                         </span>
                                     </div>
-
                                 </td>
                                 <td>
                                     <div class="ms-4 btns">
                                         <label for="non-disclosure-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc">
                                         <p class="non-disclosure"></p>
+                                        @error('non_disclosure_doc')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="ms-4 responsive-btns">
                                         <button class="primary-fill mb-2 mt-2" name="non_disclosure_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
                                         <p class="non-disclosure"></p>
+                                        @error('independent_contractor')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </td>
                             </tr>

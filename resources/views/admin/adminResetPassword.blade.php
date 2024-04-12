@@ -30,9 +30,9 @@
         @endif
 
         <div class="form">
-            <form action="{{route('adminForgotPassword')}}" method="post">
+            <form action="{{route('adminForgotPassword')}}" method="post" id="adminLogin">
                 @csrf
-                <div class="mb-4 username">
+                <div class="mb-4 username adminLogin">
                     <i class="bi bi-person-circle person-logo"></i>
                     <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder=" email" name="email">
                     @error('email')
@@ -55,5 +55,7 @@
 
 
 @section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ URL::asset('assets/admin/adminLogin.js') }}"></script>
 @endsection

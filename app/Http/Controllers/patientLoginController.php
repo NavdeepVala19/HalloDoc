@@ -29,7 +29,7 @@ class patientLoginController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => "required|min:8|max:20|regex:/^\S(.*\S)?$/",
         ]);
 
         $credentials = [
@@ -110,8 +110,7 @@ class patientLoginController extends Controller
         ])->update(['password' => Hash::make($request->new_password)]);
 
 
-        users::where(['email' => $request->email])->update(['token' => null]);
-
+        users::where(['token' => $request->token])->update(['token' => ""]);
 
         return redirect('/patient_login')->with('success', 'Your password has been changed!');
     }

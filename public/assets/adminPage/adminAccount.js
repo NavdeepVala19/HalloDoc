@@ -1,105 +1,185 @@
 $(document).ready(function () {
+    $.validator.addMethod(
+        "phoneUS",
+        function (phone_number, element) {
+            return (
+                this.optional(element) ||
+                phone_number.match(
+                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
+                )
+            );
+        },
+        "Please enter a valid phone number."
+    );
 
-    $.validator.addMethod("phoneUS", function (phone_number, element) {
-        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
-    }, "Please enter a valid phone number.");
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid city name."
+    );
 
-    $.validator.addMethod("city", function (value, element) {
-        return value.match(/^[a-zA-Z ,_-]+?$/);
-    }, "Please enter a valid city name.");
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid state name."
+    );
 
-    $.validator.addMethod("state", function (value, element) {
-        return value.match(/^[a-zA-Z ,_-]+?$/);
-    }, "Please enter a valid state name.");
+ 
+    $.validator.addMethod(
+        "zipcode",
+        function (value, element) {
+            return value.length == 6 && /\d/.test(value);
+        },
+        "Please enter a valid zipcode."
+    );
+    $.validator.addMethod(
+        "password",
+        function (email, element) {
+            return this.optional(element) || email.match(/^\S(.*\S)?$/);
+        },
+        "Please enter a valid password"
+    );
+    $.validator.addMethod(
+        "lettersUserName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your User name."
+    );
+    $.validator.addMethod(
+        "lettersFirstName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your first name."
+    );
 
-    $.validator.addMethod("zipcode", function (value, element) {
-        return value.length == 6 && /\d/.test(value);
-    }, "Please enter a valid zipcode.");
+    $.validator.addMethod(
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
+        },
+        "Please enter a valid email (format: alphanum@alpha.domain)."
+    );
 
-    $('#createAdminAccountForm').validate({
+    $.validator.addMethod(
+        "lettersLastName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your Last name."
+    );
+
+    $("#createAdminAccountForm").validate({
         rules: {
             user_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 60,
+                lettersUserName: true,
             },
             password: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 8,
+                maxlength: 20,
+                password: true,
             },
             first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersFirstName: true,
             },
             last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30
+                minlength: 3,
+                maxlength: 15,
+                lettersLastName: true,
             },
             email: {
                 required: true,
-                email: true,
+                emailAddress: true,
             },
             confirm_email: {
                 required: true,
-                email: true,
+                emailAddress: true,
             },
             phone_number: {
                 required: true,
-                phoneUS: true
+                phoneUS: true,
             },
             alt_mobile: {
                 required: true,
-                phoneUS: true
+                phoneUS: true,
             },
             address1: {
                 required: true,
                 minlength: 2,
-                maxlength: 50
+                maxlength: 30,
+                address1: true,
             },
             address2: {
                 required: true,
                 minlength: 2,
-                maxlength: 50,
+                maxlength: 30,
+                address2: true,
             },
             city: {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
-                city: true
+                city: true,
             },
             zip: {
                 required: true,
-                zipcode: true
+                zipcode: true,
+            },
+            state: {
+                required: true,
             },
             role: {
                 required: true,
-            }
+            },
         },
         messages: {
+            user_name: {
+                required: "Please enter a username",
+            },
+            password: {
+                required: "Please enter a password",
+            },
             first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             email: {
-                required: "Please enter a valid email format (e.g., user@example.com).",
+                required:
+                    "Please enter a valid email format (e.g., user@example.com).",
             },
             confirm_email: {
-                required: "Please enter a valid email format (e.g., user@example.com).",
+                required:"Please enter a valid email format (e.g., user@example.com).",
             },
             phone_number: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format...."
+                phoneUS: "Please enter valid phone number format....",
             },
             alt_mobile: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format...."
+                phoneUS: "Please enter valid phone number format....",
             },
             address1: {
+                required: "Please enter a address1",
+            },
+            address2: {
                 required: "Please enter a address1",
             },
             city: {
@@ -113,19 +193,18 @@ $(document).ready(function () {
             },
             role: {
                 required: "Please select at least one role",
-            }
+            },
         },
-        errorElement: 'span',
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass('errorMsg');
-            element.closest('.form-floating').append(error);
+            error.addClass("errorMsg");
+            element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid').addClass('is-valid');
-        }
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
     });
-    console.log("here");
 });

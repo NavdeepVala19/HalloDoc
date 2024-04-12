@@ -27,24 +27,25 @@ class familyRequestController extends Controller
 
     public function create(Request $request)
     {
-
         $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'required|min:2|max:30',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required',
-            'email' => 'required|email|min:2|max:30',
+            'email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'street' => 'required|min:2|max:30',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'zipcode' => 'digits:6',
-            'family_first_name' => 'required|min:2|max:30',
-            'family_last_name' => 'required|min:2|max:30',
-            'family_email' => 'required|email|min:2|max:30',
+            'zipcode' => 'digits:6|gte:1',
+            'family_first_name' => 'required|min:3|max:15|alpha',
+            'family_last_name' => 'required|min:3|max:15|alpha',
+            'family_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'family_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'family_relation' => 'required',
-            'docs'=>'required|file|mimes:jpg,png,pdf,doc|max:2048',
-        ]);
+            'family_relation' => 'required|alpha',
+            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'symptoms' => 'nullable|min:5|max:200|',
+            'room'=>'gte:1|nullable'
+    ]);
 
 
         $isEmailStored = users::where('email', $request->email)->first();

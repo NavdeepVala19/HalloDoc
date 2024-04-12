@@ -34,15 +34,18 @@ class AdminDashboardController extends Controller
     public function createAdminPatientRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'required|min:2|max:30',
+            'first_name' => 'required|min:2|max:30|alpha',
+            'last_name' => 'required|min:2|max:30|alpha',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'room'=>'gte:1|nullable',
+            'zip' => 'digits:6|nullable|gte:1',
+            'adminNote' => 'nullable|min:5|max:200|',
         ]);
-
+        dd("here");
         $isEmailStored = users::where('email', $request->email)->pluck('email');
 
         if ($request->email != $isEmailStored) {
@@ -229,8 +232,8 @@ class AdminDashboardController extends Controller
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
-            'email' => 'required|email',
-            'confirm_email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'confirm_email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);
 
@@ -264,7 +267,7 @@ class AdminDashboardController extends Controller
 
         $request->validate([
             'address1' => 'required|min:2|max:30',
-            'address2' => 'min:2|max:30',
+            'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
             'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',

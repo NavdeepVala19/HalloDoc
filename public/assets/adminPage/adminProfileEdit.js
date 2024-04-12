@@ -1,24 +1,74 @@
-
-
 $(document).ready(function () {
-    $.validator.addMethod("phoneUS", function (phone_number, element) {
-        return this.optional(element) || phone_number.match(/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/);
-    }, "Please enter a valid phone number.");
+    $.validator.addMethod(
+        "phoneUS",
+        function (phone_number, element) {
+            return (
+                this.optional(element) ||
+                phone_number.match(
+                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
+                )
+            );
+        },
+        "Please enter a valid phone number."
+    );
 
-    $.validator.addMethod("city", function (value, element) {
-        return value.match(/^[a-zA-Z ,_-]+?$/);
-    }, "Please enter a valid city name.");
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid city name."
+    );
 
-    $.validator.addMethod("zipcode", function (value, element) {
-        return value.length == 6 && /\d/.test(value);
-    }, "Please enter a valid zipcode.");
+    $.validator.addMethod(
+        "zipcode",
+        function (value, element) {
+            return value.length == 6 && /\d/.test(value);
+        },
+        "Please enter a valid zipcode."
+    );
 
-    $('#adminEditProfileForm1').validate({
+    $.validator.addMethod(
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
+        },
+        "Please enter a valid email (format: alphanum@alpha.domain)."
+    );
+
+    $.validator.addMethod(
+        "lettersFirstName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your first name."
+    );
+
+    $.validator.addMethod(
+        "lettersLastName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your Last name."
+    );
+
+        $.validator.addMethod(
+            "state",
+            function (value, element) {
+                return value.match(/^[a-zA-Z ,_-]+?$/);
+            },
+            "Please enter a valid address2."
+        );
+
+    $("#adminEditProfileForm1").validate({
         rules: {
             password: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 50,
             },
         },
         message: {
@@ -26,44 +76,48 @@ $(document).ready(function () {
                 required: "Please enter a valid password",
             },
         },
-        errorElement: 'span',
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass('errorMsg');
-            element.closest('.form-floating').append(error);
+            error.addClass("errorMsg");
+            element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid').addClass('is-valid');
-        }
-    })
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
 
-    $('#adminEditProfileForm2').validate({
+    $("#adminEditProfileForm2").validate({
         rules: {
             first_name: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 15,
+                lettersFirstName: true,
             },
             last_name: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 15,
+                lettersLastName: true,
             },
             email: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 20,
+                emailAddress: true,
             },
-            confirm_email : {
+            confirm_email: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 20,
+                emailAddress: true,
             },
             phone_number: {
                 required: true,
-                phoneUS:true
+                phoneUS: true,
             },
         },
         message: {
@@ -83,43 +137,43 @@ $(document).ready(function () {
                 required: "Please enter a valid phone_number",
             },
         },
-        errorElement: 'span',
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass('errorMsg');
-            element.closest('.form-floating').append(error);
+            error.addClass("errorMsg");
+            element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid').addClass('is-valid');
-        }
-    })
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
 
-
-    $('#adminEditProfileForm3').validate({
+    $("#adminEditProfileForm3").validate({
         rules: {
             address1: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 30,
             },
             address2: {
                 required: true,
                 minlength: 3,
-                maxlength: 50
+                maxlength: 30,
+                state:true
             },
             city: {
                 required: true,
-                city:true
+                city: true,
             },
-            zip : {
+            zip: {
                 required: true,
-                zipcode:true
+                zipcode: true,
             },
             alt_mobile: {
                 required: true,
-                phoneUS: true
+                phoneUS: true,
             },
         },
         message: {
@@ -139,16 +193,16 @@ $(document).ready(function () {
                 required: "Please enter a valid alt_phone_number",
             },
         },
-        errorElement: 'span',
+        errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass('errorMsg');
-            element.closest('.form-floating').append(error);
+            error.addClass("errorMsg");
+            element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element).addClass("is-invalid").removeClass("is-valid");
         },
         unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid').addClass('is-valid');
-        }
-    })
-})
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+});
