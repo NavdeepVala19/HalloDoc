@@ -313,5 +313,6 @@
 @endsection
 
 @section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
 <script defer src="{{ asset('assets/adminPage/searchRecords.js') }}"></script>
 @endsection

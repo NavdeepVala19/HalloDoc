@@ -1230,3 +1230,5 @@ $("#listing-region-admin-provider").on("change", function (event) {
     var selectedId = $(this).val();
     fetchPaginatedResultsMobileView(selectedId, 1);
 });
+
+
