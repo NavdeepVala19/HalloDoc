@@ -169,7 +169,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider.status");
 
     // For Searching Request
-    Route::get('/provider/search/{status?}/{category?}', [ProviderController::class, 'search'])->name('provider.searching');
+    Route::post('/provider/{status?}/{category?}', [ProviderController::class, 'search'])->name('provider.searching');
 
     // ************** PROVIDER CREATE REQUEST PAGE ***************
     // show Create request page for provider
@@ -273,7 +273,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.status");
 
     // For Searching Request
-    Route::get('/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
+    // Route::post('admin/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
+    Route::post('admin/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
 
     // Assign Case pop-up, populate select menu with all physician regions (AJAX)
     Route::get('/physician-regions', [AdminController::class, 'physicianRegions'])->name('physician.regions');
@@ -286,7 +287,6 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Send Link
     Route::post('/admin/send-mail', [AdminController::class, 'sendMail'])->name('admin.send.mail');
-
 
     // Cancel Case by admin
     Route::get('/cancel-case', [AdminController::class, "cancelCaseOptions"]);
@@ -309,13 +309,10 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // ENCOUNTER FORM
     // Show Encounter Form when clicked on Encounter from Conclude State
-    Route::get(
-        '/admin-encounter-form/{id?}',
-        [AdminController::class, 'encounterFormView']
-    )->name('admin.encounter.form');
+    Route::get('/admin-encounter-form/{id?}', [AdminController::class, 'encounterFormView'])->name('admin.encounter.form');
 
+    // Changes Saved from admin on Medical Form(Encounter Form)
     Route::post('/admin-medical-form', [AdminController::class, 'encounterForm'])->name('admin.medical.data');
-
 
     // Clear Case by admin pending and close state
     Route::post('clear-case', [AdminController::class, 'clearCase'])->name('admin.clear.case');
@@ -340,10 +337,6 @@ Route::middleware('checkAdminLogin')->group(function () {
     // send orders admin page 
     Route::get('/admin-view-order/{id}', [AdminController::class, 'viewOrder'])->name('admin.view.order');
     Route::post('/admin-send-order', [AdminController::class, 'sendOrder'])->name('admin.send.order');
-    // Dynamically update data of business dropdown based on selection of profession
-    Route::get('/fetch-business/{id}', [AdminController::class, 'fetchBusiness'])->name('fetch.business');
-    // Dynamically fetch data of business based on selection in dropdown
-    Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessData'])->name('fetch.business.data');
 
     // Account Roles Access Page
     Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
@@ -389,97 +382,100 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Filter Shifts review page as per the region selected
     Route::post('/filter-regions', [SchedulingController::class, 'filterRegions'])->name('filter-regions-shifts');
 
+    // ------------------------ Shivesh Work -----------------------------------
+    route::get('/admin-providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
-route::get('/admin-providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
+    route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 
-route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
+    route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
+    route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
-route::get('/admin-new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
-route::post('/admin-new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
+    route::get('/admin-new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
+    route::post('/admin-new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
 
-route::get('/admin-edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
+    route::get('/admin-edit-provider/{id}', [AdminProviderController::class, 'editProvider'])->name('adminEditProvider');
 
-route::post('/admin-provider-updated-account/{id}', [AdminProviderController::class, 'updateProviderAccountInfo'])->name('updateProviderAccountInfo');
-route::post('/admin-provider-updated-info/{id}', [AdminProviderController::class, 'providerInfoUpdate'])->name('providerInfoUpdate');
-route::post('/admin-provider-updated-mail-info/{id}', [AdminProviderController::class, 'providerMailInfoUpdate'])->name('providerMailInfoUpdate');
-route::post('/admin-provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
-route::post('/admin-provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
+    route::post('/admin-provider-updated-account/{id}', [AdminProviderController::class, 'updateProviderAccountInfo'])->name('updateProviderAccountInfo');
+    route::post('/admin-provider-updated-info/{id}', [AdminProviderController::class, 'providerInfoUpdate'])->name('providerInfoUpdate');
+    route::post('/admin-provider-updated-mail-info/{id}', [AdminProviderController::class, 'providerMailInfoUpdate'])->name('providerMailInfoUpdate');
+    route::post('/admin-provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
+    route::post('/admin-provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
 
-route::post('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
+    route::post('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
 
-route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
+    route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
 route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
 route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
-route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
+    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
 
-Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
+    Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 
-route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
+    route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
 
-route::post('/admin-new-exportNew', [AdminController::class, 'exportNew'])->name('exportNewData');
-route::post('/admin-pending-exportPending', [AdminController::class, 'exportPending'])->name('exportPending');
-route::post('/admin-active-exportActive', [AdminController::class, 'exportActive'])->name('exportActive');
-route::post('/admin-conclude-exportConclude', [AdminController::class, 'exportConclude'])->name('exportConclude');
-route::post('/admin-toclose-exportToClose', [AdminController::class, 'exportToClose'])->name('exportToClose');
-route::post('/admin-new-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('exportUnPaid');
-route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
+    route::post('/admin-new-exportNew', [AdminController::class, 'exportNew'])->name('exportNewData');
+    route::post('/admin-pending-exportPending', [AdminController::class, 'exportPending'])->name('exportPending');
+    route::post('/admin-active-exportActive', [AdminController::class, 'exportActive'])->name('exportActive');
+    route::post('/admin-conclude-exportConclude', [AdminController::class, 'exportConclude'])->name('exportConclude');
+    route::post('/admin-toclose-exportToClose', [AdminController::class, 'exportToClose'])->name('exportToClose');
+    route::post('/admin-new-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('exportUnPaid');
+    route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('exportAll');
 
-route::get('/admin-createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
-route::post('/admin-createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
+    route::get('/admin-createRequest', [AdminDashboardController::class, 'createNewRequest'])->name('adminPatientRequest');
+    route::post('/admin-createRequest', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('adminCreatedPatientRequest');
 
-route::get('/admin-new', [AdminController::class, 'fetchRegions']);
+    route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-route::post('/dropdown-data', [AdminController::class, 'filterPatientNew'])->name("filterByRegion");
-route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name("filterByRegionPending");
-route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name("filterByRegionActive");
-route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name("filterByRegionConclude");
-route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name("filterByRegionToClose");
-route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name("filterByRegionUnpaid");
+    route::post('/dropdown-data', [AdminController::class, 'filterPatientNew'])->name("filterByRegion");
+    route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name("filterByRegionPending");
+    route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name("filterByRegionActive");
+    route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name("filterByRegionConclude");
+    route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name("filterByRegionToClose");
+    route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name("filterByRegionUnpaid");
 
-Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
-Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
+    Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
+    Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
 
-route::get('/adminProfile/my-profile/Edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
-route::get('/admin-profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
+    route::get('/adminProfile/my-profile/Edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
+    route::get('/admin/profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
 
-route::post('/admin-profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
+    route::get('/adminProfile/my-profile/Edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
+    route::get('/admin-profile/{id}', [AdminDashboardController::class, 'adminProfile'])->name('adminProfile');
 
-route::post('/admin-adminChangePassword/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('adminChangePassword');
-route::post('/admin-adminInfoEdit/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('adminInfoUpdate');
-route::post('/admin-adminMailEdit/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('adminMailInfoUpdate');
+    route::post('/admin-profileEdit/{id}', [AdminDashboardController::class, 'adminProfileEdit'])->name('adminProfileEdit');
 
-route::get('/admin-provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
-route::post('/admin-provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
+    route::post('/admin-adminChangePassword/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('adminChangePassword');
+    route::post('/admin-adminInfoEdit/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('adminInfoUpdate');
+    route::post('/admin-adminMailEdit/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('adminMailInfoUpdate');
+
+    route::get('/admin-provider-profile/{id}', [AdminDashboardController::class, 'adminEditProviderThroughUserAccess'])->name('adminEditProfileThroughUserAccess');
+    route::post('/admin-provider-profile-edited/{id}', [AdminDashboardController::class, 'adminEditedProviderThroughUserAccess'])->name('adminEditedProfileThroughUserAccess');
 
 route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filterUserAccessAccountTypeWise');
 route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('FilterUserAccessAccountTypeWiseMobileView');
 
-route::get('/send-sms', [AdminDashboardController::class, 'sendSMS'])->name('sendingSMS');
+    route::get('/admin-createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
+    route::post('/admin-adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
 
-route::get('/admin-createAdmin', [AdminController::class, 'adminAccount'])->name('createAdminAccount');
-route::post('/admin-adminAccountCreated', [AdminController::class, 'createAdminAccount'])->name('adminAccountCreated');
-
-route::get('/admin-account-state', [AdminController::class, 'fetchRegionsForState'])->name('fetchStates');
-route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetchRole');
-
-// Records Page
-Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
-Route::match(['get', 'post'], '/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
-
-route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
-Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
-
-Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
-Route::match(['get', 'post'], '/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
-
-Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
-Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
-Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');
-Route::get('/block-history/unblock/{id}', [AdminController::class, 'unBlockPatientInBlockHistoryPage'])->name('admin.block.history.unblock');
+    route::get('/admin-account-state', [AdminController::class, 'fetchRegionsForState'])->name('fetchStates');
+    route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetchRole');
 
 
+    // Records Page
+    Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
+    Route::match(['get', 'post'], '/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
+
+    route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('downloadFilteredData');
+    Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
+
+    Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
+    Route::match(['get', 'post'], '/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+
+    Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
+    Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
+    Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');
+    Route::get('/block-history/unblock/{id}', [AdminController::class, 'unBlockPatientInBlockHistoryPage'])->name('admin.block.history.unblock');
 });
 
 // download document uploaded in view Uploads / Conclude Care
@@ -494,6 +490,12 @@ Route::post('/operations', [ProviderController::class, 'operations'])->name('ope
 // SEND LINK DASHBOARD PAGE
 // Send Agreement via email and sms, pending page
 Route::post('/send-agreement', [ProviderController::class, 'sendAgreementLink'])->name('send.agreement');
+
+// Dynamically update data of business dropdown based on selection of profession
+Route::get('/fetch-business/{id}', [AdminController::class, 'fetchBusiness'])->name('fetch.business');
+
+// Dynamically fetch data of business based on selection in dropdown
+Route::get('/fetch-business-data/{id}', [AdminController::class, 'fetchBusinessData'])->name('fetch.business.data');
 
 
 // ---------------- REMOVED FROM SRS -----------------

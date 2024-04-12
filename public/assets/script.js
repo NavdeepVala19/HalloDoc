@@ -45,4 +45,17 @@ $(document).ready(function () {
     setTimeout(function () {
         $(".popup-message").fadeOut("slow");
     }, 2000);
+
+    // No space are allowed directly when input field is empty
+    $(
+        'input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"], textarea'
+    ).on("keypress", function (event) {
+        // Check if space key is pressed and the input field is empty
+        if (event.which === 32 && $(this).val().trim() === "") {
+            event.preventDefault(); // Prevent space from being inserted
+        } else {
+            // Allow other key presses (including backspace, delete, etc.)
+            return true;
+        }
+    });
 });

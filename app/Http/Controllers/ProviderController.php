@@ -41,11 +41,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\HealthProfessionalType;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 
 class ProviderController extends Controller
 {
+    // Counts Total Number of cases for particular Physician and having particular state
     public function totalCasesCount($providerId)
     {
         // Total count of cases as per the status (displayed in all listing pages)
@@ -63,21 +65,22 @@ class ProviderController extends Controller
     // Build Query as per filters, search query or normal cases
     public function buildQuery($status, $category, $searchTerm, $providerId)
     {
+        // Check for Status(whether it's single status or multiple)
         if (is_array($this->getStatusId($status))) {
             $query = RequestTable::with('requestClient')->whereIn('status', $this->getStatusId($status))->where('physician_id', $providerId);
         } else {
             $query = RequestTable::with('requestClient')->where('status', $this->getStatusId($status))->where('physician_id', $providerId);
         }
 
-        // Filter by Category if not 'all'
+        // Filter by Category if not 'all' (These will enter condition only if there is any filter selected)
         if ($category !== 'all') {
             $query->where('request_type_id', $this->getCategoryId($category));
         }
 
-        // Apply search condition
+        // Apply search condition(Enter condition only when any search query is requested)
         if ($searchTerm) {
             $query->whereHas('requestClient', function ($q) use ($searchTerm) {
-                $q->where('first_name', 'like', "%$searchTerm%");
+                $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
             });
         }
 
@@ -87,7 +90,12 @@ class ProviderController extends Controller
     // Method to retrieve cases based on status, category, and search term
     public function cases(Request $request, $status = 'new', $category = "all")
     {
-        $searchTerm = $request->search;
+        // $searchTerm = $request->search;
+
+        // Use Session to filter by category and searchTerm
+        $searchTerm = $request->session()->get('searchTerm', null);
+        $category = $request->session()->get('category', 'all');
+
         $userData = Auth::user();
         $providerId = Provider::where('user_id', $userData->id)->first()->id;
         $count = $this->totalCasesCount($providerId);
@@ -99,6 +107,7 @@ class ProviderController extends Controller
         return view($viewName, compact('cases', 'count', 'userData'));
     }
 
+    // For Provider redirect to new State(By Default)
     public function providerDashboard()
     {
         return redirect('/provider/new');
@@ -107,18 +116,29 @@ class ProviderController extends Controller
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
+        // Forget from session whenever a new status is opened
+        Session::forget(['searchTerm', 'category']);
+
         return $this->cases($request, $status);
     }
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
     public function filter(Request $request, $status = 'new', $category = 'all')
     {
+
+        // Store category in the session
+        $request->session()->put('category', $category);
+
         return $this->cases($request, $status, $category);
     }
 
     // Search for specific keyword in first_name of requestTable and requestclient
     public function search(Request $request, $status = 'new', $category = 'all')
     {
+
+        // store searchTerm in session
+        $request->session()->put('searchTerm', $request->search);
+
         return $this->cases($request, $status, $category);
     }
 
@@ -150,7 +170,7 @@ class ProviderController extends Controller
     public function transferCase(Request $request)
     {
         $request->validate([
-            'notes' => 'required',
+            'notes' => 'required|max:100|min:5|alpha_num',
         ]);
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         RequestStatus::create([
@@ -166,6 +186,7 @@ class ProviderController extends Controller
         return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
     }
 
+    // Show Provider Request Page
     public function viewCreateRequest()
     {
         return view('providerPage/providerRequest');
@@ -175,8 +196,8 @@ class ProviderController extends Controller
     public function createRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'string|min:2|max:30',
+            'first_name' => 'required|min:2|max:30|alpha',
+            'last_name' => 'string|min:2|max:30|alpha',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required|email',
             'street' => 'required',
@@ -318,10 +339,11 @@ class ProviderController extends Controller
         $requestData = RequestTable::where('id', $id)->first();
         return view('providerPage.encounterForm', compact('data', 'id', 'requestData'));
     }
+    // Store Encounter Form (Medical Form) Data 
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
+            'first_name' => 'required|alpha|min:2|max:30',
             'email' => 'required|email',
             'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
@@ -518,7 +540,7 @@ class ProviderController extends Controller
         return redirect()->route('provider.view.notes', compact('id'))->with('providerNoteAdded', 'Your Note Successfully Added');
     }
 
-    // Send Mail
+    // Send Mail to patient for creating request
     public function sendMail(Request $request)
     {
         // Generate the link using route() helper (assuming route parameter is optional)
@@ -588,6 +610,7 @@ class ProviderController extends Controller
 
         return view('providerPage.pages.viewUploads', compact('data', 'documents'));
     }
+    // View upload page upload Document feature
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
@@ -595,16 +618,21 @@ class ProviderController extends Controller
         ], [
             'document.required' => 'Select an File to upload!'
         ]);
+
+        $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
+        $path = $request->file('document')->storeAs('public', $fileName);
+
         $providerId = RequestTable::where('id', $id)->first()->physician_id;
-        $path = $request->file('document')->storeAs('public', $request->file('document')->getClientOriginalName());
+
         RequestWiseFile::create([
             'request_id' => $id,
-            'file_name' => $request->file('document')->getClientOriginalName(),
+            'file_name' => $fileName,
             'physician_id' => $providerId,
         ]);
 
         return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
     }
+    // Download any sinlge file function
     public function download($id = null)
     {
         $file = RequestWiseFile::where('id', $id)->first();
@@ -622,6 +650,7 @@ class ProviderController extends Controller
         return response()->download($path);
     }
 
+    // Delete a single document from viewUploads page
     public function deleteDoc(Request $request, $id = null)
     {
         RequestWiseFile::where('id', $id)->delete();
@@ -629,9 +658,11 @@ class ProviderController extends Controller
         return redirect()->back();
     }
 
+    // Perform different options as per the request (Delete All, Download All, Send Mail)
     public function operations(Request $request)
     {
         $email = request_Client::where('request_id', $request->requestId)->first()->email;
+        // Delete All Documents or Delete the selected documents
         if ($request->input('operation') == 'delete_all') {
             if (empty($request->input('selected'))) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
@@ -646,6 +677,7 @@ class ProviderController extends Controller
 
             return redirect()->back();
         } else if ($request->input('operation') == 'download_all') {
+            // Download All Documents or Download the selected documents
             if (empty($request->input('selected'))) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
@@ -670,7 +702,7 @@ class ProviderController extends Controller
             }
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
         } else if ($request->input('operation') == 'send_mail') {
-
+            // Send Mail of Selected Documents as attachment
             $data = RequestWiseFile::where('request_id', $request->requestId)->get();
             if ($data->isEmpty()) {
                 return redirect()->back()->with('noRecordFound', 'There are no records to Send Mail!');
@@ -706,12 +738,12 @@ class ProviderController extends Controller
                 'email' => $email,
             ]);
             Mail::to($email)->send(new DocsAttachmentMail($email, $zipFile));
-            // return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
 
             return redirect()->back()->with('mailDocsSent', 'Mail of all the selected documents is sent!');
         }
     }
 
+    // View Order Page -> Display page and show data
     public function viewOrder(Request $request, $id = null)
     {
         $data = RequestTable::where('id', $id)->first();
@@ -743,7 +775,7 @@ class ProviderController extends Controller
         return redirect()->route('provider.status', 'active')->with('orderPlaced', 'Order Created Successfully!');
     }
 
-
+    // Provider/Admin Send Agreement Link to Patient from Pending State
     public function sendAgreementLink(Request $request)
     {
         $request->validate([
@@ -774,14 +806,14 @@ class ProviderController extends Controller
 
         $twilio = new Client($sid, $token);
 
-        // $message = $twilio->messages
-        //     ->create(
-        //         "+91 99780 71802", // to
-        //         [
-        //             "body" => "Hii " .  $clientData->requestClient->first_name . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
-        //             "from" =>  $senderNumber
-        //         ]
-        //     );
+        $message = $twilio->messages
+            ->create(
+                "+91 99780 71802", // to
+                [
+                    "body" => "Hii " .  $clientData->requestClient->first_name . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
+                    "from" =>  $senderNumber
+                ]
+            );
 
         SMSLogs::create(
             [
@@ -795,9 +827,10 @@ class ProviderController extends Controller
                 'sms_template' => "Hii ,Click on the below link to create request"
             ]
         );
-        return redirect()->back()->withErrors('email', 'phone_number');
+        return redirect()->back()->with('agreementSent', 'Agreement sent to patient successfully!');
     }
 
+    // View Conclude Care Page -> Display page and show data
     public function viewConcludeCare($id)
     {
         $case = RequestTable::where('id', $id)->first();
@@ -805,6 +838,7 @@ class ProviderController extends Controller
         return view('providerPage.concludeCare', compact('case', 'docs'));
     }
 
+    // Conclude Care functionality -> Provider Conclude care from conclude state which will move to toclose-state
     public function concludeCare(Request $request)
     {
         $encounterForm = RequestWiseFile::where('request_id', $request->caseId)->where('is_finalize', true)->first();
@@ -826,6 +860,7 @@ class ProviderController extends Controller
 
         return redirect()->route('provider.status', 'conclude')->with('CaseConcluded', 'Case Concluded Successfully!');
     }
+    // Upload Document from conclude Care page
     public function uploadDocsConcludeCare(Request $request)
     {
         $providerId = RequestTable::where('id', $request->caseId)->first()->physician_id;

@@ -87,6 +87,7 @@ class AdminController extends Controller
     // Build Query as per filters, search query or normal cases
     public function buildQuery($status, $category, $searchTerm)
     {
+        // Check for Status(whether it's single status or multiple)
         if (is_array($this->getStatusId($status))) {
             $query = RequestTable::with('requestClient')->whereIn('status', $this->getStatusId($status));
         } else {
@@ -101,9 +102,9 @@ class AdminController extends Controller
         // Apply search condition
         if ($searchTerm) {
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('first_name', 'like', "%$searchTerm%")
+                $query->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%")
                     ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', "%$searchTerm%");
+                        $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
                     });
             });
         }
@@ -113,7 +114,11 @@ class AdminController extends Controller
     // Method to retrieve cases based on status, category, and search term
     public function cases(Request $request, $status = 'new', $category = "all")
     {
-        $searchTerm = $request->search;
+        // $searchTerm = $request->search;
+        // Use Session to filter by category and searchTerm
+        $searchTerm = $request->session()->get('searchTerm', null);
+        $category = $request->session()->get('category', 'all');
+
         $userData = Auth::user();
         $count = $this->totalCasesCount();
         $query = $this->buildQuery($status, $category, $searchTerm);
@@ -132,17 +137,35 @@ class AdminController extends Controller
     // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
     public function status(Request $request, $status = 'new')
     {
-        return $this->cases($request, $status);
+        // Forget from session whenever a new status is opened
+        Session::forget(['searchTerm', 'category']);
+        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
+            return $this->cases($request, $status);
+        } else {
+            return view('errors.404');
+        }
     }
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
     public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
-        return $this->cases($request, $status, $category);
+        // Store category in the session
+        $request->session()->put('category', $category);
+
+        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
+            if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
+                return $this->cases($request, $status, $category);
+            }
+        } else {
+            return view('errors.404');
+        }
     }
     // Search for specific keyword in first_name of requestTable and requestclient
     public function search(Request $request, $status = 'new', $category = 'all')
     {
+        // store searchTerm in session
+        $request->session()->put('searchTerm', $request->search);
+
         return $this->cases($request, $status, $category);
     }
 
@@ -178,6 +201,7 @@ class AdminController extends Controller
         return response()->json($regions);
     }
 
+    // AJAX call for Physician listing in dropdown selection
     public function getPhysicians($id = null)
     {
         $physiciansId = PhysicianRegion::where('region_id', $id)->pluck('provider_id')->toArray();
@@ -185,6 +209,7 @@ class AdminController extends Controller
         return response()->json($physicians);
     }
 
+    // AJAX call for (Remaining) Physician for listing in dropdown selection 
     public function getNewPhysicians($requestId, $regionId)
     {
         $oldPhysicianId = RequestStatus::where('request_id', $requestId)->where('TransToAdmin', 1)->where('status', 3)->orderByDesc('id')->first()->physician_id;
@@ -192,12 +217,13 @@ class AdminController extends Controller
         $physicians = Provider::whereIn('id', $physiciansId)->whereNot('id', $oldPhysicianId)->get()->toArray();
         return response()->json($physicians);
     }
-    // assign Case login 
+
+    // Admin assign Case to provider  
     public function assignCase(Request $request)
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'assign_note' => 'required'
+            'assign_note' => 'required|max:100'
 
         ]);
         RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
@@ -214,11 +240,12 @@ class AdminController extends Controller
         return redirect()->back()->with('assigned', "Case Assigned Successfully to physician - {$physicianName}");
     }
 
+    // Admin Transfer Case to another physician
     public function transferCase(Request $request)
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'notes' => 'required'
+            'notes' => 'required|max:100'
         ]);
 
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -266,7 +293,7 @@ class AdminController extends Controller
     public function blockCase(Request $request)
     {
         $request->validate([
-            'block_reason' => 'required'
+            'block_reason' => 'required|max:100'
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
@@ -306,10 +333,11 @@ class AdminController extends Controller
         return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
+    // Store Admin Note to display in ViewNotes Page
     public function storeNote(Request $request)
     {
         $request->validate([
-            'admin_note' => 'required'
+            'admin_note' => 'required|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         if (!empty($requestNote)) {
@@ -328,25 +356,27 @@ class AdminController extends Controller
         return redirect()->route('admin.view.note', compact('id'))->with('adminNoteAdded', 'Your Note Successfully Added');
     }
 
+    // Display View Upload Page with the data
     public function viewUpload($id)
     {
         $data  = requestTable::where('id', $id)->first();
         $documents = RequestWiseFile::where('request_id', $id)->orderByDesc('id')->get();
         return view('adminPage.pages.viewUploads', compact('data', 'documents'));
     }
+
+    // Upload Document from viewUpload Page
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
-            'document' => 'required'
+            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf'
         ], [
             'document.required' => 'Select an File to upload!'
         ]);
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-        // $providerId = RequestTable::where('id', $id)->first()->physician_id;
+
         $path = $request->file('document')->storeAs('public', $fileName);
         RequestWiseFile::create([
             'request_id' => $id,
-            // 'file_name' => $request->file('document')->getClientOriginalName(),
             'file_name' => $fileName,
             'admin_id' => 1,
         ]);
@@ -362,10 +392,11 @@ class AdminController extends Controller
         return view('adminPage.adminEncounterForm', compact('data', 'id', 'requestData'));
     }
 
+    // Store Encounter Form (Medical Form) data, changes made by admin
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
+            'first_name' => 'required|alpha|max:50',
             'email' => 'required|email',
             'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
@@ -419,14 +450,13 @@ class AdminController extends Controller
         return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
     }
 
-    // ****************** This code is for Sending Link ************************
-
+    // Send Link to Patient for creating request
     public function sendMail(Request $request)
     {
 
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|alpha|min:5|max:30',
+            'last_name' => 'required|alpha|min:5|max:30',
             'phone_number' => 'required',
             'email' => 'required|email'
         ]);
@@ -486,7 +516,7 @@ class AdminController extends Controller
         return redirect()->back()->with('linkSent', "Link Sent Successfully!");
     }
 
-
+    // Clear Case -> change status for particular case to "Clear"
     public function clearCase(Request $request)
     {
         RequestTable::where('id', $request->requestId)->update([
@@ -499,12 +529,14 @@ class AdminController extends Controller
         return redirect()->back()->with('caseCleared', 'Case Cleared Successfully');
     }
 
+    // Show Close Case Page with Details
     public function closeCase(Request $request, $id = null)
     {
         $data = RequestTable::where('id', $id)->first();
         $files = RequestWiseFile::where('request_id', $id)->get();
         return view('adminPage.pages.closeCase', compact('data', 'files'));
     }
+    // Close Case -> particular case will move from toClose state to unpaid state1
     public function closeCaseData(Request $request)
     {
         if ($request->input('closeCaseBtn') == 'Save') {
@@ -588,7 +620,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'email' => 'required',
+            'email' => 'required|email',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -618,6 +650,8 @@ class AdminController extends Controller
         $professions = HealthProfessionalType::get();
         return view('adminPage.partners.updateBusiness', compact("vendor", 'professions'));
     }
+
+    // Update business Data 
     public function updateBusiness(Request $request)
     {
         $request->validate([
@@ -625,7 +659,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'email' => 'required',
+            'email' => 'required|email',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -647,6 +681,7 @@ class AdminController extends Controller
         return redirect()->back()->with('changesSaved', 'Changes Saved Successfully!');
     }
 
+    // Display ViewOrder Page with the details
     public function viewOrder($id = null)
     {
         $data = RequestTable::where('id', $id)->first();
@@ -679,6 +714,7 @@ class AdminController extends Controller
 
         return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('orderPlaced', 'Order Created Successfully!');
     }
+    // Delete Business From the vendors page
     public function deleteBusiness($id = null)
     {
         HealthProfessional::where('id', $id)->delete();
@@ -689,13 +725,12 @@ class AdminController extends Controller
     public function fetchBusiness(Request $request, $id)
     {
         $business = HealthProfessional::where('profession', $id)->get();
-
         return response()->json($business);
     }
+    // Ajax call for fetching business data and showing in the page
     public function fetchBusinessData($id)
     {
         $businessData = HealthProfessional::where('id', $id)->first();
-
         return response()->json($businessData);
     }
 
@@ -705,12 +740,14 @@ class AdminController extends Controller
         $roles = Role::orderByDesc('id')->get();
         return view('adminPage.access.access', compact('roles'));
     }
+    // Create a new Role Page View
     public function createRoleView()
     {
         $menus = Menu::get();
         return view('adminPage.access.createRole', compact('menus'));
     }
 
+    // Fetch Roles data from Menu Table
     public function fetchRoles($id = null)
     {
         if ($id == 0) {
@@ -725,6 +762,7 @@ class AdminController extends Controller
         }
     }
 
+    // Creating different Access for different roles
     public function createAccess(Request $request)
     {
         $request->validate([
@@ -747,12 +785,14 @@ class AdminController extends Controller
         return redirect()->route('admin.access.view');
     }
 
+    // Delete complete role
     public function deleteAccess($id = null)
     {
         Role::where('id', $id)->delete();
         return redirect()->back();
     }
 
+    // show edit Access Page with pre-filled data
     public function editAccess($id = null)
     {
         $role = Role::where('id', $id)->first();
@@ -760,6 +800,7 @@ class AdminController extends Controller
         $menus = Menu::where('account_type', $role->account_type)->get();
         return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
     }
+    // Edit Access of a role previously created
     public function editAccessData(Request $request)
     {
         $request->validate([
@@ -783,8 +824,6 @@ class AdminController extends Controller
         }
         return redirect()->route('admin.access.view')->with('accessEdited', 'Your Changes Are successfully Saved!');
     }
-
-
 
     // Records Page
     public function searchRecordsView()
@@ -1570,7 +1609,7 @@ class AdminController extends Controller
         $adminAllUserData->street = $request->address1;
         $adminAllUserData->city = $request->city;
         $adminAllUserData->zipcode = $request->zip;
-        $adminAllUserData->mobile =$request->phone_number;
+        $adminAllUserData->mobile = $request->phone_number;
         $adminAllUserData->status = 'pending';
         $adminAllUserData->save();
 
@@ -1802,7 +1841,7 @@ class AdminController extends Controller
         } else {
             $exportConcludeData = $this->fetchQuery($status, $category, $search, $region);
         }
-        
+
         $exportConclude = new ConcludeStatusExport($exportConcludeData);
         return Excel::download($exportConclude, 'ConcludeData.xls');
     }

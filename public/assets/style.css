@@ -9,20 +9,22 @@
         rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
     --bs-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     --toggle-primary-fg-color: rgb(0, 190, 232);
+    /* --toggle-primary-bg-color: ; */
     --section-bg-color: #fff;
 }
 
 :root.dark {
+    --blue: rgb(0, 190, 232);
     --color-bg: #121212;
     --color-fg: #ffffff;
-    --blue: rgb(0, 190, 232);
     --box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
         rgba(255, 255, 255, 0.842) 0px 0.125em 0.5em,
         rgba(255, 255, 255, 0.63) 0px 0px 0px 1px inset;
     --bs-box-shadow: 0 0.5rem 1rem rgba(170, 170, 170, 0.419);
     --toggle-primary-fg-color: #fff;
-    /* --section-bg-color: #282828; */
+    /* --toggle-primary-bg-color: ; */
     --section-bg-color: #3f3f3f;
+    --label-text-color: #000;
 }
 
 html,
@@ -47,8 +49,6 @@ a {
     text-decoration: none;
 }
 
-
-
 .toggle-mode {
     background-color: var(--color-bg) !important;
     color: var(--toggle-primary-fg-color) !important;
@@ -59,6 +59,7 @@ a {
 .text-muted {
     color: var(--color-fg) !important;
 }
+
 /* *********************** HEADER ************************ */
 .header,
 .navbar-section {
@@ -120,7 +121,7 @@ nav {
 }
 
 .active-link {
-    color: var(--blue);
+    color: var(--blue) !important;
     border-bottom: 2px solid var(--blue);
 }
 
@@ -186,8 +187,8 @@ nav {
 }
 
 .primary-fill {
-    border: none;
     background-color: var(--blue);
+    border: none;
     padding: 8px 20px;
     color: #fff;
     border-radius: 5px;
@@ -199,6 +200,15 @@ nav {
     padding: 8px 20px;
     color: #fff;
     border-radius: 5px;
+}
+
+.no-record {
+    color: #000 !important;
+    font-size: 20px;
+    background-color: #fde1e1 !important;
+    font-weight: bolder;
+    font-style: italic;
+    text-align: center;
 }
 
 /* ****************** ALL FORM COMMON STYLING **************************************** */

@@ -95,6 +95,11 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($files->isEmpty())
+                                <tr>
+                                    <td colspan="100" class="no-record">No Documents Found</td>
+                                </tr>
+                            @endif
                             @foreach ($files as $file)
                                 <tr>
                                     <td>

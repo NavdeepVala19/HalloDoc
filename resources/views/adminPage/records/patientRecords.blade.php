@@ -51,7 +51,7 @@
                 Back</a>
         </div>
         <div class="section">
-            <div class="table-responsive">
+            <div class="table-responsive table-view">
                 <table class="table">
                     <thead class="table-secondary">
                         <td>Client/Member</td>
@@ -88,7 +88,7 @@
                                             <a href="{{ route('download.encounter.form', $status->request_id) }}"
                                                 class="primary-empty">View</a>
                                         @else
-                                            {{-- <button class="primary-empty">View</button> --}} -
+                                            -
                                         @endif
                                     </td>
                                     <td>
@@ -113,6 +113,42 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="mobile-listing">
+                @foreach ($data as $record)
+                    <div class="mobile-list">
+                        <div class="main-section">
+                            <h5 class="heading">{{ $record->first_name }} {{ $record->last_name }}</h5>
+                            <div class="detail-box">
+                                <span>
+                                    <strong>{{ $record->request->confirmation_no }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <span>
+                                <i class="bi bi-person"></i> Created Date:
+                                {{ $record->created_at }}
+                            </span>
+                            <br>
+                            <span><i class="bi bi-calendar3"></i> Provider: @if ($status)
+                                    @if ($status->provider)
+                                        Dr. {{ $status->provider->first_name }}
+                                    @endif
+                                @endif
+                            </span>
+                            <span>
+                                status : @if ($status)
+                                    {{ $status->statusTable->status_type }}
+                                @endif
+                            </span>
+                            <div class="text-end">
+                                {{-- <a href="{{ route('patient.records', $patient->id) }}" class="primary-empty">Explore</a> --}}
+                                </td>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

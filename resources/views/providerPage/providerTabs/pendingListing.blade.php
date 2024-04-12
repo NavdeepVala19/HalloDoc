@@ -39,6 +39,9 @@
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
 
+    {{-- Agreement Sent to patient Successfully --}}
+    @include('alertMessages.agreementSentSuccess')
+
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
 pending state, providers need to send an agreement link to patients. --}}
@@ -51,7 +54,7 @@ pending state, providers need to send an agreement link to patients. --}}
     @include('popup.providerTransferRequest')
 
     <nav>
-        <div class="nav nav-tabs " id="nav-tab">
+        <div class="nav nav-tabs" id="nav-tab">
             <a href="{{ route('provider.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
                 <div class="case case-new  p-1 ps-3 d-flex flex-column justify-content-between align-items-start ">
                     <span>
@@ -124,12 +127,12 @@ pending state, providers need to send an agreement link to patients. --}}
             <div class="search-section d-flex align-items-center  justify-content-between ">
                 <form
                     action="{{ route('provider.searching', ['status' => 'pending', 'category' => request('category', 'all')]) }}"
-                    method="GET">
-                    {{-- @csrf --}}
+                    method="POST">
+                    @csrf
                     <div class="input-group mb-3">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-patient"
-                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search">
-                        {{-- <input type="submit" class="primary-fill"> --}}
+                            placeholder='&#xF52A;  Search Patients' aria-describedby="basic-addon1" name="search"
+                            value="{{ session('searchTerm') }}">
                     </div>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -160,6 +163,11 @@ pending state, providers need to send an agreement link to patients. --}}
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($cases->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Cases Found</td>
+                            </tr>
+                        @endif
                         @foreach ($cases as $case)
                             @if (!empty($case) && !empty($case->requestClient))
                                 <tr class="type-{{ $case->request_type_id }}">
@@ -222,6 +230,11 @@ pending state, providers need to send an agreement link to patients. --}}
             </div>
 
             <div class="mobile-listing">
+                @if ($cases->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Cases Found</sp>
+                    </div>
+                @endif
                 @foreach ($cases as $case)
                     @if (!empty($case) && !empty($case->requestClient))
                         <div class="mobile-list d-flex justify-content-between">

@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -144,6 +144,11 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($documents->isEmpty())
+                                <tr>
+                                    <td colspan="100" class="no-record">No Documents Found</td>
+                                </tr>
+                            @endif
                             @foreach ($documents as $document)
                                 <tr>
                                     <td>
@@ -152,7 +157,7 @@
                                     </td>
                                     <td>
                                         <i class="bi bi-filetype-doc doc-symbol"></i>
-                                        {{ substr($document->file_name, 14) }} 
+                                        {{ substr($document->file_name, 14) }}
                                     </td>
                                     <td>{{ $document->created_at }}</td>
                                     <td class="d-flex align-items-center justify-content-center gap-2">
