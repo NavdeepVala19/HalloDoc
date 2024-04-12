@@ -1,3 +1,5 @@
+var iti;
+
 $(document).ready(function () {
     // Toggle Theme Implementation
     // Check if a theme preference is stored in local storage
@@ -43,7 +45,8 @@ $(document).ready(function () {
     }, 2000);
 
     let telephone = document.querySelector("#telephone");
-    window.intlTelInput(telephone, {
+
+    iti = window.intlTelInput(telephone, {
         initialCountry: "in",
         strictMode: true,
         // utilsScript: "/intl-tel-input/js/utils.js?1712785596628",

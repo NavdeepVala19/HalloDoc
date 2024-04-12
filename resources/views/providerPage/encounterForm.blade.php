@@ -47,194 +47,138 @@
         <form action="{{ route('encounter.form.data') }}" method="POST" id="providerEncounterForm">
             @csrf
             <div class="section">
-                <h1 class="main-heading">Medical Report-Confidential</h1>
-                <div>
-                    <div class="grid-2">
-                        <input type="text" name="request_id" value="{{ $id }}" hidden>
-                        <div class="form-floating ">
-                            <input type="text" name="first_name"
-                                class="form-control @error('first_name') is-invalid @enderror" id="floatingInput1"
-                                placeholder="First Name" value="{{ $data->first_name ?? '' }}">
-                            <label for="floatingInput1">First Name</label>
-                            @error('first_name')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-floating ">
-                            <input type="text" name="last_name" class="form-control" id="floatingInput"
-                                placeholder="Last Name" value={{ $data->last_name ?? '' }}>
-                            <label for="floatingInput">Last Name</label>
-                        </div>
-                    </div>
-
-                    <div class="form-floating ">
-                        <input type="text" name="location" class="form-control" id="floatingInput" placeholder="location"
-                            value="{{ $data->location ?? '' }}">
-                        <label for="floatingInput">Location</label>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-floating ">
-                            <input type="date" name="date_of_birth" class="form-control" id="floatingInput4"
-                                placeholder="date of birth" value="{{ $data->date_of_birth ?? '' }}">
-                            <label for="floatingInput4">Date Of Birth</label>
-                        </div>
-                        <div class="form-floating ">
-                            <input type="date" name="service_date" class="form-control" id="floatingInput5"
-                                placeholder="date" value="{{ $data->service_date ?? '' }}">
-                            <label for="floatingInput5">Date</label>
-                        </div>
-                        <div class="form-floating">
-                            <div>
-                                <input type="tel" name="mobile"
-                                    class="form-control phone @error('mobile') is-invalid @enderror " id="telephone"
-                                 value="{{ $data->mobile ?? '' }}">
-                            </div>
-                            @error('mobile')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-floating">
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                id="floatingInput2" placeholder="name@example.com" value="{{ $data->email ?? '' }}">
-                            <label for="floatingInput2">Email</label>
-                            @error('email')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="present_illness_history" placeholder="injury" id="floatingTextarea2">{{ $data->present_illness_history ?? '' }}</textarea>
-                            <label for="floatingTextarea2">History Of Present illness Or injury</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="medical_history" placeholder="Medical History" id="floatingTextarea2">{{ $data->medical_history ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Medical History</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="medications" placeholder="Medications" id="floatingTextarea2">{{ $data->medications ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Medications</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="allergies" placeholder="allergies" id="floatingTextarea2">{{ $data->allergies ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Allergies</label>
-                        </div>
-                    </div>
-
-                    <div class="grid-3">
-                        <div class="form-floating ">
-                            <input type="number" name="temperature" class="form-control" id="floatingInput6"
-                                placeholder="Temp" value={{ $data->temperature ?? '' }}>
-                            <label for="floatingInput6">Temp</label>
-                        </div>
-                        <div class="form-floating ">
-                            <input type="number" name="heart_rate" class="form-control" id="floatingInput7"
-                                placeholder="Temp" value={{ $data->heart_rate ?? '' }}>
-                            <label for="floatingInput7">HR</label>
-                        </div>
-                        <div class="form-floating ">
-                            <input type="number" name="repository_rate" class="form-control" id="floatingInput8"
-                                placeholder="Temp" value={{ $data->repository_rate ?? '' }}>
-                            <label for="floatingInput8">RR</label>
-                        </div>
-                        <div class="grid-2 blood-pressure">
-
-                            <div class="form-floating ">
-                                <input type="number" name="sis_BP" class="form-control" id="floatingInput9"
-                                    placeholder="blood pressure" value={{ $data->sis_BP ?? '' }}>
-                                <label for="floatingInput9" style="font-size: 12px">Blood Pressure(systolic)</label>
-                            </div>
-                            <div class="form-floating ">
-                                <input type="number" name="dia_BP" class="form-control" id="floatingInput10"
-                                    placeholder="blood pressure" value={{ $data->dia_BP ?? '' }}>
-                                <label for="floatingInput10" style="font-size: 12px">Blood Presure(diastolic)</label>
-                            </div>
-                        </div>
-
-                        <div class="form-floating ">
-                            <input type="number" name="oxygen" class="form-control" id="floatingInput11"
-                                placeholder="o2" value={{ $data->oxygen ?? '' }}>
-                            <label for="floatingInput11">O2</label>
-                        </div>
-                        <div class="form-floating ">
-                            <input type="text" name="pain" class="form-control" id="floatingInput"
-                                placeholder="pain" value="{{ $data->pain ?? '' }}">
-                            <label for="floatingInput">Pain</label>
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="heent" placeholder="Heent" id="floatingTextarea2">{{ $data->heent ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Heent</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="cv" placeholder="cv" id="floatingTextarea2">{{ $data->cv ?? '' }}</textarea>
-                            <label for="floatingTextarea2">CV</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="chest" placeholder="chest" id="floatingTextarea2">{{ $data->chest ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Chest</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="abd" placeholder="abd" id="floatingTextarea2">{{ $data->abd ?? '' }}</textarea>
-                            <label for="floatingTextarea2">ABD</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="extr" placeholder="extr" id="floatingTextarea2">{{ $data->extr ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Extr</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="skin" placeholder="skin" id="floatingTextarea2">{{ $data->skin ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Skin</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="neuro" placeholder="neuro" id="floatingTextarea2">{{ $data->neuro ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Neuro</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="other" placeholder="other" id="floatingTextarea2">{{ $data->other ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Other</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="diagnosis" placeholder="diagnosis" id="floatingTextarea2">{{ $data->diagnosis ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Diagnosis</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="treatment_plan" placeholder="Treatment Plan" id="floatingTextarea2">{{ $data->treatment_plan ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Treatment Plan</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="medication_dispensed" placeholder="Medications Dispensed"
-                                id="floatingTextarea2">{{ $data->medication_dispensed ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Medication Dispensed</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control note" name="procedure" placeholder="procedures" id="floatingTextarea2">{{ $data->procedure ?? '' }}</textarea>
-                            <label for="floatingTextarea2">Procedures</label>
-                        </div>
-                    </div>
-                    <div class="form-floating">
-                        <textarea class="form-control note" name="followUp" placeholder="followup" id="floatingTextarea2">{{ $data->followUp ?? '' }}</textarea>
-                        <label for="floatingTextarea2">Followup</label>
-                    </div>
-
-                    {{-- Three buttons at last --}}
-                    <div class="button-section">
-                        <input type="submit" value="Save Changes" class="primary-fill" id="providerEncounterFormBtn">
-                        <a href="{{ route('encounter.finalized', $id) }}" type="button"
-                            class="finalize-btn">Finalize</a>
-                        <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
-                            class="primary-empty">Cancel</a>
-                    </div>
+                @include('adminPage.encounter')
+                {{-- Three buttons at last --}}
+                <div class="button-section">
+                    <input type="submit" value="Save Changes" class="primary-fill" id="providerEncounterFormBtn">
+                    <a href="{{ route('encounter.finalized', $id) }}" type="button" class="finalize-btn">Finalize</a>
+                    <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
+                        class="primary-empty">Cancel</a>
                 </div>
             </div>
         </form>
     </div>
 @endsection
 @section('script')
+    <script>
+        $(document).ready(function() {
+            // Get the pre-filled values from the input fields
+            var initialFirstName = $("#providerEncounterForm #floatingInput1").val();
+            var initialLastName = $("#providerEncounterForm #floatingInput2").val();
+            var initialLocation = $("#providerEncounterForm #floatingInput3").val();
+            var initialDateOfBirth = $("#providerEncounterForm #floatingInput4").val();
+            var initialServiceDate = $("#providerEncounterForm #floatingInput5").val();
+            var initialMobile = $("#providerEncounterForm #telephone").val();
+            var initialEmail = $("#providerEncounterForm #floatingInput6").val();
+            var initialPresentIllnessHistory = $("#providerEncounterForm #floatingTextarea1").val();
+            var initialMedicalHistory = $("#providerEncounterForm #floatingTextarea2").val();
+            var initialMedications = $("#providerEncounterForm #floatingTextarea3").val();
+            var initialAllergies = $("#providerEncounterForm #floatingTextarea4").val();
+            var initialTemperature = $("#providerEncounterForm #floatingInput7").val();
+            var initialHeartRate = $("#providerEncounterForm #floatingInput8").val();
+            var initialRepositoryRate = $("#providerEncounterForm #floatingInput9").val();
+            var initialSisBP = $("#providerEncounterForm #floatingInput10").val();
+            var initialDiaBP = $("#providerEncounterForm #floatingInput11").val();
+            var initialOxygen = $("#providerEncounterForm #floatingInput12").val();
+            var initialPain = $("#providerEncounterForm #floatingInput13").val();
+            var initialHeent = $("#providerEncounterForm #floatingTextarea5").val();
+            var initialCv = $("#providerEncounterForm #floatingTextarea6").val();
+            var initialChest = $("#providerEncounterForm #floatingTextarea7").val();
+            var initialAbd = $("#providerEncounterForm #floatingTextarea8").val();
+            var initialExtr = $("#providerEncounterForm #floatingTextarea9").val();
+            var initialSkin = $("#providerEncounterForm #floatingTextarea10").val();
+            var initialNeuro = $("#providerEncounterForm #floatingTextarea11").val();
+            var initialOther = $("#providerEncounterForm #floatingTextarea12").val();
+            var initialDiagnosis = $("#providerEncounterForm #floatingTextarea13").val();
+            var initialTreatmentPlan = $("#providerEncounterForm #floatingTextarea14").val();
+            var initialMedicationDispensed = $("#providerEncounterForm #floatingTextarea15").val();
+            var initialProcedure = $("#providerEncounterForm #floatingTextarea16").val();
+            var initialFollowUp = $("#providerEncounterForm #floatingTextarea17").val();
+
+            // Encounter Form Finalize Button
+            $(".finalize-btn").click(function(e) {
+                e.preventDefault();
+
+                if (
+                    initialFirstName == "" ||
+                    initialLastName == "" ||
+                    initialLocation == "" ||
+                    initialDateOfBirth == "" ||
+                    initialServiceDate == "" ||
+                    initialMobile == "" ||
+                    initialEmail == "" ||
+                    initialAllergies == "" ||
+                    initialTreatmentPlan == "" ||
+                    initialMedicationDispensed == "" ||
+                    initialProcedure == "" ||
+                    initialFollowUp == ""
+                ) {
+                    // Remove any existing error messages
+                    $(".button-section .text-danger").remove();
+
+                    let error =
+                        "<div class='text-danger'>Save form and then finalize!</div>";
+                    $(".button-section").append(error);
+
+                    setTimeout(() => {
+                        $(".button-section .text-danger").fadeOut("slow");
+                    }, 2000);
+
+                    console.log(firstName, email);
+                } else if (
+                    initialFirstName !== $("#floatingInput1").val() ||
+                    initialLastName !== $("#floatingInput2").val() ||
+                    initialLocation !== $("#floatingInput3").val() ||
+                    initialDateOfBirth !== $("#floatingInput4").val() ||
+                    initialServiceDate !== $("#floatingInput5").val() ||
+                    initialMobile !== $("#telephone").val() ||
+                    initialEmail !== $("#floatingInput6").val() ||
+                    initialPresentIllnessHistory !== $("#floatingTextarea1").val() ||
+                    initialMedicalHistory !== $("#floatingTextarea2").val() ||
+                    initialMedications !== $("#floatingTextarea3").val() ||
+                    initialAllergies !== $("#floatingTextarea4").val() ||
+                    initialTemperature !== $("#floatingInput7").val() ||
+                    initialHeartRate !== $("#floatingInput8").val() ||
+                    initialRepositoryRate !== $("#floatingInput9").val() ||
+                    initialSisBP !== $("#floatingInput10").val() ||
+                    initialDiaBP !== $("#floatingInput11").val() ||
+                    initialOxygen !== $("#floatingInput12").val() ||
+                    initialPain !== $("#floatingInput13").val() ||
+                    initialHeent !== $("#floatingTextarea5").val() ||
+                    initialCv !== $("#floatingTextarea6").val() ||
+                    initialChest !== $("#floatingTextarea7").val() ||
+                    initialAbd !== $("#floatingTextarea8").val() ||
+                    initialExtr !== $("#floatingTextarea9").val() ||
+                    initialSkin !== $("#floatingTextarea10").val() ||
+                    initialNeuro !== $("#floatingTextarea11").val() ||
+                    initialOther !== $("#floatingTextarea12").val() ||
+                    initialDiagnosis !== $("#floatingTextarea13").val() ||
+                    initialTreatmentPlan !== $("#floatingTextarea14").val() ||
+                    initialMedicationDispensed !== $("#floatingTextarea15").val() ||
+                    initialProcedure !== $("#floatingTextarea16").val() ||
+                    initialFollowUp !== $("#floatingTextarea17").val()
+                ) {
+                    // Remove any existing error messages
+                    $(".button-section .text-danger").remove();
+
+                    let error =
+                        "<div class='text-danger'>Form has unsaved changes! Save the form before finalizing.</div>";
+                    $(".button-section").append(error);
+
+                    setTimeout(() => {
+                        $(".button-section .text-danger").fadeOut("slow");
+                    }, 2000);
+                    console.log("Changes Detected");
+                } else {
+                    // Proceed with finalization
+                    // $(".finalize-btn").off("click"); 
+                    // console.log('Form to be submitted');
+                    window.location.href = "{{ route('encounter.finalized', $id) }}";
+                }
+            });
+
+        });
+    </script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
 @endsection

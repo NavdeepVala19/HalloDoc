@@ -43,7 +43,7 @@ class familyRequestController extends Controller
             'family_email' => 'required|email|min:2|max:30',
             'family_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'family_relation' => 'required',
-            'docs'=>'required|file|mimes:jpg,png,pdf,doc|max:2048',
+            'docs' => 'required|file|mimes:jpg,png,pdf,doc|max:2048',
         ]);
 
 
@@ -75,7 +75,6 @@ class familyRequestController extends Controller
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
-
         }
 
         $requestEmail = new users();
@@ -108,7 +107,7 @@ class familyRequestController extends Controller
         $patientRequest->save();
 
 
-        
+
 
         // store documents in request_wise_file table
 

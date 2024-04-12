@@ -47,7 +47,7 @@ class AdminProviderController extends Controller
 
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
-           
+
         if ($request->selectedId == "all") {
             $providersData = Provider::paginate(10);
         } else {
@@ -197,8 +197,6 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
-        // dd($request->all());
-
         $request->validate([
             'user_name' => 'required',
             'password' => 'required',
@@ -348,7 +346,6 @@ class AdminProviderController extends Controller
     public function regionName()
     {
         $regions = Regions::get();
-        dd($regions);
         return view('/adminPage/provider/adminEditProvider', compact('regions'));
     }
 
@@ -360,7 +357,7 @@ class AdminProviderController extends Controller
 
     public function updateProviderAccountInfo(Request $request, $id)
     {
-      
+
 
         // update data of providers in users table
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
@@ -380,7 +377,7 @@ class AdminProviderController extends Controller
         $getProviderData->save();
 
         $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
-        if(!empty($updateProviderDataAllUsers)){
+        if (!empty($updateProviderDataAllUsers)) {
             $updateProviderDataAllUsers->status = $request->status_type;
             $updateProviderDataAllUsers->save();
         }
@@ -439,7 +436,7 @@ class AdminProviderController extends Controller
 
     public function providerMailInfoUpdate(Request $request, $id)
     {
- 
+
         $request->validate([
             'address1' => 'required',
             'address2' => 'required',
@@ -463,7 +460,6 @@ class AdminProviderController extends Controller
             return back()->with('message', 'Mailing and Billing information is updated');
         } else {
             $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
-            dd($updateProviderDataAllUsers);
 
             $updateProviderDataAllUsers->street = $request->address1;
             $updateProviderDataAllUsers->city = $request->city;

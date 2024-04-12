@@ -26,7 +26,7 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth','PhysicianName', 'RequestedDate','PatientMobile','RequestorMobile', 'Address'];
+        return ['PatientName', 'Date Of Birth', 'PhysicianName', 'RequestedDate', 'PatientMobile', 'RequestorMobile', 'Address'];
     }
 
     /**
@@ -66,10 +66,10 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
             return [
                 'PatientName' => $patientName,
                 'Date of Birth' => $dateOfBirth,
-                'PhysicianName' => $adminConclude->provider->first_name.' '.$adminConclude->provider->last_name,
+                'PhysicianName' => $adminConclude->provider->first_name . ' ' . $adminConclude->provider->last_name,
                 'RequestedDate' => $adminConclude->created_at,
-                'PatientMobile'=>$PatientMobile,
-                'RequestorMobile'=>$adminConclude->phone_number,
+                'PatientMobile' => $PatientMobile,
+                'RequestorMobile' => $adminConclude->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
             ];
         });

@@ -44,11 +44,11 @@ $(document).ready(function () {
     // Conclude Case Encounter Form - Medical Report
     $(".encounter-popup-btn").click(function () {
         $(".requestId").val($(this).data("id"));
-
         $(".encounter-finalized").show();
         $(".overlay").show();
     });
 
+    
     // for showing transfer-request pop-up on pending listing page
     $(".transfer-btn").click(function () {
         $(".transfer-request").show();

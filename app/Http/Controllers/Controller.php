@@ -25,8 +25,4 @@ class Controller extends BaseController
     {
         return view('patientSite.loader');
     }
-
-
-
-
 }

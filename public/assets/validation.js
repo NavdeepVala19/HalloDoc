@@ -1,9 +1,7 @@
 $(document).ready(function () {
-    // Validation for city input field
     // $.validator.addMethod(
     //     "mobileValidation",
     //     function (value, element) {
-    //         console.log(element);
     //         if (element.intlTelInput("isValidNumber")) {
     //             console.log("valide");
     //             return true;
@@ -12,6 +10,16 @@ $(document).ready(function () {
     //     },
     //     "Please enter a valid phone number."
     // );
+
+    $.validator.addMethod(
+        "mobileValidation",
+        function (value, element, params) {
+            var telInput = $(element).intlTelInput("isValidNumber");
+            console.log(telInput);
+            return telInput && intlTelInputUtils.isValidNumber(telInput);
+        },
+        "Please enter a valid phone number."
+    );
 
     // Validation for city input field
     $.validator.addMethod(
@@ -55,12 +63,14 @@ $(document).ready(function () {
     $.validator.addMethod(
         "dateRange",
         function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
             // Parse the entered date and minimum/maximum dates
             var enteredDate = new Date(value);
             var minDate = new Date(params[0]); // First parameter in params array is minimum date
             var maxDate = new Date(params[1]); // Second parameter in params array is maximum date
-
-            console.log(enteredDate, minDate, maxDate);
 
             // Check if entered date is within the allowed range (inclusive)
             return enteredDate >= minDate && enteredDate <= maxDate;
@@ -451,18 +461,278 @@ $(document).ready(function () {
     $("#providerEncounterForm, #adminEncounterForm").validate({
         rules: {
             first_name: nameRules("First Name"),
+            last_name: nameRules("Last Name"),
+            location: {
+                required: true,
+                minlength: 5,
+                maxlength: 50,
+            },
+            date_of_birth: {
+                required: true,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
+            },
+            service_date: {
+                required: true,
+                dateRange: [
+                    new Date("2024-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
+            },
             mobile: {
-                phoneUS: true,
-                required: false,
+                required: true,
+                mobileValidation: true,
+                // minlength: 12,
+                // maxlength: 12,
             },
             email: emailRules(),
+            present_illness_history: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            medical_history: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            medications: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            allergies: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+            },
+            temperature: {
+                required: false,
+                min: -50,
+                max: 50,
+            },
+            heart_rate: {
+                required: false,
+                min: 30,
+                max: 220,
+            },
+            repository_rate: {
+                required: false,
+                min: 12,
+                max: 40,
+            },
+            sis_BP: {
+                required: false,
+                min: 40,
+                max: 250,
+            },
+            dia_BP: {
+                required: false,
+                min: 40,
+                max: 150,
+            },
+            oxygen: {
+                required: false,
+                min: 70,
+                max: 100,
+            },
+            pain: {
+                required: false,
+                minlength: 5,
+                maxlength: 50,
+            },
+            heent: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            cv: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            chest: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            abd: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            extr: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            skin: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            neuro: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            other: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            diagnosis: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
+            treatment_plan: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+            },
+            medication_dispensed: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+            },
+            procedure: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+            },
+            followUp: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+            },
         },
         messages: {
             first_name: nameMessages("First Name"),
+            last_name: nameMessages("Last Name"),
+            location: {
+                required: "Please enter patient's whole address",
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 50 characters",
+            },
             mobile: {
-                phoneUS: "Phone Number should have valid format",
+                required: "Please enter mobile number",
+                min: "Mobile number should have 10 digits",
+                max: "Mobile number should have 10 digits",
             },
             email: emailMessages("Email"),
+            date_of_birth: {
+                required: "Please enter date of birth",
+            },
+            service_date: {
+                required: "Please enter service Date",
+            },
+            present_illness_history: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            medical_history: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            medications: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            allergies: {
+                required: "Please Enter allergies of the patient",
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            temperature: {
+                min: "Minimum value could be -50",
+                max: "Maximum value could be 50",
+            },
+            heart_rate: {
+                min: "Minimum value could be 30",
+                max: "Maximum value could be 220",
+            },
+            repository_rate: {
+                min: "Minimum value could be 12",
+                max: "Maximum value could be 40",
+            },
+            sis_BP: {
+                min: "Minimum value could be 40",
+                max: "Maximum value could be 250",
+            },
+            dia_BP: {
+                min: "Minimum value could be 40",
+                max: "Maximum value could be 150",
+            },
+            oxygen: {
+                min: "Minimum value could be 70",
+                max: "Maximum value could be 100",
+            },
+            pain: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 50 characters",
+            },
+            heent: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            cv: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            chest: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            abd: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            extr: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            skin: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            neuro: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            other: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            diagnosis: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            treatment_plan: {
+                required: "Please enter a treatment plan for the patient",
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            medication_dispensed: {
+                required:
+                    "Enter medications which were dispensed during patient visits.",
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            procedure: {
+                required:
+                    "enter procedures from which patients must pass through.",
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
+            followUp: {
+                required:
+                    "Enter follow-up which should be taken by the patient.",
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -528,6 +798,11 @@ $(document).ready(function () {
             fax_number: {
                 required: true,
             },
+            prescription: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+            },
             email: emailRules(),
         },
         messages: {
@@ -542,6 +817,10 @@ $(document).ready(function () {
             },
             fax_number: {
                 required: "Enter Fax number to send order",
+            },
+            prescription: {
+                minlength: "Minimum length should be 5 characters",
+                maxlength: "Maximum length should be 200 characters only",
             },
             email: emailMessages("Email"),
         },

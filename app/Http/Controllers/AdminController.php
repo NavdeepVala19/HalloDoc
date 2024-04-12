@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
-use Carbon\Carbon;
 use App\Models\Menu;
 
 // Different Models used in these Controller
@@ -15,7 +13,6 @@ use App\Models\Roles;
 use App\Models\Shift;
 use App\Models\users;
 use App\Mail\SendLink;
-use App\Mail\SendMail;
 use App\Models\Orders;
 
 use App\Models\caseTag;
@@ -32,7 +29,6 @@ use App\Models\RoleMenu;
 // DomPDF package used for the creation of pdf from the form
 use App\Models\UserRoles;
 // To create zip, used to download multiple documents at once
-use App\Mail\SendAgreement;
 use App\Models\AdminRegion;
 use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
@@ -64,7 +60,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
 use App\Models\HealthProfessionalType;
 use Illuminate\Support\Facades\Session;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 
 class AdminController extends Controller

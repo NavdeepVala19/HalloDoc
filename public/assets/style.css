@@ -228,6 +228,10 @@ form > h3 {
     margin-bottom: 24px;
 }
 
+.mobile-container {
+    height: 75% !important;
+}
+
 .section #floatingTextarea2 {
     height: 150px;
 }
