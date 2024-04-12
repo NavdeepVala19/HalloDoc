@@ -53,6 +53,11 @@
 .notes-logo {
     font-size: 28px !important;
 }
+.notes > span {
+    /* text-wrap: wrap; */
+    word-break: break-all;
+    overflow-wrap: break-word !important;
+}
 
 .notes-section > div {
     padding: 25px;

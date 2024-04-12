@@ -78,7 +78,7 @@
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                            class="form-control phone" id="telephone" placeholder="Phone Number" disabled>
+                            class="form-control phone" id="telephone" disabled>
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror

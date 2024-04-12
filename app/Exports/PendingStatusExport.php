@@ -19,7 +19,7 @@ class PendingStatusExport implements FromCollection, WithCustomCsvSettings, With
     {
         $this->data = $data;
     }
-    
+
     public function getCsvSettings(): array
     {
         return ['delimiter' => ','];
@@ -27,7 +27,7 @@ class PendingStatusExport implements FromCollection, WithCustomCsvSettings, With
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor','PhysicianName' ,'RequestedDate', 'Mobile', 'Address','Notes'];
+        return ['PatientName', 'Date Of Birth', 'Requestor', 'PhysicianName', 'RequestedDate', 'Mobile', 'Address', 'Notes'];
     }
 
     /**
@@ -36,7 +36,7 @@ class PendingStatusExport implements FromCollection, WithCustomCsvSettings, With
     public function collection()
     {
         $adminPendingData = $this->data->get();
-    
+
         return collect($adminPendingData)->map(function ($adminPending) {
             $patientName = null;
             $patientLastName = null;
@@ -65,14 +65,14 @@ class PendingStatusExport implements FromCollection, WithCustomCsvSettings, With
                 $state = $adminPending->requestClient->state;
             }
             return [
-                'PatientName' => $patientName.' '. $patientLastName, 
+                'PatientName' => $patientName . ' ' . $patientLastName,
                 'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminPending->first_name.' '. $adminPending->first_name,
-                'PhysicianName'=>$adminPending->provider->first_name.' '.$adminPending->provider->last_name,
+                'Requestor' => $adminPending->first_name . ' ' . $adminPending->first_name,
+                'PhysicianName' => $adminPending->provider->first_name . ' ' . $adminPending->provider->last_name,
                 'RequestedDate' => $adminPending->created_at,
                 'Mobile' => $adminPending->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
-                'Notes'=>$adminPending->requestClient->notes,
+                'Notes' => $adminPending->requestClient->notes,
             ];
         });
     }

@@ -76,7 +76,6 @@ class familyRequestController extends Controller
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
-
         }
 
         $requestEmail = new users();
@@ -109,7 +108,7 @@ class familyRequestController extends Controller
         $patientRequest->save();
 
 
-        
+
 
         // store documents in request_wise_file table
 

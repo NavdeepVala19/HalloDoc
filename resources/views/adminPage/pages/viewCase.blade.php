@@ -58,6 +58,10 @@
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
+
+    {{-- Wrong Request on url (case doesn't exists) --}}
+    @include('alertMessages.wrongCaseRequestError')
+    
     {{-- Assign Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
     to providers based on patient’s region using this pop-up. --}}
@@ -128,7 +132,7 @@
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                            class="form-control phone" id="telephone" placeholder="Phone Number" disabled>
+                            class="form-control phone" id="telephone" disabled>
                         @error('phone_number')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror

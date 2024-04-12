@@ -196,7 +196,6 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
-
         $request->validate([
             'user_name' => 'required|alpha|min:3|max:40',
             'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',

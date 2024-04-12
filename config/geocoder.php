@@ -56,7 +56,6 @@ return [
     |
     */
     'providers' => [
-        // dd(env('GOOGLE_MAPS_LOCALE')),
         Chain::class => [
             GoogleMaps::class => [
                 env('GOOGLE_MAPS_LOCALE'),
@@ -64,7 +63,6 @@ return [
             ],
 
             GeoPlugin::class  => [],
-            // dd(GoogleMaps::class),
         ],
     ],
 

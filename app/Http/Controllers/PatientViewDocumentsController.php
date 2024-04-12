@@ -27,8 +27,6 @@ class PatientViewDocumentsController extends Controller
             ->leftJoin('request', 'request.id', 'request_wise_file.request_id')
             ->where('request_id', $id)
             ->paginate(10);
-
-        // dd($documents);
         
         return view('patientSite/patientViewDocument', compact('documents'));
     }

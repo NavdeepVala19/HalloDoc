@@ -134,7 +134,7 @@
                 </div>
 
                 <div class="form-floating" style="height: 58px;">
-                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" placeholder="Phone Number" value="{{ $adminProfileData->mobile }}" disabled>
+                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $adminProfileData->mobile }}" disabled>
                     @error('phone_number')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
