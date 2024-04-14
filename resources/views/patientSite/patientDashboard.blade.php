@@ -44,7 +44,7 @@
                                 <td style="height: 5%;">
                                     @if ($patientData->request_id == null)
                                     @else
-                                        <a href="{{ route('patientViewDocsFile', $patientData->id) }}"
+                                        <a href="{{ route('patientViewDocsFile',  Crypt::encrypt($patientData->id)) }}"
                                             type="button" class="primary-empty btn ">Documents</a>
                                     @endif
                                 </td>
@@ -91,7 +91,7 @@
                             -
                         @else
                             <div>
-                                <a href="{{ route('patientViewDocsFile', $patientData->id) }}" type="button"
+                                <a href="{{ route('patientViewDocsFile', Crypt::encrypt($patientData->id)) }}" type="button"
                                     class="primary-empty btn ">Documents</a>
                             </div>
                         @endif

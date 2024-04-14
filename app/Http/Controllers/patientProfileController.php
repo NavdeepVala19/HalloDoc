@@ -33,7 +33,8 @@ class patientProfileController extends Controller
                 return view("patientSite/patientProfileEdit", compact('getPatientData'));
             }
         } catch (\Throwable $th) {
-            return view('errors.404');
+            // return view('errors.404');
+            return back();
         }
     }
 

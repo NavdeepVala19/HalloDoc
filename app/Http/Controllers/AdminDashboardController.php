@@ -15,6 +15,7 @@ use App\Models\request_Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminDashboardController extends Controller
 {
@@ -145,28 +146,35 @@ class AdminDashboardController extends Controller
 
     public function adminProfile($id)
     {
-        $adminProfileData = Admin::select(
-            'admin.first_name',
-            'admin.last_name',
-            'admin.email',
-            'admin.mobile',
-            'admin.address1',
-            'admin.address2',
-            'admin.city',
-            'admin.zip',
-            'admin.status',
-            'admin.user_id',
-            'alt_phone',
-            'role.name',
-            'regions.region_name'
-        )
-            ->leftJoin('role', 'role.id', 'admin.role_id')
-            ->leftJoin('users', 'users.id', 'admin.user_id')
-            ->leftJoin('regions', 'regions.id', 'admin.region_id')
-            ->where('user_id', $id)
-            ->first();
-
+        try {
+            $id = Crypt::decrypt($id);
+            $adminProfileData = Admin::select(
+                'admin.first_name',
+                'admin.last_name',
+                'admin.email',
+                'admin.mobile',
+                'admin.address1',
+                'admin.address2',
+                'admin.city',
+                'admin.zip',
+                'admin.status',
+                'admin.user_id',
+                'alt_phone',
+                'role.name',
+                'regions.region_name'
+            )
+                ->leftJoin('role', 'role.id', 'admin.role_id')
+                ->leftJoin('users', 'users.id', 'admin.user_id')
+                ->leftJoin('regions', 'regions.id', 'admin.region_id')
+                ->where('user_id', $id)
+                ->first();
         return view('adminPage/adminProfile', compact('adminProfileData'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back();
+        }
+    
+
     }
 
 

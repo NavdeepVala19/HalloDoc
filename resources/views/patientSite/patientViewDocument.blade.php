@@ -17,7 +17,7 @@
         <a type="button" class="primary-empty btn d-flex justify-content-center align-items-center" href="{{route('patientDashboardData')}}"> <i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
-    <form action="{{route('patientViewDocuments')}}" method="post" enctype="multipart/form-data">
+    <form action="{{route('patientViewDocuments')}}" method="post" enctype="multipart/form-data" id="patientUploadDocs">
         @csrf
         <input type="hidden" name="request_wise_file_id" value="{{$documents[0]->request_id}}">
         <input type="hidden" name="request_type" value="1">
@@ -66,7 +66,7 @@
                     <td><i class="bi bi-filetype-doc"></i> {{ $document->file_name }}</td>
                     <td>{{ $document->first_name }}</td>
                     <td>{{date_format(date_create($document->created_date), 'd-m-Y')}}</td>
-                    <td> <a href="{{ route('downloadOne', $document->id) }}" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
+                    <td> <a href="{{ route('downloadOne', Crypt::encrypt($document->id)) }}" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -80,7 +80,7 @@
                 </div>
                 <div class="mb-3">{{ $document->first_name }}</div>
                 <p>{{ $document->created_at }}</p>
-                <a href="{{ route('downloadOne', $document->id) }}" class="primary-empty cloud-down" type="button"> <i class="bi bi-cloud-download "></i>
+                <a href="{{ route('downloadOne', Crypt::encrypt($document->id)) }}" class="primary-empty cloud-down" type="button"> <i class="bi bi-cloud-download "></i>
                 </a>
             </div>
             @endforeach
@@ -91,5 +91,7 @@
 
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ URL::asset('assets/patientSite/patientViewDocs.js') }}"></script>
 @endsection

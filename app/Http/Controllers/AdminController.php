@@ -58,6 +58,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\HealthProfessionalType;
 use Illuminate\Support\Facades\Session;
 
@@ -936,27 +937,26 @@ class AdminController extends Controller
             $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if (!empty($request->email)) {
-            $combinedData = $combinedData->orWhere('request_client.email', "like", "%" . $request->email . "%");
+            $combinedData = $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
         }
         if (!empty($request->phone_number)) {
-            $combinedData = $combinedData->orWhere('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+            $combinedData = $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->request_type)) {
-            $combinedData = $combinedData->orWhere('request.request_type_id', "like", "%" . $request->request_type . "%");
+            $combinedData = $combinedData->where('request.request_type_id', "like", "%" . $request->request_type . "%");
         }
         if (!empty($request->provider_name)) {
-            $combinedData = $combinedData->orWhere('provider.first_name', "like", "%" . $request->provider_name . "%");
+            $combinedData = $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
         }
         if (!empty($request->request_status)) {
-            $combinedData = $combinedData->orWhere('request_status.status', "like", "%" . $request->request_status . "%");
+            $combinedData = $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
         }
         if (!empty($request->from_date_of_service)) {
-            $combinedData = $combinedData->orWhere('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
+            $combinedData = $combinedData->where('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
         }
         if (!empty($request->to_date_of_service)) {
-            $combinedData = $combinedData->orWhere('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
+            $combinedData = $combinedData->where('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
         }
-
         return $combinedData;
     }
 
@@ -1058,16 +1058,16 @@ class AdminController extends Controller
             $sms = $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
         }
         if (!empty($request->phone_number)) {
-            $sms = $sms->orWhere('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+            $sms = $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->created_date)) {
-            $sms = $sms->orWhere('sms_log.created_date', "like", "%" . $request->created_date . "%");
+            $sms = $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
         }
         if (!empty($request->sent_date)) {
-            $sms = $sms->orWhere('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+            $sms = $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
         }
         if (!empty($request->role_type)) {
-            $sms = $sms->orWhere('sms_log.role_id', "like", "%" . $request->role_type . "%");
+            $sms = $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
         }
         $sms = $sms->paginate($perPage, ['*'], 'page', $page);
 
@@ -1267,17 +1267,25 @@ class AdminController extends Controller
 
     public function UserAccessEdit($id)
     {
-        $UserAccessRoleName = Roles::select('name')
+        try {
+            $id = Crypt::decrypt($id);
+            $UserAccessRoleName = Roles::select('name')
             ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
             ->where('user_roles.user_id', $id)
             ->get();
 
         if ($UserAccessRoleName->first()->name == 'admin') {
-            return redirect()->route('adminProfile', ['id' => $id]);
-        } else if ($UserAccessRoleName->first()->name == 'physician') {
+            return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
+        } 
+        else if ($UserAccessRoleName->first()->name == 'physician') {
             $getProviderId = Provider::where('user_id', $id);
-            return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
+            return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
         }
+        } catch (\Throwable $th) {
+            // return view('errors.404');
+            dd("SS");
+            return back();
+        }    
     }
 
     public function FilterUserAccessAccountTypeWise(Request $request)
@@ -1325,7 +1333,7 @@ class AdminController extends Controller
     public function sendRequestSupport(Request $request)
     {
         $request->validate([
-            'contact_msg' => 'required',
+            'contact_msg' => 'required|min:5|max:100',
         ]);
 
         $currentDate = now()->toDateString();

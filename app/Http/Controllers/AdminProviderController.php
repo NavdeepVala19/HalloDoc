@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ContactProvider;
+use App\Models\Role;
+use App\Models\users;
+use App\Models\Regions;
+use App\Models\SMSLogs;
+use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
-use App\Models\PhysicianRegion;
 use App\Models\Provider;
-use App\Models\Regions;
-use App\Models\RequestWiseFile;
-use App\Models\Role;
-use App\Models\SMSLogs;
 use App\Models\UserRoles;
-use App\Models\users;
 use Illuminate\Http\Request;
+use App\Mail\ContactProvider;
+use App\Models\PhysicianRegion;
+use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminProviderController extends Controller
 {
@@ -355,8 +356,15 @@ class AdminProviderController extends Controller
 
     public function editProvider($id)
     {
-        $getProviderData = Provider::with('users', 'role', 'Regions')->where('id', $id)->first();
-        return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+        try {
+            $id = Crypt::decrypt($id);
+            $getProviderData = Provider::with('users', 'role', 'Regions')->where('id', $id)->first();
+            return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+        } catch (\Throwable $th) {
+            // return view('errors.404');
+            return back();
+        }       
+
     }
 
     public function updateProviderAccountInfo(Request $request, $id)
