@@ -97,6 +97,14 @@ $(document).ready(function () {
             url: "/physician/" + $physician,
             type: "GET",
             success: function (data) {
+                if (data.length == 0) {
+                    $(".selectPhysician").append(
+                        $(
+                            "<option disabled>No physicians for these Region</option>"
+                        )
+                    );
+                }
+
                 data.forEach(function (physician) {
                     $(".selectPhysician").append(
                         $("<option>", {
@@ -124,6 +132,13 @@ $(document).ready(function () {
             url: "/newPhysicians/" + $requestId + "/" + $region,
             type: "GET",
             success: function (data) {
+                if (data.length == 0) {
+                    $(".selectPhysician").append(
+                        $(
+                            "<option disabled>No physicians for these Region</option>"
+                        )
+                    );
+                }
                 data.forEach(function (physician) {
                     $(".selectPhysician").append(
                         $("<option>", {
@@ -137,7 +152,7 @@ $(document).ready(function () {
                 });
             },
             error: function (error) {
-                console.error(error);
+                console.error(error.responseJSON);
             },
         });
     });

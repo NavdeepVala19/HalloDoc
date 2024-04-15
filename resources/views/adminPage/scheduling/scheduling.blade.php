@@ -162,66 +162,68 @@
                     <input name="is_repeat" class="form-check-input repeat-switch" type="checkbox" role="switch"
                         id="flexSwitchCheckChecked">
                 </div>
-                <div class="checkboxes-section">
-                    <p>Repeat Days</p>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="0"
-                            id="defaultCheck1" disabled>
-                        <label class="form-check-label" for="defaultCheck1">
-                            Every Sunday
-                        </label>
+                <div class="repeat-section">
+                    <div class="checkboxes-section">
+                        <p>Repeat Days</p>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="0"
+                                id="defaultCheck1" disabled>
+                            <label class="form-check-label" for="defaultCheck1">
+                                Every Sunday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="1"
+                                id="defaultCheck2" disabled>
+                            <label class="form-check-label" for="defaultCheck2">
+                                Every Monday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
+                                id="defaultCheck3" disabled>
+                            <label class="form-check-label" for="defaultCheck3">
+                                Every Tuesday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="3"
+                                id="defaultCheck4" disabled>
+                            <label class="form-check-label" for="defaultCheck4">
+                                Every Wednesday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
+                                id="defaultCheck5" disabled>
+                            <label class="form-check-label" for="defaultCheck5">
+                                Every Thursday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="5"
+                                id="defaultCheck6" disabled>
+                            <label class="form-check-label" for="defaultCheck6">
+                                Every Friday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="6"
+                                id="defaultCheck7" disabled>
+                            <label class="form-check-label" for="defaultCheck7">
+                                Every Saturday
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="1"
-                            id="defaultCheck2" disabled>
-                        <label class="form-check-label" for="defaultCheck2">
-                            Every Monday
-                        </label>
+                    <div class="form-floating">
+                        <select class="form-select repeat-end-selection" name="repeatEnd" class="cancel-options"
+                            id="floatingSelect8" aria-label="Floating label select example" disabled>
+                            <option selected value="2">2-times</option>
+                            <option value="3">3-times</option>
+                            <option value="4">4-times</option>
+                        </select>
+                        <label for="floatingSelect8">Repeat End</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
-                            id="defaultCheck3" disabled>
-                        <label class="form-check-label" for="defaultCheck3">
-                            Every Tuesday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="3"
-                            id="defaultCheck4" disabled>
-                        <label class="form-check-label" for="defaultCheck4">
-                            Every Wednesday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
-                            id="defaultCheck5" disabled>
-                        <label class="form-check-label" for="defaultCheck5">
-                            Every Thursday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="5"
-                            id="defaultCheck6" disabled>
-                        <label class="form-check-label" for="defaultCheck6">
-                            Every Friday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="6"
-                            id="defaultCheck7" disabled>
-                        <label class="form-check-label" for="defaultCheck7">
-                            Every Saturday
-                        </label>
-                    </div>
-                </div>
-                <div class="form-floating">
-                    <select class="form-select repeat-end-selection" name="repeatEnd" class="cancel-options"
-                        id="floatingSelect8" aria-label="Floating label select example" disabled>
-                        <option selected value="2">2-times</option>
-                        <option value="3">3-times</option>
-                        <option value="4">4-times</option>
-                    </select>
-                    <label for="floatingSelect8">Repeat End</label>
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
@@ -256,14 +258,14 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeStart"
-                            class="form-control shiftStartTime shiftStartTimeInput" id="floatingInput2"
+                            class="form-control shiftStartTime shiftStartTimeInput" id="startTime"
                             placeholder="Created Date" disabled>
-                        <label for="floatingInput2">Start</label>
+                        <label for="startTime">Start</label>
                     </div>
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeEnd" class="form-control shiftEndTime shiftEndTimeInput"
-                            id="floatingInput3" placeholder="Created Date" disabled>
-                        <label for="floatingInput3">End</label>
+                            id="endTime" placeholder="Created Date" disabled>
+                        <label for="endTime">End</label>
                     </div>
                 </div>
             </div>
@@ -271,7 +273,7 @@
                 <button type="submit" name="action" value="return" class="primary-fill">Return</button>
                 {{-- Change status from pending to approved and vice-versa --}}
                 <button type="button" class="primary-fill edit-btn">Edit</button>
-                <button type="submit" name="action" value="save" class="primary-fill save-btn">Save</button>
+                <button type="submit" name="action" value="save" class="primary-fill save-btn" id="saveAdminEditShiftBtn">Save</button>
                 <button type="submit" name="action" value="delete" class="delete-selected-btn">Delete</button>
             </div>
         </form>

@@ -62,18 +62,18 @@ required, without finalizing encounter form provider cannot conclude the case. -
             <h6>Patient Name</h6>
             <p class="patient-name mb-4">{{ $case->requestClient->first_name }}
                 {{ $case->requestClient->last_name }}</p>
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h3>Encounter Forms</h3>
-                <form action="{{ route('upload.conclude.care.docs') }}" method="POST" enctype="multipart/form-data"
-                    class="upload-docs">
-                    @csrf
-                    <input type="text" value="{{ $case->id }}" name="caseId" hidden>
-                    <div>
+            <div class="mb-4 custom-file-input">
+                <div class="d-flex align-items-center justify-content-between ">
+                    <h3>Encounter Forms</h3>
+                    <form action="{{ route('upload.conclude.care.docs') }}" method="POST" enctype="multipart/form-data"
+                        class="upload-docs" id="concludeCareForm">
+                        @csrf
+                        <input type="text" value="{{ $case->id }}" name="caseId" hidden>
                         <input type="file" name="document" id="document" hidden>
                         <label for="document" class="primary-empty "><i class="bi bi-cloud-upload"></i>
                             <span class="upload-txt">Upload</span> </label>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
 
             <div class="table-responsive conclude-care-docs">
@@ -129,4 +129,6 @@ required, without finalizing encounter form provider cannot conclude the case. -
             })
         })
     </script>
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

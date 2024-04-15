@@ -86,7 +86,8 @@
             <span class="confirmation-number">({{ $data->confirmation_no }})</span>
             <p>Check here to review and add files that you or the Client/Member has attached to the Request.</p>
 
-            <form action="{{ route('admin.upload.doc', $data->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.upload.doc', $data->id) }}" method="POST" enctype="multipart/form-data"
+                id="adminViewUploadsForm">
                 @csrf
                 <div class="custom-file-input mb-4">
                     <input type="file" name="document" id="file-upload" hidden>
@@ -95,7 +96,7 @@
                     is-invalid
                 @enderror">
                         Select File </label>
-                    <button type="submit" class="primary-fill upload-btn">
+                    <button type="submit" class="primary-fill upload-btn" id="adminUploadBtn">
                         <i class="bi bi-cloud-arrow-up me-2"></i>
                         <span class="upload-txt">Upload</span>
                     </button>
@@ -197,4 +198,8 @@
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

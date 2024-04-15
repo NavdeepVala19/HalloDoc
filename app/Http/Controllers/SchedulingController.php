@@ -240,11 +240,11 @@ class SchedulingController extends Controller
     }
     public function shiftAction(Request $request)
     {
-        if (empty($request->selected)){
-            return redirect()->back()->with('selectOption', "Select Atleast one shift for performing operation!");   
+        if (empty($request->selected)) {
+            return redirect()->back()->with('selectOption', "Select Atleast one shift for performing operation!");
         }
         if ($request->action == 'approve') {
-                ShiftDetail::whereIn('id', $request->selected)->update(['status' => 2]);
+            ShiftDetail::whereIn('id', $request->selected)->update(['status' => 2]);
             return redirect()->back();
         } else {
             $shifts = ShiftDetail::whereIn('id', $request->selected)->get();

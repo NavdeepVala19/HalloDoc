@@ -44,26 +44,32 @@ $(document).ready(function () {
         $(".popup-message").fadeOut("slow");
     }, 2000);
 
-    let telephone = document.querySelector("#telephone");
-
-    iti = window.intlTelInput(telephone, {
-        initialCountry: "in",
-        strictMode: true,
-        // utilsScript: "/intl-tel-input/js/utils.js?1712785596628",
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/21.1.3/js/utils.min.js",
-    });
-
     // No space are allowed directly when input field is empty
     $(
-        'input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"], textarea'
+        'textarea, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"]'
     ).on("keypress", function (event) {
         // Check if space key is pressed and the input field is empty
-        if (event.which === 32 && $(this).val().trim() === "") {
+        // if (event.which === 32 && $(this).val().trim() === "") {
+        console.log($(this).val());
+        if (
+            event.which === 32 &&
+            ($(this).val().trim() === "" ||
+                $(this).val().trim().charAt(0) === " ")
+        ) {
             event.preventDefault(); // Prevent space from being inserted
         } else {
             // Allow other key presses (including backspace, delete, etc.)
             return true;
         }
     });
+
+    let telephone = document.querySelector("#telephone");
+    if (telephone) {
+        iti = window.intlTelInput(telephone, {
+            initialCountry: "in",
+            strictMode: true,
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/21.1.3/js/utils.min.js",
+        });
+    }
 });

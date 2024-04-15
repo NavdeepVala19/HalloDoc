@@ -60,9 +60,8 @@
                     <label for="floatingSelect1">Region</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate"
-                        class="form-control @error('shiftDate') is-invalid @enderror" id="floatingInput4"
-                        placeholder="Created Date" value="{{ old('shiftDate') }}">
+                    <input type="date" name="shiftDate" class="form-control @error('shiftDate') is-invalid @enderror"
+                        id="floatingInput4" placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput4">Shift Date</label>
                     @error('shiftDate')
                         <div class="text-danger">{{ $message }}</div>
@@ -71,8 +70,8 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control @error('shiftStartTime') is-invalid @enderror"
-                            id="floatingInput2" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
+                            class="form-control @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
+                            placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')
                             <div class="text-danger">{{ $message }}</div>
@@ -80,8 +79,8 @@
                     </div>
                     <div class="form-floating ">
                         <input type="time" name="shiftEndTime"
-                            class="form-control @error('shiftEndTime') is-invalid @enderror"
-                            id="floatingInput3" placeholder="Created Date" value="{{ old('shiftEndTime') }}">
+                            class="form-control @error('shiftEndTime') is-invalid @enderror" id="floatingInput3"
+                            placeholder="Created Date" value="{{ old('shiftEndTime') }}">
                         <label for="floatingInput3">End</label>
                         @error('shiftEndTime')
                             <div class="text-danger">{{ $message }}</div>
@@ -93,66 +92,68 @@
                     <input name="is_repeat" class="form-check-input repeat-switch" type="checkbox" role="switch"
                         id="flexSwitchCheckChecked">
                 </div>
-                <div class="checkboxes-section">
-                    <p>Repeat Days</p>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="0" id="defaultCheck1"
-                            disabled>
-                        <label class="form-check-label" for="defaultCheck1">
-                            Every Sunday
-                        </label>
+                <div class="repeat-section">
+                    <div class="checkboxes-section">
+                        <p>Repeat Days</p>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="0"
+                                id="defaultCheck1" disabled>
+                            <label class="form-check-label" for="defaultCheck1">
+                                Every Sunday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="1"
+                                id="defaultCheck2" disabled>
+                            <label class="form-check-label" for="defaultCheck2">
+                                Every Monday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="2"
+                                id="defaultCheck3" disabled>
+                            <label class="form-check-label" for="defaultCheck3">
+                                Every Tuesday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="3"
+                                id="defaultCheck4" disabled>
+                            <label class="form-check-label" for="defaultCheck4">
+                                Every Wednesday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
+                                id="defaultCheck5" disabled>
+                            <label class="form-check-label" for="defaultCheck5">
+                                Every Thursday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="5"
+                                id="defaultCheck6" disabled>
+                            <label class="form-check-label" for="defaultCheck6">
+                                Every Friday
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="checkbox[]" type="checkbox" value="6"
+                                id="defaultCheck7" disabled>
+                            <label class="form-check-label" for="defaultCheck7">
+                                Every Saturday
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="1" id="defaultCheck2"
-                            disabled>
-                        <label class="form-check-label" for="defaultCheck2">
-                            Every Monday
-                        </label>
+                    <div class="form-floating">
+                        <select class="form-select repeat-end-selection" name="repeatEnd" class="cancel-options"
+                            id="floatingSelect" aria-label="Floating label select example" disabled>
+                            <option selected value="2">2-times</option>
+                            <option value="3">3-times</option>
+                            <option value="4">4-times</option>
+                        </select>
+                        <label for="floatingSelect">Repeat End</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="2" id="defaultCheck3"
-                            disabled>
-                        <label class="form-check-label" for="defaultCheck3">
-                            Every Tuesday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="3"
-                            id="defaultCheck4" disabled>
-                        <label class="form-check-label" for="defaultCheck4">
-                            Every Wednesday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="4"
-                            id="defaultCheck5" disabled>
-                        <label class="form-check-label" for="defaultCheck5">
-                            Every Thursday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="5"
-                            id="defaultCheck6" disabled>
-                        <label class="form-check-label" for="defaultCheck6">
-                            Every Friday
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="checkbox[]" type="checkbox" value="6"
-                            id="defaultCheck7" disabled>
-                        <label class="form-check-label" for="defaultCheck7">
-                            Every Saturday
-                        </label>
-                    </div>
-                </div>
-                <div class="form-floating">
-                    <select class="form-select repeat-end-selection" name="repeatEnd" class="cancel-options"
-                        id="floatingSelect" aria-label="Floating label select example" disabled>
-                        <option selected value="2">2-times</option>
-                        <option value="3">3-times</option>
-                        <option value="4">4-times</option>
-                    </select>
-                    <label for="floatingSelect">Repeat End</label>
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
@@ -188,8 +189,8 @@
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeStart"
                             class="form-control shiftStartTime shiftStartTimeInput @error('shiftTimeStart') is-invalid @enderror"
-                            id="floatingInput2" placeholder="Created Date" disabled value="{{ old('shiftTimeStart') }}">
-                        <label for="floatingInput2">Start</label>
+                            id="startTime" placeholder="Created Date" disabled value="{{ old('shiftTimeStart') }}">
+                        <label for="startTime">Start</label>
                         @error('shiftTimeStart')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -197,8 +198,8 @@
                     <div class="form-floating ">
                         <input type="time" name="shiftTimeEnd"
                             class="form-control shiftEndTime shiftEndTimeInput @error('shiftTimeEnd') is-invalid @enderror"
-                            id="floatingInput3" placeholder="Created Date" disabled value="{{ old('shiftTimeEnd') }}">
-                        <label for="floatingInput3">End</label>
+                            id="endTime" placeholder="Created Date" disabled value="{{ old('shiftTimeEnd') }}">
+                        <label for="endTime">End</label>
                         @error('shiftTimeEnd')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror

@@ -28,6 +28,11 @@
     border: 2px solid rgb(136, 168, 141);
 }
 
+/* ------------ Repeat Section -------------- */
+.repeat-section {
+    display: none;
+}
+
 /* Calendar Styling */
 #calendar {
     width: 70%;
@@ -210,7 +215,7 @@ thead tr .fc-datagrid-cell-cushion {
     .provider {
         text-wrap: nowrap;
     }
-    .button-section a{
+    .button-section a {
         margin: 0;
     }
 }

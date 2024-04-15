@@ -131,7 +131,7 @@
                     initialLocation !== $("#floatingInput3").val() ||
                     initialDateOfBirth !== $("#floatingInput4").val() ||
                     initialServiceDate !== $("#floatingInput5").val() ||
-                    initialMobile !== $("#telephone").val() ||
+                    // initialMobile !== $("#telephone").val() ||
                     initialEmail !== $("#floatingInput6").val() ||
                     initialPresentIllnessHistory !== $("#floatingTextarea1").val() ||
                     initialMedicalHistory !== $("#floatingTextarea2").val() ||
@@ -171,8 +171,6 @@
                     console.log("Changes Detected");
                 } else {
                     // Proceed with finalization
-                    // $(".finalize-btn").off("click"); 
-                    // console.log('Form to be submitted');
                     window.location.href = "{{ route('encounter.finalized', $id) }}";
                 }
             });

@@ -209,7 +209,8 @@ class AdminController extends Controller
     // AJAX call for (Remaining) Physician for listing in dropdown selection 
     public function getNewPhysicians($requestId, $regionId)
     {
-        $oldPhysicianId = RequestStatus::where('request_id', $requestId)->where('TransToAdmin', 1)->where('status', 3)->orderByDesc('id')->first()->physician_id;
+        // $oldPhysicianId = RequestStatus::where('request_id', $requestId)->where('TransToAdmin', 1)->where('status', 3)->orderByDesc('id')->first()->physician_id;
+        $oldPhysicianId = RequestTable::where('id', $requestId)->where('status', 3)->orderByDesc('id')->first()->physician_id;
         $physiciansId = PhysicianRegion::where('region_id', $regionId)->pluck('provider_id')->toArray();
         $physicians = Provider::whereIn('id', $physiciansId)->whereNot('id', $oldPhysicianId)->get()->toArray();
         return response()->json($physicians);
@@ -371,7 +372,7 @@ class AdminController extends Controller
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
-            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf'
+            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf|max:5242880'
         ], [
             'document.required' => 'Select an File to upload!'
         ]);
@@ -578,8 +579,9 @@ class AdminController extends Controller
             $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->orderByDesc('id')->paginate(10);
         }
         $professions = HealthProfessionalType::get();
+        $search = null;
 
-        return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
+        return view('adminPage.partners.partners', compact('vendors', 'professions', 'id', 'search'));
     }
 
     // For Searching and filtering Partners
@@ -605,7 +607,7 @@ class AdminController extends Controller
         $vendors = $query->orderByDesc('id')->paginate(10, ['*'], 'page', $page);
         $professions = HealthProfessionalType::get();
 
-        return view('adminPage.partners.partners', compact('vendors', 'professions', 'id'));
+        return view('adminPage.partners.partners', compact('vendors', 'professions', 'id', 'search'));
     }
 
     // Add Business page
@@ -1553,7 +1555,7 @@ class AdminController extends Controller
             'zip' => 'digits:6',
             'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'role' => 'required',
-            'state'=>'required',
+            'state' => 'required',
         ]);
 
         dd("here");

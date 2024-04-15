@@ -39,8 +39,8 @@ $(document).ready(function () {
     $.validator.addMethod(
         "email",
         function (value, element) {
-            var regex =
-                /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+            // var regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+            var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             return this.optional(element) || regex.test(value);
         },
         "Please enter a valid email address (alphanumeric characters, periods, common symbols, and @ followed by a domain name)"
@@ -57,8 +57,11 @@ $(document).ready(function () {
             // Parse the entered date and minimum/maximum dates
             var enteredDate = new Date(value);
             var minDate = new Date(params[0]); // First parameter in params array is minimum date
-            var maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            var maxDate = new Date(); // Use current date as maximum date
 
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
             // Check if entered date is within the allowed range (inclusive)
             return enteredDate >= minDate && enteredDate <= maxDate;
         },
@@ -92,43 +95,28 @@ $(document).ready(function () {
     function emailRules(fieldName) {
         return {
             required: true,
+            maxlength: 100,
             email: true,
         };
     }
     function emailMessages(fieldName) {
         return {
             required: "Please enter email address",
-            email: "Please enter a valid email address {ex. a@b.c}",
+            maxlength:
+                "Email should not be longer than 100 characters (including local and domain part)",
+            email: "Please enter a valid email address {ex. a@b.cd}",
         };
     }
     // Mobile Number Rule and Message
     function mobileRules(fieldName) {
         return {
             required: true,
-            // minlength: 12,
-            // maxlength: 12,
             phoneIndia: true,
-            // mobileValidation: true,
-
-            // minlength: function (value, element) {
-            //     // Remove spaces before counting length
-            //     const trimmedValue = value.replace(/\s/g, "");
-            //     return trimmedValue.length === 10;
-            // },
-            // maxlength: function (value, element) {
-            //     // Remove spaces before counting length
-            //     const trimmedValue = value.replace(/\s/g, "");
-            //     return trimmedValue.length === 10;
-            // },
         };
     }
     function mobileMessages(fieldName) {
         return {
             required: "Please enter phone number",
-            // minlength: "Phone number should have exact 10 digits",
-            // maxlength: "Phone number should have exact 10 digits",
-
-            // mobileValidation: "Please enter a valid phone number",
         };
     }
     // TextArea Rule and Message
@@ -156,10 +144,7 @@ $(document).ready(function () {
             email: emailRules(),
             dob: {
                 required: false,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             street: {
                 required: true,
@@ -185,7 +170,8 @@ $(document).ready(function () {
             phone_number: mobileMessages(),
             email: emailMessages(),
             dob: {
-                date: "Date should have an proper format",
+                dateRange:
+                    "Date of Birth should be less than or equal to Today's Date & should be greater than 1900-01-01",
             },
             street: "Please enter your street",
             city: "Please enter your city",
@@ -202,6 +188,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#providerSaveButton").click(function () {
         if ($("#providerCreateRequestForm").valid()) {
@@ -230,6 +219,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#cancel-case").click(function () {
         if ($("#cancelCaseForm").valid()) {
@@ -262,6 +254,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#adminSendLinkButton, .providerSendLinkButton").click(function () {
         if ($("#adminSendLinkForm, #providerSendLinkForm").valid()) {
@@ -272,20 +267,14 @@ $(document).ready(function () {
     // Provider and Admin Send Agreement Pop-Up Validation
     $("#providerSendAgreement, #adminSendAgreement").validate({
         rules: {
-            phone_number: {
-                required: true,
-                phoneUS: true,
-            },
+            phone_number: mobileRules(),
             email: {
                 required: true,
                 email: true,
             },
         },
         messages: {
-            phone_number: {
-                required: "Enter Phone Number to Send Agreement",
-                phoneUS: "Enter Phone Number in proper format",
-            },
+            phone_number: mobileMessages(),
             email: {
                 required: "Enter Email to Send Agreement.",
                 email: "Your email address must be in the format of name@domain.com",
@@ -302,6 +291,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#providerSendAgreementBtn, #adminSendAgreementBtn").click(function () {
         if ($("#providerSendAgreement, #adminSendAgreement").valid()) {
@@ -328,6 +320,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#providerTransferCaseBtn").click(function () {
         if ($("#providerTransferCase").valid()) {
@@ -361,6 +356,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#adminAssignCaseBtn, #adminTransferRequestBtn").click(function () {
         if ($("#adminAssignCase, #adminTransferRequest").valid()) {
@@ -387,6 +385,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#adminBlockCaseBtn").click(function () {
         if ($("#adminBlockCase").valid()) {
@@ -413,6 +414,12 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            form.submit();
+        },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#cancelAgreementPatientBtn").click(function () {
         if ($("#cancelAgreementPatient").valid()) {
@@ -439,6 +446,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#profileEditMailFormBtn").click(function () {
         if ($("#profileEditMailForm").valid()) {
@@ -470,12 +480,7 @@ $(document).ready(function () {
                     new Date().toDateString(),
                 ],
             },
-            mobile: {
-                required: true,
-                mobileValidation: true,
-                // minlength: 12,
-                // maxlength: 12,
-            },
+            mobile: mobileRules(),
             email: emailRules(),
             present_illness_history: {
                 required: false,
@@ -606,11 +611,7 @@ $(document).ready(function () {
                 minlength: "Minimum length should be 5 characters",
                 maxlength: "Maximum length should be 50 characters",
             },
-            mobile: {
-                required: "Please enter mobile number",
-                min: "Mobile number should have 10 digits",
-                max: "Mobile number should have 10 digits",
-            },
+            mobile: mobileMessages(),
             email: emailMessages("Email"),
             date_of_birth: {
                 required: "Please enter date of birth",
@@ -734,6 +735,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#providerEncounterFormBtn, #adminEncounterFormBtn").click(function () {
         if ($("#providerEncounterForm, #adminEncounterForm").valid()) {
@@ -825,6 +829,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
     $("#adminSendOrderSubmit, #providerSendOrderSubmit").click(function () {
         if ($("#adminSendOrderForm, #providerSendOrderForm").valid()) {
@@ -837,7 +844,8 @@ $(document).ready(function () {
     $.validator.addMethod(
         "greaterThan",
         function (value, element, params) {
-            var startTime = $("#floatingInput2").val();
+            var startTime = $(element).val();
+            console.log(startTime);
             if (value < startTime) {
                 return false;
             }
@@ -851,13 +859,17 @@ $(document).ready(function () {
         rules: {
             shiftDate: {
                 required: true,
+                dateRange: [
+                    new Date("2000-1-1").toDateString(),
+                    new Date("2050-1-1").toDateString(),
+                ],
             },
             shiftTimeStart: {
                 required: true,
             },
             shiftTimeEnd: {
                 required: true,
-                greaterThan: "#floatingInput2", // ShiftStartTime input element
+                greaterThan: "#startTime", // ShiftStartTime input element
             },
         },
         messages: {
@@ -873,7 +885,6 @@ $(document).ready(function () {
                     "Shift End Time must be greater than Shift Start Time.",
             },
         },
-        // errorElement: "span",
         errorPlacement: function (error, element) {
             let errorBox = $("<span class='text-danger'></span>");
             errorBox.append(error);
@@ -886,8 +897,11 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
-    $("#saveProviderEditShiftBtn").click(function () {
+    $("#saveProviderEditShiftBtn, #saveAdminEditShiftBtn").click(function () {
         if ($("#providerEditShiftForm, #adminEditShiftForm").valid()) {
             $("#providerEditShiftForm, #adminEditShiftForm").submit();
         }
@@ -904,6 +918,10 @@ $(document).ready(function () {
             },
             shiftDate: {
                 required: true,
+                dateRange: [
+                    new Date("2000-1-1").toDateString(),
+                    new Date("2050-1-1").toDateString(),
+                ],
             },
             shiftStartTime: {
                 required: true,
@@ -960,8 +978,11 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        // submitHandler: function (form) {
+        //     form.submit();
+        // },
     });
-    $("#adminAddShiftBtn").click(function () {
+    $("#adminAddShiftBtn, #providerAddShiftBtn").click(function () {
         if ($("#adminAddShiftForm, #providerAddShiftForm").valid()) {
             $("#adminAddShiftForm, #providerAddShiftForm").submit();
         }
@@ -990,6 +1011,108 @@ $(document).ready(function () {
         },
         submitHandler: function (form) {
             form.submit();
+        },
+    });
+
+    // File Upload Validations
+    $.validator.addMethod(
+        "customFile",
+        function (value, element, param) {
+            // Check if a file is selected
+            if (element.files.length === 0) {
+                return true; // Allow if no file is selected (optional)
+            }
+
+            // Get the file extension
+            var extension = element.files[0].name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+            // Allowed extensions
+            var allowedExtensions = ["jpg", "jpeg", "png", "pdf", "doc"];
+
+            // Check extension
+            if ($.inArray(extension, allowedExtensions) === -1) {
+                return false; // Invalid extension
+            }
+
+            // Check file size (2MB in bytes)
+            var maxSize = 2 * 1024 * 1024;
+            if (element.files[0].size > maxSize) {
+                return false; // File size too large
+            }
+
+            return true; // Valid file
+        },
+        "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
+    );
+
+    $(
+        "#adminViewUploadsForm, #providerViewUploadsForm, #concludeCareForm"
+    ).validate({
+        ignore: [],
+        rules: {
+            document: {
+                required: true,
+                customFile: true,
+            },
+        },
+        messages: {
+            document: {
+                required: "Please Select file to upload",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            console.log(error);
+            errorDiv.append(error);
+            element.closest(".custom-file-input").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+    });
+
+    $("#adminUploadBtn, #providerUploadBtn").click(function (e) {
+        if (
+            $(
+                "#adminViewUploadsForm, #providerViewUploadsForm, #concludeCareForm"
+            ).valid()
+        ) {
+            $(
+                "#adminViewUploadsForm, #providerViewUploadsForm, #concludeCareForm"
+            ).submit();
+        }
+    });
+
+    $("#updateBusinessForm").validate({
+        ignore: [],
+        rules: {
+            document: {
+                required: true,
+                customFile: true,
+            },
+        },
+        messages: {
+            document: {
+                required: "Please Select file to upload",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            console.log(error);
+            errorDiv.append(error);
+            element.closest(".custom-file-input").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
 });

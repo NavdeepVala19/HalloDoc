@@ -233,7 +233,4 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-
-    
-
 });

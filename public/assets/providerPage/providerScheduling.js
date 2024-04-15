@@ -50,9 +50,11 @@ $(document).ready(function () {
         if ($(".repeat-switch").is(":checked")) {
             $(".checkboxes-section .form-check-input").prop("disabled", false);
             $(".repeat-end-selection").prop("disabled", false);
+            $(".repeat-section").show();
         } else {
             $(".checkboxes-section .form-check-input").prop("disabled", true);
             $(".repeat-end-selection").prop("disabled", true);
+            $(".repeat-section").hide();
         }
     });
 

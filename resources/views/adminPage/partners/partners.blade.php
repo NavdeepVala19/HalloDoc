@@ -13,7 +13,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -66,7 +66,7 @@
                     @csrf
                     <div class="gap-3 filter-section">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-vendor"
-                            placeholder='&#xF52A;  Search Vendors' aria-describedby="basic-addon1" name="search">
+                            placeholder='&#xF52A;  Search Vendors' aria-describedby="basic-addon1" name="search" value="{{ $search }}">
                         <select name="profession" class="form-select select-profession">
                             <option value="0">All Profession</option>
                             @foreach ($professions as $profession)
