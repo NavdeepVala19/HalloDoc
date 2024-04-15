@@ -216,6 +216,15 @@ nav {
     margin-top: 20px;
 }
 
+label {
+    color: #000;
+}
+.text-danger label {
+    color: red !important;
+}
+label .is-valid {
+    color: green;
+}
 .section {
     background-color: var(--section-bg-color);
     border-radius: 8px;
