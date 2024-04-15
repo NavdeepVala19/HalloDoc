@@ -1,24 +1,11 @@
 $(document).ready(function () {
-    // $.validator.addMethod(
-    //     "mobileValidation",
-    //     function (value, element) {
-    //         if (element.intlTelInput("isValidNumber")) {
-    //             console.log("valide");
-    //             return true;
-    //         }
-    //         // $(element).intlTelInput("isValidNumber");
-    //     },
-    //     "Please enter a valid phone number."
-    // );
-
+    // Add custom validation method for phone number
     $.validator.addMethod(
-        "mobileValidation",
-        function (value, element, params) {
-            var telInput = $(element).intlTelInput("isValidNumber");
-            console.log(telInput);
-            return telInput && intlTelInputUtils.isValidNumber(telInput);
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
         },
-        "Please enter a valid phone number."
+        "Please enter a valid phone number for India."
     );
 
     // Validation for city input field
@@ -118,8 +105,9 @@ $(document).ready(function () {
     function mobileRules(fieldName) {
         return {
             required: true,
-            minlength: 12,
-            maxlength: 12,
+            // minlength: 12,
+            // maxlength: 12,
+            phoneIndia: true,
             // mobileValidation: true,
 
             // minlength: function (value, element) {
@@ -137,8 +125,9 @@ $(document).ready(function () {
     function mobileMessages(fieldName) {
         return {
             required: "Please enter phone number",
-            minlength: "Phone number should have exact 10 digits",
-            maxlength: "Phone number should have exact 10 digits",
+            // minlength: "Phone number should have exact 10 digits",
+            // maxlength: "Phone number should have exact 10 digits",
+
             // mobileValidation: "Please enter a valid phone number",
         };
     }

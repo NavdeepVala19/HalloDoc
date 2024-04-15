@@ -45,6 +45,9 @@ table td {
     .table-view {
         display: none;
     }
+    .mobile-listing {
+        display: block;
+    }
 
     .mobile-list {
         border-bottom: 1px solid grey;

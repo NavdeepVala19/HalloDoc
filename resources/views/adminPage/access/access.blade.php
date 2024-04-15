@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -64,6 +64,11 @@
                         <td class="actions">Actions</td>
                     </thead>
                     <tbody>
+                        @if ($roles->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Roles Found</td>
+                            </tr>
+                        @endif
                         @foreach ($roles as $role)
                             <tr>
                                 <td>{{ $role->name }}</td>
@@ -78,6 +83,11 @@
                     </tbody>
                 </table>
                 <div class="mobile-listing">
+                    @if ($roles->isEmpty())
+                        <div class="no-record mt-3 mb-3">
+                            <span>No Roles Found</span>
+                        </div>
+                    @endif
                     @foreach ($roles as $role)
                         <div class="mobile-list">
                             <div class="m-2">Name: {{ $role->name }} </div>

@@ -50,6 +50,8 @@ $(document).ready(function () {
         initialCountry: "in",
         strictMode: true,
         // utilsScript: "/intl-tel-input/js/utils.js?1712785596628",
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/21.1.3/js/utils.min.js",
     });
 
     // No space are allowed directly when input field is empty
