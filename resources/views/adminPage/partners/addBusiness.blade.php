@@ -13,7 +13,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -60,14 +60,14 @@
             {{-- Health Professional Table --}}
             {{-- Health Professional Type Table -> for profession names --}}
 
-            <form action="{{ route('add.business') }}" method="POST">
+            <form action="{{ route('add.business') }}" method="POST" id="addBusinessForm">
                 @csrf
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="business_name"
-                            class="form-control @error('business_name') is-invalid @enderror" id="floatingInput"
+                            class="form-control @error('business_name') is-invalid @enderror" id="floatingInput1"
                             placeholder="Business Name">
-                        <label for="floatingInput">Business Name</label>
+                        <label for="floatingInput1">Business Name</label>
                         @error('business_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -87,15 +87,15 @@
                     </div>
                     <div class="form-floating ">
                         <input type="number" name="fax_number"
-                            class="form-control @error('fax_number') is-invalid @enderror" id="floatingInput"
+                            class="form-control @error('fax_number') is-invalid @enderror" id="floatingInput2"
                             placeholder="Fax Number">
-                        <label for="floatingInput">Fax Number</label>
+                        <label for="floatingInput2">Fax Number</label>
                         @error('fax_number')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div>
-                        <div>
+                        <div class="form-floating">
                             <input type="tel" name="mobile"
                                 class="form-control phone @error('mobile') is-invalid @enderror" id="telephone"
                                 placeholder="mobile">
@@ -106,8 +106,8 @@
                     </div>
                     <div class="form-floating ">
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                            id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
+                            id="floatingInput3" placeholder="name@example.com">
+                        <label for="floatingInput3">Email</label>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -115,9 +115,9 @@
 
                     <div class="form-floating ">
                         <input type="text" name="business_contact"
-                            class="form-control @error('business_contact') is-invalid @enderror" id="floatingInput"
+                            class="form-control @error('business_contact') is-invalid @enderror" id="floatingInput4"
                             placeholder="Business Contact">
-                        <label for="floatingInput">Business Contact</label>
+                        <label for="floatingInput4">Business Contact</label>
                         @error('business_contact')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -125,8 +125,8 @@
 
                     <div class="form-floating ">
                         <input type="text" name="street" class="form-control @error('street') is-invalid @enderror"
-                            id="floatingInput" placeholder="Street">
-                        <label for="floatingInput">Street</label>
+                            id="floatingInput5" placeholder="Street">
+                        <label for="floatingInput5">Street</label>
                         @error('street')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -134,8 +134,8 @@
 
                     <div class="form-floating ">
                         <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
-                            id="floatingInput" placeholder="City">
-                        <label for="floatingInput">City</label>
+                            id="floatingInput6" placeholder="City">
+                        <label for="floatingInput6">City</label>
                         @error('city')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -143,27 +143,31 @@
 
                     <div class="form-floating ">
                         <input type="text" name="state" class="form-control @error('state') is-invalid @enderror"
-                            id="floatingInput" placeholder="State">
-                        <label for="floatingInput">State</label>
+                            id="floatingInput7" placeholder="State">
+                        <label for="floatingInput7">State</label>
                         @error('state')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="zip" class="form-control @error('zip') is-invalid @enderror"
-                            id="floatingInput" placeholder="Zip/postal">
-                        <label for="floatingInput">Zip/postal</label>
+                        <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror"
+                            id="floatingInput8" placeholder="Zip/postal">
+                        <label for="floatingInput8">Zip/postal</label>
                         @error('zip')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="text-end">
-                    <input type="submit" value="Save" class="primary-fill">
+                    <input type="submit" value="Save" class="primary-fill" id="addBusinessSaveBtn">
                     <a href="{{ route('admin.partners') }}" class="primary-empty">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

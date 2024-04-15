@@ -1089,24 +1089,95 @@ $(document).ready(function () {
         }
     });
 
-    $("#updateBusinessForm").validate({
-        ignore: [],
+    // Add Business page validation
+    $("#addBusinessForm, #updateBusinessForm").validate({
         rules: {
-            document: {
+            business_name: {
                 required: true,
-                customFile: true,
+                minlength: 5,
+                maxlength: 20,
+            },
+            profession: {
+                required: true,
+            },
+            fax_number: {
+                required: true,
+                min: 0,
+            },
+            mobile: mobileRules(),
+            email: emailRules(),
+            business_contact: {
+                required: true,
+                minlength: 3,
+                maxlength: 30,
+            },
+            street: {
+                required: true,
+                minlength: 3,
+                maxlength: 25,
+            },
+            city: {
+                required: true,
+                minlength: 3,
+                maxlength: 25,
+            },
+            state: {
+                required: true,
+                minlength: 3,
+                maxlength: 25,
+            },
+            zip: {
+                required: true,
+                minlength: 6,
+                maxlength: 6,
+                // digits: true,
             },
         },
         messages: {
-            document: {
-                required: "Please Select file to upload",
+            business_name: {
+                required: "Business name is required",
+                minlength: "Mininum 5 characters needed",
+                maxlength: "Maximum 20 characters allowed",
+            },
+            profession: {
+                required: "Please select profession",
+            },
+            fax_number: {
+                required: "Fax Number is required",
+                min: "Minimum value can be 0",
+            },
+            mobile: mobileMessages(),
+            email: emailMessages(),
+            business_contact: {
+                required: "Business contact is required",
+                minlength: "Minimum 3 characters needed",
+                maxlength: "Maximum 30 characters are allowed",
+            },
+            street: {
+                required: "Street is required",
+                minlength: "Minimum 3 characters needed",
+                maxlength: "Maximum 25 characters allowed",
+            },
+            city: {
+                required: "City is required",
+                minlength: "Minimum 3 characters needed",
+                maxlength: "Maximum 25 characters allowed",
+            },
+            state: {
+                required: "State is required",
+                minlength: "Minimum 3 characters needed",
+                maxlength: "Maximum 25 characters allowed",
+            },
+            zip: {
+                required: "Zip is required",
+                min: "Minimum 6 digits are required",
+                max: "Maximum 6 digits are allowed",
             },
         },
         errorPlacement: function (error, element) {
             let errorDiv = $("<div class='text-danger'></div>");
-            console.log(error);
             errorDiv.append(error);
-            element.closest(".custom-file-input").append(errorDiv);
+            element.closest(".form-floating").append(errorDiv);
         },
         highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -1114,5 +1185,11 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+    });
+
+    $("#addBusinessSaveBtn, #updateBusinessSaveBtn").click(function (e) {
+        if ($("#addBusinessForm, #updateBusinessForm").valid()) {
+            $("#addBusinessForm, #updateBusinessForm").submit();
+        }
     });
 });
