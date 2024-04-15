@@ -23,7 +23,7 @@
         <input type="hidden" name="request_type" value="1">
         <div class="container main-content">
             <p>Patient Name</p>
-            <p class="user-name">{{$documents->first()->first_name}} <span class="confirmation-no ">{{$documents->first()->confirmation_no}} </span> </p>
+            <p class="user-name">{{$documents->first()->first_name}} <span class="confirmation-no" style="color: gray;">{{$documents->first()->confirmation_no}} </span> </p>
             <p>Check Here for any files that you or doctors of your subsequents requestors have attached for you to review.</p>
 
             <div class="custom-file-input mb-4">

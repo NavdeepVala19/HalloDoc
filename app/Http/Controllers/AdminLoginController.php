@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\sendResetPasswordMail;
-use App\Models\request_Client;
-use App\Models\RequestTable;
+use App\Models\users;
+use App\Models\Provider;
 use App\Models\UserRoles;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PhysicianLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
-use App\Models\users;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-
-use Illuminate\Support\Str;
-
 
 class AdminLoginController extends Controller
 {
@@ -26,9 +21,9 @@ class AdminLoginController extends Controller
         return view("admin/adminLogin");
     }
 
-
     public function userLogin(Request $request)
     {
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -39,10 +34,19 @@ class AdminLoginController extends Controller
             'password' => $request->password,
         ];
 
-
         if (Auth::attempt($credentials)) {
             $userData = Auth::user();
             $userRolesData = UserRoles::where('user_id', $userData->id)->first();
+
+            if ($userRolesData->role_id == 2) {
+                $providersData = Provider::where('email', $userData->email)->first();
+                PhysicianLocation::create([
+                    'provider_id' => $providersData->id,
+                    'physician_name' => $providersData->first_name,
+                    'latitude' => $request->latitude,
+                    'longitude' => $request->longitude,
+                ]);
+            }
 
             if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
@@ -56,14 +60,12 @@ class AdminLoginController extends Controller
         }
     }
 
-
     // this code is for entering email for reset password
 
     public function adminResetPassword()
     {
         return view("admin/adminResetPassword");
     }
-
 
     public function submitForgetPasswordForm(Request $request)
     {
@@ -81,8 +83,6 @@ class AdminLoginController extends Controller
         $user->token = $token;
         $user->save();
 
-
-
         Mail::send('email.adminforgetPassword', ['token' => $token], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Reset Password');
@@ -98,7 +98,6 @@ class AdminLoginController extends Controller
         return view('admin/adminPasswordUpdate', ['token' => $token]);
     }
 
-
     public function submitUpdatePasswordForm(Request $request)
     {
 
@@ -108,7 +107,6 @@ class AdminLoginController extends Controller
 
         ]);
 
-
         $updatePassword = users::where('token', $request->token)->first();
 
         if (!$updatePassword) {
@@ -116,17 +114,24 @@ class AdminLoginController extends Controller
         }
 
         users::where([
-            'token' => $request->token
+            'token' => $request->token,
         ])->update(['password' => Hash::make($request->new_password)]);
 
-
-        users::where(['email' => $request->email])->delete();
+        users::where(['token' => $request->token])->update(['token' => ""]);
 
         return redirect('/adminLogin')->with('message', 'Your password has been changed!');
     }
 
     public function logout()
     {
+        $userData = Auth::user();
+        $userRolesData = UserRoles::where('user_id', $userData->id)->first();
+
+        if ($userRolesData->role_id == 2) {
+            $providersData = Provider::where('email', $userData->email)->first();
+            PhysicianLocation::where('provider_id',$providersData->id)->forceDelete();
+        }
+
         Auth::logout();
         return redirect()->route('adminLogin');
     }

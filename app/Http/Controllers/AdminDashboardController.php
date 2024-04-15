@@ -170,8 +170,8 @@ class AdminDashboardController extends Controller
                 ->first();
         return view('adminPage/adminProfile', compact('adminProfileData'));
         } catch (\Throwable $th) {
-            //throw $th;
-            return back();
+           return view('errors.404');
+
         }
     
 

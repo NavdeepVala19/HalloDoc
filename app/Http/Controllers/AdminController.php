@@ -1282,9 +1282,8 @@ class AdminController extends Controller
             return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
         }
         } catch (\Throwable $th) {
-            // return view('errors.404');
-            dd("SS");
-            return back();
+            return view('errors.404');
+;
         }    
     }
 
@@ -1346,6 +1345,7 @@ class AdminController extends Controller
 
         $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
         $offDutyPhysicians = Provider::whereIn('id', $offDutyPhysicianIds)->pluck('email')->toArray();
+
 
         $requestMessage = $request->contact_msg;
         foreach ($offDutyPhysicians as $offDutyPhysician) {
@@ -1663,9 +1663,10 @@ class AdminController extends Controller
                     });
             });
         }
+
         // Filter Regions 
         if ($region) {
-            $query = RequestTable::with('requestClient')->whereHas('requestClient', function ($query) use ($region) {
+            $query->whereHas('requestClient', function ($query) use ($region) {
                 $query->where('state', 'like', '%' . $region . '%');
             })->where('status', $this->getStatusId($status));
         }
@@ -1677,11 +1678,12 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-
+        $request->session()->put('regionName',$regionName);
+                
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
@@ -1696,10 +1698,11 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
-
+        $category = $request->category_value;
+        $search = $request->search_value;
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1716,10 +1719,13 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1735,10 +1741,12 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1754,10 +1762,12 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;   
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1773,10 +1783,13 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1791,16 +1804,17 @@ class AdminController extends Controller
 
     public function exportNew(Request $request)
     {
-
         $status = 'new';
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
 
-        if ($region = "All Regions") {
-            $exportNewData = $this->buildQuery($status, $category, $search,);
+        $regionName = $request->session()->get('regionName', null);
+        
+        if ($regionName == "All Regions") {
+            $exportNewData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportNewData = $this->fetchQuery($status, $category, $search, $region);
+            $exportNewData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportNew = new NewStatusExport($exportNewData);
@@ -1812,11 +1826,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportPendingData = $this->buildQuery($status, $category, $search,);
         } else {
-            $exportPendingData = $this->fetchQuery($status, $category, $search, $region);
+            $exportPendingData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportPending = new PendingStatusExport($exportPendingData);
@@ -1829,11 +1845,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportActiveData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportActiveData = $this->fetchQuery($status, $category, $search, $region);
+            $exportActiveData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportActive = new ActiveStatusExport($exportActiveData);
@@ -1846,11 +1864,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportConcludeData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportConcludeData = $this->fetchQuery($status, $category, $search, $region);
+            $exportConcludeData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportConclude = new ConcludeStatusExport($exportConcludeData);
@@ -1862,11 +1882,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportToCloseData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportToCloseData = $this->fetchQuery($status, $category, $search, $region);
+            $exportToCloseData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportToClose = new ToCloseStatusExport($exportToCloseData);
@@ -1879,11 +1901,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportUnpaidData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportUnpaidData = $this->fetchQuery($status, $category, $search, $region);
+            $exportUnpaidData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);

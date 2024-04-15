@@ -216,5 +216,6 @@
 
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
+<script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/businessRequestFormValidation.js') }}"></script>
 @endsection

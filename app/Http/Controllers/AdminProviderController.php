@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Mail\ContactProvider;
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
+use App\Models\PhysicianLocation;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
@@ -361,8 +362,8 @@ class AdminProviderController extends Controller
             $getProviderData = Provider::with('users', 'role', 'Regions')->where('id', $id)->first();
             return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
         } catch (\Throwable $th) {
-            // return view('errors.404');
-            return back();
+            return view('errors.404');
+
         }       
 
     }
@@ -568,7 +569,19 @@ class AdminProviderController extends Controller
     public function providerLocations()
     {
         $providers = Provider::get();
-        return view('adminPage/provider/providerLocation', compact('providers'));
+        return view('adminPage/provider/providerLocation',compact("providers"));
+    }
+
+    public function providerMapLocations(){
+        $providers = PhysicianLocation::all();
+        $locations = $providers->map(function ($provider) {
+            return [
+                'latitude' => $provider->latitude,
+                'longitude' => $provider->longitude,
+            ];
+        });
+
+        return response()->json(['locations' => $locations->toArray()]);
     }
 
     public function fetchRolesName()

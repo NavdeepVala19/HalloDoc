@@ -92,6 +92,11 @@
                         <td>Actions</td>
                     </thead>
                     <tbody class="text-center align-middle">
+                        @if ($userAccessData->isEmpty())
+                        <div class="no-record mt-3 mb-3">
+                            <span>No Users Found</sp>
+                        </div>
+                        @endif
                         @foreach ($userAccessData as $data)
                         <tr>
                             <td>{{ $data->name }}</td>
@@ -108,6 +113,11 @@
             </div>
 
             <div class="mobile-listing mt-3">
+                @if ($userAccessData->isEmpty())
+                <div class="no-record mt-3 mb-3">
+                    <span>No Users Found</sp>
+                </div>
+                @endif
                 @foreach ($userAccessData as $data)
                 <div class="mobile-list">
                     <div class="main-section">

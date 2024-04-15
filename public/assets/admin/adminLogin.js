@@ -1,4 +1,4 @@
-$(document).ready(function () {
+at$(document).ready(function () {
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {

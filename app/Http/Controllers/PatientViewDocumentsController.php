@@ -33,7 +33,8 @@ class PatientViewDocumentsController extends Controller
 
             return view('patientSite/patientViewDocument', compact('documents'));
         } catch (\Throwable $th) {
-            return back();
+            return view('errors.404');
+
         }
     }
 
@@ -74,7 +75,8 @@ class PatientViewDocumentsController extends Controller
             $path = (public_path() . '/storage/' . $file->file_name);
             return response()->download($path);
         } catch (\Throwable $th) {
-            return back();
+            return view('errors.404');
+
         }
     }
 

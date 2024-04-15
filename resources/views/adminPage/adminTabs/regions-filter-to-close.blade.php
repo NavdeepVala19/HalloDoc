@@ -12,6 +12,11 @@
                         </tr>
                     </thead>
                     <tbody id="dropdown-data-body">
+                        @if ($cases->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Cases Found</td>
+                            </tr>
+                        @endif
                         @foreach ($cases as $case)
                             @if (!empty($case->requestClient))
                                 <tr class="type-{{ $case->request_type_id }}">
