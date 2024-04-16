@@ -9,6 +9,7 @@
 
 @section('content')
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- Error or Success Message Alerts/Pop-ups --}}
     {{-- Admin Logged In Successfully --}}

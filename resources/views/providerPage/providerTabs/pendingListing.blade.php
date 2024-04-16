@@ -16,6 +16,7 @@
     {{-- Patient requests that have been accepted by providers or are still pending the acceptance of the service agreement by patients. --}}
     {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the "Pending" state to the "Active" state. --}}
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- Error or Success Message Alerts/Pop-ups --}}
     @if (session('caseAccepted'))

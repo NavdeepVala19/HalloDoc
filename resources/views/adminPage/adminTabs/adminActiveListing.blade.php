@@ -11,6 +11,7 @@
     {{-- This page will display patient requests for which patients have accepted the service agreement and provider is
 giving service to the patient. --}}
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')

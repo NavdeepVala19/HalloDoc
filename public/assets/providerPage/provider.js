@@ -48,7 +48,6 @@ $(document).ready(function () {
         $(".overlay").show();
     });
 
-    
     // for showing transfer-request pop-up on pending listing page
     $(".transfer-btn").click(function () {
         $(".transfer-request").show();
@@ -166,5 +165,15 @@ $(document).ready(function () {
         $("#providerSendAgreement").validate().resetForm();
         $(".pop-up form .form-control").removeClass("is-valid");
         $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
+    // Show loading animation when link Sent by Provider
+    $("#providerSendLinkForm").submit(function () {
+        $(".loader").show();
+    });
+
+    // Show loading animation when Agreement Sent by Provider
+    $("#providerSendAgreement").submit(function () {
+        $(".loader").show();
     });
 });

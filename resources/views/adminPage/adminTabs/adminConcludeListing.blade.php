@@ -11,6 +11,7 @@
     {{-- This page will display patient requests for which medical is completed by the provider. Once the request is
 transferred into conclude state providers can finally conclude care for the patients. --}}
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')

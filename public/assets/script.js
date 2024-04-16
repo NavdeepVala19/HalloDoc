@@ -1,6 +1,11 @@
 var iti;
 
 $(document).ready(function () {
+    // When Window loading is completed, hide the loader
+    $(window).on("load", function () {
+        $("#loading-icon").hide();
+    });
+
     // Toggle Theme Implementation
     // Check if a theme preference is stored in local storage
     const themePref = localStorage.getItem("theme");

@@ -13,6 +13,8 @@ by patients. --}}
     {{-- When providers accept a patient request, they are required to send an agreement video link via email and SMS to the
 patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the
 "Pending" state to the "Active" state. --}}
+    <div class="overlay"></div>
+    @include('loading')
 
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
@@ -53,7 +55,6 @@ patient's email address and phone number. Once the patient accepts the agreement
     {{-- Agreement Sent to patient Successfully --}}
     @include('alertMessages.agreementSentSuccess')
 
-    <div class="overlay"></div>
 
     {{-- Clear Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Clear case” link from Actions menu. From the pending and close

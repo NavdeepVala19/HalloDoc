@@ -14,6 +14,7 @@ by patients. --}}
 patient's email address and phone number. Once the patient accepts the agreement, their request will transition from the
 "Pending" state to the "Active" state. --}}
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- Case Cleared Successfully --}}
     @if (session('caseCleared'))

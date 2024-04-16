@@ -250,6 +250,16 @@ $(document).ready(function () {
         $(".default-buttons").show();
     });
 
+    // Show loading animation when send Link form is submitted
+    $("#adminSendLinkForm").submit(function () {
+        $(".loader").show();
+    });
+
+    // Show loading animation when Agreement Sent by Admin
+    $("#adminSendAgreement").submit(function () {
+        $(".loader").show();
+    });
+
     // Reset Admin Send Link form on Closing pop-up
     $(".adminSendLinkClose").click(function () {
         $("#adminSendLinkForm").trigger("reset");

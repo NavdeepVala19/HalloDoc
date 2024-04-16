@@ -14,6 +14,7 @@
 
 @section('content')
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')

@@ -259,6 +259,8 @@ $(document).ready(function () {
         // },
     });
     $("#adminSendLinkButton, .providerSendLinkButton").click(function () {
+
+        
         if ($("#adminSendLinkForm, #providerSendLinkForm").valid()) {
             $("#adminSendLinkForm, #providerSendLinkForm").submit();
         }

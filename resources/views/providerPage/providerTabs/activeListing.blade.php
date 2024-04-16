@@ -16,6 +16,7 @@
     {{-- This page will display patient requests for which patients have accepted the service agreement and provider is
 giving service to the patient. --}}
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.providerSendLink')
