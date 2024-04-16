@@ -80,11 +80,12 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
         "Please enter valid symptoms."
     );
+
 
     $.validator.addMethod(
         "customFile",
@@ -118,15 +119,14 @@ $(document).ready(function () {
         },
         "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
     );
-
-   
-
+  
     $("#patientRequestForm").validate({
+        ignore: [],
         rules: {
             first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 10,
+                minlength: 3,
+                maxlength: 15,
                 lettersFirstName: true,
             },
             date_of_birth: {
@@ -134,12 +134,12 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
-                emailAddress:true
+                emailAddress: true,
             },
             last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 10,
+                minlength: 3,
+                maxlength: 15,
                 lettersLastName: true,
             },
             phone_number: {
@@ -171,9 +171,9 @@ $(document).ready(function () {
                 minlength: 0,
                 nonNegativeOptional: true,
             },
-            patient_note: {
+            symptoms: {
                 diseaseSymptoms: true,
-                maxlength: 255,
+                maxlength: 200,
             },
             docs: {
                 customFile: true,
@@ -183,13 +183,14 @@ $(document).ready(function () {
             email: {
                 required:
                     "Please enter a valid email format (e.g., user@example.com).",
-                emailAddress:"Please enter a valid email (format: alphanum@alpha.domain)."
+                emailAddress:
+                    "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 10 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 10 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             date_of_birth: {
                 required: "Please enter a date of birth",
@@ -213,18 +214,19 @@ $(document).ready(function () {
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
-            patient_note: {
+            symptoms: {
                 diseaseSymptoms: "Please enter valid symptoms.",
-                maxlength: "Symptoms details cannot exceed 255 characters.", // Optional: Message for exceeding limit
+                maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
             docs: {
-                customFile: "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+                customFile:
+                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
             },
         },
-        errorElement: span,
         errorPlacement: function (error, element) {
-            error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            let errorDiv = $('<div class="text-danger"></div>');
+            errorDiv.append(error);
+            element.closest("#form-floating").append(errorDiv);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -232,5 +234,11 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
+
+
 });

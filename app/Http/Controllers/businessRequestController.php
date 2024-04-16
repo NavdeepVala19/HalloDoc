@@ -32,8 +32,8 @@ class businessRequestController extends Controller
   {
 
     $request->validate([
-      'first_name' => 'required|min:2|max:30',
-      'last_name' => 'required|min:2|max:30',
+      'first_name' => 'required|min:3|max:15',
+      'last_name' => 'required|min:3|max:15',
       'date_of_birth' => 'required',
       'email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
@@ -41,11 +41,12 @@ class businessRequestController extends Controller
       'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'zipcode' => 'digits:6|gte:1',
-      'business_first_name' => 'required|min:2|max:30',
-      'business_last_name' => 'required|min:2|max:30',
+      'business_first_name' => 'required|min:3|max:15',
+      'business_last_name' => 'required|min:3|max:15',
       'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'business_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
       'business_property_name' => 'required|min:2|max:30',
+      'symptoms' => 'nullable|min:5|max:200|',
     ]);
 
 

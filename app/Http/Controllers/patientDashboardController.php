@@ -166,8 +166,6 @@ class patientDashboardController extends Controller
 
     public function createSomeOneElseRequest(Request $request)
     {
-        $userData = Auth::user();
-        $email = $userData["email"];
 
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',

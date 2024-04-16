@@ -56,13 +56,11 @@
         <div id="map-container" style="width:100%;height:660px" class="mt-3">
            <iframe src="https://www.google.com/maps?q=[
                     @foreach ($providers as $data )
-                            {{$data->address1}}+{{$data->address2}}+{{$data->city}}+{{$data->zipcode}}+
+                            {{$data->address1}}+{{$data->address2}}+{{$data->city}}
                     @endforeach
                 ]&output=embed" style="width:100%;height:660px"></iframe>
-              
         </div>
     </div>
-
 
 @endsection
 

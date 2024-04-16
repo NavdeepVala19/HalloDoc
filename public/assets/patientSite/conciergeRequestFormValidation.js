@@ -1,6 +1,32 @@
 $(document).ready(function () {
+    // ** This code is for client side validation in conceirge form
 
-     // ** This code is for client side validation in conceirge form
+    $.validator.addMethod(
+        "lettersFirstName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your first name."
+    );
+
+    $.validator.addMethod(
+        "lettersLastName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your Last name."
+    );
+
+    $.validator.addMethod(
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
+        },
+        "Please enter a valid email (format: alphanum@alpha.domain)."
+    );
 
     $.validator.addMethod(
         "phoneUS",
@@ -32,6 +58,14 @@ $(document).ready(function () {
     );
 
     $.validator.addMethod(
+        "hotel",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid hotel/property name."
+    );
+
+    $.validator.addMethod(
         "zipcode",
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
@@ -39,28 +73,62 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
+      $.validator.addMethod(
+          "diseaseSymptoms",
+          function (value, element) {
+              const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+              return this.optional(element) || regex.test(value.trim());
+          },
+          "Please enter valid symptoms."
+      );
+
+      $.validator.addMethod(
+          "nonNegativeOptional",
+          function (value, element) {
+              // If the field is empty, consider it valid
+              if (value === "") {
+                  return true;
+              }
+              // If a value is entered, check if it's a non-negative number
+              return !isNaN(value) && value >= 0;
+          },
+          "Please enter a valid room number."
+      );
+
     $("#patientRequestForm").validate({
+        ignore: [],
         rules: {
             first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersFirstName: true,
             },
             date_of_birth: {
                 required: true,
             },
+            symptoms: {
+                required: false,
+                diseaseSymptoms: true,
+                maxlength: 200,
+            },
             email: {
                 required: true,
-                email: true,
+                emailAddress: true,
             },
             last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersLastName: true,
             },
             phone_number: {
                 required: true,
                 phoneUS: true,
+            },
+            room: {
+                minlength: 0,
+                nonNegativeOptional: true,
             },
             street: {
                 required: true,
@@ -85,13 +153,15 @@ $(document).ready(function () {
             },
             concierge_first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersFirstName: true,
             },
             concierge_last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersLastName: true,
             },
             concierge_mobile: {
                 required: true,
@@ -101,11 +171,13 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
+                emailAddress: true,
             },
             concierge_hotel_name: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
+                hotel:true,
             },
             concierge_street: {
                 required: true,
@@ -135,10 +207,10 @@ $(document).ready(function () {
                     "Please enter a valid email format (e.g., user@example.com).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             date_of_birth: {
                 required: "Please enter a date of birth",
@@ -159,8 +231,14 @@ $(document).ready(function () {
             zipcode: {
                 required: "Please enter a zipcode",
             },
+            symptoms: {
+                maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
+            },
+            room: {
+                nonNegativeOptional: "Please enter a valid room number.",
+            },
             concierge_first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             concierge_mobile: {
                 required: "Please enter a mobile number",
@@ -171,7 +249,7 @@ $(document).ready(function () {
                     "Please enter a valid email format (e.g., user@example.com).",
             },
             concierge_last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             concierge_hotel_name: {
                 required: "Please enter a hotel name",
@@ -192,7 +270,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -200,6 +278,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
-
-})
+});

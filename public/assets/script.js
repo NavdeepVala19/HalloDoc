@@ -1,10 +1,13 @@
 var iti;
 
+// When Window loading is completed, hide the loader
+$(window).on("load", function () {
+    // $("#loading-icon").hide();
+    $("#loading-icon").fadeOut("slow");
+});
+
 $(document).ready(function () {
-    // When Window loading is completed, hide the loader
-    $(window).on("load", function () {
-        $("#loading-icon").hide();
-    });
+    
 
     // Toggle Theme Implementation
     // Check if a theme preference is stored in local storage

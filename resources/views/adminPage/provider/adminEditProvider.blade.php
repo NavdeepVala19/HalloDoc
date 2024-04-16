@@ -49,15 +49,13 @@
         <h2 class="heading">Edit Physician Account</h2>
         <a href="{{ route('adminProvidersInfo') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
-
     <div class="section">
-
         @if (Session::has('message'))
         <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
         </div>
         @endif
-
+        
         <div class="section">
             <form action="{{ route('updateProviderAccountInfo', $getProviderData->id) }}" method="POST" id="adminEditProviderForm1">
                 @csrf

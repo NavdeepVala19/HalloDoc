@@ -27,8 +27,8 @@ class AdminDashboardController extends Controller
     public function createAdminPatientRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:30|alpha',
-            'last_name' => 'required|min:2|max:30|alpha',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'street' => 'min:2|max:30',
@@ -36,9 +36,9 @@ class AdminDashboardController extends Controller
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'room'=>'gte:1|nullable',
             'zip' => 'digits:6|nullable|gte:1',
-            'adminNote' => 'nullable|min:5|max:200|',
+            'adminNote' => 'nullable|min:5|max:200',
         ]);
-        dd("here");
+
         $isEmailStored = users::where('email', $request->email)->pluck('email');
 
         if ($request->email != $isEmailStored) {

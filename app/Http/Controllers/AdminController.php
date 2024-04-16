@@ -1281,7 +1281,7 @@ class AdminController extends Controller
         } 
         else if ($UserAccessRoleName->first()->name == 'physician') {
             $getProviderId = Provider::where('user_id', $id);
-            return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
+            return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
         }
         } catch (\Throwable $th) {
             return view('errors.404');
@@ -1328,9 +1328,6 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
-
-
     public function sendRequestSupport(Request $request)
     {
         $request->validate([
@@ -1365,182 +1362,7 @@ class AdminController extends Controller
         return response()->json($fetchedRegions);
     }
 
-    // *****  fetching only that data which is filter-by All-Regions drop-down button  ****
-    public function filterPatientByRegion(Request $request)
-    {
-        $status = $request->status;
-        $regionId = $request->regionId;
-        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-
-        $cases = [];
-        if ($status == 'new') {
-            $cases = RequestTable::with('requestClient')->whereHas('requestClient', function ($query) use ($regionName) {
-                $query->where('state', 'like', '%' . $regionName . '%');
-            })->where('status', 1)->get();
-        } else if ($status == 'pending') {
-            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                $query->where('state', 'like', '%' . $regionName . '%');
-            })->where('status', 3)->get();
-        } else if ($status == 'active') {
-            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                $query->where('state', 'like', '%' . $regionName . '%');
-            })->where('status', 5)->get();
-        } else if ($status == 'conclude') {
-            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                $query->where('state', 'like', '%' . $regionName . '%');
-            })->where('status', 6)->get();
-        } else if ($status == 'toclose') {
-            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                $query->where('state', 'like', '%' . $regionName . '%');
-            })->where('status', 7)->get();
-        } else if ($status == 'unpaid') {
-            $cases = RequestStatus::with(['request', 'requestClient'])->whereHas('requestClient', function ($query) use ($regionName) {
-                $query->where('state', 'like', '%' . $regionName . '%');
-            })->where('status', 9)->get();
-        }
-
-        // Format the data as needed (optional)
-        $formattedData = [];
-        foreach ($cases as $patient) {
-            $formattedData[] = [
-                'request_id' => $patient->request->id,
-                'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->requestClient->first_name,
-                'last_name' => $patient->requestClient->last_name,
-                'date_of_birth' => $patient->requestClient->date_of_birth,
-                'requestor' => $patient->request->first_name,
-                'created_at' => $patient->requestClient->created_at,
-                'phone_number' => $patient->requestClient->phone_number,
-                'street' => $patient->requestClient->street,
-                'city' => $patient->requestClient->city,
-                'state' => $patient->requestClient->state,
-            ];
-        }
-        $data = view('adminPage.adminTabs.regions-filter-new')->with('cases', $formattedData)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    public function filterPatientByRegionActiveState($selectedId)
-    {
-        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
-
-        $patientData = request_Client::with('request')->where('state', $regionName)->get();
-
-        // Format the data as needed (optional)
-        $formattedData = [];
-        foreach ($patientData as $patient) {
-            $formattedData[] = [
-                'request_id' => $patient->request->id,
-                'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->first_name,
-                'last_name' => $patient->last_name,
-                'date_of_birth' => $patient->date_of_birth,
-                'requestor' => $patient->request->first_name,
-                'physician_name' => $patient->request->last_name,
-                'created_at' => $patient->created_at,
-                'phone_number' => $patient->phone_number,
-                'street' => $patient->street,
-                'city' => $patient->city,
-                'state' => $patient->state,
-            ];
-        }
-
-        $data = view('adminPage.adminTabs.regions-filter-active')->with('cases', $formattedData)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    public function filterPatientByRegionConcludeState($selectedId)
-    {
-
-        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
-
-        $patientData = request_Client::with('request')->where('state', $regionName)->get();
-
-        // Format the data as needed (optional)
-        $formattedData = [];
-        foreach ($patientData as $patient) {
-            $formattedData[] = [
-                'request_id' => $patient->request->id,
-                'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->first_name,
-                'last_name' => $patient->last_name,
-                'date_of_birth' => $patient->date_of_birth,
-                'requestor' => $patient->request->first_name,
-                'physician_name' => $patient->request->last_name,
-                'created_at' => $patient->created_at,
-                'phone_number' => $patient->phone_number,
-                'street' => $patient->street,
-                'city' => $patient->city,
-                'state' => $patient->state,
-            ];
-        }
-
-        $data = view('adminPage.adminTabs.regions-filter-conclude')->with('cases', $formattedData)->render();
-        return response()->json(['html' => $data]);
-    }
-    public function filterPatientByRegionToCloseState($selectedId)
-    {
-
-        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
-
-        $patientData = request_Client::with('request')->where('state', $regionName)->get();
-
-        // Format the data as needed (optional)
-        $formattedData = [];
-        foreach ($patientData as $patient) {
-            $formattedData[] = [
-                'request_id' => $patient->request->id,
-                'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->first_name,
-                'last_name' => $patient->last_name,
-                'date_of_birth' => $patient->date_of_birth,
-                'requestor' => $patient->request->first_name,
-                'physician_name' => $patient->request->last_name,
-                'created_at' => $patient->created_at,
-                'phone_number' => $patient->phone_number,
-                'street' => $patient->street,
-                'city' => $patient->city,
-                'state' => $patient->state,
-            ];
-        }
-
-        $data = view('adminPage.adminTabs.regions-filter-to-close')->with('cases', $formattedData)->render();
-        return response()->json(['html' => $data]);
-    }
-
-    public function filterPatientByRegionUnPaidState($selectedId)
-    {
-
-        $regionName = Regions::where('id', $selectedId)->pluck('region_name')->first();
-
-        $patientData = request_Client::with('request')->where('state', $regionName)->get();
-
-        // Format the data as needed (optional)
-        $formattedData = [];
-        foreach ($patientData as $patient) {
-            $formattedData[] = [
-                'request_id' => $patient->request->id,
-                'request_type_id' => $patient->request->request_type_id,
-                'first_name' => $patient->first_name,
-                'last_name' => $patient->last_name,
-                'date_of_birth' => $patient->date_of_birth,
-                'requestor' => $patient->request->first_name,
-                'physician_name' => $patient->request->last_name,
-                'created_at' => $patient->created_at,
-                'phone_number' => $patient->phone_number,
-                'street' => $patient->street,
-                'city' => $patient->city,
-                'state' => $patient->state,
-            ];
-        }
-
-        $data = view('adminPage.adminTabs.regions-filter-unpaid')->with('cases', $formattedData)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
+    
     public function adminAccount()
     {
         $regions = Regions::get();

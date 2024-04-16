@@ -64,122 +64,128 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
-        $request->validate([
-            'contact_msg' => 'required|min:2|max:100',
-        ]);
-
-        $receipientData = Provider::where('id', $id)->get();
-        $receipientId = $id;
-        $receipientName = $receipientData->first()->first_name;
-        $receipientEmail = $receipientData->first()->email;
-        $receipientMobile = $receipientData->first()->mobile;
-
-        $enteredText = $request->contact_msg;
-
-        if ($request->contact == "email") {
-            // send email
-            $providerData = Provider::get()->where('id', $request->provider_id);
-            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
-
-            EmailLog::create([
-                'role_id' => 1,
-                // 'provider_id' => specify provider id
-                // 'email_template' =>,
-                // 'subject_name' =>,
-                'is_email_sent' => true,
-                'sent_tries' => 1,
-                'sent_date' => now(),
-                'email_template' => $enteredText,
-                'subject_name' => 'notification to provider',
-                'email' => $receipientEmail,
-                'provider_id' => $receipientId,
-            ]);
-        } else if ($request->contact == "sms") {
-            // send SMS
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-            $twilio = new Client($sid, $token);
-
-            $message = $twilio->messages
-                ->create(
-                    "+91 99780 71802", // to
-                    [
-                        "body" => "$enteredText",
-                        "from" => $senderNumber,
-                    ]
-                );
-
-            SMSLogs::create(
-                [
-                    'provider_id' => $receipientId,
-                    'mobile_number' => $receipientMobile,
-                    'created_date' => now(),
-                    'sent_date' => now(),
-                    'role_id' => 1,
-                    'recipient_name' => $receipientName,
-                    'sent_tries' => 1,
-                    'is_sms_sent' => 1,
-                    'action' => 1,
-                    'sms_template' => $enteredText,
-                ]
-            );
-        } else if ($request->contact == "both") {
-            // send email
-            $providerData = Provider::get()->where('id', $request->provider_id);
-            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
-
-            // send SMS
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-            $twilio = new Client(
-                $sid,
-                $token
-            );
-
-            $message = $twilio->messages
-                ->create(
-                    "+91 99780 71802", // to
-                    [
-                        "body" => "$enteredText",
-                        "from" => $senderNumber,
-                    ]
-                );
-
-            EmailLog::create([
-                'role_id' => 1,
-                // 'provider_id' => specify provider id
-                // 'email_template' =>,
-                // 'subject_name' =>,
-                'is_email_sent' => true,
-                'sent_tries' => 1,
-                'sent_date' => now(),
-                'email_template' => $enteredText,
-                'subject_name' => 'notification to provider',
-                'email' => $receipientEmail,
-                'provider_id' => $receipientId,
+        try {
+            $id = Crypt::decrypt($id);
+      
+            $request->validate([
+                'contact_msg' => 'required|min:2|max:100',
             ]);
 
-            SMSLogs::create(
-                [
-                    'provider_id' => $receipientId,
-                    'mobile_number' => $receipientMobile,
-                    'created_date' => now(),
-                    'sent_date' => now(),
+            $receipientData = Provider::where('id', $id)->get();
+            $receipientId = $id;
+            $receipientName = $receipientData->first()->first_name;
+            $receipientEmail = $receipientData->first()->email;
+            $receipientMobile = $receipientData->first()->mobile;
+
+            $enteredText = $request->contact_msg;
+
+            if ($request->contact == "email") {
+                // send email
+                $providerData = Provider::get()->where('id', $request->provider_id);
+                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+
+                EmailLog::create([
                     'role_id' => 1,
-                    'recipient_name' => $receipientName,
+                    // 'provider_id' => specify provider id
+                    // 'email_template' =>,
+                    // 'subject_name' =>,
+                    'is_email_sent' => true,
                     'sent_tries' => 1,
-                    'is_sms_sent' => 1,
-                    'action' => 1,
-                    'sms_template' => $enteredText,
-                ]
-            );
+                    'sent_date' => now(),
+                    'email_template' => $enteredText,
+                    'subject_name' => 'notification to provider',
+                    'email' => $receipientEmail,
+                    'provider_id' => $receipientId,
+                ]);
+            } else if ($request->contact == "sms") {
+                // send SMS
+                $sid = getenv("TWILIO_SID");
+                $token = getenv("TWILIO_AUTH_TOKEN");
+                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+                $twilio = new Client($sid, $token);
+
+                $message = $twilio->messages
+                    ->create(
+                        "+91 99780 71802", // to
+                        [
+                            "body" => "$enteredText",
+                            "from" => $senderNumber,
+                        ]
+                    );
+
+                SMSLogs::create(
+                    [
+                        'provider_id' => $receipientId,
+                        'mobile_number' => $receipientMobile,
+                        'created_date' => now(),
+                        'sent_date' => now(),
+                        'role_id' => 1,
+                        'recipient_name' => $receipientName,
+                        'sent_tries' => 1,
+                        'is_sms_sent' => 1,
+                        'action' => 1,
+                        'sms_template' => $enteredText,
+                    ]
+                );
+            } else if ($request->contact == "both") {
+                // send email
+                $providerData = Provider::get()->where('id', $request->provider_id);
+                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+
+                // send SMS
+                $sid = getenv("TWILIO_SID");
+                $token = getenv("TWILIO_AUTH_TOKEN");
+                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+                $twilio = new Client(
+                    $sid,
+                    $token
+                );
+
+                $message = $twilio->messages
+                    ->create(
+                        "+91 99780 71802", // to
+                        [
+                            "body" => "$enteredText",
+                            "from" => $senderNumber,
+                        ]
+                    );
+
+                EmailLog::create([
+                    'role_id' => 1,
+                    // 'provider_id' => specify provider id
+                    // 'email_template' =>,
+                    // 'subject_name' =>,
+                    'is_email_sent' => true,
+                    'sent_tries' => 1,
+                    'sent_date' => now(),
+                    'email_template' => $enteredText,
+                    'subject_name' => 'notification to provider',
+                    'email' => $receipientEmail,
+                    'provider_id' => $receipientId,
+                ]);
+
+                SMSLogs::create(
+                    [
+                        'provider_id' => $receipientId,
+                        'mobile_number' => $receipientMobile,
+                        'created_date' => now(),
+                        'sent_date' => now(),
+                        'role_id' => 1,
+                        'recipient_name' => $receipientName,
+                        'sent_tries' => 1,
+                        'is_sms_sent' => 1,
+                        'action' => 1,
+                        'sms_template' => $enteredText,
+                    ]
+                );
+            }
+            return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
+        } 
+        catch (\Throwable $th) {
+            return view('errors.404');
         }
-
-        return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
     }
 
     public function stopNotifications(Request $request)
@@ -346,7 +352,7 @@ class AdminProviderController extends Controller
         //     $providerData->save();
         // }
 
-        return redirect()->route('adminProvidersInfo')->with('message','account is created');
+        return redirect()->route('adminProvidersInfo')->with('message', 'account is created');
     }
 
     public function regionName()
@@ -363,9 +369,7 @@ class AdminProviderController extends Controller
             return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
         } catch (\Throwable $th) {
             return view('errors.404');
-
-        }       
-
+        }
     }
 
     public function updateProviderAccountInfo(Request $request, $id)
@@ -445,13 +449,12 @@ class AdminProviderController extends Controller
 
     public function providerMailInfoUpdate(Request $request, $id)
     {
-
         $request->validate([
-            'address1' => 'required|min:2|max:30',
-            'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'address1' => 'required|min:2|max:40',
+            'address2' => 'required|min:2|max:40',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
-            'phone_number_alt' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);
 
         $getProviderInformation = Provider::with('users')->where('id', $id)->first();
@@ -468,8 +471,7 @@ class AdminProviderController extends Controller
 
         if (empty($updateProviderDataAllUsers)) {
             return back()->with('message', 'Mailing and Billing information is updated');
-        } 
-        else {
+        } else {
             $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
             $updateProviderDataAllUsers->street = $request->address1;
             $updateProviderDataAllUsers->city = $request->city;
@@ -569,10 +571,11 @@ class AdminProviderController extends Controller
     public function providerLocations()
     {
         $providers = Provider::get();
-        return view('adminPage/provider/providerLocation',compact("providers"));
+        return view('adminPage/provider/providerLocation', compact("providers"));
     }
 
-    public function providerMapLocations(){
+    public function providerMapLocations()
+    {
         $providers = PhysicianLocation::all();
         $locations = $providers->map(function ($provider) {
             return [
@@ -580,7 +583,6 @@ class AdminProviderController extends Controller
                 'longitude' => $provider->longitude,
             ];
         });
-
         return response()->json(['locations' => $locations->toArray()]);
     }
 

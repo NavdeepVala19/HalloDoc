@@ -15,7 +15,43 @@ function fetchPaginatedUserAccessData(selectedAccount, page) {
 
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
-    var page = $(this).text();
+      var page;
+      page = $(this).text();
+
+      if (page === "›") {
+          // Get the <li> element with the class "active"
+          var activeListItem = $(".pagination .page-item.active");
+
+          // Get the next sibling of the active <li> element
+          var nextSibling = activeListItem.next();
+
+          // Check if the next sibling exists and does not have the "active" class
+          if (nextSibling.length && !nextSibling.hasClass("active")) {
+              // Get the value of the next sibling
+              var page = nextSibling.first(".page-link").text();
+          } else {
+              console.log(
+                  "There is no next sibling without the 'active' class."
+              );
+          }
+      } else if (page === "‹") {
+          // Get the <li> element with the class "active"
+          var activeListItem = $(".pagination .page-item.active");
+
+          // Get the next sibling of the active <li> element
+          var prevSibling = activeListItem.prev();
+
+          // Check if the next sibling exists and does not have the "active" class
+          if (prevSibling.length && !prevSibling.hasClass("active")) {
+              // Get the value of the next sibling
+              var page = prevSibling.first(".page-link").text();
+              console.log(page);
+          } else {
+              console.log(
+                  "There is no next sibling without the 'active' class."
+              );
+          }
+      }
     var selectedAccount = $("#accountType").val();
     fetchPaginatedUserAccessData(selectedAccount, page);
 });
@@ -80,7 +116,40 @@ function fetchPaginatedUserAccessMobileData(selectedAccount, page) {
 
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
-    var page = $(this).text();
+    var page;
+    page = $(this).text();
+
+    if (page === "›") {
+        // Get the <li> element with the class "active"
+        var activeListItem = $(".pagination .page-item.active");
+
+        // Get the next sibling of the active <li> element
+        var nextSibling = activeListItem.next();
+
+        // Check if the next sibling exists and does not have the "active" class
+        if (nextSibling.length && !nextSibling.hasClass("active")) {
+            // Get the value of the next sibling
+            var page = nextSibling.first(".page-link").text();
+        } else {
+            console.log("There is no next sibling without the 'active' class.");
+        }
+    } else if (page === "‹") {
+        // Get the <li> element with the class "active"
+        var activeListItem = $(".pagination .page-item.active");
+
+        // Get the next sibling of the active <li> element
+        var prevSibling = activeListItem.prev();
+
+        // Check if the next sibling exists and does not have the "active" class
+        if (prevSibling.length && !prevSibling.hasClass("active")) {
+            // Get the value of the next sibling
+            var page = prevSibling.first(".page-link").text();
+            console.log(page);
+        } else {
+            console.log("There is no next sibling without the 'active' class.");
+        }
+    }
+
     var selectedAccount = $("#accountTypeMobile").val();
     fetchPaginatedUserAccessMobileData(selectedAccount, page);
 });

@@ -25,15 +25,13 @@
                 <td class="data"> {{ $data->status }} </td>
                 <td class="data gap-1">
                     <button type="button" data-id='{{ $data->id }}' class="primary-empty contact-btn mt-2 mb-2" {{ $data->is_notifications ? 'disabled' : '' }}>Contact</button>
-                    <a href="{{ route('adminEditProvider', $data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
+                    <a href="{{ route('adminEditProvider',$data->id) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
     {{ $providersData->links('pagination::bootstrap-5') }}
-
-
 
     <!-- contact your provider pop-up -->
 
@@ -44,8 +42,7 @@
         </div>
         <p class="mt-4 ms-3">Choose communication to send message</p>
         <div class="ms-3 ">
-            
-            <form action="#" method="post" id="ContactProviderForm">
+            <form aaction="{{ route('sendMailToProvider', Crypt::encrypt( $data->id)) }}" method="post" id="ContactProviderForm">
                 @csrf
                 <input type="text" name="provider_id" class="provider_id" hidden>
                 <div class="radio-sms">
