@@ -126,7 +126,11 @@ class ProviderController extends Controller
         // Forget from session whenever a new status is opened
         Session::forget(['searchTerm', 'category']);
 
-        return $this->cases($request, $status);
+        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude') {
+            return $this->cases($request, $status);
+        } else {
+            return view('errors.404');
+        }
     }
 
     // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
@@ -134,6 +138,16 @@ class ProviderController extends Controller
     {
         // Store category in the session
         $request->session()->put('category', $category);
+
+        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude') {
+            if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
+                return $this->cases($request, $status, $category);
+            } else {
+                return view('errors.404');
+            }
+        } else {
+            return view('errors.404');
+        }
 
         return $this->cases($request, $status, $category);
     }

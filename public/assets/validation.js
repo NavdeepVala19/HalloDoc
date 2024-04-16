@@ -1131,7 +1131,7 @@ $(document).ready(function () {
             zip: {
                 required: true,
                 minlength: 6,
-                maxlength: 6,
+                maxlength : 6,
                 // digits: true,
             },
         },
