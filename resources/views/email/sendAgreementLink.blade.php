@@ -108,7 +108,7 @@
         <h3> {{ $data->requestClient->first_name }} {{ $data->requestClient->last_name }}, Click on the below link to
             read the agreement.</h3>
         <div class="case">
-            <a href="{{ route('patientAgreement', $data) }}">Agreement Link</a>
+            <a href="{{ route('patientAgreement', Crypt::encrypt($data->id)) }}">Agreement Link</a>
         </div>
     </div>
 </div>

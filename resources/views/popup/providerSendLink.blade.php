@@ -4,7 +4,7 @@
         <span>Send mail to patient for submitting request</span>
         <button class="hide-popup-btn providerSendLinkCancel"><i class="bi bi-x-lg"></i></button>
     </div>
-    <form action="{{ route('send.mail') }}" method="POST" id="c">
+    <form action="{{ route('provider.send.mail') }}" method="POST" id="providerSendLinkForm">
         @csrf
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
             <div class="form-floating ">

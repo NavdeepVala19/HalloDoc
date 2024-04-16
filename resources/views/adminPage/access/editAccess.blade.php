@@ -55,7 +55,7 @@
             <a href="{{ route('admin.access.view') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
-            <form action="{{ route('admin.edit.access.data') }}" method="POST">
+            <form action="{{ route('admin.edit.access.data') }}" method="POST" id="editAccessForm">
                 @csrf
                 <input type="text" name="roleId" value="{{ $role->id }}" hidden>
                 <h4>Details</h4>
@@ -105,4 +105,8 @@
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

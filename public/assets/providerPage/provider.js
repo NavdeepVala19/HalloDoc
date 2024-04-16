@@ -168,12 +168,18 @@ $(document).ready(function () {
     });
 
     // Show loading animation when link Sent by Provider
-    $("#providerSendLinkForm").submit(function () {
-        $(".loader").show();
-    });
+    // $("#providerSendLinkForm").submit(function () {
+    //     $(".loader").show();
+    //     $(".loader").fadeIn('slow');
+    // });
 
     // Show loading animation when Agreement Sent by Provider
-    $("#providerSendAgreement").submit(function () {
-        $(".loader").show();
-    });
+    // $("#providerSendAgreement").submit(function () {
+    //     $(".loader").show();
+    // });
+
+    // Show loading animation when Agreement Sent by Provider
+    // $("#profileEditMailForm").submit(function () {
+    //     $(".loader").show();
+    // });
 });

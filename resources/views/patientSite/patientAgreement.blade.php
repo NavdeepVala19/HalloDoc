@@ -8,6 +8,64 @@
 @section('patientRequests')
     <div class="overlay"></div>
 
+    {{-- Agreement Agreed by Patient, these pop-up/alert will be shown --}}
+    @if (session('agreementAgreed'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('agreementAgreed') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Agreement Cancelled by Patient, these pop-up/alert will be shown --}}
+    @if (session('agreementCancelled'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('agreementCancelled') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Agreement already agreed by patient (& trying to submit the request again) --}}
+    @if (session('alreadyAgreed'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('alreadyAgreed') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+    {{-- Agreement already cancelled by patient (& trying to submit the request again) --}}
+    @if (session('alreadyCancelled'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('alreadyCancelled') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+    {{-- Agreement already cancelled by patient (& now trying to accept the agreement) --}}
+    @if (session('errorAlreadyCancelled'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('errorAlreadyCancelled') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+    {{-- Agreement already Agreed by patient (& now trying to cancel the agreement) --}}
+    @if (session('errorAlreadyAgreed'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('errorAlreadyAgreed') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     <!-- Cancel pop-up -->
     <form action="{{ route('patient.cancel.agreement') }}" method="POST" id="cancelAgreementPatient">
         @csrf
@@ -39,25 +97,7 @@
         </div>
     </form>
 
-    {{-- Agreement Agreed by Patient, these pop-up/alert will be shown --}}
-    @if (session('agreementAgreed'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('agreementAgreed') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
 
-    {{-- Agreement Cancelled by Patient, these pop-up/alert will be shown --}}
-    @if (session('agreementCancelled'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('agreementCancelled') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
     <div class="container">
         <p>To provide best medical service, we cannot determine the cost right away.If you agree to our service,
             so we provide care and follow-up untill all care is completed.

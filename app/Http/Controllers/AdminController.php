@@ -221,7 +221,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'assign_note' => 'required|max:100'
+            'assign_note' => 'required|min:5|max:200'
 
         ]);
         RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
@@ -243,7 +243,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'notes' => 'required|max:100'
+            'notes' => 'required|min:5|max:200'
         ]);
 
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -272,7 +272,8 @@ class AdminController extends Controller
     public function cancelCase(Request $request)
     {
         $request->validate([
-            'case_tag' => 'required|in:1,2,3,4'
+            'case_tag' => 'required|in:1,2,3,4',
+            'reason' => 'required|min:5|max:200'
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 2,
@@ -284,7 +285,7 @@ class AdminController extends Controller
             'notes' => $request->reason
         ]);
 
-        return redirect()->back()->with('caseCancelled', 'Case Cancelled Successfully!');
+        return redirect()->back()->with('caseCancelled', 'Case Cancelled (Moved to ToClose State)');
     }
 
     // Admin Blocks patient
@@ -332,7 +333,7 @@ class AdminController extends Controller
         }
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
+        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
         $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
@@ -402,7 +403,7 @@ class AdminController extends Controller
         $request->validate([
             'first_name' => 'required|alpha|max:50',
             'email' => 'required|email',
-            'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
+            'mobile' => 'sometimes'
         ]);
 
         $report = MedicalReport::where("request_id", $request->request_id)->first();
@@ -624,7 +625,7 @@ class AdminController extends Controller
             'business_name' => 'required',
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
-            'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'mobile' => 'required',
             'email' => 'required|email',
             'business_contact' => 'required',
             'city' => 'required',
@@ -663,7 +664,7 @@ class AdminController extends Controller
             'business_name' => 'required',
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
-            'mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'mobile' => 'required',
             'email' => 'required|email',
             'business_contact' => 'required',
             'city' => 'required',
@@ -672,7 +673,7 @@ class AdminController extends Controller
         ]);
 
         HealthProfessional::where('id', $request->vendor_id)->update([
-            'vendor_name' => $request->buisness_name,
+            'vendor_name' => $request->business_name,
             'profession' => $request->profession,
             'fax_number' => $request->fax_number,
             'phone_number' => $request->mobile,

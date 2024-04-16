@@ -18,6 +18,7 @@ use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 
 class patientDashboardController extends Controller
@@ -43,13 +44,27 @@ class patientDashboardController extends Controller
 
     public function viewAgreement($data)
     {
-        $clientData = RequestTable::with('requestClient')->where('id', $data)->first();
-        return view("patientSite/patientAgreement", compact('clientData'));
+        try {
+            $id = Crypt::decrypt($data);
+            $clientData = RequestTable::with('requestClient')->where('id', $id)->first();
+            if (!empty($clientData)) {
+                return view("patientSite/patientAgreement", compact('clientData'));
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return view('errors.404');
+        }
     }
 
     // Agreement Agreed by Patient
     public function agreeAgreement(Request $request)
     {
+        $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
+        if ($caseStatus == 4) {
+            return redirect()->back()->with('alreadyAgreed', 'You have already agreed to the Agreement');
+        } else if ($caseStatus == 11) {
+            return redirect()->back()->with('errorAlreadyCancelled', "You have already Cancelled the Agreement(You can't change now)");
+        }
         $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
 
         RequestTable::where('id', $request->requestId)->update([
@@ -67,6 +82,13 @@ class patientDashboardController extends Controller
     // Agreeemnt Cancelled by Patient
     public function cancelAgreement(Request $request)
     {
+        $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
+
+        if ($caseStatus == 4) {
+            return redirect()->back()->with('errorAlreadyAgreed', "You have already agreed to the Agreement(You can't change now)");
+        } else if ($caseStatus == 11) {
+            return redirect()->back()->with('alreadyCancelled', "You have already Cancelled the Agreement");
+        }
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,
             'physician_id' => DB::raw("Null"),
@@ -95,9 +117,9 @@ class patientDashboardController extends Controller
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'symptoms' => 'nullable|min:5|max:200|',
-            'room'=>'gte:1|nullable'
+            'room' => 'gte:1|nullable'
         ]);
 
         $newPatient = new RequestTable();
@@ -128,12 +150,11 @@ class patientDashboardController extends Controller
         // store documents in request_wise_file table
 
         if (isset($request->docs)) {
-        $request_file = new RequestWiseFile();
-        $request_file->request_id = $newPatient->id;
-        $request_file->file_name = $request->file('docs')->getClientOriginalName();
-        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();  
-        
+            $request_file = new RequestWiseFile();
+            $request_file->request_id = $newPatient->id;
+            $request_file->file_name = $request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->save();
         }
 
         // store symptoms in request_notes table
@@ -173,15 +194,15 @@ class patientDashboardController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required',
-             'email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'symptoms' => 'nullable|min:5|max:200|',
-            'room'=>'gte:1|nullable',
+            'room' => 'gte:1|nullable',
             'relation' => 'nullable|alpha'
         ]);
 
@@ -240,16 +261,16 @@ class patientDashboardController extends Controller
 
         $newPatientRequest->save();
 
-    
+
 
         // store documents in request_wise_file table
 
-        if(isset($request->docs)){
-        $request_file = new RequestWiseFile();
-        $request_file->request_id = $newPatient->id;
-        $request_file->file_name = $request->file('docs')->getClientOriginalName();
-        $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
-        $request_file->save();
+        if (isset($request->docs)) {
+            $request_file = new RequestWiseFile();
+            $request_file->request_id = $newPatient->id;
+            $request_file->file_name = $request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->save();
         }
 
         // store symptoms in request_notes table
@@ -336,9 +357,6 @@ class patientDashboardController extends Controller
             ->where('email', $email)
             ->paginate(10);
 
-        return view('patientSite/patientDashboard', compact('data','userData'));
-
-
-        
+        return view('patientSite/patientDashboard', compact('data', 'userData'));
     }
 }

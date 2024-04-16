@@ -175,20 +175,21 @@ class ProviderController extends Controller
     public function transferCase(Request $request)
     {
         $request->validate([
-            'notes' => 'required|max:100|min:5|alpha_num',
+            'notes' => 'required|min:5|max:200',
         ]);
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         RequestStatus::create([
             'request_id' => $request->requestId,
-            'status' => 3,
+            'status' => 1,
             'TransToAdmin' => true,
             'physician_id' => $providerId,
             'notes' => $request->notes
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'physician_id' => DB::raw("NULL"),
+            'status' => 1
         ]);
-        return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
+        return redirect()->back()->with('transferredCase', 'Case Transferred to Admin');
     }
 
     // Show Provider Request Page
@@ -201,10 +202,10 @@ class ProviderController extends Controller
     public function createRequest(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:30|alpha',
-            'last_name' => 'string|min:2|max:30|alpha',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             'street' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -239,7 +240,6 @@ class ProviderController extends Controller
         $requestTable->status = 1;
         $requestTable->user_id = $requestEmail->id;
         $requestTable->request_type_id = $request->request_type_id;
-        $requestTable->full_name = $request->first_name . " " . $request->last_name;
         $requestTable->first_name = $request->first_name;
         $requestTable->last_name = $request->last_name;
         $requestTable->email = $request->email;
@@ -250,6 +250,7 @@ class ProviderController extends Controller
         $requestClient->request_id = $requestTable->id;
         $requestClient->first_name = $request->first_name;
         $requestClient->last_name = $request->last_name;
+        $requestClient->email = $request->email;
         $requestClient->phone_number = $request->phone_number;
         $requestClient->date_of_birth = $request->dob;
         $requestClient->street = $request->street;
@@ -281,6 +282,9 @@ class ProviderController extends Controller
             $requestTable->update(['confirmation_no' => $confirmationNumber]);
         }
 
+        $user = Auth::user();
+        $providerId = Provider::where('user_id', $user->id)->first()->id;
+
         // send email
         $emailAddress = $request->email;
         Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
@@ -288,17 +292,20 @@ class ProviderController extends Controller
         EmailLog::create([
             'role_id' => 3,
             'request_id' =>  $requestTable->id,
+            'recipient_name' => $request->first_name . " " . $request->last_name,
             'confirmation_number' => $confirmationNumber,
+            'provider_id' => $providerId,
             'is_email_sent' => 1,
             'sent_tries' => 1,
+            // 'action' => 5,
             'create_date' => now(),
             'sent_date' => now(),
-            'email_template' => $request->email,
+            'email_template' => 'Create Account With Provided Email',
             'subject_name' => 'Create account by clicking on below link with below email address',
             'email' => $request->email,
         ]);
 
-        return redirect()->route("provider.dashboard")->withInput();
+        return redirect()->route("provider.create.request")->withInput()->with('requestCreated', "Request Created Successfully!");
     }
 
     // Encounter pop-up as per action (consult, hous_call) selected perform particular tasks 
@@ -519,7 +526,7 @@ class ProviderController extends Controller
         $data = RequestTable::where('id', $id)->first();
         $note = RequestNotes::where('request_id', $id)->first();
         $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 3)->where('TransToAdmin', true)->orderByDesc('id')->first();
+        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
         $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
         return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
@@ -528,7 +535,7 @@ class ProviderController extends Controller
     public function storeNote(Request $request)
     {
         $request->validate([
-            'physician_note' => 'required'
+            'physician_note' => 'required|min:5|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         if (!empty($requestNote)) {
@@ -552,14 +559,15 @@ class ProviderController extends Controller
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route('submitRequest');
 
+        // Validation 
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
         ]);
 
-        // send SMS 
+        // send SMS Logic
         $sid = getenv("TWILIO_SID");
         $token = getenv("TWILIO_AUTH_TOKEN");
         $senderNumber = getenv("TWILIO_PHONE_NUMBER");
@@ -575,35 +583,40 @@ class ProviderController extends Controller
                 ]
             );
 
+        $user = Auth::user();
+        $providerId = Provider::where('user_id', $user->id)->first()->id;
+
         $name = $request->first_name . " " . $request->last_name;
 
         SMSLogs::create(
             [
+                'sms_template' => "Hii ,Click on the below link to create request",
                 'mobile_number' => $request->phone_number,
+                'recipient_name' => $name,
+                'provider_id' => $providerId,
                 'created_date' => now(),
                 'sent_date' => now(),
                 'role_id' => 2,
-                'recipient_name' => $name,
-                'sent_tries' => 1,
                 'is_sms_sent' => 1,
+                'sent_tries' => 1,
                 'action' => 1,
-                'sms_template' => "Hii ,Click on the below link to create request"
             ]
         );
 
+        // Send Email Logic
         Mail::to($request->email)->send(new SendMail($request->all()));
         EmailLog::create([
             'role_id' => 2,
-            // 'provider_id' => Auth::user()->id,
+            'provider_id' => $providerId,
             'recipient_name' => $name,
-            'subject_name' => 'Send mail to patient for submitting request',
-            'is_email_sent' => true,
-            'action' => 1,
-            'sent_tries' => 1,
-            'sent_date' => now(),
             'email_template' => 'mail.blade.php',
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
+            'create_date' => now(),
+            'sent_date' => now(),
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+            'action' => 1,
         ]);
 
         return redirect()->back()->with('linkSent', "Link Sent Successfully!");
@@ -791,20 +804,57 @@ class ProviderController extends Controller
             'phone_number' => 'required'
         ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
+
+        $user = Auth::user();
+        $provider = Provider::where('user_id', $user->id)->first();
+
+        $providerId = DB::raw("NULL");
+        $adminId = DB::raw("NULL");
+
+        if ($provider) {
+            $roleId = 2;
+            $providerId = Provider::where('user_id', $user->id)->first()->id;
+        } else {
+            $roleId = 1;
+            $adminId = Admin::where('user_id', $user->id)->first()->id;
+        }
+
         $id = $request->request_id;
         EmailLog::create([
-            'role_id' => 2,
-            'provider_id' => $request->providerId,
+            'role_id' => $roleId,
+            'request_id' => $request->request_id,
+            'admin_id' => $adminId,
+            'provider_id' => $providerId,
+            'recipient_name' => $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name,
+            'email_template' => 'sendAgreementLink.blade.php',
             'subject_name' => 'Agreement Link Sent to Patient',
+            'email' => $request->email,
+            'confirmation_number' => $clientData->confirmation_no,
             'create_date' => now(),
             'sent_date' => now(),
             'is_email_sent' => 1,
-            'action' => 4,
-            'recipient_name' => $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name,
-            'email_template' => 'sendAgreementLink.blade.php',
-            'email' => $request->email,
             'sent_tries' => 1,
+            'action' => 4,
         ]);
+
+        SMSLogs::create(
+            [
+                'sms_template' => "Hii, Click on the given link to create request",
+                'mobile_number' => $request->phone_number,
+                'confirmation_number' => $clientData->confirmation_no,
+                'recipient_name' => $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name,
+                'role_id' => $roleId,
+                'admin_id' => $adminId,
+                'request_id' => $request->request_id,
+                'provider_id' => $providerId,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'is_sms_sent' => 1,
+                'sent_tries' => 1,
+                'action' => 4,
+            ]
+        );
+
         Mail::to($request->email)->send(new SendAgreement($clientData));
 
         // send SMS 
@@ -818,23 +868,11 @@ class ProviderController extends Controller
             ->create(
                 "+91 99780 71802", // to
                 [
-                    "body" => "Hii " .  $clientData->requestClient->first_name . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
+                    "body" => "Hii " .  $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
                     "from" =>  $senderNumber
                 ]
             );
 
-        SMSLogs::create(
-            [
-                'mobile_number' => $request->phone_number,
-                'created_date' => now(),
-                'sent_date' => now(),
-                'role_id' => 2,
-                'sent_tries' => 1,
-                'is_sms_sent' => 1,
-                'action' => 4,
-                'sms_template' => "Hii ,Click on the below link to create request"
-            ]
-        );
         return redirect()->back()->with('agreementSent', 'Agreement sent to patient successfully!');
     }
 

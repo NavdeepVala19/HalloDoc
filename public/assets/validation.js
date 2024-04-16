@@ -5,7 +5,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || iti.isValidNumber();
         },
-        "Please enter a valid phone number for India."
+        "Please enter a valid phone number."
     );
 
     // Validation for city input field
@@ -32,7 +32,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-z]+$/i.test(value);
         },
-        "Letters only please"
+        "Please enter alphabets only (characters and numbers not allowed)"
     );
 
     // Email Validation method
@@ -163,6 +163,11 @@ $(document).ready(function () {
                 maxlength: 30,
                 state: true,
             },
+            zip: {
+                required: false,
+                minlength: 6,
+                maxlength: 6,
+            },
         },
         messages: {
             first_name: nameMessages("First name"),
@@ -176,6 +181,10 @@ $(document).ready(function () {
             street: "Please enter your street",
             city: "Please enter your city",
             state: "Please enter your state",
+            zip: {
+                minlength: "Zip code should have minimum 6 digits",
+                maxlength: "Zip code should have maximum 6 digits",
+            },
         },
         errorPlacement: function (error, element) {
             var errorDiv = $('<div class="text-danger"></div>');
@@ -188,14 +197,10 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#providerSaveButton").click(function () {
-        if ($("#providerCreateRequestForm").valid()) {
-            $("#providerCreateRequestForm").submit();
-        }
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
 
     // Admin Cancel Case Pop-Up Client Side Validation
@@ -219,14 +224,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#cancel-case").click(function () {
-        if ($("#cancelCaseForm").valid()) {
-            $("#cancelCaseForm").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Admin Send Link Pop-Up Validation
@@ -254,16 +254,10 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#adminSendLinkButton, .providerSendLinkButton").click(function () {
-
-        
-        if ($("#adminSendLinkForm, #providerSendLinkForm").valid()) {
-            $("#adminSendLinkForm, #providerSendLinkForm").submit();
-        }
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
 
     // Provider and Admin Send Agreement Pop-Up Validation
@@ -293,14 +287,10 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#providerSendAgreementBtn, #adminSendAgreementBtn").click(function () {
-        if ($("#providerSendAgreement, #adminSendAgreement").valid()) {
-            $("#providerSendAgreement, #adminSendAgreement").submit();
-        }
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
 
     // Provider Transfer Request
@@ -322,14 +312,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#providerTransferCaseBtn").click(function () {
-        if ($("#providerTransferCase").valid()) {
-            $("#providerTransferCase").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Admin Assign Case and Admin Transfer Case Pop-ups Validation
@@ -358,14 +343,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#adminAssignCaseBtn, #adminTransferRequestBtn").click(function () {
-        if ($("#adminAssignCase, #adminTransferRequest").valid()) {
-            $("#adminAssignCase, #adminTransferRequest").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Admin Block Case Pop-Up Validation
@@ -387,14 +367,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#adminBlockCaseBtn").click(function () {
-        if ($("#adminBlockCase").valid()) {
-            $("#adminBlockCase").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Patient Cancel Agreement Pop-up
@@ -419,14 +394,9 @@ $(document).ready(function () {
         submitHandler: function (form) {
             form.submit();
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#cancelAgreementPatientBtn").click(function () {
-        if ($("#cancelAgreementPatient").valid()) {
-            $("#cancelAgreementPatient").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Provider Profile Email pop-up for requesting changes in profile
@@ -448,14 +418,10 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#profileEditMailFormBtn").click(function () {
-        if ($("#profileEditMailForm").valid()) {
-            $("#profileEditMailForm").submit();
-        }
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
 
     // Encounter Form Client Side Validation
@@ -737,14 +703,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#providerEncounterFormBtn, #adminEncounterFormBtn").click(function () {
-        if ($("#providerEncounterForm, #adminEncounterForm").valid()) {
-            $("#providerEncounterForm, #adminEncounterForm").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Close Case Page Client Side Validation for phone-number and email
@@ -831,14 +792,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#adminSendOrderSubmit, #providerSendOrderSubmit").click(function () {
-        if ($("#adminSendOrderForm, #providerSendOrderForm").valid()) {
-            $("#adminSendOrderForm, #providerSendOrderForm").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // ------------ PROVIDER SCHEDULING -----------
@@ -862,8 +818,8 @@ $(document).ready(function () {
             shiftDate: {
                 required: true,
                 dateRange: [
-                    new Date("2000-1-1").toDateString(),
-                    new Date("2050-1-1").toDateString(),
+                    new Date().toDateString(),
+                    new Date("2030-1-1").toDateString(),
                 ],
             },
             shiftTimeStart: {
@@ -899,14 +855,9 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#saveProviderEditShiftBtn, #saveAdminEditShiftBtn").click(function () {
-        if ($("#providerEditShiftForm, #adminEditShiftForm").valid()) {
-            $("#providerEditShiftForm, #adminEditShiftForm").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // ----------- ADMIN SCHEDULING ---------
@@ -921,7 +872,7 @@ $(document).ready(function () {
             shiftDate: {
                 required: true,
                 dateRange: [
-                    new Date("2000-1-1").toDateString(),
+                    new Date().toDateString(),
                     new Date("2050-1-1").toDateString(),
                 ],
             },
@@ -980,14 +931,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
-        // submitHandler: function (form) {
-        //     form.submit();
-        // },
-    });
-    $("#adminAddShiftBtn, #providerAddShiftBtn").click(function () {
-        if ($("#adminAddShiftForm, #providerAddShiftForm").valid()) {
-            $("#adminAddShiftForm, #providerAddShiftForm").submit();
-        }
+        submitHandler: function (form) {
+            form.submit();
+        },
     });
 
     // Admin View Notes (Store note form validation)
@@ -1077,18 +1023,45 @@ $(document).ready(function () {
         unhighlight: function (element) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
 
-    $("#adminUploadBtn, #providerUploadBtn").click(function (e) {
-        if (
-            $(
-                "#adminViewUploadsForm, #providerViewUploadsForm, #concludeCareForm"
-            ).valid()
-        ) {
-            $(
-                "#adminViewUploadsForm, #providerViewUploadsForm, #concludeCareForm"
-            ).submit();
-        }
+    $(
+        "#adminViewUploadOperationsForm, #providerViewUploadOperationsForm"
+    ).validate({
+        ignore: [],
+        rules: {
+            "selected[]": {
+                required: {
+                    depends: function (element) {
+                        return (
+                            $(element)
+                                .closest("form")
+                                .find('button[value="send_mail"]')
+                                .val() === "send_mail"
+                        );
+                    },
+                },
+            },
+        },
+        messages: {
+            "selected[]": {
+                required:
+                    "Please select atleast one document to send mail(Attachment)",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            errorDiv.append(error);
+            $("#error-container").append(errorDiv);
+        },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
 
     // Add Business page validation
@@ -1104,7 +1077,7 @@ $(document).ready(function () {
             },
             fax_number: {
                 required: true,
-                min: 0,
+                minlength: 4,
             },
             mobile: mobileRules(),
             email: emailRules(),
@@ -1122,17 +1095,18 @@ $(document).ready(function () {
                 required: true,
                 minlength: 3,
                 maxlength: 25,
+                lettersonly: true,
             },
             state: {
                 required: true,
                 minlength: 3,
                 maxlength: 25,
+                lettersonly: true,
             },
             zip: {
                 required: true,
                 minlength: 6,
                 maxlength: 6,
-                // digits: true,
             },
         },
         messages: {
@@ -1146,7 +1120,7 @@ $(document).ready(function () {
             },
             fax_number: {
                 required: "Fax Number is required",
-                min: "Minimum value can be 0",
+                minlength: "Minimum 4 digits required",
             },
             mobile: mobileMessages(),
             email: emailMessages(),
@@ -1193,5 +1167,48 @@ $(document).ready(function () {
         if ($("#addBusinessForm, #updateBusinessForm").valid()) {
             $("#addBusinessForm, #updateBusinessForm").submit();
         }
+    });
+
+    $("#createAccessForm, #editAccessForm").validate({
+        rules: {
+            role: {
+                required: true,
+                minlength: 3,
+                maxlength: 20,
+            },
+            role_name: {
+                required: true,
+            },
+            "menu_checkbox[]": {
+                required: true,
+            },
+        },
+        messages: {
+            role: {
+                required: "Please enter role name",
+                minlength: "Minimum 3 characters required",
+                maxlength: "Maximum 20 characters allowed",
+            },
+            role_name: {
+                required: "Select Account Type",
+            },
+            "menu_checkbox[]": {
+                required: "Select atleast one role to assign",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            errorDiv.append(error);
+            element.closest(".form-floating, .menu-section").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit(); // Submit the form
+        },
     });
 });

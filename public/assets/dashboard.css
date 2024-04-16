@@ -310,6 +310,10 @@ td {
     z-index: 999 !important;
 }
 
+.table-responsive {
+    min-height: 300px;
+}
+
 .action-menu > button {
     width: 180px !important;
     border: none;

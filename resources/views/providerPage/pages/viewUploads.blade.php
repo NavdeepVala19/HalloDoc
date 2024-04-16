@@ -17,6 +17,7 @@
 @endsection
 
 @section('content')
+    @include('loading')
     {{-- Document Upload Was Successfully --}}
     @include('alertMessages.uploadDocSuccess')
 
@@ -70,7 +71,7 @@
                 </div>
             </form>
 
-            <form action="{{ route('operations') }}" method="POST">
+            <form action="{{ route('operations') }}" method="POST" id="providerViewUploadOperationsForm">
                 @csrf
                 <input type="text" name="requestId" value="{{ $data->id }}" hidden>
                 <div class="d-flex align-items-center justify-content-between mb-4">
@@ -92,6 +93,7 @@
                                 class="bi bi-envelope"></i></button>
                     </div>
                 </div>
+                <div id="error-container"></div>
                 @error('selected')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

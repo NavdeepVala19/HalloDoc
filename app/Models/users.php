@@ -35,6 +35,11 @@ class users extends Model
         return $this->hasOne(UserRoles::class, 'user_id', 'id');
     }
 
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class, 'user_id');
+    }
+
 
 
     /**

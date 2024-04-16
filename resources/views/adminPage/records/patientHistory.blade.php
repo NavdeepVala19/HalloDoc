@@ -126,7 +126,7 @@
                     </div>
                 @endforeach
             </div>
-            {{ $patients->links('pagination::bootstrap-5') }}
+            {{ $patients->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection
