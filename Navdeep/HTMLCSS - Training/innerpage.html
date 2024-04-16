@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="./HTML Training Assignment/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./HTML Training Assignment/css/innerpage.css"
+    />
+    <script
+      src="./HTML Training Assignment/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+    <script src="./HTML Training Assignment/js/custom.js" defer></script>
+    <title>InnerPage</title>
+  </head>
+  <body>
+    <!-- ********************************************************************* -->
+
+    <header class="grid-three">
+      <!-- ************** Navigation Bar *********************** -->
+      <div
+        class="d-flex align-items-center justify-content-center gap-3 company-box"
+      >
+        <button id="menu-btn" class="menu-btn-sm">
+          <img
+            src="./HTML Training Assignment/images/menu-bar.svg"
+            alt="menu bar"
+          />
+        </button>
+        <a href="./dashboard.html">
+          <img
+            src="./HTML Training Assignment/images/header-logo.svg"
+            alt="logo"
+          />
+        </a>
+      </div>
+
+      <div class="search d-flex align-items-center gap-2 ms-3">
+        <img
+          src="./HTML Training Assignment/images/search-icon.svg"
+          alt="search-icon"
+          class="svg"
+        />
+        <input type="text" name="" id="src" placeholder="Search" />
+      </div>
+
+      <div class="d-flex gap-4 profile">
+        <div class="d-flex align-items-center justify-content-center">
+          <img
+            src="./HTML Training Assignment/images/notification-icon.svg"
+            alt="notification-icon"
+          />
+        </div>
+        <div class="d-flex align-items-center justify-content-around gap-4">
+          <img
+            src="./HTML Training Assignment/images/profile.png"
+            alt="profile-img"
+          />
+          <div class="wdt">John Doe</div>
+          <a href="./index.html">
+            <img
+              src="./HTML Training Assignment/images/downward-arrow.svg"
+              alt="downward-arrow"
+            />
+          </a>
+        </div>
+      </div>
+    </header>
+    <!-- ********************************************************************* -->
+
+    <section class="d-flex gap-3">
+      <aside id="nav" class="mobile-nav">
+        <!-- ************** Side Menu Bar *********************** -->
+        <div class="sidebar">
+          <a href="./dashboard.html">
+            <img
+              src="./HTML Training Assignment/images/dashboard-default.svg"
+              class="svg"
+              alt="dashboard-active"
+            />
+            <span>Dashboard</span>
+          </a>
+          <a href="./innerpage.html" class="active-bg">
+            <img
+              src="./HTML Training Assignment/images/graph-active.svg"
+              class="svg"
+              alt="graph-default"
+            />
+            <span class="active">Analysis</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/inbox-default.svg"
+              class="svg"
+              alt="inbox-default"
+            />
+            <span>Inbox</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/clock-default.svg"
+              class="svg"
+              alt="clock-default"
+            />
+            <span>History</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/user-default.svg"
+              class="svg"
+              alt="user-default"
+            />
+            <span>Users</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/maintenance-default.svg"
+              class="svg"
+              alt="maintenance-default"
+            />
+            <span>Maintenance</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/setting-default.svg"
+              class="svg"
+              alt="setting-default"
+            />
+            <span>Setting</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- ******************************************* MAIN ************************************************ -->
+      <main>
+        <h2 class="heading fw-bold">Analysis</h2>
+        <div class="white-bg">
+          <div class="action-fields">
+            <h3 class="title">One Column</h3>
+            <form>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder=""
+                />
+                <label for="floatingInput">Name</label>
+              </div>
+              <select name="Names" id="names" class="input-area one-column">
+                <option value="">Dropdown</option>
+                <option value="First Name">First Name</option>
+                <option value="Second Name">Second Name</option>
+                <option value="Third Name">Third Name</option>
+                <option value="Fourth Name">Fourth Name</option>
+              </select>
+
+              <textarea
+                name="Write"
+                id=""
+                rows="4"
+                class="input-area one-column"
+                placeholder="Multiple Line"
+              ></textarea>
+            </form>
+          </div>
+
+          <div class="action-fields">
+            <h3 class="title">Two Column</h3>
+
+            <div class="row">
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Name"
+                />
+                <label for="floatingInput">Name</label>
+              </div>
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Username"
+                />
+                <label for="floatingInput">Username</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="password"
+                />
+                <label for=" col floatingInput">Password</label>
+              </div>
+
+              <select class="col-md input-area one-column">
+                <option selected>Dropdown</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ******************************************* EXPERIMENT ************************************************ -->
+          <!-- ************** *************  ***************** -->
+          <!-- ******************************************* ********************************* ************************************************ -->
+
+          <div class="action-fields">
+            <h3 class="title">Three Column</h3>
+
+            <div class="row">
+              <div class="col form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control focus"
+                  id="floatingInput"
+                  placeholder="Focus"
+                />
+                <label for="floatingInput " class="focus-label">Focus</label>
+              </div>
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="password"
+                />
+                <label for="floatingInput">Password</label>
+              </div>
+
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="John Doe"
+                  disabled
+                />
+                <label for="floatingInputDisabled">Name</label>
+              </div>
+            </div>
+          </div>
+          <!-- **************************** ERROR MESSAGE ************************************** -->
+          <div class="action-fields">
+            <h3 class="title">Four Column</h3>
+
+            <div class="row">
+              <div class="col-md input-group has-validation">
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control is-invalid"
+                    id="floatingInput"
+                    placeholder="Name"
+                    required
+                  />
+                  <label for="floatingInput">Designation</label>
+                  <div class="invalid-feedback">Enter valid data</div>
+                </div>
+              </div>
+
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Name"
+                />
+                <label for="floatingInput">Name</label>
+                <div id="emailHelp" class="form-text">
+                  Enter Your full name as per ID
+                </div>
+              </div>
+              <div class="col-md form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floatingInput"
+                  placeholder="Name"
+                />
+                <label for="floatingInput">Username</label>
+              </div>
+              <select class="col-md input-area one-column">
+                <option selected>Select</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+          <!-- **************************************** OTHER DESIGN ELEMENTS **************************************** -->
+          <h3 class="title">Other Design Elements</h3>
+          <!-- ************************** FILE UPLOAD ****************************** -->
+          <div class="action-fields">
+            <p class="element">File Upload</p>
+
+            <label for="file-input" class="upload-input">
+              <input type="file" id="file-input" name="file-input" />
+              <img
+                src="./HTML Training Assignment/images/cloud-upload-icon.svg"
+                alt="cloud-upload-icon"
+              />
+              Upload
+            </label>
+            <span class="upload-txt"> No item Selected </span>
+          </div>
+          <!-- ************************** RADIO BUTTON ****************************** -->
+          <div class="action-fields">
+            <p class="element">Radio Button</p>
+            <div class="d-flex gap-4">
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  name="option"
+                  class="radio-btn"
+                  id="radio1"
+                />
+                <label for="radio1" class="ms-2"> Option 1 </label>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  name="option"
+                  class="radio-btn"
+                  id="radio2"
+                />
+                <label for="radio2" class="ms-2"> Option 2 </label>
+              </div>
+            </div>
+          </div>
+          <!-- ************************** CHECKBOX ****************************** -->
+          <div class="action-fields">
+            <p class="element">Checkbox</p>
+            <div class="d-flex gap-4">
+              <div class="d-flex align-items-center">
+                <input
+                  type="checkbox"
+                  name="option"
+                  class="radio-btn"
+                  id="checkbox1"
+                />
+                <label for="checkbox1" class="ms-2"> Option 1 </label>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <input
+                  type="checkbox"
+                  name="option"
+                  class="radio-btn"
+                  id="checkbox2"
+                />
+                <label for="checkbox2" class="ms-2"> Option 2 </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ************************** SNACKBAR ****************************** -->
+          <div class="action-fields">
+            <p class="element">Snackbar</p>
+
+            <div class="row gap-4">
+              <div class="col-md alert d-flex align-items-center error-msg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#ff3535"
+                  class="bi bi-exclamation-circle"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                  />
+                  <path
+                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"
+                  />
+                </svg>
+                <div class="warning-msg error">This is an error Message</div>
+              </div>
+              <div
+                class="col-md alert d-flex align-items-center information-msg"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#00B9E1"
+                  class="bi bi-exclamation-circle"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                  />
+                  <path
+                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"
+                  />
+                </svg>
+                <div class="warning-msg information">
+                  This is an information Message!
+                </div>
+              </div>
+            </div>
+
+            <div class="row gap-4">
+              <div
+                class="col-md alert d-flex align-items-center warning-message"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#FFA800"
+                  class="bi bi-exclamation-triangle"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"
+                  />
+                  <path
+                    d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"
+                  />
+                </svg>
+                <div class="warning-msg warning">
+                  This is a warning Message!
+                </div>
+              </div>
+
+              <div
+                class="col-md alert d-flex align-items-center success-message"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#00AF27"
+                  class="bi bi-exclamation-triangle"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"
+                  />
+                  <path
+                    d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"
+                  />
+                </svg>
+                <div class="warning-msg success">
+                  This is a Success Message!
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ********************************** CALL TO ACTION ****************************** -->
+          <div class="action-fields">
+            <p class="element">Call to action</p>
+            <button class="primary-btn">Primary</button>
+            <button class="secondary-btn">Secondary</button>
+          </div>
+          <!-- *************************************** TABS *********************************** -->
+          <div class="action-fields">
+            <p class="element">Tabs</p>
+
+            <div>
+              <ul class="nav nav-tabs tabs" id="myTab" role="tablist">
+                <li class="nav-item active-tab" role="presentation">
+                  <button
+                    class="nav-link active active--link"
+                    id="home-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#home-tab-pane"
+                    type="button"
+                    role="tab"
+                    aria-controls="home-tab-pane"
+                    aria-selected="true"
+                  >
+                    Tab 1
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="profile-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#profile-tab-pane"
+                    type="button"
+                    role="tab"
+                    aria-controls="profile-tab-pane"
+                    aria-selected="false"
+                  >
+                    Tab 2
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="contact-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#contact-tab-pane"
+                    type="button"
+                    role="tab"
+                    aria-controls="contact-tab-pane"
+                    aria-selected="false"
+                  >
+                    Tab 3
+                  </button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="home-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                  tabindex="0"
+                >
+                  Tab1 -> Lorem ipsum dolor sit, amet consectetur adipisicing
+                  elit. Quaerat eaque sunt cum consequatur recusandae saepe
+                  odit, iste accusantium illo quod totam aut? Quasi dolor
+                  numquam modi nemo reiciendis iusto sit!
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="profile-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="profile-tab"
+                  tabindex="0"
+                >
+                  Tab 2 -> Lorem ipsum dolor sit amet consectetur adipisicing
+                  elit. Recusandae fugit ratione reprehenderit quo, vero
+                  temporibus corrupti provident quam aspernatur dicta, earum
+                  eius deleniti maxime adipisci unde! Nobis vel nihil molestias.
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="contact-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="contact-tab"
+                  tabindex="0"
+                >
+                  Tab 3 -> Lorem, ipsum dolor sit amet consectetur adipisicing
+                  elit. Adipisci maxime repellendus sed consequatur accusamus
+                  explicabo, cum commodi iste non sunt asperiores minus sit enim
+                  at et ut deleniti alias natus.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!--  -->
+
+    <!--  -->
+  </body>
+</html>

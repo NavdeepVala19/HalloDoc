@@ -49,13 +49,7 @@ $(document).ready(function () {
         'textarea, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"]'
     ).on("keypress", function (event) {
         // Check if space key is pressed and the input field is empty
-        // if (event.which === 32 && $(this).val().trim() === "") {
-        console.log($(this).val());
-        if (
-            event.which === 32 &&
-            ($(this).val().trim() === "" ||
-                $(this).val().trim().charAt(0) === " ")
-        ) {
+        if (event.which === 32 && $(this).val().trim() === "") {
             event.preventDefault(); // Prevent space from being inserted
         } else {
             // Allow other key presses (including backspace, delete, etc.)

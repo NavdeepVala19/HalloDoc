@@ -1,0 +1,318 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
+  /* overflow-x: hidden; */
+}
+
+.svg {
+  width: 2rem;
+}
+
+header {
+  padding: 1.5rem;
+}
+
+.active-bg {
+  background-color: #fff3f4;
+  border-radius: 5px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar > a {
+  display: inline-block;
+  width: 15rem;
+  padding: 1rem;
+}
+
+.sidebar img {
+  margin-right: 1rem;
+}
+
+a:link,
+a:hover,
+a:visited {
+  text-decoration: none;
+  color: #3e3e3e;
+}
+
+a:active {
+  color: #c8242f;
+  text-decoration: underline !important;
+}
+
+.active {
+  color: #c8242f;
+}
+
+.active-link {
+  color: #c8242f !important;
+  text-decoration: underline !important;
+}
+
+main {
+  padding: 4rem;
+  width: 100%;
+}
+
+.circle {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.red {
+  background-color: #c8242f;
+}
+
+.green {
+  background-color: #a2b86c;
+}
+
+.orange {
+  background-color: #f16c20;
+}
+
+.yellow {
+  background-color: #ebc844;
+}
+
+th {
+  color: #adadad !important;
+}
+
+td {
+  color: #3e3e3e !important;
+}
+
+.img {
+  margin-bottom: 6.2rem;
+}
+
+.heading {
+  color: #3e3e3e;
+  font-weight: bold;
+}
+
+.paid {
+  color: #3cdd5f !important;
+}
+
+.pending {
+  color: #bababa !important;
+}
+
+.failed {
+  color: #ff4545 !important;
+}
+
+.bg {
+  background-color: #ebffef !important;
+  padding: 0.7rem;
+}
+
+.wdt {
+  white-space: nowrap;
+}
+
+#src {
+  border: none;
+}
+
+.country-name {
+  width: 45rem;
+}
+
+.close-nav {
+  display: none;
+  overflow-x: hidden;
+}
+
+#menu-btn {
+  border: none;
+  background-color: #fff;
+}
+
+#nav {
+  width: 24rem;
+  padding: 3rem;
+}
+
+main {
+  background-color: #fafafa;
+}
+
+.white-bg {
+  padding: 3rem;
+  background-color: #ffffff;
+}
+
+th,
+td {
+  padding: 1.2rem !important;
+}
+
+.grid-four {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.pie-chart {
+  margin: 0 auto;
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.country {
+  width: 100%;
+}
+
+.spacing {
+  margin: 0 auto !important;
+}
+
+.graph {
+  max-width: 100%;
+  height: auto;
+}
+
+.table {
+  overflow-x: scroll !important;
+}
+
+/* *************************************** */
+.grid-three {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+}
+
+/* ****************************** MEDIA QUERIES *********************************** */
+@media (max-width: 1525px) {
+  .graph-container {
+    width: 60%;
+  }
+
+  .pie-container {
+    width: 40%;
+  }
+}
+
+@media (max-width: 1350px) {
+  .graph-container {
+    width: 100%;
+  }
+
+  .graph {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .pie-container {
+    width: 100%;
+  }
+
+  .spacing {
+    width: 100%;
+    /* display: block; */
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 9px;
+  }
+  header {
+    min-width: 100vw;
+  }
+}
+
+@media (max-width: 1000px) {
+  html {
+    font-size: 8px;
+  }
+  header {
+    min-width: 100vw;
+  }
+}
+
+/* ********************** NAV *************************** */
+
+/* ********************************** */
+@media (max-width: 900px) {
+  html {
+    font-size: 8px;
+  }
+  header {
+    min-width: 100vw;
+  }
+
+  #nav {
+    display: none;
+  }
+
+  #nav .sidebar {
+    margin: 0 auto;
+  }
+
+  .menu-bar-sm #nav {
+    display: block;
+  }
+  .menu-bar-sm .mobile-nav {
+    position: absolute;
+    background-color: #fff;
+    height: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  .grid-three {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .company-box {
+    justify-self: start !important;
+  }
+  .search {
+    justify-self: end;
+  }
+  .profile {
+    grid-column: span 2;
+  }
+
+  #src {
+    border: 0.5px solid #3e3e3e;
+  }
+
+  .profile {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 7.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 6px;
+  }
+}

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="./HTML Training Assignment/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./HTML Training Assignment/css/dashboard.css"
+    />
+    <script src="./HTML Training Assignment/js/custom.js" defer></script>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <!-- ********************************************************************* -->
+
+    <header class="grid-three">
+      <!-- ************** Navigation Bar *********************** -->
+      <div class="d-flex align-items-center justify-content-center gap-3 company-box">
+        <button id="menu-btn" class="menu-btn-sm">
+          <img
+            src="./HTML Training Assignment/images/menu-bar.svg"
+            alt="menu bar"
+          />
+        </button>
+        <a href="./dashboard.html">
+          <img
+            src="./HTML Training Assignment/images/header-logo.svg"
+            alt="logo"
+          />
+        </a>
+      </div>
+
+      <div class="search d-flex align-items-center gap-2 ms-3">
+        <img
+          src="./HTML Training Assignment/images/search-icon.svg"
+          alt="search-icon"
+          class="svg"
+        />
+        <input type="text" name="" id="src" placeholder="Search" />
+      </div>
+
+      <div class="d-flex gap-4 profile">
+        <div class="d-flex align-items-center justify-content-center">
+          <img
+            src="./HTML Training Assignment/images/notification-icon.svg"
+            alt="notification-icon"
+          />
+        </div>
+        <div class="d-flex align-items-center justify-content-around gap-4">
+          <img
+            src="./HTML Training Assignment/images/profile.png"
+            alt="profile-img"
+          />
+          <div class="wdt">John Doe</div>
+          <a href="./index.html">
+            <img
+              src="./HTML Training Assignment/images/downward-arrow.svg"
+              alt="downward-arrow"
+            />
+          </a>
+        </div>
+      </div>
+    </header>
+    <!-- ********************************************************************* -->
+
+    <section class="d-flex gap-3">
+      <aside id="nav" class="mobile-nav">
+        <!-- ************** Side Menu Bar *********************** -->
+        <div class="sidebar">
+          <a href="./dashboard.html" class="active-bg">
+            <img
+              src="./HTML Training Assignment/images/dashboard-active.svg"
+              class="svg"
+              alt="dashboard-active"
+            />
+            <span class="active">Dashboard</span>
+          </a>
+          <a href="./innerpage.html">
+            <img
+              src="./HTML Training Assignment/images/graph-default.svg"
+              class="svg"
+              alt="graph-default"
+            />
+            <span>Analysis</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/inbox-default.svg"
+              class="svg"
+              alt="inbox-default"
+            />
+            <span>Inbox</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/clock-default.svg"
+              class="svg"
+              alt="clock-default"
+            />
+            <span>History</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/user-default.svg"
+              class="svg"
+              alt="user-default"
+            />
+            <span>Users</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/maintenance-default.svg"
+              class="svg"
+              alt="maintenance-default"
+            />
+            <span>Maintenance</span>
+          </a>
+
+          <a href="#">
+            <img
+              src="./HTML Training Assignment/images/setting-default.svg"
+              class="svg"
+              alt="setting-default"
+            />
+            <span>Setting</span>
+          </a>
+        </div>
+      </aside>
+
+      <main>
+        <!-- ************** Dashboard *********************** -->
+        <h2 class="fw-bold mb-5">Dashboard</h2>
+        <div class="row mb-5 gap-5">
+          <div
+            class="col d-flex align-items-center justify-content-center gap-3 white-bg"
+          >
+            <img src="./HTML Training Assignment/images/star.svg" alt="star" />
+            <div>
+              <h3>23,456</h3>
+              <p class="text-nowrap">New Products</p>
+            </div>
+          </div>
+          <div
+            class="col d-flex align-items-center justify-content-center gap-3 white-bg"
+          >
+            <img
+              src="./HTML Training Assignment/images/new-product.svg"
+              alt="new-product"
+            />
+            <div>
+              <h3>2345</h3>
+              <p class="text-nowrap">Added Products</p>
+            </div>
+          </div>
+          <div
+            class="col d-flex align-items-center justify-content-center gap-3 white-bg"
+          >
+            <img
+              src="./HTML Training Assignment/images/total-product.svg"
+              alt="total-product"
+            />
+            <div>
+              <h3>32,456</h3>
+              <p class="text-nowrap">Total Products</p>
+            </div>
+          </div>
+          <div
+            class="col d-flex align-items-center justify-content-center gap-3 white-bg"
+          >
+            <img
+              src="./HTML Training Assignment/images/dollar-filled.svg"
+              alt=""
+            />
+            <div>
+              <h3>5678</h3>
+              <p class="text-nowrap">Today's Sale</p>
+            </div>
+          </div>
+          <div
+            class="col d-flex align-items-center justify-content-center gap-3 white-bg"
+          >
+            <img
+              src="./HTML Training Assignment/images/money-bag.svg"
+              alt="money-bag"
+            />
+            <div>
+              <h3>33,5342</h3>
+              <p class="text-nowrap">Total Sale</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gap-5 img">
+          <div class="col-auto white-bg graph-container">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <h1>Sale</h1>
+              <div class="d-flex gap-3">
+                <a href="#">Weekly</a>
+                <a href="#">Monthly</a>
+                <a href="#" class="active-link link-offset-3">Yearly</a>
+              </div>
+            </div>
+
+            <img
+              src="./HTML Training Assignment/images/data-graph.png"
+              alt="data-graph"
+              class="graph"
+            />
+          </div>
+          <div class="col-auto pie-container">
+            <div class="white-bg spacing">
+              <h1>Sales by Country</h1>
+
+              <img
+                src="./HTML Training Assignment/images/pie-chart.svg"
+                alt="pie-chart"
+                class="pie-chart"
+              />
+              <div class="grid-four country">
+                <div class="d-flex align-items-center">
+                  <span class="circle red"></span>
+                  <span>United States of America</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="circle green"></span>
+                  <span>Canada</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="circle orange"></span>
+                  <span>Russia</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="circle yellow"></span>
+                  <span>India</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ************** Table *********************** -->
+        <div class="m-4 white-bg">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="heading">Invoices</h3>
+            <p class="active">View All</p>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>INVOICE</th>
+                  <th>COMPANY NAME</th>
+                  <th>EMAIL</th>
+                  <th>DUE DATE</th>
+                  <th>STATUS</th>
+                  <th>AMOUNT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>651535</td>
+                  <td>Public Adjusting Firm</td>
+                  <td>georgia.young@example.com</td>
+                  <td>24 May,2020</td>
+                  <td class="paid"><span class="bg">Paid</span></td>
+                  <td>$47,800</td>
+                </tr>
+                <tr>
+                  <td>558612</td>
+                  <td>Other</td>
+                  <td>jessica.hanson@example.com</td>
+                  <td>24 May,2020</td>
+                  <td class="paid"><span class="bg">Paid</span></td>
+                  <td>$98,000</td>
+                </tr>
+                <tr>
+                  <td>558612</td>
+                  <td>Vendor</td>
+                  <td>alma.lawson@example.com</td>
+                  <td>8 Sep,2020</td>
+                  <td class="paid"><span class="bg">Paid</span></td>
+                  <td>$20,900</td>
+                </tr>
+                <tr>
+                  <td>651535</td>
+                  <td>Property Management Company</td>
+                  <td>kenzi.lawson@example.com</td>
+                  <td>22 Oct,2020</td>
+                  <td class="paid"><span class="bg">Paid</span></td>
+                  <td>$10,570</td>
+                </tr>
+                <tr>
+                  <td>651535</td>
+                  <td>Subcontractor Company</td>
+                  <td>jackson.graham@example.com</td>
+                  <td>1 Feb,2020</td>
+                  <td class="failed">Failed</td>
+                  <td>$10,200</td>
+                </tr>
+                <tr>
+                  <td>651535</td>
+                  <td>Mortgage Company</td>
+                  <td>felicia.reid@example.com</td>
+                  <td>22 Oct,2020</td>
+                  <td class="pending">Pending</td>
+                  <td>$12,600</td>
+                </tr>
+                <tr>
+                  <td>487441</td>
+                  <td>TPA</td>
+                  <td>dolores.chambers@example.com</td>
+                  <td>21 Sep,2020</td>
+                  <td class="paid"><span class="bg">Paid</span></td>
+                  <td>$11,170</td>
+                </tr>
+                <tr>
+                  <td>267400</td>
+                  <td>Fire Department</td>
+                  <td>neavah.simons@example.com</td>
+                  <td>17 oct,2020</td>
+                  <td class="failed">Failed</td>
+                  <td>$28,000</td>
+                </tr>
+                <tr>
+                  <td>449003</td>
+                  <td>Insurance Carrier</td>
+                  <td>curtis.weaver@example.com</td>
+                  <td>21 Sep,2020</td>
+                  <td class="paid"><span class="bg">Paid</span></td>
+                  <td>$10,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </section>
+  </body>
+</html>

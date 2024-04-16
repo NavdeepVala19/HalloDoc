@@ -60,6 +60,22 @@ a {
     color: var(--color-fg) !important;
 }
 
+/* Loading SVG Spinner styles */
+.loader {
+    border: 1px solid black;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 998;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
 /* *********************** HEADER ************************ */
 .header,
 .navbar-section {

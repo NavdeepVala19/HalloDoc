@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+html {
+  font-size: 62.5%;
+  /* 
+  -> 10px / 16 px * 100 = 62.5% -> doing these will change the root font size from 16px to 10px, {10px is 62.5% of 16px}
+  -> one way is to do font-size: 10px; => never use pixels for font-sizing, if user increases font size in browser it will not work
+  -> rem should be used for font sizing & em should not be used for font-sizing as there a compounding effect
+  -> em are mainly used for giving padding and margin(as it is relative to its font-size)
+  -> rem is used where we want to make changes in a whole site because it allows us to only change the font size in a single place.
+  -> The key-value em units offer is they allow sizing values to be determined by a font size
+  -> Use em units for sizing that should scale depending on the font size of an element other than the root.
+  -> Use rem units on media queries
+  -> Don’t use em or rem in multi-column layout widths – use % instead.
+
+  -> e.g, you might set the padding, margin and line-height around navigation, menu item to use em values. This way if you change the menu’s font size the spacing around the menu items will scale proportionately, independently of the rest of the layout.
+
+  -> As per our example above, design components like menu items, buttons, and headings may have their own explicitly stated font sizes. If you change these font sizes, you want the entire component to scale proportionately.
+
+  -> Common properties this guideline will apply to are margin, padding, width, height, and line-height settings when used on elements with non-default font sizing.
+
+  Type Scale : 
+    html {
+        --font-size-300: 0.75rem; 12px 
+        --font-size-400: 1rem;    16px, base 
+        --font-size-500: 1.25rem; 20px 
+        --font-size-600: 1.5rem;  24px 
+        --font-size-700: 1.75rem; 28px 
+        --font-size-800: 2rem;    32px 
+        --font-size-900: 2.25rem; 36px 
+    }
+  */
+}
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
+  /* These is written to again give the root font size a value of 16px */
+}
+.row {
+  gap: 15rem;
+  height: 100vh;
+}
+
+.logo {
+  width: 27rem;
+  height: 6rem;
+  margin-bottom: 2rem;
+}
+.heading {
+  font-size: 4rem;
+  line-height: 4.7rem;
+  margin-bottom: 3rem;
+  color: #3e3e3e;
+}
+.txt {
+  font-size: 2.5rem;
+  line-height: 3.3rem;
+  margin-bottom: 2.4rem;
+}
+.bold {
+  color: #c8242f;
+}
+
+.img {
+  width: 100%;
+  border-radius: 100%;
+}
+
+.btn {
+  background-color: #c8242f;
+  border-radius: 2.25rem;
+  font-size: 1.8rem;
+  text-align: center;
+  width: 14rem;
+  height: 4.5rem;
+  color: white;
+}
+.btn:hover {
+  border: 1px solid #adadad;
+}
+input {
+  border-radius: 0.45rem;
+  border: 1px solid #adadad;
+  width: 43rem;
+  height: 5rem;
+  margin-bottom: 2.7rem;
+  padding: 1.5rem;
+}
+.text {
+  color: #adadad;
+}
+a:link,
+a:visited {
+  text-decoration: none;
+  color: #adadad;
+}
+.box {
+  width: 43rem;
+  margin-bottom: 2.5rem;
+}
+#clr {
+  color: #c8242f;
+}
+
+/* ****************************** MEDIA QUERIES *********************************** */
+
+@media (max-width: 991px) {
+  html {
+    font-size: 9px;
+  }
+  .form {
+    margin: 0 auto;
+    max-width: 35rem;
+  }
+  .img {
+    display: block;
+    margin: 0 auto;
+  }
+  .row {
+    gap: 2rem;
+  }
+  input {
+    width: 100%;
+  }
+  .box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 8px;
+  }
+  .img {
+    width: 20%;
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 7.5;
+  }
+}
+@media (max-width: 420px) {
+  .form {
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+}
