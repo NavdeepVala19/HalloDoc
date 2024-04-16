@@ -1186,14 +1186,8 @@ $(document).on("click", ".pagination .page-link", function (event) {
     var page = $(this).text();
     // console.log(page);
 
-    if (page === "›") {
-        console.log("here");
-        var page = $(".pagination li.active span").text();
-        console.log(page);
-    }
-
-    var selectedId = $("#listing-region-admin-provider").val();
-    fetchPaginatedResult(selectedId, page);
+        var selectedId = $("#listing-region-admin-provider").val();
+    fetchPaginatedResults(selectedId, page);
 });
 
 $("#listing-region-admin-provider").on("change", function (event) {
