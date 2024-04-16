@@ -154,32 +154,3 @@
     }
 }
 
-.loader {
-    border: 1px solid black;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    z-index: 998;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-}
-
-
-.bi-arrow-repeat {
-    animation: spin 1s linear infinite;
-    color: #7bdac2;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}

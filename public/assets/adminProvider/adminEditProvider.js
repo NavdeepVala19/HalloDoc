@@ -13,7 +13,7 @@ $(document).ready(function () {
 
     $(".contact-btn").on("click", function () {
         let id = $(this).data("id");
-        const url = `/admin/provider/${id}`;
+        const url = `/admin-send-msg-provider/${id}`;
         $("#ContactProviderForm").attr("action", url);
         $(".provider_id").val(id);
     });
@@ -145,10 +145,10 @@ $(document).ready(function () {
             data.forEach(function (region) {
                 $("#listing-region-admin-provider").append(
                     '<option value="' +
-                        region.id +
-                        '" class="regions-name" >' +
-                        region.region_name +
-                        "</option>"
+                    region.id +
+                    '" class="regions-name" >' +
+                    region.region_name +
+                    "</option>"
                 );
             });
         },
@@ -161,18 +161,18 @@ $(document).ready(function () {
 
 
     // **** Fetching role from role table ****
-    
+
     $.ajax({
         url: "/admin-provider/role",
-        type: "POST",
+        type: "GET",
         success: function (data) {
             data.forEach(function (role) {
                 $("#provider-role").append(
                     '<option value="' +
-                        role.id +
-                        '" class="role_name" >' +
-                        role.name +
-                        "</option>"
+                    role.id +
+                    '" class="role_name" >' +
+                    role.name +
+                    "</option>"
                 );
             });
         },
@@ -310,6 +310,14 @@ $(document).ready(function () {
     // ****
 
     // *** This code is for validation in contact provider pop-up
+    $.validator.addMethod(
+        "contactMsg",
+        function (value, element) {
+            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Please enter valid Contact Message."
+    );
 
     $("#ContactProviderForm").validate({
         rules: {
@@ -317,6 +325,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 100,
+                contactMsg: true,
             },
         },
         messages: {
@@ -335,7 +344,29 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
+        $("#ContactProviderForm").click(function () {
+            if ($("#ContactProviderForm").valid()) {
+                $("#ContactProviderForm").submit();
+            }
+        });
+
+        $(".requestDTYClose").click(function (e) {
+            e.preventDefault();
+
+            $("#ContactProviderForm").trigger("reset");
+            $("#ContactProviderForm").validate().resetForm();
+            $(".pop-up-request-support.form-control").removeClass("is-valid");
+            $(".pop-up-request-support .form-control").removeClass(
+                "is-invalid"
+            );
+        });
+    
+    
 
     // client side validation in adminProviderCreateForm
 
@@ -376,14 +407,14 @@ $(document).ready(function () {
         "Please enter a valid address2."
     );
 
-    
-     $.validator.addMethod(
-         "address1",
-         function (value, element) {
-             return value.match(/^[a-zA-Z0-9-, ]+$/);
-         },
-         "Please enter a valid address1."
-     );
+
+    $.validator.addMethod(
+        "address1",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9-, ]+$/);
+        },
+        "Please enter a valid address1."
+    );
 
     $.validator.addMethod(
         "zipcode",
@@ -469,13 +500,13 @@ $(document).ready(function () {
         "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
     );
 
-      $.validator.addMethod(
-          "password",
-          function (email, element) {
-              return this.optional(element) || email.match(/^\S(.*\S)?$/);
-          },
-          "Please enter a valid password"
-      );
+    $.validator.addMethod(
+        "password",
+        function (email, element) {
+            return this.optional(element) || email.match(/^\S(.*\S)?$/);
+        },
+        "Please enter a valid password"
+    );
 
     $("#createAdminProvider").validate({
         rules: {
@@ -489,7 +520,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 8,
                 maxlength: 20,
-                password:true,
+                password: true,
             },
             first_name: {
                 required: true,
@@ -525,7 +556,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
-                address1:true
+                address1: true
             },
             address2: {
                 required: true,
@@ -727,13 +758,13 @@ $(document).ready(function () {
         "Please enter only letters for your User name."
     );
 
-     $.validator.addMethod(
-         "password",
-         function (email, element) {
-             return this.optional(element) || email.match(/^\S(.*\S)?$/);
-         },
-         "Please enter a valid password"
-     );
+    $.validator.addMethod(
+        "password",
+        function (email, element) {
+            return this.optional(element) || email.match(/^\S(.*\S)?$/);
+        },
+        "Please enter a valid password"
+    );
 
     $("#adminEditProviderForm1").validate({
         rules: {
@@ -786,32 +817,32 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-     $.validator.addMethod(
-         "lettersFirstName",
-         function (value, element) {
-             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
-         },
-         "Please enter only letters for your first name."
-     );
+    $.validator.addMethod(
+        "lettersFirstName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your first name."
+    );
 
-     $.validator.addMethod(
-         "emailAddress",
-         function (email, element) {
-             return (
-                 this.optional(element) ||
-                 email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
-             );
-         },
-         "Please enter a valid email (format: alphanum@alpha.domain)."
-     );
+    $.validator.addMethod(
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
+        },
+        "Please enter a valid email (format: alphanum@alpha.domain)."
+    );
 
-     $.validator.addMethod(
-         "lettersLastName",
-         function (value, element) {
-             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
-         },
-         "Please enter only letters for your Last name."
-     );
+    $.validator.addMethod(
+        "lettersLastName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your Last name."
+    );
 
     $("#adminEditProviderForm2").validate({
         rules: {
@@ -910,35 +941,26 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
-     $.validator.addMethod(
-         "address2",
-         function (value, element) {
-             return value.match(/^[a-zA-Z ,_-]+?$/);
-         },
-         "Please enter a valid address2."
-     );
+    $.validator.addMethod(
+        "address1",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9-, ]+$/);
+        },
+        "Please enter a valid address1."
+    );
 
-     $.validator.addMethod(
-         "address1",
-         function (value, element) {
-             return value.match(/^[a-zA-Z0-9-, ]+$/);
-         },
-         "Please enter a valid address1."
-     );
-    
     $("#adminEditProviderForm3").validate({
         rules: {
             address1: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
-                address1:true,
+                maxlength: 40,
+                address1: true,
             },
             address2: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
-                address2: true,
+                maxlength: 40,
             },
             city: {
                 required: true,
@@ -1024,13 +1046,13 @@ $(document).ready(function () {
         "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
     );
 
-      $.validator.addMethod(
-          "businessname",
-          function (value, element) {
-              return value.match(/^[a-zA-Z ,_-]+?$/);
-          },
-          "Please enter a valid business name."
-      );
+    $.validator.addMethod(
+        "businessname",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid business name."
+    );
 
     $("#adminEditProviderForm4").validate({
         rules: {
@@ -1183,10 +1205,41 @@ function fetchPaginatedResults(selectedId, page) {
 
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
-    var page = $(this).text();
-    // console.log(page);
+    var page;
+    page = $(this).text();
 
-        var selectedId = $("#listing-region-admin-provider").val();
+    if (page === "›") {
+        // Get the <li> element with the class "active"
+        var activeListItem = $(".pagination .page-item.active");
+
+        // Get the next sibling of the active <li> element
+        var nextSibling = activeListItem.next();
+
+        // Check if the next sibling exists and does not have the "active" class
+        if (nextSibling.length && !nextSibling.hasClass("active")) {
+            // Get the value of the next sibling
+            var page = nextSibling.first(".page-link").text();
+        } else {
+            console.log("There is no next sibling without the 'active' class.");
+        }
+    }
+    else if (page === "‹") {
+        // Get the <li> element with the class "active"
+        var activeListItem = $(".pagination .page-item.active");
+
+        // Get the next sibling of the active <li> element
+        var prevSibling = activeListItem.prev();
+
+        // Check if the next sibling exists and does not have the "active" class
+        if (prevSibling.length && !prevSibling.hasClass("active")) {
+            // Get the value of the next sibling
+            var page = prevSibling.first(".page-link").text();
+        } else {
+            console.log("There is no next sibling without the 'active' class.");
+        }
+    }
+
+    var selectedId = $("#listing-region-admin-provider").val();
     fetchPaginatedResults(selectedId, page);
 });
 
@@ -1226,7 +1279,39 @@ function fetchPaginatedResultsMobileView(selectedId, page) {
 
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
-    var page = $(this).text();
+    var page;
+    page = $(this).text();
+
+    if (page === "›") {
+        // Get the <li> element with the class "active"
+        var activeListItem = $(".pagination .page-item.active");
+
+        // Get the next sibling of the active <li> element
+        var nextSibling = activeListItem.next();
+
+        // Check if the next sibling exists and does not have the "active" class
+        if (nextSibling.length && !nextSibling.hasClass("active")) {
+            // Get the value of the next sibling
+            var page = nextSibling.first(".page-link").text();
+        } else {
+            console.log("There is no next sibling without the 'active' class.");
+        }
+    } else if (page === "‹") {
+        // Get the <li> element with the class "active"
+        var activeListItem = $(".pagination .page-item.active");
+
+        // Get the next sibling of the active <li> element
+        var prevSibling = activeListItem.prev();
+
+        // Check if the next sibling exists and does not have the "active" class
+        if (prevSibling.length && !prevSibling.hasClass("active")) {
+            // Get the value of the next sibling
+            var page = prevSibling.first(".page-link").text();
+        } else {
+            console.log("There is no next sibling without the 'active' class.");
+        }
+    }
+
     var selectedId = $("#listing-region-admin-provider").val();
     fetchPaginatedResultsMobileView(selectedId, page);
 });

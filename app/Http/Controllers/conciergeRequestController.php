@@ -38,7 +38,7 @@ class conciergeRequestController extends Controller
             'concierge_last_name' => 'required|min:3|max:15|alpha',
             'concierge_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'concierge_mobile' => 'required|regex:/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/',
-            'concierge_hotel_name' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'concierge_hotel_name' => 'required|min:2|max:50|regex:/^[a-zA-Z ,_-]+?$/',
             'concierge_street' => 'required|min:2|max:30',
             'concierge_state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'concierge_city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -56,7 +56,7 @@ class conciergeRequestController extends Controller
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
 
-            // $requestEmail->save();
+            $requestEmail->save();
 
             // store all details of patient in allUsers table
 
@@ -70,12 +70,12 @@ class conciergeRequestController extends Controller
             $requestUsers->city = $request->city;
             $requestUsers->state = $request->state;
             $requestUsers->zipcode = $request->zipcode;
-            // $requestUsers->save();
+            $requestUsers->save();
 
             $userRolesEntry = new UserRoles();
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
-            // $userRolesEntry->save();
+            $userRolesEntry->save();
         }
 
         $requestEmail = new users();
@@ -89,7 +89,7 @@ class conciergeRequestController extends Controller
         $concierge->city = $request->concierge_city;
         $concierge->state = $request->concierge_state;
         $concierge->zipcode = $request->concierge_zip_code;
-        // $concierge->save();
+        $concierge->save();
 
         // concierge request into request table
 
@@ -102,7 +102,7 @@ class conciergeRequestController extends Controller
         $requestConcierge->email = $request->concierge_email;
         $requestConcierge->phone_number = $request->concierge_mobile;
         $requestConcierge->relation_name = $request->concierge_hotel_name;
-        // $requestConcierge->save();
+        $requestConcierge->save();
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestConcierge->id;
@@ -117,51 +117,46 @@ class conciergeRequestController extends Controller
         $patientRequest->zipcode = $request->concierge_zip_code;
         $patientRequest->room = $request->room;
         $patientRequest->notes = $request->symptoms;
-        // $patientRequest->save();
+        $patientRequest->save();
 
         // store data in request_concierge table
         $conciergeRequest = new RequestConcierge();
         $conciergeRequest->request_id = $requestConcierge->id;
         $conciergeRequest->concierge_id = $concierge->id;
-        // $conciergeRequest->save();
+        $conciergeRequest->save();
+
+        $currentTime = Carbon::now();
+        $currentDate = $currentTime->format('Y');
+
+        $todayDate = $currentTime->format('Y-m-d');
+        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+
+        $confirmationNumber = substr($request->concierge_state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
 
 
-
-
-
-        // $currentTime = Carbon::now();
-        // $currentDate = $currentTime->format('Y');
-
-        // $todayDate = $currentTime->format('Y-m-d');
-        // $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
-
-        // $confirmationNumber = substr($request->concierge_state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
-
-
-        // if (!empty($requestConcierge->id)) {
-        //     $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
-        // }
+        if (!empty($requestConcierge->id)) {
+            $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
+        }
 
         if ($isEmailStored == null) {
 
             // send email
             $emailAddress = $request->email;
-            // Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-            // EmailLog::create([
-            //     'request_id' => $requestConcierge->id,
-            //     'confirmation_number' => $confirmationNumber,
-            //     'role_id' => 3,
-            //     'is_email_sent' => 1,
-            //     'recipient_name' => $request->first_name,
-            //     'sent_tries' => 1,
-            //     'create_date' => now(),
-            //     'sent_date' => now(),
-            //     'email_template' => $request->email,
-            //     'subject_name' => 'Create account by clicking on below link with below email address',
-            //     'email' => $request->email,
-            // ]);
+            EmailLog::create([
+                'request_id' => $requestConcierge->id,
+                'confirmation_number' => $confirmationNumber,
+                'role_id' => 3,
+                'is_email_sent' => 1,
+                'recipient_name' => $request->first_name,
+                'sent_tries' => 1,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'email_template' => $request->email,
+                'subject_name' => 'Create account by clicking on below link with below email address',
+                'email' => $request->email,
+            ]);
         }
 
         if ($isEmailStored == null) {

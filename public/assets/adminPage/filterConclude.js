@@ -33,9 +33,42 @@ function fetchPaginatedResults(
 $(document).on('click', '.pagination .page-link', function (event) {
     event.preventDefault();
 
-    $(".page-item").removeClass('active');
-    $(this).closest('.page-item').addClass('active');
-    var page = $(this).text();
+      var page;
+      page = $(this).text();
+
+      if (page === "›") {
+          // Get the <li> element with the class "active"
+          var activeListItem = $(".pagination .page-item.active");
+
+          // Get the next sibling of the active <li> element
+          var nextSibling = activeListItem.next();
+
+          // Check if the next sibling exists and does not have the "active" class
+          if (nextSibling.length && !nextSibling.hasClass("active")) {
+              // Get the value of the next sibling
+              var page = nextSibling.first(".page-link").text();
+          } else {
+              console.log(
+                  "There is no next sibling without the 'active' class."
+              );
+          }
+      } else if (page === "‹") {
+          // Get the <li> element with the class "active"
+          var activeListItem = $(".pagination .page-item.active");
+
+          // Get the next sibling of the active <li> element
+          var prevSibling = activeListItem.prev();
+
+          // Check if the next sibling exists and does not have the "active" class
+          if (prevSibling.length && !prevSibling.hasClass("active")) {
+              // Get the value of the next sibling
+              var page = prevSibling.first(".page-link").text();
+          } else {
+              console.log(
+                  "There is no previous sibling without the 'active' class."
+              );
+          }
+      }
 
     var tab = $(".nav-link.active").attr("id");
     var words = tab.split("-");

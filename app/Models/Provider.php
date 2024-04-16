@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\users;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Provider extends Model
 {
@@ -30,6 +31,13 @@ class Provider extends Model
 
     public function Regions(){
         return $this->hasOne(Regions::class,'id','regions_id');
+    }
+
+
+    // Mutator
+
+    public function getIdAttribute($value){
+       return Crypt::encrypt($value); 
     }
 
 }

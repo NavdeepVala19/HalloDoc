@@ -386,7 +386,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     // ------------------------ Shivesh Work -----------------------------------
     route::get('/admin-providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
-    route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
+    route::post('/admin-send-msg-provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 
     route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
     route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
@@ -402,7 +402,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::post('/admin-provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
     route::post('/admin-provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
 
-    route::post('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
+    route::get('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
 
     route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 

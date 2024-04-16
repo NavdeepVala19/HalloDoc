@@ -1,15 +1,10 @@
 $(document).ready(function () {
-
-
-
     $.ajax({
         url: "/providers-map-Locations",
         type: "get",
         success: function (response) {
-            console.log(response);
-
             response.locations.forEach(function (location) {
-                getAddressFromCoordinates(
+                getAddressFromCoordinate(
                     location.latitude,
                     location.longitude,
                     function (address) {

@@ -7,7 +7,6 @@
     {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
 @endsection
 
-
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
@@ -45,14 +44,14 @@
         </ul>
     </div>
 @endsection
-
 @section('content')
+
+@include('loading')
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Submit Information</h1>
             <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
-
         <div class="section">
             <form action="{{ route('adminCreatedPatientRequest') }}" method="POST" id="adminCreateRequestForm">
                 @csrf

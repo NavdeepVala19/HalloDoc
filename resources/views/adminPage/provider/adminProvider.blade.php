@@ -47,8 +47,8 @@
 @endsection
 
 @section('content')
+@include('loading')
     <div class="overlay"> </div>
-
     @if (session('message'))
         <h6 class="alert alert-success  popup-message">
             {{ session('message') }}
@@ -103,7 +103,7 @@
                                             <button type="button" data-id='{{ $data->id }}'
                                                 class="primary-empty contact-btn mt-2 mb-2"
                                                 id="contact_btn_{{ $data->id }}">Contact</button>
-                                            <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}" type="button"
+                                            <a href="{{ route('adminEditProvider',$data->id) }}" type="button"
                                                 class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                         </td>
                                     </tr>
@@ -121,8 +121,7 @@
                         </div>
                         <p class="mt-4 ms-3">Choose communication to send message</p>
                         <div class="ms-3">
-                            <form action="{{ route('sendMailToProvider', $data->id) }}" method="post"
-                                id="ContactProviderForm">
+                            <form action="{{ route('sendMailToProvider', Crypt::encrypt( $data->id)) }}" method="post" id="ContactProviderForm">
                                 @csrf
                                 <input type="text" name="provider_id" class="provider_id" hidden>
                                 <div class="form-check">
@@ -187,7 +186,7 @@
                                     <button type="button" data-id='{{ $data->id }}'
                                         class="primary-empty contact-btn mt-2 mb-2"
                                         id="contact_btn_{{ $data->id }}">Contact</button>
-                                    <a href="{{ route('adminEditProvider',Crypt::encrypt($data->id)) }}" type="button"
+                                    <a href="{{ route('adminEditProvider',$data->id) }}" type="button"
                                         class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                 </div>
                             </div>
@@ -203,7 +202,7 @@
                         </div>
                         <p class="mt-4 ms-3">Choose communication to send message</p>
                         <div class="ms-3">
-                            <form action="{{ route('sendMailToProvider', $data->id) }}" method="post"
+                            <form action="{{ route('sendMailToProvider',Crypt::encrypt( $data->id)) }}" method="post"
                                 id="ContactProviderForm">
                                 @csrf
                                 <input type="text" name="provider_id" class="provider_id" hidden>

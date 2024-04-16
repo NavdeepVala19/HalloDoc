@@ -39,14 +39,13 @@ class patientProfileController extends Controller
 
     public function patientUpdate(Request $request)
     {
-
         $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'required|min:2|max:30',
+            'first_name' => 'required|min:3|max:15',
+            'last_name' => 'required|min:3|max:15',
             'date_of_birth' => 'required',
-            'email' => 'required|email|min:2|max:30',
+            'email' => 'required|email|min:2|max:30|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'street' => 'required|min:2',
+            'street' => 'required|min:2|max:60',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6',
@@ -105,7 +104,7 @@ class patientProfileController extends Controller
         $updateRequestTableData = RequestTable::where('email', $userData['email'])->update($updatedRequestTableData);
 
 
-        return redirect()->route('patientDashboardData');
+        return redirect()->route('patientDashboardData')->with('message','profile is updated successfully');
     }
 
     public function patientMapLocation()
