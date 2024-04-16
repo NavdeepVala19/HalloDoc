@@ -136,7 +136,7 @@ patient's email address and phone number. Once the patient accepts the agreement
                     <input name="filter_category" value="" hidden>
                     <button type="submit" hidden>export</button>
                 </form>
-                <a href="" class="primary-fill">
+                <a href="{{ route('exportAll') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down-fill"></i>
                     <span class="txt">
                         Export All

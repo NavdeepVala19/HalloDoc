@@ -151,6 +151,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if ($combinedData->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Records Found</td>
+                            </tr>
+                    @endif
                     @foreach ($combinedData as $data )
                     <tr>
                         <td>{{$data->first_name}}</td>
@@ -218,8 +223,12 @@
 
         <div class="mobile-listing mt-3">
             <div class="mobile-list">
+                @if ($combinedData->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Records Found</td>
+                            </tr>
+                    @endif
                 @foreach ( $combinedData as $data )
-
                 <div class="main-section">
                     <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox"> {{$data->first_name}} </h5>
                     <div class="detail-box">
@@ -313,5 +322,6 @@
 @endsection
 
 @section('script')
+<script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
 <script defer src="{{ asset('assets/adminPage/searchRecords.js') }}"></script>
 @endsection

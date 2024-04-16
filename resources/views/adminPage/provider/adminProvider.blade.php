@@ -84,6 +84,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if ($providersData->isEmpty())
+                                    <tr>
+                                        <td colspan="100" class="no-record">No Provider Found</td>
+                                    </tr>
+                                @endif
                                 @foreach ($providersData as $data)
                                     <tr>
                                         <td class="checks"> <input class="form-check-input checkbox1" type="checkbox"
@@ -98,7 +103,7 @@
                                             <button type="button" data-id='{{ $data->id }}'
                                                 class="primary-empty contact-btn mt-2 mb-2"
                                                 id="contact_btn_{{ $data->id }}">Contact</button>
-                                            <a href="{{ route('adminEditProvider', $data->id) }}" type="button"
+                                            <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}" type="button"
                                                 class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                         </td>
                                     </tr>
@@ -157,6 +162,11 @@
                 </div>
 
                 <div class="mobile-listing">
+                    @if ($providersData->isEmpty())
+                        <tr>
+                            <td colspan="100" class="no-record">No Provider Found</td>
+                        </tr>
+                    @endif
                     @foreach ($providersData as $data)
                         <div class="mobile-list">
                             <div class="main-section mt-3">
@@ -177,7 +187,7 @@
                                     <button type="button" data-id='{{ $data->id }}'
                                         class="primary-empty contact-btn mt-2 mb-2"
                                         id="contact_btn_{{ $data->id }}">Contact</button>
-                                    <a href="{{ route('adminEditProvider', $data->id) }}" type="button"
+                                    <a href="{{ route('adminEditProvider',Crypt::encrypt($data->id)) }}" type="button"
                                         class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                 </div>
                             </div>

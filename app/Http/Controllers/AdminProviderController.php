@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ContactProvider;
+use App\Models\Role;
+use App\Models\users;
+use App\Models\Regions;
+use App\Models\SMSLogs;
+use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
-use App\Models\PhysicianRegion;
 use App\Models\Provider;
-use App\Models\Regions;
-use App\Models\RequestWiseFile;
-use App\Models\Role;
-use App\Models\SMSLogs;
 use App\Models\UserRoles;
-use App\Models\users;
 use Illuminate\Http\Request;
+use App\Mail\ContactProvider;
+use App\Models\PhysicianRegion;
+use App\Models\RequestWiseFile;
+use App\Models\PhysicianLocation;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminProviderController extends Controller
 {
@@ -344,7 +346,7 @@ class AdminProviderController extends Controller
         //     $providerData->save();
         // }
 
-        return redirect()->route('adminProvidersInfo');
+        return redirect()->route('adminProvidersInfo')->with('message','account is created');
     }
 
     public function regionName()
@@ -355,8 +357,15 @@ class AdminProviderController extends Controller
 
     public function editProvider($id)
     {
-        $getProviderData = Provider::with('users', 'role', 'Regions')->where('id', $id)->first();
-        return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+        try {
+            $id = Crypt::decrypt($id);
+            $getProviderData = Provider::with('users', 'role', 'Regions')->where('id', $id)->first();
+            return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+
+        }       
+
     }
 
     public function updateProviderAccountInfo(Request $request, $id)
@@ -560,7 +569,19 @@ class AdminProviderController extends Controller
     public function providerLocations()
     {
         $providers = Provider::get();
-        return view('adminPage/provider/providerLocation', compact('providers'));
+        return view('adminPage/provider/providerLocation',compact("providers"));
+    }
+
+    public function providerMapLocations(){
+        $providers = PhysicianLocation::all();
+        $locations = $providers->map(function ($provider) {
+            return [
+                'latitude' => $provider->latitude,
+                'longitude' => $provider->longitude,
+            ];
+        });
+
+        return response()->json(['locations' => $locations->toArray()]);
     }
 
     public function fetchRolesName()

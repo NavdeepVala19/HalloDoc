@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('physician_name')->nullable();
             $table->string('address')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
