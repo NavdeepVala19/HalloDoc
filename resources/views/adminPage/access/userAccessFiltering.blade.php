@@ -1,4 +1,3 @@
-
 <table class="table" id="user-access-table">
     <thead class="table-secondary text-center align-middle">
         <td>Account Type <i class="bi bi-arrow-up"></i></td>
@@ -9,6 +8,11 @@
         <td>Actions</td>
     </thead>
     <tbody class="text-center align-middle">
+        @if ($userAccessDataFiltering->isEmpty())
+        <div class="no-record mt-3 mb-3">
+            <span>No Users Found</sp>
+        </div>
+        @endif
         @foreach ($userAccessDataFiltering as $data )
         <tr>
             <td>{{$data->name}}</td>
@@ -25,6 +29,11 @@
 
 
 <div class="mobile-listing mt-3">
+    @if ($userAccessDataFiltering->isEmpty())
+    <div class="no-record mt-3 mb-3">
+        <span>No Users Found</sp>
+    </div>
+    @endif
     @foreach ($userAccessDataFiltering as $data)
     <div class="mobile-list">
         <div class="main-section">

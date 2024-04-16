@@ -137,6 +137,7 @@ route::get('/adminLogin', [AdminLoginController::class, 'adminLogin'])->name('ad
 route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
 
 route::post('/adminLoggedIn', [AdminLoginController::class, 'userLogin'])->name('adminLoggedIn');
+// route::get('/testData', [AdminLoginController::class, 'testData']);
 
 
 // admin ResetPassword
@@ -408,7 +409,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
     route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
-    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
+    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation'); 
+    route::get('/providers-map-Locations', [AdminProviderController::class, 'providerMapLocations'])->name('providerMapLocation'); 
 
     Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 

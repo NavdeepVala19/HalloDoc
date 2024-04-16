@@ -53,38 +53,24 @@
             <a href="{{ route('admin.dashboard') }}" class="primary-empty"> <i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
-        <!-- <iframe src="https://www.google.com/maps?q=[shivanjali heights-2,abrama road,mota varachha,394101,surat]&output=embed" style="width:100%;height:660px"></iframe> -->
-
         <div id="map-container" style="width:100%;height:660px" class="mt-3">
-            <iframe id="map-iframe" style="width:100%;height:660px" frameborder="0" scrolling="no" marginheight="0"
-                marginwidth="0"></iframe>
+           <iframe src="https://www.google.com/maps?q=[
+                    @foreach ($providers as $data )
+                            {{$data->address1}}+{{$data->address2}}+{{$data->city}}+{{$data->zipcode}}+
+                    @endforeach
+                ]&output=embed" style="width:100%;height:660px"></iframe>
+              
         </div>
     </div>
 
-    <script>
-        function updateMap() {
-            var addresses = @json($providers);
-            var mapUrl = "https://www.google.com/maps?q=";
 
-            addresses.forEach(function(provider, index) {
-                if (index !== 0) {
-                    mapUrl += "+";
-                }
+@endsection
 
-                mapUrl += encodeURIComponent(provider.address1 + ", " + provider.address2 + ", " + provider.city +
-                    ", " + provider.zipcode);
-            });
 
-            document.getElementById('map-iframe').src = mapUrl + "&output=embed";
-        }
-
-        // Call the function to update the map when the page loads
-        updateMap();
-    </script>
-    </body>
-
-    </html>
-    </body>
-
-    </html>
+@section('script')
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2SMA7GMfSg2E9equWVM1JIasVo3igTuc&loading=async&callback=getAddressFromCoordinates">
+</script>
+<script defer src="{{ URL::asset('assets/adminProvider/providerMapLocation.js') }}"></script>
+<script defer  src="{{ URL::asset('assets/adminProvider/providerLocationRender.js') }}"></script>
 @endsection

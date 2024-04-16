@@ -331,21 +331,6 @@ class patientDashboardController extends Controller
         $userData = Auth::user();
         $email = $userData["email"];
 
-        // $data = request_Client::select(
-        //     'request_status.status',
-        //     'request_client.request_id',
-        //     'request_wise_file.id',
-        //     'status.status_type',
-        //     DB::raw('DATE(request_client.created_at) as created_date'),
-        // )
-        //     ->leftJoin('request_status', 'request_status.request_id', 'request_client.request_id')
-        //     ->leftJoin('status', 'status.id', 'request_status.status')
-        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request_client.request_id')
-        //     ->where('email', $email)
-        //     ->paginate(10);
-
-
-
         $data = RequestTable::select(
             'request.id',
             'request_wise_file.request_id',

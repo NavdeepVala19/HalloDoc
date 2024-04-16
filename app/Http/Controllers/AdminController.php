@@ -58,6 +58,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\HealthProfessionalType;
 use Illuminate\Support\Facades\Session;
 
@@ -939,27 +940,26 @@ class AdminController extends Controller
             $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if (!empty($request->email)) {
-            $combinedData = $combinedData->orWhere('request_client.email', "like", "%" . $request->email . "%");
+            $combinedData = $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
         }
         if (!empty($request->phone_number)) {
-            $combinedData = $combinedData->orWhere('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+            $combinedData = $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->request_type)) {
-            $combinedData = $combinedData->orWhere('request.request_type_id', "like", "%" . $request->request_type . "%");
+            $combinedData = $combinedData->where('request.request_type_id', "like", "%" . $request->request_type . "%");
         }
         if (!empty($request->provider_name)) {
-            $combinedData = $combinedData->orWhere('provider.first_name', "like", "%" . $request->provider_name . "%");
+            $combinedData = $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
         }
         if (!empty($request->request_status)) {
-            $combinedData = $combinedData->orWhere('request_status.status', "like", "%" . $request->request_status . "%");
+            $combinedData = $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
         }
         if (!empty($request->from_date_of_service)) {
-            $combinedData = $combinedData->orWhere('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
+            $combinedData = $combinedData->where('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
         }
         if (!empty($request->to_date_of_service)) {
-            $combinedData = $combinedData->orWhere('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
+            $combinedData = $combinedData->where('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
         }
-
         return $combinedData;
     }
 
@@ -1061,16 +1061,16 @@ class AdminController extends Controller
             $sms = $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
         }
         if (!empty($request->phone_number)) {
-            $sms = $sms->orWhere('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+            $sms = $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->created_date)) {
-            $sms = $sms->orWhere('sms_log.created_date', "like", "%" . $request->created_date . "%");
+            $sms = $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
         }
         if (!empty($request->sent_date)) {
-            $sms = $sms->orWhere('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+            $sms = $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
         }
         if (!empty($request->role_type)) {
-            $sms = $sms->orWhere('sms_log.role_id', "like", "%" . $request->role_type . "%");
+            $sms = $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
         }
         $sms = $sms->paginate($perPage, ['*'], 'page', $page);
 
@@ -1270,17 +1270,24 @@ class AdminController extends Controller
 
     public function UserAccessEdit($id)
     {
-        $UserAccessRoleName = Roles::select('name')
+        try {
+            $id = Crypt::decrypt($id);
+            $UserAccessRoleName = Roles::select('name')
             ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
             ->where('user_roles.user_id', $id)
             ->get();
 
         if ($UserAccessRoleName->first()->name == 'admin') {
-            return redirect()->route('adminProfile', ['id' => $id]);
-        } else if ($UserAccessRoleName->first()->name == 'physician') {
+            return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
+        } 
+        else if ($UserAccessRoleName->first()->name == 'physician') {
             $getProviderId = Provider::where('user_id', $id);
-            return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
+            return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
         }
+        } catch (\Throwable $th) {
+            return view('errors.404');
+;
+        }    
     }
 
     public function FilterUserAccessAccountTypeWise(Request $request)
@@ -1328,7 +1335,7 @@ class AdminController extends Controller
     public function sendRequestSupport(Request $request)
     {
         $request->validate([
-            'contact_msg' => 'required',
+            'contact_msg' => 'required|min:5|max:100',
         ]);
 
         $currentDate = now()->toDateString();
@@ -1342,12 +1349,13 @@ class AdminController extends Controller
         $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
         $offDutyPhysicians = Provider::whereIn('id', $offDutyPhysicianIds)->pluck('email')->toArray();
 
+
         $requestMessage = $request->contact_msg;
         foreach ($offDutyPhysicians as $offDutyPhysician) {
             Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('message','message is sent');
     }
 
 
@@ -1658,9 +1666,10 @@ class AdminController extends Controller
                     });
             });
         }
+
         // Filter Regions 
         if ($region) {
-            $query = RequestTable::with('requestClient')->whereHas('requestClient', function ($query) use ($region) {
+            $query->whereHas('requestClient', function ($query) use ($region) {
                 $query->where('state', 'like', '%' . $region . '%');
             })->where('status', $this->getStatusId($status));
         }
@@ -1672,11 +1681,12 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-
+        $request->session()->put('regionName',$regionName);
+                
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
@@ -1691,10 +1701,11 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
-
+        $category = $request->category_value;
+        $search = $request->search_value;
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1711,10 +1722,13 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1730,10 +1744,12 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1749,10 +1765,12 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;   
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1768,10 +1786,13 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = "all";
-        $search = "";
+        $category = $request->category_value;
+        $search = $request->search_value;
+
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
+        $request->session()->put('regionName', $regionName);
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1786,16 +1807,17 @@ class AdminController extends Controller
 
     public function exportNew(Request $request)
     {
-
         $status = 'new';
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
 
-        if ($region = "All Regions") {
-            $exportNewData = $this->buildQuery($status, $category, $search,);
+        $regionName = $request->session()->get('regionName', null);
+        
+        if ($regionName == "All Regions") {
+            $exportNewData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportNewData = $this->fetchQuery($status, $category, $search, $region);
+            $exportNewData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportNew = new NewStatusExport($exportNewData);
@@ -1807,11 +1829,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportPendingData = $this->buildQuery($status, $category, $search,);
         } else {
-            $exportPendingData = $this->fetchQuery($status, $category, $search, $region);
+            $exportPendingData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportPending = new PendingStatusExport($exportPendingData);
@@ -1824,11 +1848,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportActiveData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportActiveData = $this->fetchQuery($status, $category, $search, $region);
+            $exportActiveData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportActive = new ActiveStatusExport($exportActiveData);
@@ -1841,11 +1867,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportConcludeData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportConcludeData = $this->fetchQuery($status, $category, $search, $region);
+            $exportConcludeData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportConclude = new ConcludeStatusExport($exportConcludeData);
@@ -1857,11 +1885,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportToCloseData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportToCloseData = $this->fetchQuery($status, $category, $search, $region);
+            $exportToCloseData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportToClose = new ToCloseStatusExport($exportToCloseData);
@@ -1874,11 +1904,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
+        $regionName = $request->session()->get('regionName', null);
 
-        if ($region = "All Regions") {
+
+        if ($regionName == "All Regions") {
             $exportUnpaidData = $this->buildQuery($status, $category, $search);
         } else {
-            $exportUnpaidData = $this->fetchQuery($status, $category, $search, $region);
+            $exportUnpaidData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
         $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);

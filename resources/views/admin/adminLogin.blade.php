@@ -31,10 +31,11 @@
 
 
         <div class="form">
-
             <form action="{{ route('adminLoggedIn') }}" method="post" id="adminLogin">
                 @csrf
 
+                <input type="hidden" name="latitude" id="lat">
+                <input type="hidden" name="longitude" id="lng">
                 <div class="mb-4 email adminLogin">
                     <i class="bi bi-person-circle person-logo"></i>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
@@ -65,4 +66,5 @@
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 <script defer src="{{ URL::asset('assets/admin/adminLogin.js') }}"></script>
+<script defer src="{{ URL::asset('assets/adminProvider/providerMapLocation.js') }}"></script>
 @endsection

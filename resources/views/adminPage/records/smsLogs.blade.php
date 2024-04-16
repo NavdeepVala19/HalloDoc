@@ -124,6 +124,11 @@
                         <td>Confirmation Number</td>
                     </thead>
                     <tbody>
+                    @if ($sms->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No SMS Logs Found</td>
+                            </tr>
+                    @endif
                         @foreach ($sms as $data)
                             <tr>
                                 <td>{{ $data->recipient_name }}</td>
@@ -157,6 +162,11 @@
             </div>
 
             <div class="mobile-listing">
+                @if ($sms->isEmpty())
+                    <tr>
+                        <td colspan="100" class="no-record">No SMS Logs Found</td>
+                    </tr>
+                @endif
                 @foreach ($sms as $data)
                     <div class="mobile-list">
                         <div class="main-section">

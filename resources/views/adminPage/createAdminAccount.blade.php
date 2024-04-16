@@ -110,7 +110,7 @@
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="d-flex gap-4 checkboxes">
+                <div class="d-flex gap-4 checkboxes flex-wrap">
                     @foreach ($regions as $region)
                     <div class="form-check region-no-{{ $region->id }}">
                         <input class="form-check-input" type="checkbox" name="region_id[]" id="region_{{ $region->id }}" value="{{ $region->id }}" @if (in_array($region->id, $selectedRegionIds ?? [])) checked @endif>
