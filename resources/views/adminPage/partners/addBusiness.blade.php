@@ -88,7 +88,7 @@
                     <div class="form-floating ">
                         <input type="number" name="fax_number"
                             class="form-control @error('fax_number') is-invalid @enderror" id="floatingInput2"
-                            placeholder="Fax Number">
+                            placeholder="Fax Number" min="0">
                         <label for="floatingInput2">Fax Number</label>
                         @error('fax_number')
                             <div class="text-danger">{{ $message }}</div>

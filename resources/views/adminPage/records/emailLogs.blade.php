@@ -139,8 +139,10 @@
                                     <td>Yes</td>
                                     <td>{{ $email->sent_tries }}</td>
                                     <td>
-                                        @if ($email->request_id)
-                                            {{ $email->request->confirmation_no }}
+                                        @if ($email->confirmation_number)
+                                            {{ $email->confirmation_number }}
+                                        @else
+                                            -
                                         @endif
                                     </td>
                                 </tr>
@@ -197,9 +199,7 @@
                     </div>
                 @endforeach
             </div>
-            {{-- {{ $emails->appends(request()->except('page'))->links('pagination::bootstrap-5') }} --}}
             {{ $emails->appends(request()->query())->links('pagination::bootstrap-5') }}
-            {{-- {{ $emails->paginate->appends(request()->except('page'))->links('pagination::bootstrap-5') }} --}}
         </div>
     </div>
 @endsection

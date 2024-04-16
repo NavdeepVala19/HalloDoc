@@ -37,7 +37,7 @@ return new class extends Migration
             $table->date('sent_date')->nullable();
             $table->boolean('is_email_sent')->nullable();
             $table->integer('sent_tries')->nullable();
-            $table->enum('action', ['Link to create Request', 'Notification to Provider', 'Provider Edit Profile Request', 'Send Agreement to Patient','Send Email Address after Creating Request'])->nullable();
+            $table->enum('action', ['Link to create Request', 'Notification to Provider', 'Provider Edit Profile Request', 'Send Agreement to Patient', 'Send Email Address after Creating Request'])->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -54,11 +54,11 @@
             <a href="{{ route('admin.access.view') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
-            <form action="{{ route('admin.create.access') }}" method="POST">
+            <form action="{{ route('admin.create.access') }}" method="POST" id="createAccessForm">
                 @csrf
                 <h4>Details</h4>
                 <div class="grid-2">
-                    <div class="form-floating ">
+                    <div class="form-floating">
                         <input type="text" name="role" class="form-control" id="floatingInput" placeholder="Role Name"
                             value="{{ old('role') }}">
                         <label for="floatingInput">Role Name</label>
@@ -103,4 +103,8 @@
             </form>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/validation.js') }}"></script>
 @endsection

@@ -37,24 +37,7 @@ class patientAccountController extends Controller
                 $create_account->save();
             }
         }
-        return redirect()->route('patientDashboardData');
-
-        // $data = request_Client::select(
-        //     'request_status.status',
-        //     'request_status.request_id',
-        //     'request_client.request_id',
-        //     'request_client.first_name',
-        //     'request_wise_file.id',
-        //     DB::raw('DATE(request_client.created_at) as created_date'),
-        //     'status.status_type'
-        // )
-        //     ->leftJoin('request_status', 'request_status.request_id', 'request_client.request_id')
-        //     ->leftJoin('status', 'status.id', 'request_status.status')
-        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request_client.request_id')
-        //     ->where('email', $request->email)
-        //     ->paginate(10);
-
-        // return view('patientSite/patientDashboard', compact('data'));
+        return redirect()->route('loginScreen')->with('success','login with create account credentials');
 
     }
 }

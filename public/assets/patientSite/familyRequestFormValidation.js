@@ -1,6 +1,29 @@
 $(document).ready(function () {
+    
+    // ** This code is for client side validation in all family/friend form
+    $.validator.addMethod(
+        "lettersFirstName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your first name."
+    );
 
-     // ** This code is for client side validation in all family/friend form
+    $.validator.addMethod(
+        "lettersLastName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your Last name."
+    );
+
+    $.validator.addMethod(
+        "relation",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your relation."
+    );
 
     $.validator.addMethod(
         "phoneUS",
@@ -13,6 +36,17 @@ $(document).ready(function () {
             );
         },
         "Please enter a valid phone number."
+    );
+
+    $.validator.addMethod(
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
+        },
+        "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
     $.validator.addMethod(
@@ -39,12 +73,69 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
+     $.validator.addMethod(
+         "diseaseSymptoms",
+         function (value, element) {
+             const regex = value.match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
+             return this.optional(element) || regex.test(value.trim());
+         },
+         "Please enter valid symptoms."
+     );
+    
+    $.validator.addMethod(
+        "nonNegativeOptional",
+        function (value, element) {
+            // If the field is empty, consider it valid
+            if (value === "") {
+                return true;
+            }
+            // If a value is entered, check if it's a non-negative number
+            return !isNaN(value) && value >= 0;
+        },
+        "Please enter a valid room number."
+    );
+
+    $.validator.addMethod(
+        "customFile",
+        function (value, element, param) {
+            // Check if a file is selected
+            if (element.files.length === 0) {
+                return true; // Allow if no file is selected (optional)
+            }
+
+            // Get the file extension
+            var extension = element.files[0].name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+            // Allowed extensions
+            var allowedExtensions = ["jpg", "jpeg", "png", "pdf", "doc"];
+
+            // Check extension
+            if ($.inArray(extension, allowedExtensions) === -1) {
+                return false; // Invalid extension
+            }
+
+            // Check file size (2MB in bytes)
+            var maxSize = 2 * 1024 * 1024;
+            if (element.files[0].size > maxSize) {
+                return false; // File size too large
+            }
+
+            return true; // Valid file
+        },
+        "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
+    );
+
     $("#patientRequestForm").validate({
+        ignore: [],
         rules: {
             first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersFirstName: true,
             },
             date_of_birth: {
                 required: true,
@@ -52,11 +143,13 @@ $(document).ready(function () {
             email: {
                 required: true,
                 email: true,
+                emailAddress: true,
             },
             last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersLastName: true,
             },
             phone_number: {
                 required: true,
@@ -87,12 +180,17 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
+                lettersFirstName: true,
             },
-
+            room: {
+                minlength: 0,
+                nonNegativeOptional: true,
+            },
             family_last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersLastName: true,
             },
             family_phone_number: {
                 required: true,
@@ -101,24 +199,35 @@ $(document).ready(function () {
             family_email: {
                 required: true,
                 email: true,
+                emailAddress: true,
             },
             family_relation: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                relation:true
             },
-           
+            symptoms: {
+                required: false,
+                diseaseSymptoms: true,
+                maxlength: 200,
+            },
+            docs: {
+                customFile: true,
+            },
         },
         messages: {
             email: {
                 required:
                     "Please enter a valid email format (e.g., user@example.com).",
+                emailAddress:
+                    "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             date_of_birth: {
                 required: "Please enter a date of birth",
@@ -156,11 +265,21 @@ $(document).ready(function () {
                 required:
                     "Please enter a valid email format (e.g., user@example.com).",
             },
+            docs: {
+                customFile:
+                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+            },
+            room: {
+                nonNegativeOptional: "Please enter a valid room number.",
+            },
+            symptoms: {
+                maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
+            },
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -168,6 +287,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
-
-})
+});

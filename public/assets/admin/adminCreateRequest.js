@@ -47,7 +47,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "zipcode",
         function (value, element) {
-            return value.length == 6 && /\d/.test(value);
+            return (
+                this.optional(element) ||
+                (value.length == 6 && /\d/.test(value))
+            );
         },
         "Please enter a valid zipcode."
     );
@@ -65,14 +68,14 @@ $(document).ready(function () {
         "Please enter a valid room number."
     );
 
-    $.validator.addMethod(
-        "diseaseSymptoms",
-        function (value, element) {
-            const regex = value.match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
-            return this.optional(element) || regex.test(value.trim());
-        },
-        "Please enter valid notes."
-    );
+     $.validator.addMethod(
+         "diseaseSymptoms",
+         function (value, element) {
+             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+             return this.optional(element) || regex.test(value.trim());
+         },
+         "Please enter valid symptoms."
+     );
 
     $.validator.addMethod(
         "emailAddress",
@@ -89,8 +92,8 @@ $(document).ready(function () {
         rules: {
             first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 10,
+                minlength: 3,
+                maxlength: 15,
                 lettersFirstName: true,
             },
             email: {
@@ -99,8 +102,8 @@ $(document).ready(function () {
             },
             last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 10,
+                minlength: 3,
+                maxlength: 15,
                 lettersLastName: true,
             },
             phone_number: {
@@ -124,8 +127,7 @@ $(document).ready(function () {
                 maxlength: 30,
                 state: true,
             },
-            zipcode: {
-                required: true,
+            zip: {
                 zipcode: true,
             },
             room: {
@@ -145,10 +147,10 @@ $(document).ready(function () {
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 10 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 10 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             phone_number: {
                 required: "Please enter a mobile number",
@@ -163,9 +165,7 @@ $(document).ready(function () {
             state: {
                 required: "Please enter a state",
             },
-            zipcode: {
-                required: "Please enter a zipcode",
-            },
+
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
@@ -184,6 +184,10 @@ $(document).ready(function () {
         },
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
         },
     });
 });

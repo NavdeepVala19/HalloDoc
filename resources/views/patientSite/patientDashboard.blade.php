@@ -10,15 +10,12 @@
     <a href="{{ route('patientProfile') }}" class="">Profile</a>
 @endsection
 
-
 @section('patientSiteContent')
     @if (Session::has('message'))
         <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
         </div>
-    @endif 
-    
-
+    @endif
     <div class="container-fluid">
         <h2>Medical History</h2>
         <div class="content shadow">
@@ -44,7 +41,7 @@
                                 <td style="height: 5%;">
                                     @if ($patientData->request_id == null)
                                     @else
-                                        <a href="{{ route('patientViewDocsFile', $patientData->id) }}"
+                                        <a href="{{ route('patientViewDocsFile',  Crypt::encrypt($patientData->id)) }}"
                                             type="button" class="primary-empty btn ">Documents</a>
                                     @endif
                                 </td>
@@ -54,12 +51,8 @@
                 </table>
                 {{ $data->links('pagination::bootstrap-5') }}
             </div>
-
-           
-
             <div class="accordions">
                 <!-- create a new request pop-up -->
-           
                 <div class="pop-up-accordion new-request-create">
                     <div class="popup-heading-section d-flex align-items-center justify-content-between">
                         <span>Create new Request</span>
@@ -79,7 +72,6 @@
                         <button class="primary-empty hide-popup-btn">Cancel</button>
                     </div>
                 </div>
-
                 @foreach ($data as $patientData)
                     <button class="accordion"> <i class="bi bi-clock"></i>
                         Created-Date:{{ $patientData->created_date }}</button>
@@ -91,7 +83,7 @@
                             -
                         @else
                             <div>
-                                <a href="{{ route('patientViewDocsFile', $patientData->id) }}" type="button"
+                                <a href="{{ route('patientViewDocsFile', Crypt::encrypt($patientData->id)) }}" type="button"
                                     class="primary-empty btn ">Documents</a>
                             </div>
                         @endif
@@ -99,12 +91,8 @@
                 @endforeach
                 {{ $data->links('pagination::bootstrap-5') }}
             </div>
-
             <!-- create a new request pop-up -->
-
-            
             <div class="pop-up new-request">
-                
                 <div class="popup-heading-section d-flex align-items-center justify-content-between">
                     <span>Create new Request</span>
                     <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>

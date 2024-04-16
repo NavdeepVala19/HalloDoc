@@ -16,6 +16,17 @@
 @endsection
 
 @section('content')
+    @include('loading')
+
+    {{-- Request Created Successfully --}}
+    @if (session('requestCreated'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('requestCreated') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Submit Information</h1>

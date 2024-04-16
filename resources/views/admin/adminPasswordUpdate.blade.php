@@ -58,6 +58,6 @@
 
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 <script defer src="{{ URL::asset('assets/admin/adminLogin.js') }}"></script>
+<script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 @endsection

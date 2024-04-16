@@ -77,14 +77,14 @@ $(document).ready(function () {
         "Please enter a valid room number."
     );
 
-    $.validator.addMethod(
-        "diseaseSymptoms",
-        function (value, element) {
-            const regex = value.match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
-            return this.optional(element) || regex.test(value.trim());
-        },
-        "Please enter valid symptoms."
-    );
+      $.validator.addMethod(
+          "diseaseSymptoms",
+          function (value, element) {
+              const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+              return this.optional(element) || regex.test(value.trim());
+          },
+          "Please enter valid symptoms."
+      );
 
      $.validator.addMethod(
          "relation",
@@ -128,6 +128,7 @@ $(document).ready(function () {
     );
 
     $("#patientSomeOneRequest").validate({
+        ignore: [],
         rules: {
             first_name: {
                 required: true,
@@ -194,10 +195,10 @@ $(document).ready(function () {
                     "Please enter a valid email format (e.g., user@example.com).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             date_of_birth: {
                 required: "Please enter a date of birth",
@@ -236,7 +237,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -244,8 +245,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
-
-    
-    console.log("here");
 })

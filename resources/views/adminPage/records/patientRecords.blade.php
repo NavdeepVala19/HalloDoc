@@ -50,7 +50,7 @@
             <a href="{{ route('admin.patient.records.view') }}" class="primary-empty"><i class="bi bi-chevron-left"></i>
                 Back</a>
         </div>
-        <div class="section">
+        <div class="section records-container">
             <div class="table-responsive table-view">
                 <table class="table">
                     <thead class="table-secondary">
@@ -133,18 +133,24 @@
                             <br>
                             <span><i class="bi bi-calendar3"></i> Provider: @if ($status)
                                     @if ($status->provider)
-                                        Dr. {{ $status->provider->first_name }}
+                                        Dr. {{ $status->provider->first_name }} {{ $status->provider->last_name }}
+                                    @else
+                                        -
                                     @endif
                                 @endif
                             </span>
-                            <span>
+                            <br>
+                            <span> <i class="bi bi-calendar3"></i>
                                 status : @if ($status)
                                     {{ $status->statusTable->status_type }}
                                 @endif
                             </span>
-                            <div class="text-end">
-                                {{-- <a href="{{ route('patient.records', $patient->id) }}" class="primary-empty">Explore</a> --}}
-                                </td>
+                            <br>
+                            <div class="mobile-button-section">
+                                <a href="{{ route('admin.view.case', $record->id) }}" class="patient-record-btn">View
+                                    Case</a>
+                                <a href="{{ route('admin.view.upload', $record->id) }}"
+                                    class="patient-record-btn">({{ $documentCount }})Documents</a>
                             </div>
                         </div>
                     </div>

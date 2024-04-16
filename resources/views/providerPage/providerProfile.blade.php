@@ -18,6 +18,7 @@
 
 @section('content')
     <div class="overlay"></div>
+    @include('loading')
 
     {{-- Password Reset Successfull alert message --}}
     @if (session('success'))

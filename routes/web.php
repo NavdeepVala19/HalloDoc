@@ -137,6 +137,7 @@ route::get('/adminLogin', [AdminLoginController::class, 'adminLogin'])->name('ad
 route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
 
 route::post('/adminLoggedIn', [AdminLoginController::class, 'userLogin'])->name('adminLoggedIn');
+// route::get('/testData', [AdminLoginController::class, 'testData']);
 
 
 // admin ResetPassword
@@ -230,7 +231,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::post('/download-medical-form', [ProviderController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 
     // Send Email for creating request through provider
-    Route::post('/provider/send/mail', [ProviderController::class, 'sendMail'])->name('send.mail');
+    Route::post('/provider-send-mail', [ProviderController::class, 'sendMail'])->name('provider.send.mail');
 
     // Provider Profile page (MyProfile)
     Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
@@ -385,7 +386,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     // ------------------------ Shivesh Work -----------------------------------
     route::get('/admin-providers', [AdminProviderController::class, 'readProvidersInfo'])->name('adminProvidersInfo');
 
-    route::post('/admin/provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
+    route::post('/admin-send-msg-provider/{id}', [AdminProviderController::class, 'sendMailToContactProvider'])->name('sendMailToProvider');
 
     route::get('/admin/new-provider', [AdminProviderController::class, 'newProvider'])->name('adminNewProvider');
     route::post('/admin/new-provider', [AdminProviderController::class, 'adminCreateNewProvider'])->name('adminCreateNewProvider');
@@ -401,14 +402,15 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::post('/admin-provider-updated-profile-data/{id}', [AdminProviderController::class, 'providerProfileUpdate'])->name('providerProfileUpdate');
     route::post('/admin-provider-updated-documents/{id}', [AdminProviderController::class, 'providerDocumentsUpdate'])->name('providerDocumentsUpdate');
 
-    route::post('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
+    route::get('/admin-provider/role', [AdminProviderController::class, 'fetchRolesName']);
 
     route::get('/admin-providers-details/{id}', [AdminProviderController::class, 'deleteProviderAccount'])->name('deleteProviderAccount');
 
     route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
     route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
-    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
+    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation'); 
+    route::get('/providers-map-Locations', [AdminProviderController::class, 'providerMapLocations'])->name('providerMapLocation'); 
 
     Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 
@@ -506,5 +508,5 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('adminPage.records.cancelHistory');
+    return view('email.sendAgreementLink');
 });

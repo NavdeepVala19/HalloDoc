@@ -1,11 +1,12 @@
 var iti;
 
-$(document).ready(function () {
-    // When Window loading is completed, hide the loader
-    $(window).on("load", function () {
-        $("#loading-icon").hide();
-    });
+// When Window loading is completed, hide the loader
+$(window).on("load", function () {
+    // $("#loading-icon").hide();
+    $("#loading-icon").fadeOut("slow");
+});
 
+$(document).ready(function () {
     // Toggle Theme Implementation
     // Check if a theme preference is stored in local storage
     const themePref = localStorage.getItem("theme");
@@ -66,7 +67,8 @@ $(document).ready(function () {
     if (telephone) {
         iti = window.intlTelInput(telephone, {
             initialCountry: "in",
-            strictMode: true,
+            nationalMode: true,
+            // strictMode: true,
             utilsScript:
                 "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/21.1.3/js/utils.min.js",
         });

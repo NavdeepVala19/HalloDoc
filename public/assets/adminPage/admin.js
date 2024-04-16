@@ -251,14 +251,14 @@ $(document).ready(function () {
     });
 
     // Show loading animation when send Link form is submitted
-    $("#adminSendLinkForm").submit(function () {
-        $(".loader").show();
-    });
+    // $("#adminSendLinkForm").submit(function () {
+    //     $(".loader").show();
+    // });
 
     // Show loading animation when Agreement Sent by Admin
-    $("#adminSendAgreement").submit(function () {
-        $(".loader").show();
-    });
+    // $("#adminSendAgreement").submit(function () {
+    //     $(".loader").show();
+    // });
 
     // Reset Admin Send Link form on Closing pop-up
     $(".adminSendLinkClose").click(function () {
@@ -432,9 +432,11 @@ $(document).ready(function () {
         }
     });
 
-    // ************************************************************************************
+    // *******
+    
 
-    // ***************** Fetching regions from regions table ******************
+
+    // ****** Fetching regions from regions table *****
     $.ajax({
         url: "/admin-new",
         type: "GET",
@@ -453,60 +455,7 @@ $(document).ready(function () {
             console.error(error);
         },
     });
-    // ************************************************************************************
-
-    // ***************** Filtering regions from dropdown button ******************
-
-    // $(".listing-region").on("change", function () {
-    //     var token = $('meta[name="csrf-token"]').attr("content");
-    //     // Store the selected option's ID
-    //     var tab = $(".nav-link.active").attr("id");
-    //     var words = tab.split("-");
-    //     var activeStatus = words[1];
-
-    //     var selectedId = $(this).val();
-
-    //     $.ajax({
-    //         url: "/dropdown-data",
-    //         type: "POST",
-    //         dataType: "json",
-    //         data: {
-    //             regionId: selectedId,
-    //             status: activeStatus,
-    //             _token: token,
-    //         },
-    //         success: function (data) {
-    //             $("#dropdown-data-body").html(data.html);
-    //         },
-    //         error: function (error) {
-    //             console.error(error);
-    //         },
-    //     });
-    // });
-    // ************************************************************************************
-
-    // ********************* Filtering AccountType in User Access Page ***********************
-
-    // $('#accountType').on('change', function () {
-    //     var accountType = $(this).val();
-
-    //     var token = $('meta[name="csrf-token"]').attr('content')
-
-    //     $.ajax({
-    //         url: "/user-access/filter",
-    //         method: "POST",
-    //         data: {
-    //             accountType: accountType,
-    //             "_token": token
-    //         },
-    //         success: function (response) {
-    //             $('#user-access-table').html(response.html);
-    //         },
-    //         error: function (error) {
-    //             console.error(error);
-    //         }
-    //     })
-    // })
+    // *********
 });
 
 // ************************************************************************************
@@ -556,6 +505,9 @@ $.ajax({
 });
 
 // *** End of fetching regions from regions table ***
+
+
+
 
 // **** Fetching roles from role table ****
 $.ajax({

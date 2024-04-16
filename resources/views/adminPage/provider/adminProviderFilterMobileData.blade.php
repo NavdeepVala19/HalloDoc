@@ -19,7 +19,7 @@
                 <a href="{{ route('adminEditProvider', $data->id) }}" type="button"
                     class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
             </div>
-        </div>
+        </div> 
     </div>
 @endforeach
 {{ $providersData->links('pagination::bootstrap-5') }}

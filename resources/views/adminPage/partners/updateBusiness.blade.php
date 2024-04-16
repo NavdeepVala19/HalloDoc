@@ -73,7 +73,7 @@
                 <input type="text" value="{{ $vendor->id }}" name="vendor_id" hidden>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="buisness_name"
+                        <input type="text" name="business_name"
                             value="{{ $vendor->vendor_name ? $vendor->vendor_name : old('buisness_name') }}"
                             class="form-control @error('business_name') is-invalid @enderror" id="floatingInput1"
                             placeholder="Business Name">

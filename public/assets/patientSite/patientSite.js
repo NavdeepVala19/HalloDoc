@@ -116,18 +116,45 @@ $(document).ready(function () {
 
     // ** This code is for client side validation of patientProfileEdit
 
-    $.validator.addMethod(
-        "phoneUS",
-        function (phone_number, element) {
-            return (
-                this.optional(element) ||
-                phone_number.match(
-                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
-                )
-            );
-        },
-        "Please enter a valid phone number."
-    );
+   $.validator.addMethod(
+       "lettersFirstName",
+       function (value, element) {
+           return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+       },
+       "Please enter only letters for your first name."
+   );
+
+   $.validator.addMethod(
+       "lettersLastName",
+       function (value, element) {
+           return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+       },
+       "Please enter only letters for your Last name."
+   );
+
+   $.validator.addMethod(
+       "phoneUS",
+       function (phone_number, element) {
+           return (
+               this.optional(element) ||
+               phone_number.match(
+                   /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
+               )
+           );
+       },
+       "Please enter a valid phone number."
+   );
+
+   $.validator.addMethod(
+       "emailAddress",
+       function (email, element) {
+           return (
+               this.optional(element) ||
+               email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+           );
+       },
+       "Please enter a valid email (format: alphanum@alpha.domain)."
+   );
 
     $.validator.addMethod(
         "city",
@@ -157,17 +184,19 @@ $(document).ready(function () {
         rules: {
             first_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersFirstName: true,
             },
             email: {
                 required: true,
-                email: true,
+                emailAddress: true,
             },
             last_name: {
                 required: true,
-                minlength: 2,
-                maxlength: 30,
+                minlength: 3,
+                maxlength: 15,
+                lettersLastName: true,
             },
             phone_number: {
                 required: true,
@@ -176,12 +205,12 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 100,
+                maxlength: 60,
             },
             city: {
                 required: true,
                 minlength: 2,
-                maxlength: 40,
+                maxlength: 30,
                 city: true,
             },
             state: {
@@ -236,23 +265,9 @@ $(document).ready(function () {
         },
     });
 
-    // *** This code is for showing loader when form get submitted ***
-    $("#patientRequestForm").submit(function () {
-        $(".loader").show();
-    });
-    // ***
-
-
 });
 
 
-//  ** This code is for hide loader after page load **
-$(window).on('load',function(){
-    $('#loading-icon').hide();
-})
-
-
-// ***
 
 
 
