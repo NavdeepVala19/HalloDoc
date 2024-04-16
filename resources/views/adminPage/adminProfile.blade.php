@@ -61,7 +61,6 @@
         </div>
         @endif
 
-
         <form action="{{ route('adminChangePassword', $adminProfileData->user_id) }}" method="POST" id="adminEditProfileForm1">
             @csrf
             <h3>Account Information</h3>

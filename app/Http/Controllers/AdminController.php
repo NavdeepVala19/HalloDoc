@@ -1352,7 +1352,7 @@ class AdminController extends Controller
             Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('message','message is sent');
     }
 
 

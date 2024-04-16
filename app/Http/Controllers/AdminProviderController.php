@@ -346,7 +346,7 @@ class AdminProviderController extends Controller
         //     $providerData->save();
         // }
 
-        return redirect()->route('adminProvidersInfo');
+        return redirect()->route('adminProvidersInfo')->with('message','account is created');
     }
 
     public function regionName()

@@ -141,7 +141,7 @@ class AdminDashboardController extends Controller
             'email' => $request->email,
         ]);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('admin.dashboard')->with('message','email for create account is sent');
     }
 
     public function adminProfile($id)
@@ -221,13 +221,12 @@ class AdminDashboardController extends Controller
         ];
         $updateAdminInfoInUsers = users::where('id', $id)->first()->update($updateUserData);
 
-        return back()->with('message', 'Your profile is updated successfully');
+        return back()->with('message', 'Your password is updated successfully');
     }
 
 
     public function adminInfoUpdate(Request $request, $id)
     {
-
 
         $request->validate([
             'first_name' => 'required|min:2|max:30',
@@ -259,7 +258,7 @@ class AdminDashboardController extends Controller
         $updateAdminInfoAllUsers->mobile = $request->phone_number;
         $updateAdminInfoAllUsers->save();
 
-        return back()->with('message', 'Your profile is updated successfully');
+        return back()->with('message', 'Your Administration Information is updated successfully');
     }
 
     public function adminMailInfoUpdate(Request $request, $id)
@@ -297,6 +296,6 @@ class AdminDashboardController extends Controller
         $updateAdminInfoAllUsers->save();
 
 
-        return back()->with('message', 'Your profile is updated successfully');
+        return back()->with('message', 'Your Mailing and Billing Information is updated successfully');
     }
 }

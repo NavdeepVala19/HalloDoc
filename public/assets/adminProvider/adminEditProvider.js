@@ -1181,7 +1181,7 @@ function fetchPaginatedResults(selectedId, page) {
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
     var page = $(this).text();
-    if(page == '>'){
+    if(page == '›'){
         var page = $("li.active span").text();
         console.log(page);
     }

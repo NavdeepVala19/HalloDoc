@@ -88,7 +88,7 @@ class AdminLoginController extends Controller
             $message->subject('Reset Password');
         });
 
-        return back()->with('message', 'We have e-mailed your password reset link!');
+        return redirect()->route('adminLogin')->with('message', 'We have e-mailed your password reset link!');
     }
 
     // this code is to update/reset password

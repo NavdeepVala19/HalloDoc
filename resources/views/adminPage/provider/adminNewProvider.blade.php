@@ -55,7 +55,6 @@
             <form action="{{ route('adminCreateNewProvider') }}" method="POST" enctype="multipart/form-data"
                 id="createAdminProvider">
                 @csrf
-
                 <h3>Account Information</h3>
 
                 <div class="grid-3">
@@ -84,14 +83,10 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                 </div>
 
-
                 <h3>Administrator Information</h3>
-
                 <div class="grid-2">
-
                     <div class="form-floating ">
                         <input type="text" name="first_name"
                             class="form-control @error('first_name') is-invalid @enderror" id="floatingInput"
@@ -148,7 +143,6 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
 
                     <div class="d-flex gap-4 flex-wrap">
                         @foreach ($regions as $region)
@@ -211,7 +205,6 @@
                             </input>
                         </div>
                     </div>
-
                     <div class="form-floating ">
                         <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror"
                             id="floatingInput" placeholder="zip" value="{{ old('zip') }}">
@@ -220,7 +213,6 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <div style="height: 58px;">
                         <input type="tel" name="phone_number_alt"
                             class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="telephone"
@@ -229,12 +221,9 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
-
                 </div>
                 <h3>Provider Profile</h3>
                 <div class="grid-2">
-
                     <div class="form-floating ">
                         <input type="text" name="business_name"
                             class="form-control @error('business_name') is-invalid @enderror" id="floatingInput"
@@ -244,7 +233,6 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <div class="form-floating ">
                         <input type="url" name="business_website"
                             class="form-control @error('business_website') is-invalid @enderror" id="floatingInput"
@@ -254,7 +242,6 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                 </div>
                 <div class="custom-file-input mb-4">
                     <input type="file" name="provider_photo" id="file-upload-request" hidden>
