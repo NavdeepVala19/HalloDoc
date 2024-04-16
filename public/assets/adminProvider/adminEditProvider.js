@@ -158,7 +158,10 @@ $(document).ready(function () {
     });
     // ********
 
+
+
     // **** Fetching role from role table ****
+    
     $.ajax({
         url: "/admin-provider/role",
         type: "POST",
@@ -1181,12 +1184,16 @@ function fetchPaginatedResults(selectedId, page) {
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
     var page = $(this).text();
-    if(page == '›'){
-        var page = $("li.active span").text();
+    // console.log(page);
+
+    if (page === "›") {
+        console.log("here");
+        var page = $(".pagination li.active span").text();
         console.log(page);
     }
+
     var selectedId = $("#listing-region-admin-provider").val();
-    fetchPaginatedResults(selectedId, page);
+    fetchPaginatedResult(selectedId, page);
 });
 
 $("#listing-region-admin-provider").on("change", function (event) {
