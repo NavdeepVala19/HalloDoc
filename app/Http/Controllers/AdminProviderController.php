@@ -64,9 +64,7 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
-        try {
-            $id = Crypt::decrypt($id);
-      
+     
             $request->validate([
                 'contact_msg' => 'required|min:2|max:100',
             ]);
@@ -182,10 +180,7 @@ class AdminProviderController extends Controller
                 );
             }
             return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
-        } 
-        catch (\Throwable $th) {
-            return view('errors.404');
-        }
+             
     }
 
     public function stopNotifications(Request $request)
@@ -204,6 +199,7 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
+     
         $request->validate([
             'user_name' => 'required|alpha|min:3|max:40',
             'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
@@ -220,8 +216,8 @@ class AdminProviderController extends Controller
             'phone_number_alt' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'provider_photo' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'business_website' => 'nullable|url|max:40|min:10',
-            'admin_notes' => 'nullable|min:5|max:100|',
+            'business_website' => 'required|url|max:40|min:10',
+            'admin_notes' => 'required|min:5|max:100|',
             'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'background_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
@@ -239,7 +235,7 @@ class AdminProviderController extends Controller
 
         // store data in physician region
         $providerData = new Provider();
-        $physicianRegion = new PhysicianRegion();
+
 
         // store data of providers in providers table
         $providerData->user_id = $userProvider->id;
@@ -262,13 +258,11 @@ class AdminProviderController extends Controller
         $providerData->role_id = $request->role;
 
         $providerData->save();
-
+        $physicianRegion = new PhysicianRegion();
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([
-
                 'provider_id' => $providerData->id,
                 'region_id' => $region,
-
             ]);
         }
 

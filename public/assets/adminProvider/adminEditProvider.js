@@ -24,7 +24,7 @@ $(document).ready(function () {
     $("#provider-credentials-edit-btn").click(function () {
         $(".provider-username-field").removeAttr("disabled");
         $("#provider-status").removeAttr("disabled");
-        $("#provider-role").removeAttr("disabled");
+        $("#provider_role").removeAttr("disabled");
 
         $("#providerAccSaveBtn").show();
         $("#providerAccCancelBtn").show();
@@ -35,7 +35,7 @@ $(document).ready(function () {
     $("#providerAccCancelBtn").click(function () {
         $(".provider-username-field").attr("disabled");
         $("#provider-status").attr("disabled");
-        $("#provider-role").attr("disabled");
+        $("#provider_role").attr("disabled");
 
         $("#providerAccSaveBtn").hide();
         $("#providerAccCancelBtn").hide();
@@ -167,12 +167,12 @@ $(document).ready(function () {
         type: "GET",
         success: function (data) {
             data.forEach(function (role) {
-                $("#provider-role").append(
+                $("#provider_role").append(
                     '<option value="' +
-                    role.id +
-                    '" class="role_name" >' +
-                    role.name +
-                    "</option>"
+                        role.id +
+                        '" class="role_name" >' +
+                        role.name +
+                        "</option>"
                 );
             });
         },
@@ -366,7 +366,6 @@ $(document).ready(function () {
             );
         });
     
-    
 
     // client side validation in adminProviderCreateForm
 
@@ -390,6 +389,7 @@ $(document).ready(function () {
         },
         "Please enter a valid city name."
     );
+
 
     $.validator.addMethod(
         "businessname",
@@ -468,6 +468,36 @@ $(document).ready(function () {
     );
 
     $.validator.addMethod(
+        "roleCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a role."
+    );
+
+    $.validator.addMethod(
+        "stateCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a state."
+    );
+
+    $.validator.addMethod(
+        "atLeastOneChecked",
+        function (value, element, options) {
+            // Target the checkbox group using the provided name or selector
+            const checkboxGroup = $(
+                options.group || `[name="${element.name}"]`
+            );
+
+            // Check if at least one checkbox is checked within the group
+            return checkboxGroup.filter(":checked").length > 0;
+        },
+        "Please select at least one region."
+    );
+
+    $.validator.addMethod(
         "customFile",
         function (value, element, param) {
             // Check if a file is selected
@@ -509,12 +539,20 @@ $(document).ready(function () {
     );
 
     $("#createAdminProvider").validate({
+        ignore: [],
         rules: {
+            role: {
+                required: true,
+                roleCheck: true,
+            },
             user_name: {
                 required: true,
                 minlength: 3,
-                maxlength: 60,
+                maxlength: 40,
                 lettersUserName: true,
+            },
+            "region_id[]": {
+                atLeastOneChecked: true,
             },
             password: {
                 required: true,
@@ -542,6 +580,10 @@ $(document).ready(function () {
                 required: true,
                 phoneUS: true,
             },
+            phone_number_alt: {
+                required: true,
+                phoneUS: true,
+            },
             medical_license: {
                 required: true,
                 minlength: 3,
@@ -556,7 +598,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 30,
-                address1: true
+                address1: true,
             },
             address2: {
                 required: true,
@@ -569,6 +611,10 @@ $(document).ready(function () {
                 minlength: 2,
                 maxlength: 30,
                 city: true,
+            },
+            select_state: {
+                required: true,
+                stateCheck: true,
             },
             zip: {
                 required: true,
@@ -588,12 +634,12 @@ $(document).ready(function () {
                 businessname: true,
             },
             business_website: {
-                required: false,
+                required: true,
                 minlength: 10,
                 maxlength: 40,
             },
             admin_notes: {
-                required: false,
+                required: true,
                 minlength: 5,
                 maxlength: 100,
             },
@@ -614,6 +660,9 @@ $(document).ready(function () {
             },
         },
         message: {
+            role: {
+                required: "Please select role",
+            },
             user_name: {
                 required: "Please enter a valid username",
             },
@@ -684,8 +733,8 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            error.addClass("text-danger");
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -696,58 +745,7 @@ $(document).ready(function () {
     });
 });
 
-// $(document).ready(function () {
-//     const fetch_data = (regions, page) => {
-//         $.ajax({
-//             url: "/admin/providers/regionsFiltering?page="+page,
-//             type: "POST",
-//             success: function (data) {
-//                 $('#adminProviderData').html(data.html)
-//             },
-//             error: function (error) {
-//                 console.error(error);
-//             }
-//         })
-//     }
 
-//     $('#listing-region-admin-provider').on('change',function (e) {
-//         e.preventDefault();
-//         var token = $('meta[name="csrf-token"]').attr('content')
-//         var selectedId = $(this).val();
-//         var page = $('#hidden_page').val();
-//         fetch_data(page, regions);
-//     });
-
-//     $('#listing-region-admin-provider').on('click', '.pager a', function (event) {
-//         event.preventDefault();
-//         var token = $('meta[name="csrf-token"]').attr('content')
-//         var selectedId = $(this).val();
-//         var page = $(this).attr('href').split('page=')[1];
-//         $('#hidden_page').val(page);
-//         fetch_data(page, regions);
-//     });
-// })
-
-// $('#listing-region-admin-provider').on('change', function () {
-//     var token = $('meta[name="csrf-token"]').attr('content')
-//     var selectedId = $(this).val();
-
-//     $.ajax({
-//         url: "/admin/providers/regionsFiltering",
-//         type: "POST",
-//         dataType: 'json',
-//         data: {
-//             regionId: selectedId,
-//             "_token": token
-//         },
-//         success: function (data) {
-//             $('#adminProviderData').html(data.html)
-//         },
-//         error: function (error) {
-//             console.error(error);
-//         }
-//     });
-// })
 
 $(document).ready(function () {
     $.validator.addMethod(
@@ -766,6 +764,23 @@ $(document).ready(function () {
         "Please enter a valid password"
     );
 
+      $.validator.addMethod(
+          "roleCheck",
+          function (value, element) {
+              return value !== "";
+          },
+          "Please select a role."
+      );
+
+    
+      $.validator.addMethod(
+          "statusCheck",
+          function (value, element) {
+              return value !== "";
+          },
+          "Please select a status."
+      );
+
     $("#adminEditProviderForm1").validate({
         rules: {
             user_name: {
@@ -779,6 +794,12 @@ $(document).ready(function () {
                 minlength: 8,
                 maxlength: 20,
                 password: true,
+            },
+            status_type: {
+                statusCheck: true,
+            },
+            role: {
+                roleCheck:true,
             },
         },
         message: {
@@ -949,6 +970,14 @@ $(document).ready(function () {
         "Please enter a valid address1."
     );
 
+    $.validator.addMethod(
+        "stateCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a state."
+    );
+
     $("#adminEditProviderForm3").validate({
         rules: {
             address1: {
@@ -978,6 +1007,7 @@ $(document).ready(function () {
             },
             select_state: {
                 required: true,
+                stateCheck:true,
             },
         },
         message: {
@@ -1055,6 +1085,7 @@ $(document).ready(function () {
     );
 
     $("#adminEditProviderForm4").validate({
+        ignore: [],
         rules: {
             business_name: {
                 required: true,
@@ -1104,6 +1135,7 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+    
     $.validator.addMethod(
         "customFile",
         function (value, element, param) {
@@ -1139,6 +1171,7 @@ $(document).ready(function () {
 
 
     $("#adminEditProviderForm5").validate({
+        ignore: [],
         rules: {
             independent_contractor: {
                 customFile: true,
@@ -1321,5 +1354,4 @@ $("#listing-region-admin-provider").on("change", function (event) {
     var selectedId = $(this).val();
     fetchPaginatedResultsMobileView(selectedId, 1);
 });
-
 

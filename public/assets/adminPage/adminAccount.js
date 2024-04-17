@@ -77,8 +77,58 @@ $(document).ready(function () {
         "Please enter only letters for your Last name."
     );
 
+     $.validator.addMethod(
+         "roleCheck",
+         function (value, element) {
+             return value !== "";
+         },
+         "Please select a role."
+     );
+
+     $.validator.addMethod(
+         "stateCheck",
+         function (value, element) {
+             return value !== "";
+         },
+         "Please select a state."
+     );
+
+     $.validator.addMethod(
+         "atLeastOneChecked",
+         function (value, element, options) {
+             // Target the checkbox group using the provided name or selector
+             const checkboxGroup = $(
+                 options.group || `[name="${element.name}"]`
+             );
+
+             // Check if at least one checkbox is checked within the group
+             return checkboxGroup.filter(":checked").length > 0;
+         },
+         "Please select at least one region."
+     );
+    
+        $.validator.addMethod(
+            "address2",
+            function (value, element) {
+                return value.match(/^[a-zA-Z ,_-]+?$/);
+            },
+            "Please enter a valid address2."
+        );
+
+        $.validator.addMethod(
+            "address1",
+            function (value, element) {
+                return value.match(/^[a-zA-Z0-9-, ]+$/);
+            },
+            "Please enter a valid address1."
+        );
+
     $("#createAdminAccountForm").validate({
         rules: {
+            role: {
+                required: true,
+                roleCheck: true,
+            },
             user_name: {
                 required: true,
                 minlength: 3,
@@ -137,6 +187,10 @@ $(document).ready(function () {
                 maxlength: 30,
                 city: true,
             },
+            state: {
+                stateCheck: true,
+                required: true,
+            },
             zip: {
                 required: true,
                 zipcode: true,
@@ -147,8 +201,15 @@ $(document).ready(function () {
             role: {
                 required: true,
             },
+            "region_id[]": {
+                atLeastOneChecked: true,
+                required: true,
+            },
         },
         messages: {
+            role: {
+                required: "Please select the role",
+            },
             user_name: {
                 required: "Please enter a username",
             },
@@ -166,7 +227,8 @@ $(document).ready(function () {
                     "Please enter a valid email format (e.g., user@example.com).",
             },
             confirm_email: {
-                required:"Please enter a valid email format (e.g., user@example.com).",
+                required:
+                    "Please enter a valid email format (e.g., user@example.com).",
             },
             phone_number: {
                 required: "Please enter a mobile number",
@@ -179,14 +241,14 @@ $(document).ready(function () {
             address1: {
                 required: "Please enter a address1",
             },
-            address2: {
-                required: "Please enter a address1",
-            },
             city: {
                 required: "Please enter a city",
             },
             address2: {
                 required: "Please enter a address2",
+            },
+            state: {
+                required: "Please select state",
             },
             zipcode: {
                 required: "Please enter a zipcode",
@@ -198,7 +260,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

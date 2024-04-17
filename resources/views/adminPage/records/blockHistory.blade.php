@@ -5,44 +5,44 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/records.css') }}">
 @endsection
 @section('username')
-    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+{{ !empty(Auth::user()) ? Auth::user()->username : '' }}
 @endsection
 @section('nav-links')
-    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="#">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Access
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
-        </ul>
-    </div>
-    <div class="dropdown record-navigation">
-        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
+<a href="{{ route('admin.dashboard') }}">Dashboard</a>
+<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Providers
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+        <li><a class="dropdown-item" href="#">Invoicing</a></li>
+    </ul>
+</div>
+<a href="{{ route('admin.partners') }}">Partners</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Access
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+    </ul>
+</div>
+<div class="dropdown record-navigation">
+    <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Records
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+    </ul>
+</div>
 @endsection
 
 @section('content')
@@ -55,7 +55,7 @@
             {{ Session::get('message') }}
         </div>
         @endif
-        
+
         <form action="{{route('admin.block.history.search')}}" method="POST">
             @csrf
             <div class="grid-4">
@@ -93,6 +93,11 @@
                     <td>Action</td>
                 </thead>
                 <tbody>
+                    @if ($blockData->isEmpty())
+                    <tr>
+                        <td colspan="100" class="no-record">No Data Found</td>
+                    </tr>
+                    @endif
                     @foreach ($blockData as $data)
                     <tr>
                         <td>{{$data->patient_name}}</td>
@@ -113,6 +118,12 @@
 
 
         <div class="mobile-listing">
+            @if ($blockData->isEmpty())
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="no-record">No Data Found</div>
+            </div>
+
+            @endif
             @foreach ($blockData as $data)
             <div class="mobile-list">
                 <div class="main-section">

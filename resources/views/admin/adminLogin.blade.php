@@ -29,21 +29,20 @@
         </div>
         @endif
 
-
         <div class="form">
             <form action="{{ route('adminLoggedIn') }}" method="post" id="adminLogin">
                 @csrf
 
                 <input type="hidden" name="latitude" id="lat">
                 <input type="hidden" name="longitude" id="lng">
-                <div class="mb-4 email adminLogin">
+                <div class="mb-4 email" id="adminLogin">
                     <i class="bi bi-person-circle person-logo"></i>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="mb-3 password adminLogin">
+                <div class="mb-3 password" id="adminLogin">
                     <i class="bi bi-eye-fill person-eye"></i>
                     <input type="password" class="form-control @error('password') is-invalid @enderror" id="exampleInputPassword1" placeholder="password" name="password">
                     @error('password')

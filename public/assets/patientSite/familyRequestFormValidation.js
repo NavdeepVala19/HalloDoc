@@ -76,7 +76,7 @@ $(document).ready(function () {
      $.validator.addMethod(
          "diseaseSymptoms",
          function (value, element) {
-             const regex = value.match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
+             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
              return this.optional(element) || regex.test(value.trim());
          },
          "Please enter valid symptoms."
