@@ -325,6 +325,43 @@ class AdminController extends Controller
         return view('adminPage.pages.viewCase', compact('data'));
     }
 
+    public function editCase(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'dob' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required',
+            'patient_notes' => 'required',
+        ]);
+
+        $firstName = $request->first_name;
+        $lastName = $request->last_name;
+        $dateOfBirth = $request->dob;
+        $phoneNumber = $request->phone_number;
+        $email = $request->email;
+        $patientNotes = $request->patient_notes;
+
+        RequestTable::where('id', $request->requestId)->where('request_type_id', 1)->update([
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'phone_number' => $phoneNumber,
+            'email' => $email,
+        ]);
+
+        request_Client::where('request_id', $request->requestId)->update([
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'phone_number' => $phoneNumber,
+            'email' => $email,
+            'date_of_birth' => $dateOfBirth,
+            'notes' => $patientNotes
+        ]);
+
+        return redirect()->back()->with('caseEdited', "Information updated successfully!");
+    }
+
     // View Notes
     public function viewNote($id)
     {
@@ -1203,13 +1240,18 @@ class AdminController extends Controller
     }
     public function patientRecordsView($id = null)
     {
+        $email = request_Client::where('id', $id)->pluck('email')->first();
+        $data = request_Client::where('email', $email)->get();
         $requestId = request_Client::where('id', $id)->first()->request_id;
         $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
         $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
-        $email = request_Client::where('id', $id)->pluck('email')->first();
-        $data = request_Client::where('email', $email)->get();
         $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
-        return view('adminPage.records.patientRecords', compact('data', 'status', 'documentCount', 'isFinalize'));
+        $concludeDate = null;
+        if (RequestStatus::where('request_id', $requestId)->where('status', 6)->first()) {
+            $concludeDate = RequestStatus::where('request_id', $requestId)->where('status', 6)->first()->created_at;
+        }
+        $requestData = RequestTable::where('id', $requestId)->first();
+        return view('adminPage.records.patientRecords', compact('data', 'requestData', 'status', 'documentCount', 'isFinalize', 'concludeDate'));
     }
     public function downloadEncounterForm($requestId)
     {

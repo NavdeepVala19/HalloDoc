@@ -68,6 +68,16 @@ $(document).ready(function () {
         "Please enter a date between {0} and {1}."
     );
 
+    // Only alphabets and spaces allowed
+    $.validator.addMethod(
+        "onlyAlphabets",
+        function (value, element) {
+            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Only alpabets and spaces are allowed."
+    );
+
     // ------------- Common Rules and Message functions repeated uses: ------------------
     // First Name and Last Name Rules and messages
     function nameRules(fieldName) {
@@ -125,6 +135,7 @@ $(document).ready(function () {
             required: true,
             minlength: 5,
             maxlength: 200,
+            onlyAlphabets: true,
         };
     }
     function noteMessages(fieldName) {
@@ -132,6 +143,7 @@ $(document).ready(function () {
             required: `${fieldName} field is required`,
             minlength: `${fieldName} field should have atleast 5 characters`,
             maxlength: `${fieldName} field should not have more than 200 characters`,
+            onlyAlphabets: "Only alphabets are allowed",
         };
     }
 
@@ -1195,6 +1207,60 @@ $(document).ready(function () {
             "menu_checkbox[]": {
                 required: "Select atleast one role to assign",
             },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            errorDiv.append(error);
+            element.closest(".form-floating, .menu-section").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit(); // Submit the form
+        },
+    });
+
+    $("#adminEditCaseForm").validate({
+        rules: {
+            patient_notes: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+                onlyAlphabets: true,
+            },
+            first_name: nameRules(),
+            last_name: nameRules(),
+            dob: {
+                required: true,
+                dateRange: [new Date("1900-01-01").toDateString()],
+            },
+            phone_number: {
+                required: true,
+                phoneIndia: true,
+            },
+            email: emailRules(),
+        },
+        messages: {
+            patient_notes: {
+                minlength: "Minimum 5 characters are required",
+                maxlength: "Maximum 200 characters are allowed",
+                onlyAlphabets: "Only alphabets are allowed",
+            },
+            first_name: nameMessages(),
+            last_name: nameMessages(),
+            dob: {
+                required: "Date of birth is required",
+                dateRange:
+                    "Date of Birth should be less than or equal to Today's Date & should be greater than 1900-01-01",
+            },
+            phone_number: {
+                required: "Phone number field can't be empty",
+            },
+            email: emailMessages(),
         },
         errorPlacement: function (error, element) {
             let errorDiv = $("<div class='text-danger'></div>");

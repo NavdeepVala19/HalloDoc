@@ -228,6 +228,14 @@ $(document).ready(function () {
         $(".request_id").val($(this).data("id"));
     });
 
+    $(".edit-case-btn").click(function () {
+        $(
+            ".firstName, .lastName, .dob, .phoneNumber, .email, .patientNotes"
+        ).removeAttr("disabled");
+        $(".edit-case-btn").hide();
+        $(".save-case-btn").show();
+    });
+
     $(".edit-btn").click(function () {
         $(".phone").removeAttr("disabled");
         $(".email").removeAttr("disabled");
@@ -249,16 +257,6 @@ $(document).ready(function () {
         $(".new-buttons").hide();
         $(".default-buttons").show();
     });
-
-    // Show loading animation when send Link form is submitted
-    // $("#adminSendLinkForm").submit(function () {
-    //     $(".loader").show();
-    // });
-
-    // Show loading animation when Agreement Sent by Admin
-    // $("#adminSendAgreement").submit(function () {
-    //     $(".loader").show();
-    // });
 
     // Reset Admin Send Link form on Closing pop-up
     $(".adminSendLinkClose").click(function () {
@@ -433,8 +431,6 @@ $(document).ready(function () {
     });
 
     // *******
-    
-
 
     // ****** Fetching regions from regions table *****
     $.ajax({
@@ -505,9 +501,6 @@ $.ajax({
 });
 
 // *** End of fetching regions from regions table ***
-
-
-
 
 // **** Fetching roles from role table ****
 $.ajax({

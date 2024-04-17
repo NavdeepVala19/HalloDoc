@@ -392,7 +392,15 @@ td {
 .confirmationNumber {
     color: var(--blue);
 }
-
+/* ******* VIEW CASE ******* */
+.edit-case-btn,
+.save-case-btn {
+    height: 100% !important;
+    width: 120px !important;
+}
+.save-case-btn {
+    display: none;
+}
 /******************************* All Pop-ups Styling**************************************/
 /******************************* Encounter - Active listing Page **************************************/
 .encounter {

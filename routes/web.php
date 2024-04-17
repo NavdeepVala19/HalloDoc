@@ -297,7 +297,9 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::post('block-case', [AdminController::class, 'blockCase'])->name('admin.block.case');
 
     // Admin View Case
-    Route::get('admin/view/case/{id?}', [AdminController::class, 'viewCase'])->name('admin.view.case');
+    Route::get('admin/view/case/{id}', [AdminController::class, 'viewCase'])->name('admin.view.case');
+    // Admin Edit Case
+    Route::post('admin/view/case/edit', [AdminController::class, 'editCase'])->name('admin.edit.case');
 
     // Admin View Notes
     Route::get('admin/view/notes/{id}', [AdminController::class, 'viewNote'])->name('admin.view.note');
@@ -409,8 +411,8 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::post('/admin-providers/regionsFiltering', [AdminProviderController::class, 'filterPhysicianThroughRegions']);
     route::post('/admin-providers-regionsFiltering-mobile', [AdminProviderController::class, 'filterPhysicianThroughRegionsMobileView']);
 
-    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation'); 
-    route::get('/providers-map-Locations', [AdminProviderController::class, 'providerMapLocations'])->name('providerMapLocation'); 
+    route::get('/providers-Locations', [AdminProviderController::class, 'providerLocations'])->name('providerLocation');
+    route::get('/providers-map-Locations', [AdminProviderController::class, 'providerMapLocations'])->name('providerMapLocation');
 
     Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
 
