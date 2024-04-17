@@ -12,7 +12,7 @@
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
     <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
+    <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
@@ -59,9 +59,19 @@
         </div>
     @endif
 
+    {{-- Case Edited Successfully --}}
+    @if (session('caseEdited'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseEdited') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     {{-- Wrong Request on url (case doesn't exists) --}}
     @include('alertMessages.wrongCaseRequestError')
-    
+
     {{-- Assign Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
     to providers based on patient’s region using this pop-up. --}}
@@ -95,7 +105,7 @@
 
 
         <div class="section">
-            <form action="" method="POST">
+            <form action="{{ route('admin.edit.case') }}" method="POST" id="adminEditCaseForm">
                 @csrf
                 <h3>Patient Information</h3>
                 <div>
@@ -103,45 +113,55 @@
                     <h3 class="confirmationNumber">{{ $data->confirmation_no }}</h3>
                 </div>
 
+                <input type="hidden" name="requestId" value="{{ $data->id }}">
+
                 <div class="form-floating h-25">
-                    <textarea class="form-control " placeholder="injury" id="floatingTextarea2" disabled>{{ $data->requestClient->notes }}</textarea>
+                    <textarea name="patient_notes" class="form-control patientNotes" placeholder="injury" id="floatingTextarea2" disabled>{{ $data->requestClient->notes }}</textarea>
                     <label for="floatingTextarea2">Patient Notes</label>
                 </div>
 
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="first_name" class="form-control" id="floatingInput"
+                        <input type="text" name="first_name" class="form-control firstName" id="floatingInput1"
                             placeholder="First Name" value="{{ $data->requestClient->first_name }}" disabled>
-                        <label for="floatingInput">First Name</label>
+                        <label for="floatingInput1">First Name</label>
                         @error('first_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="last_name" value="{{ $data->requestClient->last_name }}"
-                            class="form-control" id="floatingInput" placeholder="Last Name" disabled>
-                        <label for="floatingInput">Last Name</label>
+                            class="form-control lastName" id="floatingInput2" placeholder="Last Name" disabled>
+                        <label for="floatingInput2">Last Name</label>
                         @error('last_name')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" class="form-control" value="{{ $data->requestClient->date_of_birth }}"
-                            id="floatingInput" placeholder="date of birth" disabled>
-                        <label for="floatingInput">Date Of Birth</label>
+                        <input type="date" name="dob" class="form-control dob"
+                            value="{{ $data->requestClient->date_of_birth }}" id="floatingInput3"
+                            placeholder="date of birth" disabled>
+                        <label for="floatingInput3">Date Of Birth</label>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                            class="form-control phone" id="telephone" disabled>
-                        @error('phone_number')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                        <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
+                    <div class="form-floating">
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
+                                class="form-control phone phoneNumber" id="telephone" disabled>
+                            @error('phone_number')
+                                <div class="alert text-danger">{{ $message }}</div>
+                            @enderror
+                            <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
+                        </div>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" class="form-control" value="{{ $data->requestClient->email }}"
-                            id="floatingInput" placeholder="name@example.com" disabled>
-                        <label for="floatingInput">Email</label>
+                        <input type="email" name="email" class="form-control email"
+                            value="{{ $data->requestClient->email }}" id="floatingInput4" placeholder="name@example.com"
+                            disabled>
+                        <label for="floatingInput4">Email</label>
+                    </div>
+                    <div>
+                        <button type="button" class="primary-empty edit-case-btn">Edit</button>
+                        <button type="submit" class="primary-fill save-case-btn">Save</button>
                     </div>
                 </div>
                 <h3>Location Information</h3>
@@ -151,7 +171,7 @@
                             id="floatingInput" placeholder="region" disabled>
                         <label for="floatingInput">Region</label>
                         @error('region')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="d-flex align-items-center gap-2 ">

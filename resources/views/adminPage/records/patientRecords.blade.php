@@ -67,17 +67,28 @@
                         @foreach ($data as $record)
                             @if (!empty($record))
                                 <tr>
-                                    <td>{{ $record->first_name }}</td>
-                                    <td>{{ $record->created_at }}</td>
+                                    <td>{{ $record->first_name }} {{ $record->last_name }}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($record->created_at)->format('d/m/Y') }}
+                                    </td>
                                     <td>{{ $record->request->confirmation_no }}</td>
                                     <td>
-                                        @if ($status)
-                                            @if ($status->provider)
-                                                Dr. {{ $status->provider->first_name }}
+                                        @if ($requestData)
+                                            @if ($requestData->provider)
+                                                Dr. {{ $requestData->provider->first_name }}
+                                                {{ $requestData->provider->last_name }}
+                                            @else
+                                                -
                                             @endif
                                         @endif
                                     </td>
-                                    <td>Concluded date</td>
+                                    <td>
+                                        @if ($concludeDate)
+                                            {{ \Carbon\Carbon::parse($concludeDate)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($status)
                                             {{ $status->statusTable->status_type }}

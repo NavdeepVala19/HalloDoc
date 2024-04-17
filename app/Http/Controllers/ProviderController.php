@@ -517,7 +517,9 @@ class ProviderController extends Controller
     public function acceptCase($id = null)
     {
         $providerId = Provider::where('user_id', Auth::user()->id)->first();
-        RequestTable::where('id', $id)->update(['status' => 3]);
+        RequestTable::where('id', $id)->update([
+            'status' => 3,
+        ]);
         RequestStatus::create([
             'request_id' => $id,
             'physician_id' => $providerId->id,

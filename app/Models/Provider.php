@@ -12,7 +12,7 @@ class Provider extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
     protected $table = 'provider';
 
     protected $fillable = [
@@ -25,19 +25,13 @@ class Provider extends Model
         return $this->belongsTo(users::class, 'user_id');
     }
 
-    public function role(){
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 
-    public function Regions(){
-        return $this->hasOne(Regions::class,'id','regions_id');
+    public function Regions()
+    {
+        return $this->hasOne(Regions::class, 'id', 'regions_id');
     }
-
-
-    // Mutator
-
-    public function getIdAttribute($value){
-       return Crypt::encrypt($value); 
-    }
-
 }
