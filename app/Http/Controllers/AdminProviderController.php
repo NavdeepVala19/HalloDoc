@@ -27,7 +27,7 @@ class AdminProviderController extends Controller
 
     public function readProvidersInfo()
     {
-        $providersData = Provider::orderBy('created_at', 'asc')->paginate(10);
+        $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         return view('/adminPage/provider/adminProvider', compact('providersData'));
     }
 

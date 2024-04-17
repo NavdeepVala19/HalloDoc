@@ -28,7 +28,6 @@ $(document).ready(function () {
         "Please enter a valid state name."
     );
 
- 
     $.validator.addMethod(
         "zipcode",
         function (value, element) {
@@ -77,51 +76,82 @@ $(document).ready(function () {
         "Please enter only letters for your Last name."
     );
 
-     $.validator.addMethod(
-         "roleCheck",
-         function (value, element) {
-             return value !== "";
-         },
-         "Please select a role."
-     );
+    $.validator.addMethod(
+        "roleCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a role."
+    );
 
-     $.validator.addMethod(
-         "stateCheck",
-         function (value, element) {
-             return value !== "";
-         },
-         "Please select a state."
-     );
+    $.validator.addMethod(
+        "stateCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a state."
+    );
 
-     $.validator.addMethod(
-         "atLeastOneChecked",
-         function (value, element, options) {
-             // Target the checkbox group using the provided name or selector
-             const checkboxGroup = $(
-                 options.group || `[name="${element.name}"]`
-             );
+    $.validator.addMethod(
+        "atLeastOneChecked",
+        function (value, element, options) {
+            // Target the checkbox group using the provided name or selector
+            const checkboxGroup = $(
+                options.group || `[name="${element.name}"]`
+            );
 
-             // Check if at least one checkbox is checked within the group
-             return checkboxGroup.filter(":checked").length > 0;
-         },
-         "Please select at least one region."
-     );
-    
-        $.validator.addMethod(
-            "address2",
-            function (value, element) {
-                return value.match(/^[a-zA-Z ,_-]+?$/);
-            },
-            "Please enter a valid address2."
-        );
+            // Check if at least one checkbox is checked within the group
+            return checkboxGroup.filter(":checked").length > 0;
+        },
+        "Please select at least one region."
+    );
 
-        $.validator.addMethod(
-            "address1",
-            function (value, element) {
-                return value.match(/^[a-zA-Z0-9-, ]+$/);
-            },
-            "Please enter a valid address1."
-        );
+    $.validator.addMethod(
+        "address2",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid address2."
+    );
+
+    $.validator.addMethod(
+        "address1",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9-, ]+$/);
+        },
+        "Please enter a valid address1."
+    );
+
+       $.validator.addMethod(
+           "phoneIndia",
+           function (value, element) {
+               return this.optional(element) || iti.isValidNumber();
+           },
+           "Please enter a valid phone number."
+       );
+ 
+
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(); // Use current date as maximum date
+
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
 
     $("#createAdminAccountForm").validate({
         rules: {
@@ -155,6 +185,8 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             confirm_email: {
@@ -163,11 +195,11 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             alt_mobile: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             address1: {
                 required: true,
@@ -201,6 +233,14 @@ $(document).ready(function () {
             role: {
                 required: true,
             },
+            date_of_birth: {
+                required: true,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
+            },
+
             "region_id[]": {
                 atLeastOneChecked: true,
                 required: true,
@@ -232,11 +272,11 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                phoneIndia: "Please enter valid phone number format....",
             },
             alt_mobile: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                phoneIndia: "Please enter valid phone number format....",
             },
             address1: {
                 required: "Please enter a address1",
@@ -259,7 +299,7 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
+            error.addClass("text-danger");
             element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {

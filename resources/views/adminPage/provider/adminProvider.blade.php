@@ -94,7 +94,7 @@
                                     id="checkbox_{{ $data->id }}">
                                 </td>
                                 <td class="data"> {{ $data->first_name }}</td>
-                                <td class="data"> Physician</td>
+                                <td class="data"> {{$data->role->name}}</td>
                                 <td class="data"> Available</td>
                                 <td class="data"> {{ $data->status }} </td>
                                 <td class="data gap-1">

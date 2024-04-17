@@ -33,6 +33,7 @@ $(document).ready(function () {
     );
 
     $("#patientUploadDocs").validate({
+        ignore:[],
         rules: {           
             document: {
                 required:true,

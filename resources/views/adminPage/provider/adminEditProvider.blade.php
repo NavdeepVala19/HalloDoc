@@ -173,7 +173,6 @@
                 </div>
             </form>
 
-
             <h3>Mailing & Billing Information</h3>
 
             <form action="{{ route('providerMailInfoUpdate', $getProviderData->id) }}" method="post" id="adminEditProviderForm3">
@@ -256,7 +255,7 @@
                     </div>
                 </div>
                 <div class="custom-file-input mb-4">
-                    <input type="file" name="provider_photo" id="file-upload-request" hidden class="@error('provider_photo') is-invalid @enderror">
+                    <input type="file" name="provider_photo" id="file-upload-request" hidden class="@error('provider_photo') is-invalid @enderror" disabled>
                     <label for="file-upload-request" class="upload-label">
                         <div class="p-2 file-label">
                             Select File

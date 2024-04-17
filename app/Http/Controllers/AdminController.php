@@ -1324,7 +1324,7 @@ class AdminController extends Controller
                 return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
             } else if ($UserAccessRoleName->first()->name == 'physician') {
                 $getProviderId = Provider::where('user_id', $id);
-                return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
+                return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
             }
         } catch (\Throwable $th) {
             return view('errors.404');;
@@ -1466,8 +1466,8 @@ class AdminController extends Controller
             ]);
         }
 
-        // $data = AdminRegion::where('admin_id', $storeAdminData->id)->pluck('id')->toArray();
-        // $ids = implode(',', $data);
+        $data = AdminRegion::where('admin_id', $storeAdminData->id)->pluck('id')->toArray();
+        $ids = implode(',', $data);
 
 
         // make entry in user_roles table to identify the user(whether it is admin or physician)

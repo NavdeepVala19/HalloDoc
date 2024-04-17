@@ -23,18 +23,20 @@ $(document).ready(function () {
         rules: {
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             password: {
                 required: true,
                 minlength: 8,
-                maxlength: 20,
+                maxlength: 30,
                 password: true,
             },
             new_password: {
                 required: true,
                 minlength: 8,
-                maxlength: 20,
+                maxlength: 30,
                 password: true,
             },
             confirm_password: {

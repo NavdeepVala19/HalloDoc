@@ -43,7 +43,7 @@ $(document).ready(function () {
         },
         "Please enter a valid state name."
     );
-    
+
     $.validator.addMethod(
         "zipcode",
         function (value, element) {
@@ -68,14 +68,44 @@ $(document).ready(function () {
         "Please enter a valid room number."
     );
 
-     $.validator.addMethod(
-         "diseaseSymptoms",
-         function (value, element) {
-             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
-             return this.optional(element) || regex.test(value.trim());
-         },
-         "Please enter valid symptoms."
-     );
+    $.validator.addMethod(
+        "diseaseSymptoms",
+        function (value, element) {
+            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Please enter valid symptoms."
+    );
+
+      $.validator.addMethod(
+          "phoneIndia",
+          function (value, element) {
+              return this.optional(element) || iti.isValidNumber();
+          },
+          "Please enter a valid phone number."
+      );
+    
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(); // Use current date as maximum date
+
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
 
     $.validator.addMethod(
         "emailAddress",
@@ -98,7 +128,16 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
+            },
+            date_of_birth: {
+                required: true,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
             },
             last_name: {
                 required: true,
@@ -108,7 +147,7 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             street: {
                 required: true,
@@ -131,7 +170,8 @@ $(document).ready(function () {
                 zipcode: true,
             },
             room: {
-                minlength: 0,
+                min: 0,
+                max: 1000,
                 nonNegativeOptional: true,
             },
             adminNote: {
@@ -154,7 +194,7 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                phoneIndia: "Please enter valid phone number format....",
             },
             street: {
                 required: "Please enter a street",

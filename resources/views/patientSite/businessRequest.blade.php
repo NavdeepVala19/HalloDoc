@@ -58,7 +58,7 @@
                         @enderror
                     </div>
                     <div class="form-floating" id="form-floating">
-                        <input type="number" class="form-control @error('case_number') is-invalid @enderror" id="floatingInput5" value="{{ old('case_number') }}" name="case_number" placeholder="Case Number (optional)">
+                        <input type="number" class="form-control @error('case_number') is-invalid @enderror" id="floatingInput5" value="{{ old('case_number') }}" name="case_number" placeholder="Case Number (optional)" max:1000>
                         <label for="floatingInput5">Case Number (optional)</label>
                         @error('case_number')
                         <div class="text-danger">{{ $message }}</div>
@@ -218,4 +218,5 @@
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
 <script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/businessRequestFormValidation.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientValidInfoSubmit.js') }}"></script>
 @endsection

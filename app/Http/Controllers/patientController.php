@@ -39,7 +39,7 @@ class patientController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required',
-            'email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -47,7 +47,7 @@ class patientController extends Controller
             'zipcode' => 'digits:6|gte:1',
             'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'symptoms' => 'nullable|min:5|max:200|',
-            'room'=>'gte:1|nullable'
+            'room'=>'gte:1|nullable|max:1000'
         ]);
 
 

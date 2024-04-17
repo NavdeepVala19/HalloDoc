@@ -22,6 +22,8 @@ $(document).ready(function () {
         rules: {
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             password: {

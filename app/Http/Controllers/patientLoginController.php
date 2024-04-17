@@ -28,7 +28,7 @@ class patientLoginController extends Controller
     public function userLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|min:2|max:40',
             'password' => "required|min:8|max:20|regex:/^\S(.*\S)?$/",
         ]);
 
@@ -42,7 +42,11 @@ class patientLoginController extends Controller
 
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
 
-            if ($userRolesData->role_id == 3) {
+
+            if($userRolesData == null){
+                return redirect()->route('loginScreen')->with('error', 'submit request with registered email');
+            }
+            else if ($userRolesData->role_id == 3) {
                 return redirect()->route('patientDashboardData');
             } else {
                 return back()->with('error', 'Invalid credentials');

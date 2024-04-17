@@ -16,6 +16,7 @@
             {{ Session::get('message') }}
         </div>
     @endif
+    <div class="overlay"></div>
     <div class="container-fluid">
         <h2>Medical History</h2>
         <div class="content shadow">

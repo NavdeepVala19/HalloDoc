@@ -44,7 +44,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid city name."
+        "Please do not enter numbers in city name ."
     );
 
     $.validator.addMethod(
@@ -52,16 +52,16 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid state name."
+        "Please do not enter numbers in state name."
     );
 
-      $.validator.addMethod(
-          "zipcode",
-          function (value, element) {
-              return value.length == 6 && /\d/.test(value);
-          },
-          "Please enter a valid zipcode."
-      );
+    $.validator.addMethod(
+        "zipcode",
+        function (value, element) {
+            return value.length == 6 && /\d/.test(value);
+        },
+        "Please enter a valid zipcode."
+    );
 
     $.validator.addMethod(
         "nonNegativeOptional",
@@ -73,7 +73,7 @@ $(document).ready(function () {
             // If a value is entered, check if it's a non-negative number
             return !isNaN(value) && value >= 0;
         },
-        "Please enter a valid room number."
+        "Please enter a positive valid room number."
     );
 
     $.validator.addMethod(
@@ -118,8 +118,38 @@ $(document).ready(function () {
         "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
     );
 
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(); // Use current date as maximum date
+
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
+
+       $.validator.addMethod(
+           "phoneIndia",
+           function (value, element) {
+               return this.optional(element) || iti.isValidNumber();
+           },
+           "Please enter a valid phone number."
+       );
 
     $("#patientNewRequest").validate({
+        ignore: [],
         rules: {
             first_name: {
                 required: true,
@@ -135,7 +165,7 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             street: {
                 required: true,
@@ -144,6 +174,10 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
             },
             city: {
                 required: true,
@@ -162,7 +196,8 @@ $(document).ready(function () {
                 zipcode: true,
             },
             room: {
-                minlength: 0,
+                min: 0,
+                max: 1000,
                 nonNegativeOptional: true,
             },
             symptoms: {
@@ -179,26 +214,28 @@ $(document).ready(function () {
                     "Please enter a valid email format (e.g., user@example.com).",
             },
             first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             phone_number: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                phoneIndia: "Please enter valid phone number format....",
             },
             date_of_birth: {
-                required: "Please enter a date of birth",
+                required: "Please enter a valid date of birth",
             },
             street: {
                 required: "Please enter a street",
             },
             city: {
                 required: "Please enter a city",
+                city: "Please do not enter numbers in city name.",
             },
             state: {
                 required: "Please enter a state",
+                state: "Please do not enter numbers in state name.",
             },
             zipcode: {
                 required: "Please enter a zipcode",
@@ -218,7 +255,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -227,5 +264,4 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-    console.log("here");
 })

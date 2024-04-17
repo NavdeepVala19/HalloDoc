@@ -51,15 +51,6 @@ $(document).ready(function () {
 
     //  ****
 
-    // **** This code is for hiding pop-up button in family/concierge/business page ****
-
-    $(".submit-valid-details-ok-btn").click(function () {
-        $(".submit-valid-details").show();
-        $(".overlay").show();
-    });
-
-    //  *****
-
     // **** This code is for showing input password and hide it when click on eye icon ****
 
     $(".person-eye").click(function () {
@@ -84,77 +75,51 @@ $(document).ready(function () {
         }
     });
 
-    // *** This code is for showing request submit pop in family/concierge/business
 
-    $("#back-btn").click(function () {
-        localStorage.setItem("popupShown", "true");
-    });
 
-    $("#cancel-btn").click(function () {
-        localStorage.setItem("popupShown", "true");
-    });
-
-    // Check if the popup was already shown
-    if (localStorage.getItem("popupShown") == "false") {
-        // Show the popup if not shown before
-        $("#validDetailsPopup").hide();
-        $(".overlay").hide();
-    } else {
-        $("#validDetailsPopup").show();
-        $(".overlay").show();
-    }
-
-    // Attach an event listener to the "OK" button in the popup
-    $("#closePopupBtn").on("click", function () {
-        // When clicked, hide the popup
-        $("#validDetailsPopup").hide();
-        $(".overlay").hide();
-
-        // And set a flag in localStorage indicating the popup was shown
-        localStorage.setItem("popupShown", "false");
-    });
+  
 
     // ** This code is for client side validation of patientProfileEdit
 
-   $.validator.addMethod(
-       "lettersFirstName",
-       function (value, element) {
-           return this.optional(element) || /^[a-zA-Z]+$/.test(value);
-       },
-       "Please enter only letters for your first name."
-   );
+    $.validator.addMethod(
+        "lettersFirstName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your first name."
+    );
 
-   $.validator.addMethod(
-       "lettersLastName",
-       function (value, element) {
-           return this.optional(element) || /^[a-zA-Z]+$/.test(value);
-       },
-       "Please enter only letters for your Last name."
-   );
+    $.validator.addMethod(
+        "lettersLastName",
+        function (value, element) {
+            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+        },
+        "Please enter only letters for your Last name."
+    );
 
-   $.validator.addMethod(
-       "phoneUS",
-       function (phone_number, element) {
-           return (
-               this.optional(element) ||
-               phone_number.match(
-                   /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
-               )
-           );
-       },
-       "Please enter a valid phone number."
-   );
+    $.validator.addMethod(
+        "phoneUS",
+        function (phone_number, element) {
+            return (
+                this.optional(element) ||
+                phone_number.match(
+                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
+                )
+            );
+        },
+        "Please enter a valid phone number."
+    );
 
-   $.validator.addMethod(
-       "emailAddress",
-       function (email, element) {
-           return (
-               this.optional(element) ||
-               email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
-           );
-       },
-       "Please enter a valid email (format: alphanum@alpha.domain)."
-   );
+    $.validator.addMethod(
+        "emailAddress",
+        function (email, element) {
+            return (
+                this.optional(element) ||
+                email.match(/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/)
+            );
+        },
+        "Please enter a valid email (format: alphanum@alpha.domain)."
+    );
 
     $.validator.addMethod(
         "city",
@@ -180,6 +145,36 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(); // Use current date as maximum date
+
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
+
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     $("#patientProfileEditForm").validate({
         rules: {
             first_name: {
@@ -190,7 +185,16 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
+            },
+            date_of_birth: {
+                required: true,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
             },
             last_name: {
                 required: true,
@@ -200,7 +204,7 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             street: {
                 required: true,
@@ -237,7 +241,7 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                phoneIndia: "Please enter valid phone number format....",
             },
             street: {
                 required: "Please enter a street",
@@ -264,7 +268,6 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-
 });
 
 

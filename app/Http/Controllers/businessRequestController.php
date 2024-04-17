@@ -32,21 +32,23 @@ class businessRequestController extends Controller
   {
 
     $request->validate([
-      'first_name' => 'required|min:3|max:15',
-      'last_name' => 'required|min:3|max:15',
+      'first_name' => 'required|min:3|max:15|alpha',
+      'last_name' => 'required|min:3|max:15|alpha',
       'date_of_birth' => 'required',
-      'email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+      'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
       'street' => 'required|min:2|max:30',
       'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'zipcode' => 'digits:6|gte:1',
-      'business_first_name' => 'required|min:3|max:15',
-      'business_last_name' => 'required|min:3|max:15',
+      'business_first_name' => 'required|min:3|max:15|alpha',
+      'business_last_name' => 'required|min:3|max:15|alpha',
       'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'business_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
       'business_property_name' => 'required|min:2|max:30',
       'symptoms' => 'nullable|min:5|max:200|',
+      'case_number'=>'nullable|min:0|max:1000',
+      'room'=>'nullable|min:0|max:1000'
     ]);
 
 

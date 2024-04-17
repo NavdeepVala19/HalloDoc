@@ -70,8 +70,8 @@
 
                     <div class="area-text">
                         <div class="form-floating" id="form-floating">
-                            <textarea class="form-control text-area-box" placeholder="Leave a comment here" name="symptoms"  id="floatingTextarea3" style="height: 150px" > {{ old('symptoms') }}</textarea>
-                            <label for="floatingTextarea3" class="floatingTextarea3">Enter Brief Details of Symptoms(optional)</label>
+                            <textarea class="form-control" placeholder="Leave a comment here" name="symptoms"  id="floatingTextarea2" style="height: 150px"> {{ old('symptoms') }}</textarea>
+                            <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
                         </div>
                     </div>
                 </div>
@@ -226,4 +226,5 @@
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/familyRequestFormValidation.js') }}"></script>
 <script defer src="{{ asset('assets/patientSite/patientSite.js') }}"></script>
+<script defer src="{{ asset('assets/patientSite/patientValidInfoSubmit.js') }}"></script>
 @endsection

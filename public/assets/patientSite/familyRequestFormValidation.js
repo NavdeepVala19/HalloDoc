@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    
     // ** This code is for client side validation in all family/friend form
     $.validator.addMethod(
         "lettersFirstName",
@@ -39,6 +38,14 @@ $(document).ready(function () {
     );
 
     $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
+    $.validator.addMethod(
         "emailAddress",
         function (email, element) {
             return (
@@ -73,15 +80,15 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
-     $.validator.addMethod(
-         "diseaseSymptoms",
-         function (value, element) {
-             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
-             return this.optional(element) || regex.test(value.trim());
-         },
-         "Please enter valid symptoms."
-     );
-    
+    $.validator.addMethod(
+        "diseaseSymptoms",
+        function (value, element) {
+            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Please enter valid symptoms."
+    );
+
     $.validator.addMethod(
         "nonNegativeOptional",
         function (value, element) {
@@ -128,6 +135,28 @@ $(document).ready(function () {
         "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
     );
 
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(); // Use current date as maximum date
+
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
+
     $("#patientRequestForm").validate({
         ignore: [],
         rules: {
@@ -139,10 +168,15 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
+                dateRange: [
+                    new Date("1900-01-01").toDateString(),
+                    new Date().toDateString(),
+                ],
             },
             email: {
                 required: true,
-                email: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             last_name: {
@@ -153,7 +187,7 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             street: {
                 required: true,
@@ -183,7 +217,8 @@ $(document).ready(function () {
                 lettersFirstName: true,
             },
             room: {
-                minlength: 0,
+                min: 0,
+                max: 1000,
                 nonNegativeOptional: true,
             },
             family_last_name: {
@@ -194,18 +229,19 @@ $(document).ready(function () {
             },
             family_phone_number: {
                 required: true,
-                phoneUS: "Please enter valid phone number format....",
+                phoneIndia: "Please enter valid phone number format....",
             },
             family_email: {
                 required: true,
-                email: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             family_relation: {
                 required: true,
                 minlength: 3,
                 maxlength: 15,
-                relation:true
+                relation: true,
             },
             symptoms: {
                 required: false,
@@ -249,10 +285,10 @@ $(document).ready(function () {
                 required: "Please enter a zipcode",
             },
             family_first_name: {
-                required: "Please enter a firstname between 2 and 30 character",
+                required: "Please enter a firstname between 3 and 15 character",
             },
             family_last_name: {
-                required: "Please enter a lastname between 2 and 30 character",
+                required: "Please enter a lastname between 3 and 15 character",
             },
             family_phone_number: {
                 required: "Please enter a mobile number",

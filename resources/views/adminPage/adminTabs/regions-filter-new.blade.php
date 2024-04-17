@@ -73,7 +73,6 @@
                  </td>
              </tr>
              @endif
-             @endforeach
          </tbody>
      </table>
      <div class="page ">

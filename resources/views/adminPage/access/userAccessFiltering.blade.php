@@ -9,9 +9,9 @@
     </thead>
     <tbody class="text-center align-middle">
         @if ($userAccessDataFiltering->isEmpty())
-        <div class="no-record mt-3 mb-3">
-            <span>No Users Found</sp>
-        </div>
+        <tr>
+            <td colspan="100" class="no-record">No Users Found</td>
+        </tr>
         @endif
         @foreach ($userAccessDataFiltering as $data )
         <tr>

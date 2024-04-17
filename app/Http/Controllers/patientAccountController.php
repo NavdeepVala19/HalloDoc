@@ -21,7 +21,7 @@ class patientAccountController extends Controller
     {
         $request->validate([
             "email" => "required|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/",
-            "password" => "required|min:8|max:20|regex:/^\S(.*\S)?$/",
+            "password" => "required|min:2|max:40|regex:/^\S(.*\S)?$/",
             "confirm_password" => "required|same:password",
         ]);
 

@@ -23,9 +23,8 @@ class AdminLoginController extends Controller
 
     public function userLogin(Request $request)
     {
-
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|min:2|max:40|',
             'password' => 'required',
         ]);
 

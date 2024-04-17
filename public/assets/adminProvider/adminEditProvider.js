@@ -109,6 +109,7 @@ $(document).ready(function () {
         $(".business-name").removeAttr("disabled");
         $(".business-web").removeAttr("disabled");
         $(".admin-notes").removeAttr("disabled");
+        $("#file-upload-request").removeAttr("disabled");
 
         $("#providerProfileSaveBtn").show();
         $("#providerProfileCancelBtn").show();
@@ -145,10 +146,10 @@ $(document).ready(function () {
             data.forEach(function (region) {
                 $("#listing-region-admin-provider").append(
                     '<option value="' +
-                    region.id +
-                    '" class="regions-name" >' +
-                    region.region_name +
-                    "</option>"
+                        region.id +
+                        '" class="regions-name" >' +
+                        region.region_name +
+                        "</option>"
                 );
             });
         },
@@ -157,8 +158,6 @@ $(document).ready(function () {
         },
     });
     // ********
-
-
 
     // **** Fetching role from role table ****
 
@@ -349,23 +348,20 @@ $(document).ready(function () {
             form.submit(); // Submit the form
         },
     });
-        $("#ContactProviderForm").click(function () {
-            if ($("#ContactProviderForm").valid()) {
-                $("#ContactProviderForm").submit();
-            }
-        });
+    $("#ContactProviderForm").click(function () {
+        if ($("#ContactProviderForm").valid()) {
+            $("#ContactProviderForm").submit();
+        }
+    });
 
-        $(".requestDTYClose").click(function (e) {
-            e.preventDefault();
+    $(".requestDTYClose").click(function (e) {
+        e.preventDefault();
 
-            $("#ContactProviderForm").trigger("reset");
-            $("#ContactProviderForm").validate().resetForm();
-            $(".pop-up-request-support.form-control").removeClass("is-valid");
-            $(".pop-up-request-support .form-control").removeClass(
-                "is-invalid"
-            );
-        });
-    
+        $("#ContactProviderForm").trigger("reset");
+        $("#ContactProviderForm").validate().resetForm();
+        $(".pop-up-request-support.form-control").removeClass("is-valid");
+        $(".pop-up-request-support .form-control").removeClass("is-invalid");
+    });
 
     // client side validation in adminProviderCreateForm
 
@@ -390,7 +386,6 @@ $(document).ready(function () {
         "Please enter a valid city name."
     );
 
-
     $.validator.addMethod(
         "businessname",
         function (value, element) {
@@ -406,7 +401,6 @@ $(document).ready(function () {
         },
         "Please enter a valid address2."
     );
-
 
     $.validator.addMethod(
         "address1",
@@ -530,6 +524,36 @@ $(document).ready(function () {
         "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB."
     );
 
+    // Date Validation (params array will hold minimum and maximum date)
+    $.validator.addMethod(
+        "dateRange",
+        function (value, element, params) {
+            if (!value) {
+                // Check if the field is empty
+                return true; // Allow empty field
+            }
+            // Parse the entered date and minimum/maximum dates
+            var enteredDate = new Date(value);
+            var minDate = new Date(params[0]); // First parameter in params array is minimum date
+            var maxDate = new Date(); // Use current date as maximum date
+
+            if (params[1]) {
+                maxDate = new Date(params[1]); // Second parameter in params array is maximum date
+            }
+            // Check if entered date is within the allowed range (inclusive)
+            return enteredDate >= minDate && enteredDate <= maxDate;
+        },
+        "Please enter a date between {0} and {1}."
+    );
+
+      $.validator.addMethod(
+          "phoneIndia",
+          function (value, element) {
+              return this.optional(element) || iti.isValidNumber();
+          },
+          "Please enter a valid phone number."
+      );
+
     $.validator.addMethod(
         "password",
         function (email, element) {
@@ -574,6 +598,8 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             phone_number: {
@@ -582,7 +608,7 @@ $(document).ready(function () {
             },
             phone_number_alt: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             medical_license: {
                 required: true,
@@ -623,9 +649,6 @@ $(document).ready(function () {
             alt_phone_number: {
                 required: true,
                 phoneUS: true,
-            },
-            select_state: {
-                required: true,
             },
             business_name: {
                 required: true,
@@ -865,6 +888,14 @@ $(document).ready(function () {
         "Please enter only letters for your Last name."
     );
 
+      $.validator.addMethod(
+          "phoneIndia",
+          function (value, element) {
+              return this.optional(element) || iti.isValidNumber();
+          },
+          "Please enter a valid phone number."
+      );
+    
     $("#adminEditProviderForm2").validate({
         rules: {
             first_name: {
@@ -881,11 +912,13 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
+                minlength: 2,
+                maxlength: 40,
                 emailAddress: true,
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             medical_license: {
                 required: true,
@@ -978,6 +1011,14 @@ $(document).ready(function () {
         "Please select a state."
     );
 
+      $.validator.addMethod(
+          "phoneIndia",
+          function (value, element) {
+              return this.optional(element) || iti.isValidNumber();
+          },
+          "Please enter a valid phone number."
+      );
+
     $("#adminEditProviderForm3").validate({
         rules: {
             address1: {
@@ -1003,11 +1044,11 @@ $(document).ready(function () {
             },
             alt_phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             select_state: {
                 required: true,
-                stateCheck:true,
+                stateCheck: true,
             },
         },
         message: {
