@@ -103,7 +103,7 @@
                     <div class="d-flex gap-4 align-items-center">
                         <div class="form-floating w-100">
                             <input type="text" name="zipcode" class="form-control zipcode" id="floatingInput"
-                                placeholder="Zipcode" value="{{ $getPatientData->zipcode }}">
+                                placeholder="Zipcode" value="{{ $getPatientData->zipcode }}" min="0">
                             <label for="floatingInput">Zipcode</label>
                             @error('zipcode')
                                 <div class="text-danger">{{ $message }}</div>

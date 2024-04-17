@@ -33,11 +33,4 @@ class Provider extends Model
         return $this->hasOne(Regions::class,'id','regions_id');
     }
 
-
-    // Mutator
-
-    public function getIdAttribute($value){
-       return Crypt::encrypt($value); 
-    }
-
 }

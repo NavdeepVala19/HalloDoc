@@ -67,7 +67,7 @@ at$(document).ready(function () {
         },
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".adminLogin").append(error);
+            element.closest("#adminLogin").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

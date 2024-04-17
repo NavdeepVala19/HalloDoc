@@ -25,6 +25,7 @@ $(document).ready(function () {
         const newTheme = currentTheme === "light" ? "dark" : "light";
 
         // Update body class and local storage
+
         $("html").removeClass(currentTheme).addClass(newTheme);
         localStorage.setItem("theme", newTheme);
     });
@@ -52,7 +53,7 @@ $(document).ready(function () {
 
     // No space are allowed directly when input field is empty
     $(
-        'textarea, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"]'
+        'textarea, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"], input[type="url"]'
     ).on("keypress", function (event) {
         // Check if space key is pressed and the input field is empty
         if (event.which === 32 && $(this).val().trim() === "") {

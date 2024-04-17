@@ -102,7 +102,7 @@
             <div class="d-flex gap-4 align-items-center">
 
                 <div class="form-floating w-100">
-                    <input type="text" name="zipcode" class="form-control zipcode" disabled id="floatingInput" placeholder="Zipcode" value="{{$getEmailData->zipcode}}">
+                    <input type="text" name="zipcode" class="form-control zipcode" disabled id="floatingInput" placeholder="Zipcode" value="{{$getEmailData->zipcode}}" min="0">
                     <label for="floatingInput">Zipcode</label>
                     @error('zipcode')
                     <div class="alert alert-danger">{{ $message }}</div>

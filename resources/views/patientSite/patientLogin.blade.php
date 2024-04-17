@@ -43,7 +43,7 @@
 
                 <div class="mb-4 email patientLogin">
                     <i class="bi bi-person-circle person-logo"></i>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email">
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email" value="{{old('email')}}">
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

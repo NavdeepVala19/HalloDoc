@@ -77,7 +77,7 @@
                     </div>
                     <div class="form-floating status-select">
                         <select class="form-select @error('status_type') is-invalid @enderror" id="provider-status" disabled name="status_type" value="{{ $getProviderData->status }}">
-                            <option selected>Status</option>
+                            <option selected value="">Status</option>
                             <option value="pending" {{ $getProviderData->status == 'pending' ? 'selected' : '' }}>
                                 Pending
                             </option>
@@ -96,7 +96,7 @@
                                 <option selected>{{ $getProviderData->role->name }}</option>
                         </select>
                         --}}
-                        <select class="form-select @error('role') is-invalid @enderror" id="provider-role" name="role" disabled>
+                        <select class="form-select @error('role') is-invalid @enderror" id="provider_role" name="role" disabled>
                             <option selected value="{{ $getProviderData->role->id }}">
                                 {{ $getProviderData->role->name }}
                             </option>
@@ -214,7 +214,7 @@
                         </div>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="zip" class="form-control provider-bill-zip @error('zip') is-invalid @enderror" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip }}" disabled>
+                        <input type="text" name="zip" class="form-control provider-bill-zip @error('zip') is-invalid @enderror" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip }}" disabled min="0">
                         <label for="floatingInput">Zip</label>
                         @error('user_name')
                         <div class="alert alert-danger">{{ $message }}</div>

@@ -862,9 +862,8 @@ class AdminController extends Controller
             })
             ->leftJoin('status', 'status.id', '=', 'request_status.status')
             ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
+            ->orderByDesc('id')
             ->paginate(10);
-
-
 
 
         Session::forget('request_status');
@@ -881,6 +880,7 @@ class AdminController extends Controller
         $perPage = $request->input('per_page', 10);
 
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
+
 
         $session = session([
             'patient_name' => $request->patient_name,
@@ -937,28 +937,29 @@ class AdminController extends Controller
             ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id');
 
         if (!empty($request->patient_name)) {
-            $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+            // $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+            $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if (!empty($request->email)) {
-            $combinedData = $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
+            $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
         }
         if (!empty($request->phone_number)) {
-            $combinedData = $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+            $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->request_type)) {
-            $combinedData = $combinedData->where('request.request_type_id', "like", "%" . $request->request_type . "%");
+            $combinedData->where('request.request_type_id', "like", "%" . $request->request_type . "%");
         }
         if (!empty($request->provider_name)) {
-            $combinedData = $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
+            $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
         }
         if (!empty($request->request_status)) {
-            $combinedData = $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
+            $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
         }
         if (!empty($request->from_date_of_service)) {
-            $combinedData = $combinedData->where('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
+            $combinedData->where('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
         }
         if (!empty($request->to_date_of_service)) {
-            $combinedData = $combinedData->where('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
+            $combinedData->where('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
         }
         return $combinedData;
     }
@@ -1058,22 +1059,21 @@ class AdminController extends Controller
         $sms = SMSLogs::select();
 
         if (!empty($request->receiver_name)) {
-            $sms = $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
+            $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
         }
         if (!empty($request->phone_number)) {
-            $sms = $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+            $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->created_date)) {
-            $sms = $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
+            $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
         }
         if (!empty($request->sent_date)) {
-            $sms = $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+            $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
         }
         if (!empty($request->role_type)) {
-            $sms = $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
+            $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
         }
         $sms = $sms->paginate($perPage, ['*'], 'page', $page);
-
 
         $session = session(
             [
@@ -1114,6 +1114,7 @@ class AdminController extends Controller
 
     public function blockHistroySearchData(Request $request)
     {
+  
         $blockData = BlockRequest::select(
             'request_client.first_name as patient_name',
             'block_request.id',
@@ -1127,16 +1128,16 @@ class AdminController extends Controller
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
 
         if (!empty($request->patient_name)) {
-            $blockData = $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+            $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if (!empty($request->email)) {
-            $blockData = $blockData->orWhere('block_request.email', "like", "%" . $request->email . "%");
+           $blockData->where('block_request.email', "like", "%" . $request->email . "%");
         }
         if (!empty($request->phone_number)) {
-            $blockData = $blockData->orWhere('block_request.phone_number', "like", "%" . $request->phone_number . "%");
+            $blockData->where('block_request.phone_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->date)) {
-            $blockData = $blockData->orWhere('block_request.created_at', "like", "%" . $request->date . "%");
+            $blockData->where('block_request.created_at', "like", "%" . $request->date . "%");
         }
         $blockData = $blockData->paginate(10);
 
@@ -1273,21 +1274,19 @@ class AdminController extends Controller
         try {
             $id = Crypt::decrypt($id);
             $UserAccessRoleName = Roles::select('name')
-            ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
-            ->where('user_roles.user_id', $id)
-            ->get();
+                ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
+                ->where('user_roles.user_id', $id)
+                ->get();
 
-        if ($UserAccessRoleName->first()->name == 'admin') {
-            return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
-        } 
-        else if ($UserAccessRoleName->first()->name == 'physician') {
-            $getProviderId = Provider::where('user_id', $id);
-            return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
-        }
+            if ($UserAccessRoleName->first()->name == 'admin') {
+                return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
+            } else if ($UserAccessRoleName->first()->name == 'physician') {
+                $getProviderId = Provider::where('user_id', $id);
+                return redirect()->route('adminEditProvider', ['id' => $getProviderId->first()->id]);
+            }
         } catch (\Throwable $th) {
-            return view('errors.404');
-;
-        }    
+            return view('errors.404');;
+        }
     }
 
     public function FilterUserAccessAccountTypeWise(Request $request)
@@ -1352,7 +1351,7 @@ class AdminController extends Controller
             Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
         }
 
-        return redirect()->back()->with('message','message is sent');
+        return redirect()->back()->with('message', 'message is sent');
     }
 
 
@@ -1363,7 +1362,7 @@ class AdminController extends Controller
         return response()->json($fetchedRegions);
     }
 
-    
+
     public function adminAccount()
     {
         $regions = Regions::get();
@@ -1507,8 +1506,8 @@ class AdminController extends Controller
         $search = $request->search_value;
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        $request->session()->put('regionName',$regionName);
-                
+        $request->session()->put('regionName', $regionName);
+
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
         } else {
@@ -1587,7 +1586,7 @@ class AdminController extends Controller
     {
         $status = $request->status;
         $regionId = $request->regionId;
-        $category = $request->category_value;   
+        $category = $request->category_value;
         $search = $request->search_value;
 
 
@@ -1635,7 +1634,7 @@ class AdminController extends Controller
         $region = $request->filter_region;
 
         $regionName = $request->session()->get('regionName', null);
-        
+
         if ($regionName == "All Regions") {
             $exportNewData = $this->buildQuery($status, $category, $search);
         } else {

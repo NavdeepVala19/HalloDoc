@@ -107,7 +107,7 @@
                             @enderror
                         </div>
                         <div class="form-floating w-100" id="form-floating">
-                            <input type="number" name="zipcode" class="form-control zipcode @error('zipcode') is-invalid @enderror" id="floatingInput8" placeholder="Zipcode" value="{{ old('zipcode') }}">
+                            <input type="number" name="zipcode" class="form-control zipcode @error('zipcode') is-invalid @enderror" id="floatingInput8" placeholder="Zipcode" value="{{ old('zipcode') }}" min="0">
                             <label for="floatingInput8">Zipcode</label>
                             @error('zipcode')
                             <div class="text-danger">{{ $message }}</div>

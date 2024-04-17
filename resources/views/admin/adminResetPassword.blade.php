@@ -32,7 +32,7 @@
         <div class="form">
             <form action="{{route('adminForgotPassword')}}" method="post" id="adminLogin">
                 @csrf
-                <div class="mb-4 username adminLogin">
+                <div class="mb-4 username" id="adminLogin">
                     <i class="bi bi-person-circle person-logo"></i>
                     <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder=" email" name="email">
                     @error('email')

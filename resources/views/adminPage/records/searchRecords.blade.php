@@ -5,44 +5,44 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/searchRecords.css') }}">
 @endsection
 @section('username')
-    {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
+{{ !empty(Auth::user()) ? Auth::user()->username : '' }}
 @endsection
 @section('nav-links')
-    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
-    <a href="{{route('admin.profile.editing')}}">My Profile</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Providers
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
-            <li><a class="dropdown-item" href="#">Invoicing</a></li>
-        </ul>
-    </div>
-    <a href="{{ route('admin.partners') }}">Partners</a>
-    <div class="dropdown record-navigation">
-        <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Access
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
-        </ul>
-    </div>
-    <div class="dropdown record-navigation">
-        <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Records
-        </button>
-        <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
-        </ul>
-    </div>
+<a href="{{ route('admin.dashboard') }}">Dashboard</a>
+<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="{{route('admin.profile.editing')}}">My Profile</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Providers
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
+        <li><a class="dropdown-item" href="#">Invoicing</a></li>
+    </ul>
+</div>
+<a href="{{ route('admin.partners') }}">Partners</a>
+<div class="dropdown record-navigation">
+    <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Access
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.user.access') }}">User Access</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.access.view') }}">Account Access</a></li>
+    </ul>
+</div>
+<div class="dropdown record-navigation">
+    <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Records
+    </button>
+    <ul class="dropdown-menu records-menu">
+        <li><a class="dropdown-item" href="{{ route('admin.search.records.view') }}">Search Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.email.records.view') }}">Email Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.sms.records.view') }}">SMS Logs</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.patient.records.view') }}">Patient Records</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.block.history.view') }}">Blocked History</a></li>
+    </ul>
+</div>
 @endsection
 
 @section('content')
@@ -51,20 +51,20 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h3>Search Records</h3>
         <a href="#" class="primary-empty export-data-to-excel"> <i class="bi bi-send-arrow-down"></i> Export Data To Excel </a>
-    </div>  
+    </div>
     <div class="section">
         <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">
             @csrf
-            {{--  The currentPage() method retrieves the current page number of the paginator. --}}
+            {{-- The currentPage() method retrieves the current page number of the paginator. --}}
             <input type="hidden" name="page" value="{{ $combinedData->currentPage() }}">
 
-            {{--  The perPage() method retrieves the number of items per page in the paginator. --}}
-            <input type="hidden" name="per_page" value="{{ $combinedData->perPage() }}"> 
+            {{-- The perPage() method retrieves the number of items per page in the paginator. --}}
+            <input type="hidden" name="per_page" value="{{ $combinedData->perPage() }}">
 
             <div class="grid-4">
                 <div class="form-floating request-status-select">
-                    <select class="form-select status-type" name="request_status">
-                        <option selected>Select Request Status</option>
+                    <select class="form-select status-type" name="request_status" id="floatingInput" placeholder="status">
+                        <option selected disabled>Select Request Status</option>
                         <option value="1" {{ Session::get('request_status') == '1' ? 'selected' : '' }}>Unassigned</option>
                         <option value="2" {{ Session::get('request_status') == '2' ? 'selected' : '' }}>Cancelled</option>
                         <option value="3" {{ Session::get('request_status') == '3' ? 'selected' : '' }}>Accepted</option>
@@ -76,7 +76,7 @@
                         <option value="9" {{ Session::get('request_status') == '9' ? 'selected' : '' }}>UnPaid</option>
                         <option value="10" {{ Session::get('request_status') == '10' ? 'selected' : '' }}>Block</option>
                     </select>
-                    </input>
+                    <label for="floatingInput">Select Status</label>
                 </div>
 
                 <div class="form-floating ">
@@ -85,14 +85,14 @@
                 </div>
 
                 <div class="form-floating request-type-select">
-                    <select class="form-select request-type" name="request_type">
-                        <option selected>Select Request Type</option>
+                    <select class="form-select request-type" name="request_type" id="floatingInput" placeholder="request_type">
+                        <option selected disabled>Select Request Type</option>
                         <option value="1" {{ Session::get('request_type') == '1' ? 'selected' : '' }}>Patient</option>
                         <option value="2" {{ Session::get('request_type') == '2' ? 'selected' : '' }}>Family/Friend</option>
                         <option value="3" {{ Session::get('request_type') == '3' ? 'selected' : '' }}>Concierge</option>
                         <option value="4" {{ Session::get('request_type') == '4' ? 'selected' : '' }}>Business</option>
                     </select>
-                    </input>
+                    <label for="floatingInput">Select Request Type</label>
                 </div>
 
                 <div class="form-floating ">
@@ -152,9 +152,9 @@
                 </thead>
                 <tbody>
                     @if ($combinedData->isEmpty())
-                            <tr>
-                                <td colspan="100" class="no-record">No Records Found</td>
-                            </tr>
+                    <tr>
+                        <td colspan="100" class="no-record">No Records Found</td>
+                    </tr>
                     @endif
                     @foreach ($combinedData as $data )
                     <tr>
@@ -173,8 +173,9 @@
                         <td>{{date_format(date_create($data->created_date), 'd-m-Y')}}</td>
                         <td> @if ($data->closed_date)
                             {{date_format(date_create($data->closed_date), 'd-m-Y')}}
-                            @else 
-                        @endif </td>
+                            @else
+                            @endif
+                        </td>
                         <td>{{$data->email}}</td>
                         <td>{{$data->phone_number}}</td>
                         <td>{{$data->street}},{{$data->city}},{{$data->state}}</td>
@@ -224,10 +225,11 @@
         <div class="mobile-listing mt-3">
             <div class="mobile-list">
                 @if ($combinedData->isEmpty())
-                            <tr>
-                                <td colspan="100" class="no-record">No Records Found</td>
-                            </tr>
-                    @endif
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="no-record">No Records Found</div>
+                </div>
+
+                @endif
                 @foreach ( $combinedData as $data )
                 <div class="main-section">
                     <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox"> {{$data->first_name}} </h5>
