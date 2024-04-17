@@ -28,7 +28,6 @@ $(document).ready(function () {
         "Please enter a valid state name."
     );
 
- 
     $.validator.addMethod(
         "zipcode",
         function (value, element) {
@@ -77,51 +76,51 @@ $(document).ready(function () {
         "Please enter only letters for your Last name."
     );
 
-     $.validator.addMethod(
-         "roleCheck",
-         function (value, element) {
-             return value !== "";
-         },
-         "Please select a role."
-     );
+    $.validator.addMethod(
+        "roleCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a role."
+    );
 
-     $.validator.addMethod(
-         "stateCheck",
-         function (value, element) {
-             return value !== "";
-         },
-         "Please select a state."
-     );
+    $.validator.addMethod(
+        "stateCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a state."
+    );
 
-     $.validator.addMethod(
-         "atLeastOneChecked",
-         function (value, element, options) {
-             // Target the checkbox group using the provided name or selector
-             const checkboxGroup = $(
-                 options.group || `[name="${element.name}"]`
-             );
+    $.validator.addMethod(
+        "atLeastOneChecked",
+        function (value, element, options) {
+            // Target the checkbox group using the provided name or selector
+            const checkboxGroup = $(
+                options.group || `[name="${element.name}"]`
+            );
 
-             // Check if at least one checkbox is checked within the group
-             return checkboxGroup.filter(":checked").length > 0;
-         },
-         "Please select at least one region."
-     );
-    
-        $.validator.addMethod(
-            "address2",
-            function (value, element) {
-                return value.match(/^[a-zA-Z ,_-]+?$/);
-            },
-            "Please enter a valid address2."
-        );
+            // Check if at least one checkbox is checked within the group
+            return checkboxGroup.filter(":checked").length > 0;
+        },
+        "Please select at least one region."
+    );
 
-        $.validator.addMethod(
-            "address1",
-            function (value, element) {
-                return value.match(/^[a-zA-Z0-9-, ]+$/);
-            },
-            "Please enter a valid address1."
-        );
+    $.validator.addMethod(
+        "address2",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ,_-]+?$/);
+        },
+        "Please enter a valid address2."
+    );
+
+    $.validator.addMethod(
+        "address1",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9-, ]+$/);
+        },
+        "Please enter a valid address1."
+    );
 
     $("#createAdminAccountForm").validate({
         rules: {
@@ -259,7 +258,7 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
+            error.addClass("text-danger");
             element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {

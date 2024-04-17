@@ -331,30 +331,22 @@ class AdminController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'dob' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required',
             'patient_notes' => 'required',
         ]);
 
         $firstName = $request->first_name;
         $lastName = $request->last_name;
         $dateOfBirth = $request->dob;
-        $phoneNumber = $request->phone_number;
-        $email = $request->email;
         $patientNotes = $request->patient_notes;
 
         RequestTable::where('id', $request->requestId)->where('request_type_id', 1)->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'phone_number' => $phoneNumber,
-            'email' => $email,
         ]);
 
         request_Client::where('request_id', $request->requestId)->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'phone_number' => $phoneNumber,
-            'email' => $email,
             'date_of_birth' => $dateOfBirth,
             'notes' => $patientNotes
         ]);

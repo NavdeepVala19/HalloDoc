@@ -64,6 +64,11 @@
                         <td class="actions">Actions</td>
                     </thead>
                     <tbody>
+                        @if ($data->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Records Found</td>
+                            </tr>
+                        @endif
                         @foreach ($data as $record)
                             @if (!empty($record))
                                 <tr>
@@ -126,6 +131,11 @@
                 </table>
             </div>
             <div class="mobile-listing">
+                @if ($data->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Logs Found</sp>
+                    </div>
+                @endif
                 @foreach ($data as $record)
                     <div class="mobile-list">
                         <div class="main-section">

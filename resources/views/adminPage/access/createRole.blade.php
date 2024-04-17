@@ -68,10 +68,9 @@
                     </div>
                     <div class="form-floating">
                         <select class="form-select role-selected" name="role_name" id="floatingSelect">
-                            <option value="0" disabled>All</option>
                             <option value="1" @if (old('role_name') == 1) selected @endif>Admin</option>
                             <option value="2" @if (old('role_name') == 2) selected @endif>Physician</option>
-                            <option value="3" @if (old('role_name') == 3) selected @endif>Patient</option>
+                            {{-- <option value="3" @if (old('role_name') == 3) selected @endif>Patient</option> --}}
                         </select>
                         <label for="floatingSelect">Account Type</label>
                         @error('role_name')

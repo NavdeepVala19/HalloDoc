@@ -146,7 +146,7 @@
                     <div class="form-floating">
                         <div class="d-flex align-items-center gap-2">
                             <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                                class="form-control phone phoneNumber" id="telephone" disabled>
+                                class="form-control phone" id="telephone" disabled>
                             @error('phone_number')
                                 <div class="alert text-danger">{{ $message }}</div>
                             @enderror
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control email"
+                        <input type="email" name="email" class="form-control"
                             value="{{ $data->requestClient->email }}" id="floatingInput4" placeholder="name@example.com"
                             disabled>
                         <label for="floatingInput4">Email</label>
