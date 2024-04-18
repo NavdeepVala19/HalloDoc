@@ -38,7 +38,7 @@
 
         <form action="{{ route('provider.send.order') }}" method="POST" id="providerSendOrderForm">
             @csrf
-            <input type="text" name="requestId" value="{{ $id }}" hidden>
+            <input type="text" name="requestId" value="{{ $requestId }}" hidden>
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">

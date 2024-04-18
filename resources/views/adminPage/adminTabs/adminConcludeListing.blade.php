@@ -233,17 +233,17 @@ transferred into conclude state providers can finally conclude care for the pati
                                             <button class="table-btn action-btn"
                                                 data-id="{{ $case->id }}">Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"><i
+                                                <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href={{ route('admin.view.note', $case->id) }}><i
+                                                <a href={{ route('admin.view.note', Crypt::encrypt($case->id)) }}><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View
                                                     Notes</a>
-                                                <a href="{{ route('admin.view.order', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.order', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                                                <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                                <a href="{{ route('admin.encounter.form', Crypt::encrypt($case->id)) }}"
                                                     class="encounter-form-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             </div>
@@ -300,7 +300,7 @@ transferred into conclude state providers can finally conclude care for the pati
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('admin.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :
@@ -327,14 +327,14 @@ transferred into conclude state providers can finally conclude care for the pati
                                     {{ $case->provider->first_name }} {{ $case->provider->last_name }}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href={{ route('admin.view.note', $case->id) }}
+                                    <a href={{ route('admin.view.note', Crypt::encrypt($case->id)) }}
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
+                                    <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View Uploads</a>
-                                    <a href="{{ route('admin.encounter.form', $case->id) }}"
+                                    <a href="{{ route('admin.encounter.form', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">Encouter</a>
-                                    <a href="{{ route('admin.view.order', $case->id) }}"
+                                    <a href="{{ route('admin.view.order', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn-2 text-center">Orders</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>

@@ -1,7 +1,7 @@
 <h1 class="main-heading">Medical Report-Confidential</h1>
 <div>
     <div class="grid-2">
-        <input type="text" name="request_id" value="{{ $id }}" hidden>
+        <input type="text" name="request_id" value="{{ $requestId }}" hidden>
         <div class="form-floating ">
             <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
                 id="floatingInput1" placeholder="First Name" value="{{ $data->first_name ?? '' }}">

@@ -289,10 +289,10 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                                     data-patient_name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"><i
                                                         class="bi bi-x-circle me-2 ms-3"></i>Cancel
                                                     Case</button>
-                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View
                                                     Case</a>
-                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button class="block-case-btn" data-id="{{ $case->id }}"
                                                     data-patient_name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}">
@@ -353,7 +353,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                             </div>
                         </div>
                         <div class="more-info">
-                            <a href="{{ route('admin.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :
@@ -382,7 +382,7 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                                         data-patient_name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"
                                         class="secondary-btn-4 text-center cancel-case-btn">Cancel
                                         Case</button>
-                                    <a href="{{ route('admin.view.note', $case->id) }}"
+                                    <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button data-id="{{ $case->id }}"

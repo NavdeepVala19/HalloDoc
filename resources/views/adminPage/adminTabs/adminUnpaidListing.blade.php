@@ -243,12 +243,12 @@ patient's email address and phone number. Once the patient accepts the agreement
                                             <button class="table-btn action-btn"
                                                 data-id={{ $case->id }}>Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"><i
+                                                <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>
                                                     View Notes</a>
                                             </div>
@@ -305,7 +305,8 @@ patient's email address and phone number. Once the patient accepts the agreement
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('admin.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View
+                                Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-envelope"></i> Email :
@@ -327,10 +328,10 @@ patient's email address and phone number. Once the patient accepts the agreement
                                     {{ $case->provider->first_name }} {{ $case->provider->last_name }}
                                 </span>
                                 <div class="grid-2-listing ">
-                                    <a href="{{ route('admin.view.note', $case->id) }}"
+                                    <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">
                                         View Notes</a>
-                                    <a href="{{ route('admin.view.upload', $case->id) }}"
+                                    <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View
                                         Uploads</a>
                                     <button class="secondary-btn">Email</button>

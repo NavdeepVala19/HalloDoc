@@ -16,6 +16,16 @@
     <div class="overlay"></div>
     @include('loading')
 
+    {{-- Request Created Successfully --}}
+    @if (session('requestCreated'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('requestCreated') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
 
@@ -177,9 +187,9 @@
                                             <div class="action-menu">
                                                 <a href="{{ route('provider.accept.case', $case->id) }}"><i
                                                         class="bi bi-check-square me-2 ms-3"></i>Accept</a>
-                                                <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                                <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                                <a href="{{ route('provider.view.notes', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                             </div>
                                         </div>
@@ -236,7 +246,8 @@
                             </div>
                         </div>
                         <div class="more-info">
-                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View
+                                Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :
@@ -255,7 +266,7 @@
                                 <div class="grid-2-listing">
                                     <a href="{{ route('provider.accept.case', $case->id) }}"
                                         class="accept-btn">Accept</a>
-                                    <a href="{{ route('provider.view.notes', $case->id) }}"
+                                    <a href="{{ route('provider.view.notes', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn">Email</button>

@@ -18,15 +18,6 @@
 @section('content')
     @include('loading')
 
-    {{-- Request Created Successfully --}}
-    @if (session('requestCreated'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('requestCreated') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Submit Information</h1>
@@ -109,14 +100,14 @@
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="zip" class="form-control" id="floatingInput" placeholder="zip code"
+                        <input type="number" name="zip" class="form-control" id="floatingInput8" placeholder="zip code"
                             value="{{ old('zip') }}" min="0" max="999999">
-                        <label for="floatingInput">Zip Code (Optional)</label>
+                        <label for="floatingInput8">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="room" class="form-control" id="floatingInput" placeholder="Room"
+                        <input type="number" name="room" class="form-control" id="floatingInput9" placeholder="Room"
                             value="{{ old('room') }}" min="0" max="100">
-                        <label for="floatingInput">Room # (Optional)</label>
+                        <label for="floatingInput9">Room # (Optional)</label>
                     </div>
                 </div>
                 <div class="mb-3">

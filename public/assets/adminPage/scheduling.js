@@ -2,6 +2,15 @@ $(document).ready(function () {
     $(".new-shift-btn").click(function () {
         $(".create-shift").show();
         $(".overlay").show();
+
+        let todaysDate = new Date().toISOString().split("T")[0];
+        $(".shiftDate").val(todaysDate);
+
+        const hours = new Date().getHours().toString().padStart(2, "0");
+        const minutes = new Date().getMinutes().toString().padStart(2, "0");
+        const currentTime = `${hours}:${minutes}`;
+
+        $(".shiftStartTime").val(currentTime);
     });
 
     $(".repeat-switch").on("click", function () {

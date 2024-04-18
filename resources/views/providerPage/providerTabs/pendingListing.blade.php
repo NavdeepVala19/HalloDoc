@@ -211,12 +211,12 @@ pending state, providers need to send an agreement link to patients. --}}
                                                     data-phone_number="{{ $case->requestClient->phone_number }}"
                                                     data-email={{ $case->requestClient->email }}><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Send Agreement</button>
-                                                <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                                <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                                <a href="{{ route('provider.view.upload', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                                                     Uploads</a>
-                                                <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                                <a href="{{ route('provider.view.notes', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button class="transfer-btn" data-id="{{ $case->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
@@ -273,7 +273,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View
+                            <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View
                                 Case</a>
                             <div>
                                 <span>
@@ -296,10 +296,12 @@ pending state, providers need to send an agreement link to patients. --}}
                                 </span>
                                 <div class="grid-2-listing ">
                                     <button class="agreement-btn">Send Agreement</button>
-                                    <a href="{{ route('provider.view.notes', $case->id) }}"
+                                    <a href="{{ route('provider.view.notes', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
-                                    <button class="secondary-btn">View Uploads</button>
+                                    <a class="secondary-btn text-center"
+                                        href="{{ route('provider.view.upload', Crypt::encrypt($case->id)) }}">View
+                                        Uploads</a>
                                     <button class="secondary-btn">Email</button>
                                 </div>
                             </div>

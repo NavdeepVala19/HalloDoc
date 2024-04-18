@@ -62,7 +62,7 @@
 
         <form action="{{ route('admin.send.order') }}" method="POST" id="adminSendOrderForm">
             @csrf
-            <input type="text" name="requestId" value="{{ $id }}" hidden>
+            <input type="text" name="requestId" value="{{ $requestId }}" hidden>
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">
