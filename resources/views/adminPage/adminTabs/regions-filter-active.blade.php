@@ -1,3 +1,5 @@
+
+
 <table class="table table-hover ">
                     <thead class="table-secondary">
                         <tr>
@@ -84,6 +86,6 @@
                     </tbody>
                 </table>
 
-                   <div class="page ">
+        <div class="page ">
          {{ $cases->links('pagination::bootstrap-5') }}
      </div>

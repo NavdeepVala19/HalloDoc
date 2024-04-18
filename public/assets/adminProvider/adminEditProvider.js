@@ -365,26 +365,21 @@ $(document).ready(function () {
 
     // client side validation in adminProviderCreateForm
 
-    $.validator.addMethod(
-        "phoneUS",
-        function (phone_number, element) {
-            return (
-                this.optional(element) ||
-                phone_number.match(
-                    /^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/
-                )
-            );
-        },
-        "Please enter a valid phone number."
-    );
+      $.validator.addMethod(
+          "city",
+          function (value, element) {
+              return value.match(/^[a-zA-Z ,_-]+?$/);
+          },
+          "Please enter alphabets in city name."
+      );
 
-    $.validator.addMethod(
-        "city",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid city name."
-    );
+      $.validator.addMethod(
+          "state",
+          function (value, element) {
+              return value.match(/^[a-zA-Z ,_-]+?$/);
+          },
+          "Please enter alphabets in state name."
+      );
 
     $.validator.addMethod(
         "businessname",
@@ -399,15 +394,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid address2."
-    );
-
-    $.validator.addMethod(
-        "address1",
-        function (value, element) {
-            return value.match(/^[a-zA-Z0-9-, ]+$/);
-        },
-        "Please enter a valid address1."
+        "Please enter alphabets in  address2."
     );
 
     $.validator.addMethod(
@@ -546,6 +533,16 @@ $(document).ready(function () {
         "Please enter a date between {0} and {1}."
     );
 
+        
+    $.validator.addMethod(
+        "address1",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in address1 name. "
+    );
+
+
       $.validator.addMethod(
           "phoneIndia",
           function (value, element) {
@@ -561,6 +558,15 @@ $(document).ready(function () {
         },
         "Please enter a valid password"
     );
+
+        $.validator.addMethod(
+            "adminNotes",
+            function (value, element) {
+                const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+                return this.optional(element) || regex.test(value.trim());
+            },
+            "Please enter alphabets, number in admin notes."
+        );
 
     $("#createAdminProvider").validate({
         ignore: [],
@@ -613,23 +619,23 @@ $(document).ready(function () {
             medical_license: {
                 required: true,
                 minlength: 3,
-                maxlength: 20,
+                max: 100000,
             },
             npi_number: {
                 required: true,
                 minlength: 3,
-                maxlength: 30,
+                maxlength: 10,
             },
             address1: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
                 address1: true,
             },
             address2: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
                 address2: true,
             },
             city: {
@@ -665,6 +671,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 5,
                 maxlength: 100,
+                adminNotes: true,
             },
             provider_photo: {
                 customFile: true,
@@ -712,12 +719,18 @@ $(document).ready(function () {
             },
             address1: {
                 required: "Please enter a valid address1",
+                address1: "Please enter only Alphabets and number",
             },
             address2: {
                 required: "Please enter a valid address2",
             },
             city: {
-                required: "Please enter a valid city",
+                required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
+            },
+            state: {
+                required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
             zip: {
                 required: "Please enter a valid zipcode",
@@ -739,19 +752,19 @@ $(document).ready(function () {
             },
             independent_contractor: {
                 customFile:
-                    "The independent contractor field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The independent contractor field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
             background_doc: {
                 customFile:
-                    "The background check field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The background check field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB..",
             },
             hipaa_docs: {
                 customFile:
-                    "The hipaa docs field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The hipaa docs field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
             non_disclosure_doc: {
                 customFile:
-                    "The non disclosure doc field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The non disclosure doc field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
         },
         errorElement: "span",
@@ -979,13 +992,21 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-    $.validator.addMethod(
-        "city",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid city name."
-    );
+   $.validator.addMethod(
+       "city",
+       function (value, element) {
+           return value.match(/^[a-zA-Z ,_-]+?$/);
+       },
+       "Please enter alphabets in city name."
+   );
+
+   $.validator.addMethod(
+       "state",
+       function (value, element) {
+           return value.match(/^[a-zA-Z ,_-]+?$/);
+       },
+       "Please enter alphabets in state name."
+   );
 
     $.validator.addMethod(
         "zipcode",
@@ -995,13 +1016,15 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
+    
     $.validator.addMethod(
         "address1",
         function (value, element) {
-            return value.match(/^[a-zA-Z0-9-, ]+$/);
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter a valid address1."
+        "Please enter a only alphabets and numbers in address1 name. "
     );
+
 
     $.validator.addMethod(
         "stateCheck",
@@ -1024,7 +1047,8 @@ $(document).ready(function () {
             address1: {
                 required: true,
                 minlength: 2,
-                maxlength: 40,
+                maxlength: 50,
+                street: true,
                 address1: true,
             },
             address2: {
@@ -1059,7 +1083,12 @@ $(document).ready(function () {
                 required: "Please enter a valid address2",
             },
             city: {
-                required: "Please enter a valid city",
+                required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
+            },
+            state: {
+                required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
             zip: {
                 required: "Please enter a valid zipcode",
@@ -1125,6 +1154,15 @@ $(document).ready(function () {
         "Please enter a valid business name."
     );
 
+           $.validator.addMethod(
+               "adminNotes",
+               function (value, element) {
+                   const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+                   return this.optional(element) || regex.test(value.trim());
+               },
+               "Please enter alphabets, number in admin notes."
+           );
+
     $("#adminEditProviderForm4").validate({
         ignore: [],
         rules: {
@@ -1140,9 +1178,10 @@ $(document).ready(function () {
                 maxlength: 40,
             },
             admin_notes: {
-                required: false,
+                required: true,
                 minlength: 5,
                 maxlength: 100,
+                adminNotes: true,
             },
             provider_photo: {
                 customFile: true,
@@ -1230,19 +1269,19 @@ $(document).ready(function () {
         message: {
             independent_contractor: {
                 customFile:
-                    "The independent contractor field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The independent contractor field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
             background_doc: {
                 customFile:
-                    "The background check field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The background check field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
             hipaa_docs: {
                 customFile:
-                    "The hipaa docs field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The hipaa docs field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
             non_disclosure_doc: {
                 customFile:
-                    "The non disclosure doc field must be a file of type: jpg, png, jpeg, pdf, doc.",
+                    "The non disclosure doc field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
         },
         errorElement: "span",

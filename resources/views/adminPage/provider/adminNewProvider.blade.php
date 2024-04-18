@@ -51,11 +51,9 @@
     </div>
 
     <div class="section">
-
         <form action="{{ route('adminCreateNewProvider') }}" method="POST" enctype="multipart/form-data" id="createAdminProvider">
             @csrf
             <h3>Account Information</h3>
-
             <div class="grid-3">
                 <div class="form-floating" id="form-floating">
                     <input type="text" name="user_name" class="form-control @error('user_name') is-invalid @enderror" id="floatingInput1" placeholder="User Name" value="{{ old('user_name') }}">
@@ -80,7 +78,6 @@
                     @enderror
                 </div>
             </div>
-
             <h3>Administrator Information</h3>
             <div class="grid-2">
                 <div class="form-floating" id="form-floating">
@@ -111,14 +108,14 @@
                     @enderror
                 </div>
                 <div class="form-floating" id="form-floating">
-                    <input type="number" name="medical_license" class="form-control @error('medical_license') is-invalid @enderror" id="floatingInput6" placeholder="Medical License" value="{{ old('medical_license') }}">
+                    <input type="number" name="medical_license" class="form-control @error('medical_license') is-invalid @enderror" id="floatingInput6" placeholder="Medical License" value="{{ old('medical_license') }}" min="0">
                     <label for="floatingInput6">Medical license # </label>
                     @error('medical_license')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating" id="form-floating">
-                    <input type="number" name="npi_number" class="form-control @error('npi_number') is-invalid @enderror" id="floatingInput7" placeholder="NPI Number" value="{{ old('npi_number') }}">
+                    <input type="number" name="npi_number" class="form-control @error('npi_number') is-invalid @enderror" id="floatingInput7" placeholder="NPI Number" value="{{ old('npi_number') }}" min="0">
                     <label for="floatingInput7">NPI Number</label>
                     @error('npi_number')
                     <div class="text-danger">{{ $message }}</div>
@@ -240,7 +237,7 @@
                                 </td>
 
                                 <td>
-                                    <div class="ms-4 btns" onclick="openFileSelection()">
+                                    <div class="ms-4 btns" id="form-floating">
                                         <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
                                         <p id="Contractor"></p>
@@ -248,8 +245,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-
-                                    <div class="ms-4 responsive-btns">
+                                    <div class="ms-4 responsive-btns" id="form-floating">
                                         <label for="independent_contractor" class="upload primary-fill"> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <p id="Contractor"></p>
                                         @error('independent_contractor')
@@ -269,7 +265,7 @@
                                 </td>
 
                                 <td>
-                                    <div class="ms-4 btns">
+                                    <div class="ms-4 btns" id="form-floating">
                                         <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="background-input" name="background_doc" hidden>
                                         <p id="Background"></p>
@@ -278,7 +274,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="ms-4 responsive-btns">
+                                    <div class="ms-4 responsive-btns" id="form-floating">
                                         <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
                                         <input type="file" id="background-input" name="background_doc" hidden>
                                         <p id="Background"></p>
@@ -299,7 +295,7 @@
                                 </td>
 
                                 <td>
-                                    <div class="ms-4 btns">
+                                    <div class="ms-4 btns" id="form-floating">
                                         <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="hipaa-input" hidden name="hipaa_docs">
                                         <p id="HIPAA"></p>
@@ -307,7 +303,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="ms-4 responsive-btns">
+                                    <div class="ms-4 responsive-btns" id="form-floating">
                                         <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i class="bi bi-cloud-arrow-up"></i></button>
                                         <p id="HIPAA"></p>
                                         @error('hipaa_docs')
@@ -326,7 +322,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="ms-4 btns">
+                                    <div class="ms-4 btns" id="form-floating">
                                         <label for="non-disclosure-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc">
                                         <p class="non-disclosure"></p>
@@ -334,7 +330,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="ms-4 responsive-btns">
+                                    <div class="ms-4 responsive-btns" id="form-floating">
                                         <button class="primary-fill mb-2 mt-2" name="non_disclosure_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
                                         <p class="non-disclosure"></p>
                                         @error('independent_contractor')

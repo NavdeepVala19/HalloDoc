@@ -43,8 +43,8 @@ class patientProfileController extends Controller
             'first_name' => 'required|min:3|max:15',
             'last_name' => 'required|min:3|max:15',
             'date_of_birth' => 'required',
-            'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'phone_number' => 'required',
             'street' => 'required|min:2|max:60',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -52,37 +52,17 @@ class patientProfileController extends Controller
         ]);
 
 
-        $userData = Auth::user();
-
-        // update Data in requestClientTable
-        $updatedData = [
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'phone_number' => $request->input('phone_number'),
-            'city' => $request->input('city'),
-            'state' => $request->input('state'),
-            'street' => $request->input('street'),
-            'zipcode' => $request->input('zipcode')
-        ];
-
-        // update Data in RequestTable
-
-        $updatedRequestTableData = [
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'phone_number' => $request->input('phone_number'),
-        ];
-
+        $userData = Auth::user();     
+      
         // Update data in users table
         $updateUserData = [
             'email' => $request->input('email'),
+            'phone_number'=>$request->input('phone_number'),
             'username' => $request->input('first_name') . $request->input('last_name'),
         ];
 
-        // update Data in allusers table 
 
+        // update Data in allusers table 
         $updateAllUser = [
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -95,14 +75,9 @@ class patientProfileController extends Controller
             'zipcode' => $request->input('zipcode')
         ];
 
-        $updateData = request_Client::where('email', $userData['email'])->update($updatedData);
-
         $updateUser = users::where('email', $userData['email'])->update($updateUserData);
 
         $updateAllUserData = allusers::where('email', $userData['email'])->update($updateAllUser);
-
-        $updateRequestTableData = RequestTable::where('email', $userData['email'])->update($updatedRequestTableData);
-
 
         return redirect()->route('patientDashboardData')->with('message','profile is updated successfully');
     }

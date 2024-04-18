@@ -946,10 +946,11 @@ class AdminController extends Controller
 
     public function exportFilteredSearchRecord($request)
     {
+        $todayDate = now();
+
         $combinedData = request_Client::distinct()->select([
             'request_client.first_name',
             'request.request_type_id',
-            DB::raw('DATE(request_client.created_at) as created_date'),
             'request_client.email',
             'request_client.phone_number',
             'request_client.street',
@@ -962,6 +963,7 @@ class AdminController extends Controller
             'request_notes.admin_notes',
             'request_notes.patient_notes',
             'request_client.id',
+            DB::raw('DATE(request_client.created_at) as created_date'),
             DB::raw('DATE(request_closed.created_at) as closed_date'),
         ])
             ->join('request', 'request.id', '=', 'request_client.request_id')
@@ -993,10 +995,13 @@ class AdminController extends Controller
             $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
         }
         if (!empty($request->from_date_of_service)) {
-            $combinedData->where('request_client.created_at', "like", "%" . $request->from_date_of_service . "%");
+            $combinedData->whereBetween('request_client.created_at',[$request->from_date_of_service, $todayDate]);
         }
         if (!empty($request->to_date_of_service)) {
-            $combinedData->where('request_closed.created_at', "like", "%" . $request->to_date_of_service . "%");
+            $combinedData->where('request_client.created_at',"<",$request->to_date_of_service);
+        }
+        if(!empty($request->from_date_of_service) && !empty($request->to_date_of_service)){
+            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service,]);
         }
         return $combinedData;
     }
@@ -1013,10 +1018,11 @@ class AdminController extends Controller
 
 
     public function deleteSearchRecordData($id)
-    {
+    {   
+        $getRequestId = request_Client::select('request_id')->where('id', $id)->first()->request_id;
+        
         $deleteData = request_Client::where('id', $id)->forceDelete();
-        $getRequestId = request_Client::select('request_id')->where('id', $id)->first();
-        $deleteRequestTableData = Request::where('id', $getRequestId)->forceDelete();
+        $deleteRequestTableData = RequestTable::where('id', $getRequestId)->forceDelete();
         $deleteDocuments = RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
         $deleteRequestStatus = RequestStatus::where('request_id', $getRequestId)->forceDelete();
         $deleteRequestBusiness = RequestBusiness::where('request_id', $getRequestId)->forceDelete();
@@ -1670,6 +1676,7 @@ class AdminController extends Controller
 
     public function exportNew(Request $request)
     {
+        // dd($request->all());
         $status = 'new';
         $category = $request->filter_category;
         $search = $request->filter_search;
@@ -1677,7 +1684,8 @@ class AdminController extends Controller
 
         $regionName = $request->session()->get('regionName', null);
 
-        if ($regionName == "All Regions") {
+
+        if ($region == "All Regions") {
             $exportNewData = $this->buildQuery($status, $category, $search);
         } else {
             $exportNewData = $this->fetchQuery($status, $category, $search, $regionName);

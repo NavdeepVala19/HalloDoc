@@ -28,7 +28,7 @@
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-floating" id="form-floating"> 
+                    <div class="form-floating" id="form-floating">
                         <input type="text" class="form-control @error('family_last_name') is-invalid @enderror" id="floatingInput2" value="{{ old('family_last_name') }}" name="family_last_name" placeholder="Your Last Name">
                         <label for="floatingInput2">Your Last Name</label>
                         @error('family_last_name')
@@ -67,12 +67,9 @@
                     <div class="patient-info-text">
                         <h4>Patient Information</h4>
                     </div>
-
-                    <div class="area-text">
-                        <div class="form-floating" id="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" name="symptoms"  id="floatingTextarea2" style="height: 150px"> {{ old('symptoms') }}</textarea>
-                            <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
-                        </div>
+                    <div class="form-floating" id="form-floating">
+                        <textarea class="form-control note" name='symptoms' placeholder="notes" id="floatingTextarea2" style="height: 150px">{{ old('symptoms') }}</textarea>
+                        <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
                     </div>
                 </div>
 
@@ -177,7 +174,7 @@
 
                         <div class="custom-file-input mb-4" id="form-floating">
                             <input type="file" name="docs" id="file-upload-request" hidden>
-                            <label for="file-upload-request" class="upload-label">
+                            <label for="file-upload-request" class="upload-label" style="color: #3c9eff;">
                                 <div class="p-2 file-label">
                                     Select File
                                 </div>

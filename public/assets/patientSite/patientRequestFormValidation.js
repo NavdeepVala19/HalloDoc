@@ -36,6 +36,17 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
+    
+
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
+    );
+
+    
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {
@@ -47,21 +58,21 @@ $(document).ready(function () {
         "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
-    $.validator.addMethod(
-        "city",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid city name."
-    );
+   $.validator.addMethod(
+       "city",
+       function (value, element) {
+           return value.match(/^[a-zA-Z ,_-]+?$/);
+       },
+       "Please do not enter numbers in city name."
+   );
 
-    $.validator.addMethod(
-        "state",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid state name."
-    );
+   $.validator.addMethod(
+       "state",
+       function (value, element) {
+           return value.match(/^[a-zA-Z ,_-]+?$/);
+       },
+       "Please do not enter numbers in state name."
+   );
 
     $.validator.addMethod(
         "zipcode",
@@ -90,7 +101,7 @@ $(document).ready(function () {
             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter alphabets in symptoms."
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -194,7 +205,7 @@ $(document).ready(function () {
             state: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
                 state: true,
             },
             zipcode: {
@@ -239,9 +250,11 @@ $(document).ready(function () {
             },
             city: {
                 required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
             },
             state: {
                 required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
             zipcode: {
                 required: "Please enter a zipcode",
@@ -255,7 +268,7 @@ $(document).ready(function () {
             },
             docs: {
                 customFile:
-                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+                    "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB. ",
             },
         },
         errorPlacement: function (error, element) {

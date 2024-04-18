@@ -1,6 +1,6 @@
 <table class="table" id="user-access-table">
     <thead class="table-secondary text-center align-middle">
-        <td>Account Type <i class="bi bi-arrow-up"></i></td>
+        <td>Account Type</td>
         <td>Account POC</td>
         <td>Phone</td>
         <td>Status</td>

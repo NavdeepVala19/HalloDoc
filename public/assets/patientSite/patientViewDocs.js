@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     $.validator.addMethod(
         "customFile",
         function (value, element, param) {
@@ -33,23 +34,24 @@ $(document).ready(function () {
     );
 
     $("#patientUploadDocs").validate({
-        ignore:[],
-        rules: {           
+        ignore: [],
+        rules: {
             document: {
-                required:true,
+                required: true,
                 customFile: true,
             },
         },
-        messages: {         
+        messages: {
             document: {
-                required:"Please select document",
-                customFile: "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+                required: "Please select document",
+                customFile:
+                    "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB. ",
             },
         },
-        errorElement: span,
+        errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".custom-file-input").append(error);
+            element.closest("#form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -57,6 +59,9 @@ $(document).ready(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
+         submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit(); // Submit the form
+        },
     });
-
 });

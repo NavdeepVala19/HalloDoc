@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientRequest.css') }}">
 @endsection
 
-
 @section('patientRequests')
 
 @include('loading')
@@ -30,7 +29,6 @@
                         <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
                     </div>
                 </div>
-
                 <!--  Patient FirstName, LastName ,DOB Field  -->
                 <div class=" grid-2">
                     <div class="form-floating" id="form-floating">
@@ -129,7 +127,7 @@
                     </div>
                     <div class="custom-file-input mb-4" id="form-floating">
                         <input type="file" name="docs" id="file-upload-request" hidden>
-                        <label for="file-upload-request" class="upload-label">
+                        <label for="file-upload-request" class="upload-label" style="color: #3c9eff;">
                             <div class="p-2 file-label">
                                 Select File
                             </div>

@@ -22,24 +22,24 @@
         <h3>General Information </h3>
         <input type="hidden" name="email" value="{{Session::get('email')}}">
         <div class="grid-2">
-            <div class="form-floating ">
-                <input type="text" name="first_name" class="form-control first_name" id="floatingInput" value="{{$getEmailData->first_name}}" disabled placeholder="First Name">
-                <label for="floatingInput">First Name</label>
+            <div class="form-floating">
+                <input type="text" name="first_name" class="form-control first_name" id="floatingInput1" value="{{$getEmailData->first_name}}" disabled placeholder="First Name">
+                <label for="floatingInput1">First Name</label>
                 @error('first_name')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="form-floating ">
-                <input type="text" name="last_name" class="form-control last_name" id="floatingInput" value="{{$getEmailData->last_name}}" disabled placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
+            <div class="form-floating">
+                <input type="text" name="last_name" class="form-control last_name" id="floatingInput2" value="{{$getEmailData->last_name}}" disabled placeholder="Last Name">
+                <label for="floatingInput2">Last Name</label>
                 @error('last_name')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="form-floating ">
-                <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth" placeholder="date of birth" disabled value="{{$getEmailData->date_of_birth}}">
-                <label for="floatingInput">Date Of Birth</label>
+            <div class="form-floating">
+                <input type="date" class="form-control date_of_birth" id="floatingInput3" name="date_of_birth" placeholder="date of birth" disabled value="{{$getEmailData->date_of_birth}}">
+                <label for="floatingInput3">Date Of Birth</label>
                 @error('date_of_birth')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -58,9 +58,9 @@
                 @enderror
             </div>
 
-            <div class="form-floating ">
-                <input type="email" class="form-control email" id="floatingInput" value="{{$getEmailData->email}}" disabled placeholder="name@example.com" name="email">
-                <label for="floatingInput">Email</label>
+            <div class="form-floating">
+                <input type="email" class="form-control email" id="floatingInput4" value="{{$getEmailData->email}}" disabled placeholder="name@example.com" name="email">
+                <label for="floatingInput4">Email</label>
                 @error('email')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -75,25 +75,25 @@
 
         <div class="grid-2">
 
-            <div class="form-floating ">
-                <input type="text" name="street" class="form-control street" id="floatingInput" disabled placeholder="Street" value="{{$getEmailData->street}}">
-                <label for="floatingInput">Street</label>
+            <div class="form-floating">
+                <input type="text" name="street" class="form-control street" id="floatingInput5" disabled placeholder="Street" value="{{$getEmailData->street}}">
+                <label for="floatingInput5">Street</label>
                 @error('street')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="form-floating ">
-                <input type="text" name="city" class="form-control city" id="floatingInput" disabled placeholder="City" value="{{$getEmailData->city}}">
-                <label for="floatingInput">City</label>
+            <div class="form-floating">
+                <input type="text" name="city" class="form-control city" id="floatingInput6" disabled placeholder="City" value="{{$getEmailData->city}}">
+                <label for="floatingInput6">City</label>
                 @error('city')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="form-floating ">
-                <input type="text" name="state" class="form-control state" id="floatingInput" disabled placeholder="State" value="{{$getEmailData->state}}">
-                <label for="floatingInput">State</label>
+            <div class="form-floating">
+                <input type="text" name="state" class="form-control state" id="floatingInput7" disabled placeholder="State" value="{{$getEmailData->state}}">
+                <label for="floatingInput7">State</label>
                 @error('state')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -102,8 +102,8 @@
             <div class="d-flex gap-4 align-items-center">
 
                 <div class="form-floating w-100">
-                    <input type="text" name="zipcode" class="form-control zipcode" disabled id="floatingInput" placeholder="Zipcode" value="{{$getEmailData->zipcode}}" min="0">
-                    <label for="floatingInput">Zipcode</label>
+                    <input type="text" name="zipcode" class="form-control zipcode" disabled id="floatingInput8" placeholder="Zipcode" value="{{$getEmailData->zipcode}}" min="0">
+                    <label for="floatingInput8">Zipcode</label>
                     @error('zipcode')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror

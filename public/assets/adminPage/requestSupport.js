@@ -40,20 +40,18 @@ $(document).ready(function () {
         },
     });
 
-    $("#requestDTYSupportForm").click(function () {
-        if ($("#requestDTYSupportForm").valid()) {
-            $("#requestDTYSupportForm").submit();
-        }
-    });
 
-
-    $(".requestDTYClose").click(function (e) {
-        e.preventDefault();
-
+    $(".requestDTYClose").click(function () {
+        $(".pop-up .pop-up-request-support")
+            .empty()
         $("#requestDTYSupportForm").trigger("reset");
         $("#requestDTYSupportForm").validate().resetForm();
-        $(".pop-up-request-support.form-control").removeClass("is-valid");
-        $(".pop-up-request-support .form-control").removeClass("is-invalid");
+        $(".pop-up form .form-control").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control").removeClass(
+            "is-invalid"
+        );
     });
 
 });

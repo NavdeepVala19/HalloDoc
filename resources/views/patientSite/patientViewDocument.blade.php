@@ -10,6 +10,7 @@
 @endsection
 
 @section('patientSiteContent')
+@include('loading')
 
 <div class="container content">
     <div class="head-btn">
@@ -26,9 +27,9 @@
             <p class="user-name">{{$documents->first()->first_name}} <span class="confirmation-no" style="color: gray;">{{$documents->first()->confirmation_no}} </span> </p>
             <p>Check Here for any files that you or doctors of your subsequents requestors have attached for you to review.</p>
 
-            <div class="custom-file-input mb-4">
+            <div class="custom-file-input mb-4" id="form-floating">
                 <input type="file" name="document" id="file-upload" hidden>
-                <label for="file-upload" class="upload-label @error('document') is-invalid @enderror">Select File </label>
+                <label for="file-upload" class="upload-label @error('document') is-invalid @enderror" style="color: #3c9eff;">Select File </label>
                  <button type="submit" class="primary-fill upload-btn">
                         <i class="bi bi-cloud-arrow-up me-2"></i>
                         <span class="upload-txt">Upload</span>
@@ -51,8 +52,7 @@
         <table class="table">
             <thead class="table-secondary">
                 <tr>
-                    <td><input class="form-check-input master-checkbox" type="checkbox" id="flexCheckDefault" name="" value="">
-                    </td>
+                    <td><input class="form-check-input master-checkbox" type="checkbox" id="flexCheckDefault" name="" value=""> </td>
                     <td></td>
                     <td>Uploader</td>
                     <td>Upload Date</td>
@@ -63,12 +63,13 @@
                 @foreach ($documents as $document)
                 <tr>
                     <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault" name="selected_files[]" value="{{ $document->id }}"></td>
-                    <td><i class="bi bi-filetype-doc"></i> {{ $document->file_name }}</td>
+                    <td><i class="bi bi-filetype-doc"></i>{{ substr($document->file_name, 14)}}</td>
                     <td>{{ $document->first_name }}</td>
                     <td>{{date_format(date_create($document->created_date), 'd-m-Y')}}</td>
                     <td> <a href="{{ route('downloadOne', Crypt::encrypt($document->id)) }}" class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
                 </tr>
                 @endforeach
+                {{$documents->links('pagination::bootstrap-5')}}
             </tbody>
         </table>
         <div class="table-content">
@@ -84,13 +85,13 @@
                 </a>
             </div>
             @endforeach
+            {{$documents->links('pagination::bootstrap-5')}}
         </div>
     </form>
 </div>
 @endsection
 
 @section('script')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
 <script defer src="{{ URL::asset('assets/patientSite/patientViewDocs.js') }}"></script>

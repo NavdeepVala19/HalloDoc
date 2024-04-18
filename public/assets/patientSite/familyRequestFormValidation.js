@@ -56,21 +56,21 @@ $(document).ready(function () {
         "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
-    $.validator.addMethod(
-        "city",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid city name."
-    );
+     $.validator.addMethod(
+         "city",
+         function (value, element) {
+             return value.match(/^[a-zA-Z ,_-]+?$/);
+         },
+         "Please do not enter numbers in city name."
+     );
 
-    $.validator.addMethod(
-        "state",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid state name."
-    );
+     $.validator.addMethod(
+         "state",
+         function (value, element) {
+             return value.match(/^[a-zA-Z ,_-]+?$/);
+         },
+         "Please do not enter numbers in state name.."
+     );
 
     $.validator.addMethod(
         "zipcode",
@@ -80,14 +80,15 @@ $(document).ready(function () {
         "Please enter a valid zipcode."
     );
 
-    $.validator.addMethod(
-        "diseaseSymptoms",
-        function (value, element) {
-            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
-            return this.optional(element) || regex.test(value.trim());
-        },
-        "Please enter valid symptoms."
-    );
+      $.validator.addMethod(
+          "diseaseSymptoms",
+          function (value, element) {
+              const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+              return this.optional(element) || regex.test(value.trim());
+          },
+          "Please enter alphabets in symptoms."
+      );
+
 
     $.validator.addMethod(
         "nonNegativeOptional",
@@ -100,6 +101,15 @@ $(document).ready(function () {
             return !isNaN(value) && value >= 0;
         },
         "Please enter a valid room number."
+    );
+
+
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -192,7 +202,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 100,
+                maxlength: 50,
+                street: true,
             },
             city: {
                 required: true,
@@ -277,9 +288,11 @@ $(document).ready(function () {
             },
             city: {
                 required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
             },
             state: {
                 required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
             zipcode: {
                 required: "Please enter a zipcode",
@@ -303,7 +316,7 @@ $(document).ready(function () {
             },
             docs: {
                 customFile:
-                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+                    "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB. ",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",

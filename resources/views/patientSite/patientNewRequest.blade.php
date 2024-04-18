@@ -128,7 +128,7 @@
                     </div>
                     <div class="custom-file-input mb-4" id="form-floating">
                         <input type="file" name="docs" id="file-upload-request" hidden>
-                        <label for="file-upload-request" class="upload-label">
+                        <label for="file-upload-request" class="upload-label" style="color: #3c9eff;">
                             <div class="p-2 file-label">
                                 Select File
                             </div>

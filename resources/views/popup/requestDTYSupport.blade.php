@@ -12,7 +12,7 @@
                 <textarea class="form-control @error('contact_msg') is-invalid @enderror pop-up-request-support" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
                     style="height: 120px"></textarea>
                 <label for="floatingTextarea2">Message</label>
-                <span id="errorMsg"></span>
+                <span id="errorMsg"></span> 
                 @error('contact_msg')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

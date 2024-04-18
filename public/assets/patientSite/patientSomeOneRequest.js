@@ -39,12 +39,21 @@ $(document).ready(function () {
         "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
+
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
+    );
+
     $.validator.addMethod(
         "city",
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid city name."
+        "Please enter alphabets in city name."
     );
 
     $.validator.addMethod(
@@ -52,7 +61,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid state name."
+        "Please enter alphabets in state name."
     );
 
     $.validator.addMethod(
@@ -190,7 +199,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
+                street: true,
             },
             city: {
                 required: true,
@@ -247,9 +257,11 @@ $(document).ready(function () {
             },
             city: {
                 required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
             },
             state: {
                 required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
             zipcode: {
                 required: "Please enter a zipcode",
@@ -263,7 +275,7 @@ $(document).ready(function () {
             },
             docs: {
                 customFile:
-                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' and size should be less than 2MB ",
             },
             relation: {
                 relation: "Please enter only letters",

@@ -33,7 +33,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid city name."
+        "Please enter alphabets in city name."
     );
 
     $.validator.addMethod(
@@ -41,7 +41,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid state name."
+        "Please enter alphabets in state name."
     );
 
     $.validator.addMethod(
@@ -107,6 +107,16 @@ $(document).ready(function () {
         "Please enter a date between {0} and {1}."
     );
 
+    
+  
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
+    );
+
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {
@@ -152,7 +162,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
+                street: true,
             },
             city: {
                 required: true,
@@ -201,11 +212,12 @@ $(document).ready(function () {
             },
             city: {
                 required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
             },
             state: {
                 required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
-
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },

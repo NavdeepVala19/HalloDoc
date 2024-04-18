@@ -1,4 +1,6 @@
-at$(document).ready(function () {
+$(document).ready(function () {
+
+
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {
@@ -40,7 +42,7 @@ at$(document).ready(function () {
             },
             confirm_password: {
                 required: true,
-                equalTo: '[name="password"]',
+                equalTo: "#exampleInputPassword1",
             },
         },
         messages: {
@@ -67,9 +69,11 @@ at$(document).ready(function () {
                 equalTo: "Passwords do not match.",
             },
         },
+
         errorPlacement: function (error, element) {
-            error.addClass("text-danger");
-            element.closest("#adminLogin").append(error);
+            let errorDiv = $('<div class="text-danger"></div>');
+            errorDiv.append(error);
+            element.closest("#adminLog").append(errorDiv);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

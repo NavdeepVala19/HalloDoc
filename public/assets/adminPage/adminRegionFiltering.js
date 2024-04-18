@@ -77,6 +77,7 @@ $(".listing-region").on("change", function (event) {
     event.preventDefault();
     var tab = $(".nav-link.active").attr("id");
     var words = tab.split("-");
+
     var selectedId = $(this).val();
     var activeStatus = words[1];
 

@@ -24,27 +24,27 @@
                 <!-- <input type="hidden" name="email" value="{{ Session::get('email') }}"> -->
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="first_name" class="form-control first_name" id="floatingInput"
+                        <input type="text" name="first_name" class="form-control first_name" id="floatingInput1"
                             value="{{ $getPatientData->first_name }}" placeholder="First Name">
-                        <label for="floatingInput">First Name</label>
+                        <label for="floatingInput1">First Name</label>
                         @error('first_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span class="errorMsg"></span>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="last_name" class="form-control last_name" id="floatingInput"
+                        <input type="text" name="last_name" class="form-control last_name" id="floatingInput2"
                             value="{{ $getPatientData->last_name }}" placeholder="Last Name">
-                        <label for="floatingInput">Last Name</label>
+                        <label for="floatingInput2">Last Name</label>
                         @error('last_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span class="errorMsg"></span>
                     </div>
                     <div class="form-floating ">
-                        <input type="date" class="form-control date_of_birth" id="floatingInput" name="date_of_birth"
+                        <input type="date" class="form-control date_of_birth" id="floatingInput3" name="date_of_birth"
                             placeholder="date of birth" value="{{ $getPatientData->date_of_birth }}">
-                        <label for="floatingInput">Date Of Birth</label>
+                        <label for="floatingInput3">Date Of Birth</label>
                         @error('date_of_birth')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -62,9 +62,9 @@
                         <span class="errorMsg"></span>
                     </div>
                     <div class="form-floating ">
-                        <input type="email" class="form-control email" id="floatingInput"
+                        <input type="email" class="form-control email" id="floatingInput4"
                             value="{{ $getPatientData->email }}" placeholder="name@example.com" name="email">
-                        <label for="floatingInput">Email</label>
+                        <label for="floatingInput4">Email</label>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -74,27 +74,27 @@
                 <h4>Patient Location</h4>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="street" class="form-control street" id="floatingInput"
+                        <input type="text" name="street" class="form-control street" id="floatingInput5"
                             placeholder="Street" value="{{ $getPatientData->street }}">
-                        <label for="floatingInput">Street</label>
+                        <label for="floatingInput5">Street</label>
                         @error('street')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span class="errorMsg"></span>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="city" class="form-control city" id="floatingInput" placeholder="City"
+                        <input type="text" name="city" class="form-control city" id="floatingInput6" placeholder="City"
                             value="{{ $getPatientData->city }}">
-                        <label for="floatingInput">City</label>
+                        <label for="floatingInput6">City</label>
                         @error('city')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span class="errorMsg"></span>
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="state" class="form-control state" id="floatingInput"
+                        <input type="text" name="state" class="form-control state" id="floatingInput7"
                             placeholder="State" value="{{ $getPatientData->state }}">
-                        <label for="floatingInput">State</label>
+                        <label for="floatingInput7">State</label>
                         @error('state')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -102,9 +102,9 @@
                     </div>
                     <div class="d-flex gap-4 align-items-center">
                         <div class="form-floating w-100">
-                            <input type="text" name="zipcode" class="form-control zipcode" id="floatingInput"
+                            <input type="text" name="zipcode" class="form-control zipcode" id="floatingInput8"
                                 placeholder="Zipcode" value="{{ $getPatientData->zipcode }}" min="0">
-                            <label for="floatingInput">Zipcode</label>
+                            <label for="floatingInput8">Zipcode</label>
                             @error('zipcode')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror

@@ -41,7 +41,7 @@ $(document).ready(function () {
             },
             confirm_password: {
                 required: true,
-                equalTo: '[name="password"]',
+                equalTo: "#exampleInputPassword1",
             },
         },
         messages: {

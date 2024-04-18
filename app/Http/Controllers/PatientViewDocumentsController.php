@@ -40,23 +40,22 @@ class PatientViewDocumentsController extends Controller
 
     public function uploadDocs(Request $request)
     {
-
         $request->validate([
             'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
         ]);
+  
         $userData = Auth::user();
         $email = $userData["email"];
 
-        $reqestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
+        $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
 
         if (!empty($request->document)) {
             // store documents in request_wise_file table
             $request_file = new RequestWiseFile();
-            $request_file->request_id = $reqestWiseData->first()->request_id;
-            $request_file->file_name = $request->file('document')->getClientOriginalName();
-            $path = $request->file('document')->storeAs('public', $request->document->getClientOriginalName());
+            $request_file->request_id = $requestWiseData->first()->request_id;
+            $request_file->file_name = uniqid() . '_' .$request->file('document')->getClientOriginalName();
+            $path = $request->file('document')->storeAs('public', $request_file->file_name);
             $request_file->save();
-
             return back();
         }
         else{
@@ -83,13 +82,13 @@ class PatientViewDocumentsController extends Controller
 
     public function downloadSelectedFiles(Request $request)
     {
-
         if (empty($request->input('selected_files'))) {
             $data = RequestWiseFile::where('request_id', $request->requestId)->get();
             if ($data->isEmpty()) {
                 return redirect()->back()->with('noRecordFound', 'There are no records to download!');
             }
             $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+
         } else {
             $ids = $request->input('selected_files');
         }
@@ -101,7 +100,6 @@ class PatientViewDocumentsController extends Controller
             foreach ($ids as $id) {
                 $file = RequestWiseFile::where('id', $id)->first();
                 $path = (public_path() . '/storage/' . $file->file_name);
-
                 $zip->addFile($path, $file->file_name);
             }
             $zip->close();

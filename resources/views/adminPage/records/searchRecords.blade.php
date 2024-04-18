@@ -116,7 +116,7 @@
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
+                <input type="text" name="phone_number" class="form-control phone-number" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
             <div class=" mt-4 d-flex justify-content-end gap-2">
                 <button class="primary-fill" type="submit">
@@ -144,7 +144,6 @@
                         <td>Request Status</td>
                         <td>Physician</td>
                         <td>Physician Note</td>
-                        <td>Cancelled By Provider Note</td>
                         <td>Admin Note</td>
                         <td>Patient Note</td>
                         <td>Delete Permanently</td>
@@ -205,10 +204,8 @@
                         </td>
                         <td>{{$data->physician_first_name}}</td>
                         <td>{{$data->physician_notes}}</td>
-                        <td></td>
                         <td>{{$data->admin_notes}}</td>
                         <td>{{$data->patient_notes}}</td>
-
                         <td class="text-center align-middle"> <a href="{{route('admin.search.records.delete', $data->id)}}" class="primary-empty" type="button">Delete</a> </td>
                     </tr>
                     @endforeach

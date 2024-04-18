@@ -6,30 +6,22 @@
 
 @endsection
 
-
 @section('patientContent')
-
-
-
+@include("loading")
 <!-- main content -->
-
 <div class="container-fluid main-section">
-
     <div class="reset-password">
-
         <div class="details">
             <div class="main-content">
                 <a href="{{route('loginScreen')}}"><i class="bi bi-chevron-left"></i> Back</a>
             </div>
             <h1>Reset Your Password</h1>
         </div>
-
         @if (Session::has('error'))
         <div class="alert alert-danger popup-message" role="alert">
             {{ Session::get('error') }}
         </div>
         @endif
-
         <div class="form">
             <form action="{{route('forgot.password')}}" method="post" id="patientLogin">
                 @csrf

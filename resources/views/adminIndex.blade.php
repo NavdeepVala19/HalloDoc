@@ -15,17 +15,14 @@
 
 
 <div class=" container-fluid admin-container">
-
     <div class="row rows">
         <div class="col-lg-6 logo-doctor">
             <img class="doctor-logo" src="{{ URL::asset('/assets/11116016_415.jpg') }}" alt="">
         </div>
-
         <div class="col-lg-6 second-col">
             <div class="moon-icon">
-                <a href="" class="primary-empty toggle-mode"> <i class="bi bi-moon"></i> </a>
+                <a href="" class="primary-empty toggle-mode" id="toggle-mode"> <i class="bi bi-moon"></i> </a>
             </div>
-
             <div class="app-logo">
                 <a href=""><img class="hallodoc-logo" src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
             </div>

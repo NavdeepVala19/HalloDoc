@@ -44,7 +44,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please do not enter numbers in city name ."
+        "Please enter alphabets in city name."
     );
 
     $.validator.addMethod(
@@ -52,7 +52,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please do not enter numbers in state name."
+        "Please enter alphabets in state name."
     );
 
     $.validator.addMethod(
@@ -83,6 +83,16 @@ $(document).ready(function () {
             return this.optional(element) || regex.test(value.trim());
         },
         "Please enter valid symptoms."
+    );
+
+    
+ 
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -188,8 +198,8 @@ $(document).ready(function () {
             state: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
-                state: true,
+                maxlength: 50,
+                street: true,
             },
             zipcode: {
                 required: true,
@@ -231,11 +241,11 @@ $(document).ready(function () {
             },
             city: {
                 required: "Please enter a city",
-                city: "Please do not enter numbers in city name.",
+                city: "Please enter alpbabets in city name.",
             },
             state: {
                 required: "Please enter a state",
-                state: "Please do not enter numbers in state name.",
+                state: "Please enter alpbabets in state name.",
             },
             zipcode: {
                 required: "Please enter a zipcode",
@@ -249,7 +259,7 @@ $(document).ready(function () {
             },
             docs: {
                 customFile:
-                    "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' ",
+                    "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB. ",
             },
         },
         errorElement: "span",

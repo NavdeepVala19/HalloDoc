@@ -71,21 +71,21 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-    $.validator.addMethod(
-        "city",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid city name."
-    );
+      $.validator.addMethod(
+          "city",
+          function (value, element) {
+              return value.match(/^[a-zA-Z ,_-]+?$/);
+          },
+          "Please enter alphabets in city name."
+      );
 
-    $.validator.addMethod(
-        "state",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid state name."
-    );
+      $.validator.addMethod(
+          "state",
+          function (value, element) {
+              return value.match(/^[a-zA-Z ,_-]+?$/);
+          },
+          "Please enter alphabets in state name."
+      );
 
     $.validator.addMethod(
         "zipcode",
@@ -106,6 +106,16 @@ $(document).ready(function () {
             return !isNaN(value) && value >= 0;
         },
         "Please enter a positive value in  room number."
+    );
+
+    
+  
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -172,7 +182,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
+                street: true,
             },
             city: {
                 required: true,
@@ -256,9 +267,11 @@ $(document).ready(function () {
             },
             city: {
                 required: "Please enter a city",
+                city: "Please enter alpbabets in city name.",
             },
             state: {
                 required: "Please enter a state",
+                state: "Please enter alpbabets in state name.",
             },
             zipcode: {
                 required: "Please enter a zipcode",
