@@ -247,7 +247,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
 
@@ -304,6 +303,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             role: {
                 required: "Please select at least one role",

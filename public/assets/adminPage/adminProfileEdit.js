@@ -1,4 +1,62 @@
 $(document).ready(function () {
+
+        $("#admin-info-cancel-btn").on("click", function () {
+            $(".admin_first_name").attr("disabled", true);
+            $(".admin_last_name").attr("disabled", true);
+            $(".admin_email").attr("disabled", true);
+            $(".admin_confirm_email").attr("disabled", true);
+            $(".phone").attr("disabled", true);
+
+            $("#adminEditBtn1").show();
+            $(".admin-info-btns").hide();
+        });
+
+        $("#admin-mail-cancel-btn").on("click", function () {
+            $(".admin_add1").attr("disabled",true);
+            $(".admin_add2").attr("disabled", true);
+            $(".city").attr("disabled", true);
+            $(".admin_state").attr("disabled", true);
+            $(".admin_zipcode").attr("disabled", true);
+            $(".admin_alt_phone").attr("disabled", true);
+
+            $("#adminEditBtn2").show();
+            $(".admin-mail-info-btns").hide();
+        });
+
+        $("#adminAccEditBtn").on("click", function () {
+            $(".admin_user_name").removeAttr("disabled");
+            $("#status-select").removeAttr("disabled");
+            $("#listing_role_admin_Account").removeAttr("disabled");
+
+            $("#adminAccEditBtn").hide();
+            $(".admin-acc-btns").show();
+        });
+
+        $("#adminEditBtn1").on("click", function () {
+            $(".admin_first_name").removeAttr("disabled");
+            $(".admin_last_name").removeAttr("disabled");
+            $(".admin_email").removeAttr("disabled");
+            $(".admin_confirm_email").removeAttr("disabled");
+            $(".phone").removeAttr("disabled");
+
+            $("#adminEditBtn1").hide();
+            $(".admin-info-btns").show();
+        });
+
+        $("#adminEditBtn2").on("click", function () {
+            $(".admin_add1").removeAttr("disabled");
+            $(".admin_add2").removeAttr("disabled");
+            $(".city").removeAttr("disabled");
+            $(".admin_state").removeAttr("disabled");
+            $(".admin_zipcode").removeAttr("disabled");
+            $(".admin_alt_phone").removeAttr("disabled");
+            $("#listing_state_admin_account").removeAttr("disabled");
+
+            $("#adminEditBtn2").hide();
+            $(".admin-mail-info-btns").show();
+        });
+
+
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {
@@ -103,7 +161,7 @@ $(document).ready(function () {
                 maxlength: 50,
             },
         },
-        message: {
+        messages: {
             password: {
                 required: "Please enter a valid password",
             },
@@ -160,7 +218,7 @@ $(document).ready(function () {
                 phoneIndia: true,
             },
         },
-        message: {
+        messages: {
             first_name: {
                 required: "Please enter a firstname",
             },
@@ -217,7 +275,7 @@ $(document).ready(function () {
                 phoneUS: true,
             },
         },
-        message: {
+        messages: {
             address1: {
                 required: "Please enter a valid address1",
             },
@@ -234,6 +292,7 @@ $(document).ready(function () {
             },
             zip: {
                 required: "Please enter a valid zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             alt_mobile: {
                 required: "Please enter a valid alt_phone_number",

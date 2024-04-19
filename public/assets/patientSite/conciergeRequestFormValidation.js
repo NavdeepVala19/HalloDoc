@@ -148,7 +148,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             symptoms: {
@@ -280,6 +279,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             symptoms: {
                 maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
@@ -315,6 +315,7 @@ $(document).ready(function () {
             },
             concierge_zip_code: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
         },
         errorElement: "span",

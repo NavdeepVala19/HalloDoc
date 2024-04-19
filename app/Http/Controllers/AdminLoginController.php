@@ -74,6 +74,7 @@ class AdminLoginController extends Controller
 
         $user = users::where('email', $request->email)->first();
         if ($user == null) {
+            
             return back()->with('error', 'no such email is registered');
         }
 
@@ -109,7 +110,7 @@ class AdminLoginController extends Controller
         $updatePassword = users::where('token', $request->token)->first();
 
         if (!$updatePassword) {
-            return back()->withInput()->with('error', 'Invalid token!');
+            return back()->with('error', 'Invalid token!');
         }
 
         users::where([
@@ -118,7 +119,7 @@ class AdminLoginController extends Controller
 
         users::where(['token' => $request->token])->update(['token' => ""]);
 
-        return redirect('/adminLogin')->with('message', 'Your password has been changed!');
+        return redirect()->route('adminLogin')->with('message', 'Your password has been changed!');
     }
 
     public function logout()

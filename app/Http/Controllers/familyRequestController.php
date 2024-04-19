@@ -115,8 +115,8 @@ class familyRequestController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $familyRequest->id;
-            $request_file->file_name = $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
 

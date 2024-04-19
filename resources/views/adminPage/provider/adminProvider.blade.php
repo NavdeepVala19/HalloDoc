@@ -138,7 +138,7 @@
                                 </label>
                             </div>
                             <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
+                                <textarea class="form-control contact_provider_msg" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
                                 <label for="floatingTextarea2">Message</label>
                                 <span id="errorMsg"></span>
                             </div>

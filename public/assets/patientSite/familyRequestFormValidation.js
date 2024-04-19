@@ -180,7 +180,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             email: {
@@ -240,7 +239,7 @@ $(document).ready(function () {
             },
             family_phone_number: {
                 required: true,
-                phoneIndia: "Please enter valid phone number format....",
+                phoneIndia: true,
             },
             family_email: {
                 required: true,
@@ -296,6 +295,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             family_first_name: {
                 required: "Please enter a firstname between 3 and 15 character",

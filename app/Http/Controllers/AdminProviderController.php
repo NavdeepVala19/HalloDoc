@@ -199,7 +199,6 @@ class AdminProviderController extends Controller
 
     public function adminCreateNewProvider(Request $request)
     {
-     
         $request->validate([
             'user_name' => 'required|alpha|min:3|max:40',
             'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
@@ -217,7 +216,7 @@ class AdminProviderController extends Controller
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'provider_photo' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'business_website' => 'required|url|max:40|min:10',
-            'admin_notes' => 'required|min:5|max:100|',
+            'admin_notes' => 'required|min:5|max:200|',
             'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'background_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
@@ -399,10 +398,10 @@ class AdminProviderController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'medical_license' => 'required|alpha_num|max:20|min:3',
-            'npi_number' => 'required|numeric|min:3|max_digits:7',
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'phone_number' => 'required',
+            'medical_license' => 'required|num|max:20|min:3',
+            'npi_number' => 'required|numeric|min:3|max_digits:10',
         ]);
         $getProviderInformation = Provider::with('users')->where('id', $id)->first();
 
@@ -482,7 +481,7 @@ class AdminProviderController extends Controller
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'provider_photo' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'business_website' => 'nullable|url|max:40|min:10',
-            'admin_notes' => 'nullable|min:5|max:100|',
+            'admin_notes' => 'nullable|min:5|max:200|',
         ]);
 
         $getProviderInformation = Provider::where('id', $id)->first();
@@ -565,6 +564,7 @@ class AdminProviderController extends Controller
     public function providerLocations()
     {
         $providers = Provider::get();
+     
         return view('adminPage/provider/providerLocation', compact("providers"));
     }
 

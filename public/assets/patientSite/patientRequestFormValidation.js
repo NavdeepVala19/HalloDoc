@@ -172,7 +172,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             email: {
@@ -258,6 +257,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",

@@ -105,7 +105,7 @@ class patientLoginController extends Controller
         $updatePassword = users::where('token', $request->token)->first();
 
         if (!$updatePassword) {
-            return back()->withInput()->with('error', 'Invalid token!');
+            return back()->with('error', 'Invalid token!');
         }
 
         users::where([

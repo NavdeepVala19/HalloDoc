@@ -20,6 +20,8 @@ $(document).ready(function () {
 
     // ********************************************************************************
 
+
+
     // **** This code is for enabling field in adminProviderEdit Page ****
     $("#provider-credentials-edit-btn").click(function () {
         $(".provider-username-field").removeAttr("disabled");
@@ -33,9 +35,9 @@ $(document).ready(function () {
     });
 
     $("#providerAccCancelBtn").click(function () {
-        $(".provider-username-field").attr("disabled");
-        $("#provider-status").attr("disabled");
-        $("#provider_role").attr("disabled");
+        $(".provider-username-field").attr("disabled", true);
+        $("#provider-status").attr("disabled", true);
+        $("#provider_role").attr("disabled", true);
 
         $("#providerAccSaveBtn").hide();
         $("#providerAccCancelBtn").hide();
@@ -66,13 +68,13 @@ $(document).ready(function () {
     });
 
     $("#providerInfoCancelBtn").click(function () {
-        $(".provider-firstname").attr("disabled");
-        $(".provider-lastname").attr("disabled");
-        $(".provider-email").attr("disabled");
-        $("#telephone").attr("disabled");
-        $(".provider-license").attr("disabled");
-        $(".provider-npi").attr("disabled");
-        $(".provider-alt-email").attr("disabled");
+        $(".provider-firstname").attr("disabled", true);
+        $(".provider-lastname").attr("disabled", true);
+        $(".provider-email").attr("disabled", true);
+        $("#telephone").attr("disabled", true);
+        $(".provider-license").attr("disabled", true);
+        $(".provider-npi").attr("disabled", true);
+        $(".provider-alt-email").attr("disabled", true);
 
         $("#providerInfoSaveBtn").hide();
         $("#providerInfoCancelBtn").hide();
@@ -80,6 +82,7 @@ $(document).ready(function () {
     });
 
     $("#provider-bill-edit-btn").click(function () {
+     
         $(".provider-bill-add1").removeAttr("disabled");
         $(".provider-bill-add2").removeAttr("disabled");
         $(".provider-bill-city").removeAttr("disabled");
@@ -93,16 +96,17 @@ $(document).ready(function () {
     });
 
     $("#providerMailCancelBtn").click(function () {
-        $(".provider-bill-add1").attr("disabled");
-        $(".provider-bill-add2").attr("disabled");
-        $(".provider-bill-city").attr("disabled");
-        $(".provider-bill-zip").attr("disabled");
-        $(".alt-phone-provider").attr("disabled");
-        $(".listing-region").attr("disabled");
+        $(".provider-bill-add1").attr("disabled",true);
+        $(".provider-bill-add2").attr("disabled", true);
+        $(".provider-bill-city").attr("disabled", true);
+        $(".provider-bill-zip").attr("disabled", true);
+        $(".alt-phone-provider").attr("disabled", true);
+        $(".listing-region").attr("disabled", true);
 
         $("#providerMailSaveBtn").hide();
         $("#providerMailCancelBtn").hide();
         $("#provider-bill-edit-btn").show();
+        console.log("here");
     });
 
     $("#provider-profile-edit-btn").click(function () {
@@ -334,7 +338,7 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
+            error.addClass("text-danger");
             element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
@@ -348,20 +352,15 @@ $(document).ready(function () {
             form.submit(); // Submit the form
         },
     });
-    $("#ContactProviderForm").click(function () {
-        if ($("#ContactProviderForm").valid()) {
-            $("#ContactProviderForm").submit();
-        }
-    });
 
-    $(".requestDTYClose").click(function (e) {
-        e.preventDefault();
-
+    $(".hide-popup-btn").click(function () {
+        $(".pop-up .contact_provider_msg").empty();
         $("#ContactProviderForm").trigger("reset");
         $("#ContactProviderForm").validate().resetForm();
-        $(".pop-up-request-support.form-control").removeClass("is-valid");
-        $(".pop-up-request-support .form-control").removeClass("is-invalid");
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
+    
 
     // client side validation in adminProviderCreateForm
 
@@ -386,7 +385,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid business name."
+        "Please enter alphabets in business name."
     );
 
     $.validator.addMethod(
@@ -402,7 +401,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter positive number with 6 digits"
     );
 
     $.validator.addMethod(
@@ -453,7 +452,7 @@ $(document).ready(function () {
         function (value, element) {
             return value !== "";
         },
-        "Please select a role."
+        "Please select role."
     );
 
     $.validator.addMethod(
@@ -610,11 +609,12 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             phone_number_alt: {
                 required: true,
-                phoneIndia: true,
+                minlength: 10,
+                maxlength:10,
             },
             medical_license: {
                 required: true,
@@ -654,7 +654,7 @@ $(document).ready(function () {
             },
             alt_phone_number: {
                 required: true,
-                phoneUS: true,
+                phoneIndia: true,
             },
             business_name: {
                 required: true,
@@ -665,12 +665,12 @@ $(document).ready(function () {
             business_website: {
                 required: true,
                 minlength: 10,
-                maxlength: 40,
+                maxlength: 50,
             },
             admin_notes: {
                 required: true,
                 minlength: 5,
-                maxlength: 100,
+                maxlength: 200,
                 adminNotes: true,
             },
             provider_photo: {
@@ -689,27 +689,35 @@ $(document).ready(function () {
                 customFile: true,
             },
         },
-        message: {
+        messages: {
             role: {
                 required: "Please select role",
+                roleCheck: "Please select role",
             },
             user_name: {
-                required: "Please enter a valid username",
+                required: "Please enter a username",
             },
             password: {
                 required: "Please enter a password",
             },
             first_name: {
-                required: "Please enter a valid first_name",
+                required: "Please enter a first_name",
+                lettersFirstName:
+                    "Please enter only letters for your first name.",
             },
             last_name: {
-                required: "Please enter a valid last_name",
+                required: "Please enter a last_name",
+                lettersLastName:
+                    "Please enter only letters for your Last name.",
             },
             email: {
                 required: "Please enter a valid email",
+                emailAddress:
+                    "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             phone_number: {
                 required: "Please enter a valid phone_number",
+                phoneIndia: "Please enter a valid phone number.",
             },
             medical_license: {
                 required: "Please enter a valid medical_license",
@@ -723,6 +731,7 @@ $(document).ready(function () {
             },
             address2: {
                 required: "Please enter a valid address2",
+                address2: "Please enter alphabets in  address2.",
             },
             city: {
                 required: "Please enter a city",
@@ -734,18 +743,27 @@ $(document).ready(function () {
             },
             zip: {
                 required: "Please enter a valid zipcode",
+                min: "Please enter positive number with 6 digits",
+                zipcode: "Please enter positive number with 6 digits",
             },
             alt_phone_number: {
                 required: "Please enter a valid alt_phone_number",
+                phoneIndia: "Please enter a valid phone number.",
             },
             business_name: {
                 required: "Please enter a valid business_name",
+                businessname: "Please enter alphabets in business name.",
             },
             business_website: {
                 required: "Please enter a valid business_website",
             },
+            provider_photo: {
+                customFile:
+                    "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB.",
+            },
             admin_notes: {
                 required: "Please enter a valid Admin_Notes",
+                adminNotes: "Please enter alphabets, number in admin notes.",
             },
             select_state: {
                 required: "Please select the state",
@@ -770,7 +788,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest("#form-floating").append(error);
+            element.closest(".provider-form").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -835,10 +853,10 @@ $(document).ready(function () {
                 statusCheck: true,
             },
             role: {
-                roleCheck:true,
+                roleCheck: true,
             },
         },
-        message: {
+        messages: {
             user_name: {
                 required: "Please enter a valid username",
             },
@@ -848,8 +866,8 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            error.addClass("text-danger");
+            element.closest(".provider-edit-form").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -944,7 +962,7 @@ $(document).ready(function () {
                 maxlength: 30,
             },
         },
-        message: {
+        messages: {
             first_name: {
                 required: "Please enter a valid first_name",
             },
@@ -966,8 +984,8 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            error.addClass("text-danger");
+            element.closest(".provider-edit-form").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -1041,6 +1059,14 @@ $(document).ready(function () {
           },
           "Please enter a valid phone number."
       );
+    
+     $.validator.addMethod(
+         "address2",
+         function (value, element) {
+             return value.match(/^[a-zA-Z ,_-]+?$/);
+         },
+         "Please enter alphabets in  address2."
+     );
 
     $("#adminEditProviderForm3").validate({
         rules: {
@@ -1055,6 +1081,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 40,
+                address2:true,
             },
             city: {
                 required: true,
@@ -1068,14 +1095,15 @@ $(document).ready(function () {
             },
             alt_phone_number: {
                 required: true,
-                phoneIndia: true,
+                minlength: 10,
+                maxlength: 10,
             },
             select_state: {
                 required: true,
                 stateCheck: true,
             },
         },
-        message: {
+        messages: {
             address1: {
                 required: "Please enter a valid address1",
             },
@@ -1092,6 +1120,7 @@ $(document).ready(function () {
             },
             zip: {
                 required: "Please enter a valid zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             alt_phone_number: {
                 required: "Please enter a valid alt_phone_number",
@@ -1099,8 +1128,8 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            error.addClass("text-danger");
+            element.closest(".provider-edit-form").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -1180,14 +1209,14 @@ $(document).ready(function () {
             admin_notes: {
                 required: true,
                 minlength: 5,
-                maxlength: 100,
+                maxlength: 200,
                 adminNotes: true,
             },
             provider_photo: {
                 customFile: true,
             },
         },
-        message: {
+        messages: {
             business_name: {
                 required: "Please enter a valid business_name",
             },
@@ -1200,8 +1229,8 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            error.addClass("text-danger");
+            element.closest(".provider-edit-form").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -1266,7 +1295,7 @@ $(document).ready(function () {
                 customFile: true,
             },
         },
-        message: {
+        messages: {
             independent_contractor: {
                 customFile:
                     "The independent contractor field must be a (JPG, PNG, PDF, DOC) with a size less than 2MB.",
@@ -1286,8 +1315,8 @@ $(document).ready(function () {
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
-            element.closest(".form-floating").append(error);
+            error.addClass("text-danger");
+            element.closest(".provider-edit-form").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

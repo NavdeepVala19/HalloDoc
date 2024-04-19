@@ -186,7 +186,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             city: {
@@ -249,11 +248,12 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
-            patient_note: {
+            symptoms: {
                 diseaseSymptoms: "Please enter valid symptoms.",
                 maxlength: "Symptoms details cannot exceed 255 characters.", // Optional: Message for exceeding limit
             },

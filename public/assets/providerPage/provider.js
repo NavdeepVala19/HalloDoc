@@ -5,11 +5,10 @@ $(document).ready(function () {
 
     // for showing action menu in new listing page
     $(document).on("click", ".action-btn", function (event) {
+        event.stopPropagation();
         $(this).siblings(".action-menu").toggle();
         $(".action-menu").not($(this).next(".action-menu")).hide();
         $(".case-id").val($(this).data("id"));
-
-        event.stopPropagation();
     });
 
     // for showing Encounter pop-up on active listing page

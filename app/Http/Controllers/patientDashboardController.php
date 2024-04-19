@@ -152,8 +152,8 @@ class patientDashboardController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $newPatient->id;
-            $request_file->file_name = $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
 
@@ -266,8 +266,8 @@ class patientDashboardController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $newPatient->id;
-            $request_file->file_name = $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
 
@@ -329,17 +329,19 @@ class patientDashboardController extends Controller
         $userData = Auth::user();
         $email = $userData["email"];
 
-        $data = RequestTable::select(
-            'request.id',
-            'request_wise_file.request_id',
-            'status.status_type',
-            DB::raw('DATE(request.created_at) as created_date'),
-        )
-            ->leftJoin('status', 'status.id', 'request.status')
-            ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request.id')
-            ->where('email', $email)
-            ->paginate(10);
+        $docs = RequestTable::with('requestWiseFile')->where('email', $email)->paginate(10);
+    
+        return view('patientSite/patientDashboard', compact('docs', 'userData'));
 
-        return view('patientSite/patientDashboard', compact('data', 'userData'));
+        // $docs = RequestTable::select(
+        //     'request.id',
+        //     'request_wise_file.request_id',
+        //     'status.status_type',
+        //     DB::raw('DATE(request.created_at) as created_date'),
+        // )
+        //     ->leftJoin('status', 'status.id', 'request.status')
+        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request.id')
+        //     ->where('email', $email)
+        //     ->paginate(10);
     }
 }
