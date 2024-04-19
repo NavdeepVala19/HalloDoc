@@ -110,7 +110,7 @@
                         <td>Action</td>
                         <td>Role Name</td>
                         <td>Email Id</td>
-                        <td>Create Date <i class="bi bi-arrow-down"></i></td>
+                        <td>Create Date</td>
                         <td>Sent Date</td>
                         <td>Sent</td>
                         <td>Sent Tries</td>
@@ -191,8 +191,10 @@
                             <br>
                             <span><i class="bi bi-envelope"></i>Sent Tries: {{ $email->sent_tries }}</span>
                             <br>
-                            <span><i class="bi bi-check2"></i>Confirmation Number: @if ($email->request_id)
-                                    {{ $email->request->confirmation_no }}
+                            <span><i class="bi bi-check2"></i>Confirmation Number: @if ($email->confirmation_number)
+                                    {{ $email->confirmation_number }}
+                                @else
+                                    -
                                 @endif
                             </span>
 

@@ -97,6 +97,11 @@
                             </tr>
                         </thead>
                         <tbody class="filtered-shifts">
+                            @if ($shiftDetails->isEmpty())
+                                <tr>
+                                    <td colspan="100" class="no-record">No shift to approve</td>
+                                </tr>
+                            @endif
                             @foreach ($shiftDetails as $shiftDetail)
                                 @if ($shiftDetail)
                                     <tr>

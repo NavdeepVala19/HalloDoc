@@ -708,10 +708,15 @@ class AdminController extends Controller
     // update Business Page
     public function updateBusinessView($id)
     {
-        // HealthProfessional Id whose value need to be updated
-        $vendor = HealthProfessional::where('id', $id)->first();
-        $professions = HealthProfessionalType::get();
-        return view('adminPage.partners.updateBusiness', compact("vendor", 'professions'));
+        try {
+            $caseId = Crypt::decrypt($id);
+            // HealthProfessional Id whose value need to be updated
+            $vendor = HealthProfessional::where('id', $caseId)->first();
+            $professions = HealthProfessionalType::get();
+            return view('adminPage.partners.updateBusiness', compact("vendor", 'professions'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Update business Data 
@@ -764,17 +769,15 @@ class AdminController extends Controller
         $request->validate([
             'profession' => 'required',
             'vendor_id' => 'required',
-            'business_contact' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'fax_number' => 'required',
-
         ]);
+
+        $healthProfessional = HealthProfessional::where('id', $request->vendor_id)->first();
         Orders::create([
             'vendor_id' => $request->vendor_id,
             'request_id' => $request->requestId,
-            'fax_number' => $request->fax_number,
-            'business_contact' => $request->business_contact,
-            'email' => $request->email,
+            'fax_number' => $healthProfessional->fax_number,
+            'business_contact' => $healthProfessional->business_contact,
+            'email' => $healthProfessional->email,
             'prescription' => $request->prescription,
             'no_of_refill' => $request->refills,
         ]);
@@ -806,6 +809,7 @@ class AdminController extends Controller
     // Access Page
     public function accessView()
     {
+
         $roles = Role::orderByDesc('id')->get();
         return view('adminPage.access.access', compact('roles'));
     }
@@ -864,10 +868,16 @@ class AdminController extends Controller
     // show edit Access Page with pre-filled data
     public function editAccess($id = null)
     {
-        $role = Role::where('id', $id)->first();
-        $roleMenus = RoleMenu::where('role_id', $id)->get();
-        $menus = Menu::where('account_type', $role->account_type)->get();
-        return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
+        try {
+            $roleId = Crypt::decrypt($id);
+
+            $role = Role::where('id', $roleId)->first();
+            $roleMenus = RoleMenu::where('role_id', $roleId)->get();
+            $menus = Menu::where('account_type', $role->account_type)->get();
+            return view('adminPage.access.editAccess', compact('role', 'roleMenus', 'menus'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
     // Edit Access of a role previously created
     public function editAccessData(Request $request)
@@ -1020,12 +1030,12 @@ class AdminController extends Controller
             $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
         }
         if (!empty($request->from_date_of_service)) {
-            $combinedData->whereBetween('request_client.created_at',[$request->from_date_of_service, $todayDate]);
+            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $todayDate]);
         }
         if (!empty($request->to_date_of_service)) {
-            $combinedData->where('request_client.created_at',"<",$request->to_date_of_service);
+            $combinedData->where('request_client.created_at', "<", $request->to_date_of_service);
         }
-        if(!empty($request->from_date_of_service) && !empty($request->to_date_of_service)){
+        if (!empty($request->from_date_of_service) && !empty($request->to_date_of_service)) {
             $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service,]);
         }
         return $combinedData;
@@ -1043,9 +1053,9 @@ class AdminController extends Controller
 
 
     public function deleteSearchRecordData($id)
-    {   
+    {
         $getRequestId = request_Client::select('request_id')->where('id', $id)->first()->request_id;
-        
+
         $deleteData = request_Client::where('id', $id)->forceDelete();
         $deleteRequestTableData = RequestTable::where('id', $getRequestId)->forceDelete();
         $deleteDocuments = RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
@@ -1413,18 +1423,18 @@ class AdminController extends Controller
         $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
 
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-        $onCallPhysicians = Provider::whereIn('id', $onCallPhysicianIds)->get();
 
-        $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
-        $offDutyPhysicians = Provider::whereIn('id', $offDutyPhysicianIds)->pluck('email')->toArray();
-
+        $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->pluck('email')->toArray();
 
         $requestMessage = $request->contact_msg;
-        foreach ($offDutyPhysicians as $offDutyPhysician) {
-            Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+        if ($offDutyPhysicians) {
+            foreach ($offDutyPhysicians as $offDutyPhysician) {
+                Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+            }
+            return redirect()->back()->with('message', 'message is sent');
+        } else {
+            return redirect()->back()->with('message', 'No unschedule physician available!');
         }
-
-        return redirect()->back()->with('message', 'message is sent');
     }
 
 

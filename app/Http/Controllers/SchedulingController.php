@@ -95,8 +95,7 @@ class SchedulingController extends Controller
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         $onCallPhysicians = Provider::whereIn('id', $onCallPhysicianIds)->get();
 
-        $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
-        $offDutyPhysicians = Provider::whereIn('id', $offDutyPhysicianIds)->get();
+        $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->get();
 
         return view('adminPage.scheduling.providerOnCall', compact('regions', 'onCallPhysicians', 'offDutyPhysicians'));
     }
@@ -112,12 +111,12 @@ class SchedulingController extends Controller
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
 
+
         if ($id == 0) {
             $onDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $onCallPhysicianIds)->pluck('provider_id')->unique()->toArray();
             $onCallPhysicians = Provider::whereIn('id', $onDutyFilterPhysicianIds)->get();
 
-            $offDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $offDutyPhysicianIds)->pluck('provider_id')->unique()->toArray();
-            $offDutyPhysicians = Provider::whereIn('id', $offDutyFilterPhysicianIds)->get();
+            $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->get();
 
             $physicians = ['onDutyPhysicians' => $onCallPhysicians, 'offDutyPhysicians' => $offDutyPhysicians];
             return response()->json($physicians);
@@ -125,7 +124,7 @@ class SchedulingController extends Controller
             $onDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $onCallPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
             $onCallPhysicians = Provider::whereIn('id', $onDutyFilterPhysicianIds)->get();
 
-            $offDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $offDutyPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
+            $offDutyFilterPhysicianIds = PhysicianRegion::whereNotIn('provider_id', $onCallPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
             $offDutyPhysicians = Provider::whereIn('id', $offDutyFilterPhysicianIds)->get();
 
             $physicians = ['onDutyPhysicians' => $onCallPhysicians, 'offDutyPhysicians' => $offDutyPhysicians];

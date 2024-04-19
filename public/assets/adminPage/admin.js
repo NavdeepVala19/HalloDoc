@@ -311,10 +311,9 @@ $(document).ready(function () {
     $(".select-profession").on("change", function () {
         $(this).closest("form").submit();
     });
-    // View Uploads -> when download All button is clicked close the loader
-    $("#downloadAll").click(function () {
-        console.log("Hide loader");
-        $("#loading-icon").fadeOut("slow");
+    // View Uploads -> when Send Mail button is clicked show the loader
+    $(".sendMailBtn").click(function () {
+        $("#loading-icon").fadeIn("slow");
     });
 
     // Search Vendor based on name

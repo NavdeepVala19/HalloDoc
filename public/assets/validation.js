@@ -60,7 +60,7 @@ $(document).ready(function () {
         "Only alpabets and spaces are allowed."
     );
 
-    // // Only alphabets, Numbers & spaces allowed
+    // Only alphabets, Numbers & spaces allowed
     $.validator.addMethod(
         "lettersNum",
         function (value, element) {
@@ -68,6 +68,16 @@ $(document).ready(function () {
             return this.optional(element) || regex.test(value.trim());
         },
         "Only alpabets, Numbers and spaces are allowed."
+    );
+
+    // Only alphabets & spaces allowed
+    $.validator.addMethod(
+        "alphaSpace",
+        function (value, element) {
+            const regex = /^[a-zA-Z ]+?$/; // Allows letters, spaces, & numbers
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Only alpabets and spaces are allowed."
     );
 
     // Only alphabets, Numbers and (,_-) allowed
@@ -137,7 +147,7 @@ $(document).ready(function () {
             required: true,
             minlength: 5,
             maxlength: 200,
-            // notes: true,
+            alphaNumChar: true,
         };
     }
     function noteMessages(fieldName) {
@@ -145,7 +155,6 @@ $(document).ready(function () {
             required: `${fieldName} field is required`,
             minlength: `${fieldName} field should have atleast 5 characters`,
             maxlength: `${fieldName} field should not have more than 200 characters`,
-            // notes: "Only alphabets are allowed",
         };
     }
 
@@ -169,13 +178,13 @@ $(document).ready(function () {
                 required: true,
                 minlength: 5,
                 maxlength: 30,
-                lettersonly: true,
+                alphaSpace: true,
             },
             state: {
                 required: true,
                 minlength: 5,
                 maxlength: 30,
-                lettersonly: true,
+                alphaSpace: true,
             },
             zip: {
                 required: false,
@@ -805,12 +814,13 @@ $(document).ready(function () {
             fax_number: {
                 required: true,
                 minlength: 4,
-                maxlength: 10,
+                maxlength: 8,
             },
             prescription: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             email: emailRules(),
         },
@@ -827,7 +837,7 @@ $(document).ready(function () {
             fax_number: {
                 required: "Enter Fax number to send order",
                 minlength: "Minimum 4 digits required",
-                maxlength: "Maximum 10 digits allowed",
+                maxlength: "Maximum 8 digits allowed",
             },
             prescription: {
                 minlength: "Minimum length should be 5 characters",
@@ -874,6 +884,10 @@ $(document).ready(function () {
             const minutes = new Date().getMinutes().toString().padStart(2, "0");
             const currentTime = `${hours}:${minutes}`;
 
+            if ($(params).val() != new Date().toISOString().split("T")[0]) {
+                return value;
+            }
+
             if (value < currentTime) {
                 return false;
             }
@@ -893,7 +907,7 @@ $(document).ready(function () {
             },
             shiftTimeStart: {
                 required: true,
-                startTime: true,
+                startTime: ".shiftDate",
             },
             shiftTimeEnd: {
                 required: true,
@@ -948,7 +962,7 @@ $(document).ready(function () {
             },
             shiftStartTime: {
                 required: true,
-                startTime: true,
+                startTime: ".shiftDate",
             },
             shiftEndTime: {
                 required: true,
@@ -1150,31 +1164,32 @@ $(document).ready(function () {
             fax_number: {
                 required: true,
                 minlength: 4,
-                maxlength: 10,
+                maxlength: 8,
             },
             mobile: mobileRules(),
             email: emailRules(),
             business_contact: {
                 required: true,
-                minlength: 3,
-                maxlength: 30,
+                minlength: 10,
+                maxlength: 10,
             },
             street: {
                 required: true,
                 minlength: 3,
                 maxlength: 25,
+                alphaNumChar: true,
             },
             city: {
                 required: true,
                 minlength: 3,
                 maxlength: 25,
-                lettersonly: true,
+                alphaSpace: true,
             },
             state: {
                 required: true,
                 minlength: 3,
                 maxlength: 25,
-                lettersonly: true,
+                alphaSpace: true,
             },
             zip: {
                 required: true,
@@ -1194,14 +1209,14 @@ $(document).ready(function () {
             fax_number: {
                 required: "Fax Number is required",
                 minlength: "Minimum 4 digits required",
-                maxlength: "Maximum 10 digits allowed",
+                maxlength: "Maximum 8 digits allowed",
             },
             mobile: mobileMessages(),
             email: emailMessages(),
             business_contact: {
                 required: "Business contact is required",
-                minlength: "Minimum 3 characters needed",
-                maxlength: "Maximum 30 characters are allowed",
+                minlength: "Business contact should have exactly 10 numbers",
+                maxlength: "Business contact should have exactly 10 numbers",
             },
             street: {
                 required: "Street is required",

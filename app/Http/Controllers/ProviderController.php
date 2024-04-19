@@ -33,6 +33,7 @@ use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\DocsAttachmentMail;
+use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -825,17 +826,14 @@ class ProviderController extends Controller
         $request->validate([
             'profession' => 'required',
             'vendor_id' => 'required',
-            'business_contact' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'fax_number' => 'required',
-
         ]);
+        $healthProfessional = HealthProfessional::where('id', $request->vendor_id)->first();
         Orders::create([
             'vendor_id' => $request->vendor_id,
             'request_id' => $request->requestId,
-            'fax_number' => $request->fax_number,
-            'business_contact' => $request->business_contact,
-            'email' => $request->email,
+            'fax_number' => $healthProfessional->fax_number,
+            'business_contact' => $healthProfessional->business_contact,
+            'email' => $healthProfessional->email,
             'prescription' => $request->prescription,
             'no_of_refill' => $request->refills,
         ]);

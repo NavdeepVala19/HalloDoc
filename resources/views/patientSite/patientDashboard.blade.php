@@ -41,13 +41,13 @@
                                 <td style="height: 5%;"> {{ $patientData->status_type }}</td>
                                 <td style="height: 5%;">
                                     @if ($patientData->request_id == null)
-                                    @else
-                                        <a href="{{ route('patientViewDocsFile',  Crypt::encrypt($patientData->id)) }}"
+                                    @else 
+                                        <a href="{{ route('patientViewDocsFile', Crypt::encrypt($patientData->id)) }}"
                                             type="button" class="primary-empty btn ">Documents</a>
                                     @endif
                                 </td>
+                            </tr>
                         @endforeach
-                        </tr>
                     </tbody>
                 </table>
                 {{ $data->links('pagination::bootstrap-5') }}
@@ -84,8 +84,8 @@
                             -
                         @else
                             <div>
-                                <a href="{{ route('patientViewDocsFile', Crypt::encrypt($patientData->id)) }}" type="button"
-                                    class="primary-empty btn ">Documents</a>
+                                <a href="{{ route('patientViewDocsFile', Crypt::encrypt($patientData->id)) }}"
+                                    type="button" class="primary-empty btn ">Documents</a>
                             </div>
                         @endif
                     </div>
@@ -114,8 +114,8 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection
 
-    @section('script')
-        <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
-    @endsection
+@section('script')
+    <script defer src="{{ URL::asset('assets/patientSite/patientSite.js') }}"></script>
+@endsection

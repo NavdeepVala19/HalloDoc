@@ -114,10 +114,10 @@
                                                 Actions
                                             </button>
                                             <ul class="dropdown-menu dropdown-actions">
-                                                <li><a href="{{ route('admin.view.case', $record->id) }}"
+                                                <li><a href="{{ route('admin.view.case', Crypt::encrypt($record->id)) }}"
                                                         class="dropdown-item" href="">View
                                                         Case</a></li>
-                                                <li><a href="{{ route('admin.view.upload', $record->id) }}"
+                                                <li><a href="{{ route('admin.view.upload', Crypt::encrypt($record->id)) }}"
                                                         class="dropdown-item" href="">({{ $documentCount }})
                                                         Documents</a>
                                                 </li>
@@ -133,7 +133,7 @@
             <div class="mobile-listing">
                 @if ($data->isEmpty())
                     <div class="no-record mt-3 mb-3">
-                        <span>No Logs Found</sp>
+                        <span>No Records Found</sp>
                     </div>
                 @endif
                 @foreach ($data as $record)

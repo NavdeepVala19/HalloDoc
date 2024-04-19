@@ -196,7 +196,8 @@
                         <button type="button" class="assign-case-btn primary-fill"
                             data-id="{{ $data->id }}">Assign</button>
                     @endif
-                    <a href="{{ route('admin.view.note', $data->id) }}" class="primary-fill">View Notes</a>
+                    <a href="{{ route('admin.view.note', Crypt::encrypt($data->id)) }}" class="primary-fill">View
+                        Notes</a>
                     <a href="{{ route(
                         'admin.status',
                         $data->status == 1

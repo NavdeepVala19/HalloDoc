@@ -89,6 +89,11 @@
                         <td class="actions">Actions</td>
                     </thead>
                     <tbody>
+                        @if ($patients->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Records Found</td>
+                            </tr>
+                        @endif
                         @foreach ($patients as $patient)
                             <tr>
                                 <td>{{ $patient->first_name }}</td>
@@ -104,6 +109,11 @@
                 </table>
             </div>
             <div class="mobile-listing">
+                @if ($patients->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Records Found</sp>
+                    </div>
+                @endif
                 @foreach ($patients as $patient)
                     <div class="mobile-list">
                         <div class="main-section">

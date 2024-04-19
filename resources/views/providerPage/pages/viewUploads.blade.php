@@ -82,14 +82,15 @@
                         <button type="submit" name="operation" value="download_all" class="primary-empty">Download
                             All</button>
                         <button type="submit" name="operation" value="delete_all" class="primary-empty">Delete All</button>
-                        <button type="submit" name="operation" value="send_mail" class="primary-empty">Send Mail</button>
+                        <button type="submit" name="operation" value="send_mail" class="primary-empty sendMailBtn">Send
+                            Mail</button>
                     </div>
                     <div class="small-screen-btn">
                         <button type="submit" name="operation" value="download_all" class="primary-empty"><i
                                 class="bi bi-cloud-arrow-down-fill"></i></button>
                         <button type="submit" name="operation" value="delete_all" class="primary-empty"><i
                                 class="bi bi-trash-fill"></i></button>
-                        <button type="submit" name="operation" value="send_mail" class="primary-empty"><i
+                        <button type="submit" name="operation" value="send_mail" class="primary-empty sendMailBtn"><i
                                 class="bi bi-envelope"></i></button>
                     </div>
                 </div>
@@ -106,7 +107,7 @@
                                         value="" id="flexCheckDefault">
                                 </th>
                                 <th>Documents</th>
-                                <th>Upload Date <i class="bi bi-arrow-up"></i></th>
+                                <th>Upload Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

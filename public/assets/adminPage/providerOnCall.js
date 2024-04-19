@@ -22,7 +22,6 @@ $(document).ready(function () {
                         );
                     });
                 }
-                console.log(data.offDutyPhysicians);
                 if (data.offDutyPhysicians) {
                     data.offDutyPhysicians.forEach(function (offDutyProvider) {
                         $(".offDuty-provider-grid").append(

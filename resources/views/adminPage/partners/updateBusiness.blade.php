@@ -127,7 +127,7 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="business_contact" value="{{ $vendor->business_contact }}"
+                        <input type="number" name="business_contact" value="{{ $vendor->business_contact }}"
                             class="form-control @error('business_contact') is-invalid @enderror" id="floatingInput4"
                             placeholder="Business Contact">
                         <label for="floatingInput4">Business Contact</label>

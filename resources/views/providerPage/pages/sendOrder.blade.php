@@ -71,7 +71,7 @@
                     <div class="form-floating ">
                         <input type="text" name="business_contact"
                             class="form-control business_contact @error('business_contact') is-invalid @enderror"
-                            id="floatingInput3" placeholder="Business Contact" value="{{ old('business_contact') }}">
+                            id="floatingInput3" placeholder="Business Contact" value="{{ old('business_contact') }}" disabled>
                         <label for="floatingInput3">Business Contact</label>
                         @error('business_contact')
                             <div class="text-danger">{{ $message }}</div>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="form-floating ">
                         <input type="email" name="email" class="form-control email @error('email') is-invalid @enderror"
-                            id="floatingInput4" placeholder="email" value="{{ old('email') }}">
+                            id="floatingInput4" placeholder="email" value="{{ old('email') }}" disabled>
                         <label for="floatingInput4">Email</label>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
@@ -88,7 +88,7 @@
                     <div class="form-floating ">
                         <input type="number" name="fax_number"
                             class="form-control fax_number @error('fax_number') is-invalid @enderror" id="floatingInput5"
-                            placeholder="Fax Number" value="{{ old('fax_number') }}" min="0">
+                            placeholder="Fax Number" value="{{ old('fax_number') }}" min="0" disabled>
                         <label for="floatingInput5">Fax Number</label>
                         @error('fax_number')
                             <div class="text-danger">{{ $message }}</div>

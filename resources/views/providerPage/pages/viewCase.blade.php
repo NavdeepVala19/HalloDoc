@@ -118,7 +118,7 @@
 
                 <div class="text-end button-section">
                     {{-- <button class="primary-fill">Assign</button> --}}
-                    <a href="{{ route('provider.view.notes', $data->id) }}" class="primary-fill">View Notes</a>
+                    <a href="{{ route('provider.view.notes', Crypt::encrypt($data->id)) }}" class="primary-fill">View Notes</a>
                     <a href="{{ route(
                         'provider.status',
                         $data->status == 1

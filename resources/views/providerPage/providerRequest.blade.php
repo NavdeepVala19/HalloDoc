@@ -105,15 +105,15 @@
                         <label for="floatingInput8">Zip Code (Optional)</label>
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="room" class="form-control" id="floatingInput9" placeholder="Room"
-                            value="{{ old('room') }}" min="0" max="100">
+                        <input type="number" name="room" class="form-control" id="floatingInput9"
+                            placeholder="Room" value="{{ old('room') }}" min="0" max="100">
                         <label for="floatingInput9">Room # (Optional)</label>
                     </div>
                 </div>
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <button type="button" class="primary-empty me-3 ">Verify</button>
                     <button type="button" class="primary-empty"><i class="bi bi-geo-alt"></i> Map</button>
-                </div>
+                </div> --}}
 
                 <h3>Notes</h3>
                 <div class="mb-4">
