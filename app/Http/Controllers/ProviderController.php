@@ -220,10 +220,10 @@ class ProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email',
-            'street' => 'required',
-            'city' => 'required',
-            'state' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'street' => 'required|min:3|max:30',
+            'city' => 'required|min:5|max:30',
+            'state' => 'required|min:5|max:30',
             'zipcode' => 'digits:6',
         ]);
 
@@ -377,8 +377,8 @@ class ProviderController extends Controller
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|alpha|min:3|max:30',
-            'email' => 'required|email',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             // 'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
 
@@ -599,7 +599,7 @@ class ProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
         ]);
 
         // send SMS Logic
@@ -826,7 +826,7 @@ class ProviderController extends Controller
             'profession' => 'required',
             'vendor_id' => 'required',
             'business_contact' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'fax_number' => 'required',
 
         ]);
@@ -847,7 +847,7 @@ class ProviderController extends Controller
     public function sendAgreementLink(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required'
         ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();

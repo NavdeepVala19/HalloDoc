@@ -150,7 +150,7 @@
                             @error('phone_number')
                                 <div class="alert text-danger">{{ $message }}</div>
                             @enderror
-                            <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button>
+                            {{-- <button type="button" class="primary-empty"><i class="bi bi-telephone"></i></button> --}}
                         </div>
                     </div>
                     <div class="form-floating ">
@@ -182,7 +182,7 @@
                                 disabled>
                             <label for="floatingInput">Business Name/Address</label>
                         </div>
-                        <button type="button" class="primary-empty"><i class="bi bi-geo-alt"></i></button>
+                        {{-- <button type="button" class="primary-empty"><i class="bi bi-geo-alt"></i></button> --}}
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="room" class="form-control" id="floatingInput" placeholder="room"

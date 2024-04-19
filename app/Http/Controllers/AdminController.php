@@ -334,10 +334,10 @@ class AdminController extends Controller
     public function editCase(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'dob' => 'required',
-            'patient_notes' => 'required',
+            'patient_notes' => 'required|min:5|max:200',
         ]);
 
         $firstName = $request->first_name;
@@ -382,7 +382,7 @@ class AdminController extends Controller
     public function storeNote(Request $request)
     {
         $request->validate([
-            'admin_note' => 'required|max:200'
+            'admin_note' => 'required||min:5|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         if (!empty($requestNote)) {
@@ -452,8 +452,8 @@ class AdminController extends Controller
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|alpha|max:50',
-            'email' => 'required|email',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'mobile' => 'sometimes'
         ]);
 
@@ -514,7 +514,7 @@ class AdminController extends Controller
             'first_name' => 'required|alpha|min:5|max:30',
             'last_name' => 'required|alpha|min:5|max:30',
             'phone_number' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
         ]);
 
         $firstname = $request->first_name;
@@ -604,7 +604,7 @@ class AdminController extends Controller
         if ($request->input('closeCaseBtn') == 'Save') {
             $request->validate([
                 'phone_number' => 'required',
-                'email' => 'required|email'
+                'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
             ]);
             request_Client::where('request_id', $request->requestId)->update([
                 'phone_number' => $request->phone_number,
@@ -683,7 +683,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -722,7 +722,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -765,7 +765,7 @@ class AdminController extends Controller
             'profession' => 'required',
             'vendor_id' => 'required',
             'business_contact' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'fax_number' => 'required',
 
         ]);
