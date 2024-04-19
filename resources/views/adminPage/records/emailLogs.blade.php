@@ -117,6 +117,11 @@
                         <td>Confirmation Number</td>
                     </thead>
                     <tbody>
+                        @if ($emails->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Logs Found</td>
+                            </tr>
+                        @endif
                         @foreach ($emails as $email)
                             @if (!empty($email))
                                 <tr>
@@ -153,6 +158,11 @@
             </div>
 
             <div class="mobile-listing">
+                @if ($emails->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Logs Found</sp>
+                    </div>
+                @endif
                 @foreach ($emails as $email)
                     <div class="mobile-list">
                         <div class="main-section">

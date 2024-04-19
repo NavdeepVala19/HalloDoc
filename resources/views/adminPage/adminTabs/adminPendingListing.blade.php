@@ -292,13 +292,13 @@ pending state, providers need to send an agreement link to patients. --}}
                                         <div class="action-container">
                                             <button class="table-btn action-btn">Actions</button>
                                             <div class="action-menu">
-                                                <a href="{{ route('admin.view.case', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                                <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}">
+                                                <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}">
                                                     <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
                                                     View Uploads
                                                 </a>
-                                                <a href="{{ route('admin.view.note', $case->id) }}"><i
+                                                <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                                 <button class="transfer-btn" data-id="{{ $case->id }}"><i
                                                         class="bi bi-send me-2 ms-3"></i>Transfer</button>
@@ -365,7 +365,7 @@ pending state, providers need to send an agreement link to patients. --}}
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('admin.view.case', $case->id) }}" class="view-btn">View Case</a>
+                            <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :
@@ -409,12 +409,12 @@ pending state, providers need to send an agreement link to patients. --}}
                                         data-phone_number="{{ $case->requestClient->phone_number }}"
                                         data-email={{ $case->requestClient->email }}>
                                         Send Agreement</button>
-                                    <a href="{{ route('admin.view.note', $case->id) }}"
+                                    <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View
                                         Notes</a>
                                     <button class="secondary-btn-3 text-center transfer-btn"
                                         data-id="{{ $case->id }}">Transfer</button>
-                                    <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"
+                                    <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn text-center">View
                                         Uploads</a>
                                     <button class="secondary-btn-2 text-center clear-btn"

@@ -318,43 +318,41 @@ class AdminController extends Controller
     // View case
     public function viewCase($id)
     {
-        $data = RequestTable::where('id', $id)->first();
-        if (empty($data)) {
-            return redirect()->back()->with('wrongCase', "Case doesn't exist");
+        try {
+            $requestId = Crypt::decrypt($id);
+            $data = RequestTable::where('id', $requestId)->first();
+            if (empty($data)) {
+                return redirect()->back()->with('wrongCase', "Case doesn't exist");
+            }
+            return view('adminPage.pages.viewCase', compact('data'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            return view('errors.404');
         }
-        return view('adminPage.pages.viewCase', compact('data'));
     }
 
     public function editCase(Request $request)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
             'dob' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required',
-            'patient_notes' => 'required',
+            'patient_notes' => 'required|min:5|max:200',
         ]);
 
         $firstName = $request->first_name;
         $lastName = $request->last_name;
         $dateOfBirth = $request->dob;
-        $phoneNumber = $request->phone_number;
-        $email = $request->email;
         $patientNotes = $request->patient_notes;
 
         RequestTable::where('id', $request->requestId)->where('request_type_id', 1)->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'phone_number' => $phoneNumber,
-            'email' => $email,
         ]);
 
         request_Client::where('request_id', $request->requestId)->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'phone_number' => $phoneNumber,
-            'email' => $email,
             'date_of_birth' => $dateOfBirth,
             'notes' => $patientNotes
         ]);
@@ -365,22 +363,26 @@ class AdminController extends Controller
     // View Notes
     public function viewNote($id)
     {
-        $data = RequestTable::where('id', $id)->first();
-        if (empty($data)) {
-            return redirect()->back()->with('wrongCase', "Case doesn't exist");
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = RequestTable::where('id', $requestId)->first();
+
+            $note = RequestNotes::where('request_id', $requestId)->first();
+            $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $requestId)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+            $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $requestId)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
+            $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $requestId)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+            return view('adminPage.pages.viewNotes', compact('requestId', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
         }
-        $note = RequestNotes::where('request_id', $id)->first();
-        $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
-        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        return view('adminPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
     }
 
     // Store Admin Note to display in ViewNotes Page
     public function storeNote(Request $request)
     {
         $request->validate([
-            'admin_note' => 'required|max:200'
+            'admin_note' => 'required||min:5|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         if (!empty($requestNote)) {
@@ -402,9 +404,14 @@ class AdminController extends Controller
     // Display View Upload Page with the data
     public function viewUpload($id)
     {
-        $data  = requestTable::where('id', $id)->first();
-        $documents = RequestWiseFile::where('request_id', $id)->orderByDesc('id')->get();
-        return view('adminPage.pages.viewUploads', compact('data', 'documents'));
+        try {
+            $requestId = Crypt::decrypt($id);
+            $data  = requestTable::where('id', $requestId)->first();
+            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->get();
+            return view('adminPage.pages.viewUploads', compact('data', 'documents'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Upload Document from viewUpload Page
@@ -430,17 +437,23 @@ class AdminController extends Controller
     // show a new medical form or an existing one when clicked encounter button in conclude listing
     public function encounterFormView(Request $request, $id = "null")
     {
-        $data = MedicalReport::where('request_id', $id)->first();
-        $requestData = RequestTable::where('id', $id)->first();
-        return view('adminPage.adminEncounterForm', compact('data', 'id', 'requestData'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = MedicalReport::where('request_id', $requestId)->first();
+            $requestData = RequestTable::where('id', $requestId)->first();
+            return view('adminPage.adminEncounterForm', compact('data', 'requestId', 'requestData'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Store Encounter Form (Medical Form) data, changes made by admin
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|alpha|max:50',
-            'email' => 'required|email',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'mobile' => 'sometimes'
         ]);
 
@@ -501,7 +514,7 @@ class AdminController extends Controller
             'first_name' => 'required|alpha|min:5|max:30',
             'last_name' => 'required|alpha|min:5|max:30',
             'phone_number' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
         ]);
 
         $firstname = $request->first_name;
@@ -575,9 +588,15 @@ class AdminController extends Controller
     // Show Close Case Page with Details
     public function closeCase(Request $request, $id = null)
     {
-        $data = RequestTable::where('id', $id)->first();
-        $files = RequestWiseFile::where('request_id', $id)->get();
-        return view('adminPage.pages.closeCase', compact('data', 'files'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = RequestTable::where('id', $requestId)->first();
+            $files = RequestWiseFile::where('request_id', $requestId)->get();
+            return view('adminPage.pages.closeCase', compact('data', 'files'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
     // Close Case -> particular case will move from toClose state to unpaid state1
     public function closeCaseData(Request $request)
@@ -585,7 +604,7 @@ class AdminController extends Controller
         if ($request->input('closeCaseBtn') == 'Save') {
             $request->validate([
                 'phone_number' => 'required',
-                'email' => 'required|email'
+                'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
             ]);
             request_Client::where('request_id', $request->requestId)->update([
                 'phone_number' => $request->phone_number,
@@ -664,7 +683,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -703,7 +722,7 @@ class AdminController extends Controller
             'profession' => 'required|numeric',
             'fax_number' => 'required|numeric',
             'mobile' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'business_contact' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -728,9 +747,15 @@ class AdminController extends Controller
     // Display ViewOrder Page with the details
     public function viewOrder($id = null)
     {
-        $data = RequestTable::where('id', $id)->first();
-        $types = HealthProfessionalType::get();
-        return view('adminPage.pages.sendOrder', compact('id', 'types', 'data'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = RequestTable::where('id', $requestId)->first();
+            $types = HealthProfessionalType::get();
+            return view('adminPage.pages.sendOrder', compact('requestId', 'types', 'data'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Send orders from action menu 
@@ -740,7 +765,7 @@ class AdminController extends Controller
             'profession' => 'required',
             'vendor_id' => 'required',
             'business_contact' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'fax_number' => 'required',
 
         ]);
@@ -1157,7 +1182,7 @@ class AdminController extends Controller
 
     public function blockHistroySearchData(Request $request)
     {
-  
+
         $blockData = BlockRequest::select(
             'request_client.first_name as patient_name',
             'block_request.id',
@@ -1174,7 +1199,7 @@ class AdminController extends Controller
             $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if (!empty($request->email)) {
-           $blockData->where('block_request.email', "like", "%" . $request->email . "%");
+            $blockData->where('block_request.email', "like", "%" . $request->email . "%");
         }
         if (!empty($request->phone_number)) {
             $blockData->where('block_request.phone_number', "like", "%" . $request->phone_number . "%");

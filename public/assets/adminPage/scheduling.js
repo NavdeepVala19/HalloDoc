@@ -2,6 +2,15 @@ $(document).ready(function () {
     $(".new-shift-btn").click(function () {
         $(".create-shift").show();
         $(".overlay").show();
+
+        let todaysDate = new Date().toISOString().split("T")[0];
+        $(".shiftDate").val(todaysDate);
+
+        const hours = new Date().getHours().toString().padStart(2, "0");
+        const minutes = new Date().getMinutes().toString().padStart(2, "0");
+        const currentTime = `${hours}:${minutes}`;
+
+        $(".shiftStartTime").val(currentTime);
     });
 
     $(".repeat-switch").on("click", function () {
@@ -51,14 +60,6 @@ $(document).ready(function () {
             right: "resourceTimelineDay resourceTimelineWeek dayGridMonth",
         },
         selectable: true,
-        // aspectRatio: 1.5,
-        windowResize: function (view) {
-            if (window.innerWidth < 600) {
-                view.setOption("aspectRatio", 1);
-            } else {
-                view.setOption("aspectRatio", 1.5);
-            }
-        },
         resourceAreaWidth: "20%",
         dayHeaderFormat: {
             day: "numeric",
@@ -175,15 +176,9 @@ $(document).ready(function () {
 
                 var repeatEnd = new Date(event.shiftDate);
 
+                // check whether shift is repeated or not
                 if (event.is_repeat == 1) {
-                    // Check if event.shiftDate is today
-                    if (
-                        new Date().toDateString() ===
-                        new Date(event.shiftDate).toDateString()
-                    ) {
-                        console.log("Same Day");
-                    }
-
+                    // will execute these code if shift are repeated
                     if (event.repeat_upto == 2) {
                         repeatEnd.setDate(repeatEnd.getDate() + 14);
                     } else if (event.repeat_upto == 3) {
@@ -193,7 +188,7 @@ $(document).ready(function () {
                     }
                     repeatEnd.toISOString().split("T")[0];
 
-                    eventData = {
+                    recurringData = {
                         title: event.title,
                         resourceId: event.resourceId,
                         daysOfWeek: event.week_days,
@@ -218,35 +213,34 @@ $(document).ready(function () {
                                 ? "approved-shift-style"
                                 : "pending-shift-style",
                     };
-                    events.push(eventData);
-                } else {
-                    eventData = {
-                        title: event.title,
-                        start: startTime,
-                        end: endTime,
-                        resourceId: event.resourceId,
-                        textColor: "#000",
-                        extendedProps: {
-                            shiftId: event.shiftId,
-                            physicianId: event.physician_id,
-                            physicianName: event.title,
-                            regionId: event.region_id,
-                            regionName: event.region_name,
-                        },
-                        backgroundColor:
-                            event.status == "approved"
-                                ? "rgb(167, 204, 163)"
-                                : "rgb(240, 173, 212)",
-                        className:
-                            event.status == "approved"
-                                ? "approved-shift-style"
-                                : "pending-shift-style",
-                    };
-                    events.push(eventData);
+                    events.push(recurringData);
+                    return events;
                 }
+                eventData = {
+                    title: event.title,
+                    start: startTime,
+                    end: endTime,
+                    resourceId: event.resourceId,
+                    textColor: "#000",
+                    extendedProps: {
+                        shiftId: event.shiftId,
+                        physicianId: event.physician_id,
+                        physicianName: event.title,
+                        regionId: event.region_id,
+                        regionName: event.region_name,
+                    },
+                    backgroundColor:
+                        event.status == "approved"
+                            ? "rgb(167, 204, 163)"
+                            : "rgb(240, 173, 212)",
+                    className:
+                        event.status == "approved"
+                            ? "approved-shift-style"
+                            : "pending-shift-style",
+                };
+                events.push(eventData);
                 return events;
             });
-
             calendar.addEventSource(events);
         },
     });
@@ -344,6 +338,7 @@ $(document).ready(function () {
                                     : "pending-shift-style",
                         };
                         events.push(eventData);
+                        return events;
                     }
 
                     eventData = {

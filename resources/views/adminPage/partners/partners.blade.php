@@ -66,7 +66,8 @@
                     @csrf
                     <div class="gap-3 filter-section">
                         <input type="text" style="font-family:'Bootstrap-icons';" class="form-control search-vendor"
-                            placeholder='&#xF52A;  Search Vendors' aria-describedby="basic-addon1" name="search" value="{{ $search }}">
+                            placeholder='&#xF52A;  Search Vendors' aria-describedby="basic-addon1" name="search"
+                            value="{{ $search }}">
                         <select name="profession" class="form-select select-profession">
                             <option value="0">All Profession</option>
                             @foreach ($professions as $profession)
@@ -97,6 +98,11 @@
                         <td>Actions</td>
                     </thead>
                     <tbody>
+                        @if ($vendors->isEmpty())
+                            <tr>
+                                <td colspan="100" class="no-record">No Vendors/Partners Found</td>
+                            </tr>
+                        @endif
                         @foreach ($vendors as $vendor)
                             @if (!empty($vendor->healthProfessionalType))
                                 <tr>
@@ -119,6 +125,11 @@
                 </table>
             </div>
             <div class="mobile-listing">
+                @if ($vendors->isEmpty())
+                    <div class="no-record mt-3 mb-3">
+                        <span>No Vendors/Partners Found</sp>
+                    </div>
+                @endif
                 @foreach ($vendors as $vendor)
                     <div class="mobile-list">
                         <h4 class="heading">{{ $vendor->vendor_name }}</h4>

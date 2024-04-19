@@ -69,9 +69,14 @@ $(document).ready(function () {
         iti = window.intlTelInput(telephone, {
             initialCountry: "in",
             nationalMode: true,
+            autoPlaceholder: "aggressive",
+            showSelectedDialCode: true,
             // strictMode: true,
             utilsScript:
                 "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/21.1.3/js/utils.min.js",
         });
+
+        // const number = iti.getNumber();
+        // console.log(number);
     }
 });

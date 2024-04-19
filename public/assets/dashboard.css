@@ -395,7 +395,7 @@ td {
 /* ******* VIEW CASE ******* */
 .edit-case-btn,
 .save-case-btn {
-    height: 100% !important;
+    height: 50px !important;
     width: 120px !important;
 }
 .save-case-btn {

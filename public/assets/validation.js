@@ -8,24 +8,6 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-    // Validation for city input field
-    $.validator.addMethod(
-        "city",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid city name."
-    );
-
-    // Validation for state input field
-    $.validator.addMethod(
-        "state",
-        function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
-        },
-        "Please enter a valid state name."
-    );
-
     // Only Letters(alpabets allowed), no numeric value will be allowed
     $.validator.addMethod(
         "lettersonly",
@@ -40,7 +22,8 @@ $(document).ready(function () {
         "email",
         function (value, element) {
             // var regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
-            var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            // var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var regex = /^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/;
             return this.optional(element) || regex.test(value);
         },
         "Please enter a valid email address (alphanumeric characters, periods, common symbols, and @ followed by a domain name)"
@@ -67,15 +50,34 @@ $(document).ready(function () {
         },
         "Please enter a date between {0} and {1}."
     );
-
-    // Only alphabets and spaces allowed
+    // Notes (Text-area) validations
     $.validator.addMethod(
-        "onlyAlphabets",
+        "notes",
         function (value, element) {
-            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
         "Only alpabets and spaces are allowed."
+    );
+
+    // // Only alphabets, Numbers & spaces allowed
+    $.validator.addMethod(
+        "lettersNum",
+        function (value, element) {
+            const regex = /^[a-zA-Z0-9 ]+?$/; // Allows letters, spaces, & numbers
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Only alpabets, Numbers and spaces are allowed."
+    );
+
+    // Only alphabets, Numbers and (,_-) allowed
+    $.validator.addMethod(
+        "alphaNumChar",
+        function (value, element) {
+            const regex = /^[a-zA-Z0-9 ,_-]+?$/; // Allows letters, spaces, punctuation
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Only alphabets, Numbers and ,_- allowed"
     );
 
     // ------------- Common Rules and Message functions repeated uses: ------------------
@@ -105,7 +107,7 @@ $(document).ready(function () {
     function emailRules(fieldName) {
         return {
             required: true,
-            maxlength: 100,
+            maxlength: 50,
             email: true,
         };
     }
@@ -113,7 +115,7 @@ $(document).ready(function () {
         return {
             required: "Please enter email address",
             maxlength:
-                "Email should not be longer than 100 characters (including local and domain part)",
+                "Email should not be longer than 50 characters (including local and domain part)",
             email: "Please enter a valid email address {ex. a@b.cd}",
         };
     }
@@ -135,7 +137,7 @@ $(document).ready(function () {
             required: true,
             minlength: 5,
             maxlength: 200,
-            onlyAlphabets: true,
+            // notes: true,
         };
     }
     function noteMessages(fieldName) {
@@ -143,7 +145,7 @@ $(document).ready(function () {
             required: `${fieldName} field is required`,
             minlength: `${fieldName} field should have atleast 5 characters`,
             maxlength: `${fieldName} field should not have more than 200 characters`,
-            onlyAlphabets: "Only alphabets are allowed",
+            // notes: "Only alphabets are allowed",
         };
     }
 
@@ -160,20 +162,20 @@ $(document).ready(function () {
             },
             street: {
                 required: true,
-                minlength: 2,
-                maxlength: 100,
+                minlength: 3,
+                maxlength: 30,
             },
             city: {
                 required: true,
-                minlength: 2,
-                maxlength: 40,
-                city: true,
+                minlength: 5,
+                maxlength: 30,
+                lettersonly: true,
             },
             state: {
                 required: true,
-                minlength: 2,
+                minlength: 5,
                 maxlength: 30,
-                state: true,
+                lettersonly: true,
             },
             zip: {
                 required: false,
@@ -188,12 +190,28 @@ $(document).ready(function () {
             email: emailMessages(),
             dob: {
                 dateRange:
-                    "Date of Birth should be less than or equal to Today's Date & should be greater than 1900-01-01",
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
-            street: "Please enter your street",
-            city: "Please enter your city",
-            state: "Please enter your state",
+            street: {
+                required: "Please enter street",
+                minlength: "Minimum 3 characters required",
+                maxlength: "Maximum 30 characters are allowed",
+            },
+            city: {
+                required: "Please enter city",
+                minlength: "Minimum 5 alphabets are required",
+                maxlength: "Maximum 30 alphabets are allowed",
+            },
+            state: {
+                required: "Please enter state",
+                minlength: "Minimum 5 characters are required",
+                maxlength: "Maximum 30 characters are allowed",
+            },
             zip: {
+                min: "Please enter positive number with 6 digits",
                 minlength: "Zip code should have minimum 6 digits",
                 maxlength: "Zip code should have maximum 6 digits",
             },
@@ -445,13 +463,11 @@ $(document).ready(function () {
                 required: true,
                 minlength: 5,
                 maxlength: 50,
+                alphaNumChar: true,
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             service_date: {
                 required: true,
@@ -466,21 +482,25 @@ $(document).ready(function () {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             medical_history: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             medications: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             allergies: {
                 required: true,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             temperature: {
                 required: false,
@@ -516,71 +536,85 @@ $(document).ready(function () {
                 required: false,
                 minlength: 5,
                 maxlength: 50,
+                notes: true,
             },
             heent: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             cv: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             chest: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             abd: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             extr: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             skin: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             neuro: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             other: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             diagnosis: {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             treatment_plan: {
                 required: true,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             medication_dispensed: {
                 required: true,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             procedure: {
                 required: true,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
             followUp: {
                 required: true,
                 minlength: 5,
                 maxlength: 200,
+                alphaNumChar: true,
             },
         },
         messages: {
@@ -595,6 +629,11 @@ $(document).ready(function () {
             email: emailMessages("Email"),
             date_of_birth: {
                 required: "Please enter date of birth",
+                dateRange:
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
             service_date: {
                 required: "Please enter service Date",
@@ -765,6 +804,8 @@ $(document).ready(function () {
             },
             fax_number: {
                 required: true,
+                minlength: 4,
+                maxlength: 10,
             },
             prescription: {
                 required: false,
@@ -785,6 +826,8 @@ $(document).ready(function () {
             },
             fax_number: {
                 required: "Enter Fax number to send order",
+                minlength: "Minimum 4 digits required",
+                maxlength: "Maximum 10 digits allowed",
             },
             prescription: {
                 minlength: "Minimum length should be 5 characters",
@@ -812,10 +855,9 @@ $(document).ready(function () {
     // ------------ PROVIDER SCHEDULING -----------
     // Validation added for shiftEndTime to be greater than shiftStartTime
     $.validator.addMethod(
-        "greaterThan",
+        "greaterThanStart",
         function (value, element, params) {
             var startTime = $(element).val();
-            console.log(startTime);
             if (value < startTime) {
                 return false;
             }
@@ -823,6 +865,21 @@ $(document).ready(function () {
             return value > startTime;
         },
         "Shift End Time must be greater than Shift Start Time."
+    );
+    // Validation added for shiftStartTime to be always greater than or equal to current time
+    $.validator.addMethod(
+        "startTime",
+        function (value, element, params) {
+            const hours = new Date().getHours().toString().padStart(2, "0");
+            const minutes = new Date().getMinutes().toString().padStart(2, "0");
+            const currentTime = `${hours}:${minutes}`;
+
+            if (value < currentTime) {
+                return false;
+            }
+            return value;
+        },
+        "Shift Start Time must be greater than current Time."
     );
     //  Validate Provider Scheduling Edit Shift Pop-up
     $("#providerEditShiftForm, #adminEditShiftForm").validate({
@@ -836,10 +893,11 @@ $(document).ready(function () {
             },
             shiftTimeStart: {
                 required: true,
+                startTime: true,
             },
             shiftTimeEnd: {
                 required: true,
-                greaterThan: "#startTime", // ShiftStartTime input element
+                greaterThanStart: "#startTime", // ShiftStartTime input element
             },
         },
         messages: {
@@ -851,7 +909,7 @@ $(document).ready(function () {
             },
             shiftTimeEnd: {
                 required: "Shift End Time is required.",
-                greaterThan:
+                greaterThanStart:
                     "Shift End Time must be greater than Shift Start Time.",
             },
         },
@@ -890,10 +948,11 @@ $(document).ready(function () {
             },
             shiftStartTime: {
                 required: true,
+                startTime: true,
             },
             shiftEndTime: {
                 required: true,
-                greaterThan: "#floatingInput2", // ShiftStartTime input element
+                greaterThanStart: "#floatingInput2", // ShiftStartTime input element
             },
             // Add a custom validation rule for checkbox selection
             "checkbox[]": {
@@ -919,7 +978,7 @@ $(document).ready(function () {
             },
             shiftTimeEnd: {
                 required: "Shift End Time is required.",
-                greaterThan:
+                greaterThanStart:
                     "Shift End Time must be greater than Shift Start Time.",
             },
             "checkbox[]": {
@@ -1049,12 +1108,12 @@ $(document).ready(function () {
             "selected[]": {
                 required: {
                     depends: function (element) {
-                        return (
-                            $(element)
-                                .closest("form")
-                                .find('button[value="send_mail"]')
-                                .val() === "send_mail"
-                        );
+                        $("#sendMailBtn").click(function () {
+                            console.log("Send Mail");
+                        });
+                        // return (
+                        //     $(element).closest("form").find('button[value="send_mail"]').val() === "send_mail"
+                        // );
                     },
                 },
             },
@@ -1071,7 +1130,7 @@ $(document).ready(function () {
             $("#error-container").append(errorDiv);
         },
         submitHandler: function (form) {
-            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            // $(".loader").fadeIn("slow"); // Show spinner on valid submission
             form.submit(); // Submit the form
         },
     });
@@ -1083,6 +1142,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 5,
                 maxlength: 20,
+                lettersonly: true,
             },
             profession: {
                 required: true,
@@ -1090,6 +1150,7 @@ $(document).ready(function () {
             fax_number: {
                 required: true,
                 minlength: 4,
+                maxlength: 10,
             },
             mobile: mobileRules(),
             email: emailRules(),
@@ -1133,6 +1194,7 @@ $(document).ready(function () {
             fax_number: {
                 required: "Fax Number is required",
                 minlength: "Minimum 4 digits required",
+                maxlength: "Maximum 10 digits allowed",
             },
             mobile: mobileMessages(),
             email: emailMessages(),
@@ -1158,8 +1220,9 @@ $(document).ready(function () {
             },
             zip: {
                 required: "Zip is required",
-                min: "Minimum 6 digits are required",
-                max: "Maximum 6 digits are allowed",
+                min: "Please enter positive number with 6 digits",
+                minlength: "Minimum 6 digits are required",
+                maxlength: "Maximum 6 digits are allowed",
             },
         },
         errorPlacement: function (error, element) {
@@ -1187,6 +1250,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 3,
                 maxlength: 20,
+                lettersNum: true,
             },
             role_name: {
                 required: true,
@@ -1230,7 +1294,7 @@ $(document).ready(function () {
                 required: false,
                 minlength: 5,
                 maxlength: 200,
-                onlyAlphabets: true,
+                notes: true,
             },
             first_name: nameRules(),
             last_name: nameRules(),
@@ -1248,14 +1312,16 @@ $(document).ready(function () {
             patient_notes: {
                 minlength: "Minimum 5 characters are required",
                 maxlength: "Maximum 200 characters are allowed",
-                onlyAlphabets: "Only alphabets are allowed",
             },
-            first_name: nameMessages(),
-            last_name: nameMessages(),
+            first_name: nameMessages("First Name"),
+            last_name: nameMessages("Last Name"),
             dob: {
                 required: "Date of birth is required",
                 dateRange:
-                    "Date of Birth should be less than or equal to Today's Date & should be greater than 1900-01-01",
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
             phone_number: {
                 required: "Phone number field can't be empty",

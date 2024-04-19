@@ -198,7 +198,6 @@ Route::middleware('checkProviderLogin')->group(function () {
 
     // VIEW CASE PAGE  
     // show view case page as per the id
-    // Route::get('provider-view-case/{id?}', [ProviderController::class, 'viewCase'])->name('provider-view-case');
     Route::get('provider/view/case/{id?}', [ProviderController::class, 'viewCase'])->name('provider.view.case');
 
     // VIEW SEND ORDER PAGE

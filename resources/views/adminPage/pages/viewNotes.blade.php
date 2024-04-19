@@ -154,7 +154,7 @@
             </div>
             <form action="{{ route('admin.store.note') }}" method="POST" id="adminNoteForm">
                 @csrf
-                <input type="text" value="{{ $id }}" name="requestId" hidden>
+                <input type="text" value="{{ $requestId }}" name="requestId" hidden>
                 <div class="form-floating mb-3">
                     <textarea class="form-control @error('admin_note') is-invalid @enderror" name="admin_note" placeholder="note"
                         id="floatingTextarea2">{{ $note->admin_notes ?? '' }}</textarea>

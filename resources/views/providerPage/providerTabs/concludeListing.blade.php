@@ -202,19 +202,19 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.conclude.care.view', $case->id) }}"><i
+                                            <a href="{{ route('provider.conclude.care.view', Crypt::encrypt($case->id)) }}"><i
                                                     class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
-                                            <a href="{{ route('provider.view.case', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                                            <a href="{{ route('provider.view.upload', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.upload', Crypt::encrypt($case->id)) }}"><i
                                                     class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View Uploads</a>
-                                            <a href="{{ route('provider.view.notes', $case->id) }}"><i
+                                            <a href="{{ route('provider.view.notes', Crypt::encrypt($case->id)) }}"><i
                                                     class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
                                             @if ($case->medicalReport && $case->medicalReport->is_finalize)
                                                 <button class="encounter-popup-btn" data-id={{ $case->id }}> <i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i> Encounter</button>
                                             @else
-                                                <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                                <a href="{{ route('provider.encounter.form', Crypt::encrypt($case->id)) }}"
                                                     class="encounter-form-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                                             @endif
@@ -272,7 +272,7 @@
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="{{ route('provider.view.case', $case->id) }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email :
@@ -284,19 +284,19 @@
                                 {{ $case->requestClient->phone_number }}
                             </span>
                             <div class="grid-2-listing">
-                                <a href="{{ route('provider.conclude.care.view', $case->id) }}"
+                                <a href="{{ route('provider.conclude.care.view', Crypt::encrypt($case->id)) }}"
                                     class="conclude-care-btn text-center">Conclude Care</a>
-                                <a href="{{ route('provider.view.notes', $case->id) }}"
+                                <a href="{{ route('provider.view.notes', Crypt::encrypt($case->id)) }}"
                                     class="secondary-btn text-center">View
                                     Notes</a>
-                                <a href="{{ route('provider.view.upload', $case->id) }}"
+                                <a href="{{ route('provider.view.upload', Crypt::encrypt($case->id)) }}"
                                     class="secondary-btn text-center">View
                                     Uploads</a>
                                 @if ($case->medicalReport && $case->medicalReport->is_finalize)
                                     <button class="secondary-btn encounter-popup-btn" data-id={{ $case->id }}>
                                         Encounter</button>
                                 @else
-                                    <a href="{{ route('provider.encounter.form', $case->id) }}"
+                                    <a href="{{ route('provider.encounter.form', Crypt::encrypt($case->id)) }}"
                                         class="secondary-btn encounter-form-btn text-center">Encounter</a>
                                 @endif
                                 <button class="secondary-btn">Email</button>

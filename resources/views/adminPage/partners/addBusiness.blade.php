@@ -152,7 +152,7 @@
 
                     <div class="form-floating ">
                         <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror"
-                            id="floatingInput8" placeholder="Zip/postal">
+                            id="floatingInput8" placeholder="Zip/postal" min="0">
                         <label for="floatingInput8">Zip/postal</label>
                         @error('zip')
                             <div class="text-danger">{{ $message }}</div>

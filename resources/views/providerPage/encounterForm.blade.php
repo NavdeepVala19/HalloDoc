@@ -51,7 +51,7 @@
                 {{-- Three buttons at last --}}
                 <div class="button-section">
                     <input type="submit" value="Save Changes" class="primary-fill" id="providerEncounterFormBtn">
-                    <a href="{{ route('encounter.finalized', $id) }}" type="button" class="finalize-btn">Finalize</a>
+                    <a href="{{ route('encounter.finalized', $requestId) }}" type="button" class="finalize-btn">Finalize</a>
                     <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
                         class="primary-empty">Cancel</a>
                 </div>
@@ -171,7 +171,7 @@
                     console.log("Changes Detected");
                 } else {
                     // Proceed with finalization
-                    window.location.href = "{{ route('encounter.finalized', $id) }}";
+                    window.location.href = "{{ route('encounter.finalized', $requestId) }}";
                 }
             });
 

@@ -14,6 +14,21 @@ $(document).ready(function () {
                 click: function () {
                     $(".create-shift").show();
                     $(".overlay").show();
+
+                    let todaysDate = new Date().toISOString().split("T")[0];
+                    $(".shiftDate").val(todaysDate);
+
+                    const hours = new Date()
+                        .getHours()
+                        .toString()
+                        .padStart(2, "0");
+                    const minutes = new Date()
+                        .getMinutes()
+                        .toString()
+                        .padStart(2, "0");
+                    const currentTime = `${hours}:${minutes}`;
+
+                    $(".shiftStartTime").val(currentTime);
                 },
             },
         },
@@ -149,31 +164,31 @@ $(document).ready(function () {
                                 : "pending-shift-style",
                     };
                     events.push(eventData);
-                } else {
-                    eventData = {
-                        title: event.title,
-                        start: startTime,
-                        end: endTime,
-                        resourceId: event.resourceId,
-                        textColor: "#000",
-                        extendedProps: {
-                            shiftId: event.shiftId,
-                            physicianId: event.physician_id,
-                            physicianName: event.title,
-                            regionId: event.region_id,
-                            regionName: event.region_name,
-                        },
-                        backgroundColor:
-                            event.status == "approved"
-                                ? "rgb(167, 204, 163)"
-                                : "rgb(240, 173, 212)",
-                        className:
-                            event.status == "approved"
-                                ? "approved-shift-style"
-                                : "pending-shift-style",
-                    };
-                    events.push(eventData);
+                    return events;
                 }
+                eventData = {
+                    title: event.title,
+                    start: startTime,
+                    end: endTime,
+                    resourceId: event.resourceId,
+                    textColor: "#000",
+                    extendedProps: {
+                        shiftId: event.shiftId,
+                        physicianId: event.physician_id,
+                        physicianName: event.title,
+                        regionId: event.region_id,
+                        regionName: event.region_name,
+                    },
+                    backgroundColor:
+                        event.status == "approved"
+                            ? "rgb(167, 204, 163)"
+                            : "rgb(240, 173, 212)",
+                    className:
+                        event.status == "approved"
+                            ? "approved-shift-style"
+                            : "pending-shift-style",
+                };
+                events.push(eventData);
                 return events;
             });
             calendar.addEventSource(events);

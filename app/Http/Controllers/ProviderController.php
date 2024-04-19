@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\HealthProfessionalType;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -219,10 +220,10 @@ class ProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-            'street' => 'required',
-            'city' => 'required',
-            'state' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'street' => 'required|min:3|max:30',
+            'city' => 'required|min:5|max:30',
+            'state' => 'required|min:5|max:30',
             'zipcode' => 'digits:6',
         ]);
 
@@ -319,7 +320,7 @@ class ProviderController extends Controller
             'email' => $request->email,
         ]);
 
-        return redirect()->route("provider.create.request")->withInput()->with('requestCreated', "Request Created Successfully!");
+        return redirect()->route("provider.status", 'new')->withInput()->with('requestCreated', "Request Created Successfully!");
     }
 
     // Encounter pop-up as per action (consult, hous_call) selected perform particular tasks 
@@ -362,16 +363,22 @@ class ProviderController extends Controller
     // show a new medical form or an existing one when clicked encounter button in conclude listing
     public function encounterFormView(Request $request, $id = "null")
     {
-        $data = MedicalReport::where('request_id', $id)->first();
-        $requestData = RequestTable::where('id', $id)->first();
-        return view('providerPage.encounterForm', compact('data', 'id', 'requestData'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = MedicalReport::where('request_id', $requestId)->first();
+            $requestData = RequestTable::where('id', $requestId)->first();
+            return view('providerPage.encounterForm', compact('data', 'requestId', 'requestData'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
     // Store Encounter Form (Medical Form) Data 
     public function encounterForm(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|alpha|min:3|max:30',
-            'email' => 'required|email',
+            'first_name' => 'required|min:3|max:15|alpha',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             // 'mobile' => 'sometimes|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/'
         ]);
 
@@ -533,18 +540,30 @@ class ProviderController extends Controller
     // show a particular case page as required
     public function viewCase($id)
     {
-        $data = RequestTable::where('id', $id)->first();
-        return view('providerPage.pages.viewCase', compact('data'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = RequestTable::where('id', $requestId)->first();
+            return view('providerPage.pages.viewCase', compact('data'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
     // show notes page for particular request
     public function viewNote($id = null)
     {
-        $data = RequestTable::where('id', $id)->first();
-        $note = RequestNotes::where('request_id', $id)->first();
-        $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $id)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
-        $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $id)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-        return view('providerPage.pages.viewNotes', compact('id', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = RequestTable::where('id', $requestId)->first();
+            $note = RequestNotes::where('request_id', $requestId)->first();
+            $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $requestId)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+            $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $requestId)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
+            $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $requestId)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
+            return view('providerPage.pages.viewNotes', compact('requestId', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Store the note in physician_note
@@ -580,7 +599,7 @@ class ProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
         ]);
 
         // send SMS Logic
@@ -641,10 +660,16 @@ class ProviderController extends Controller
     // View Uploads as per the id 
     public function viewUpload(Request $request, $id = null)
     {
-        $data  = requestTable::where('id', $id)->first();
-        $documents = RequestWiseFile::where('request_id', $id)->orderByDesc('id')->get();
+        try {
+            $requestId = Crypt::decrypt($id);
 
-        return view('providerPage.pages.viewUploads', compact('data', 'documents'));
+            $data  = requestTable::where('id', $requestId)->first();
+            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->get();
+
+            return view('providerPage.pages.viewUploads', compact('data', 'documents'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // View upload page upload Document feature
@@ -783,9 +808,15 @@ class ProviderController extends Controller
     // View Order Page -> Display page and show data
     public function viewOrder(Request $request, $id = null)
     {
-        $data = RequestTable::where('id', $id)->first();
-        $types = HealthProfessionalType::get();
-        return view('providerPage.pages.sendOrder',  compact('id', 'types', 'data'));
+        try {
+            $requestId = Crypt::decrypt($id);
+
+            $data = RequestTable::where('id', $requestId)->first();
+            $types = HealthProfessionalType::get();
+            return view('providerPage.pages.sendOrder',  compact('requestId', 'types', 'data'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Send orders from action menu 
@@ -795,7 +826,7 @@ class ProviderController extends Controller
             'profession' => 'required',
             'vendor_id' => 'required',
             'business_contact' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'fax_number' => 'required',
 
         ]);
@@ -816,7 +847,7 @@ class ProviderController extends Controller
     public function sendAgreementLink(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required'
         ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
@@ -895,10 +926,16 @@ class ProviderController extends Controller
     // View Conclude Care Page -> Display page and show data
     public function viewConcludeCare($id)
     {
-        $case = RequestTable::where('id', $id)->first();
-        $docs = RequestWiseFile::where('request_id', $id)->get();
+        try {
+            $requestId = Crypt::decrypt($id);
 
-        return view('providerPage.concludeCare', compact('case', 'docs'));
+            $case = RequestTable::where('id', $requestId)->first();
+            $docs = RequestWiseFile::where('request_id', $requestId)->get();
+
+            return view('providerPage.concludeCare', compact('case', 'docs'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
     }
 
     // Conclude Care functionality -> Provider Conclude care from conclude state which will move to toclose-state

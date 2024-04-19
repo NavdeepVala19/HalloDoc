@@ -130,7 +130,7 @@
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control @error('shiftDate') is-invalid @enderror"
+                    <input type="date" name="shiftDate" class="form-control shiftDate @error('shiftDate') is-invalid @enderror"
                         id="floatingInput3" placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput3">Shift Date</label>
                     @error('shiftDate')
@@ -140,7 +140,7 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
+                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
                             placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')
@@ -149,7 +149,7 @@
                     </div>
                     <div class="form-floating ">
                         <input type="time" name="shiftEndTime"
-                            class="form-control @error('shiftEndTime') is-invalid @enderror" id="floatingInput5"
+                            class="form-control shiftEndTime @error('shiftEndTime') is-invalid @enderror" id="floatingInput5"
                             placeholder="Created Date" value="{{ old('shiftEndTime') }}">
                         <label for="floatingInput5">End</label>
                         @error('shiftEndTime')

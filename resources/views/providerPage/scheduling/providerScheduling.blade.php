@@ -60,8 +60,9 @@
                     <label for="floatingSelect1">Region</label>
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control @error('shiftDate') is-invalid @enderror"
-                        id="floatingInput4" placeholder="Created Date" value="{{ old('shiftDate') }}">
+                    <input type="date" name="shiftDate"
+                        class="form-control shiftDate @error('shiftDate') is-invalid @enderror" id="floatingInput4"
+                        placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput4">Shift Date</label>
                     @error('shiftDate')
                         <div class="text-danger">{{ $message }}</div>
@@ -70,7 +71,7 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
+                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
                             placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')

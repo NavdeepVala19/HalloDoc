@@ -62,7 +62,7 @@
 
         <form action="{{ route('admin.send.order') }}" method="POST" id="adminSendOrderForm">
             @csrf
-            <input type="text" name="requestId" value="{{ $id }}" hidden>
+            <input type="text" name="requestId" value="{{ $requestId }}" hidden>
             <div class="section">
                 <div class="grid-2">
                     <div class="form-floating">
@@ -111,9 +111,9 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="fax_number"
+                        <input type="number" name="fax_number"
                             class="form-control fax_number @error('fax_number') is-invalid @enderror" id="floatingInput5"
-                            placeholder="Fax Number" value="{{ old('fax_number') }}">
+                            placeholder="Fax Number" value="{{ old('fax_number') }}" min="0">
                         <label for="floatingInput5">Fax Number</label>
                         @error('fax_number')
                             <div class="text-danger">{{ $message }}</div>

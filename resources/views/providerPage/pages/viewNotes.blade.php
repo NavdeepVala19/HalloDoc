@@ -118,7 +118,7 @@
             </div>
             <form action="{{ route('provider.store.note') }}" method="POST" id="providerNoteForm">
                 @csrf
-                <input type="text" value="{{ $id }}" name="requestId" hidden>
+                <input type="text" value="{{ $requestId }}" name="requestId" hidden>
                 <div class="form-floating mb-3">
                     <textarea class="form-control @error('physician_note') is-invalid @enderror" name="physician_note" placeholder="injury"
                         id="floatingTextarea2">{{ $note->physician_notes ?? '' }}</textarea>
