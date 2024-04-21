@@ -15,14 +15,14 @@ $(document).ready(function () {
         "Please enter only letters for your Last name."
     );
 
-       $.validator.addMethod(
-           "phoneIndia",
-           function (value, element) {
-               return this.optional(element) || iti.isValidNumber();
-           },
-           "Please enter a valid phone number."
-       );
-    
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {
@@ -36,8 +36,6 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-    
-
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -46,7 +44,6 @@ $(document).ready(function () {
         "Please enter a only alphabets and numbers in street name. "
     );
 
-    
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {
@@ -58,21 +55,21 @@ $(document).ready(function () {
         "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
-   $.validator.addMethod(
-       "city",
-       function (value, element) {
-           return value.match(/^[a-zA-Z ,_-]+?$/);
-       },
-       "Please do not enter numbers in city name."
-   );
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return /^[a-zA-Z\s,.-]+$/.test(value);
+        },
+        "Please enter a valid city name with alphabets."
+    );
 
-   $.validator.addMethod(
-       "state",
-       function (value, element) {
-           return value.match(/^[a-zA-Z ,_-]+?$/);
-       },
-       "Please do not enter numbers in state name."
-   );
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return /^[a-zA-Z\s,.-]+$/.test(value);
+        },
+        "Please enter a valid state name with alphabets."
+    );
 
     $.validator.addMethod(
         "zipcode",
@@ -170,9 +167,7 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             email: {
                 required: true,

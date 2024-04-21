@@ -205,7 +205,7 @@ class AdminProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'phone_number' => 'required',
             'medical_license' => 'required|alpha_num|max:20|min:3',
             'npi_number' => 'required|numeric|min:3|max_digits:7',
             'address1' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9-, ]+$/',

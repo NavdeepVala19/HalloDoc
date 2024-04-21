@@ -42,17 +42,17 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
+            return /^[a-zA-Z\s,.-]+$/.test(value);
         },
-        "Please enter alphabets in city name."
+        "Please enter a valid city name with alphabets."
     );
 
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
+            return /^[a-zA-Z\s,.-]+$/.test(value);
         },
-        "Please enter alphabets in state name."
+        "Please enter a valid state name with alphabets."
     );
 
     $.validator.addMethod(
