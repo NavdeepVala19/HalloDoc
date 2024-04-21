@@ -665,7 +665,7 @@ class ProviderController extends Controller
             $requestId = Crypt::decrypt($id);
 
             $data  = requestTable::where('id', $requestId)->first();
-            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->get();
+            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->paginate(10);
 
             return view('providerPage.pages.viewUploads', compact('data', 'documents'));
         } catch (\Throwable $th) {
@@ -698,19 +698,14 @@ class ProviderController extends Controller
     // Download any sinlge file function
     public function download($id = null)
     {
-        $file = RequestWiseFile::where('id', $id)->first();
-        $path = (public_path() . '/storage/' . $file->file_name);
+        try {
+            $file = RequestWiseFile::where('id', $id)->first();
+            $path = (public_path() . '/storage/' . $file->file_name);
 
-        // if ($file->isEmpty()) {
-        //     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
-        // }
-
-        // if (!Storage::exists($path)) {
-        //     return redirect()->back()->with('FileDoesNotExists', "File You are trying to download doesn't exists");
-        //     // Handle case where file not found on disk
-        // }
-
-        return response()->download($path);
+            return response()->download($path);
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
     }
 
     // Delete a single document from viewUploads page

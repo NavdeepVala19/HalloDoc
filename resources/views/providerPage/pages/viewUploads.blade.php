@@ -169,6 +169,9 @@
             </form>
         </div>
     </div>
+    <div class="page">
+        {{ $documents->links('pagination::bootstrap-5') }}
+    </div>
 @endsection
 @section('script')
     <script src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>

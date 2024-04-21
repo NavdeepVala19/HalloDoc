@@ -22,51 +22,33 @@ use App\Http\Controllers\PatientViewDocumentsController;
 use App\Http\Controllers\ProviderSchedulingController;
 
 // ******************************* SHIVESH **********************************************
-
-
-
 //  ******* First page of patient site *********
 route::get('/', [Controller::class, 'patientSite'])->name('patientSite');
 route::get('/loader', [Controller::class, 'loader'])->name('loader');
 
-
-
 //  ***** Types of request ******
 route::get('/submit_request', [Controller::class, 'submitScreen'])->name('submitRequest');
-
-
 
 //  ******** Patient request create**********
 route::get('/submit_request/patient', [patientController::class, 'patientRequests'])->name('patient');
 Route::post('/patient_create', [patientController::class, 'create'])->name('patientRequests');
 
-
-
 //  ****** Family request creating *********
 route::get('/submit_request/family', [familyRequestController::class, 'familyRequests'])->name('family');
 Route::post('/family_create', [familyRequestController::class, 'create'])->name('familyRequests');
 
-
-
 //  ******* Concierge request creating ********
-
 route::get('/submit_request/concierge', [conciergeRequestController::class, 'conciergeRequests'])->name('concierge');
 Route::post('/concierge_create', [conciergeRequestController::class, 'create'])->name('conciergeRequests');
-
-
 
 //  ******** Business request creating **********
 route::get('/submit_request/business', [businessRequestController::class, 'businessRequests'])->name('business');
 Route::post('/business_create', [businessRequestController::class, 'create'])->name('businessRequests');
 
-
-
 //  ********* Create account of patient ***********
 route::get('/patient_register', [patientAccountController::class, 'patientRegister'])->name('patientRegister');
 route::post('/patientRegistered', [patientAccountController::class, 'createAccount'])->name('patientRegistered');
 //  *************************************************************************************************************
-
-
 
 //  ******  Patient login page *********
 route::get('/patient_login', [patientLoginController::class, 'loginScreen'])->name('loginScreen');
@@ -79,8 +61,6 @@ route::post('/forgot_password_link', [patientLoginController::class, 'submitForg
 Route::get('reset-password/{token}', [patientLoginController::class, 'showResetPasswordForm'])->name('reset.password');
 Route::post('reset-password', [patientLoginController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
-
-
 route::middleware('CheckPatientLogin')->group(function () {
 
     route::get('/patient_logout', [patientLoginController::class, 'logout'])->name('patientLogOut');
@@ -88,22 +68,18 @@ route::middleware('CheckPatientLogin')->group(function () {
     //  ******* Patient Dashboard **********
     route::get('/patientDashboard', [patientDashboardController::class, 'read'])->name('patientDashboardData');
 
-
     //  ********* Edit profile of patient ***********
     route::get('/patientProfile', [patientProfileController::class, 'patientEdit'])->name('patientProfile');
     route::get('/patient-profile-edit/{id}', [patientProfileController::class, 'patientprofileEdit'])->name('patientProfileEditData');
     route::post('/patientProfileUpdated', [patientProfileController::class, 'patientUpdate'])->name('patientProfileEdited');
     route::get('/patientMapLocation', [patientProfileController::class, 'patientMapLocation'])->name('patientLocationOnMap');
 
-
     //  ********* Create New Request or Someone else request from Patient Dashboard ********
     route::get('/createPatientRequests', [patientDashboardController::class, 'createNewRequest'])->name('createPatientRequests');
     route::post('/createdPatientRequests', [patientDashboardController::class, 'createNewPatient'])->name('createdPatientRequests');
 
-
     route::get('/createSomeoneRequests', [patientDashboardController::class, 'createSomeoneRequest'])->name('createSomeoneRequests');
     route::post('/createdSomeoneRequests', [patientDashboardController::class, 'createSomeOneElseRequest'])->name('createdSomeoneRequests');
-
 
     //  *********  View Documents  *********
     route::get('/patientViewDocsFile/{id}', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patientViewDocsFile');
@@ -111,9 +87,6 @@ route::middleware('CheckPatientLogin')->group(function () {
     route::get('/downloadOne/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('downloadOne');
     route::post('/patientViewDocsDownload', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('downloadAllFiles');
 });
-
-
-
 //  *******************************************************************************************************
 
 
@@ -128,8 +101,6 @@ Route::post('/cancel-agreement', [patientDashboardController::class, 'cancelAgre
 //  ***************************************************************************************************************************************
 
 
-
-
 // **********************************************************ADMIN***************************************************************
 
 // admin LogIn
@@ -139,22 +110,16 @@ route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
 route::post('/adminLoggedIn', [AdminLoginController::class, 'userLogin'])->name('adminLoggedIn');
 // route::get('/testData', [AdminLoginController::class, 'testData']);
 
-
 // admin ResetPassword
 route::get('/adminResetPassword', [AdminLoginController::class, 'adminResetPassword'])->name('adminresetpassword');
 route::post('/resetPasswordlink', [AdminLoginController::class, 'submitForgetPasswordForm'])->name('adminForgotPassword');
-
 
 // admin Update Password
 Route::get('updatePassword/{token}', [AdminLoginController::class, 'showUpdatePasswordForm'])->name('updatePassword');
 Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswordForm'])->name('updatePasswordPost');
 
-
 // route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
-
-
 // ****************************************************************************************************************************
-
 
 
 // ******************************* NAVDEEP's Work **********************************************
@@ -224,8 +189,6 @@ Route::middleware('checkProviderLogin')->group(function () {
     // Encounter (Medical Form Finalized) by Provider
     Route::get('/encounter-finalized/{id}', [ProviderController::class, 'encounterFinalized'])->name('encounter.finalized');
 
-    // Generate Pdf of the medical-form when finalized (IMPLEMENTATION REMAINING - once finalized, generate pdf and then the form should not be visible again, option to download the form)
-    // Route::get('encounter-form/generate-pdf/{id?}', [ProviderController::class, 'generatePDF'])->name('generate.pdf');
     // Download The medical-form when clicked from encounter finalized pop-up from conclude state
     Route::post('/download-medical-form', [ProviderController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 

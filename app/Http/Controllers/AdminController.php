@@ -407,7 +407,7 @@ class AdminController extends Controller
         try {
             $requestId = Crypt::decrypt($id);
             $data  = requestTable::where('id', $requestId)->first();
-            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->get();
+            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->paginate(10);
             return view('adminPage.pages.viewUploads', compact('data', 'documents'));
         } catch (\Throwable $th) {
             return view('errors.404');

@@ -80,7 +80,6 @@
                 class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
-
         <div class="section">
             <p>Patient Name</p>
             <span class="patient-name">{{ $data->first_name }} {{ $data->last_name }}</span>
@@ -200,6 +199,9 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="page">
+        {{ $documents->links('pagination::bootstrap-5') }}
     </div>
 @endsection
 @section('script')
