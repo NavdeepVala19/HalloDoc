@@ -126,13 +126,13 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                 <div class="action-container">
                     <button class="table-btn action-btn">Actions</button>
                     <div class="action-menu">
-                        <a href="{{ route('admin.view.case', $case->id) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                        <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}">
+                        <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                        <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}">
                             <i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>
                             View Uploads
                         </a>
-                        <a href="{{ route('admin.view.note', $case->id) }}"><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
-                        <button class="transfer-btn assign-case-btn" data-id="{{ $case->id }}"><i class="bi bi-send me-2 ms-3"></i>Transfer</button>
+                        <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i class="bi bi-journal-text me-2 ms-3"></i>View Notes</a>
+                        <button class="transfer-btn" data-id="{{ $case->id }}"><i class="bi bi-send me-2 ms-3"></i>Transfer</button>
                         <button class="clear-btn" data-id="{{ $case->id }}"><i class="bi bi-x-circle me-2 ms-3"></i>Clear
                             Case</button>
                         <button class="send-agreement-btn" data-id="{{ $case->id }}" data-request_type_id={{ $case->request_type_id }} data-phone_number="{{ $case->requestClient->phone_number }}" data-email={{ $case->requestClient->email }}><i class="bi bi-text-paragraph me-2 ms-3"></i>Send

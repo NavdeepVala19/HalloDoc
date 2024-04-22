@@ -1,64 +1,34 @@
-  {{-- Error or Success Message Alerts/Pop-ups --}}
-  {{-- Admin Logged In Successfully --}}
-  @if (session('message'))
-  <h6 class="alert alert-success popup-message">
-      {{ session('message') }}
-  </h6>
-  @endif
+    {{-- Case Cleared Successfully --}}
+    @if (session('caseCleared'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseCleared') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
 
-  {{-- Case Assigned Successfully --}}
-  @if (session('assigned'))
-  <div class="alert alert-success popup-message ">
-      <span>
-          {{ session('assigned') }}
-      </span>
-      <i class="bi bi-check-circle-fill"></i>
-  </div>
-  @endif
+    {{-- Order Created Successfully Pop-up Message --}}
+    @include('alertMessages.orderPlacedSuccess')
 
-  {{-- Case Blocked Successfully --}}
-  @if (session('CaseBlocked'))
-  <div class="alert alert-success popup-message ">
-      <span>
-          {{ session('CaseBlocked') }}
-      </span>
-      <i class="bi bi-check-circle-fill"></i>
-  </div>
-  @endif
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
-  {{-- Case Cancelled Successfully --}}
-  @if (session('caseCancelled'))
-  <div class="alert alert-success popup-message ">
-      <span>
-          {{ session('caseCancelled') }}
-      </span>
-      <i class="bi bi-check-circle-fill"></i>
-  </div>
-  @endif
+    {{-- Clear Case Pop-up --}}
+    {{-- This pop-up will open when admin clicks on “Clear case” link from Actions menu. From the pending and close
+state, admin can clear the case from the action grid. --}}
+    @include('popup.adminClearCase')
 
-  {{-- SendLink Completed Successfully --}}
-  @include('alertMessages.sendLinkSuccess')
+    {{-- Send Agreement Pop-up --}}
+    {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
+pending state, providers need to send an agreement link to patients. --}}
+    @include('popup.adminSendAgreement')
 
-  {{-- Cancel Case Pop-up --}}
-  {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}
-  @include('popup.adminCancelCase')
+    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
+    @include('popup.adminSendLink')
 
-  {{-- Assign Case Pop-up --}}
-  {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
-to providers based on patient’s region using this pop-up. --}}
-  @include('popup.adminAssignCase')
-
-  {{-- Block Case Pop-up --}}
-  {{-- This pop-up will open when admin clicks on “Block Case” link from Actions menu. From the new state, admin
-can block any case. All blocked cases can be seen in Block history page. --}}
-  @include('popup.blockCase')
-
-  {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-  @include('popup.adminSendLink')
-
-
-  {{-- Request DTY Support pop-up ->  --}}
-  @include('popup.requestDTYSupport')
+    {{-- Request DTY Support pop-up ->  --}}
+    @include('popup.requestDTYSupport')
 
   <table class="table table-hover ">
       <thead class="table-secondary">
@@ -102,18 +72,18 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                   <div class="action-container">
                       <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>
                       <div class="action-menu">
-                          <a href="{{ route('admin.view.case', $case->id) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                          <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
+                          <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                          <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                               Uploads</a>
-                          <a href="{{ route('admin.view.note', $case->id) }}"><i class="bi bi-journal-text me-2 ms-3"></i>View
+                          <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i class="bi bi-journal-text me-2 ms-3"></i>View
                               Notes</a>
-                          <a href="{{ route('admin.view.order', $case->id) }}"><i class="bi bi-card-list me-2 ms-3"></i>Orders</a>
-                          <a href="{{ route('admin.close.case', $case->id) }}">
+                          <a href="{{ route('admin.view.order', Crypt::encrypt($case->id)) }}"><i class="bi bi-card-list me-2 ms-3"></i>Orders</a>
+                          <a href="{{ route('admin.close.case', Crypt::encrypt($case->id)) }}">
                               <i class="bi bi-x-circle me-2 ms-3"></i>Close Case</a>
                           <button class="clear-btn" data-id="{{ $case->id }}"><i class="bi
                                                     bi-x-circle me-2 ms-3"></i>Clear
                               Case</button>
-                          <a href="{{ route('admin.encounter.form', $case->id) }}" class="encounter-form-btn"><i class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
+                          <a href="{{ route('admin.encounter.form', Crypt::encrypt($case->id)) }}" class="encounter-form-btn"><i class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
                       </div>
                   </div>
               </td>

@@ -52,6 +52,7 @@ class patientController extends Controller
 
 
         $isEmailStored = users::where('email', $request->email)->first();
+
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();

@@ -83,7 +83,7 @@ $(document).ready(function () {
     });
 
     // for Hiding Encounter pop-up on active listing page pop-up assign-case
-    $(".hide-popup-btn").click(function (event) {
+    $(document).on('click',".hide-popup-btn",function (event) {
         event.preventDefault();
 
         $(".pop-up").hide();

@@ -1,64 +1,21 @@
- {{-- Error or Success Message Alerts/Pop-ups --}}
- {{-- Admin Logged In Successfully --}}
- @if (session('message'))
- <h6 class="alert alert-success popup-message">
-     {{ session('message') }}
- </h6>
- @endif
+    {{-- SendLink Completed Successfully --}}
+    @include('alertMessages.sendLinkSuccess')
 
- {{-- Case Assigned Successfully --}}
- @if (session('assigned'))
- <div class="alert alert-success popup-message ">
-     <span>
-         {{ session('assigned') }}
-     </span>
-     <i class="bi bi-check-circle-fill"></i>
- </div>
- @endif
+    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
+    @include('popup.adminSendLink')
 
- {{-- Case Blocked Successfully --}}
- @if (session('CaseBlocked'))
- <div class="alert alert-success popup-message ">
-     <span>
-         {{ session('CaseBlocked') }}
-     </span>
-     <i class="bi bi-check-circle-fill"></i>
- </div>
- @endif
+    {{-- Request DTY Support pop-up ->  --}}
+    @include('popup.requestDTYSupport')
 
- {{-- Case Cancelled Successfully --}}
- @if (session('caseCancelled'))
- <div class="alert alert-success popup-message ">
-     <span>
-         {{ session('caseCancelled') }}
-     </span>
-     <i class="bi bi-check-circle-fill"></i>
- </div>
- @endif
-
- {{-- SendLink Completed Successfully --}}
- @include('alertMessages.sendLinkSuccess')
-
- {{-- Cancel Case Pop-up --}}
- {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}
- @include('popup.adminCancelCase')
-
- {{-- Assign Case Pop-up --}}
- {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
-to providers based on patient’s region using this pop-up. --}}
- @include('popup.adminAssignCase')
-
- {{-- Block Case Pop-up --}}
- {{-- This pop-up will open when admin clicks on “Block Case” link from Actions menu. From the new state, admin
-can block any case. All blocked cases can be seen in Block history page. --}}
- @include('popup.blockCase')
-
- {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
- @include('popup.adminSendLink')
-
-
- {{-- Request DTY Support pop-up ->  --}}
- @include('popup.requestDTYSupport')
+    {{-- Case Cancelled Successfully --}}
+    @if (session('caseClosed'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('caseClosed') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
 
  <table class="table table-hover ">
      <thead class="table-secondary">
@@ -117,10 +74,10 @@ can block any case. All blocked cases can be seen in Block history page. --}}
                  <div class="action-container">
                      <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>
                      <div class="action-menu">
-                         <a href="{{ route('admin.view.case', $case->id) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
-                         <a href="{{ route('admin.view.upload', ['id' => $case->id]) }}"><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
+                         <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}"><i class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
+                         <a href="{{ route('admin.view.upload', Crypt::encrypt($case->id)) }}"><i class="bi bi-file-earmark-arrow-up-fill me-2 ms-3"></i>View
                              Uploads</a>
-                         <a href="{{ route('admin.view.note', $case->id) }}"><i class="bi bi-journal-text me-2 ms-3"></i>
+                         <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i class="bi bi-journal-text me-2 ms-3"></i>
                              View Notes</a>
                      </div>
                  </div>

@@ -58,12 +58,12 @@
 
     {{-- Assign Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Assign case” link from Actions menu. Admin can assign the case
-to providers based on patient’s region using this pop-up. --}}
+    to providers based on patient’s region using this pop-up. --}}
     @include('popup.adminAssignCase')
 
     {{-- Block Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Block Case” link from Actions menu. From the new state, admin
-can block any case. All blocked cases can be seen in Block history page. --}}
+    can block any case. All blocked cases can be seen in Block history page. --}}
     @include('popup.blockCase')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}

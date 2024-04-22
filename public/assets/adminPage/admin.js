@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(document).on('click',".cancel-case-btn",function () {
+    $(document).on('click','.cancel-case-btn',function () {
         $(".cancel-case").show();
         $(".overlay").show();
 
@@ -13,6 +13,8 @@ $(document).ready(function () {
             url: "/cancel-case",
             type: "GET",
             success: function (data) {
+            console.log(data);
+
                 // Assuming data is an array of reasons
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
@@ -74,7 +76,7 @@ $(document).ready(function () {
         });
     });
 
-    $(".adminAssignCancel").click(function () {
+    $(document).on('click','.adminAssignCancel',function () {
         $(".pop-up .selectPhysician")
             .empty()
             .append(
@@ -90,7 +92,7 @@ $(document).ready(function () {
         );
     });
 
-    $(".physicianRegions").on("change", function () {
+    $(document).on("change", ".physicianRegions", function () {
         $physician = $(this).val();
         $(".selectPhysician").empty();
         $.ajax({
@@ -165,7 +167,7 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
     });
 
-    $(".transfer-btn").click(function () {
+    $(document).on('click',".transfer-btn",function () {
         $(".transfer-case").show();
         $(".overlay").show();
 
