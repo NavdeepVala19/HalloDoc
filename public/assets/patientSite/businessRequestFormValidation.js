@@ -71,21 +71,21 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-      $.validator.addMethod(
-          "city",
-          function (value, element) {
-              return value.match(/^[a-zA-Z ,_-]+?$/);
-          },
-          "Please enter alphabets in city name."
-      );
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return /^[a-zA-Z\s,.-]+$/.test(value);
+        },
+        "Please enter a valid city name with alphabets."
+    );
 
-      $.validator.addMethod(
-          "state",
-          function (value, element) {
-              return value.match(/^[a-zA-Z ,_-]+?$/);
-          },
-          "Please enter alphabets in state name."
-      );
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return /^[a-zA-Z\s,.-]+$/.test(value);
+        },
+        "Please enter a valid state name with alphabets."
+    );
 
     $.validator.addMethod(
         "zipcode",
@@ -160,7 +160,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             email: {
@@ -275,6 +274,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",

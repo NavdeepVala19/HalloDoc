@@ -42,8 +42,7 @@ $(document).ready(function () {
 
 
     $(".requestDTYClose").click(function () {
-        $(".pop-up .pop-up-request-support")
-            .empty()
+        $(".pop-up .pop-up-request-support").empty()
         $("#requestDTYSupportForm").trigger("reset");
         $("#requestDTYSupportForm").validate().resetForm();
         $(".pop-up form .form-control").removeClass(

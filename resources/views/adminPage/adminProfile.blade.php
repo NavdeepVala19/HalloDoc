@@ -94,9 +94,7 @@
                 </div>
             </div>
             <div class="text-end">
-
                 <button class="primary-empty" type="submit" id="adminResetPassword">Reset Password</button>
-
             </div>
 
         </form>
@@ -144,8 +142,7 @@
                 <button class="primary-fill" type="button" id="adminEditBtn1">Edit</button>
 
                 <button class="primary-fill admin-info-btns" type="submit">Save</button>
-
-                <a href="" class="btn btn-danger admin-info-btns" type="button" id="admin-info-cancel-btn">Cancel</a>
+                <button class="btn btn-danger admin-info-btns" type="button" id="admin-info-cancel-btn">Cancel</button>
 
             </div>
         </form>
@@ -170,8 +167,8 @@
                 <div>
                     {{-- Dropdown State Selection --}}
                     <div class="form-floating">
-                        <select class="form-select" id="listing_state_admin_account" aria-label="Floating label select example" disabled name="select_state">
-                            <option selected>{{ $adminProfileData->region_name }}</option>
+                        <select class="form-select admin_state" id="listing_state_admin_account" aria-label="Floating label select example" disabled name="select_state">
+                            <option selected value="{{$adminProfileData->id }}">{{ $adminProfileData->region_name }}</option>
                         </select>
                         <label for="floatingSelect">State</label>
                     </div>
@@ -187,25 +184,19 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
             </div>
             <div class="text-end">
                 <button class="primary-fill" id="adminEditBtn2" type="button">Edit</button>
                 <button class="primary-fill admin-mail-info-btns" type="submit">Save</button>
-                <a href="" class="btn btn-danger admin-mail-info-btns" type="button" id="admin-mail-cancel-btn">Cancel</a>
+                <button class="btn btn-danger admin-mail-info-btns" type="button" id="admin-mail-cancel-btn">Cancel</button>
             </div>
         </form>
-
-
         <hr>
-
     </div>
-
 </div>
 @endsection
 
-
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-<script defer src="{{ URL::asset('assets/adminPage/adminProfileEdit.js') }}"></script>
+<script defer src="{{ asset('assets/adminPage/adminProfileEdit.js') }}"></script>
 @endsection

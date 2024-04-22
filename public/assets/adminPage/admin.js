@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".cancel-case-btn").click(function () {
+    $(document).on('click','.cancel-case-btn',function () {
         $(".cancel-case").show();
         $(".overlay").show();
 
@@ -13,6 +13,8 @@ $(document).ready(function () {
             url: "/cancel-case",
             type: "GET",
             success: function (data) {
+            console.log(data);
+
                 // Assuming data is an array of reasons
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
@@ -30,7 +32,7 @@ $(document).ready(function () {
         });
     });
     // Reset Cancel Case Form when pop-up is closed
-    $(".cancleCaseClose").click(function () {
+    $(document).on('click',".cancleCaseClose",function () {
         $("#cancelCaseForm").trigger("reset");
         $("#cancelCaseForm").validate().resetForm();
         $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
@@ -41,7 +43,7 @@ $(document).ready(function () {
         );
     });
 
-    $(".assign-case-btn").click(function () {
+    $(document).on("click", ".assign-case-btn", function () {
         $(".assign-case").show();
         $(".overlay").show();
 
@@ -74,7 +76,7 @@ $(document).ready(function () {
         });
     });
 
-    $(".adminAssignCancel").click(function () {
+    $(document).on('click','.adminAssignCancel',function () {
         $(".pop-up .selectPhysician")
             .empty()
             .append(
@@ -90,7 +92,7 @@ $(document).ready(function () {
         );
     });
 
-    $(".physicianRegions").on("change", function () {
+    $(document).on("change", ".physicianRegions", function () {
         $physician = $(this).val();
         $(".selectPhysician").empty();
         $.ajax({
@@ -157,7 +159,7 @@ $(document).ready(function () {
         });
     });
 
-    $(".block-case-btn").click(function () {
+    $(document).on('click',".block-case-btn",function () {
         $(".block-case").show();
         $(".overlay").show();
 
@@ -165,7 +167,7 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
     });
 
-    $(".transfer-btn").click(function () {
+    $(document).on('click',".transfer-btn",function () {
         $(".transfer-case").show();
         $(".overlay").show();
 
@@ -350,63 +352,9 @@ $(document).ready(function () {
         $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
+
+
     // ************************************* Shivesh *************************************
-
-    $("#admin-info-cancel-btn").on("click", function () {
-        $(".admin_first_name").attr("disabled");
-        $(".admin_last_name").attr("disabled");
-        $(".admin_email").attr("disabled");
-        $(".admin_confirm_email").attr("disabled");
-        $(".phone").attr("disabled");
-
-        $("#adminEditBtn1").show();
-        $(".admin-info-btns").hide();
-    });
-
-    $("#admin-mail-cancel-btn").on("click", function () {
-        $(".admin_add1").attr("disabled");
-        $(".admin_add2").attr("disabled");
-        $(".city").attr("disabled");
-        $(".admin_state").attr("disabled");
-        $(".admin_zipcode").attr("disabled");
-        $(".admin_alt_phone").attr("disabled");
-
-        $("#adminEditBtn2").show();
-        $(".admin-mail-info-btns").hide();
-    });
-
-    $("#adminAccEditBtn").on("click", function () {
-        $(".admin_user_name").removeAttr("disabled");
-        $("#status-select").removeAttr("disabled");
-        $("#listing_role_admin_Account").removeAttr("disabled");
-
-        $("#adminAccEditBtn").hide();
-        $(".admin-acc-btns").show();
-    });
-
-    $("#adminEditBtn1").on("click", function () {
-        $(".admin_first_name").removeAttr("disabled");
-        $(".admin_last_name").removeAttr("disabled");
-        $(".admin_email").removeAttr("disabled");
-        $(".admin_confirm_email").removeAttr("disabled");
-        $(".phone").removeAttr("disabled");
-
-        $("#adminEditBtn1").hide();
-        $(".admin-info-btns").show();
-    });
-
-    $("#adminEditBtn2").on("click", function () {
-        $(".admin_add1").removeAttr("disabled");
-        $(".admin_add2").removeAttr("disabled");
-        $(".city").removeAttr("disabled");
-        $(".admin_state").removeAttr("disabled");
-        $(".admin_zipcode").removeAttr("disabled");
-        $(".admin_alt_phone").removeAttr("disabled");
-        $("#listing_state_admin_account").removeAttr("disabled");
-
-        $("#adminEditBtn2").hide();
-        $(".admin-mail-info-btns").show();
-    });
 
     $(document).on("click", ".action-btn", function () {
         var sibling = $(this).siblings(".actions-menubar:visible").length;

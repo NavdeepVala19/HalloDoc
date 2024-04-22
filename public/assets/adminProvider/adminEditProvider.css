@@ -85,6 +85,8 @@ input[type="checkbox"] {
 .upload{
     cursor: pointer;
 }
+
+
 @media (max-width: 550px) {
     .upload-txt {
         display: none;
@@ -138,4 +140,17 @@ input[type="checkbox"] {
 
 #providerProfileCancelBtn ,#providerProfileSaveBtn{
     display: none;
+}
+
+.bi{
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .upload-txt {
+        display: none;
+    }
+    .bi{
+        display: block;
+    }
 }

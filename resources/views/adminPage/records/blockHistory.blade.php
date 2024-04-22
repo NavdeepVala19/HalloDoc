@@ -73,7 +73,7 @@
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" class="form-control phone empty-fields" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
+                <input type="text" name="phone_number" class="form-control phone empty-fields" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
             <div class="text-end mb-3">
                 <button type="submit" class="primary-fill">Search</button>

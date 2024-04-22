@@ -31,17 +31,17 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
+            return /^[a-zA-Z\s,.-]+$/.test(value);
         },
-        "Please enter alphabets in city name."
+        "Please enter a valid city name with alphabets."
     );
 
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
+            return /^[a-zA-Z\s,.-]+$/.test(value);
         },
-        "Please enter alphabets in state name."
+        "Please enter a valid state name with alphabets."
     );
 
     $.validator.addMethod(
@@ -146,7 +146,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             last_name: {
@@ -187,7 +186,7 @@ $(document).ready(function () {
             },
             adminNote: {
                 diseaseSymptoms: true,
-                maxlength: 255,
+                maxlength: 200,
             },
         },
         messages: {
@@ -218,12 +217,15 @@ $(document).ready(function () {
                 required: "Please enter a state",
                 state: "Please enter alpbabets in state name.",
             },
+            zip: {
+                min: "Please enter positive number with 6 digits",
+            },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             adminNote: {
                 diseaseSymptoms: "Please enter valid symptoms.",
-                maxlength: "Symptoms details cannot exceed 255 characters.", // Optional: Message for exceeding limit
+                maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
         },
         errorElement: "span",

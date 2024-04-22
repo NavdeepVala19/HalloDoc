@@ -29,7 +29,7 @@ class AdminDashboardController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'phone_number' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'street' => 'min:2|max:30',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -173,15 +173,10 @@ class AdminDashboardController extends Controller
            return view('errors.404');
 
         }
-    
-
     }
-
-
     public function adminProfilePage()
     {
         $adminData = Auth::user();
-
         // $adminProfileData = Admin::with('users')->where('user_id', $adminData->id)->first();
         $adminProfileData = Admin::select(
             'admin.first_name',
@@ -196,7 +191,8 @@ class AdminDashboardController extends Controller
             'admin.user_id',
             'alt_phone',
             'role.name',
-            'regions.region_name'
+            'regions.region_name',
+            'regions.id'
         )
             ->leftJoin('role', 'role.id', 'admin.role_id')
             ->leftJoin('users', 'users.id', 'admin.user_id')
@@ -210,7 +206,6 @@ class AdminDashboardController extends Controller
 
     public function adminChangePassword(Request $request, $id)
     {
-
         $request->validate([
             'password' => 'required|min:8|max:30'
         ]);
@@ -233,7 +228,7 @@ class AdminDashboardController extends Controller
             'last_name' => 'required|min:2|max:30',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'confirm_email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'phone_number' => 'required',
         ]);
 
         // Update in admin table
@@ -269,7 +264,7 @@ class AdminDashboardController extends Controller
             'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
-            'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'alt_mobile' => 'required',
         ]);
 
 

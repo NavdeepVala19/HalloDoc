@@ -55,21 +55,21 @@
             @csrf
             <h3>Account Information</h3>
             <div class="grid-3">
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form">
                     <input type="text" name="user_name" class="form-control @error('user_name') is-invalid @enderror" id="floatingInput1" placeholder="User Name" value="{{ old('user_name') }}">
                     <label for="floatingInput1">User Name</label>
                     @error('user_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
-                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="floatingInput2" placeholder="password" value="{{ old('password') }}">
+                <div class="form-floating provider-form">
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="floatingInput2" placeholder="password" value="{{ old('password') }}" autocomplete="on">
                     <label for="floatingInput2">Password</label>
                     @error('password')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating role-select" id="form-floating">
+                <div class="form-floating role-select provider-form" >
                     <select class="form-select @error('role') is-invalid @enderror" id="provider_role" name="role" value="{{ old('role') }}">
                         <option selected value="">Role</option>
                     </select>
@@ -80,48 +80,48 @@
             </div>
             <h3>Administrator Information</h3>
             <div class="grid-2">
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" id="floatingInput3" placeholder="First Name" value="{{ old('first_name') }}">
                     <label for="floatingInput3">First Name</label>
                     @error('first_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" id="floatingInput4" placeholder="Last Name" value="{{ old('last_name') }}">
                     <label for="floatingInput4">Last Name</label>
                     @error('last_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="floatingInput5" placeholder="name@example.com" name="email" value="{{ old('email') }}">
                     <label for="floatingInput5">Email</label>
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" style="height: 58px;" id="form-floating">
+                <div class="form-floating provider-form" style="height: 58px;">
                     <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
                     @error('phone_number')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form">
                     <input type="number" name="medical_license" class="form-control @error('medical_license') is-invalid @enderror" id="floatingInput6" placeholder="Medical License" value="{{ old('medical_license') }}" min="0">
                     <label for="floatingInput6">Medical license # </label>
                     @error('medical_license')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="number" name="npi_number" class="form-control @error('npi_number') is-invalid @enderror" id="floatingInput7" placeholder="NPI Number" value="{{ old('npi_number') }}" min="0">
                     <label for="floatingInput7">NPI Number</label>
                     @error('npi_number')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="d-flex gap-4 flex-wrap" id="form-floating">
+                <div class="d-flex gap-4 flex-wrap provider-form" >
                     @foreach ($regions as $region)
                     <div class="form-check">
                         <input class="form-check-input region-checkbox" type="checkbox" name="region_id[]" id="region_{{ $region->id }}" value="{{ $region->id }}" @if (in_array($region->id, $selectedRegionIds ?? [])) checked @endif>
@@ -134,21 +134,21 @@
             </div>
             <h3>Mailing & Billing Information</h3>
             <div class="grid-2">
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="text" name="address1" class="form-control @error('address1') is-invalid @enderror" id="floatingInput8" placeholder="Address 1" value="{{ old('address1') }}">
                     <label for="floatingInput8">Address 1</label>
                     @error('address1')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="text" name="address2" class="form-control @error('address2') is-invalid @enderror" id="floatingInput9" placeholder="Address 2" value="{{ old('address2') }}">
                     <label for="floatingInput9">Address 2</label>
                     @error('address2')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" id="floatingInput10" placeholder="city" value="{{ old('city') }}">
                     <label for="floatingInput10">City</label>
                     @error('city')
@@ -156,7 +156,7 @@
                     @enderror
                 </div>
                 <div>
-                    <div class="form-floating" id="form-floating">
+                    <div class="form-floating provider-form" >
                         <select class="form-select @error('select_state') is-invalid @enderror" id="floatingSelect" aria-label="Floating label select example" name="select_state" value="{{ old('select_state') }}">
                             <option value="">State</option>
                             <option value="1">Somnath</option>
@@ -168,15 +168,15 @@
                         </input>
                     </div>
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror" id="floatingInput11" placeholder="zip" value="{{ old('zip') }}" min="0">
                     <label for="floatingInput11">Zip</label>
                     @error('zip')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div style="height: 58px;" id="form-floating">
-                    <input type="tel" name="phone_number_alt" class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number_alt') }}">
+                <div class="provider-form" style="height: 58px;">
+                    <input type="number" name="phone_number_alt" class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="" placeholder="Phone Number" value="{{ old('phone_number_alt') }}">
                     @error('phone_number_alt')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -184,14 +184,14 @@
             </div>
             <h3>Provider Profile</h3>
             <div class="grid-2">
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="text" name="business_name" class="form-control @error('business_name') is-invalid @enderror" id="floatingInput12" placeholder="Business Name" value="{{ old('business_name') }}">
                     <label for="floatingInput12">Business Name</label>
                     @error('business_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating" id="form-floating">
+                <div class="form-floating provider-form" >
                     <input type="url" name="business_website" class="form-control @error('business_website') is-invalid @enderror" id="floatingInput13" placeholder="Business Website" value="{{ old('business_website') }}">
                     <label for="floatingInput13">Business Website</label>
                     @error('business_website')
@@ -199,7 +199,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="custom-file-input mb-4" id="form-floating">
+            <div class="custom-file-input mb-4 provider-form" >
                 <input type="file" name="provider_photo" id="file-upload-request" hidden>
                 <label for="file-upload-request" class="upload-label">
                     <div class="p-2 file-label">
@@ -214,7 +214,7 @@
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="form-floating" id="form-floating">
+            <div class="form-floating provider-form" >
                 <textarea class="form-control @error('admin_notes') is-invalid @enderror" placeholder="Admin_Notes" id="floatingTextarea2" name="admin_notes" style="height: 120px">{{ old('admin_notes') }}</textarea>
                 <label for="floatingTextarea2">Admin Notes</label>
                 @error('admin_notes')
@@ -237,16 +237,9 @@
                                 </td>
 
                                 <td>
-                                    <div class="ms-4 btns" id="form-floating">
-                                        <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
+                                    <div class="ms-4 btns provider-form" >
+                                        <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
-                                        <p id="Contractor"></p>
-                                        @error('independent_contractor')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="ms-4 responsive-btns" id="form-floating">
-                                        <label for="independent_contractor" class="upload primary-fill"> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <p id="Contractor"></p>
                                         @error('independent_contractor')
                                         <div class="text-danger">{{ $message }}</div>
@@ -265,17 +258,8 @@
                                 </td>
 
                                 <td>
-                                    <div class="ms-4 btns" id="form-floating">
-                                        <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
-                                        <input type="file" id="background-input" name="background_doc" hidden>
-                                        <p id="Background"></p>
-                                        @error('background_doc')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="ms-4 responsive-btns" id="form-floating">
-                                        <button class="primary-fill mt-2 mb-3" name="background_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
+                                    <div class="ms-4 btns provider-form" >
+                                        <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <input type="file" id="background-input" name="background_doc" hidden>
                                         <p id="Background"></p>
                                         @error('background_doc')
@@ -295,16 +279,9 @@
                                 </td>
 
                                 <td>
-                                    <div class="ms-4 btns" id="form-floating">
-                                        <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
+                                    <div class="ms-4 btns provider-form" >
+                                        <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i> </label>
                                         <input type="file" id="hipaa-input" hidden name="hipaa_docs">
-                                        <p id="HIPAA"></p>
-                                        @error('hipaa_docs')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="ms-4 responsive-btns" id="form-floating">
-                                        <button class="primary-fill mt-2 mb-3" name="hipaa_docs-btn"><i class="bi bi-cloud-arrow-up"></i></button>
                                         <p id="HIPAA"></p>
                                         @error('hipaa_docs')
                                         <div class="text-danger">{{ $message }}</div>
@@ -322,18 +299,11 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="ms-4 btns" id="form-floating">
-                                        <label for="non-disclosure-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> </label>
+                                    <div class="ms-4 btns provider-form" >
+                                        <label for="non-disclosure-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i></label>
                                         <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc">
                                         <p class="non-disclosure"></p>
                                         @error('non_disclosure_doc')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="ms-4 responsive-btns" id="form-floating">
-                                        <button class="primary-fill mb-2 mt-2" name="non_disclosure_doc-btn"><i class="bi bi-cloud-arrow-up"></i></button>
-                                        <p class="non-disclosure"></p>
-                                        @error('independent_contractor')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>

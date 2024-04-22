@@ -5,11 +5,10 @@ $(document).ready(function () {
 
     // for showing action menu in new listing page
     $(document).on("click", ".action-btn", function (event) {
+        event.stopPropagation();
         $(this).siblings(".action-menu").toggle();
         $(".action-menu").not($(this).next(".action-menu")).hide();
         $(".case-id").val($(this).data("id"));
-
-        event.stopPropagation();
     });
 
     // for showing Encounter pop-up on active listing page
@@ -84,7 +83,7 @@ $(document).ready(function () {
     });
 
     // for Hiding Encounter pop-up on active listing page pop-up assign-case
-    $(".hide-popup-btn").click(function (event) {
+    $(document).on('click',".hide-popup-btn",function (event) {
         event.preventDefault();
 
         $(".pop-up").hide();

@@ -7,6 +7,17 @@
 @endsection
 
 @section('patientContent')
+
+   @if (session('error'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('error') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
+
 <!-- main content -->
 <div class="container-fluid main-section w-45">
     <div class="password-reset">

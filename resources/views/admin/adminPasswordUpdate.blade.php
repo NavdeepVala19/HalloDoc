@@ -11,18 +11,18 @@
 <!-- main content -->
 
 <div class="container-fluid main-section mt-5">
-
     <div class="main-container2">
-
         <div class="details">
             <h1>Reset Password</h1>
         </div>
-
-        @if (Session::has('message'))
-        <div class="alert alert-success" role="alert">
-            {{ Session::get('message') }}
+         @if (session('error'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('error') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
         </div>
-        @endif
+    @endif
 
         <div class="form">
             <form action="{{route('updatePasswordPost')}}" method="post" id="adminLogin">

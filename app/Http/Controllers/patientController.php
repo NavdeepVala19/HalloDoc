@@ -40,10 +40,10 @@ class patientController extends Controller
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'phone_number' => 'required',
             'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
             'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'symptoms' => 'nullable|min:5|max:200|',
@@ -52,6 +52,7 @@ class patientController extends Controller
 
 
         $isEmailStored = users::where('email', $request->email)->first();
+
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
@@ -78,8 +79,6 @@ class patientController extends Controller
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
         }
-
-        $requestEmail = new users();
 
         $requestData = new RequestTable();
         $requestData->user_id = $requestEmail->id;
@@ -110,8 +109,8 @@ class patientController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $requestData->id;
-            $request_file->file_name = $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request->file('docs')->getClientOriginalName());
+            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
 

@@ -56,21 +56,21 @@ $(document).ready(function () {
         "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
-     $.validator.addMethod(
-         "city",
-         function (value, element) {
-             return value.match(/^[a-zA-Z ,_-]+?$/);
-         },
-         "Please do not enter numbers in city name."
-     );
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return /^[a-zA-Z\s,.-]+$/.test(value);
+        },
+        "Please enter a valid city name with alphabets."
+    );
 
-     $.validator.addMethod(
-         "state",
-         function (value, element) {
-             return value.match(/^[a-zA-Z ,_-]+?$/);
-         },
-         "Please do not enter numbers in state name.."
-     );
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return /^[a-zA-Z\s,.-]+$/.test(value);
+        },
+        "Please enter a valid state name with alphabets."
+    );
 
     $.validator.addMethod(
         "zipcode",
@@ -180,7 +180,6 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date("1900-01-01").toDateString(),
-                    new Date().toDateString(),
                 ],
             },
             email: {
@@ -240,7 +239,7 @@ $(document).ready(function () {
             },
             family_phone_number: {
                 required: true,
-                phoneIndia: "Please enter valid phone number format....",
+                phoneIndia: true,
             },
             family_email: {
                 required: true,
@@ -296,6 +295,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
+                min: "Please enter positive number with 6 digits",
             },
             family_first_name: {
                 required: "Please enter a firstname between 3 and 15 character",

@@ -6,17 +6,14 @@
 
 @endsection
 
-
 @section('adminContent')
+@include('loading');
 
 <div class="container-fluid main-section mt-5">
-
     <div class="main-container1">
-
         <div class="details">
             <h1>Reset Your Password</h1>
         </div>
-
         @if (Session::has('message'))
         <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
@@ -49,10 +46,7 @@
     </div>
 </div>
 
-
-
 @endsection
-
 
 @section('script')
 <script defer src="{{ asset('assets/validation/jquery.validate.min.js')}}"></script>
