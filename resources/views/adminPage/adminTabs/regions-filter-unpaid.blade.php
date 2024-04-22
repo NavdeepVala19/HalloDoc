@@ -1,21 +1,3 @@
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
-    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink')
-
-    {{-- Request DTY Support pop-up ->  --}}
-    @include('popup.requestDTYSupport')
-
-    {{-- Case Cancelled Successfully --}}
-    @if (session('caseClosed'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('caseClosed') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
 
  <table class="table table-hover ">
      <thead class="table-secondary">

@@ -77,7 +77,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter a 6 digit positive number in zipcode."
     );
 
       $.validator.addMethod(
@@ -178,9 +178,7 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             email: {
                 required: true,
@@ -256,6 +254,7 @@ $(document).ready(function () {
             symptoms: {
                 required: false,
                 diseaseSymptoms: true,
+                minlength:5,
                 maxlength: 200,
             },
             docs: {
@@ -296,6 +295,7 @@ $(document).ready(function () {
             zipcode: {
                 required: "Please enter a zipcode",
                 min: "Please enter positive number with 6 digits",
+                zipcode: "Please enter a 6 digit positive number in zipcode.",
             },
             family_first_name: {
                 required: "Please enter a firstname between 3 and 15 character",

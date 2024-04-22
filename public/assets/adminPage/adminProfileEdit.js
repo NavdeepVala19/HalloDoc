@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    //* enable and disable the adminprofile page fields 
         $("#admin-info-cancel-btn").on("click", function () {
             $(".admin_first_name").attr("disabled", true);
             $(".admin_last_name").attr("disabled", true);
@@ -57,6 +58,8 @@ $(document).ready(function () {
         });
 
 
+    
+    // * client side validation of admin profile edit
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {
@@ -169,7 +172,7 @@ $.validator.addMethod(
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
+            error.addClass("text-danger");
             element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
@@ -238,7 +241,7 @@ $.validator.addMethod(
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
+            error.addClass("text-danger");
             element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {
@@ -301,7 +304,7 @@ $.validator.addMethod(
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("errorMsg");
+            error.addClass("text-danger");
             element.closest(".form-floating").append(error);
         },
         highlight: function (element, errorClass, validClass) {

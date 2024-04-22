@@ -103,6 +103,7 @@ class patientDashboardController extends Controller
         return redirect()->back()->with('agreementCancelled', 'Agreement Cancelled Sucessfully');
     }
 
+    //  create me request in patient Dashboard
     public function createNewPatient(Request $request)
     {
         $userData = Auth::user();
@@ -111,15 +112,15 @@ class patientDashboardController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required',
+            'date_of_birth' => 'required|before:today',
             'phone_number' => 'required',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'symptoms' => 'nullable|min:5|max:200|',
-            'room' => 'gte:1|nullable|max:1000'
+            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
+            'room'=>'gte:1|nullable|max:1000'
         ]);
 
         $newPatient = new RequestTable();
@@ -157,14 +158,6 @@ class patientDashboardController extends Controller
             $request_file->save();
         }
 
-        // store symptoms in request_notes table
-
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $newPatient->id;
-        $request_notes->patient_notes = $request->symptoms;
-
-        $request_notes->save();
-
         // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
@@ -182,28 +175,27 @@ class patientDashboardController extends Controller
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        return redirect()->route('patientDashboardData');
+        return redirect()->route('patientDashboardData')->with('message','request is submitted');
     }
 
+    // create someone else request from patient dashboard
     public function createSomeOneElseRequest(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'street' => 'min:2|max:30',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'phone_number' => 'required',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'symptoms' => 'nullable|min:5|max:200|',
-            'room' => 'gte:1|nullable|max:1000',
+            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
+            'room'=>'gte:1|nullable|max:1000',
             'relation' => 'nullable|alpha'
         ]);
-
 
 
         $isEmailStored = users::where('email', $request->email)->first();
@@ -319,7 +311,7 @@ class patientDashboardController extends Controller
         if ($isEmailStored == null) {
             return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent');
         } else {
-            return redirect()->route('patientDashboardData');
+            return redirect()->route('patientDashboardData')->with('message','request is submitted');
         }
     }
 
@@ -333,15 +325,5 @@ class patientDashboardController extends Controller
     
         return view('patientSite/patientDashboard', compact('docs', 'userData'));
 
-        // $docs = RequestTable::select(
-        //     'request.id',
-        //     'request_wise_file.request_id',
-        //     'status.status_type',
-        //     DB::raw('DATE(request.created_at) as created_date'),
-        // )
-        //     ->leftJoin('status', 'status.id', 'request.status')
-        //     ->leftJoin('request_wise_file', 'request_wise_file.request_id', 'request.id')
-        //     ->where('email', $email)
-        //     ->paginate(10);
     }
 }

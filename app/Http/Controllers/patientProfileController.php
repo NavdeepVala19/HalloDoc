@@ -42,13 +42,13 @@ class patientProfileController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15',
             'last_name' => 'required|min:3|max:15',
-            'date_of_birth' => 'required',
+            'date_of_birth' => 'required|before:today',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
-            'street' => 'required|min:2|max:60',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z\s,.-]+$/',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'zipcode' => 'digits:6',
+            'zipcode' => 'digits:6|gte:1',
         ]);
 
 

@@ -74,7 +74,7 @@ class PatientViewDocumentsController extends Controller
             $path = (public_path() . '/storage/' . $file->file_name);
             return response()->download($path);
         } catch (\Throwable $th) {
-            return view('errors.404');
+            return view('errors.500');
 
         }
     }
@@ -82,6 +82,8 @@ class PatientViewDocumentsController extends Controller
 
     public function downloadSelectedFiles(Request $request)
     {
+        try {
+           
         if (empty($request->input('selected_files'))) {
             $data = RequestWiseFile::where('request_id', $request->requestId)->get();
             if ($data->isEmpty()) {
@@ -105,24 +107,9 @@ class PatientViewDocumentsController extends Controller
             $zip->close();
         }
         return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
-
-        // -------------------------------------
-
-        // $ids = $request->input('selected_files');
-
-        // $zip = new ZipArchive;
-        // $zipFile = 'documents.zip';
-
-        // if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
-        //     foreach ($ids as $id) {
-        //         $file = RequestWiseFile::where('id', $id)->first();
-        //         $path = (public_path() . '/storage/' . $file->file_name);
-
-        //         $zip->addFile($path, $file->file_name);
-        //     }
-        //     $zip->close();
-        // }
-        // return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
     }
 }

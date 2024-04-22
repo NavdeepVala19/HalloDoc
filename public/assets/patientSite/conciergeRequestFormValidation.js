@@ -1,5 +1,6 @@
+// ** This code is for client side validation in conceirge form
+
 $(document).ready(function () {
-    // ** This code is for client side validation in conceirge form
 
     $.validator.addMethod(
         "lettersFirstName",
@@ -153,6 +154,7 @@ $(document).ready(function () {
             symptoms: {
                 required: false,
                 diseaseSymptoms: true,
+                minlength:5,
                 maxlength: 200,
             },
             email: {

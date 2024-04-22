@@ -223,7 +223,7 @@ $(document).ready(function () {
         $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
-    $(".clear-btn").click(function () {
+    $(document).on('click',".clear-btn",function () {
         $(".clear-case").show();
         $(".overlay").show();
 

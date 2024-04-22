@@ -29,7 +29,7 @@ class patientLoginController extends Controller
     {
         $request->validate([
             'email' => 'required|email|min:2|max:40',
-            'password' => "required|min:8|max:20|regex:/^\S(.*\S)?$/",
+            'password' => "required|min:8|max:30|regex:/^\S(.*\S)?$/",
         ]);
 
         $credentials = [
@@ -39,10 +39,7 @@ class patientLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
-
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-
-
             if($userRolesData == null){
                 return redirect()->route('loginScreen')->with('error', 'submit request with registered email');
             }
@@ -96,9 +93,8 @@ class patientLoginController extends Controller
 
     public function submitResetPasswordForm(Request $request)
     {
-
         $request->validate([
-            'new_password' => 'required|min:8|max:20',
+            'new_password' => 'required|min:8|max:30',
             'confirm_password' => 'required|same:new_password',
         ]);
 
@@ -107,11 +103,9 @@ class patientLoginController extends Controller
         if (!$updatePassword) {
             return back()->with('error', 'Invalid token!');
         }
-
         users::where([
             'token' => $request->token
         ])->update(['password' => Hash::make($request->new_password)]);
-
 
         users::where(['token' => $request->token])->update(['token' => ""]);
 

@@ -126,7 +126,7 @@ $(document).ready(function () {
     });
 
     // For Send Aggrement Pop-up in pending listing page
-    $(".send-agreement-btn").on("click", function () {
+    $(document).on("click",".send-agreement-btn", function () {
         $(".send-agreement").show();
         $(".overlay").show();
         $(".send-agreement-id").val($(this).data("id"));

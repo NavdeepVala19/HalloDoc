@@ -75,10 +75,6 @@ $(document).ready(function () {
         }
     });
 
-
-
-  
-
     // ** This code is for client side validation of patientProfileEdit
 
     $.validator.addMethod(
@@ -127,6 +123,14 @@ $(document).ready(function () {
             return /^[a-zA-Z\s,.-]+$/.test(value);
         },
         "Please enter a valid city name with alphabets."
+    );
+
+    $.validator.addMethod(
+        "street",
+        function (value, element) {
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
+        },
+        "Please enter a only alphabets and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -209,7 +213,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 60,
+                maxlength: 50,
+                street:true,
             },
             city: {
                 required: true,
@@ -270,10 +275,6 @@ $(document).ready(function () {
     });
 });
 
-
-
-
-
 // **** This code is for patient view documents checkboxes ****
 
 $(".master-checkbox").on("click", function () {
@@ -286,7 +287,6 @@ $(".master-checkbox").on("click", function () {
 
 // ***
 
-
 // **** This code is for show file name********
 //
 $(".file-input").change(function (e) {
@@ -295,9 +295,6 @@ $(".file-input").change(function (e) {
 });
 
 // ****
-
-
-
 
 // **** This code is for patientDashboard accordion menu ******
 
@@ -316,10 +313,8 @@ for (i = 0; i < acc.length; i++) {
     });
 }
 
-
-
-        // View Uploads File Upload Functionality
-    $("#file-upload").on("change", function () {
-        var fileName = $(this).val().split("\\").pop();
-        $(".upload-label").text(fileName);
-    });
+// View Uploads File Upload Functionality
+$("#file-upload").on("change", function () {
+    var fileName = $(this).val().split("\\").pop();
+    $(".upload-label").text(fileName);
+});

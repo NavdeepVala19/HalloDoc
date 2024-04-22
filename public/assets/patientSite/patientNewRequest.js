@@ -84,8 +84,6 @@ $(document).ready(function () {
         },
         "Please enter valid symptoms."
     );
-
-    
  
     $.validator.addMethod(
         "street",
@@ -180,7 +178,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
+                street:true,
             },
             date_of_birth: {
                 required: true,
@@ -197,7 +196,7 @@ $(document).ready(function () {
             state: {
                 required: true,
                 minlength: 2,
-                maxlength: 50,
+                maxlength: 30,
                 street: true,
             },
             zipcode: {
@@ -211,7 +210,7 @@ $(document).ready(function () {
             },
             symptoms: {
                 diseaseSymptoms: true,
-                maxlength: 255,
+                maxlength: 200,
             },
             docs: {
                 customFile: true,

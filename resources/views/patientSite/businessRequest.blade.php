@@ -58,7 +58,7 @@
                         @enderror
                     </div>
                     <div class="form-floating" id="form-floating">
-                        <input type="number" class="form-control @error('case_number') is-invalid @enderror" id="floatingInput5" value="{{ old('case_number') }}" name="case_number" placeholder="Case Number (optional)" max:1000>
+                        <input type="number" class="form-control @error('case_number') is-invalid @enderror" id="floatingInput5" value="{{ old('case_number') }}" name="case_number" placeholder="Case Number (optional)" max:1000 min="0">
                         <label for="floatingInput5">Case Number (optional)</label>
                         @error('case_number')
                         <div class="text-danger">{{ $message }}</div>
@@ -169,7 +169,7 @@
                             @enderror
                         </div>
                         <div class="form-floating" id="form-floating">
-                            <input type="number" name="room" class="form-control room @error('room') is-invalid @enderror" id="floatingInput14" placeholder="room" value="{{ old('room') }}">
+                            <input type="number" name="room" class="form-control room @error('room') is-invalid @enderror" id="floatingInput14" placeholder="room" value="{{ old('room') }}" min="0">
                             <label for="floatingInput14">Room (Optional) </label>
                             @error('room')
                             <div class="text-danger">{{ $message }}</div>

@@ -20,9 +20,11 @@ use Illuminate\Support\Facades\Mail;
 
 // use App\Models\User;
 
+// this controller is responsible for creating/storing the business request
+
+
 class businessRequestController extends Controller
 {
-
   public function businessRequests()
   {
     return view('patientSite/businessRequest');
@@ -30,14 +32,13 @@ class businessRequestController extends Controller
 
   public function create(Request $request)
   {
-
     $request->validate([
       'first_name' => 'required|min:3|max:15|alpha',
       'last_name' => 'required|min:3|max:15|alpha',
-      'date_of_birth' => 'required',
+      'date_of_birth' => 'required|before:today',
       'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'phone_number' => 'required',
-      'street' => 'required|min:2|max:30',
+      'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
       'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
       'zipcode' => 'digits:6|gte:1',
@@ -46,7 +47,7 @@ class businessRequestController extends Controller
       'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'business_mobile' => 'required',
       'business_property_name' => 'required|min:2|max:30',
-      'symptoms' => 'nullable|min:5|max:200|',
+      'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
       'case_number'=>'nullable|min:0|max:1000',
       'room'=>'nullable|min:0|max:1000'
     ]);
@@ -87,6 +88,9 @@ class businessRequestController extends Controller
 
     $business = new Business();
     $business->phone_number = $request->business_mobile;
+    $business->address1 = $request->street;
+    $business->address2 = $request->city;
+    $business->zipcode = $request->zipcode;
     $business->business_name = $request->business_property_name;
     $business->save();
 

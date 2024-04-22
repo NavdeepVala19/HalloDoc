@@ -1,14 +1,3 @@
-{{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
-    {{-- Order Created Successfully Pop-up Message --}}
-    @include('alertMessages.orderPlacedSuccess')
-
-    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink')
-
-    {{-- Request DTY Support pop-up ->  --}}
-    @include('popup.requestDTYSupport')
 
 <table class="table table-hover ">
     <thead class="table-secondary">

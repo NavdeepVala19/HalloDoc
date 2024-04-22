@@ -922,7 +922,7 @@ class AdminController extends Controller
             'request_notes.patient_notes',
             'request_notes.physician_notes',
             'request_notes.admin_notes',
-            'request_status.status',
+            'request.status',
             'provider.first_name as physician_first_name',
             DB::raw('DATE(request_client.created_at) as created_date'),
             DB::raw('DATE(request_closed.created_at) as closed_date'),
@@ -933,11 +933,11 @@ class AdminController extends Controller
             ->leftJoin('provider', function ($join) {
                 $join->on('request.physician_id', '=', 'provider.id');
             })
-            ->leftJoin('status', 'status.id', '=', 'request_status.status')
             ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
             ->orderByDesc('id')
             ->paginate(10);
 
+        // dd($combinedData);   
 
         Session::forget('request_status');
         Session::forget('request_type');
@@ -993,7 +993,7 @@ class AdminController extends Controller
             'request_client.city',
             'request_client.state',
             'request_client.zipcode',
-            'request_status.status',
+            'request.status',
             'provider.first_name as physician_first_name',
             'request_notes.physician_notes',
             'request_notes.admin_notes',
@@ -1004,12 +1004,11 @@ class AdminController extends Controller
         ])
             ->join('request', 'request.id', '=', 'request_client.request_id')
             ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
-            ->leftJoin('request_status', 'request_status.request_id', '=', 'request_client.request_id')
             ->leftJoin('provider', function ($join) {
                 $join->on('request.physician_id', '=', 'provider.id');
             })
-            ->leftJoin('status', 'status.id', '=', 'request_status.status')
-            ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id');
+            ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
+            ->orderByDesc('id');
 
         if (!empty($request->patient_name)) {
             // $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
@@ -1022,13 +1021,13 @@ class AdminController extends Controller
             $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
         }
         if (!empty($request->request_type)) {
-            $combinedData->where('request.request_type_id', "like", "%" . $request->request_type . "%");
+            $combinedData->where('request.request_type_id', $request->request_type);
         }
         if (!empty($request->provider_name)) {
             $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
         }
         if (!empty($request->request_status)) {
-            $combinedData->where('request_status.status', "like", "%" . $request->request_status . "%");
+            $combinedData->where('request.status', $request->request_status);
         }
         if (!empty($request->from_date_of_service)) {
             $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $todayDate]);
@@ -1427,7 +1426,9 @@ class AdminController extends Controller
 
         $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->pluck('email')->toArray();
 
+
         $requestMessage = $request->contact_msg;
+
         if ($offDutyPhysicians) {
             foreach ($offDutyPhysicians as $offDutyPhysician) {
                 Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));

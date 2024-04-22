@@ -7,11 +7,13 @@
    <div class="mobile-list">
        <div class="main-section mt-3">
            <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox">
-               {{ $data->first_name }}
+               {{ $data->first_name }} {{$data->last_name}}
            </h5>
            <div class="detail-box">
                <span>
-                   On Call Status: <strong>Available</strong>
+                   On Call Status: <strong>
+                    {{ in_array($data->id, $onCallPhysicianIds) ? 'Unavailable' : 'Available' }}
+                   </strong>
                </span>
            </div>
        </div>

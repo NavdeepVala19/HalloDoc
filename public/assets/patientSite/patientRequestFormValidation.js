@@ -76,7 +76,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter a 6 digit positive number in zipcode."
     );
 
     $.validator.addMethod(
@@ -188,7 +188,8 @@ $(document).ready(function () {
             street: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
+                street:true,
             },
             city: {
                 required: true,
@@ -213,6 +214,7 @@ $(document).ready(function () {
             },
             symptoms: {
                 diseaseSymptoms: true,
+                minlength: 5,
                 maxlength: 200,
             },
             docs: {
@@ -227,13 +229,14 @@ $(document).ready(function () {
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required:
+                    "Please enter a firstname between 3 and 15 character.",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter a lastname between 3 and 15 character.",
             },
             date_of_birth: {
-                required: "Please enter a date of birth",
+                required: "Please enter a date of birth.",
             },
             phone_number: {
                 required: "Please enter a mobile number",
@@ -252,7 +255,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
-                min: "Please enter positive number with 6 digits",
+                min: "Please enter a 6 digit positive number in zipcode.",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
@@ -282,4 +285,5 @@ $(document).ready(function () {
             form.submit(); // Submit the form
         },
     });
+
 });

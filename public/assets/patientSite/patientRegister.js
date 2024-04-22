@@ -1,5 +1,6 @@
-$(document).ready(function () {
+// this code is of client side validation of patient update password and patient register
 
+$(document).ready(function () {
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {
