@@ -19,9 +19,9 @@ class FormController extends Controller
     }
 
     /**
-  * Show the form for creating a new user.
+     * Show the form for creating a new user.
  
-  */
+     */
     public function create()
     {
         return view('CRUD/create');
@@ -63,7 +63,6 @@ class FormController extends Controller
         $user->save();
 
         return redirect('index')->withSuccess('Successfully registered');
-
     }
 
     public function read()
@@ -82,10 +81,7 @@ class FormController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
-
         // Log::info("Request data", $request->all());
-        
 
         $request->validate([
             'firstname' => ['required', 'min:2', 'max:30'],
@@ -107,20 +103,14 @@ class FormController extends Controller
         $user->image = $request->file('image')->store('public');
 
         // $user->image = decrypt($user->image);
-        // dd($request->image);
-
         $user->save();
 
         return redirect('index');
-
     }
 
     public function destroy($id)
     {
         $users = User::where('id', $id)->delete();
-        // dd($users);
-
         return redirect('index');
     }
-
 }

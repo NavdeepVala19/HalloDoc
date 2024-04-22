@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $(document).on('click','.cancel-case-btn',function () {
+    // Show cancel-case pop-up
+    $(document).on("click", ".cancel-case-btn", function () {
         $(".cancel-case").show();
         $(".overlay").show();
 
@@ -9,13 +10,11 @@ $(document).ready(function () {
             .empty()
             .append('<option value="" selected disabled>Reasons</option>');
 
+        // Fetch cancel-case reasons from database using AJAX calls
         $.ajax({
             url: "/cancel-case",
             type: "GET",
             success: function (data) {
-            console.log(data);
-
-                // Assuming data is an array of reasons
                 data.forEach(function (reason) {
                     $("#floatingSelect").append(
                         '<option value="' +
@@ -30,17 +29,6 @@ $(document).ready(function () {
                 console.error(error);
             },
         });
-    });
-    // Reset Cancel Case Form when pop-up is closed
-    $(document).on('click',".cancleCaseClose",function () {
-        $("#cancelCaseForm").trigger("reset");
-        $("#cancelCaseForm").validate().resetForm();
-        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
-            "is-valid"
-        );
-        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
-            "is-invalid"
-        );
     });
 
     $(document).on("click", ".assign-case-btn", function () {
@@ -74,22 +62,6 @@ $(document).ready(function () {
                 console.log(error);
             },
         });
-    });
-
-    $(document).on('click','.adminAssignCancel',function () {
-        $(".pop-up .selectPhysician")
-            .empty()
-            .append(
-                '<option value="" selected disabled>Select Physician</option>'
-            );
-        $("#adminAssignCase").trigger("reset");
-        $("#adminAssignCase").validate().resetForm();
-        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
-            "is-valid"
-        );
-        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
-            "is-invalid"
-        );
     });
 
     $(document).on("change", ".physicianRegions", function () {
@@ -159,7 +131,8 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click',".block-case-btn",function () {
+    // Show block-case pop-up
+    $(document).on("click", ".block-case-btn", function () {
         $(".block-case").show();
         $(".overlay").show();
 
@@ -167,7 +140,8 @@ $(document).ready(function () {
         $(".displayPatientName").html($(this).data("patient_name"));
     });
 
-    $(document).on('click',".transfer-btn",function () {
+    // Show Transfer-case pop-up
+    $(document).on("click", ".transfer-btn", function () {
         $(".transfer-case").show();
         $(".overlay").show();
 
@@ -179,7 +153,7 @@ $(document).ready(function () {
                 '<option value="" selected disabled>Narrow Search by Region</option>'
             );
 
-        // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
+        // populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
             url: "/physician-regions",
             type: "GET",
@@ -199,30 +173,8 @@ $(document).ready(function () {
             },
         });
     });
-    // Reset Form when Transfer case pop-up is closed
-    $(".adminTransferCancel").click(function () {
-        $(".pop-up .selectPhysician")
-            .empty()
-            .append(
-                '<option value="" selected disabled>Select Physician</option>'
-            );
-        $("#adminTransferRequest").trigger("reset");
-        $("#adminTransferRequest").validate().resetForm();
-        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
-            "is-valid"
-        );
-        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
-            "is-invalid"
-        );
-    });
-    // Reset Form when block case pop-up is closed
-    $(".blockCaseCancel").click(function () {
-        $("#adminBlockCase").trigger("reset");
-        $("#adminBlockCase").validate().resetForm();
-        $(".pop-up form .form-control").removeClass("is-valid");
-        $(".pop-up form .form-control").removeClass("is-invalid");
-    });
 
+    // Show clear-case pop-up
     $(".clear-btn").click(function () {
         $(".clear-case").show();
         $(".overlay").show();
@@ -258,14 +210,6 @@ $(document).ready(function () {
 
         $(".new-buttons").hide();
         $(".default-buttons").show();
-    });
-
-    // Reset Admin Send Link form on Closing pop-up
-    $(".adminSendLinkClose").click(function () {
-        $("#adminSendLinkForm").trigger("reset");
-        $("#adminSendLinkForm").validate().resetForm();
-        $(".pop-up form .form-control").removeClass("is-valid");
-        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     // Send Orders Page dynamic data fetching
@@ -344,6 +288,69 @@ $(document).ready(function () {
         $(".overlay").show();
     });
 
+    // ---------------- RESET FORMS WHEN POP-UPs ARE CLOSED ----------------------
+    // Reset Cancel Case Form when pop-up is closed
+    $(document).on("click", ".cancleCaseClose", function () {
+        $("#cancelCaseForm").trigger("reset");
+        $("#cancelCaseForm").validate().resetForm();
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-invalid"
+        );
+    });
+
+    // Reset Admin Assign Case pop-up when it's closed
+    $(document).on("click", ".adminAssignCancel", function () {
+        $(".pop-up .selectPhysician")
+            .empty()
+            .append(
+                '<option value="" selected disabled>Select Physician</option>'
+            );
+        $("#adminAssignCase").trigger("reset");
+        $("#adminAssignCase").validate().resetForm();
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-invalid"
+        );
+    });
+
+    // Reset Form when Transfer case pop-up is closed
+    $(".adminTransferCancel").click(function () {
+        $(".pop-up .selectPhysician")
+            .empty()
+            .append(
+                '<option value="" selected disabled>Select Physician</option>'
+            );
+        $("#adminTransferRequest").trigger("reset");
+        $("#adminTransferRequest").validate().resetForm();
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-valid"
+        );
+        $(".pop-up form .form-control, .pop-up form .form-select").removeClass(
+            "is-invalid"
+        );
+    });
+
+    // Reset Form when block case pop-up is closed
+    $(".blockCaseCancel").click(function () {
+        $("#adminBlockCase").trigger("reset");
+        $("#adminBlockCase").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
+    // Reset Admin Send Link form on Closing pop-up
+    $(".adminSendLinkClose").click(function () {
+        $("#adminSendLinkForm").trigger("reset");
+        $("#adminSendLinkForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
     // Admin Send Agreement reset form when pop-up is closed
     $(".adminSendAgreementClose").click(function () {
         // $("#providerSendLinkForm").trigger("reset");
@@ -352,10 +359,7 @@ $(document).ready(function () {
         $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
-
-
     // ************************************* Shivesh *************************************
-
     $(document).on("click", ".action-btn", function () {
         var sibling = $(this).siblings(".actions-menubar:visible").length;
 
@@ -382,8 +386,6 @@ $(document).ready(function () {
         }
     });
 
-    // *******
-
     // ****** Fetching regions from regions table *****
     $.ajax({
         url: "/admin-new",
@@ -403,10 +405,7 @@ $(document).ready(function () {
             console.error(error);
         },
     });
-    // *********
 });
-
-// ************************************************************************************
 
 // Display different roles checkboxes as per the roles selected
 $(".role-selected").on("change", function () {
@@ -452,8 +451,6 @@ $.ajax({
     },
 });
 
-// *** End of fetching regions from regions table ***
-
 // **** Fetching roles from role table ****
 $.ajax({
     url: "/admin-account-role",
@@ -473,5 +470,3 @@ $.ajax({
         console.error(error);
     },
 });
-
-// *** End of Fetching roles from role table ***

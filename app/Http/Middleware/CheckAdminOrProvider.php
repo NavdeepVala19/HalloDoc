@@ -2,13 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\UserRoles;
 use Closure;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class checkAdminLogin
+class CheckAdminOrProvider
 {
     /**
      * Handle an incoming request.
@@ -20,13 +20,12 @@ class checkAdminLogin
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
-            if ($roleId == 1) {
+            if ($roleId == 1 || $roleId == 2) {
                 return $next($request);
             } else {
                 return redirect()->route('adminLogin');
             }
         }
-
         return redirect()->route('adminLogin');
     }
 }

@@ -18,9 +18,6 @@ class LoginController extends Controller
 
     public function userLogin(Request $request)
     {
-
-        // dd($request->all());
-
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -31,7 +28,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             return redirect()->intended('read')->withSuccess('Successfully logged in');
         } else {
-            return redirect("login")->with('error',"Invalid crendentials");
+            return redirect("login")->with('error', "Invalid crendentials");
         }
     }
 
@@ -41,5 +38,4 @@ class LoginController extends Controller
         Auth::logout();
         return redirect("login");
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckAdminOrProvider;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -40,7 +41,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'CheckPatientLogin' =>  \App\Http\Middleware\CheckPatientLogin::class,
         'checkAdminLogin' =>  \App\Http\Middleware\checkAdminLogin::class,
-        'checkProviderLogin' =>  \App\Http\Middleware\checkProviderLogin::class,
+        'checkProviderLogin' => \App\Http\Middleware\checkProviderLogin::class,
+        'CheckAdminOrProvider' => \App\Http\Middleware\CheckAdminOrProvider::class,
     ];
 }

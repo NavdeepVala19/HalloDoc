@@ -1,9 +1,10 @@
 $(document).ready(function () {
+    // when clicked anywhere outside action-menu -> hide action-menu
     $(document).click(function () {
         $(".action-menu").hide();
     });
 
-    // for showing action menu in new listing page
+    // Showing action menu -> when clicked on action-btn
     $(document).on("click", ".action-btn", function (event) {
         event.stopPropagation();
         $(this).siblings(".action-menu").toggle();
@@ -11,69 +12,62 @@ $(document).ready(function () {
         $(".case-id").val($(this).data("id"));
     });
 
-    // for showing Encounter pop-up on active listing page
+    // Showing Encounter pop-up on active listing page
     $(".encounter-btn").on("click", function () {
         $(".encounter").show();
         $(".overlay").show();
         $(".case-id").val($(this).data("id"));
     });
 
+    // When housecall-btn is clicked
     $(".housecall-btn").click(function () {
+        // Toggle class btn-active
         $(this).toggleClass("btn-active");
         $(".consult-btn").removeClass("btn-active");
 
+        // Store value in hidden inputs
         $(".house_call").val(1);
         $(".consult").val(0);
 
+        // show and hide save button, as per the call selected or not
         $(".encounter-save-btn").toggleClass("houseCallSelected");
         $(".encounter-save-btn").removeClass("consultCallSelected");
     });
 
     $(".consult-btn").click(function () {
+        // Toggle class btn-active
         $(this).toggleClass("btn-active");
         $(".housecall-btn").removeClass("btn-active");
 
+        // Store value in hidden inputs
         $(".house_call").val(0);
         $(".consult").val(1);
 
+        // show and hide save button, as per the call selected or not
         $(".encounter-save-btn").toggleClass("consultCallSelected");
         $(".encounter-save-btn").removeClass("houseCallSelected");
     });
 
     // Conclude Case Encounter Form - Medical Report
     $(".encounter-popup-btn").click(function () {
+        // If medical report is finalized then open encouter pop-up to download the medical report
         $(".requestId").val($(this).data("id"));
         $(".encounter-finalized").show();
         $(".overlay").show();
     });
 
-    // for showing transfer-request pop-up on pending listing page
+    // Show transfer-request pop-up on pending listing page
     $(".transfer-btn").click(function () {
         $(".transfer-request").show();
         $(".overlay").show();
 
         $(".requestId").val($(this).data("id"));
     });
-    // Reset Form when pop-up is closed
-    $(".providerTransferCancel").click(function () {
-        $("#providerTransferCase").trigger("reset");
-        $("#providerTransferCase").validate().resetForm();
-        $(".pop-up form .form-control").removeClass("is-valid");
-        $(".pop-up form .form-control").removeClass("is-invalid");
-    });
 
     // for showing send-link pop-up on every listing page
     $(".send-link-btn").click(function (event) {
         $(".send-link").show();
         $(".overlay").show();
-    });
-
-    // Reset Provider Send Link form on Closing pop-up
-    $(".providerSendLinkCancel").click(function () {
-        $("#providerSendLinkForm").trigger("reset");
-        $("#providerSendLinkForm").validate().resetForm();
-        $(".pop-up form .form-control").removeClass("is-valid");
-        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     // for showing request-to-admin pop-up on providerProfile Page
@@ -83,14 +77,14 @@ $(document).ready(function () {
     });
 
     // for Hiding Encounter pop-up on active listing page pop-up assign-case
-    $(document).on('click',".hide-popup-btn",function (event) {
+    $(document).on("click", ".hide-popup-btn", function (event) {
         event.preventDefault();
 
         $(".pop-up").hide();
         $(".overlay").hide();
     });
 
-    // Mobile Listing view
+    // Mobile Listing view (when clicked on any particular case, open details about it)
     $(".mobile-list").on("click", function () {
         // Target the next sibling .more-info element specifically
         $(this).next(".more-info").toggleClass("active");
@@ -152,10 +146,28 @@ $(document).ready(function () {
             );
         }
     });
+
     // View Uploads File Upload Functionality
     $("#file-upload").on("change", function () {
         var fileName = $(this).val().split("\\").pop();
         $(".upload-label").text(fileName);
+    });
+
+    // ---------------- RESET FORMS WHEN POP-UPs ARE CLOSED ----------------------
+    // Reset Form when pop-up is closed
+    $(".providerTransferCancel").click(function () {
+        $("#providerTransferCase").trigger("reset");
+        $("#providerTransferCase").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
+    // Reset Provider Send Link form on Closing pop-up
+    $(".providerSendLinkCancel").click(function () {
+        $("#providerSendLinkForm").trigger("reset");
+        $("#providerSendLinkForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     // Provider Send Agreement reset form when pop-up is closed
@@ -165,20 +177,4 @@ $(document).ready(function () {
         $(".pop-up form .form-control").removeClass("is-valid");
         $(".pop-up form .form-control").removeClass("is-invalid");
     });
-
-    // Show loading animation when link Sent by Provider
-    // $("#providerSendLinkForm").submit(function () {
-    //     $(".loader").show();
-    //     $(".loader").fadeIn('slow');
-    // });
-
-    // Show loading animation when Agreement Sent by Provider
-    // $("#providerSendAgreement").submit(function () {
-    //     $(".loader").show();
-    // });
-
-    // Show loading animation when Agreement Sent by Provider
-    // $("#profileEditMailForm").submit(function () {
-    //     $(".loader").show();
-    // });
 });

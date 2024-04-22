@@ -2,85 +2,154 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 
 // Different Models used in these Controller
 use App\Models\Role;
 use App\Models\Admin;
 use App\Models\Roles;
-
-// Different Models used in these Controller
-use App\Models\Shift;
+use App\Models\Menu;
 use App\Models\users;
-use App\Mail\SendLink;
-use App\Models\Orders;
-
-use App\Models\caseTag;
-
-// For sending Mails
 use App\Models\Regions;
 use App\Models\SMSLogs;
-use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RoleMenu;
-
-// DomPDF package used for the creation of pdf from the form
 use App\Models\UserRoles;
-// To create zip, used to download multiple documents at once
 use App\Models\AdminRegion;
 use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
-use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\MedicalReport;
-use App\Models\RequestClosed;
 use App\Models\RequestStatus;
 use App\Models\request_Client;
-use App\Models\PhysicianRegion;
 use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Exports\NewStatusExport;
 use App\Models\RequestConcierge;
 use App\Models\HealthProfessional;
-use Illuminate\Support\Facades\DB;
+use App\Models\HealthProfessionalType;
+
+// For sending Mails
+use App\Mail\SendLink;
+use Twilio\Rest\Client;
+use App\Mail\RequestSupportMessage;
+
+// Export Data with Excel
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\NewStatusExport;
 use App\Exports\ActiveStatusExport;
 use App\Exports\SearchRecordExport;
 use App\Exports\UnPaidStatusExport;
-use App\Mail\RequestSupportMessage;
 use App\Exports\PendingStatusExport;
 use App\Exports\ToCloseStatusExport;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\HealthProfessionalType;
-use Illuminate\Support\Facades\Session;
 
 
 class AdminController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Listing (Cases with different status, category and searchTerm)
+    |--------------------------------------------------------------------------
+    |
+    | Admin Listing pages functionality
+    |   1. Total Cases Count
+    |   2. Different Status selection
+    |   3. Different category selection
+    |   4. Search Term request
+    */
+    const CATEGORY_PATIENT = 1;
+    const CATEGORY_FAMILY = 2;
+    const CATEGORY_CONCIERGE = 3;
+    const CATEGORY_BUSINESS = 4;
+
+    const STATUS_NEW = 1;
+    const STATUS_PENDING = 3;
+    const STATUS_ACTIVE = [4, 5];
+    const STATUS_CONCLUDE = 6;
+    const STATUS_TOCLOSE = [2, 7, 11];
+    const STATUS_UNPAID = 9;
+
+    /**
+     * Get category id from the name of category
+     *
+     * @param string $category different category names.
+     * @return int different types of request_type_id.
+     */
+    private function getCategoryId($category)
+    {
+        // mapping of category names to request_type_id
+        $categoryMapping = [
+            'patient' => self::CATEGORY_PATIENT,
+            'family' => self::CATEGORY_FAMILY,
+            'concierge' => self::CATEGORY_CONCIERGE,
+            'business' => self::CATEGORY_BUSINESS,
+        ];
+        return $categoryMapping[$category] ?? null;
+    }
+    /**
+     * Get status id from the name of status
+     *
+     * @param string $status different status names.
+     * @return int status in Id.
+     */
+    private function getStatusId($status)
+    {
+        $statusMapping = [
+            'new' => self::STATUS_NEW,
+            'pending' => self::STATUS_PENDING,
+            'active' => self::STATUS_ACTIVE,
+            'conclude' => self::STATUS_CONCLUDE,
+            'toclose' => self::STATUS_TOCLOSE,
+            'unpaid' => self::STATUS_UNPAID,
+        ];
+        return $statusMapping[$status];
+    }
+
+    // For Admin redirect to new State(By Default)
+    public function adminDashboard()
+    {
+        return redirect('/admin/new');
+    }
+
+    /**
+     *  Counts Total Number of cases for different status 
+     *
+     * @return int total number of cases, as per the status.
+     */
     public function totalCasesCount()
     {
         // Total count of cases as per the status (displayed in all listing pages)
         return [
-            // unassigned case, assigned to provider but not accepted
-            'newCase' => RequestTable::where('status', 1)->count(),
-            //accepted by provider, pending state
-            'pendingCase' => RequestTable::where('status', 3)->count(),
-            //MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider)
-            'activeCase' => RequestTable::whereIn('status', [4, 5])->count(),
-            'concludeCase' => RequestTable::where('status', 6)->count(),
-            'tocloseCase' => RequestTable::whereIn('status', [2, 7, 11])->count(),
-            'unpaidCase' => RequestTable::where('status', 9)->count(),
+            // unassigned case(Status = 1) -> assigned to provider but not accepted
+            'newCase' => RequestTable::where('status', self::STATUS_NEW)->count(),
+            // pending state(Status = 3) -> Accepted by provider 
+            'pendingCase' => RequestTable::where('status', self::STATUS_PENDING)->count(),
+            // Active State(Status = 4,5) -> MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider[HouseCall])
+            'activeCase' => RequestTable::whereIn('status', self::STATUS_ACTIVE)->count(),
+            // Conclude State(Status = 6) -> when consult selected during Encounter pop-up or HouseCall Completed
+            'concludeCase' => RequestTable::where('status', self::STATUS_CONCLUDE)->count(),
+            // toClose State(Status = 2,7,11) -> when provider conclude care or when admin cancel case or agreement cancelled by patient, it moves to ToClose state
+            'tocloseCase' => RequestTable::whereIn('status', self::STATUS_TOCLOSE)->count(),
+            // toClose State(Status = 9) -> when Admin close case, it will move to unpaid state
+            'unpaidCase' => RequestTable::where('status', self::STATUS_UNPAID)->count(),
         ];
     }
-    // Build Query as per filters, search query or normal cases
+
+    /**
+     *  Build Query as per filters, search query or normal cases
+     *
+     * @param string $status status of the cases [new, active, pending, conclude].
+     * @param string $category category of the cases [all, patient, family, business, concierge].
+     * @param string $searchTerm search term to filter the cases.
+     * @return object $query formed as per the status, category selected, any search term entered
+     */
     public function buildQuery($status, $category, $searchTerm)
     {
         // Check for Status(whether it's single status or multiple)
@@ -107,7 +176,14 @@ class AdminController extends Controller
         return $query;
     }
 
-    // Method to retrieve cases based on status, category, and search term
+    /**
+     * Method to retrieve cases based on status, category, and search term
+     *
+     * @param \illuminate\HTTP\Request $request
+     * @param string $status different status names.
+     * @param string $category different category names.
+     * @return \illuminate\View\View
+     */
     public function cases(Request $request, $status = 'new', $category = "all")
     {
         // $searchTerm = $request->search;
@@ -124,13 +200,13 @@ class AdminController extends Controller
         return view($viewName, compact('cases', 'count', 'userData'));
     }
 
-    // Admin dashboard
-    public function adminDashboard()
-    {
-        return redirect('/admin/new');
-    }
-
-    // Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
+    /**
+     * Display Provider Listing/Dashboard page as per the Tab Selected (By default it's "new")
+     *
+     * @param \illuminate\HTTP\Request $request
+     * @param string $status different status names.
+     * @return \illuminate\View\View
+     */
     public function status(Request $request, $status = 'new')
     {
         // Forget from session whenever a new status is opened
@@ -142,7 +218,14 @@ class AdminController extends Controller
         }
     }
 
-    // Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
+    /**
+     * Filter as per the button clicked in listing pages (Here we need both, the status and which button was clicked)
+     *
+     * @param \illuminate\HTTP\Request $request
+     * @param string $status different status names.
+     * @param string $category different category names.
+     * @return \illuminate\View\View
+     */
     public function adminFilter(Request $request, $status = 'new', $category = 'all')
     {
         // Store category in the session
@@ -158,7 +241,15 @@ class AdminController extends Controller
             return view('errors.404');
         }
     }
-    // Search for specific keyword in first_name of requestTable and requestclient
+
+    /**
+     * Search for searchTerm request in first_name & last_name of requestclient or RequestTable
+     *
+     * @param \illuminate\Http\Request $request
+     * @param string $status different status names.
+     * @param string $category different category names.
+     * @return \illuminate\View\View
+     */
     public function search(Request $request, $status = 'new', $category = 'all')
     {
         // store searchTerm in session
@@ -167,350 +258,28 @@ class AdminController extends Controller
         return $this->cases($request, $status, $category);
     }
 
-    //Get category id from the name of category
-    private function getCategoryId($category)
-    {
-        // mapping of category names to request_type_id
-        $categoryMapping = [
-            'patient' => 1,
-            'family' => 2,
-            'concierge' => 3,
-            'business' => 4,
-        ];
-        return $categoryMapping[$category] ?? null;
-    }
-    private function getStatusId($status)
-    {
-        $statusMapping = [
-            'new' => 1,
-            'pending' => 3,
-            'active' => [4, 5],
-            'conclude' => 6,
-            'toclose' => [2, 7, 11],
-            'unpaid' => 9,
-        ];
-        return $statusMapping[$status];
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Dashboard
+    |--------------------------------------------------------------------------
+    |
+    | Admin Dashboard different functionality
+    |   1. Send Link (sendMail)
+    |   2. Create Request
+    |   3. Export 
+    |   4. Export All 
+    |   5. Request DTY Support 
+    */
 
-    // Assign case - All physician Regions
-    public function physicianRegions()
-    {
-        $regions = Regions::get();
-        return response()->json($regions);
-    }
-
-    // AJAX call for Physician listing in dropdown selection
-    public function getPhysicians($id = null)
-    {
-        $physiciansId = PhysicianRegion::where('region_id', $id)->pluck('provider_id')->toArray();
-        $physicians = Provider::whereIn('id', $physiciansId)->get()->toArray();
-        return response()->json($physicians);
-    }
-
-    // AJAX call for (Remaining) Physician for listing in dropdown selection 
-    public function getNewPhysicians($requestId, $regionId)
-    {
-        // $oldPhysicianId = RequestStatus::where('request_id', $requestId)->where('TransToAdmin', 1)->where('status', 3)->orderByDesc('id')->first()->physician_id;
-        $oldPhysicianId = RequestTable::where('id', $requestId)->where('status', 3)->orderByDesc('id')->first()->physician_id;
-        $physiciansId = PhysicianRegion::where('region_id', $regionId)->pluck('provider_id')->toArray();
-        $physicians = Provider::whereIn('id', $physiciansId)->whereNot('id', $oldPhysicianId)->get()->toArray();
-        return response()->json($physicians);
-    }
-
-    // Admin assign Case to provider  
-    public function assignCase(Request $request)
-    {
-        $request->validate([
-            'physician' => 'required|numeric',
-            'assign_note' => 'required|min:5|max:200'
-
-        ]);
-        RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
-        RequestStatus::create([
-            'request_id' => $request->requestId,
-            'TransToPhysicianId' => $request->physician,
-            'status' => 1,
-            'admin_id' => 1,
-            'notes' => $request->assign_note
-        ]);
-
-        $physician = Provider::where('id', $request->physician)->first();
-        $physicianName = $physician->first_name . " " . $physician->last_name;
-        return redirect()->back()->with('assigned', "Case Assigned Successfully to physician - {$physicianName}");
-    }
-
-    // Admin Transfer Case to another physician
-    public function transferCase(Request $request)
-    {
-        $request->validate([
-            'physician' => 'required|numeric',
-            'notes' => 'required|min:5|max:200'
-        ]);
-
-        $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
-        RequestStatus::create([
-            'request_id' => $request->requestId,
-            'physician_id' => $providerId,
-            'TransToPhysicianId' => $request->physician,
-            'status' => "3",
-            'admin_id' => '1',
-            'notes' => $request->notes
-        ]);
-        RequestTable::where('id', $request->requestId)->update([
-            'status' => 3,
-            'physician_id' => $request->physician
-        ]);
-        return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
-    }
-
-    // fetch all caseTag data from its table and show in cancelCase PopUp
-    public function cancelCaseOptions()
-    {
-        $reasons = caseTag::all();
-        return response()->json($reasons);
-    }
-    // Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog
-    public function cancelCase(Request $request)
-    {
-        $request->validate([
-            'case_tag' => 'required|in:1,2,3,4',
-            'reason' => 'required|min:5|max:200'
-        ]);
-        RequestTable::where('id', $request->requestId)->update([
-            'status' => 2,
-            'case_tag' => $request->case_tag
-        ]);
-        RequestStatus::create([
-            'request_id' => $request->requestId,
-            'status' => '2',
-            'notes' => $request->reason
-        ]);
-
-        return redirect()->back()->with('caseCancelled', 'Case Cancelled (Moved to ToClose State)');
-    }
-
-    // Admin Blocks patient
-    public function blockCase(Request $request)
-    {
-        $request->validate([
-            'block_reason' => 'required|max:100'
-        ]);
-
-        // Block patient phone number, email, requestId and reason given by admin stored in block_request table
-        $client = request_Client::where('request_id', $request->requestId)->first();
-        BlockRequest::create([
-            'request_id' => $request->requestId,
-            'reason' => $request->block_reason,
-            'phone_number' => $client->phone_number,
-            'email' => $client->email
-        ]);
-        RequestTable::where('id', $request->requestId)->update([
-            'status' => 10,
-        ]);
-        RequestStatus::create([
-            'request_id' => $request->requestId,
-            'status' => 10,
-            'notes' => $request->block_reason,
-        ]);
-        return redirect()->back()->with('CaseBlocked', 'Case Blocked Successfully!');
-    }
-
-    // View case
-    public function viewCase($id)
-    {
-        try {
-            $requestId = Crypt::decrypt($id);
-            $data = RequestTable::where('id', $requestId)->first();
-            if (empty($data)) {
-                return redirect()->back()->with('wrongCase', "Case doesn't exist");
-            }
-            return view('adminPage.pages.viewCase', compact('data'));
-        } catch (\Throwable $th) {
-            //throw $th;
-            return view('errors.404');
-        }
-    }
-
-    public function editCase(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'dob' => 'required',
-        ]);
-
-
-        $firstName = $request->first_name;
-        $lastName = $request->last_name;
-        $dateOfBirth = $request->dob;
-        $patientNotes = $request->patient_notes;
-
-        RequestTable::where('id', $request->requestId)->where('request_type_id', 1)->update([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-        ]);
-
-        request_Client::where('request_id', $request->requestId)->update([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'date_of_birth' => $dateOfBirth,
-            'notes' => $patientNotes
-        ]);
-
-        return redirect()->back()->with('caseEdited', "Information updated successfully!");
-    }
-
-    // View Notes
-    public function viewNote($id)
-    {
-        try {
-            $requestId = Crypt::decrypt($id);
-
-            $data = RequestTable::where('id', $requestId)->first();
-
-            $note = RequestNotes::where('request_id', $requestId)->first();
-            $adminAssignedCase = RequestStatus::with('transferedPhysician')->where('request_id', $requestId)->where('status', 1)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-            $providerTransferedCase = RequestStatus::with('provider')->where('request_id', $requestId)->where('status', 1)->where('TransToAdmin', true)->orderByDesc('id')->first();
-            $adminTransferedCase = RequestStatus::with('transferedPhysician')->where('request_id', $requestId)->where('admin_id', 1)->where('status', 3)->whereNotNull('TransToPhysicianId')->orderByDesc('id')->first();
-            return view('adminPage.pages.viewNotes', compact('requestId', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'));
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-
-    // Store Admin Note to display in ViewNotes Page
-    public function storeNote(Request $request)
-    {
-        $request->validate([
-            'admin_note' => 'required||min:5|max:200'
-        ]);
-        $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
-        if (!empty($requestNote)) {
-            RequestNotes::where('request_id', $request->requestId)->update([
-                'admin_notes' => $request->admin_note,
-            ]);
-        } else {
-            RequestNotes::create([
-                'request_id' => $request->requestId,
-                'admin_notes' => $request->admin_note,
-            ]);
-        }
-
-        $id = $request->requestId;
-        $id = Crypt::encrypt($id);
-
-        return redirect()->route('admin.view.note', compact('id'))->with('adminNoteAdded', 'Your Note Successfully Added');
-    }
-
-    // Display View Upload Page with the data
-    public function viewUpload($id)
-    {
-        try {
-            $requestId = Crypt::decrypt($id);
-            $data  = requestTable::where('id', $requestId)->first();
-            $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->paginate(10);
-            return view('adminPage.pages.viewUploads', compact('data', 'documents'));
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-
-    // Upload Document from viewUpload Page
-    public function uploadDocument(Request $request, $id = null)
-    {
-        $request->validate([
-            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf|max:5242880'
-        ], [
-            'document.required' => 'Select an File to upload!'
-        ]);
-        $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-
-        $path = $request->file('document')->storeAs('public', $fileName);
-        RequestWiseFile::create([
-            'request_id' => $id,
-            'file_name' => $fileName,
-            'admin_id' => 1,
-        ]);
-
-        return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
-    }
-
-    // show a new medical form or an existing one when clicked encounter button in conclude listing
-    public function encounterFormView(Request $request, $id = "null")
-    {
-        try {
-            $requestId = Crypt::decrypt($id);
-
-            $data = MedicalReport::where('request_id', $requestId)->first();
-            $requestData = RequestTable::where('id', $requestId)->first();
-            return view('adminPage.adminEncounterForm', compact('data', 'requestId', 'requestData'));
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-
-    // Store Encounter Form (Medical Form) data, changes made by admin
-    public function encounterForm(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'mobile' => 'sometimes'
-        ]);
-
-        $report = MedicalReport::where("request_id", $request->request_id)->first();
-
-        $array = [
-            'request_id' => $request->request_id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'location' => $request->location,
-            'service_date' => $request->service_date,
-            'date_of_birth' => $request->date_of_birth,
-            'mobile' => $request->mobile,
-            'present_illness_history' => $request->present_illness_history,
-            'medical_history' => $request->medical_history,
-            'medications' => $request->medications,
-            'allergies' => $request->allergies,
-            'temperature' => $request->temperature,
-            'heart_rate' => $request->heart_rate,
-            'repository_rate' => $request->repository_rate,
-            'sis_BP' => $request->sis_BP,
-            'dia_BP' => $request->dia_BP,
-            'oxygen' => $request->oxygen,
-            'pain' => $request->pain,
-            'heent' => $request->heent,
-            'cv' => $request->cv,
-            'chest' => $request->chest,
-            'abd' => $request->abd,
-            'extr' => $request->extr,
-            'skin' => $request->skin,
-            'neuro' => $request->neuro,
-            'other' => $request->other,
-            'diagnosis' => $request->diagnosis,
-            'treatment_plan' => $request->treatment_plan,
-            'medication_dispensed' => $request->medication_dispensed,
-            'procedure' => $request->procedure,
-            'followUp' => $request->followUp,
-            'is_finalize' => false
-        ];
-        $medicalReport = new MedicalReport();
-        if ($report) {
-            // Report Already exists, update report
-            $report->update($array);
-        } else {
-            // Report does'nt exists, insert a new entry
-            $medicalReport->create($array);
-        }
-
-        return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
-    }
-
-    // Send Link to Patient for creating request
+    // -------------------- 1. Send Link (sendMail) -------------------
+    /**
+     * Send Mail to patient with link to create request page
+     *
+     * @param Request $request 
+     * @return \Illuminate\Http\RedirectResponse redirect back with success message
+     */
     public function sendMail(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|alpha|min:5|max:30',
             'last_name' => 'required|alpha|min:5|max:30',
@@ -572,64 +341,47 @@ class AdminController extends Controller
 
         return redirect()->back()->with('linkSent', "Link Sent Successfully!");
     }
+    // -------------------- 2. Create Request -------------------------
+    // -------------------- 3. Export ---------------------------------
+    // -------------------- 4. Export All -----------------------------
+    // -------------------- 5. Request DTY Support --------------------
 
-    // Clear Case -> change status for particular case to "Clear"
-    public function clearCase(Request $request)
-    {
-        RequestTable::where('id', $request->requestId)->update([
-            'status' => 8,
-        ]);
-        RequestStatus::create([
-            'request_id' => $request->requestId,
-            'status' => 8,
-        ]);
-        return redirect()->back()->with('caseCleared', 'Case Cleared Successfully');
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Dashboard -> Menu-Bar different pages
+    |--------------------------------------------------------------------------
+    |
+    | Admin Dashboard Menu-bar pages functionality
+    |   1. Provider Location
+    |   2. My Profile
+    |   3. Providers 
+    |       3.1 : Provider
+    |       3.2 : Scheduling
+    |   4. Partners
+    |   5. Access  
+    |       5.1 : User Access 
+    |       5.2 : Account Access 
+    |   6. Records  
+    |       6.1 : Search Records 
+    |       6.2 : Email Logs
+    |       6.3 : SMS Logs
+    |       6.4 : Patient Records
+    |       6.5 : Blocked History
+    */
 
-    // Show Close Case Page with Details
-    public function closeCase(Request $request, $id = null)
-    {
-        try {
-            $requestId = Crypt::decrypt($id);
-
-            $data = RequestTable::where('id', $requestId)->first();
-            $files = RequestWiseFile::where('request_id', $requestId)->get();
-            return view('adminPage.pages.closeCase', compact('data', 'files'));
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-    // Close Case -> particular case will move from toClose state to unpaid state1
-    public function closeCaseData(Request $request)
-    {
-        if ($request->input('closeCaseBtn') == 'Save') {
-            $request->validate([
-                'phone_number' => 'required',
-                'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
-            ]);
-            request_Client::where('request_id', $request->requestId)->update([
-                'phone_number' => $request->phone_number,
-                'email' => $request->email
-            ]);
-        } else if ($request->input('closeCaseBtn') == 'Close Case') {
-            $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
-            RequestTable::where('id', $request->requestId)->update(['status' => 9]);
-            RequestStatus::create([
-                'request_id' => $request->requestId,
-                'status' => 9,
-                'physician_id' => $physicianId,
-            ]);
-            $statusId = RequestStatus::where('request_id', $request->requestId)->orderByDesc('id')->first()->id;
-            RequestClosed::create([
-                'request_id' => $request->requestId,
-                'request_status_id' => $statusId
-            ]);
-            return redirect()->route('admin.status', 'unpaid')->with('caseClosed', 'Case Closed Successfully!');
-        }
-        return redirect()->back();
-    }
-
-    // Show Partners page in Admin
+    // -------------------- 1. Provider Location --------------------
+    // -------------------- 2. My Profile ---------------------------
+    // -------------------- 3. Providers ----------------------------
+    // --------- 3.1 : Provider ----------
+    // --------- 3.2 : Scheduling --------
+    // Admin Scheduling -> Implementation and functionality is in Scheduling Controller
+    // -------------------- 4. Partners -----------------------------
+    /**
+     * Display Partners/Vendors page 
+     *
+     * @param int $id healthProfessionalType id to show selection on dropdown 
+     * @return \Illuminate\View\View partners page
+     */
     public function viewPartners($id = null)
     {
         if ($id == null || $id == '0') {
@@ -643,7 +395,14 @@ class AdminController extends Controller
         return view('adminPage.partners.partners', compact('vendors', 'professions', 'id', 'search'));
     }
 
-    // For Searching and filtering Partners
+    /**
+     * For Searching and filtering Partners
+     *
+     * Filtering partners based on healthProfessionalType or by search term query to search by business name
+     *
+     * @param Request $request 
+     * @return \Illuminate\View\View partners page
+     */
     public function searchPartners(Request $request)
     {
         $search = $request->get('search');
@@ -669,14 +428,23 @@ class AdminController extends Controller
         return view('adminPage.partners.partners', compact('vendors', 'professions', 'id', 'search'));
     }
 
-    // Add Business page
+    /**
+     * Display Add Business page
+     *
+     * @return \Illuminate\View\View partners page
+     */
     public function addBusinessView()
     {
         $types = HealthProfessionalType::get();
         return view('adminPage.partners.addBusiness', compact('types'));
     }
 
-    // Add Business Logic
+    /**
+     * Add Business entry in partners/vendors 
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View partners page
+     */
     public function addBusiness(Request $request)
     {
         $request->validate([
@@ -750,67 +518,18 @@ class AdminController extends Controller
         return redirect()->back()->with('changesSaved', 'Changes Saved Successfully!');
     }
 
-    // Display ViewOrder Page with the details
-    public function viewOrder($id = null)
-    {
-        try {
-            $requestId = Crypt::decrypt($id);
-
-            $data = RequestTable::where('id', $requestId)->first();
-            $types = HealthProfessionalType::get();
-            return view('adminPage.pages.sendOrder', compact('requestId', 'types', 'data'));
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-
-    // Send orders from action menu 
-    public function sendOrder(Request $request)
-    {
-        $request->validate([
-            'profession' => 'required',
-            'vendor_id' => 'required',
-        ]);
-
-        $healthProfessional = HealthProfessional::where('id', $request->vendor_id)->first();
-        Orders::create([
-            'vendor_id' => $request->vendor_id,
-            'request_id' => $request->requestId,
-            'fax_number' => $healthProfessional->fax_number,
-            'business_contact' => $healthProfessional->business_contact,
-            'email' => $healthProfessional->email,
-            'prescription' => $request->prescription,
-            'no_of_refill' => $request->refills,
-        ]);
-
-        $status = RequestTable::where('id', $request->requestId)->first()->status;
-
-        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('orderPlaced', 'Order Created Successfully!');
-    }
     // Delete Business From the vendors page
     public function deleteBusiness($id = null)
     {
         HealthProfessional::where('id', $id)->delete();
         return redirect()->back();
     }
-
-    // Fetch business values (health_professional values) as per the profession selected in Send Orders page
-    public function fetchBusiness(Request $request, $id)
-    {
-        $business = HealthProfessional::where('profession', $id)->get();
-        return response()->json($business);
-    }
-    // Ajax call for fetching business data and showing in the page
-    public function fetchBusinessData($id)
-    {
-        $businessData = HealthProfessional::where('id', $id)->first();
-        return response()->json($businessData);
-    }
-
+    // -------------------- 5. Access -------------------------------
+    // --------- 5.1 : User Access --------
+    // --------- 5.2 : Account Access -----
     // Access Page
     public function accessView()
     {
-
         $roles = Role::orderByDesc('id')->get();
         return view('adminPage.access.access', compact('roles'));
     }
@@ -904,6 +623,118 @@ class AdminController extends Controller
         }
         return redirect()->route('admin.access.view')->with('accessEdited', 'Your Changes Are successfully Saved!');
     }
+    // -------------------- 6. Records -------------------------------
+    // --------- 6.1 : Search Records -----
+    // --------- 6.2 : Email Logs ---------
+    // Display EmailLogs pages with all the log data
+    public function emailRecordsView()
+    {
+        $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
+
+        return view('adminPage.records.emailLogs', compact('emails'));
+    }
+    // Search/Filter EmailLogs 
+    public function searchEmail(Request $request)
+    {
+        $roleId = $request->get('role_id');
+        $receiverName = $request->get('receiver_name');
+        $email = $request->get('email');
+        $createdDate = $request->get('created_date');
+        $sentDate = $request->get('sent_date');
+
+        // Retrieve pagination parameters from the request
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 10);
+
+        $emails = EmailLog::query();
+
+        // Filter based on role_id (if provided)
+        if ($roleId) {
+            $emails->where('role_id', $roleId);
+        }
+
+        // Filter based on receiver_name (like operator)
+        if ($receiverName) {
+            $emails->where('recipient_name', 'LIKE', "%{$receiverName}%");
+        }
+
+        // Filter based on email (like operator)
+        if ($email) {
+            $emails->where('email', 'LIKE', "%{$email}%");
+        }
+
+        // Filter based on created_date (exact match)
+        if ($createdDate) {
+            $emails->where('created_at', 'Like',  "%$createdDate%");
+        }
+
+        // Filter based on sent_date (exact match)
+        if ($sentDate) {
+            $emails->where('sent_date', 'Like',  "%$sentDate%");
+        }
+
+        // Paginate results (10 items per page)
+        $emails = $emails->paginate($perPage, ['*'], 'page', $page);
+        $emails->appends(request()->query());
+
+        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
+    }
+    // --------- 6.3 : SMS Logs -----------
+    // --------- 6.4 : Patient Records ----
+    public function patientHistoryView()
+    {
+        $patients = request_Client::paginate(10);
+        return view('adminPage.records.patientHistory', compact('patients'));
+    }
+    public function searchPatientData(Request $request)
+    {
+        $firstName = $request->first_name;
+        $lastName = $request->last_name;
+        $email = $request->email;
+        $phoneNumber = $request->phone_number;
+
+        $patients = request_Client::query();
+
+        if ($firstName) {
+            $patients->where('first_name', 'LIKE', "%$firstName%");
+        }
+        if ($lastName) {
+            $patients->where('last_name', 'LIKE', "%$lastName%");
+        }
+        if ($email) {
+            $patients->where('email', 'LIKE', "%$email%");
+        }
+        if ($phoneNumber) {
+            $patients->where('phone_number', 'LIKE', "%$phoneNumber%");
+        }
+
+        $patients = $patients->paginate(10);
+
+        return view('adminPage.records.patientHistory', compact('patients', 'firstName', 'lastName', 'email', 'phoneNumber'));
+    }
+    public function patientRecordsView($id = null)
+    {
+        $email = request_Client::where('id', $id)->pluck('email')->first();
+        $data = request_Client::where('email', $email)->get();
+        $requestId = request_Client::where('id', $id)->first()->request_id;
+        $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
+        $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
+        $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
+        $concludeDate = null;
+        if (RequestStatus::where('request_id', $requestId)->where('status', 6)->first()) {
+            $concludeDate = RequestStatus::where('request_id', $requestId)->where('status', 6)->first()->created_at;
+        }
+        $requestData = RequestTable::where('id', $requestId)->first();
+        return view('adminPage.records.patientRecords', compact('data', 'requestData', 'status', 'documentCount', 'isFinalize', 'concludeDate'));
+    }
+
+    // Display patient records page
+    public function patientViews()
+    {
+        return view('adminPage.records.patientRecords');
+    }
+
+    // --------- 6.5 : Blocked History ----
 
     // Records Page
     public function searchRecordsView()
@@ -938,13 +769,11 @@ class AdminController extends Controller
             ->orderByDesc('id')
             ->paginate(10);
 
-
         Session::forget('request_status');
         Session::forget('request_type');
 
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
-
 
     public function searchRecordSearching(Request $request)
     {
@@ -954,7 +783,6 @@ class AdminController extends Controller
 
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
 
-
         $session = session([
             'patient_name' => $request->patient_name,
             'from_date_of_service' => $request->from_date_of_service,
@@ -963,7 +791,6 @@ class AdminController extends Controller
             'phone_number' => $request->phone_number,
             'provider_name' => $request->provider_name,
         ]);
-
 
         if (!empty($request->request_status)) {
             Session::put('request_status', $request->request_status);
@@ -1042,7 +869,6 @@ class AdminController extends Controller
         return $combinedData;
     }
 
-
     public function downloadFilteredData(Request $request)
     {
         $data = $this->exportFilteredSearchRecord($request);
@@ -1050,8 +876,6 @@ class AdminController extends Controller
 
         return Excel::download($export, 'filtered_data.xls');
     }
-
-
 
     public function deleteSearchRecordData($id)
     {
@@ -1068,59 +892,6 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
-
-
-    public function emailRecordsView()
-    {
-        $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
-
-        return view('adminPage.records.emailLogs', compact('emails'));
-    }
-    public function searchEmail(Request $request)
-    {
-        $roleId = $request->get('role_id');
-        $receiverName = $request->get('receiver_name');
-        $email = $request->get('email');
-        $createdDate = $request->get('created_date');
-        $sentDate = $request->get('sent_date');
-
-        // Retrieve pagination parameters from the request
-        $page = $request->input('page', 1);
-        $perPage = $request->input('per_page', 10);
-
-        $emails = EmailLog::query();
-
-        // Filter based on role_id (if provided)
-        if ($roleId) {
-            $emails->where('role_id', $roleId);
-        }
-
-        // Filter based on receiver_name (like operator)
-        if ($receiverName) {
-            $emails->where('recipient_name', 'LIKE', "%{$receiverName}%");
-        }
-
-        // Filter based on email (like operator)
-        if ($email) {
-            $emails->where('email', 'LIKE', "%{$email}%");
-        }
-
-        // Filter based on created_date (exact match)
-        if ($createdDate) {
-            $emails->where('created_at', 'Like',  "%$createdDate%");
-        }
-
-        // Filter based on sent_date (exact match)
-        if ($sentDate) {
-            $emails->where('sent_date', 'Like',  "%$sentDate%");
-        }
-
-        // Paginate results (10 items per page)
-        $emails = $emails->paginate($perPage, ['*'], 'page', $page);
-        $emails->appends(request()->query());
-
-        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
-    }
     public function smsRecordsView()
     {
         $sms = SMSLogs::paginate(10);
@@ -1130,7 +901,6 @@ class AdminController extends Controller
 
     public function searchSMSLogs(Request $request)
     {
-
         // Retrieve pagination parameters from the request
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
@@ -1190,10 +960,8 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-
     public function blockHistroySearchData(Request $request)
     {
-
         $blockData = BlockRequest::select(
             'request_client.first_name as patient_name',
             'block_request.id',
@@ -1220,7 +988,6 @@ class AdminController extends Controller
         }
         $blockData = $blockData->paginate(10);
 
-
         $session = session([
             'patient_name' => $request->patient_name,
             'date' => $request->date,
@@ -1238,7 +1005,6 @@ class AdminController extends Controller
         $block->update(['is_active' => $request->is_active]);
     }
 
-
     public function unBlockPatientInBlockHistoryPage($id)
     {
         $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
@@ -1247,100 +1013,6 @@ class AdminController extends Controller
         $unBlockData = BlockRequest::where('request_id', $id)->delete();
         return redirect()->back()->with('message', 'patient is unblock');
     }
-
-
-    public function patientHistoryView()
-    {
-        $patients = request_Client::paginate(10);
-        return view('adminPage.records.patientHistory', compact('patients'));
-    }
-    public function searchPatientData(Request $request)
-    {
-        $firstName = $request->first_name;
-        $lastName = $request->last_name;
-        $email = $request->email;
-        $phoneNumber = $request->phone_number;
-
-        $patients = request_Client::query();
-
-        if ($firstName) {
-            $patients->where('first_name', 'LIKE', "%$firstName%");
-        }
-        if ($lastName) {
-            $patients->where('last_name', 'LIKE', "%$lastName%");
-        }
-        if ($email) {
-            $patients->where('email', 'LIKE', "%$email%");
-        }
-        if ($phoneNumber) {
-            $patients->where('phone_number', 'LIKE', "%$phoneNumber%");
-        }
-
-        $patients = $patients->paginate(10);
-
-        return view('adminPage.records.patientHistory', compact('patients', 'firstName', 'lastName', 'email', 'phoneNumber'));
-    }
-    public function patientRecordsView($id = null)
-    {
-        $email = request_Client::where('id', $id)->pluck('email')->first();
-        $data = request_Client::where('email', $email)->get();
-        $requestId = request_Client::where('id', $id)->first()->request_id;
-        $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
-        $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
-        $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
-        $concludeDate = null;
-        if (RequestStatus::where('request_id', $requestId)->where('status', 6)->first()) {
-            $concludeDate = RequestStatus::where('request_id', $requestId)->where('status', 6)->first()->created_at;
-        }
-        $requestData = RequestTable::where('id', $requestId)->first();
-        return view('adminPage.records.patientRecords', compact('data', 'requestData', 'status', 'documentCount', 'isFinalize', 'concludeDate'));
-    }
-    public function downloadEncounterForm($requestId)
-    {
-        $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first()->file_name;
-
-        $path = (storage_path() . '/app/encounterForm/' . $encounterFile);
-        return  response()->download($path);
-    }
-
-    // Cancel History Page
-    public function viewCancelHistory()
-    {
-        $cancelCases = RequestStatus::with('request')->where('status', 2)->get();
-        return view('adminPage.records.cancelHistory', compact('cancelCases'));
-    }
-    // search cancel case in Cancel History Page
-    public function searchCancelCase(Request $request)
-    {
-        $name = $request->name;
-        $email = $request->email;
-        $date = $request->date;
-        $phone_number = $request->phone_number;
-        $query = RequestStatus::where('status', 2);
-
-        $query->whereHas('request', function ($query) use ($request) {
-            $query->whereHas('requestClient', function ($clientQuery) use ($request) {
-                $clientQuery->where(function ($subQuery) use ($request) {
-                    $subQuery->where('first_name', 'LIKE', "%$request->name%")->orWhere('last_name', 'LIKE', "%$request->name%");
-                })->when($request->email, function ($query) use ($request) {
-                    return $query->where('email', 'LIKE', "%$request->email%");
-                })->when($request->phone_number, function ($query) use ($request) {
-                    return $query->where('phone_number', 'LIKE', "%$request->phone_number%");
-                })->when($request->date, function ($query) use ($request) {
-                    return $query->where('request.updated_at', $request->date);
-                });
-            });
-        });
-
-        $cancelCases = $query->get();
-
-        return view('adminPage.records.cancelHistory', compact('cancelCases'));
-    }
-    public function patientViews()
-    {
-        return view('adminPage.records.patientRecords');
-    }
-
 
     public function UserAccess()
     {
@@ -1472,7 +1144,6 @@ class AdminController extends Controller
             'state' => 'required',
         ]);
 
-        dd("here");
         // Store Data in users table
 
         $adminCredentialsData = new users();
@@ -1618,6 +1289,8 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         }
 
+        $path = 'adminPage.adminTabs.regions-filter-' . $status;
+
         $data = view('adminPage.adminTabs.regions-filter-pending')->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
     }
@@ -1694,10 +1367,8 @@ class AdminController extends Controller
         $category = $request->category_value;
         $search = $request->search_value;
 
-
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
         $request->session()->put('regionName', $regionName);
-
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1708,18 +1379,14 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
-
     public function exportNew(Request $request)
     {
-        // dd($request->all());
         $status = 'new';
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
 
         $regionName = $request->session()->get('regionName', null);
-
 
         if ($region == "All Regions") {
             $exportNewData = $this->buildQuery($status, $category, $search);
@@ -1737,7 +1404,6 @@ class AdminController extends Controller
         $search = $request->filter_search;
         $region = $request->filter_region;
         $regionName = $request->session()->get('regionName', null);
-
 
         if ($regionName == "All Regions") {
             $exportPendingData = $this->buildQuery($status, $category, $search,);
@@ -1757,7 +1423,6 @@ class AdminController extends Controller
         $region = $request->filter_region;
         $regionName = $request->session()->get('regionName', null);
 
-
         if ($regionName == "All Regions") {
             $exportActiveData = $this->buildQuery($status, $category, $search);
         } else {
@@ -1776,7 +1441,6 @@ class AdminController extends Controller
         $region = $request->filter_region;
         $regionName = $request->session()->get('regionName', null);
 
-
         if ($regionName == "All Regions") {
             $exportConcludeData = $this->buildQuery($status, $category, $search);
         } else {
@@ -1793,7 +1457,6 @@ class AdminController extends Controller
         $search = $request->filter_search;
         $region = $request->filter_region;
         $regionName = $request->session()->get('regionName', null);
-
 
         if ($regionName == "All Regions") {
             $exportToCloseData = $this->buildQuery($status, $category, $search);
@@ -1822,5 +1485,40 @@ class AdminController extends Controller
 
         $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
         return Excel::download($exportUnpaid, 'UnPaidData.xls');
+    }
+
+    // REMOVED FROM SRS
+    // Cancel History Page
+    public function viewCancelHistory()
+    {
+        $cancelCases = RequestStatus::with('request')->where('status', 2)->get();
+        return view('adminPage.records.cancelHistory', compact('cancelCases'));
+    }
+    // search cancel case in Cancel History Page
+    public function searchCancelCase(Request $request)
+    {
+        $name = $request->name;
+        $email = $request->email;
+        $date = $request->date;
+        $phone_number = $request->phone_number;
+        $query = RequestStatus::where('status', 2);
+
+        $query->whereHas('request', function ($query) use ($request) {
+            $query->whereHas('requestClient', function ($clientQuery) use ($request) {
+                $clientQuery->where(function ($subQuery) use ($request) {
+                    $subQuery->where('first_name', 'LIKE', "%$request->name%")->orWhere('last_name', 'LIKE', "%$request->name%");
+                })->when($request->email, function ($query) use ($request) {
+                    return $query->where('email', 'LIKE', "%$request->email%");
+                })->when($request->phone_number, function ($query) use ($request) {
+                    return $query->where('phone_number', 'LIKE', "%$request->phone_number%");
+                })->when($request->date, function ($query) use ($request) {
+                    return $query->where('request.updated_at', $request->date);
+                });
+            });
+        });
+
+        $cancelCases = $query->get();
+
+        return view('adminPage.records.cancelHistory', compact('cancelCases'));
     }
 }

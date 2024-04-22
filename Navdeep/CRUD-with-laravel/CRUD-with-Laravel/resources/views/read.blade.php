@@ -52,7 +52,6 @@
             </thead>
 
             <tbody>
-                {{-- {{ dd($users) }} --}}
                 @foreach ($users as $user)
                     <tr>
                         <td> {{ $user->id }} </td>

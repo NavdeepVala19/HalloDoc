@@ -207,7 +207,13 @@ patient's email address and phone number. Once the patient accepts the agreement
                                         {{ $case->requestClient->first_name }}
                                         {{ $case->requestClient->last_name }}
                                     </td>
-                                    <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
+                                    <td>
+                                        @if ($case->provider)
+                                            {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>{{ $case->created_at }}</td>
                                     <td class="mobile-column">
                                         @if ($case->request_type_id == 1)
@@ -325,7 +331,11 @@ patient's email address and phone number. Once the patient accepts the agreement
                                 <br>
                                 <span>
                                     <i class="bi bi-person-circle"></i> Physician : Dr.
-                                    {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    @if ($case->provider)
+                                            {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                        @else
+                                            -
+                                        @endif
                                 </span>
                                 <div class="grid-2-listing ">
                                     <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"

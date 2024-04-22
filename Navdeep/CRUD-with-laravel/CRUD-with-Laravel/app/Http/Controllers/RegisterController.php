@@ -59,7 +59,6 @@ class RegisterController extends Controller
     public function updateView($id)
     {
         $user = registerModel::where("id", $id)->first();
-        // dd($user);
         return view("update", compact("user"));
     }
 

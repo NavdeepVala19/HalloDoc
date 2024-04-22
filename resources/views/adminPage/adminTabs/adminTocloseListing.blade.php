@@ -225,6 +225,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <td>
                                         @if ($case->provider)
                                             {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                        @else
+                                            -
                                         @endif
                                     </td>
                                     <td>{{ $case->created_at }}</td>
@@ -338,6 +340,8 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <i class="bi bi-person-circle"></i> Physician :
                                     @if ($case->provider)
                                         Dr. {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    @else
+                                        -
                                     @endif
                                 </span>
                                 <br>
