@@ -337,8 +337,8 @@ class AdminController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'dob' => 'required',
-            'patient_notes' => 'required|min:5|max:200',
         ]);
+
 
         $firstName = $request->first_name;
         $lastName = $request->last_name;
@@ -397,6 +397,7 @@ class AdminController extends Controller
         }
 
         $id = $request->requestId;
+        $id = Crypt::encrypt($id);
 
         return redirect()->route('admin.view.note', compact('id'))->with('adminNoteAdded', 'Your Note Successfully Added');
     }

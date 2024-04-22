@@ -545,6 +545,9 @@ td {
 }
 
 @media (max-width: 750px) {
+    .table-responsive {
+        min-height: 0;
+    }
     .case-new::after {
         display: none;
     }

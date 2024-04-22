@@ -586,6 +586,8 @@ class ProviderController extends Controller
         }
         $id = $request->requestId;
 
+        $id = Crypt::encrypt($id);
+
         return redirect()->route('provider.view.notes', compact('id'))->with('providerNoteAdded', 'Your Note Successfully Added');
     }
 
