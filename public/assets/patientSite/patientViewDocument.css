@@ -14,7 +14,6 @@
 
 /******************************** Main Content CSS Start ************************************** */
 
-
 .main-content {
     margin-top: 20px;
 }
@@ -67,10 +66,6 @@
 }
 
 @media (max-width: 550px) {
-    .down-button {
-        display: none;
-    }
-
     .upload-text {
         display: none;
     }
@@ -98,9 +93,6 @@
 
 /********************************  Main Content CSS End ************************************** */
 
-
-
-
 /* File Input Styling */
 .custom-file-input {
     width: 100%;
@@ -125,9 +117,17 @@
     padding: 8px 20px !important;
 }
 
-
+.down-button-icon {
+    display: none;
+}
 
 @media (max-width: 550px) {
+    .down-button {
+        display: none;
+    }
+    .down-button-icon {
+        display: block;
+    }
     .upload-txt {
         display: none;
     }
@@ -142,7 +142,3 @@
         padding: 4px 6px;
     }
 }
-
-
-
-

@@ -235,7 +235,7 @@ class AdminProviderController extends Controller
             'npi_number' => 'required|numeric|min:3|max_digits:7',
             'address1' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9-, ]+$/',
             'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
             'phone_number_alt' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -469,7 +469,7 @@ class AdminProviderController extends Controller
         $request->validate([
             'address1' => 'required|min:2|max:40',
             'address2' => 'required|min:2|max:40',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
             'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);

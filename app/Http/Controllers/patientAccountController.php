@@ -21,23 +21,28 @@ class patientAccountController extends Controller
     {
         $request->validate([
             "email" => "required|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/",
-            "password" => "required|min:2|max:40|regex:/^\S(.*\S)?$/",
+            "password" => "required|min:2|max:30|regex:/^\S(.*\S)?$/",
             "confirm_password" => "required|same:password",
         ]);
 
         if (isset($request->email)) {
-            $user = users::where("email", $request->email)->first();
-            if ($user) {
-                $user->password = Hash::make($request->password);
-                $user->save();
-            } else {
-                $create_account = new users();
-                $create_account->email = $request->email;
-                $create_account->password = Hash::make($request->password); // Use Hash facade to hash the password
-                $create_account->save();
-            }
-        }
-        return redirect()->route('loginScreen')->with('success','login with create account credentials');
 
+            $user = users::where("email", $request->email)->first();
+
+            if ($user != null) {
+                if($user->password != null && $user->email != null){
+                    return redirect()->route('loginScreen')->with('message', 'account with this email already exist');
+                } 
+                else if ($user->password == null && $user->email != null) {
+                    $user->password = Hash::make($request->password);
+                    $user->save();
+                    return redirect()->route('loginScreen')->with('success', 'login with your registered credentials');
+                }
+            } 
+            else if($user == null) {
+                return redirect()->back()->with('message', 'no single request was created from this email');
+            } 
+
+        }
     }
 }

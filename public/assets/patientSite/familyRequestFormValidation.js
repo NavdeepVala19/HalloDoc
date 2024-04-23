@@ -5,7 +5,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only letters for first name."
     );
 
     $.validator.addMethod(
@@ -13,15 +13,18 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only letters for Last name."
     );
 
     $.validator.addMethod(
         "relation",
         function (value, element) {
-            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+            return (
+                this.optional(element) ||
+                /^[a-zA-Z]+(?:-[a-zA-Z]+)*$/.test(value)
+            );
         },
-        "Please enter only letters for your relation."
+        "Please enter only letters and dash for your relation."
     );
 
     $.validator.addMethod(
@@ -59,7 +62,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid city name with alphabets."
     );
@@ -67,7 +70,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid state name with alphabets."
     );
@@ -80,15 +83,14 @@ $(document).ready(function () {
         "Please enter a 6 digit positive number in zipcode."
     );
 
-      $.validator.addMethod(
-          "diseaseSymptoms",
-          function (value, element) {
-              const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
-              return this.optional(element) || regex.test(value.trim());
-          },
-          "Please enter alphabets in symptoms."
-      );
-
+    $.validator.addMethod(
+        "diseaseSymptoms",
+        function (value, element) {
+            const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
+            return this.optional(element) || regex.test(value.trim());
+        },
+        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers."
+    );
 
     $.validator.addMethod(
         "nonNegativeOptional",
@@ -102,7 +104,6 @@ $(document).ready(function () {
         },
         "Please enter a valid room number."
     );
-
 
     $.validator.addMethod(
         "street",
@@ -127,7 +128,14 @@ $(document).ready(function () {
                 .toLowerCase();
 
             // Allowed extensions
-            var allowedExtensions = ["jpg", "jpeg", "png", "pdf", "doc"];
+                  var allowedExtensions = [
+                      "jpg",
+                      "jpeg",
+                      "png",
+                      "pdf",
+                      "doc",
+                      "docx",
+                  ];
 
             // Check extension
             if ($.inArray(extension, allowedExtensions) === -1) {

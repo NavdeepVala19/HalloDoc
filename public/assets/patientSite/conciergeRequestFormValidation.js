@@ -1,13 +1,12 @@
 // ** This code is for client side validation in conceirge form
 
 $(document).ready(function () {
-
     $.validator.addMethod(
         "lettersFirstName",
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only letters for first name."
     );
 
     $.validator.addMethod(
@@ -15,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only letters for Last name."
     );
 
     $.validator.addMethod(
@@ -45,7 +44,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid city name with alphabets."
     );
@@ -53,7 +52,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid state name with alphabets."
     );
@@ -61,7 +60,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "hotel",
         function (value, element) {
-            return value.match(/^[a-zA-Z ,_-]+?$/);
+            return value.match(/^[a-zA-Z0-9 &\-_.,]+$/);
         },
         "Please enter a valid hotel/property name."
     );
@@ -71,11 +70,9 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter a positive 6 digit zipcode."
     );
 
-    
- 
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -87,10 +84,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers."
     );
 
     $.validator.addMethod(
@@ -128,14 +125,14 @@ $(document).ready(function () {
         "Please enter a date between {0} and {1}."
     );
 
-       $.validator.addMethod(
-           "phoneIndia",
-           function (value, element) {
-               return this.optional(element) || iti.isValidNumber();
-           },
-           "Please enter a valid phone number."
-       );
-    
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     $("#patientRequestForm").validate({
         ignore: [],
         rules: {
@@ -176,28 +173,6 @@ $(document).ready(function () {
                 max: 1000,
                 nonNegativeOptional: true,
             },
-            street: {
-                required: true,
-                minlength: 2,
-                maxlength: 50,
-                street: true,
-            },
-            city: {
-                required: true,
-                minlength: 2,
-                maxlength: 30,
-                city: true,
-            },
-            state: {
-                required: true,
-                minlength: 2,
-                maxlength: 30,
-                state: true,
-            },
-            zipcode: {
-                required: true,
-                zipcode: true,
-            },
             concierge_first_name: {
                 required: true,
                 minlength: 3,
@@ -229,7 +204,7 @@ $(document).ready(function () {
             concierge_street: {
                 required: true,
                 minlength: 2,
-                maxlength: 30,
+                maxlength: 50,
             },
             concierge_city: {
                 required: true,
@@ -285,6 +260,7 @@ $(document).ready(function () {
             zipcode: {
                 required: "Please enter a zipcode",
                 min: "Please enter positive number with 6 digits",
+                zipcode: "Please enter a positive 6 digit zipcode",
             },
             symptoms: {
                 maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit

@@ -42,12 +42,12 @@ class patientController extends Controller
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
             'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
-            'room'=>'gte:1|nullable|max:1000'
+            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
+            'room' => 'gte:1|nullable|max:1000'
         ]);
 
 
@@ -80,15 +80,28 @@ class patientController extends Controller
             $userRolesEntry->save();
         }
 
-        $requestData = new RequestTable();
-        $requestData->user_id = $requestEmail->id;
-        $requestData->request_type_id = 1;
-        $requestData->first_name = $request->first_name;
-        $requestData->last_name = $request->last_name;
-        $requestData->email = $request->email;
-        $requestData->phone_number = $request->phone_number;
-        $requestData->status = 1;
-        $requestData->save();
+        if ($isEmailStored != null) {
+            $requestData = new RequestTable();
+            $requestData->user_id = $isEmailStored->id;
+            $requestData->request_type_id = 1;
+            $requestData->first_name = $request->first_name;
+            $requestData->last_name = $request->last_name;
+            $requestData->email = $request->email;
+            $requestData->phone_number = $request->phone_number;
+            $requestData->status = 1;
+            $requestData->save();
+        } else {
+            $requestData = new RequestTable();
+            $requestData->user_id = $requestEmail->id;
+            $requestData->request_type_id = 1;
+            $requestData->first_name = $request->first_name;
+            $requestData->last_name = $request->last_name;
+            $requestData->email = $request->email;
+            $requestData->phone_number = $request->phone_number;
+            $requestData->status = 1;
+            $requestData->save();
+        }
+
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestData->id;
@@ -109,7 +122,7 @@ class patientController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $requestData->id;
-            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }

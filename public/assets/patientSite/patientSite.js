@@ -20,10 +20,10 @@ $(document).ready(function () {
         $(".overlay").show();
     });
 
-    // $(".hide-popup-btn").click(function () {
-    //     $(".new-request-create").hide();
-    //     $(".overlay").hide();
-    // });
+    $(".hide-popup-btn").click(function () {
+        $(".new-request-create").hide();
+        $(".overlay").hide();
+    });
 
     //  *********
 
@@ -120,7 +120,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid city name with alphabets."
     );
@@ -136,7 +136,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid state name with alphabets."
     );
@@ -146,7 +146,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter a 6 digit positive number in zipcode."
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -214,7 +214,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 50,
-                street:true,
+                street: true,
             },
             city: {
                 required: true,

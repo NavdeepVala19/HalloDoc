@@ -69,12 +69,11 @@ class AdminLoginController extends Controller
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email',
         ]);
 
         $user = users::where('email', $request->email)->first();
         if ($user == null) {
-            
             return back()->with('error', 'no such email is registered');
         }
 
@@ -129,7 +128,7 @@ class AdminLoginController extends Controller
 
         if ($userRolesData->role_id == 2) {
             $providersData = Provider::where('email', $userData->email)->first();
-            PhysicianLocation::where('provider_id',$providersData->id)->forceDelete();
+            PhysicianLocation::where('provider_id', $providersData->id)->forceDelete();
         }
 
         Auth::logout();

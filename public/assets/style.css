@@ -188,6 +188,17 @@ nav {
     z-index: 999;
 }
 
+.invalid-popup-message {
+    position: absolute;
+    top: 200px;
+    right: 100px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+}
+
 /* ****************** Telephone library styling ***************************** */
 .iti--inline-dropdown .iti__dropdown-content {
     z-index: 20 !important;

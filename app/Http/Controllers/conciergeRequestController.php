@@ -33,19 +33,19 @@ class conciergeRequestController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required|before:today',
+            'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
             'concierge_first_name' => 'required|min:3|max:15|alpha',
             'concierge_last_name' => 'required|min:3|max:15|alpha',
-            'concierge_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'concierge_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'concierge_mobile' => 'required',
             'concierge_hotel_name' => 'required|min:2|max:50|regex:/^[a-zA-Z ,_-]+?$/',
             'concierge_street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-            'concierge_state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'concierge_city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'concierge_state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'concierge_city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'concierge_zip_code' => 'digits:6|gte:1',
-            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
             'room'=>'gte:1|nullable|max_digits:4|numeric|lt:1000'
         ]);
 
@@ -80,9 +80,32 @@ class conciergeRequestController extends Controller
             $userRolesEntry->save();
         }
 
-        $requestEmail = new users();
 
         // concierge request into concierge table
+
+        if ($isEmailStored != null) {
+            $requestConcierge = new RequestTable();
+            $requestConcierge->status = 1;
+            $requestConcierge->user_id = $isEmailStored->id;
+            $requestConcierge->request_type_id = 3;
+            $requestConcierge->first_name = $request->concierge_first_name;
+            $requestConcierge->last_name = $request->concierge_last_name;
+            $requestConcierge->email = $request->concierge_email;
+            $requestConcierge->phone_number = $request->concierge_mobile;
+            $requestConcierge->relation_name = $request->concierge_hotel_name;
+            $requestConcierge->save();
+        } else {
+            $requestConcierge = new RequestTable();
+            $requestConcierge->status = 1;
+            $requestConcierge->user_id = $requestEmail->id;
+            $requestConcierge->request_type_id = 3;
+            $requestConcierge->first_name = $request->concierge_first_name;
+            $requestConcierge->last_name = $request->concierge_last_name;
+            $requestConcierge->email = $request->concierge_email;
+            $requestConcierge->phone_number = $request->concierge_mobile;
+            $requestConcierge->relation_name = $request->concierge_hotel_name;
+            $requestConcierge->save();
+        }
 
         $concierge = new Concierge();
         $concierge->name = $request->concierge_first_name;
@@ -95,16 +118,7 @@ class conciergeRequestController extends Controller
 
         // concierge request into request table
 
-        $requestConcierge = new RequestTable();
-        $requestConcierge->status = 1;
-        $requestConcierge->user_id = $requestEmail->id;
-        $requestConcierge->request_type_id = 3;
-        $requestConcierge->first_name = $request->concierge_first_name;
-        $requestConcierge->last_name = $request->concierge_last_name;
-        $requestConcierge->email = $request->concierge_email;
-        $requestConcierge->phone_number = $request->concierge_mobile;
-        $requestConcierge->relation_name = $request->concierge_hotel_name;
-        $requestConcierge->save();
+
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $requestConcierge->id;

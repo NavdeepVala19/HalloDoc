@@ -12,21 +12,21 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
-   $.validator.addMethod(
-       "city",
-       function (value, element) {
-           return value.match(/^[a-zA-Z ,_-]+?$/);
-       },
-       "Please enter alphabets in city name."
-   );
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ]+?$/);
+        },
+        "Please enter alphabets in city name."
+    );
 
-   $.validator.addMethod(
-       "state",
-       function (value, element) {
-           return value.match(/^[a-zA-Z ,_-]+?$/);
-       },
-       "Please enter alphabets in state name."
-   );
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return value.match(/^[a-zA-Z ]+?$/);
+        },
+        "Please enter alphabets in state name."
+    );
 
     $.validator.addMethod(
         "zipcode",
@@ -117,21 +117,19 @@ $(document).ready(function () {
     $.validator.addMethod(
         "address1",
         function (value, element) {
-            return value.match(/^[a-zA-Z0-9-, ]+$/);
+            return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
         "Please enter a valid address1."
     );
 
-       $.validator.addMethod(
-           "phoneIndia",
-           function (value, element) {
-               return this.optional(element) || iti.isValidNumber();
-           },
-           "Please enter a valid phone number."
-       );
-    
-    
- 
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -139,7 +137,6 @@ $(document).ready(function () {
         },
         "Please enter a only alphabets and numbers in street name. "
     );
-
 
     // Date Validation (params array will hold minimum and maximum date)
     $.validator.addMethod(
@@ -245,9 +242,7 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
 
             "region_id[]": {

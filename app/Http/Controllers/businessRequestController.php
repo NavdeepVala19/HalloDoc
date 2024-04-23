@@ -39,17 +39,17 @@ class businessRequestController extends Controller
       'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'phone_number' => 'required',
       'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-      'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-      'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+      'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+      'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
       'zipcode' => 'digits:6|gte:1',
       'business_first_name' => 'required|min:3|max:15|alpha',
       'business_last_name' => 'required|min:3|max:15|alpha',
       'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'business_mobile' => 'required',
       'business_property_name' => 'required|min:2|max:30',
-      'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
-      'case_number'=>'nullable|min:0|max:1000',
-      'room'=>'nullable|min:0|max:1000'
+      'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
+      'case_number' => 'nullable|min:0|max:1000',
+      'room' => 'nullable|min:0|max:1000'
     ]);
 
 
@@ -80,10 +80,33 @@ class businessRequestController extends Controller
       $userRolesEntry->role_id = 3;
       $userRolesEntry->user_id = $requestEmail->id;
       $userRolesEntry->save();
-
-      
     }
-    $requestEmail = new users();
+
+    if ($isEmailStored != null) {
+      $requestBusiness = new RequestTable();
+      $requestBusiness->status = 1;
+      $requestBusiness->user_id = $isEmailStored->id;
+      $requestBusiness->request_type_id = 4;
+      $requestBusiness->first_name = $request->business_first_name;
+      $requestBusiness->last_name = $request->business_last_name;
+      $requestBusiness->email = $request->business_email;
+      $requestBusiness->phone_number = $request->business_mobile;
+      $requestBusiness->relation_name = $request->business_property_name;
+      $requestBusiness->case_number = $request->case_number;
+      $requestBusiness->save();
+    } else {
+      $requestBusiness = new RequestTable();
+      $requestBusiness->status = 1;
+      $requestBusiness->user_id = $requestEmail->id;
+      $requestBusiness->request_type_id = 4;
+      $requestBusiness->first_name = $request->business_first_name;
+      $requestBusiness->last_name = $request->business_last_name;
+      $requestBusiness->email = $request->business_email;
+      $requestBusiness->phone_number = $request->business_mobile;
+      $requestBusiness->relation_name = $request->business_property_name;
+      $requestBusiness->case_number = $request->case_number;
+      $requestBusiness->save();
+    }
     // business data store in business field
 
     $business = new Business();
@@ -95,18 +118,6 @@ class businessRequestController extends Controller
     $business->save();
 
     //business request store in request table
-
-    $requestBusiness = new RequestTable();
-    $requestBusiness->status = 1;
-    $requestBusiness->user_id = $requestEmail->id;
-    $requestBusiness->request_type_id = 4;
-    $requestBusiness->first_name = $request->business_first_name;
-    $requestBusiness->last_name = $request->business_last_name;
-    $requestBusiness->email = $request->business_email;
-    $requestBusiness->phone_number = $request->business_mobile;
-    $requestBusiness->relation_name = $request->business_property_name;
-    $requestBusiness->case_number = $request->case_number;
-    $requestBusiness->save();
 
     $patientRequest = new request_Client();
     $patientRequest->request_id = $requestBusiness->id;

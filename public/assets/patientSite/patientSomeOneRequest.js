@@ -4,7 +4,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only letters for first name."
     );
 
     $.validator.addMethod(
@@ -12,7 +12,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only letters for Last name."
     );
 
     $.validator.addMethod(
@@ -39,7 +39,6 @@ $(document).ready(function () {
         "Please enter a valid email (format: alphanum@alpha.domain)."
     );
 
-
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -51,7 +50,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid city name with alphabets."
     );
@@ -59,7 +58,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid state name with alphabets."
     );
@@ -69,7 +68,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter a postive 6 digit zipcode."
     );
 
     $.validator.addMethod(
@@ -88,19 +87,23 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers."
     );
 
     $.validator.addMethod(
         "relation",
         function (value, element) {
-            return this.optional(element) || /^[a-zA-Z]+$/.test(value);
+            return (
+                this.optional(element) ||
+                /^[a-zA-Z]+(?:-[a-zA-Z]+)*$/.test(value)
+            );
         },
-        "Please enter only letters."
+        "Please enter only letters and dash for your relation."
     );
+
     // Date Validation (params array will hold minimum and maximum date)
     $.validator.addMethod(
         "dateRange",
@@ -122,15 +125,15 @@ $(document).ready(function () {
         },
         "Please enter a date between {0} and {1}."
     );
-    
-   $.validator.addMethod(
-       "phoneIndia",
-       function (value, element) {
-           return this.optional(element) || iti.isValidNumber();
-       },
-       "Please enter a valid phone number."
-   );
-    
+
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     $.validator.addMethod(
         "customFile",
         function (value, element, param) {
@@ -228,6 +231,8 @@ $(document).ready(function () {
                 customFile: true,
             },
             relation: {
+                minlength: 3,
+                maxlength: 15,
                 relation: true,
             },
         },
@@ -273,7 +278,7 @@ $(document).ready(function () {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             patient_note: {
-                diseaseSymptoms: "Please enter valid symptoms.",
+                diseaseSymptoms:"Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers.",
                 maxlength: "Symptoms details cannot exceed 255 characters.", // Optional: Message for exceeding limit
             },
             docs: {
@@ -281,7 +286,8 @@ $(document).ready(function () {
                     "Please select file type of '.jpg' , '.png' , '.pdf', '.doc' and size should be less than 2MB ",
             },
             relation: {
-                relation: "Please enter only letters",
+                relation:
+                    "Please enter only letters and dash for your relation",
             },
         },
         errorElement: "span",
@@ -300,4 +306,4 @@ $(document).ready(function () {
             form.submit(); // Submit the form
         },
     });
-})
+});

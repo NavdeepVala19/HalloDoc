@@ -31,25 +31,25 @@ class familyRequestController extends Controller
     public function create(Request $request)
     {
         $request->validate([
+            'email' => ['required','email','min:2','max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
+            'family_email' => ['required','email','min:2','max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
+            'city' => ['required','min:2','max:30', 'regex:/^[a-zA-Z ]+?$/'],
+            'state' => ['required','min:2','max:30', 'regex:/^[a-zA-Z ]+?$/'],
+            'symptoms' => ['regex:/^[a-zA-Z0-9 \-_,()]+$/','nullable','min:5','max:200'],
+
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required|before:today',
-            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
             'street' => 'required|min:2|max:50',
-            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6|gte:1',
             'family_first_name' => 'required|min:3|max:15|alpha',
             'family_last_name' => 'required|min:3|max:15|alpha',
-            'family_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'family_phone_number' => 'required',
             'family_relation' => 'required|alpha',
-            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'symptoms' =>  'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
-            'room'=>'gte:1|nullable|max:1000'
+            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
+            'room' => 'gte:1|nullable|max:1000'
         ]);
-
 
         $isEmailStored = users::where('email', $request->email)->first();
 
@@ -81,20 +81,31 @@ class familyRequestController extends Controller
             $userRolesEntry->save();
         }
 
-        $requestEmail = new users();
 
         // family request creating
-
-        $familyRequest = new RequestTable();
-        $familyRequest->user_id = $requestEmail->id;
-        $familyRequest->request_type_id = 2;
-        $familyRequest->first_name = $request->family_first_name;
-        $familyRequest->last_name = $request->family_last_name;
-        $familyRequest->email = $request->family_email;
-        $familyRequest->phone_number = $request->family_phone_number;
-        $familyRequest->relation_name = $request->family_relation;
-        $familyRequest->status = 1;
-        $familyRequest->save();
+        if ($isEmailStored != null){
+            $familyRequest = new RequestTable();
+            $familyRequest->user_id = $isEmailStored->id;
+            $familyRequest->request_type_id = 2;
+            $familyRequest->first_name = $request->family_first_name;
+            $familyRequest->last_name = $request->family_last_name;
+            $familyRequest->email = $request->family_email;
+            $familyRequest->phone_number = $request->family_phone_number;
+            $familyRequest->relation_name = $request->family_relation;
+            $familyRequest->status = 1;
+            $familyRequest->save();
+        }else{
+            $familyRequest = new RequestTable();
+            $familyRequest->user_id = $requestEmail->id;
+            $familyRequest->request_type_id = 2;
+            $familyRequest->first_name = $request->family_first_name;
+            $familyRequest->last_name = $request->family_last_name;
+            $familyRequest->email = $request->family_email;
+            $familyRequest->phone_number = $request->family_phone_number;
+            $familyRequest->relation_name = $request->family_relation;
+            $familyRequest->status = 1;
+            $familyRequest->save();
+        }
 
         $patientRequest = new request_Client();
         $patientRequest->request_id = $familyRequest->id;
@@ -111,14 +122,12 @@ class familyRequestController extends Controller
         $patientRequest->save();
 
 
-
-
         // store documents in request_wise_file table
 
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $familyRequest->id;
-            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }

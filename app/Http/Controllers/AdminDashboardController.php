@@ -35,8 +35,8 @@ class AdminDashboardController extends Controller
             'phone_number' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'street' => 'min:2|max:50',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'state' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'room'=>'gte:1|nullable',
             'zip' => 'digits:6|nullable|gte:1',
             'adminNote' => 'nullable|min:5|max:200',
@@ -271,7 +271,7 @@ class AdminDashboardController extends Controller
         $request->validate([
             'address1' => 'required|min:2|max:50',
             'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
             'alt_mobile' => 'required',
         ]);

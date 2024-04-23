@@ -115,7 +115,7 @@
                             @enderror
                         </div>
                         <div class="form-floating" id="form-floating">
-                            <input type="number" name="room" class="form-control room @error('room') is-invalid @enderror" id="floatingInput9" placeholder="room" value="{{ old('room') }}">
+                            <input type="number" name="room" class="form-control room @error('room') is-invalid @enderror" id="floatingInput9" placeholder="room" value="{{ old('room') }}" min="0">
                             <label for="floatingInput9">Room(optional)</label>
                             @error('room')
                             <div class="text-danger">{{ $message }}</div>

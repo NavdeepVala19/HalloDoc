@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only letters for first name."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only letters for Last name."
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -53,7 +53,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "business",
         function (value, element) {
-            return value.match(/^[a-zA-Z]+$/);
+            return value.match(/^[a-zA-Z0-9 &\-_.,]+$/);
         },
         "Please enter a only alphabets of  business/property name."
     );
@@ -74,7 +74,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid city name with alphabets."
     );
@@ -82,7 +82,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid state name with alphabets."
     );
@@ -92,7 +92,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.length == 6 && /\d/.test(value);
         },
-        "Please enter a valid zipcode."
+        "Please enter a positive 6 digit zipcode",
     );
 
     $.validator.addMethod(
@@ -108,8 +108,6 @@ $(document).ready(function () {
         "Please enter a positive value in  room number."
     );
 
-    
-  
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -134,19 +132,19 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers."
     );
 
-       $.validator.addMethod(
-           "phoneIndia",
-           function (value, element) {
-               return this.optional(element) || iti.isValidNumber();
-           },
-           "Please enter a valid phone number."
-       );
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
 
     $("#patientRequestForm").validate({
         rules: {
@@ -278,6 +276,7 @@ $(document).ready(function () {
             zipcode: {
                 required: "Please enter a zipcode",
                 min: "Please enter positive number with 6 digits",
+                zipcode: "Please enter a positive 6 digit zipcode",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
@@ -300,7 +299,8 @@ $(document).ready(function () {
                 required: "Please enter a business/property name",
             },
             symptoms: {
-                diseaseSymptoms: "Please enter valid symptoms.",
+                diseaseSymptoms:
+                    "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers.",
                 maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
         },
@@ -320,4 +320,4 @@ $(document).ready(function () {
             form.submit(); // Submit the form
         },
     });
-})
+});

@@ -41,7 +41,7 @@ class PatientViewDocumentsController extends Controller
     public function uploadDocs(Request $request)
     {
         $request->validate([
-            'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
         ]);
   
         $userData = Auth::user();

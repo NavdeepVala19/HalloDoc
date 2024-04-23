@@ -77,7 +77,7 @@ $(document).ready(function () {
    $.validator.addMethod(
     "city",
     function (value, element) {
-        return /^[a-zA-Z\s,.-]+$/.test(value);
+        return /^[a-zA-Z ]+?$/.test(value);
     },
     "Please enter a valid city name with alphabets."
 );
@@ -85,7 +85,7 @@ $(document).ready(function () {
 $.validator.addMethod(
     "state",
     function (value, element) {
-        return /^[a-zA-Z\s,.-]+$/.test(value);
+        return /^[a-zA-Z ]+?$/.test(value);
     },
     "Please enter a valid state name with alphabets."
 );

@@ -4,7 +4,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only letters for first name."
     );
 
     $.validator.addMethod(
@@ -12,7 +12,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only letters for Last name."
     );
 
     $.validator.addMethod(
@@ -42,7 +42,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "city",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid city name with alphabets."
     );
@@ -50,7 +50,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "state",
         function (value, element) {
-            return /^[a-zA-Z\s,.-]+$/.test(value);
+            return /^[a-zA-Z ]+?$/.test(value);
         },
         "Please enter a valid state name with alphabets."
     );
@@ -79,10 +79,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = value.match(/^[a-zA-Z ,_-]+?$/); // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers."
     );
 
     $.validator.addMethod(
@@ -108,7 +108,7 @@ $(document).ready(function () {
                 .toLowerCase();
 
             // Allowed extensions
-            var allowedExtensions = ["jpg", "jpeg", "png", "pdf", "doc"];
+            var allowedExtensions = [ "jpg","jpeg","png","pdf","doc","docx",];
 
             // Check extension
             if ($.inArray(extension, allowedExtensions) === -1) {
@@ -250,13 +250,13 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
-                min: "Please enter positive number with 6 digits",
+                min: "Please enter 6 digits positive zipcode",
             },
             room: {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             symptoms: {
-                diseaseSymptoms: "Please enter valid symptoms.",
+                diseaseSymptoms:"Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers.",
                 maxlength: "Symptoms details cannot exceed 255 characters.", // Optional: Message for exceeding limit
             },
             docs: {

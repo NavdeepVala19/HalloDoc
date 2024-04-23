@@ -45,19 +45,19 @@ class patientProfileController extends Controller
             'date_of_birth' => 'required|before:today',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
-            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z\s,.-]+$/',
-            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
+            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
         ]);
 
 
-        $userData = Auth::user();     
-      
+        $userData = Auth::user();
+
         // Update data in users table
         $updateUserData = [
             'email' => $request->input('email'),
-            'phone_number'=>$request->input('phone_number'),
+            'phone_number' => $request->input('phone_number'),
             'username' => $request->input('first_name') . $request->input('last_name'),
         ];
 
@@ -79,7 +79,7 @@ class patientProfileController extends Controller
 
         $updateAllUserData = allusers::where('email', $userData['email'])->update($updateAllUser);
 
-        return redirect()->route('patientDashboardData')->with('message','profile is updated successfully');
+        return redirect()->route('patientDashboardData')->with('message', 'profile is updated successfully');
     }
 
     public function patientMapLocation()
