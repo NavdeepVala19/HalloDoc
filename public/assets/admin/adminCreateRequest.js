@@ -74,7 +74,7 @@ $(document).ready(function () {
             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms."
+        "Please enter alphabets."
     );
 
       $.validator.addMethod(
@@ -144,9 +144,7 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             last_name: {
                 required: true,
@@ -224,8 +222,15 @@ $(document).ready(function () {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             adminNote: {
-                diseaseSymptoms: "Please enter valid symptoms.",
+                diseaseSymptoms: "Please enter alphabets.",
                 maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
+            },
+            date_of_birth: {
+                dateRange:
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
         },
         errorElement: "span",

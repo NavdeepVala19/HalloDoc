@@ -127,16 +127,16 @@
                     </div>
                     <div class="form-floating">
                         <input type="number" name="zip" class="form-control  @error('zip') is-invalid @enderror"
-                            id="floatingInput" placeholder="zip code" value="{{ old('zip') }}" min="0">
-                        <label for="floatingInput">Zip Code (Optional)</label>
+                            id="floatingInput8" placeholder="zip code" value="{{ old('zip') }}" min="0">
+                        <label for="floatingInput8">Zip Code (Optional)</label>
                         @error('zip')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
                         <input type="number" name="room" class="form-control  @error('room') is-invalid @enderror"
-                            id="floatingInput" placeholder="Room" value="{{ old('room') }}">
-                        <label for="floatingInput">Room # (Optional)</label>
+                            id="floatingInput9" placeholder="Room" value="{{ old('room') }}">
+                        <label for="floatingInput9">Room # (Optional)</label>
                         @error('room')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror

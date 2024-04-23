@@ -73,6 +73,9 @@
                 <div class="form-floating ">
                     <input type="password" name="password" class="form-control admin-password" id="floatingInput" placeholder="password">
                     <label for="floatingInput">Password</label>
+                    @error('password')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
 
@@ -83,14 +86,12 @@
                         <option value="2" {{$adminProfileData->status == 'active'?'selected':''}}>Active</option>
                         <option value="3" {{$adminProfileData->status == 'inactive'?'selected':''}}>Not Active</option>
                     </select>
-                    </input>
                 </div>
 
                 <div class="form-floating role-select">
                     <select class="form-select" id="listing_role_admin_Account" disabled>
                         <option selected>{{$adminProfileData->name}}</option>
                     </select>
-                    </input>
                 </div>
             </div>
             <div class="text-end">
@@ -106,34 +107,39 @@
             <div class="grid-2">
                 <div class="form-floating ">
                     <input type="text" name="first_name" class="form-control admin_first_name" id="floatingInput" placeholder="First Name" value="{{ $adminProfileData->first_name }}" disabled>
-
                     <label for="floatingInput">First Name</label>
                     @error('first_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating ">
                     <input type="text" name="last_name" class="form-control admin_last_name" id="floatingInput" placeholder="Last Name" value="{{ $adminProfileData->last_name }}" disabled>
                     <label for="floatingInput">Last Name</label>
                     @error('last_name')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="form-floating ">
                     <input type="email" class="form-control admin_email" id="floatingInput" name="email" placeholder="name@example.com" value="{{ $adminProfileData->email }}" disabled>
                     <label for="floatingInput">Email</label>
+                         @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating ">
                     <input type="email" class="form-control admin_confirm_email" id="floatingInput" name="confirm_email" placeholder="name@example.com" value="{{ $adminProfileData->email }}" disabled>
                     <label for="floatingInput">Confirm Email</label>
+                    @error('confirm_email')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-floating" style="height: 58px;">
                     <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $adminProfileData->mobile }}" disabled>
                     @error('phone_number')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -155,14 +161,23 @@
                 <div class="form-floating ">
                     <input type="text" name="address1" class="form-control admin_add1" id="floatingInput" placeholder="Address 1" value="{{ $adminProfileData->address1 }}" disabled>
                     <label for="floatingInput">Address 1</label>
+                         @error('address1')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-floating ">
                     <input type="text" name="address2" class="form-control admin_add2" id="floatingInput" placeholder="Address 2" value="{{ $adminProfileData->address2 }}" disabled>
                     <label for="floatingInput">Address 2</label>
+                         @error('address2')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-floating ">
                     <input type="text" name="city" class="form-control city" id="floatingInput" placeholder="city" value="{{ $adminProfileData->city }}" disabled>
                     <label for="floatingInput">City</label>
+                         @error('city')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div>
                     {{-- Dropdown State Selection --}}
@@ -176,12 +191,15 @@
                 <div class="form-floating ">
                     <input type="text" name="zip" class="form-control admin_zipcode" id="floatingInput" placeholder="zip" value="{{ $adminProfileData->zip }}" disabled>
                     <label for="floatingInput">Zip</label>
+                    @error('zip')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div style="height: 58px;">
                     <input type="tel" name="alt_mobile" class="form-control admin_alt_phone" id="telephone" placeholder="mobile" value="{{ $adminProfileData->alt_phone }}" disabled>
-                    @error('mobile')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    @error('alt_mobile')
+                    <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     // Create Request Upload file, show file name in label
     $("#file-upload-request").on("change", function () {
         var fileName = $(this).val().split("\\").pop();
@@ -9,7 +10,7 @@ $(document).ready(function () {
         }
     });
 
-    // **** This code is for sending throug pop-up to sendMailToContactProvider Function in adminProvider Page ****
+    // **** This code is for sending msg through pop-up to sendMailToContactProvider Function in adminProvider Page ****
 
     $(".contact-btn").on("click", function () {
         let id = $(this).data("id");
@@ -142,6 +143,8 @@ $(document).ready(function () {
 
     // ******
 
+
+
     // ***** Fetching regions from regions table *****
     $.ajax({
         url: "/admin-new",
@@ -163,7 +166,9 @@ $(document).ready(function () {
     });
     // ********
 
-    // **** Fetching role from role table ****
+
+
+    // * Fetching role from role table *
 
     $.ajax({
         url: "/admin-provider/role",
@@ -185,31 +190,8 @@ $(document).ready(function () {
     });
     // ******
 
-    // **** Filtering Data according to selected region from dropdown button in adminProvider Page ****
 
-    // $('#listing-region-admin-provider').on('change', function () {
-    //     var token = $('meta[name="csrf-token"]').attr('content')
-    //     var selectedId = $(this).val();
-
-    //     $.ajax({
-    //         url: "/admin/providers/regionsFiltering",
-    //         type: "POST",
-    //         dataType: 'json',
-    //         data: {
-    //             regionId: selectedId,
-    //             "_token": token
-    //         },
-    //         success: function (data) {
-    //             $('#all-providers-data').html(data.html)
-    //         },
-    //         error: function (error) {
-    //             console.error(error);
-    //         }
-    //     });
-    // })
-
-    // ******
-
+    // * check/uncheck  checkbox in adminProviderlisting
     $(".contact-btn[id]").each(function (i, el) {
         var isChecked = $(el).closest("tr").find(".checkbox1").is(":checked");
 
@@ -250,6 +232,7 @@ $(document).ready(function () {
         });
     });
 
+
     //***  This code is showing contact your provider pop-up ****
 
     $(document).on("click", ".contact-btn", function () {
@@ -259,13 +242,13 @@ $(document).ready(function () {
     // ****
 
     // *** This code is for show provider photo name ***
-
     $(".file-input-provider_photo").change(function (e) {
         const filename = e.target.files[0].name;
         $("#provider_photo").text(filename);
     });
 
     // ***
+
 
     // ****This code is for show independent contractor agreement *****
 
@@ -276,6 +259,7 @@ $(document).ready(function () {
 
     // ****
 
+
     // **** This code is for show provider background photo name *****
 
     $("#background-input").change(function (e) {
@@ -284,6 +268,7 @@ $(document).ready(function () {
     });
 
     // ****
+
 
     // ***** This code is for show provider HIPAA Compliance photo name *****
 
@@ -312,6 +297,7 @@ $(document).ready(function () {
 
     // ****
 
+
     // *** This code is for validation in contact provider pop-up
     $.validator.addMethod(
         "contactMsg",
@@ -319,7 +305,7 @@ $(document).ready(function () {
             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid Contact Message."
+        "Please enter alphabets in Contact Message."
     );
 
     $("#ContactProviderForm").validate({
@@ -334,6 +320,7 @@ $(document).ready(function () {
         messages: {
             contact_msg: {
                 required: "Please enter a message",
+                contactMsg: "Please enter alphabets in Contact Message.",
             },
         },
         errorElement: "span",
@@ -362,7 +349,8 @@ $(document).ready(function () {
     });
     
 
-    // client side validation in adminProviderCreateForm
+
+    //** */ client side validation in adminProviderCreateForm
 
     $.validator.addMethod(
         "city",
@@ -801,6 +789,9 @@ $(document).ready(function () {
 
 
 
+
+ // *edit provider account information
+
 $(document).ready(function () {
     $.validator.addMethod(
         "lettersUserName",
@@ -878,6 +869,8 @@ $(document).ready(function () {
     });
 });
 
+
+    // * edit physician information
 $(document).ready(function () {
     $.validator.addMethod(
         "phoneUS",
@@ -996,6 +989,10 @@ $(document).ready(function () {
     });
 });
 
+
+
+
+// ** edit providers mailing and billing information
 $(document).ready(function () {
     $.validator.addMethod(
         "phoneUS",
@@ -1140,6 +1137,10 @@ $(document).ready(function () {
     });
 });
 
+
+
+// * edit provider profile 
+    
 $(document).ready(function () {
 
     $.validator.addMethod(
@@ -1243,6 +1244,7 @@ $(document).ready(function () {
 });
 
 
+// * edit onboarding information 
 $(document).ready(function () {
     
     $.validator.addMethod(
@@ -1328,6 +1330,10 @@ $(document).ready(function () {
 });
 
 
+
+
+
+// * filter provider according to regions
 function fetchPaginatedResults(selectedId, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
 
@@ -1390,6 +1396,8 @@ $("#listing-region-admin-provider").on("change", function (event) {
     var selectedId = $(this).val();
     fetchPaginatedResults(selectedId, 1);
 });
+
+
 
 
 

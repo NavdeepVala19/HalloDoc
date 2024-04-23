@@ -1,3 +1,5 @@
+// ** fetch data using ajax and paginate through ajax 
+
 function fetchPaginatedUserAccessData(selectedAccount, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
     $.ajax({
@@ -62,6 +64,9 @@ $("#accountType").on("change", function (event) {
     fetchPaginatedUserAccessData(selectedAccount, 1);
 });
 
+
+
+// * showing create admin/provider account button
 $(document).ready(function () {
     $("#accountType").on("click", function () {
         if ($("#accountType").val() == "admin") {
@@ -89,6 +94,11 @@ $(document).ready(function () {
         }
     });
 });
+
+
+
+
+// ** fetch data using ajax and paginate through ajax  in mobile view
 
 function fetchPaginatedUserAccessMobileData(selectedAccount, page) {
     var token = $('meta[name="csrf-token"]').attr("content");

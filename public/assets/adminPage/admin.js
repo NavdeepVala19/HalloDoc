@@ -174,8 +174,12 @@ $(document).ready(function () {
         });
     });
 
+<<<<<<< HEAD
     // Show clear-case pop-up
     $(".clear-btn").click(function () {
+=======
+    $(document).on('click',".clear-btn",function () {
+>>>>>>> shivesh
         $(".clear-case").show();
         $(".overlay").show();
 

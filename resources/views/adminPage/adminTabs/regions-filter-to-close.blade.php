@@ -1,34 +1,3 @@
-    {{-- Case Cleared Successfully --}}
-    @if (session('caseCleared'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('caseCleared') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- Order Created Successfully Pop-up Message --}}
-    @include('alertMessages.orderPlacedSuccess')
-
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
-    {{-- Clear Case Pop-up --}}
-    {{-- This pop-up will open when admin clicks on “Clear case” link from Actions menu. From the pending and close
-state, admin can clear the case from the action grid. --}}
-    @include('popup.adminClearCase')
-
-    {{-- Send Agreement Pop-up --}}
-    {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the
-pending state, providers need to send an agreement link to patients. --}}
-    @include('popup.adminSendAgreement')
-
-    {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-    @include('popup.adminSendLink')
-
-    {{-- Request DTY Support pop-up ->  --}}
-    @include('popup.requestDTYSupport')
 
   <table class="table table-hover ">
       <thead class="table-secondary">
