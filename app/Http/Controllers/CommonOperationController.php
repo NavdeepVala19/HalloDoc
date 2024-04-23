@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+// For Sending SMS & Email
+use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Mail;
+
 use ZipArchive;
-use Twilio\Http\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 use App\Models\Admin;
 use App\Models\SMSLogs;
@@ -139,7 +141,12 @@ class CommonOperationController extends Controller
                 'subject_name' => 'Documets Link Sent',
                 'email' => $email,
             ]);
-            Mail::to($email)->send(new DocsAttachmentMail($email, $zipFile));
+
+            try {
+                Mail::to($email)->send(new DocsAttachmentMail($email, $zipFile));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
 
             return redirect()->back()->with('mailDocsSent', 'Mail of all the selected documents is sent!');
         }
@@ -209,23 +216,31 @@ class CommonOperationController extends Controller
             ]
         );
 
-        Mail::to($request->email)->send(new SendAgreement($clientData));
+        try {
+            Mail::to($request->email)->send(new SendAgreement($clientData));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
-        // send SMS 
-        $sid = getenv("TWILIO_SID");
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+        try {
+            // send SMS 
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-        $twilio = new Client($sid, $token);
+            $twilio = new Client($sid, $token);
 
-        $message = $twilio->messages
-            ->create(
-                "+91 99780 71802", // to
-                [
-                    "body" => "Hii " .  $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
-                    "from" =>  $senderNumber
-                ]
-            );
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "Hii " .  $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
+                        "from" =>  $senderNumber
+                    ]
+                );
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
         return redirect()->back()->with('agreementSent', 'Agreement sent to patient successfully!');
     }

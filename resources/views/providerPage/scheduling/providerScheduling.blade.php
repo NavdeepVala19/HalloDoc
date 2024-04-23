@@ -14,6 +14,15 @@
 @endsection
 
 @section('content')
+    {{-- Shift Timing overlap (Error) --}}
+    @if (session('shiftOverlap'))
+        <div class="alert alert-danger popup-message ">
+            <span>
+                {{ session('shiftOverlap') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     {{-- Shift Added/Create Successfully --}}
     @if (session('shiftAdded'))
         <div class="alert alert-success popup-message ">
@@ -71,8 +80,8 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
-                            placeholder="Created Date" value="{{ old('shiftStartTime') }}">
+                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror"
+                            id="floatingInput2" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')
                             <div class="text-danger">{{ $message }}</div>

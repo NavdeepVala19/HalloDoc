@@ -21,9 +21,8 @@ $(document).ready(function () {
     $.validator.addMethod(
         "email",
         function (value, element) {
-            // var regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
             // var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            var regex = /^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/;
+               var regex = /^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/;
             return this.optional(element) || regex.test(value);
         },
         "Please enter a valid email address (alphanumeric characters, periods, common symbols, and @ followed by a domain name)"
@@ -862,165 +861,6 @@ $(document).ready(function () {
         },
     });
 
-    // ------------ PROVIDER SCHEDULING -----------
-    // Validation added for shiftEndTime to be greater than shiftStartTime
-    $.validator.addMethod(
-        "greaterThanStart",
-        function (value, element, params) {
-            var startTime = $(element).val();
-            if (value < startTime) {
-                return false;
-            }
-            var startTime = $(params).val();
-            return value > startTime;
-        },
-        "Shift End Time must be greater than Shift Start Time."
-    );
-    // Validation added for shiftStartTime to be always greater than or equal to current time
-    $.validator.addMethod(
-        "startTime",
-        function (value, element, params) {
-            const hours = new Date().getHours().toString().padStart(2, "0");
-            const minutes = new Date().getMinutes().toString().padStart(2, "0");
-            const currentTime = `${hours}:${minutes}`;
-
-            if ($(params).val() != new Date().toISOString().split("T")[0]) {
-                return value;
-            }
-
-            if (value < currentTime) {
-                return false;
-            }
-            return value;
-        },
-        "Shift Start Time must be greater than current Time."
-    );
-    //  Validate Provider Scheduling Edit Shift Pop-up
-    $("#providerEditShiftForm, #adminEditShiftForm").validate({
-        rules: {
-            shiftDate: {
-                required: true,
-                dateRange: [
-                    new Date().toDateString(),
-                    new Date("2030-1-1").toDateString(),
-                ],
-            },
-            shiftTimeStart: {
-                required: true,
-                startTime: ".shiftDate",
-            },
-            shiftTimeEnd: {
-                required: true,
-                greaterThanStart: "#startTime", // ShiftStartTime input element
-            },
-        },
-        messages: {
-            shiftDate: {
-                required: "Shift Date is required to create shift",
-            },
-            shiftTimeStart: {
-                required: "Shift Start Time is required",
-            },
-            shiftTimeEnd: {
-                required: "Shift End Time is required.",
-                greaterThanStart:
-                    "Shift End Time must be greater than Shift Start Time.",
-            },
-        },
-        errorPlacement: function (error, element) {
-            let errorBox = $("<span class='text-danger'></span>");
-            errorBox.append(error);
-
-            element.closest(".form-floating").append(errorBox);
-        },
-        highlight: function (element) {
-            $(element).addClass("is-invalid").removeClass("is-valid");
-        },
-        unhighlight: function (element) {
-            $(element).removeClass("is-invalid").addClass("is-valid");
-        },
-        submitHandler: function (form) {
-            form.submit();
-        },
-    });
-
-    // ----------- ADMIN SCHEDULING ---------
-    $("#adminAddShiftForm, #providerAddShiftForm").validate({
-        rules: {
-            region: {
-                required: true,
-            },
-            physician: {
-                required: true,
-            },
-            shiftDate: {
-                required: true,
-                dateRange: [
-                    new Date().toDateString(),
-                    new Date("2050-1-1").toDateString(),
-                ],
-            },
-            shiftStartTime: {
-                required: true,
-                startTime: ".shiftDate",
-            },
-            shiftEndTime: {
-                required: true,
-                greaterThanStart: "#floatingInput2", // ShiftStartTime input element
-            },
-            // Add a custom validation rule for checkbox selection
-            "checkbox[]": {
-                required: {
-                    depends: function (element) {
-                        return $(".repeat-switch").is(":checked");
-                    },
-                },
-            },
-        },
-        messages: {
-            region: {
-                required: "Select Region to filter physician",
-            },
-            physician: {
-                required: "Select Physician to create a Shift",
-            },
-            shiftDate: {
-                required: "Shift Date is required to create shift",
-            },
-            shiftTimeStart: {
-                required: "Shift Start Time is required",
-            },
-            shiftTimeEnd: {
-                required: "Shift End Time is required.",
-                greaterThanStart:
-                    "Shift End Time must be greater than Shift Start Time.",
-            },
-            "checkbox[]": {
-                required: "Please select at least one day for repeat.",
-            },
-        },
-        // errorElement: "span",
-        errorPlacement: function (error, element) {
-            let errorBox = $("<span class='text-danger'></span>");
-            errorBox.append(error);
-
-            if (element.is(":checkbox")) {
-                element.closest(".checkboxes-section").before(errorBox);
-            } else {
-                element.closest(".form-floating").append(errorBox);
-            }
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass("is-invalid").removeClass("is-valid");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass("is-invalid").addClass("is-valid");
-        },
-        submitHandler: function (form) {
-            form.submit();
-        },
-    });
-
     // Admin View Notes (Store note form validation)
     $("#adminNoteForm, #providerNoteForm").validate({
         rules: {
@@ -1098,7 +938,6 @@ $(document).ready(function () {
         },
         errorPlacement: function (error, element) {
             let errorDiv = $("<div class='text-danger'></div>");
-            console.log(error);
             errorDiv.append(error);
             element.closest(".custom-file-input").append(errorDiv);
         },
@@ -1356,6 +1195,210 @@ $(document).ready(function () {
         },
         submitHandler: function (form) {
             form.submit(); // Submit the form
+        },
+    });
+
+    // ------------ PROVIDER/ADMIN SCHEDULING -----------
+    // Validation added for shiftEndTime to be greater than shiftStartTime
+    $.validator.addMethod(
+        "greaterThanStart",
+        function (value, element, params) {
+            var startTime = $(params).val();
+
+            if (value < startTime) {
+                return false;
+            }
+            return value > startTime;
+        },
+        "Shift End Time must be greater than Shift Start Time."
+    );
+    $.validator.addMethod(
+        "minTime30End",
+        function (value, element, params) {
+            var startTime = $(params).val();
+
+            var startTimeParts = startTime.split(":");
+            var endTimeParts = value.split(":");
+            var startTimeInMinutes =
+                parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
+            var endTimeInMinutes =
+                parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
+
+            if (endTimeInMinutes < startTimeInMinutes + 30) {
+                return false;
+            }
+            return value > startTime;
+        },
+        "Minimum duration of shift allowed is for 30Minutes."
+    );
+    $.validator.addMethod(
+        "minTime30Start",
+        function (value, element, params) {
+            var endTime = $(params).val();
+
+            var endTimeParts = endTime.split(":");
+            var startTimeParts = value.split(":");
+            var endTimeInMinutes =
+                parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
+            var startTimeInMinutes =
+                parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
+
+            console.log(startTimeInMinutes);
+            console.log(endTimeInMinutes + 30);
+            if (startTimeInMinutes + 30 > endTimeInMinutes) {
+                return false;
+            }
+            return value < endTime;
+        },
+        "Minimum duration of shift allowed is for 30Minutes."
+    );
+    // Validation added for shiftStartTime to be always greater than or equal to current time
+    $.validator.addMethod(
+        "startTime",
+        function (value, element, params) {
+            const hours = new Date().getHours().toString().padStart(2, "0");
+            const minutes = new Date().getMinutes().toString().padStart(2, "0");
+            const currentTime = `${hours}:${minutes}`;
+
+            if ($(params).val() != new Date().toISOString().split("T")[0]) {
+                return value;
+            }
+
+            if (value < currentTime) {
+                return false;
+            }
+            return value;
+        },
+        "Shift Start Time must be greater than current Time."
+    );
+    // ----------- ADMIN/PROVIDER SCHEDULING - EDIT SHIFT ---------
+    //  Validate Provider Scheduling Edit Shift Pop-up
+    $("#providerEditShiftForm, #adminEditShiftForm").validate({
+        rules: {
+            shiftDate: {
+                required: true,
+                dateRange: [
+                    new Date().toDateString(),
+                    new Date("2030-1-1").toDateString(),
+                ],
+            },
+            shiftTimeStart: {
+                required: true,
+                startTime: ".shiftDate",
+                minTime30Start: "#endTime",
+            },
+            shiftTimeEnd: {
+                required: true,
+                greaterThanStart: "#startTime", // ShiftStartTime input element
+                minTime30End: "#startTime",
+            },
+        },
+        messages: {
+            shiftDate: {
+                required: "Shift Date is required to create shift",
+            },
+            shiftTimeStart: {
+                required: "Shift Start Time is required",
+            },
+            shiftTimeEnd: {
+                required: "Shift End Time is required.",
+                greaterThanStart:
+                    "Shift End Time must be greater than Shift Start Time.",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorBox = $("<span class='text-danger'></span>");
+            errorBox.append(error);
+
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit();
+        },
+    });
+
+    // ----------- ADMIN/PROVIDER SCHEDULING - ADD NEW SHIFT ---------
+    $("#adminAddShiftForm, #providerAddShiftForm").validate({
+        rules: {
+            region: {
+                required: true,
+            },
+            physician: {
+                required: true,
+            },
+            shiftDate: {
+                required: true,
+                dateRange: [
+                    new Date().toDateString(),
+                    new Date("2050-1-1").toDateString(),
+                ],
+            },
+            shiftStartTime: {
+                required: true,
+                startTime: ".shiftDate",
+                minTime30Start: "#floatingInput3",
+            },
+            shiftEndTime: {
+                required: true,
+                greaterThanStart: "#floatingInput2", // ShiftStartTime input element
+                minTime30End: "#floatingInput2",
+            },
+            // Add a custom validation rule for checkbox selection
+            "checkbox[]": {
+                required: {
+                    depends: function (element) {
+                        return $(".repeat-switch").is(":checked");
+                    },
+                },
+            },
+        },
+        messages: {
+            region: {
+                required: "Select Region to filter physician",
+            },
+            physician: {
+                required: "Select Physician to create a Shift",
+            },
+            shiftDate: {
+                required: "Shift Date is required to create shift",
+            },
+            shiftTimeStart: {
+                required: "Shift Start Time is required",
+            },
+            shiftTimeEnd: {
+                required: "Shift End Time is required.",
+                greaterThanStart:
+                    "Shift End Time must be greater than Shift Start Time.",
+            },
+            "checkbox[]": {
+                required: "Please select at least one day for repeat.",
+            },
+        },
+        // errorElement: "span",
+        errorPlacement: function (error, element) {
+            let errorBox = $("<span class='text-danger'></span>");
+            errorBox.append(error);
+
+            if (element.is(":checkbox")) {
+                element.closest(".checkboxes-section").before(errorBox);
+            } else {
+                element.closest(".form-floating").append(errorBox);
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit();
         },
     });
 });

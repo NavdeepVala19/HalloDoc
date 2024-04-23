@@ -345,7 +345,12 @@ class ProviderController extends Controller
 
         // Send email to user
         $emailAddress = $request->email;
-        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+
+        try {
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
         // Log email in EmailLog table
         $user = Auth::user();
@@ -430,7 +435,11 @@ class ProviderController extends Controller
             'sent_tries' => 1,
         ]);
 
-        Mail::to($admin->email)->send(new ProviderRequest($admin, $provider, $request));
+        try {
+            Mail::to($admin->email)->send(new ProviderRequest($admin, $provider, $request));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
         return redirect()->back()->with('mailSentToAdmin', 'Email Sent to Admin - to make requested changes!');
     }
@@ -454,21 +463,25 @@ class ProviderController extends Controller
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
         ]);
 
-        // send SMS Logic
-        $sid = getenv("TWILIO_SID");
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+        try {
+            // send SMS Logic
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-        $twilio = new Client($sid, $token);
+            $twilio = new Client($sid, $token);
 
-        $message = $twilio->messages
-            ->create(
-                "+91 99780 71802", // to
-                [
-                    "body" => "Hii $request->first_name $request->last_name, Click on the this link to create request:$link",
-                    "from" =>  $senderNumber
-                ]
-            );
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "Hii $request->first_name $request->last_name, Click on the this link to create request:$link",
+                        "from" =>  $senderNumber
+                    ]
+                );
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
         $user = Auth::user();
         $providerId = Provider::where('user_id', $user->id)->first()->id;
@@ -491,7 +504,11 @@ class ProviderController extends Controller
         );
 
         // Send Email Logic
-        Mail::to($request->email)->send(new SendMail($request->all()));
+        try {
+            Mail::to($request->email)->send(new SendMail($request->all()));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
         EmailLog::create([
             'role_id' => 2,
             'provider_id' => $providerId,

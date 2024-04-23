@@ -147,6 +147,24 @@ class SchedulingController extends Controller
             'shiftStartTime' => 'required',
             'shiftEndTime' => 'required|after:shiftStartTime'
         ]);
+        // Check whether the shift created for provider is already having shift for that time period
+        $shifts = Shift::with('shiftDetail')->get();
+        $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
+        // check for each shifts, whether it have the same time period or in-between time period
+        foreach ($currentShifts as $currentShift) {
+            if ($currentShift->physician_id == $request->physician) {
+                // for the currentShift if the physician_id matches requested physician check for the time period
+                $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
+                $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;
+
+                if (
+                    $shiftStartTimeCurrent <= $request->shiftStartTime && $shiftEndTimeCurrent > $request->shiftStartTime ||
+                    $shiftStartTimeCurrent <= $request->shiftEndTime && $shiftEndTimeCurrent > $request->shiftEndTime
+                ) {
+                    return redirect()->back()->with('shiftOverlap', "Provider you selected have an shift during the time period you provided");
+                }
+            }
+        };
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
         } else {
@@ -219,6 +237,24 @@ class SchedulingController extends Controller
                 return redirect()->back()->with('shiftApproved', 'Shift Status changed from Pending to Approved');
             }
         } else if ($request['action'] == 'save') {
+            // Check whether the shift created for provider is already having shift for that time period
+            $shifts = Shift::with('shiftDetail')->get();
+            $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
+            // check for each shifts, whether it have the same time period or in-between time period
+            foreach ($currentShifts as $currentShift) {
+                if ($currentShift->physician_id == $request->physician) {
+                    // for the currentShift if the physician_id matches requested physician check for the time period
+                    $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
+                    $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;
+
+                    if (
+                        $shiftStartTimeCurrent <= $request->shiftStartTime && $shiftEndTimeCurrent > $request->shiftStartTime ||
+                        $shiftStartTimeCurrent <= $request->shiftEndTime && $shiftEndTimeCurrent > $request->shiftEndTime
+                    ) {
+                        return redirect()->back()->with('shiftOverlap', "You have an shift during the time period you provided");
+                    }
+                }
+            };
             Shift::where('id', $request->shiftId)->update([
                 'start_date' => $request->shiftDate,
             ]);

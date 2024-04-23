@@ -121,7 +121,7 @@ class AdminController extends Controller
     /**
      *  Counts Total Number of cases for different status 
      *
-     * @return int total number of cases, as per the status.
+     * @return int[] total number of cases, as per the status.
      */
     public function totalCasesCount()
     {
@@ -296,23 +296,31 @@ class AdminController extends Controller
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route($routeName);
 
-        Mail::to($request->email)->send(new SendLink($request->all()));
+        try {
+            Mail::to($request->email)->send(new SendLink($request->all()));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
-        // send SMS 
-        $sid = getenv("TWILIO_SID");
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+        try {
+            // send SMS 
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-        $twilio = new Client($sid, $token);
+            $twilio = new Client($sid, $token);
 
-        $message = $twilio->messages
-            ->create(
-                "+91 99780 71802", // to
-                [
-                    "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
-                    "from" =>  $senderNumber
-                ]
-            );
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
+                        "from" =>  $senderNumber
+                    ]
+                );
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
         EmailLog::create([
             'role_id' => 1,
@@ -443,7 +451,7 @@ class AdminController extends Controller
      * Add Business entry in partners/vendors 
      *
      * @param Request $request
-     * @return \Illuminate\View\View partners page
+     * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function addBusiness(Request $request)
     {
@@ -1102,7 +1110,11 @@ class AdminController extends Controller
         $requestMessage = $request->contact_msg;
         if ($offDutyPhysicians) {
             foreach ($offDutyPhysicians as $offDutyPhysician) {
-                Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+                try {
+                    Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+                } catch (\Throwable $th) {
+                    return view('errors.500');
+                }
             }
             return redirect()->back()->with('message', 'message is sent');
         } else {
