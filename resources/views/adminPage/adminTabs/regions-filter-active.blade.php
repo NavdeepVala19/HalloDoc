@@ -1,22 +1,4 @@
-{{-- Error or Success Message Alerts/Pop-ups --}}
-{{-- Admin Logged In Successfully --}}
-@if (session('message'))
-<h6 class="alert alert-success popup-message">
-    {{ session('message') }}
-</h6>
-@endif
 
-{{-- SendLink Completed Successfully --}}
-@include('alertMessages.sendLinkSuccess')
-
-{{-- Order Created Successfully Pop-up Message --}}
-@include('alertMessages.orderPlacedSuccess')
-
-{{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
-@include('popup.adminSendLink')
-
-{{-- Request DTY Support pop-up ->  --}}
-@include('popup.requestDTYSupport')
 
 <table class="table table-hover ">
     <thead class="table-secondary">

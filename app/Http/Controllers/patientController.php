@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Mail;
 
 class patientController extends Controller
 {
-    // this controller is responsible for creating/storing the patient
+    // this controller is responsible for creating/storing the patient request
     public function patientRequests()
     {
         return view('patientSite/patientRequest');
@@ -38,15 +38,15 @@ class patientController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required',
+            'date_of_birth' => 'required|before:today',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
-            'street' => 'min:2|max:30',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
             'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'symptoms' => 'nullable|min:5|max:200|',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
             'room'=>'gte:1|nullable|max:1000'
         ]);
 

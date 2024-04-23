@@ -1,3 +1,5 @@
+// this code is of client side validation of patient login
+
 $(document).ready(function () {
     $.validator.addMethod(
         "emailAddress",
@@ -29,7 +31,7 @@ $(document).ready(function () {
             password: {
                 required: true,
                 minlength: 8,
-                maxlength: 20,
+                maxlength: 30,
                 password: true,
             },
         },

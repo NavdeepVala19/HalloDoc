@@ -17,6 +17,9 @@ use App\Models\request_Client;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\Mail;
 // use App\Models\User;
+
+// this controller is responsible for creating/storing the family request
+
 class familyRequestController extends Controller
 {
 
@@ -30,20 +33,20 @@ class familyRequestController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required',
+            'date_of_birth' => 'required|before:today',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
-            'street' => 'required|min:2|max:30',
+            'street' => 'required|min:2|max:50',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zipcode' => 'digits:6|gte:1',
             'family_first_name' => 'required|min:3|max:15|alpha',
             'family_last_name' => 'required|min:3|max:15|alpha',
-            'family_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'family_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'family_phone_number' => 'required',
             'family_relation' => 'required|alpha',
             'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'symptoms' => 'nullable|min:5|max:200|',
+            'symptoms' =>  'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
             'room'=>'gte:1|nullable|max:1000'
         ]);
 

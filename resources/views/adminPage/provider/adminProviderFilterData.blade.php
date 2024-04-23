@@ -11,23 +11,28 @@
         </thead>
         <tbody>
             @if ($providersData->isEmpty())
-            <tr>
-                <td colspan="100" class="no-record">No Provider Found</td>
-            </tr>
+                <tr>
+                    <td colspan="100" class="no-record">No Provider Found</td>
+                </tr>
             @endif
             @foreach ($providersData as $data)
-            <tr>
-                <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
-                </td>
-                <td class="data"> {{ $data->first_name }}</td>
-                <td class="data"> {{$data->role->name}}</td>
-                <td class="data"> Available</td>
-                <td class="data"> {{ $data->status }} </td>
-                <td class="data gap-1">
-                    <button type="button" data-id='{{ $data->id }}' class="primary-empty contact-btn mt-2 mb-2" {{ $data->is_notifications ? 'disabled' : '' }}>Contact</button>
-                    <a href="{{ route('adminEditProvider',Crypt::encrypt($data->id)) }}" type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
-                </td>
-            </tr>
+                <tr>
+                    <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1"
+                            @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
+                    </td>
+                    <td class="data"> {{ $data->first_name }} {{ $data->last_name }}</td>
+                    <td class="data"> {{ $data->role->name }}</td>
+                    <td class="data">
+                        {{ in_array($data->id, $onCallPhysicianIds) ? 'Unavailable' : 'Available' }}
+                    </td>
+                    <td class="data"> {{ $data->status }} </td>
+                    <td class="data gap-1">
+                        <button type="button" data-id='{{ $data->id }}' class="primary-empty contact-btn mt-2 mb-2"
+                            {{ $data->is_notifications ? 'disabled' : '' }}>Contact</button>
+                        <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}" type="button"
+                            class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>
@@ -52,7 +57,8 @@
                     </label>
                 </div>
                 <div class="radio-email">
-                    <input class="form-check-input" type="radio" value="email" name="emailContact" id="flexRadioDefault2">
+                    <input class="form-check-input" type="radio" value="email" name="emailContact"
+                        id="flexRadioDefault2">
                     <label class="form-check-label ms-1" for="flexRadioEmail">
                         Email
                     </label>
@@ -64,7 +70,8 @@
                     </label>
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg" style="height: 120px"></textarea>
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="contact_msg"
+                        style="height: 120px"></textarea>
                     <label for="floatingTextarea2">Message</label>
                 </div>
         </div>
@@ -76,9 +83,7 @@
         </form>
     </div>
 
-
-
     @section('script')
-    <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-    <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
+        <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
+        <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
     @endsection

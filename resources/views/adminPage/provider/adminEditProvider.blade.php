@@ -64,14 +64,14 @@
                         <input type="text" name="user_name" class="form-control provider-username-field @error('user_name') is-invalid @enderror" id="floatingInput" placeholder="User Name" disabled value="{{ $getProviderData->users->username }}">
                         <label for="floatingInput">User Name</label>
                         @error('user_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
                         <input type="password" name="password" class="form-control provider-password-field @error('password') is-invalid @enderror" id="floatingInput" placeholder="password" disabled>
                         <label for="floatingInput">Password</label>
                         @error('password')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating status-select provider-edit-form">
@@ -86,7 +86,7 @@
                                 Active</option>
                         </select>
                         @error('status_type')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating role-select">
@@ -101,7 +101,7 @@
                             </option>
                         </select>
                         @error('role')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div></div>
@@ -125,7 +125,7 @@
                         <input type="text" name="first_name" class="form-control provider-firstname @error('first_name') is-invalid @enderror " id="floatingInput" value="{{ $getProviderData->first_name }}" placeholder="First Name" disabled>
                         <label for="floatingInput">First Name</label>
                         @error('first_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span id="errorMsg"></span>
                     </div>
@@ -133,7 +133,7 @@
                         <input type="text" name="last_name" class="form-control provider-lastname @error('last_name') is-invalid @enderror " id="floatingInput" placeholder="Last Name" value="{{ $getProviderData->last_name }}" disabled>
                         <label for="floatingInput">Last Name</label>
                         @error('last_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span id="errorMsg"></span>
                     </div>
@@ -141,28 +141,28 @@
                         <input type="email" class="form-control provider-email @error('email') is-invalid @enderror " id="floatingInput" placeholder="name@example.com" value="{{ $getProviderData->email }}" name="email" disabled>
                         <label for="floatingInput">Email</label>
                         @error('email')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <span id="errorMsg"></span>
                     </div>
                     <div class="provider-edit-form">
                         <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror " id="telephone" value="{{ $getProviderData->mobile }}" placeholder="Phone Number" disabled>
                         @error('phone_number')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
                         <input type="text" name="medical_license" class="form-control provider-license @error('medical_license') is-invalid @enderror " id="floatingInput" value="{{ $getProviderData->medical_license }}" placeholder="Medical License" disabled min="0">
                         <label for="floatingInput">Medical license # </label>
                         @error('medical_license')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
                         <input type="text" name="npi_number" class="form-control provider-npi @error('npi_number') is-invalid @enderror " id="floatingInput" value="{{ $getProviderData->npi_number }}" placeholder="NPI Number" disabled min="0">
                         <label for="floatingInput">NPI Number</label>
                         @error('npi_number')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div></div>
@@ -183,21 +183,21 @@
                         <input type="text" name="address1" class="form-control provider-bill-add1 @error('address1') is-invalid @enderror" id="floatingInput" placeholder="Address 1" value="{{ $getProviderData->address1 }}" disabled>
                         <label for="floatingInput">Address 1</label>
                         @error('address1')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
                         <input type="text" name="address2" class="form-control provider-bill-add2 @error('address2') is-invalid @enderror " id="floatingInput" placeholder="Address 2" value="{{ $getProviderData->address2 }}" disabled>
                         <label for="floatingInput">Address 2</label>
                         @error('address2')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
                         <input type="text" name="city" class="form-control provider-bill-city @error('city') is-invalid @enderror " id="floatingInput" placeholder="city" value="{{ $getProviderData->city }}" disabled>
                         <label for="floatingInput">City</label>
                         @error('city')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div>
@@ -209,7 +209,7 @@
                                 </option>
                             </select>
                             @error('regions')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -217,14 +217,14 @@
                         <input type="number" name="zip" class="form-control provider-bill-zip @error('zip') is-invalid @enderror" id="floatingInput" placeholder="zip" value="{{ $getProviderData->zip }}" disabled min="0">
                         <label for="floatingInput">Zip</label>
                         @error('user_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="provider-edit-form" style="height: 58px;">
                         <input type="tel" name="alt_phone_number" class="form-control phone alt-phone-provider @error('alt_phone_number') is-invalid @enderror" id="telephone" value="{{ $getProviderData->alt_phone }}" placeholder="Phone Number" disabled>
                         @error('alt_phone_number')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -248,14 +248,14 @@
                         <input type="text" name="business_name" class="form-control business-name @error('business_name') is-invalid @enderror" id="floatingInput" disabled value="{{ $getProviderData->business_name }}" placeholder="Business Name">
                         <label for="floatingInput">Business Name</label>
                         @error('business_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-dangerr">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
-                        <input type="text" name="business_website" class="form-control business-web @error('business_website') is-invalid @enderror" id="floatingInput" disabled value="{{ $getProviderData->business_website }}" placeholder="Business Website">
+                        <input type="url" name="business_website" class="form-control business-web @error('business_website') is-invalid @enderror" id="floatingInput" disabled value="{{ $getProviderData->business_website }}" placeholder="Business Website">
                         <label for="floatingInput">Business Website</label>
                         @error('business_website')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                             <span class="upload-txt">Upload</span>
                         </span>
                         @error('provider_photo')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </label>
                 </div>
@@ -278,7 +278,7 @@
                     <textarea class="form-control admin-notes @error('admin_notes') is-invalid @enderror" placeholder="Admin_Notes" id="floatingTextarea2" disabled name="admin_notes" style="height: 120px"> {{ $getProviderData->admin_notes }} </textarea>
                     <label for="floatingTextarea2">Admin Notes</label>
                     @error('admin_notes')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="d-flex flex-row justify-content-end mt-3 gap-2">
@@ -313,7 +313,7 @@
                                             <a href="{{ asset('storage/provider/' . $getProviderData->id . '_ICA.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
                                             <p id="Contractor"></p>
                                             @error('independent_contractor')
-                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </td>
@@ -334,7 +334,7 @@
                                             <a href="{{ asset('storage/provider/' . $getProviderData->id . '_BC.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
                                             <p id="Background"></p>
                                             @error('background_doc')
-                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </td>
@@ -355,7 +355,7 @@
                                             <a href="{{ asset('storage/provider/' . $getProviderData->id . '_HCA.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
                                             <p id="HIPAA"></p>
                                             @error('hipaa_docs')
-                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </td>
@@ -375,7 +375,7 @@
                                             <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc" class="@error('non_disclosure_doc') is-invalid @enderror">
                                             <p class="non-disclosure"></p>
                                             @error('non_disclosure_doc')
-                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </td>

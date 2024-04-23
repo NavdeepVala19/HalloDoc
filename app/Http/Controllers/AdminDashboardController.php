@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Crypt;
 
 class AdminDashboardController extends Controller
 {
+
+    //* adminCreate Request on behalf of patient
     public function createNewRequest()
     {
         return view('adminPage/adminRequest');
@@ -29,9 +31,10 @@ class AdminDashboardController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
+            'date_of_birth'=> 'before:today',
             'phone_number' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'street' => 'min:2|max:30',
+            'street' => 'min:2|max:50',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'room'=>'gte:1|nullable',
@@ -60,7 +63,7 @@ class AdminDashboardController extends Controller
             $requestUsers->street = $request->street;
             $requestUsers->city = $request->city;
             $requestUsers->state = $request->state;
-            $requestUsers->zipcode = $request->zipcode;
+            $requestUsers->zipcode = $request->zip;
             $requestUsers->save();
         }
 
@@ -84,7 +87,7 @@ class AdminDashboardController extends Controller
         $adminPatientRequest->street = $request->street;
         $adminPatientRequest->city = $request->city;
         $adminPatientRequest->state = $request->state;
-        $adminPatientRequest->zipcode = $request->zipcode;
+        $adminPatientRequest->zipcode = $request->zip;
         $adminPatientRequest->room = $request->room;
         $adminPatientRequest->save();
 
@@ -104,7 +107,7 @@ class AdminDashboardController extends Controller
         $requestUsers->street = $request->street;
         $requestUsers->city = $request->city;
         $requestUsers->state = $request->state;
-        $requestUsers->zipcode = $request->zipcode;
+        $requestUsers->zipcode = $request->zip;
         $requestUsers->save();
 
 
@@ -144,6 +147,9 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.dashboard')->with('message','email for create account is sent');
     }
 
+    
+
+    //* adminProfile Edit
     public function adminProfile($id)
     {
         try {
@@ -177,7 +183,7 @@ class AdminDashboardController extends Controller
     public function adminProfilePage()
     {
         $adminData = Auth::user();
-        // $adminProfileData = Admin::with('users')->where('user_id', $adminData->id)->first();
+
         $adminProfileData = Admin::select(
             'admin.first_name',
             'admin.last_name',
@@ -204,6 +210,8 @@ class AdminDashboardController extends Controller
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 
+
+    //* admin change password
     public function adminChangePassword(Request $request, $id)
     {
         $request->validate([
@@ -220,6 +228,7 @@ class AdminDashboardController extends Controller
     }
 
 
+    //* admin administrastor information update
     public function adminInfoUpdate(Request $request, $id)
     {
 
@@ -256,11 +265,11 @@ class AdminDashboardController extends Controller
         return back()->with('message', 'Your Administration Information is updated successfully');
     }
 
+    //* admin mailing and billing information update 
     public function adminMailInfoUpdate(Request $request, $id)
     {
-
         $request->validate([
-            'address1' => 'required|min:2|max:30',
+            'address1' => 'required|min:2|max:50',
             'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'zip' => 'digits:6',
@@ -280,11 +289,9 @@ class AdminDashboardController extends Controller
         $updateAdminInformation->save();
 
 
+
         // update Data in allusers table 
-
         $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
-
-
         $updateAdminInfoAllUsers->city = $request->city;
         $updateAdminInfoAllUsers->street = $request->address1;
         $updateAdminInfoAllUsers->zipcode = $request->zip;

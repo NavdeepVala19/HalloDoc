@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Mail;
 
 // use App\Models\User;
 
+// this controller is responsible for creating/storing the concierge request
+
 class conciergeRequestController extends Controller
 {
 
@@ -31,7 +33,7 @@ class conciergeRequestController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required',
+            'date_of_birth' => 'required|before:today',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
             'concierge_first_name' => 'required|min:3|max:15|alpha',
@@ -39,11 +41,11 @@ class conciergeRequestController extends Controller
             'concierge_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'concierge_mobile' => 'required',
             'concierge_hotel_name' => 'required|min:2|max:50|regex:/^[a-zA-Z ,_-]+?$/',
-            'concierge_street' => 'required|min:2|max:30',
+            'concierge_street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
             'concierge_state' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'concierge_city' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'concierge_zip_code' => 'digits:6|gte:1',
-            'symptoms' => 'nullable|min:5|max:200|',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
             'room'=>'gte:1|nullable|max_digits:4|numeric|lt:1000'
         ]);
 

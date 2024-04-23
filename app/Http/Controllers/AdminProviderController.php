@@ -11,6 +11,7 @@ use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
+use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
 use App\Mail\ContactProvider;
 use App\Models\PhysicianRegion;
@@ -23,164 +24,187 @@ use Illuminate\Support\Facades\Crypt;
 class AdminProviderController extends Controller
 {
 
-    // ****************** This code is for listing Providers Details ************************
+    // * This code is for listing Providers Details
 
     public function readProvidersInfo()
     {
-        $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
-        return view('/adminPage/provider/adminProvider', compact('providersData'));
+        try {
+            $currentDate = now()->toDateString();
+            $currentTime = now()->format('H:i');
+
+            $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+
+            $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
+
+            $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
+
+
+            return view('/adminPage/provider/adminProvider', compact('providersData', 'onCallPhysicianIds'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            return view('errors.500');
+        }
     }
 
-    // ****************** This code is for Filtering Physician through regions ************************
+
+
+    // * This code is for Filtering Physician through regions 
 
     public function filterPhysicianThroughRegions(Request $request)
     {
+        $currentDate = now()->toDateString();
+        $currentTime = now()->format('H:i');
+
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+
+        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
+
         if ($request->selectedId == "all") {
-            $providersData = Provider::paginate(10);
+            $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
-            $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+            $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $data = view('/adminPage/provider/adminProviderFilterData')->with('providersData', $providersData)->render();
+        $data = view('/adminPage/provider/adminProviderFilterData')->with(['providersData'=> $providersData,'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
 
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
+        $currentDate = now()->toDateString();
+        $currentTime = now()->format('H:i');
 
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+
+        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         if ($request->selectedId == "all") {
-            $providersData = Provider::paginate(10);
+            $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
-            $providersData = Provider::whereIn('id', $physicianRegions)->paginate(10);
+            $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with('providersData', $providersData)->render();
+        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData'=> $providersData,'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
 
-    // ****************** This code is for Sending Mail ************************
+
+
+    // **This code is for Sending Mail and SMS 
 
     public function sendMailToContactProvider(Request $request, $id)
     {
-     
-            $request->validate([
-                'contact_msg' => 'required|min:2|max:100',
+
+        $request->validate([
+            'contact_msg' => 'required|min:2|max:100',
+        ]);
+
+        $receipientData = Provider::where('id', $id)->get();
+        $receipientId = $id;
+        $receipientName = $receipientData->first()->first_name;
+        $receipientEmail = $receipientData->first()->email;
+        $receipientMobile = $receipientData->first()->mobile;
+
+        $enteredText = $request->contact_msg;
+
+        if ($request->contact == "email") {
+            // send email
+            $providerData = Provider::get()->where('id', $request->provider_id);
+            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+
+            EmailLog::create([
+                'role_id' => 1,
+                'is_email_sent' => true,
+                'sent_tries' => 1,
+                'sent_date' => now(),
+                'email_template' => $enteredText,
+                'subject_name' => 'notification to provider',
+                'email' => $receipientEmail,
+                'provider_id' => $receipientId,
+            ]);
+        } else if ($request->contact == "sms") {
+            // send SMS
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+            $twilio = new Client($sid, $token);
+
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "$enteredText",
+                        "from" => $senderNumber,
+                    ]
+                );
+
+            SMSLogs::create(
+                [
+                    'provider_id' => $receipientId,
+                    'mobile_number' => $receipientMobile,
+                    'created_date' => now(),
+                    'sent_date' => now(),
+                    'role_id' => 1,
+                    'recipient_name' => $receipientName,
+                    'sent_tries' => 1,
+                    'is_sms_sent' => 1,
+                    'action' => 1,
+                    'sms_template' => $enteredText,
+                ]
+            );
+        } else if ($request->contact == "both") {
+            // send email
+            $providerData = Provider::get()->where('id', $request->provider_id);
+            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+
+            // send SMS
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+
+            $twilio = new Client(
+                $sid,
+                $token
+            );
+
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "$enteredText",
+                        "from" => $senderNumber,
+                    ]
+                );
+
+            EmailLog::create([
+                'role_id' => 1,
+                'is_email_sent' => true,
+                'sent_tries' => 1,
+                'sent_date' => now(),
+                'email_template' => $enteredText,
+                'subject_name' => 'notification to provider',
+                'email' => $receipientEmail,
+                'provider_id' => $receipientId,
             ]);
 
-            $receipientData = Provider::where('id', $id)->get();
-            $receipientId = $id;
-            $receipientName = $receipientData->first()->first_name;
-            $receipientEmail = $receipientData->first()->email;
-            $receipientMobile = $receipientData->first()->mobile;
-
-            $enteredText = $request->contact_msg;
-
-            if ($request->contact == "email") {
-                // send email
-                $providerData = Provider::get()->where('id', $request->provider_id);
-                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
-
-                EmailLog::create([
-                    'role_id' => 1,
-                    // 'provider_id' => specify provider id
-                    // 'email_template' =>,
-                    // 'subject_name' =>,
-                    'is_email_sent' => true,
-                    'sent_tries' => 1,
-                    'sent_date' => now(),
-                    'email_template' => $enteredText,
-                    'subject_name' => 'notification to provider',
-                    'email' => $receipientEmail,
+            SMSLogs::create(
+                [
                     'provider_id' => $receipientId,
-                ]);
-            } else if ($request->contact == "sms") {
-                // send SMS
-                $sid = getenv("TWILIO_SID");
-                $token = getenv("TWILIO_AUTH_TOKEN");
-                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-                $twilio = new Client($sid, $token);
-
-                $message = $twilio->messages
-                    ->create(
-                        "+91 99780 71802", // to
-                        [
-                            "body" => "$enteredText",
-                            "from" => $senderNumber,
-                        ]
-                    );
-
-                SMSLogs::create(
-                    [
-                        'provider_id' => $receipientId,
-                        'mobile_number' => $receipientMobile,
-                        'created_date' => now(),
-                        'sent_date' => now(),
-                        'role_id' => 1,
-                        'recipient_name' => $receipientName,
-                        'sent_tries' => 1,
-                        'is_sms_sent' => 1,
-                        'action' => 1,
-                        'sms_template' => $enteredText,
-                    ]
-                );
-            } else if ($request->contact == "both") {
-                // send email
-                $providerData = Provider::get()->where('id', $request->provider_id);
-                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
-
-                // send SMS
-                $sid = getenv("TWILIO_SID");
-                $token = getenv("TWILIO_AUTH_TOKEN");
-                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-                $twilio = new Client(
-                    $sid,
-                    $token
-                );
-
-                $message = $twilio->messages
-                    ->create(
-                        "+91 99780 71802", // to
-                        [
-                            "body" => "$enteredText",
-                            "from" => $senderNumber,
-                        ]
-                    );
-
-                EmailLog::create([
-                    'role_id' => 1,
-                    // 'provider_id' => specify provider id
-                    // 'email_template' =>,
-                    // 'subject_name' =>,
-                    'is_email_sent' => true,
-                    'sent_tries' => 1,
+                    'mobile_number' => $receipientMobile,
+                    'created_date' => now(),
                     'sent_date' => now(),
-                    'email_template' => $enteredText,
-                    'subject_name' => 'notification to provider',
-                    'email' => $receipientEmail,
-                    'provider_id' => $receipientId,
-                ]);
-
-                SMSLogs::create(
-                    [
-                        'provider_id' => $receipientId,
-                        'mobile_number' => $receipientMobile,
-                        'created_date' => now(),
-                        'sent_date' => now(),
-                        'role_id' => 1,
-                        'recipient_name' => $receipientName,
-                        'sent_tries' => 1,
-                        'is_sms_sent' => 1,
-                        'action' => 1,
-                        'sms_template' => $enteredText,
-                    ]
-                );
-            }
-            return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
-             
+                    'role_id' => 1,
+                    'recipient_name' => $receipientName,
+                    'sent_tries' => 1,
+                    'is_sms_sent' => 1,
+                    'action' => 1,
+                    'sms_template' => $enteredText,
+                ]
+            );
+        }
+        return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
     }
 
     public function stopNotifications(Request $request)
@@ -189,7 +213,8 @@ class AdminProviderController extends Controller
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
 
-    // ****************** This code is for creating a new provider ************************
+
+    // * This code is for creating a new provider 
 
     public function newProvider()
     {
@@ -332,28 +357,13 @@ class AdminProviderController extends Controller
             $providerData->save();
         }
 
-        // if (isset($request->license_doc)) {
-        //     $request_file = new RequestWiseFile();
-        //     $request_file->physician_id = $providerData->id;
-
-        //     $request_file->file_name = $request->file('license_doc')->getClientOriginalName();
-
-        //     $providerData->IsLicenseDoc = 1;
-
-        //     $path = $request->file('license_doc')->storeAs('public', $request->file('license_doc')->getClientOriginalName());
-        //     $request_file->save();
-        //     $providerData->save();
-        // }
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is created');
     }
 
-    public function regionName()
-    {
-        $regions = Regions::get();
-        return view('/adminPage/provider/adminEditProvider', compact('regions'));
-    }
 
+
+    // * display edit provider page
     public function editProvider($id)
     {
         try {
@@ -365,6 +375,7 @@ class AdminProviderController extends Controller
         }
     }
 
+    // *edit provider account information
     public function updateProviderAccountInfo(Request $request, $id)
     {
         // update data of providers in users table
@@ -372,27 +383,37 @@ class AdminProviderController extends Controller
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
 
         if (!empty($request->password)) {
+            $request->validate([
+            'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
+        ]);
             $updateProviderInfoUsers->password = Hash::make($request->password);
             $updateProviderInfoUsers->save();
         } else {
+             $request->validate([
+            'user_name' => 'required|alpha|min:3|max:40',
+            ]);
+
             $updateProviderInfoUsers->username = $request->user_name;
             $updateProviderInfoUsers->save();
-        }
-        $getProviderData = Provider::where('id', $id)->first();
 
-        $getProviderData->status = $request->status_type;
-        $getProviderData->role_id = $request->role;
-        $getProviderData->save();
+            $getProviderData = Provider::where('id', $id)->first();
 
-        $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
-        if (!empty($updateProviderDataAllUsers)) {
-            $updateProviderDataAllUsers->status = $request->status_type;
-            $updateProviderDataAllUsers->save();
+            $getProviderData->status = $request->status_type;
+            $getProviderData->role_id = $request->role;
+            $getProviderData->save();
+
+            $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
+            if (!empty($updateProviderDataAllUsers)) {
+                $updateProviderDataAllUsers->status = $request->status_type;
+                $updateProviderDataAllUsers->save();
+            }
         }
 
         return back()->with('message', 'account information is updated');
     }
 
+
+    // * edit physician information
     public function providerInfoUpdate(Request $request, $id)
     {
         $request->validate([
@@ -400,9 +421,10 @@ class AdminProviderController extends Controller
             'last_name' => 'required|min:3|max:15|alpha',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
-            'medical_license' => 'required|num|max:20|min:3',
+            'medical_license' => 'required|num|max_digits:10|min:3',
             'npi_number' => 'required|numeric|min:3|max_digits:10',
         ]);
+        
         $getProviderInformation = Provider::with('users')->where('id', $id)->first();
 
         $getProviderInformation->first_name = $request->first_name;
@@ -440,6 +462,8 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Physician information is updated');
     }
 
+
+    // ** edit providers mailing and billing information
     public function providerMailInfoUpdate(Request $request, $id)
     {
         $request->validate([
@@ -475,6 +499,8 @@ class AdminProviderController extends Controller
         }
     }
 
+
+    // * edit provider profile 
     public function providerProfileUpdate(Request $request, $id)
     {
         $request->validate([
@@ -501,6 +527,8 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Provider Profile information is updated');
     }
 
+
+    // * edit onboarding information 
     public function providerDocumentsUpdate(Request $request, $id)
     {
         $request->validate([
@@ -547,6 +575,7 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Document is uploaded');
     }
 
+    // * delete provider account
     public function deleteProviderAccount($id)
     {
         // soft delete in providers table
@@ -560,11 +589,20 @@ class AdminProviderController extends Controller
         return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
     }
 
+
+    //  * fetch roles name and display through ajax
+    public function fetchRolesName()
+    {
+        $fetchRoleName = Role::select('id', 'name')->where('account_type', 'physician')->get();
+        return response()->json($fetchRoleName);
+    }
+
+
     // *** Show Provider Location ***
     public function providerLocations()
     {
         $providers = Provider::get();
-     
+
         return view('adminPage/provider/providerLocation', compact("providers"));
     }
 
@@ -578,11 +616,5 @@ class AdminProviderController extends Controller
             ];
         });
         return response()->json(['locations' => $locations->toArray()]);
-    }
-
-    public function fetchRolesName()
-    {
-        $fetchRoleName = Role::select('id', 'name')->where('account_type', 'physician')->get();
-        return response()->json($fetchRoleName);
     }
 }
