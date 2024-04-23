@@ -189,7 +189,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 50,
-                street:true,
+                street: true,
             },
             city: {
                 required: true,
@@ -237,6 +237,11 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: "Please enter a date of birth.",
+                dateRange:
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
             phone_number: {
                 required: "Please enter a mobile number",

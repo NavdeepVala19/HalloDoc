@@ -84,7 +84,7 @@ $(document).ready(function () {
         },
         "Please enter valid symptoms."
     );
- 
+
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -148,13 +148,13 @@ $(document).ready(function () {
         "Please enter a date between {0} and {1}."
     );
 
-       $.validator.addMethod(
-           "phoneIndia",
-           function (value, element) {
-               return this.optional(element) || iti.isValidNumber();
-           },
-           "Please enter a valid phone number."
-       );
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
 
     $("#patientNewRequest").validate({
         ignore: [],
@@ -179,13 +179,11 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 50,
-                street:true,
+                street: true,
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             city: {
                 required: true,
@@ -233,6 +231,11 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: "Please enter a valid date of birth",
+                dateRange:
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
             street: {
                 required: "Please enter a street",
@@ -273,4 +276,4 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid").addClass("is-valid");
         },
     });
-})
+});

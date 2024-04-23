@@ -158,9 +158,7 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: true,
-                dateRange: [
-                    new Date("1900-01-01").toDateString(),
-                ],
+                dateRange: [new Date("1900-01-01").toDateString()],
             },
             email: {
                 required: true,
@@ -256,6 +254,11 @@ $(document).ready(function () {
             },
             date_of_birth: {
                 required: "Please enter a date of birth",
+                dateRange:
+                    "Date of Birth should be between " +
+                    new Date("1900-01-01").toDateString() +
+                    " and " +
+                    new Date().toDateString(),
             },
             phone_number: {
                 required: "Please enter a mobile number",
