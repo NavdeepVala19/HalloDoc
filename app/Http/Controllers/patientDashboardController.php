@@ -47,11 +47,13 @@ class patientDashboardController extends Controller
         try {
             $id = Crypt::decrypt($data);
             $clientData = RequestTable::with('requestClient')->where('id', $id)->first();
+            if ($clientData->status == 4 || $clientData->status == 11) {
+                return view('patientSite.agreementDone')->with('caseStatus', $clientData->status);
+            }
             if (!empty($clientData)) {
                 return view("patientSite/patientAgreement", compact('clientData'));
             }
         } catch (\Throwable $th) {
-            //throw $th;
             return view('errors.404');
         }
     }
@@ -60,10 +62,8 @@ class patientDashboardController extends Controller
     public function agreeAgreement(Request $request)
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
-        if ($caseStatus == 4) {
-            return redirect()->back()->with('alreadyAgreed', 'You have already agreed to the Agreement');
-        } else if ($caseStatus == 11) {
-            return redirect()->back()->with('errorAlreadyCancelled', "You have already Cancelled the Agreement(You can't change now)");
+        if ($caseStatus == 4 || $caseStatus == 11) {
+            return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
 
@@ -84,10 +84,8 @@ class patientDashboardController extends Controller
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
 
-        if ($caseStatus == 4) {
-            return redirect()->back()->with('errorAlreadyAgreed', "You have already agreed to the Agreement(You can't change now)");
-        } else if ($caseStatus == 11) {
-            return redirect()->back()->with('alreadyCancelled', "You have already Cancelled the Agreement");
+        if ($caseStatus == 4 || $caseStatus == 11) {
+            return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,
@@ -118,9 +116,9 @@ class patientDashboardController extends Controller
             'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
-            'room'=>'gte:1|nullable|max:1000'
+            'room' => 'gte:1|nullable|max:1000'
         ]);
 
         $newPatient = new RequestTable();
@@ -153,7 +151,7 @@ class patientDashboardController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $newPatient->id;
-            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
@@ -175,7 +173,7 @@ class patientDashboardController extends Controller
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        return redirect()->route('patientDashboardData')->with('message','request is submitted');
+        return redirect()->route('patientDashboardData')->with('message', 'request is submitted');
     }
 
     // create someone else request from patient dashboard
@@ -191,9 +189,9 @@ class patientDashboardController extends Controller
             'city' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
             'zipcode' => 'digits:6|gte:1',
-            'docs'=>'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
+            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z ,_-]+?$/',
-            'room'=>'gte:1|nullable|max:1000',
+            'room' => 'gte:1|nullable|max:1000',
             'relation' => 'nullable|alpha'
         ]);
 
@@ -258,7 +256,7 @@ class patientDashboardController extends Controller
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
             $request_file->request_id = $newPatient->id;
-            $request_file->file_name = uniqid() . '_' .$request->file('docs')->getClientOriginalName();
+            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $path = $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
@@ -311,7 +309,7 @@ class patientDashboardController extends Controller
         if ($isEmailStored == null) {
             return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent');
         } else {
-            return redirect()->route('patientDashboardData')->with('message','request is submitted');
+            return redirect()->route('patientDashboardData')->with('message', 'request is submitted');
         }
     }
 
@@ -322,8 +320,7 @@ class patientDashboardController extends Controller
         $email = $userData["email"];
 
         $docs = RequestTable::with('requestWiseFile')->where('email', $email)->paginate(10);
-    
-        return view('patientSite/patientDashboard', compact('docs', 'userData'));
 
+        return view('patientSite/patientDashboard', compact('docs', 'userData'));
     }
 }

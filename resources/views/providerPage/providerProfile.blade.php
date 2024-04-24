@@ -73,23 +73,23 @@
             <div class="text-end">
                 <button class="primary-empty request-admin-btn">Request To Admin</button>
             </div>
-            <form action="{{ route('provider.reset.password') }}" method="POST">
+            <form action="{{ route('provider.reset.password') }}" method="POST" id="providerProfileForm">
                 @csrf
                 <input type="text" name="providerId" value="{{ $provider->id }}" hidden />
                 <h3>Account Information</h3>
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="user_name" value="{{ $userData->username }}" class="form-control"
-                            id="floatingInput" placeholder="User Name" disabled>
-                        <label for="floatingInput">User Name</label>
+                            id="floatingInput1" placeholder="User Name" disabled>
+                        <label for="floatingInput1">User Name</label>
                     </div>
                     <div class="form-floating ">
                         <input type="password" name="password" value="{{ $userData->password }}"
                             class="form-control @error('password')
                             is-invalid
                         @enderror"
-                            id="floatingInput" placeholder="password">
-                        <label for="floatingInput">Password</label>
+                            id="floatingInput2" placeholder="password">
+                        <label for="floatingInput2">Password</label>
                         @error('password')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror

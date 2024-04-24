@@ -61,6 +61,11 @@ class RequestTable extends Model
         return $this->belongsTo(RequestStatus::class);
     }
 
+    public function requestStatusTable()
+    {
+        return $this->hasMany(RequestStatus::class, 'request_id');
+    }
+
     // public function status()
     // {
     //     return $this->belongsTo(RequestStatus::class);
@@ -68,7 +73,12 @@ class RequestTable extends Model
 
     public function status()
     {
-        return $this->hasOne(Status::class, 'id','status');
+        return $this->hasOne(Status::class, 'id', 'status');
+    }
+
+    public function statusTable()
+    {
+        return $this->hasOne(Status::class, 'id', 'status');
     }
 
     public function requestType()
@@ -81,14 +91,18 @@ class RequestTable extends Model
         return $this->hasOne(Provider::class, 'id', 'physician_id');
     }
 
-    public function requestWiseFile(){
+    public function requestWiseFile()
+    {
         return $this->hasOne(RequestWiseFile::class, 'request_id');
     }
 
-    public function medicalReport(){
+    public function medicalReport()
+    {
         return $this->hasOne(MedicalReport::class, 'request_id');
     }
 
-
-
+    public function requestNotes()
+    {
+        return $this->hasOne(RequestNotes::class, 'request_id');
+    }
 }

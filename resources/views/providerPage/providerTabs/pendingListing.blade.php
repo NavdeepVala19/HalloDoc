@@ -37,6 +37,16 @@
         </div>
     @endif
 
+    {{-- Request Created Successfully --}}
+    @if (session('requestCreated'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('requestCreated') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
+
     {{-- SendLink Completed Successfully --}}
     @include('alertMessages.sendLinkSuccess')
 

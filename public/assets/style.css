@@ -27,6 +27,18 @@
     --label-text-color: #000;
 }
 
+/* Chrome, Safari, Edge, Opera */
+/* input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+} */
+
+/* Firefox
+input[type=number] {
+  -moz-appearance: textfield;
+} */
+
 html,
 body {
     font-family: "Poppins", sans-serif;
@@ -215,6 +227,17 @@ nav {
     color: var(--blue);
     border-radius: 8px;
 }
+
+/* .primary-empty:hover {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.primary-fill:hover {
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    background-color: #fff;
+} */
 
 .primary-fill {
     background-color: var(--blue);

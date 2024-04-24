@@ -295,9 +295,12 @@ class ProviderController extends Controller
             $requestUsers->save();
         }
 
+        $user = Auth::user();
+        $providerId = Provider::where('user_id', $user->id)->first()->id;
         // Store request details in requestTable table
         $requestTable = new requestTable();
-        $requestTable->status = 1;
+        $requestTable->status = 3;
+        $requestTable->physician_id = $providerId;
         $requestTable->user_id = $requestEmail->id;
         $requestTable->request_type_id = $request->request_type_id;
         $requestTable->first_name = $request->first_name;
@@ -373,7 +376,7 @@ class ProviderController extends Controller
         ]);
 
         // Redirect to provider status page with success message
-        return redirect()->route("provider.status", 'new')->withInput()->with('requestCreated', "Request Created Successfully!");
+        return redirect()->route("provider.status", 'pending')->withInput()->with('requestCreated', "Request Created Successfully!");
     }
 
     /**

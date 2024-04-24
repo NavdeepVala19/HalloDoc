@@ -331,6 +331,7 @@ class AdminController extends Controller
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
             'recipient_name' => $request->first_name . ' ' . $request->last_name,
+            'action' => 1
         ]);
 
         SMSLogs::create(
@@ -583,14 +584,14 @@ class AdminController extends Controller
                 'menu_id' => $value
             ]);
         }
-        return redirect()->route('admin.access.view');
+        return redirect()->route('admin.access.view')->with('accessOperation', 'New access created successfully!');
     }
 
     // Delete complete role
     public function deleteAccess($id = null)
     {
         Role::where('id', $id)->delete();
-        return redirect()->back();
+        return redirect()->back()->with('accessOperation', 'Access role deleted successfully!');
     }
 
     // show edit Access Page with pre-filled data
@@ -629,7 +630,7 @@ class AdminController extends Controller
                 'menu_id' => $value
             ]);
         }
-        return redirect()->route('admin.access.view')->with('accessEdited', 'Your Changes Are successfully Saved!');
+        return redirect()->route('admin.access.view')->with('accessOperation', 'Your Changes Are successfully Saved!');
     }
     // -------------------- 6. Records -------------------------------
     // --------- 6.1 : Search Records -----
@@ -723,17 +724,14 @@ class AdminController extends Controller
     public function patientRecordsView($id = null)
     {
         $email = request_Client::where('id', $id)->pluck('email')->first();
-        $data = request_Client::where('email', $email)->get();
+        $data = request_Client::with(['request'])->where('email', $email)->get();
+        // $data = RequestTable::where('email', $email)->get();
+
         $requestId = request_Client::where('id', $id)->first()->request_id;
         $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
         $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
-        $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
-        $concludeDate = null;
-        if (RequestStatus::where('request_id', $requestId)->where('status', 6)->first()) {
-            $concludeDate = RequestStatus::where('request_id', $requestId)->where('status', 6)->first()->created_at;
-        }
-        $requestData = RequestTable::where('id', $requestId)->first();
-        return view('adminPage.records.patientRecords', compact('data', 'requestData', 'status', 'documentCount', 'isFinalize', 'concludeDate'));
+
+        return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
     }
 
     // Display patient records page

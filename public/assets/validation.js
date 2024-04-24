@@ -22,7 +22,7 @@ $(document).ready(function () {
         "email",
         function (value, element) {
             // var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-               var regex = /^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/;
+            var regex = /^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/;
             return this.optional(element) || regex.test(value);
         },
         "Please enter a valid email address (alphanumeric characters, periods, common symbols, and @ followed by a domain name)"
@@ -87,6 +87,41 @@ $(document).ready(function () {
             return this.optional(element) || regex.test(value.trim());
         },
         "Only alphabets, Numbers and ,_- allowed"
+    );
+
+    $.validator.addMethod(
+        "customDigitValidation",
+        function (value, element) {
+            const regex = /^[1-9][0-9]*$/;
+            return this.optional(element) || regex.test(value.trim()); // Regex for digits only
+        },
+        "Special characters are not allowed, Only numbers allowed"
+    );
+
+    // Encounter Form : Service date should be greater than date of birth
+    $.validator.addMethod(
+        "serviceDate",
+        function (value, element, params) {
+            const dob = $(params).val();
+            if (dob > value) {
+                return false;
+            }
+            return value;
+        },
+        "Date of Service should be greater than date of birth."
+    );
+
+    // date should not be greater than today's date
+    $.validator.addMethod(
+        "maxCurrentDate",
+        function (value, element, params) {
+            const date = new Date().toISOString().split("T")[0];
+            if (date < value) {
+                return false;
+            }
+            return value;
+        },
+        "Date of Service should not be greater than today's date."
     );
 
     // ------------- Common Rules and Message functions repeated uses: ------------------
@@ -172,6 +207,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 3,
                 maxlength: 30,
+                alphaNumChar: true,
             },
             city: {
                 required: true,
@@ -187,8 +223,16 @@ $(document).ready(function () {
             },
             zip: {
                 required: false,
+                digits: true,
                 minlength: 6,
                 maxlength: 6,
+                customDigitValidation: true,
+            },
+            note: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
             },
         },
         messages: {
@@ -205,7 +249,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter street",
-                minlength: "Minimum 3 characters required",
+                minlength: "Minimum 3 characters are required",
                 maxlength: "Maximum 30 characters are allowed",
             },
             city: {
@@ -222,6 +266,10 @@ $(document).ready(function () {
                 min: "Please enter positive number with 6 digits",
                 minlength: "Zip code should have minimum 6 digits",
                 maxlength: "Zip code should have maximum 6 digits",
+            },
+            note: {
+                minlength: "Minimum 5 characters are required",
+                maxlength: "Maximum 200 characters are allowed",
             },
         },
         errorPlacement: function (error, element) {
@@ -479,10 +527,8 @@ $(document).ready(function () {
             },
             service_date: {
                 required: true,
-                dateRange: [
-                    new Date("2024-01-01").toDateString(),
-                    new Date().toDateString(),
-                ],
+                serviceDate: "#floatingInput4",
+                maxCurrentDate: true,
             },
             mobile: mobileRules(),
             email: emailRules(),
@@ -1186,6 +1232,36 @@ $(document).ready(function () {
             let errorDiv = $("<div class='text-danger'></div>");
             errorDiv.append(error);
             element.closest(".form-floating, .menu-section").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit(); // Submit the form
+        },
+    });
+
+    $("#providerProfileForm").validate({
+        rules: {
+            password: {
+                required: true,
+                minlength: 5,
+                maxlength: 100,
+            },
+        },
+        messages: {
+            password: {
+                minlength: "Minimum 5 characters are required",
+                maxlength: "Maximum 100 characters are allowed",
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            errorDiv.append(error);
+            element.closest(".form-floating").append(errorDiv);
         },
         highlight: function (element) {
             $(element).addClass("is-invalid").removeClass("is-valid");

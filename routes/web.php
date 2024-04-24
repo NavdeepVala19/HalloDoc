@@ -483,5 +483,5 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('email.sendAgreementLink');
+    return view('patientSite.agreementDone');
 });
