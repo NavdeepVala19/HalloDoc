@@ -57,7 +57,6 @@ class conciergeRequestController extends Controller
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
-
             $requestEmail->save();
 
             // store all details of patient in allUsers table
@@ -78,23 +77,8 @@ class conciergeRequestController extends Controller
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
-        }
 
-
-        // concierge request into concierge table
-
-        if ($isEmailStored != null) {
-            $requestConcierge = new RequestTable();
-            $requestConcierge->status = 1;
-            $requestConcierge->user_id = $isEmailStored->id;
-            $requestConcierge->request_type_id = 3;
-            $requestConcierge->first_name = $request->concierge_first_name;
-            $requestConcierge->last_name = $request->concierge_last_name;
-            $requestConcierge->email = $request->concierge_email;
-            $requestConcierge->phone_number = $request->concierge_mobile;
-            $requestConcierge->relation_name = $request->concierge_hotel_name;
-            $requestConcierge->save();
-        } else {
+            // concierge request into request table
             $requestConcierge = new RequestTable();
             $requestConcierge->status = 1;
             $requestConcierge->user_id = $requestEmail->id;
@@ -105,42 +89,87 @@ class conciergeRequestController extends Controller
             $requestConcierge->phone_number = $request->concierge_mobile;
             $requestConcierge->relation_name = $request->concierge_hotel_name;
             $requestConcierge->save();
+
+            $patientRequest = new request_Client();
+            $patientRequest->request_id = $requestConcierge->id;
+            $patientRequest->first_name = $request->first_name;
+            $patientRequest->last_name = $request->last_name;
+            $patientRequest->date_of_birth = $request->date_of_birth;
+            $patientRequest->email = $request->email;
+            $patientRequest->phone_number = $request->phone_number;
+            $patientRequest->street = $request->concierge_street;
+            $patientRequest->city = $request->concierge_city;
+            $patientRequest->state = $request->concierge_state;
+            $patientRequest->zipcode = $request->concierge_zip_code;
+            $patientRequest->room = $request->room;
+            $patientRequest->notes = $request->symptoms;
+            $patientRequest->save();
+
+            $concierge = new Concierge();
+            $concierge->name = $request->concierge_first_name;
+            $concierge->address = $request->concierge_hotel_name;
+            $concierge->street = $request->concierge_street;
+            $concierge->city = $request->concierge_city;
+            $concierge->state = $request->concierge_state;
+            $concierge->zipcode = $request->concierge_zip_code;
+            $concierge->save();
+
+            // store data in request_concierge table
+            $conciergeRequest = new RequestConcierge();
+            $conciergeRequest->request_id = $requestConcierge->id;
+            $conciergeRequest->concierge_id = $concierge->id;
+            $conciergeRequest->save();
+
+        }else{
+
+            // concierge request into request table
+            $requestConcierge = new RequestTable();
+            $requestConcierge->status = 1;
+            $requestConcierge->user_id = $isEmailStored->id;
+            $requestConcierge->request_type_id = 3;
+            $requestConcierge->first_name = $request->concierge_first_name;
+            $requestConcierge->last_name = $request->concierge_last_name;
+            $requestConcierge->email = $request->concierge_email;
+            $requestConcierge->phone_number = $request->concierge_mobile;
+            $requestConcierge->relation_name = $request->concierge_hotel_name;
+            $requestConcierge->save();
+
+
+            // concierge request into concierge table
+            $concierge = new Concierge();
+            $concierge->name = $request->concierge_first_name;
+            $concierge->address = $request->concierge_hotel_name;
+            $concierge->street = $request->concierge_street;
+            $concierge->city = $request->concierge_city;
+            $concierge->state = $request->concierge_state;
+            $concierge->zipcode = $request->concierge_zip_code;
+            $concierge->save();
+
+
+            $patientRequest = new request_Client();
+            $patientRequest->request_id = $requestConcierge->id;
+            $patientRequest->first_name = $request->first_name;
+            $patientRequest->last_name = $request->last_name;
+            $patientRequest->date_of_birth = $request->date_of_birth;
+            $patientRequest->email = $request->email;
+            $patientRequest->phone_number = $request->phone_number;
+            $patientRequest->street = $request->concierge_street;
+            $patientRequest->city = $request->concierge_city;
+            $patientRequest->state = $request->concierge_state;
+            $patientRequest->zipcode = $request->concierge_zip_code;
+            $patientRequest->room = $request->room;
+            $patientRequest->notes = $request->symptoms;
+            $patientRequest->save();
+
+            // store data in request_concierge table
+            $conciergeRequest = new RequestConcierge();
+            $conciergeRequest->request_id = $requestConcierge->id;
+            $conciergeRequest->concierge_id = $concierge->id;
+            $conciergeRequest->save();
         }
 
-        $concierge = new Concierge();
-        $concierge->name = $request->concierge_first_name;
-        $concierge->address = $request->concierge_hotel_name;
-        $concierge->street = $request->concierge_street;
-        $concierge->city = $request->concierge_city;
-        $concierge->state = $request->concierge_state;
-        $concierge->zipcode = $request->concierge_zip_code;
-        $concierge->save();
-
-        // concierge request into request table
-
-
-
-        $patientRequest = new request_Client();
-        $patientRequest->request_id = $requestConcierge->id;
-        $patientRequest->first_name = $request->first_name;
-        $patientRequest->last_name = $request->last_name;
-        $patientRequest->date_of_birth = $request->date_of_birth;
-        $patientRequest->email = $request->email;
-        $patientRequest->phone_number = $request->phone_number;
-        $patientRequest->street = $request->concierge_street;
-        $patientRequest->city = $request->concierge_city;
-        $patientRequest->state = $request->concierge_state;
-        $patientRequest->zipcode = $request->concierge_zip_code;
-        $patientRequest->room = $request->room;
-        $patientRequest->notes = $request->symptoms;
-        $patientRequest->save();
-
-        // store data in request_concierge table
-        $conciergeRequest = new RequestConcierge();
-        $conciergeRequest->request_id = $requestConcierge->id;
-        $conciergeRequest->concierge_id = $concierge->id;
-        $conciergeRequest->save();
-
+        
+        // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -173,12 +202,9 @@ class conciergeRequestController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
-        }
-
-        if ($isEmailStored == null) {
-            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
-        } else {
-            return redirect()->route('submitRequest');
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+        }else{
+            return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
         }
     }
 }

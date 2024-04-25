@@ -40,7 +40,7 @@ class patientAccountController extends Controller
                 }
             } 
             else if($user == null) {
-                return redirect()->back()->with('message', 'no single request was created from this email');
+                return redirect()->back()->with('message', 'no single request was created from this email To create account first submit request');
             } 
 
         }

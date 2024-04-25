@@ -2,8 +2,7 @@
 
 @section('css')
 
-<link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientSite.css') }}">
-<!-- <link rel="stylesheet" href="{{ asset('assets/patientSite/patientSite.css') }}"> -->
+<link rel="stylesheet" href="{{ asset('assets/patientSite/patientSite.css') }}">
 
 @endsection
 

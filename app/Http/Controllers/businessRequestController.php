@@ -80,21 +80,7 @@ class businessRequestController extends Controller
       $userRolesEntry->role_id = 3;
       $userRolesEntry->user_id = $requestEmail->id;
       $userRolesEntry->save();
-    }
 
-    if ($isEmailStored != null) {
-      $requestBusiness = new RequestTable();
-      $requestBusiness->status = 1;
-      $requestBusiness->user_id = $isEmailStored->id;
-      $requestBusiness->request_type_id = 4;
-      $requestBusiness->first_name = $request->business_first_name;
-      $requestBusiness->last_name = $request->business_last_name;
-      $requestBusiness->email = $request->business_email;
-      $requestBusiness->phone_number = $request->business_mobile;
-      $requestBusiness->relation_name = $request->business_property_name;
-      $requestBusiness->case_number = $request->case_number;
-      $requestBusiness->save();
-    } else {
       $requestBusiness = new RequestTable();
       $requestBusiness->status = 1;
       $requestBusiness->user_id = $requestEmail->id;
@@ -106,42 +92,89 @@ class businessRequestController extends Controller
       $requestBusiness->relation_name = $request->business_property_name;
       $requestBusiness->case_number = $request->case_number;
       $requestBusiness->save();
+
+      // business data store in business field
+
+      $business = new Business();
+      $business->phone_number = $request->business_mobile;
+      $business->address1 = $request->street;
+      $business->address2 = $request->city;
+      $business->zipcode = $request->zipcode;
+      $business->business_name = $request->business_property_name;
+      $business->save();
+
+      //business request store in request table
+
+      $patientRequest = new request_Client();
+      $patientRequest->request_id = $requestBusiness->id;
+      $patientRequest->first_name = $request->first_name;
+      $patientRequest->last_name = $request->last_name;
+      $patientRequest->date_of_birth = $request->date_of_birth;
+      $patientRequest->email = $request->email;
+      $patientRequest->phone_number = $request->phone_number;
+      $patientRequest->street = $request->street;
+      $patientRequest->city = $request->city;
+      $patientRequest->state = $request->state;
+      $patientRequest->zipcode = $request->zipcode;
+      $patientRequest->room = $request->room;
+      $patientRequest->notes = $request->symptoms;
+      $patientRequest->save();
+
+
+      // store data in request business table 
+      $businessRequest = new RequestBusiness();
+      $businessRequest->request_id = $requestBusiness->id;
+      $businessRequest->business_id = $business->id;
+      $businessRequest->save();
+    }else{
+      $requestBusiness = new RequestTable();
+      $requestBusiness->status = 1;
+      $requestBusiness->user_id = $isEmailStored->id;
+      $requestBusiness->request_type_id = 4;
+      $requestBusiness->first_name = $request->business_first_name;
+      $requestBusiness->last_name = $request->business_last_name;
+      $requestBusiness->email = $request->business_email;
+      $requestBusiness->phone_number = $request->business_mobile;
+      $requestBusiness->relation_name = $request->business_property_name;
+      $requestBusiness->case_number = $request->case_number;
+      $requestBusiness->save();
+
+      // business data store in business field
+
+      $business = new Business();
+      $business->phone_number = $request->business_mobile;
+      $business->address1 = $request->street;
+      $business->address2 = $request->city;
+      $business->zipcode = $request->zipcode;
+      $business->business_name = $request->business_property_name;
+      $business->save();
+
+      //business request store in request table
+
+      $patientRequest = new request_Client();
+      $patientRequest->request_id = $requestBusiness->id;
+      $patientRequest->first_name = $request->first_name;
+      $patientRequest->last_name = $request->last_name;
+      $patientRequest->date_of_birth = $request->date_of_birth;
+      $patientRequest->email = $request->email;
+      $patientRequest->phone_number = $request->phone_number;
+      $patientRequest->street = $request->street;
+      $patientRequest->city = $request->city;
+      $patientRequest->state = $request->state;
+      $patientRequest->zipcode = $request->zipcode;
+      $patientRequest->room = $request->room;
+      $patientRequest->notes = $request->symptoms;
+      $patientRequest->save();
+
+
+      // store data in request business table 
+      $businessRequest = new RequestBusiness();
+      $businessRequest->request_id = $requestBusiness->id;
+      $businessRequest->business_id = $business->id;
+      $businessRequest->save();
     }
-    // business data store in business field
 
-    $business = new Business();
-    $business->phone_number = $request->business_mobile;
-    $business->address1 = $request->street;
-    $business->address2 = $request->city;
-    $business->zipcode = $request->zipcode;
-    $business->business_name = $request->business_property_name;
-    $business->save();
-
-    //business request store in request table
-
-    $patientRequest = new request_Client();
-    $patientRequest->request_id = $requestBusiness->id;
-    $patientRequest->first_name = $request->first_name;
-    $patientRequest->last_name = $request->last_name;
-    $patientRequest->date_of_birth = $request->date_of_birth;
-    $patientRequest->email = $request->email;
-    $patientRequest->phone_number = $request->phone_number;
-    $patientRequest->street = $request->street;
-    $patientRequest->city = $request->city;
-    $patientRequest->state = $request->state;
-    $patientRequest->zipcode = $request->zipcode;
-    $patientRequest->room = $request->room;
-    $patientRequest->notes = $request->symptoms;
-    $patientRequest->save();
-
-
-    // store data in request business table 
-    $businessRequest = new RequestBusiness();
-    $businessRequest->request_id = $requestBusiness->id;
-    $businessRequest->business_id = $business->id;
-    $businessRequest->save();
-
-
+   // confirmation number
     $currentTime = Carbon::now();
     $currentDate = $currentTime->format('Y');
 
@@ -178,12 +211,10 @@ class businessRequestController extends Controller
         'subject_name' => 'Create account by clicking on below link with below email address',
         'email' => $request->email,
       ]);
+      return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+    }else{
+      return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
     }
 
-    if ($isEmailStored == null) {
-      return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
-    } else {
-      return redirect()->route('submitRequest');
-    }
   }
 }

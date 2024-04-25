@@ -33,9 +33,10 @@ use App\Http\Controllers\ProviderSchedulingController;
 use App\Http\Controllers\CommonOperationController;
 
 // ******************************* SHIVESH **********************************************
+
 //  ******* First page of patient site *********
 route::get('/', [Controller::class, 'patientSite'])->name('patientSite');
-route::get('/loader', [Controller::class, 'loader'])->name('loader');
+
 
 //  ***** Types of request ******
 route::get('/submit_request', [Controller::class, 'submitScreen'])->name('submitRequest');
@@ -76,7 +77,7 @@ route::middleware('CheckPatientLogin')->group(function () {
 
     route::get('/patient_logout', [patientLoginController::class, 'logout'])->name('patientLogOut');
 
-    //  ******* Patient Dashboard **********
+    //  ******* Patient Dashboard **********x
     route::get('/patientDashboard', [patientDashboardController::class, 'read'])->name('patientDashboardData');
 
     //  ********* Edit profile of patient ***********

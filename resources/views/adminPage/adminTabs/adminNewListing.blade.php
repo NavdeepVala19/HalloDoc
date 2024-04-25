@@ -14,9 +14,12 @@
     {{-- Error or Success Message Alerts/Pop-ups --}}
     {{-- Admin Logged In Successfully --}}
     @if (session('message'))
-        <h6 class="alert alert-success popup-message">
-            {{ session('message') }}
-        </h6>
+         <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('message') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
     @endif
 
     {{-- Case Assigned Successfully --}}

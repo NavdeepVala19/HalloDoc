@@ -1099,7 +1099,6 @@ class AdminController extends Controller
 
         $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->pluck('email')->toArray();
 
-
         $requestMessage = $request->contact_msg;
 
         if ($offDutyPhysicians) {

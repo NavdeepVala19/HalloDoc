@@ -91,9 +91,7 @@ input[type="checkbox"] {
     .upload-txt {
         display: none;
     }
-    .mobile-icons{
-        display: block;
-    }
+
 }
 
 @media (max-width: 360px) {
@@ -114,12 +112,21 @@ input[type="checkbox"] {
         justify-content: center;
         gap: 12px;
     }
+    .mobile-icons{
+        display: block;
+    }
 
     table {
         border-collapse: collapse;
     }
 
     .responsive-btns {
+        display: block;
+    }
+      .upload-txt {
+        display: none;
+    }
+    .bi{
         display: block;
     }
 }
@@ -142,15 +149,3 @@ input[type="checkbox"] {
     display: none;
 }
 
-.bi{
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .upload-txt {
-        display: none;
-    }
-    .bi{
-        display: block;
-    }
-}

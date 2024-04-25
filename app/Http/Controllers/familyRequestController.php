@@ -79,22 +79,7 @@ class familyRequestController extends Controller
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
-        }
 
-
-        // family request creating
-        if ($isEmailStored != null){
-            $familyRequest = new RequestTable();
-            $familyRequest->user_id = $isEmailStored->id;
-            $familyRequest->request_type_id = 2;
-            $familyRequest->first_name = $request->family_first_name;
-            $familyRequest->last_name = $request->family_last_name;
-            $familyRequest->email = $request->family_email;
-            $familyRequest->phone_number = $request->family_phone_number;
-            $familyRequest->relation_name = $request->family_relation;
-            $familyRequest->status = 1;
-            $familyRequest->save();
-        }else{
             $familyRequest = new RequestTable();
             $familyRequest->user_id = $requestEmail->id;
             $familyRequest->request_type_id = 2;
@@ -105,33 +90,72 @@ class familyRequestController extends Controller
             $familyRequest->relation_name = $request->family_relation;
             $familyRequest->status = 1;
             $familyRequest->save();
+
+            $patientRequest = new request_Client();
+            $patientRequest->request_id = $familyRequest->id;
+            $patientRequest->first_name = $request->first_name;
+            $patientRequest->last_name = $request->last_name;
+            $patientRequest->date_of_birth = $request->date_of_birth;
+            $patientRequest->email = $request->email;
+            $patientRequest->phone_number = $request->phone_number;
+            $patientRequest->street = $request->street;
+            $patientRequest->city = $request->city;
+            $patientRequest->state = $request->state;
+            $patientRequest->zipcode = $request->zipcode;
+            $patientRequest->notes = $request->symptoms;
+            $patientRequest->save();
+
+
+            // store documents in request_wise_file table
+
+            if (isset($request->docs)) {
+                $request_file = new RequestWiseFile();
+                $request_file->request_id = $familyRequest->id;
+                $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request_file->save();
+            }
+        }else{
+            $familyRequest = new RequestTable();
+            $familyRequest->user_id = $isEmailStored->id;
+            $familyRequest->request_type_id = 2;
+            $familyRequest->first_name = $request->family_first_name;
+            $familyRequest->last_name = $request->family_last_name;
+            $familyRequest->email = $request->family_email;
+            $familyRequest->phone_number = $request->family_phone_number;
+            $familyRequest->relation_name = $request->family_relation;
+            $familyRequest->status = 1;
+            $familyRequest->save();
+
+
+            $patientRequest = new request_Client();
+            $patientRequest->request_id = $familyRequest->id;
+            $patientRequest->first_name = $request->first_name;
+            $patientRequest->last_name = $request->last_name;
+            $patientRequest->date_of_birth = $request->date_of_birth;
+            $patientRequest->email = $request->email;
+            $patientRequest->phone_number = $request->phone_number;
+            $patientRequest->street = $request->street;
+            $patientRequest->city = $request->city;
+            $patientRequest->state = $request->state;
+            $patientRequest->zipcode = $request->zipcode;
+            $patientRequest->notes = $request->symptoms;
+            $patientRequest->save();
+
+
+            // store documents in request_wise_file table
+
+            if (isset($request->docs)) {
+                $request_file = new RequestWiseFile();
+                $request_file->request_id = $familyRequest->id;
+                $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request_file->save();
+            }
         }
 
-        $patientRequest = new request_Client();
-        $patientRequest->request_id = $familyRequest->id;
-        $patientRequest->first_name = $request->first_name;
-        $patientRequest->last_name = $request->last_name;
-        $patientRequest->date_of_birth = $request->date_of_birth;
-        $patientRequest->email = $request->email;
-        $patientRequest->phone_number = $request->phone_number;
-        $patientRequest->street = $request->street;
-        $patientRequest->city = $request->city;
-        $patientRequest->state = $request->state;
-        $patientRequest->zipcode = $request->zipcode;
-        $patientRequest->notes = $request->symptoms;
-        $patientRequest->save();
 
-
-        // store documents in request_wise_file table
-
-        if (isset($request->docs)) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $familyRequest->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
-        }
-
+         // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -168,14 +192,10 @@ class familyRequestController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+        }else{
+            return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
         }
-
-        if ($isEmailStored == null) {
-
-            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
-        } else {
-
-            return redirect()->route('submitRequest');
-        }
+        
     }
 }

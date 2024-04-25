@@ -34,14 +34,16 @@ $(document).ready(function () {
         $("#provider-credentials-edit-btn").hide();
         $("#provider-reset-password-btn").hide();
     });
-
+    
     $("#providerAccCancelBtn").click(function () {
         $(".provider-username-field").attr("disabled", true);
         $("#provider-status").attr("disabled", true);
         $("#provider_role").attr("disabled", true);
-
+        $(".provider-password-field").attr("disabled", true);
+        
         $("#providerAccSaveBtn").hide();
         $("#providerAccCancelBtn").hide();
+        $("#provider-reset-password-btn").show();
         $("#provider-credentials-edit-btn").show();
     });
 
@@ -121,22 +123,13 @@ $(document).ready(function () {
         $("#provider-profile-edit-btn").hide();
     });
 
-    $("#provider-profile-edit-btn").click(function () {
-        $(".business-name").removeAttr("disabled");
-        $(".business-web").removeAttr("disabled");
-        $(".admin-notes").removeAttr("disabled");
-
-        $("#providerProfileSaveBtn").show();
-        $("#providerProfileCancelBtn").show();
-        $("#provider-profile-edit-btn").hide();
-    });
-
     $("#providerProfileCancelBtn").click(function () {
-        $(".business-name").removeAttr("disabled");
-        $(".business-web").removeAttr("disabled");
-        $(".admin-notes").removeAttr("disabled");
+        $(".business-name").attr("disabled", true);
+        $(".business-web").attr("disabled", true);
+        $(".admin-notes").attr("disabled", true);
+        $("#file-upload-request").attr("disabled", true);
 
-        $("#providerProfileSaveBtn").hid();
+        $("#providerProfileSaveBtn").hide();
         $("#providerProfileCancelBtn").hide();
         $("#provider-profile-edit-btn").show();
     });

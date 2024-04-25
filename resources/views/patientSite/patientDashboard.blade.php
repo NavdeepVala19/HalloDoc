@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($docs as $patientData)
+                    @foreach ($data as $patientData)
                     <tr>
                         <td style="height: 5%;">
                         {{date_format(date_create( $patientData->created_at), 'd-m-Y')}}
@@ -73,7 +73,7 @@
                     </tr>
                 </tbody>
             </table>
-            {{ $docs->links('pagination::bootstrap-5') }}
+            {{ $data->links('pagination::bootstrap-5') }}
         </div>
         <div class="accordions">
             <!-- create a new request pop-up -->
@@ -96,7 +96,7 @@
                     <button class="primary-empty hide-popup-btn">Cancel</button>
                 </div>
             </div>
-            @foreach ($docs as $patientData)
+            @foreach ($data as $patientData)
             <button class="accordion"> <i class="bi bi-clock"></i>
                 Created-Date:  {{date_format(date_create( $patientData->created_at), 'd-m-Y')}}</button>
             <div class="panel">
@@ -133,7 +133,7 @@
                 @endif
             </div>
             @endforeach
-            {{ $docs->links('pagination::bootstrap-5') }}
+            {{ $data->links('pagination::bootstrap-5') }}
         </div>
         <!-- create a new request pop-up -->
         <div class="pop-up new-request">

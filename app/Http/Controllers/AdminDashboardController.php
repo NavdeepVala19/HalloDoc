@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\users;
 use App\Models\allusers;
 use App\Models\EmailLog;
+use App\Models\UserRoles;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -42,10 +43,9 @@ class AdminDashboardController extends Controller
             'adminNote' => 'nullable|min:5|max:200',
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
+        $isEmailStored = users::where('email', $request->email)->first();
 
-        if ($request->email != $isEmailStored) {
-
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -65,52 +65,77 @@ class AdminDashboardController extends Controller
             $requestUsers->state = $request->state;
             $requestUsers->zipcode = $request->zip;
             $requestUsers->save();
+
+            $userRolesEntry = new UserRoles();
+            $userRolesEntry->role_id = 3;
+            $userRolesEntry->user_id = $requestEmail->id;
+            $userRolesEntry->save();
+
+            $requestData = new RequestTable();
+            $requestData->status = 1;
+            $requestData->user_id = $requestEmail->id;
+            $requestData->request_type_id = $request->request_type;
+            $requestData->first_name = $request->first_name;
+            $requestData->last_name = $request->last_name;
+            $requestData->email = $request->email;
+            $requestData->phone_number = $request->phone_number;
+            $requestData->save();
+
+            $adminPatientRequest = new request_Client();
+            $adminPatientRequest->request_id = $requestData->id;
+            $adminPatientRequest->first_name = $request->first_name;
+            $adminPatientRequest->last_name = $request->last_name;
+            $adminPatientRequest->date_of_birth = $request->date_of_birth;
+            $adminPatientRequest->email = $request->email;
+            $adminPatientRequest->phone_number = $request->phone_number;
+            $adminPatientRequest->street = $request->street;
+            $adminPatientRequest->city = $request->city;
+            $adminPatientRequest->state = $request->state;
+            $adminPatientRequest->zipcode = $request->zip;
+            $adminPatientRequest->room = $request->room;
+            $adminPatientRequest->save();
+
+            // store notes in request_notes table
+            $request_notes = new RequestNotes();
+            $request_notes->request_id = $requestData->id;
+            $request_notes->admin_notes = $request->adminNote;
+            $request_notes->created_by = 'admin';
+            $request_notes->save();
+
+        }else{
+            $requestData = new RequestTable();
+            $requestData->user_id = $isEmailStored->id;
+            $requestData->request_type_id = 1;
+            $requestData->first_name = $request->first_name;
+            $requestData->last_name = $request->last_name;
+            $requestData->email = $request->email;
+            $requestData->phone_number = $request->phone_number;
+            $requestData->status = 1;
+            $requestData->save();
+
+            $adminPatientRequest = new request_Client();
+            $adminPatientRequest->request_id = $requestData->id;
+            $adminPatientRequest->first_name = $request->first_name;
+            $adminPatientRequest->last_name = $request->last_name;
+            $adminPatientRequest->date_of_birth = $request->date_of_birth;
+            $adminPatientRequest->email = $request->email;
+            $adminPatientRequest->phone_number = $request->phone_number;
+            $adminPatientRequest->street = $request->street;
+            $adminPatientRequest->city = $request->city;
+            $adminPatientRequest->state = $request->state;
+            $adminPatientRequest->zipcode = $request->zip;
+            $adminPatientRequest->room = $request->room;
+            $adminPatientRequest->save();
+
+            // store notes in request_notes table
+            $request_notes = new RequestNotes();
+            $request_notes->request_id = $requestData->id;
+            $request_notes->admin_notes = $request->adminNote;
+            $request_notes->created_by = 'admin';
+            $request_notes->save();
         }
 
-        $requestData = new RequestTable();
-        $requestData->status = 1;
-        $requestData->user_id = $requestEmail->id;
-        $requestData->request_type_id = $request->request_type;
-        $requestData->first_name = $request->first_name;
-        $requestData->last_name = $request->last_name;
-        $requestData->email = $request->email;
-        $requestData->phone_number = $request->phone_number;
-        $requestData->save();
-
-        $adminPatientRequest = new request_Client();
-        $adminPatientRequest->request_id = $requestData->id;
-        $adminPatientRequest->first_name = $request->first_name;
-        $adminPatientRequest->last_name = $request->last_name;
-        $adminPatientRequest->date_of_birth = $request->date_of_birth;
-        $adminPatientRequest->email = $request->email;
-        $adminPatientRequest->phone_number = $request->phone_number;
-        $adminPatientRequest->street = $request->street;
-        $adminPatientRequest->city = $request->city;
-        $adminPatientRequest->state = $request->state;
-        $adminPatientRequest->zipcode = $request->zip;
-        $adminPatientRequest->room = $request->room;
-        $adminPatientRequest->save();
-
-        // store notes in request_notes table
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $requestData->id;
-        $request_notes->admin_notes = $request->adminNote;
-        $request_notes->created_by = 'admin';
-        $request_notes->save();
-
-        // store all details of patient in allUsers table
-        $requestUsers = new allusers();
-        $requestUsers->first_name = $request->first_name;
-        $requestUsers->last_name = $request->last_name;
-        $requestUsers->email = $request->email;
-        $requestUsers->mobile = $request->phone_number;
-        $requestUsers->street = $request->street;
-        $requestUsers->city = $request->city;
-        $requestUsers->state = $request->state;
-        $requestUsers->zipcode = $request->zip;
-        $requestUsers->save();
-
-
+         // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -127,24 +152,28 @@ class AdminDashboardController extends Controller
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        // send email
-        $emailAddress = $request->email;
-        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+        if ($isEmailStored == null) {
+            // send email
+            $emailAddress = $request->email;
+            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-        EmailLog::create([
-            'role_id' => 3,
-            'request_id' =>  $requestData->id,
-            'confirmation_number' => $confirmationNumber,
-            'is_email_sent' => 1,
-            'sent_tries' => 1,
-            'create_date' => now(),
-            'sent_date' => now(),
-            'email_template' => $request->email,
-            'subject_name' => 'Create account by clicking on below link with below email address',
-            'email' => $request->email,
-        ]);
-
-        return redirect()->route('admin.dashboard')->with('message','email for create account is sent');
+            EmailLog::create([
+                'role_id' => 3,
+                'request_id' =>  $requestData->id,
+                'confirmation_number' => $confirmationNumber,
+                'is_email_sent' => 1,
+                'recipient_name' => $request->first_name,
+                'sent_tries' => 1,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'email_template' => $request->email,
+                'subject_name' => 'Create account by clicking on below link with below email address',
+                'email' => $request->email,
+            ]);
+            return redirect()->route('admin.status','new')->with('message', 'Email for create account is sent and Request is Submitted');
+        } else {
+            return redirect()->route('admin.status','new')->with('message', 'Request is Submitted');
+        }
     }
 
     

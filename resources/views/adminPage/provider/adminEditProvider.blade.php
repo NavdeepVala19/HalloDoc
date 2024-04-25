@@ -55,7 +55,7 @@
             {{ Session::get('message') }}
         </div>
         @endif
-        <div class="section">
+       
             <form action="{{ route('updateProviderAccountInfo', $getProviderData->id) }}" method="POST" id="adminEditProviderForm1">
                 @csrf
                 <h3>Account Information</h3>
@@ -392,7 +392,7 @@
             </div>
             </form>
         </div>
-    </div>
+ 
 </div>
 @endsection
 

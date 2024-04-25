@@ -68,6 +68,12 @@
         width: 100%;
     }
 }
+@media(max-width:550px){
+    .main-container{
+        width: 100%;
+        margin-top: 170px;
+    }
+}
 
 @media(max-width:500px){
     .main-container{
@@ -79,7 +85,6 @@
 @media(max-width:400px){
     .main-container{
         width: 100%;
-        margin-top: 250px;
     }
     .logo-img{
         display: none;
@@ -94,8 +99,6 @@
     position: fixed;
     bottom: 0;
 }
-
-
 
 /********************* Footer CSS End***********************/
 

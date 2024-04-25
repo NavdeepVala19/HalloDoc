@@ -47,11 +47,12 @@ class patientController extends Controller
             'zipcode' => 'digits:6|gte:1',
             'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-            'room' => 'gte:1|nullable|max:1000'
+            'room' => 'gte:0|nullable|max:1000'
         ]);
 
 
         $isEmailStored = users::where('email', $request->email)->first();
+        dd($isEmailStored->id);
 
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
@@ -78,19 +79,7 @@ class patientController extends Controller
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
-        }
 
-        if ($isEmailStored != null) {
-            $requestData = new RequestTable();
-            $requestData->user_id = $isEmailStored->id;
-            $requestData->request_type_id = 1;
-            $requestData->first_name = $request->first_name;
-            $requestData->last_name = $request->last_name;
-            $requestData->email = $request->email;
-            $requestData->phone_number = $request->phone_number;
-            $requestData->status = 1;
-            $requestData->save();
-        } else {
             $requestData = new RequestTable();
             $requestData->user_id = $requestEmail->id;
             $requestData->request_type_id = 1;
@@ -100,34 +89,70 @@ class patientController extends Controller
             $requestData->phone_number = $request->phone_number;
             $requestData->status = 1;
             $requestData->save();
+
+            $patientRequest = new request_Client();
+            $patientRequest->request_id = $requestData->id;
+            $patientRequest->first_name = $request->first_name;
+            $patientRequest->last_name = $request->last_name;
+            $patientRequest->date_of_birth = $request->date_of_birth;
+            $patientRequest->email = $request->email;
+            $patientRequest->phone_number = $request->phone_number;
+            $patientRequest->street = $request->street;
+            $patientRequest->city = $request->city;
+            $patientRequest->state = $request->state;
+            $patientRequest->zipcode = $request->zipcode;
+            $patientRequest->room = $request->room;
+            $patientRequest->notes = $request->symptoms;
+            $patientRequest->save();
+
+            // store documents in request_wise_file table
+            if (isset($request->docs)) {
+                $request_file = new RequestWiseFile();
+                $request_file->request_id = $requestData->id;
+                $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request_file->save();
+            }
+
+        }else{
+
+            $requestData = new RequestTable();
+            $requestData->user_id = $isEmailStored->id;
+            $requestData->request_type_id = 1;
+            $requestData->first_name = $request->first_name;
+            $requestData->last_name = $request->last_name;
+            $requestData->email = $request->email;
+            $requestData->phone_number = $request->phone_number;
+            $requestData->status = 1;
+            $requestData->save();
+
+            $patientRequest = new request_Client();
+            $patientRequest->request_id = $requestData->id;
+            $patientRequest->first_name = $request->first_name;
+            $patientRequest->last_name = $request->last_name;
+            $patientRequest->date_of_birth = $request->date_of_birth;
+            $patientRequest->email = $request->email;
+            $patientRequest->phone_number = $request->phone_number;
+            $patientRequest->street = $request->street;
+            $patientRequest->city = $request->city;
+            $patientRequest->state = $request->state;
+            $patientRequest->zipcode = $request->zipcode;
+            $patientRequest->room = $request->room;
+            $patientRequest->notes = $request->symptoms;
+            $patientRequest->save();
+
+            // store documents in request_wise_file table
+            if (isset($request->docs)) {
+                $request_file = new RequestWiseFile();
+                $request_file->request_id = $requestData->id;
+                $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request_file->save();
+            }
+
         }
 
-
-        $patientRequest = new request_Client();
-        $patientRequest->request_id = $requestData->id;
-        $patientRequest->first_name = $request->first_name;
-        $patientRequest->last_name = $request->last_name;
-        $patientRequest->date_of_birth = $request->date_of_birth;
-        $patientRequest->email = $request->email;
-        $patientRequest->phone_number = $request->phone_number;
-        $patientRequest->street = $request->street;
-        $patientRequest->city = $request->city;
-        $patientRequest->state = $request->state;
-        $patientRequest->zipcode = $request->zipcode;
-        $patientRequest->room = $request->room;
-        $patientRequest->notes = $request->symptoms;
-        $patientRequest->save();
-
-        // store documents in request_wise_file table
-        if (isset($request->docs)) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $requestData->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
-        }
-
-
+         // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -143,7 +168,6 @@ class patientController extends Controller
         if (!empty($requestData->id)) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
-
 
         if ($isEmailStored == null) {
             // send email
@@ -163,9 +187,9 @@ class patientController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
-            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent');
+            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
         } else {
-            return redirect()->route('submitRequest');
+            return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
         }
     }
 }

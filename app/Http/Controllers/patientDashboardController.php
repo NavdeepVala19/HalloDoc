@@ -104,6 +104,7 @@ class patientDashboardController extends Controller
         return redirect()->back()->with('agreementCancelled', 'Agreement Cancelled Sucessfully');
     }
 
+
     //  create me request in patient Dashboard
     public function createNewPatient(Request $request)
     {
@@ -181,9 +182,11 @@ class patientDashboardController extends Controller
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        return redirect()->route('patientDashboardData')->with('message', 'request is submitted');
+        return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
     }
 
+
+    
     // create someone else request from patient dashboard
     public function createSomeOneElseRequest(Request $request)
     {
@@ -231,20 +234,7 @@ class patientDashboardController extends Controller
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
             $userRolesEntry->save();
-        }
 
-        if ($isEmailStored != null) {
-            $newPatient = new RequestTable();
-            $newPatient->request_type_id = 1;
-            $newPatient->user_id = $isEmailStored->id;
-            $newPatient->first_name = $request->first_name;
-            $newPatient->last_name = $request->last_name;
-            $newPatient->email = $request->email;
-            $newPatient->phone_number = $request->phone_number;
-            $newPatient->relation_name = $request->relation;
-            $newPatient->status = 1;
-            $newPatient->save();
-        } else {
             $newPatient = new RequestTable();
             $newPatient->request_type_id = 1;
             $newPatient->user_id = $requestEmail->id;
@@ -255,41 +245,71 @@ class patientDashboardController extends Controller
             $newPatient->relation_name = $request->relation;
             $newPatient->status = 1;
             $newPatient->save();
+
+            $newPatientRequest = new request_Client();
+            $newPatientRequest->request_id = $newPatient->id;
+            $newPatientRequest->first_name = $request->first_name;
+            $newPatientRequest->last_name = $request->last_name;
+            $newPatientRequest->date_of_birth = $request->date_of_birth;
+            $newPatientRequest->email = $request->email;
+            $newPatientRequest->phone_number = $request->phone_number;
+            $newPatientRequest->street = $request->street;
+            $newPatientRequest->city = $request->city;
+            $newPatientRequest->state = $request->state;
+            $newPatientRequest->zipcode = $request->zipcode;
+            $newPatientRequest->notes = $request->symptoms;
+            $newPatientRequest->room = $request->room;
+
+            $newPatientRequest->save();
+
+            // store documents in request_wise_file table
+
+            if (isset($request->docs)) {
+                $request_file = new RequestWiseFile();
+                $request_file->request_id = $newPatient->id;
+                $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request_file->save();
+            }
+
+
+        }else{
+            $newPatient = new RequestTable();
+            $newPatient->request_type_id = 1;
+            $newPatient->user_id = $isEmailStored->id;
+            $newPatient->first_name = $request->first_name;
+            $newPatient->last_name = $request->last_name;
+            $newPatient->email = $request->email;
+            $newPatient->phone_number = $request->phone_number;
+            $newPatient->relation_name = $request->relation;
+            $newPatient->status = 1;
+            $newPatient->save();
+
+            $newPatientRequest = new request_Client();
+            $newPatientRequest->request_id = $newPatient->id;
+            $newPatientRequest->first_name = $request->first_name;
+            $newPatientRequest->last_name = $request->last_name;
+            $newPatientRequest->date_of_birth = $request->date_of_birth;
+            $newPatientRequest->email = $request->email;
+            $newPatientRequest->phone_number = $request->phone_number;
+            $newPatientRequest->street = $request->street;
+            $newPatientRequest->city = $request->city;
+            $newPatientRequest->state = $request->state;
+            $newPatientRequest->zipcode = $request->zipcode;
+            $newPatientRequest->notes = $request->symptoms;
+            $newPatientRequest->room = $request->room;
+            $newPatientRequest->save();
+
+            // store documents in request_wise_file table
+
+            if (isset($request->docs)) {
+                $request_file = new RequestWiseFile();
+                $request_file->request_id = $newPatient->id;
+                $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request_file->save();
+            }
         }
-
-        $newPatientRequest = new request_Client();
-        $newPatientRequest->request_id = $newPatient->id;
-        $newPatientRequest->first_name = $request->first_name;
-        $newPatientRequest->last_name = $request->last_name;
-        $newPatientRequest->date_of_birth = $request->date_of_birth;
-        $newPatientRequest->email = $request->email;
-        $newPatientRequest->phone_number = $request->phone_number;
-        $newPatientRequest->street = $request->street;
-        $newPatientRequest->city = $request->city;
-        $newPatientRequest->state = $request->state;
-        $newPatientRequest->zipcode = $request->zipcode;
-        $newPatientRequest->notes = $request->symptoms;
-        $newPatientRequest->room = $request->room;
-
-        $newPatientRequest->save();
-
-        // store documents in request_wise_file table
-
-        if (isset($request->docs)) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $newPatient->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
-        }
-
-        // store symptoms in request_notes table
-
-        $request_notes = new RequestNotes();
-        $request_notes->request_id = $newPatient->id;
-        $request_notes->patient_notes = $request->symptoms;
-
-        $request_notes->save();
 
         // confirmation number
         $currentTime = Carbon::now();
@@ -326,15 +346,12 @@ class patientDashboardController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
+            return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+        }else{
+            return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
         }
 
-        if ($isEmailStored == null) {
-            return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent');
-        } else {
-            return redirect()->route('patientDashboardData')->with('message', 'request is submitted');
-        }
     }
-
 
     public function read()
     {
@@ -342,8 +359,8 @@ class patientDashboardController extends Controller
         $email = $userData["email"];
 
         $userId = users::select('id')->where('email', $email);
-        $docs = RequestTable::with('requestWiseFile')->where('user_id', $userId)->paginate(10);
+        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->paginate(10);
 
-        return view('patientSite/patientDashboard', compact('docs', 'userData'));
+        return view('patientSite/patientDashboard', compact('data', 'userData'));
     }
 }
