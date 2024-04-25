@@ -130,6 +130,11 @@ $(document).ready(function () {
 
                 var repeatEnd = new Date(event.shiftDate);
                 if (event.is_repeat == 1) {
+                    // will execute these code if shift are repeated
+                    let startDate = new Date(event.shiftDate);
+                    let recurrStartDate = startDate.setDate(
+                        startDate.getDate() + 1
+                    );
                     if (event.repeat_upto == 2) {
                         repeatEnd.setDate(repeatEnd.getDate() + 14);
                     } else if (event.repeat_upto == 3) {
@@ -144,7 +149,7 @@ $(document).ready(function () {
                         daysOfWeek: event.week_days,
                         startTime: event.startTime,
                         endTime: event.endTime,
-                        startRecur: event.shiftDate,
+                        startRecur: recurrStartDate,
                         endRecur: repeatEnd,
                         textColor: "#000",
                         extendedProps: {
@@ -164,7 +169,6 @@ $(document).ready(function () {
                                 : "pending-shift-style",
                     };
                     events.push(eventData);
-                    return events;
                 }
                 eventData = {
                     title: event.title,

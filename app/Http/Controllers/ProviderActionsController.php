@@ -333,7 +333,11 @@ class ProviderActionsController extends Controller
     {
         $file = RequestWiseFile::where('request_id', $request->requestId)->where('is_finalize', 1)->first();
 
-        return response()->download(storage_path('app/encounterForm/' . $file->file_name));
+        try {
+            return response()->download(storage_path('app/encounterForm/' . $file->file_name));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
     }
 
     // View Conclude Care Page -> Display page and show data
@@ -343,7 +347,7 @@ class ProviderActionsController extends Controller
             $requestId = Crypt::decrypt($id);
 
             $case = RequestTable::where('id', $requestId)->first();
-            $docs = RequestWiseFile::where('request_id', $requestId)->get();
+            $docs = RequestWiseFile::where('request_id', $requestId)->paginate(10);
 
             return view('providerPage.concludeCare', compact('case', 'docs'));
         } catch (\Throwable $th) {

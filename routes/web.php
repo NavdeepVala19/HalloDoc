@@ -464,6 +464,9 @@ Route::middleware('CheckAdminOrProvider')->group(function () {
     // Operations on ViewUploads page (Download All, Delete All)
     Route::post('/operations', [CommonOperationController::class, 'operations'])->name('operations');
 
+    // Send Mail to patient from listing pages
+    Route::post('/send-mail', [CommonOperationController::class, 'sendMailPatient'])->name('send.mail.patient');
+
     // SEND LINK DASHBOARD PAGE
     // Send Agreement via email and sms, pending page
     Route::post('/send-agreement', [CommonOperationController::class, 'sendAgreementLink'])->name('send.agreement');
@@ -484,5 +487,5 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 
 // For Testing Purpose only
 Route::get('/test', function () {
-    return view('email.sendAgreementLink');
+    return view('patientSite.agreementDone');
 });

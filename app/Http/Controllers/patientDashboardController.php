@@ -48,11 +48,13 @@ class patientDashboardController extends Controller
         try {
             $id = Crypt::decrypt($data);
             $clientData = RequestTable::with('requestClient')->where('id', $id)->first();
+            if ($clientData->status == 4 || $clientData->status == 11) {
+                return view('patientSite.agreementDone')->with('caseStatus', $clientData->status);
+            }
             if (!empty($clientData)) {
                 return view("patientSite/patientAgreement", compact('clientData'));
             }
         } catch (\Throwable $th) {
-            //throw $th;
             return view('errors.404');
         }
     }
@@ -61,10 +63,8 @@ class patientDashboardController extends Controller
     public function agreeAgreement(Request $request)
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
-        if ($caseStatus == 4) {
-            return redirect()->back()->with('alreadyAgreed', 'You have already agreed to the Agreement');
-        } else if ($caseStatus == 11) {
-            return redirect()->back()->with('errorAlreadyCancelled', "You have already Cancelled the Agreement(You can't change now)");
+        if ($caseStatus == 4 || $caseStatus == 11) {
+            return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
 
@@ -85,10 +85,8 @@ class patientDashboardController extends Controller
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
 
-        if ($caseStatus == 4) {
-            return redirect()->back()->with('errorAlreadyAgreed', "You have already agreed to the Agreement(You can't change now)");
-        } else if ($caseStatus == 11) {
-            return redirect()->back()->with('alreadyCancelled', "You have already Cancelled the Agreement");
+        if ($caseStatus == 4 || $caseStatus == 11) {
+            return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,

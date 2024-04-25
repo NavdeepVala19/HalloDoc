@@ -48,6 +48,15 @@
 @endsection
 
 @section('content')
+    {{-- Pop-up message --}}
+    @if (session('accessOperation'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('accessOperation') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="m-5 spacing">
         <h3 class="main-heading">Account Access</h3>
         <div class="section">
@@ -94,7 +103,8 @@
                             <div class="m-2">Name: {{ $role->name }} </div>
                             <div class="m-2 mb-2">Account Type: {{ $role->account_type }}</div>
                             <div class="m-3">
-                                <a href="{{ route('admin.edit.access', Crypt::encrypt($role->id)) }}" class="primary-empty">Edit</a>
+                                <a href="{{ route('admin.edit.access', Crypt::encrypt($role->id)) }}"
+                                    class="primary-empty">Edit</a>
                                 <a href="{{ route('admin.access.delete', $role->id) }}" class="primary-empty">Delete</a>
                             </div>
                         </div>

@@ -4,26 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\UserRoles;
 use Carbon\Carbon;
-use App\Models\User;
-use Cron\MonthField;
 use App\Models\users;
-use App\Models\Status;
 use App\Models\allusers;
 use App\Models\EmailLog;
-use App\Models\RequestWise;
-use App\Models\RequestNotes;
 use App\Models\RequestTable;
-
-use Illuminate\Http\Request;
-use App\Models\RequestStatus;
-use App\Mail\sendEmailAddress;
 use App\Models\request_Client;
 use App\Models\RequestWiseFile;
-use Illuminate\Support\Facades\DB;
+
+use App\Mail\sendEmailAddress;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
-// use App\Models\User;
-
 
 class patientController extends Controller
 {

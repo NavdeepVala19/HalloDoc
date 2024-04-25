@@ -17,6 +17,7 @@
 @endsection
 
 @section('content')
+    @include('loading')
     {{-- Encounter Form Changes Saved --}}
     @if (session('encounterChangesSaved'))
         <div class="alert alert-success popup-message ">
@@ -51,7 +52,8 @@
                 {{-- Three buttons at last --}}
                 <div class="button-section">
                     <input type="submit" value="Save Changes" class="primary-fill" id="providerEncounterFormBtn">
-                    <a href="{{ route('encounter.finalized', $requestId) }}" type="button" class="finalize-btn">Finalize</a>
+                    <a href="{{ route('encounter.finalized', $requestId) }}" type="button"
+                        class="finalize-btn">Finalize</a>
                     <a href="{{ route('provider.status', $requestData->status != 6 ? 'active' : 'conclude') }}"
                         class="primary-empty">Cancel</a>
                 </div>
@@ -62,6 +64,9 @@
 @section('script')
     <script>
         $(document).ready(function() {
+            $('.finalize-btn').click(function() {
+                $("#loading-icon").fadeIn("slow");
+            })
             // Get the pre-filled values from the input fields
             var initialFirstName = $("#providerEncounterForm #floatingInput1").val();
             var initialLastName = $("#providerEncounterForm #floatingInput2").val();

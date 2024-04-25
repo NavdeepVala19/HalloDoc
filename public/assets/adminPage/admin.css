@@ -75,9 +75,7 @@
     display: none;
 }
 
-.displayPatientName {
-    color: var(--blue);
-}
+
 
 .transfer-case {
     display: none;

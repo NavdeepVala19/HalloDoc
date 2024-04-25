@@ -90,7 +90,7 @@
                         <thead class="table-secondary">
                             <tr>
                                 <th></th>
-                                <th class="date-column">Upload Date <i class="bi bi-arrow-up"></i></th>
+                                <th class="date-column">Upload Date</th>
                                 <th class="download-column">Actions</th>
                             </tr>
                         </thead>

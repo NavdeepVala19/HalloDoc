@@ -37,6 +37,9 @@ giving service to the patient. --}}
     {{-- Order Created Successfully Pop-up Message --}}
     @include('alertMessages.orderPlacedSuccess')
 
+    {{-- Send Mail to patient --}}
+    @include('popup.sendMail')
+
     <div class="bg-blur">
         <nav>
             <div class="nav nav-tabs " id="nav-tab">
@@ -155,8 +158,19 @@ giving service to the patient. --}}
                             @endif
                             @foreach ($cases as $case)
                                 <tr class="type-{{ $case->request_type_id }}">
-                                    <td>{{ $case->requestClient->first_name }}
-                                        {{ $case->requestClient->last_name }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span>
+                                                {{ $case->requestClient->first_name }}
+                                                {{ $case->requestClient->last_name }}
+                                            </span>
+                                            <button class="send-mail-btn" data-requestid="{{ $case->id }}"
+                                                data-name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"
+                                                data-email={{ $case->requestClient->email }}>
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                     <td class="mobile-column">
                                         @if ($case->request_type_id == 1)
                                             <div class="listing-mobile-container">
@@ -252,13 +266,13 @@ giving service to the patient. --}}
                                         </span>
                                     @elseif ($case->request_type_id == 3)
                                         <span>
-                                            Business
-                                            <i class="bi bi-circle-fill ms-1 red"></i>
+                                            Concierge
+                                            <i class="bi bi-circle-fill ms-1 blue"></i>
                                         </span>
                                     @elseif ($case->request_type_id == 4)
                                         <span>
-                                            Concierge
-                                            <i class="bi bi-circle-fill ms-1 blue"></i>
+                                            Business
+                                            <i class="bi bi-circle-fill ms-1 red"></i>
                                         </span>
                                     @endif
                                 </div>

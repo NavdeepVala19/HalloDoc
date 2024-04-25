@@ -116,7 +116,7 @@ class AdminActionsController extends Controller
             'notes' => $request->reason
         ]);
 
-        return redirect()->back()->with('caseCancelled', 'Case Cancelled (Moved to ToClose State)');
+        return redirect()->back()->with('successMessage', 'Case Cancelled (Moved to ToClose State)');
     }
 
     // Admin Blocks patient

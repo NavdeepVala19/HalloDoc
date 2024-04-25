@@ -101,6 +101,9 @@ required, without finalizing encounter form provider cannot conclude the case. -
                         @endforeach
                     </tbody>
                 </table>
+                <div class="page">
+                    {{ $docs->links('pagination::bootstrap-5') }}
+                </div>
                 <hr>
                 <div>
                     <form action="{{ route('provider.conclude.care') }}" method="POST">

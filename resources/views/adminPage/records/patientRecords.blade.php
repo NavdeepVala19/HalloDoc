@@ -55,8 +55,8 @@
                 <table class="table">
                     <thead class="table-secondary">
                         <td>Client/Member</td>
-                        <td>Created Date <i class="bi bi-arrow-down"></i></td>
-                        <td>Conformation</td>
+                        <td>Created Date</td>
+                        <td>Confirmation No.</td>
                         <td>Provider Name</td>
                         <td>Concluded Date</td>
                         <td>Status</td>
@@ -78,30 +78,28 @@
                                     </td>
                                     <td>{{ $record->request->confirmation_no }}</td>
                                     <td>
-                                        @if ($requestData)
-                                            @if ($requestData->provider)
-                                                Dr. {{ $requestData->provider->first_name }}
-                                                {{ $requestData->provider->last_name }}
-                                            @else
-                                                -
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($concludeDate)
-                                            {{ \Carbon\Carbon::parse($concludeDate)->format('d/m/Y') }}
+                                        @if ($record->request->provider)
+                                            Dr. {{ $record->request->provider->first_name }}
+                                            {{ $record->request->provider->last_name }}
                                         @else
                                             -
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($status)
-                                            {{ $status->statusTable->status_type }}
+                                        @if ($record->request->statusConclude)
+                                            {{ \Carbon\Carbon::parse($record->request->statusConclude->created_at)->format('d/m/Y') }}
+                                        @else
+                                            -
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($isFinalize)
-                                            <a href="{{ route('download.encounter.form', $status->request_id) }}"
+                                        @if ($record->request->statusTable)
+                                            {{ $record->request->statusTable->status_type }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (!empty($record->request->medicalReport->is_finalize))
+                                            <a href="{{ route('download.encounter.form', $record->request->id) }}"
                                                 class="primary-empty">View</a>
                                         @else
                                             -
@@ -152,18 +150,17 @@
                                 {{ $record->created_at }}
                             </span>
                             <br>
-                            <span><i class="bi bi-calendar3"></i> Provider: @if ($status)
-                                    @if ($status->provider)
-                                        Dr. {{ $status->provider->first_name }} {{ $status->provider->last_name }}
-                                    @else
-                                        -
-                                    @endif
+                            <span><i class="bi bi-calendar3"></i> Provider: @if ($record->request->provider)
+                                    Dr. {{ $record->request->provider->first_name }}
+                                    {{ $record->request->provider->last_name }}
+                                @else
+                                    -
                                 @endif
                             </span>
                             <br>
                             <span> <i class="bi bi-calendar3"></i>
-                                status : @if ($status)
-                                    {{ $status->statusTable->status_type }}
+                                status : @if ($record->request->statusTable)
+                                    {{ $record->request->statusTable->status_type }}
                                 @endif
                             </span>
                             <br>

@@ -25,6 +25,9 @@ giving service to the patient. --}}
     {{-- Request DTY Support pop-up ->  --}}
     @include('popup.requestDTYSupport')
 
+    {{-- Send Mail to patient --}}
+    @include('popup.sendMail')
+
     <nav>
         <div class="nav nav-tabs state-grid-3" id="nav-tab">
             <a href="{{ route('admin.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
@@ -194,8 +197,19 @@ giving service to the patient. --}}
                         @foreach ($cases as $case)
                             @if (!empty($case->requestClient))
                                 <tr class="type-{{ $case->request_type_id }}">
-                                    <td>{{ $case->requestClient->first_name }}
-                                        {{ $case->requestClient->last_name }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span>
+                                                {{ $case->requestClient->first_name }}
+                                                {{ $case->requestClient->last_name }}
+                                            </span>
+                                            <button class="send-mail-btn" data-requestid="{{ $case->id }}"
+                                                data-name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"
+                                                data-email={{ $case->requestClient->email }}>
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                     <td>{{ $case->requestClient->date_of_birth }}</td>
                                     <td>{{ $case->first_name }} {{ $case->last_name }}</td>
                                     <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
@@ -243,7 +257,8 @@ giving service to the patient. --}}
                                                 <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"><i
                                                         class="bi bi-journal-text me-2 ms-3"></i>View
                                                     Notes</a>
-                                                <a href="{{ route('admin.view.order', Crypt::encrypt($case->id)) }}"><i class="bi bi-card-list me-2 ms-3"></i>Orders</a>
+                                                <a href="{{ route('admin.view.order', Crypt::encrypt($case->id)) }}"><i
+                                                        class="bi bi-card-list me-2 ms-3"></i>Orders</a>
                                                 <a href="{{ route('admin.encounter.form', Crypt::encrypt($case->id)) }}"
                                                     class="encounter-form-btn"><i
                                                         class="bi bi-text-paragraph me-2 ms-3"></i>Encounter</a>
@@ -280,13 +295,13 @@ giving service to the patient. --}}
                                         </span>
                                     @elseif ($case->request_type_id == 3)
                                         <span>
-                                            Business
-                                            <i class="bi bi-circle-fill ms-1 red"></i>
+                                            Concierge
+                                            <i class="bi bi-circle-fill ms-1 blue"></i>
                                         </span>
                                     @elseif ($case->request_type_id == 4)
                                         <span>
-                                            Concierge
-                                            <i class="bi bi-circle-fill ms-1 blue"></i>
+                                            Business
+                                            <i class="bi bi-circle-fill ms-1 red"></i>
                                         </span>
                                     @endif
                                 </div>
@@ -301,7 +316,8 @@ giving service to the patient. --}}
                             </div>
                         </div>
                         <div class="more-info ">
-                            <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View Case</a>
+                            <a href="{{ route('admin.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View
+                                Case</a>
                             <div>
                                 <span>
                                     <i class="bi bi-calendar3"></i> Date of birth :

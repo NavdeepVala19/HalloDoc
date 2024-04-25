@@ -121,7 +121,7 @@ class AdminController extends Controller
     /**
      *  Counts Total Number of cases for different status 
      *
-     * @return int total number of cases, as per the status.
+     * @return int[] total number of cases, as per the status.
      */
     public function totalCasesCount()
     {
@@ -296,23 +296,31 @@ class AdminController extends Controller
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route($routeName);
 
-        Mail::to($request->email)->send(new SendLink($request->all()));
+        try {
+            Mail::to($request->email)->send(new SendLink($request->all()));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
-        // send SMS 
-        $sid = getenv("TWILIO_SID");
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+        try {
+            // send SMS 
+            $sid = getenv("TWILIO_SID");
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-        $twilio = new Client($sid, $token);
+            $twilio = new Client($sid, $token);
 
-        $message = $twilio->messages
-            ->create(
-                "+91 99780 71802", // to
-                [
-                    "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
-                    "from" =>  $senderNumber
-                ]
-            );
+            $message = $twilio->messages
+                ->create(
+                    "+91 99780 71802", // to
+                    [
+                        "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
+                        "from" =>  $senderNumber
+                    ]
+                );
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
 
         EmailLog::create([
             'role_id' => 1,
@@ -323,6 +331,7 @@ class AdminController extends Controller
             'subject_name' => 'Create Request Link',
             'email' => $request->email,
             'recipient_name' => $request->first_name . ' ' . $request->last_name,
+            'action' => 1
         ]);
 
         SMSLogs::create(
@@ -339,7 +348,7 @@ class AdminController extends Controller
             ]
         );
 
-        return redirect()->back()->with('linkSent', "Link Sent Successfully!");
+        return redirect()->back()->with('successMessage', "Link Sent Successfully!");
     }
     // -------------------- 2. Create Request -------------------------
     // -------------------- 3. Export ---------------------------------
@@ -443,7 +452,7 @@ class AdminController extends Controller
      * Add Business entry in partners/vendors 
      *
      * @param Request $request
-     * @return \Illuminate\View\View partners page
+     * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function addBusiness(Request $request)
     {
@@ -575,14 +584,14 @@ class AdminController extends Controller
                 'menu_id' => $value
             ]);
         }
-        return redirect()->route('admin.access.view');
+        return redirect()->route('admin.access.view')->with('accessOperation', 'New access created successfully!');
     }
 
     // Delete complete role
     public function deleteAccess($id = null)
     {
         Role::where('id', $id)->delete();
-        return redirect()->back();
+        return redirect()->back()->with('accessOperation', 'Access role deleted successfully!');
     }
 
     // show edit Access Page with pre-filled data
@@ -621,7 +630,7 @@ class AdminController extends Controller
                 'menu_id' => $value
             ]);
         }
-        return redirect()->route('admin.access.view')->with('accessEdited', 'Your Changes Are successfully Saved!');
+        return redirect()->route('admin.access.view')->with('accessOperation', 'Your Changes Are successfully Saved!');
     }
     // -------------------- 6. Records -------------------------------
     // --------- 6.1 : Search Records -----
@@ -714,18 +723,19 @@ class AdminController extends Controller
     }
     public function patientRecordsView($id = null)
     {
-        $email = request_Client::where('id', $id)->pluck('email')->first();
-        $data = request_Client::where('email', $email)->get();
-        $requestId = request_Client::where('id', $id)->first()->request_id;
-        $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
-        $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
-        $status = RequestStatus::with(['statusTable', 'provider'])->where('request_id', $id)->first();
-        $concludeDate = null;
-        if (RequestStatus::where('request_id', $requestId)->where('status', 6)->first()) {
-            $concludeDate = RequestStatus::where('request_id', $requestId)->where('status', 6)->first()->created_at;
+        try {
+            $id = Crypt::decrypt($id);
+            $email = request_Client::where('id', $id)->pluck('email')->first();
+            $data = request_Client::with(['request'])->where('email', $email)->get();
+
+            $requestId = request_Client::where('id', $id)->first()->request_id;
+            $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
+            $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
+
+            return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
+        } catch (\Throwable $th) {
+            return view('errors.404');;
         }
-        $requestData = RequestTable::where('id', $requestId)->first();
-        return view('adminPage.records.patientRecords', compact('data', 'requestData', 'status', 'documentCount', 'isFinalize', 'concludeDate'));
     }
 
     // Display patient records page
@@ -1103,7 +1113,11 @@ class AdminController extends Controller
 
         if ($offDutyPhysicians) {
             foreach ($offDutyPhysicians as $offDutyPhysician) {
-                Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+                try {
+                    Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+                } catch (\Throwable $th) {
+                    return view('errors.500');
+                }
             }
             return redirect()->back()->with('message', 'message is sent');
         } else {

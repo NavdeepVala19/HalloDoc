@@ -52,6 +52,9 @@
     {{-- Encounter Form Finalized (Success Message) --}}
     @include('alertMessages.formFinalizedSuccess')
 
+    {{-- Send Mail to patient --}}
+    @include('popup.sendMail')
+
     <nav>
         <div class="nav nav-tabs " id="nav-tab">
             <a href="{{ route('provider.status', ['status' => 'new']) }}" class="nav-link" id="nav-new-tab">
@@ -170,8 +173,19 @@
                         @endif
                         @foreach ($cases as $case)
                             <tr class="type-{{ $case->request_type_id }}">
-                                <td>{{ $case->requestClient->first_name }}
-                                    {{ $case->requestClient->last_name }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span>
+                                            {{ $case->requestClient->first_name }}
+                                            {{ $case->requestClient->last_name }}
+                                        </span>
+                                        <button class="send-mail-btn" data-requestid="{{ $case->id }}"
+                                            data-name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"
+                                            data-email={{ $case->requestClient->email }}>
+                                            <i class="bi bi-envelope"></i>
+                                        </button>
+                                    </div>
+                                </td>
                                 <td class="mobile-column">
                                     @if ($case->request_type_id == 1)
                                         <div class="listing-mobile-container">
@@ -202,7 +216,8 @@
                                     <div class="action-container">
                                         <button class="table-btn action-btn conclude-action-btn">Actions</button>
                                         <div class="action-menu">
-                                            <a href="{{ route('provider.conclude.care.view', Crypt::encrypt($case->id)) }}"><i
+                                            <a
+                                                href="{{ route('provider.conclude.care.view', Crypt::encrypt($case->id)) }}"><i
                                                     class="bi bi-heart-pulse me-2 ms-3"></i>Conclude Care</a>
                                             <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}"><i
                                                     class="bi bi-journal-arrow-down me-2 ms-3"></i>View Case</a>
@@ -251,13 +266,13 @@
                                     </span>
                                 @elseif ($case->request_type_id == 3)
                                     <span>
-                                        Business
-                                        <i class="bi bi-circle-fill ms-1 red"></i>
+                                        Concierge
+                                        <i class="bi bi-circle-fill ms-1 blue"></i>
                                     </span>
                                 @elseif ($case->request_type_id == 4)
                                     <span>
-                                        Concierge
-                                        <i class="bi bi-circle-fill ms-1 blue"></i>
+                                        Business
+                                        <i class="bi bi-circle-fill ms-1 red"></i>
                                     </span>
                                 @endif
                             </div>
@@ -272,7 +287,8 @@
                         </div>
                     </div>
                     <div class="more-info ">
-                        <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View Case</a>
+                        <a href="{{ route('provider.view.case', Crypt::encrypt($case->id)) }}" class="view-btn">View
+                            Case</a>
                         <div>
                             <span>
                                 <i class="bi bi-envelope"></i> Email :
