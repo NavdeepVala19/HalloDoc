@@ -348,7 +348,7 @@ class AdminController extends Controller
             ]
         );
 
-        return redirect()->back()->with('linkSent', "Link Sent Successfully!");
+        return redirect()->back()->with('successMessage', "Link Sent Successfully!");
     }
     // -------------------- 2. Create Request -------------------------
     // -------------------- 3. Export ---------------------------------
@@ -723,15 +723,19 @@ class AdminController extends Controller
     }
     public function patientRecordsView($id = null)
     {
-        $email = request_Client::where('id', $id)->pluck('email')->first();
-        $data = request_Client::with(['request'])->where('email', $email)->get();
-        // $data = RequestTable::where('email', $email)->get();
+        try {
+            $id = Crypt::decrypt($id);
+            $email = request_Client::where('id', $id)->pluck('email')->first();
+            $data = request_Client::with(['request'])->where('email', $email)->get();
 
-        $requestId = request_Client::where('id', $id)->first()->request_id;
-        $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
-        $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
+            $requestId = request_Client::where('id', $id)->first()->request_id;
+            $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
+            $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
 
-        return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
+            return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
+        } catch (\Throwable $th) {
+            return view('errors.404');;
+        }
     }
 
     // Display patient records page

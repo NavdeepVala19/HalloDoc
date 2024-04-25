@@ -101,7 +101,7 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                        <select name="refills" class="form-select" id="floatingSelect" aria-label="Floating label select example">
                             <option selected disabled>Not Required</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>

@@ -61,9 +61,9 @@ class RequestTable extends Model
         return $this->belongsTo(RequestStatus::class);
     }
 
-    public function requestStatusTable()
+    public function statusConclude()
     {
-        return $this->hasMany(RequestStatus::class, 'request_id');
+        return $this->hasOne(RequestStatus::class, 'request_id')->where('status', 6)->orderBy('id', 'desc');
     }
 
     // public function status()

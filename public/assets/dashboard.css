@@ -204,6 +204,19 @@
     color: var(--vip-color);
 }
 
+.send-mail-btn {
+    border: 1px solid #fff;
+    background: none;
+    border-radius: 5px;
+    font-size: 18px !important;
+    color: #fff;
+}
+
+.send-mail-btn:hover {
+    border: 1px solid #000;
+    color: #000;
+}
+
 .main {
     margin: 20px 50px;
 }
@@ -233,6 +246,16 @@
     text-wrap: nowrap;
 }
 
+.send-mail {
+    display: none;
+}
+
+.displayPatientName {
+    color: var(--blue);
+}
+.displayPatientEmail {
+    color: grey;
+}
 /******************************* Encounter - Active listing Page **************************************/
 .encounter {
     display: none;

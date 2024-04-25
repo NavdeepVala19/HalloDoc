@@ -43,6 +43,7 @@
 @endsection
 
 @section('content')
+    @include('loading')
     {{-- Encounter Form Changes Saved --}}
     @if (session('encounterChangesSaved'))
         <div class="alert alert-success popup-message ">

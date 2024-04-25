@@ -86,11 +86,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @foreach ($record->request->requestStatusTable as $requestStatus)
-                                            @if ($requestStatus->status == 6)
-                                                {{ \Carbon\Carbon::parse($requestStatus->created_at)->format('d/m/Y') }}
-                                            @endif
-                                        @endforeach
+                                        @if ($record->request->statusConclude)
+                                            {{ \Carbon\Carbon::parse($record->request->statusConclude->created_at)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                     <td>
                                         @if ($record->request->statusTable)
@@ -98,8 +98,8 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($isFinalize)
-                                            <a href="{{ route('download.encounter.form', $status->request_id) }}"
+                                        @if (!empty($record->request->medicalReport->is_finalize))
+                                            <a href="{{ route('download.encounter.form', $record->request->id) }}"
                                                 class="primary-empty">View</a>
                                         @else
                                             -

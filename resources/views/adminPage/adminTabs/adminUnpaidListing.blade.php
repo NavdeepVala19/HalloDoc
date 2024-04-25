@@ -25,6 +25,9 @@ patient's email address and phone number. Once the patient accepts the agreement
     {{-- Request DTY Support pop-up ->  --}}
     @include('popup.requestDTYSupport')
 
+    {{-- Send Mail to patient --}}
+    @include('popup.sendMail')
+
     {{-- Case Cancelled Successfully --}}
     @if (session('caseClosed'))
         <div class="alert alert-success popup-message ">
@@ -204,8 +207,17 @@ patient's email address and phone number. Once the patient accepts the agreement
                             @if (!empty($case->requestClient))
                                 <tr class="type-{{ $case->request_type_id }}">
                                     <td>
-                                        {{ $case->requestClient->first_name }}
-                                        {{ $case->requestClient->last_name }}
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span>
+                                                {{ $case->requestClient->first_name }}
+                                                {{ $case->requestClient->last_name }}
+                                            </span>
+                                            <button class="send-mail-btn" data-requestid="{{ $case->id }}"
+                                                data-name="{{ $case->requestClient->first_name }} {{ $case->requestClient->last_name }}"
+                                                data-email={{ $case->requestClient->email }}>
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                     <td>
                                         @if ($case->provider)
@@ -290,13 +302,13 @@ patient's email address and phone number. Once the patient accepts the agreement
                                         </span>
                                     @elseif ($case->request_type_id == 3)
                                         <span>
-                                            Business
-                                            <i class="bi bi-circle-fill ms-1 red"></i>
+                                            Concierge
+                                            <i class="bi bi-circle-fill ms-1 blue"></i>
                                         </span>
                                     @elseif ($case->request_type_id == 4)
                                         <span>
-                                            Concierge
-                                            <i class="bi bi-circle-fill ms-1 blue"></i>
+                                            Business
+                                            <i class="bi bi-circle-fill ms-1 red"></i>
                                         </span>
                                     @endif
                                 </div>
@@ -332,10 +344,10 @@ patient's email address and phone number. Once the patient accepts the agreement
                                 <span>
                                     <i class="bi bi-person-circle"></i> Physician : Dr.
                                     @if ($case->provider)
-                                            {{ $case->provider->first_name }} {{ $case->provider->last_name }}
-                                        @else
-                                            -
-                                        @endif
+                                        {{ $case->provider->first_name }} {{ $case->provider->last_name }}
+                                    @else
+                                        -
+                                    @endif
                                 </span>
                                 <div class="grid-2-listing ">
                                     <a href="{{ route('admin.view.note', Crypt::encrypt($case->id)) }}"

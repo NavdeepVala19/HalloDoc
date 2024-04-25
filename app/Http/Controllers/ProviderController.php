@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 // Different Models used in these Controller
 use App\Models\User;
@@ -11,28 +11,29 @@ use App\Models\users;
 use App\Mail\SendMail;
 use App\Models\Regions;
 use App\Models\SMSLogs;
+use Twilio\Rest\Client;
 use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
+use App\Models\UserRoles;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
-use App\Models\request_Client;
-use App\Models\PhysicianRegion;
 
 // For Date Formatting
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 // For sending Mails
-use Illuminate\Support\Facades\Mail;
 use App\Mail\ProviderRequest;
 use App\Mail\sendEmailAddress;
+use App\Models\request_Client;
 
 // For Sending SMS
-use Twilio\Rest\Client;
+use App\Models\PhysicianRegion;
 
 // Common facades used for different functionalities
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class ProviderController extends Controller
@@ -270,10 +271,13 @@ class ProviderController extends Controller
         ]);
 
         // check if email already exists in users table
-        $isEmailStored = users::where('email', $request->email)->pluck('email');
+        $isEmailStored = users::where('email', $request->email)->first();
+
+        $user = Auth::user();
+        $providerId = Provider::where('user_id', $user->id)->first()->id;
 
         // If email doesn't exist, store email, username, phone_number in users table
-        if ($request->email != $isEmailStored) {
+        if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -293,21 +297,36 @@ class ProviderController extends Controller
             $requestUsers->state = $request->state;
             $requestUsers->zipcode = $request->zipcode;
             $requestUsers->save();
-        }
 
-        $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->first()->id;
-        // Store request details in requestTable table
-        $requestTable = new requestTable();
-        $requestTable->status = 3;
-        $requestTable->physician_id = $providerId;
-        $requestTable->user_id = $requestEmail->id;
-        $requestTable->request_type_id = $request->request_type_id;
-        $requestTable->first_name = $request->first_name;
-        $requestTable->last_name = $request->last_name;
-        $requestTable->email = $request->email;
-        $requestTable->phone_number = $request->phone_number;
-        $requestTable->save();
+            $userRolesEntry = new UserRoles();
+            $userRolesEntry->role_id = 3;
+            $userRolesEntry->user_id = $requestEmail->id;
+            $userRolesEntry->save();
+
+            // Store request details in requestTable table
+            $requestTable = new requestTable();
+            $requestTable->status = 3;
+            $requestTable->physician_id = $providerId;
+            $requestTable->user_id = $requestEmail->id;
+            $requestTable->request_type_id = $request->request_type_id;
+            $requestTable->first_name = $request->first_name;
+            $requestTable->last_name = $request->last_name;
+            $requestTable->email = $request->email;
+            $requestTable->phone_number = $request->phone_number;
+            $requestTable->save();
+        } else {
+            // Store request details in requestTable table
+            $requestTable = new requestTable();
+            $requestTable->status = 3;
+            $requestTable->physician_id = $providerId;
+            $requestTable->user_id = $isEmailStored->id;
+            $requestTable->request_type_id = $request->request_type_id;
+            $requestTable->first_name = $request->first_name;
+            $requestTable->last_name = $request->last_name;
+            $requestTable->email = $request->email;
+            $requestTable->phone_number = $request->phone_number;
+            $requestTable->save();
+        }
 
         // Store client details in request_Client table
         $requestClient = new request_Client();
@@ -346,37 +365,40 @@ class ProviderController extends Controller
             $requestTable->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        // Send email to user
-        $emailAddress = $request->email;
+        if ($isEmailStored == null) {
+            // Send email to user
+            $emailAddress = $request->email;
 
-        try {
-            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
-        } catch (\Throwable $th) {
-            return view('errors.500');
+            try {
+                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+
+            // Log email in EmailLog table
+            $user = Auth::user();
+            $providerId = Provider::where('user_id', $user->id)->first()->id;
+
+            EmailLog::create([
+                'role_id' => 3,
+                'request_id' =>  $requestTable->id,
+                'recipient_name' => $request->first_name . " " . $request->last_name,
+                'confirmation_number' => $confirmationNumber,
+                'provider_id' => $providerId,
+                'is_email_sent' => 1,
+                'sent_tries' => 1,
+                // 'action' => 5,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'email_template' => 'Create Account With Provided Email',
+                'subject_name' => 'Create account by clicking on below link with below email address',
+                'email' => $request->email,
+            ]);
+            return redirect()->route('provider.status', 'pending')->with('requestCreated', 'Email for create account is sent & request created successfully!');
+        } else {
+            // Redirect to provider status page with success message
+            return redirect()->route("provider.status", 'pending')->with('requestCreated', "Request Created Successfully!");
         }
-
-        // Log email in EmailLog table
-        $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->first()->id;
-
-        EmailLog::create([
-            'role_id' => 3,
-            'request_id' =>  $requestTable->id,
-            'recipient_name' => $request->first_name . " " . $request->last_name,
-            'confirmation_number' => $confirmationNumber,
-            'provider_id' => $providerId,
-            'is_email_sent' => 1,
-            'sent_tries' => 1,
-            // 'action' => 5,
-            'create_date' => now(),
-            'sent_date' => now(),
-            'email_template' => 'Create Account With Provided Email',
-            'subject_name' => 'Create account by clicking on below link with below email address',
-            'email' => $request->email,
-        ]);
-
-        // Redirect to provider status page with success message
-        return redirect()->route("provider.status", 'pending')->withInput()->with('requestCreated', "Request Created Successfully!");
     }
 
     /**

@@ -20,6 +20,7 @@ use App\Models\RequestTable;
 use App\Models\request_Client;
 use App\Models\RequestWiseFile;
 use App\Mail\DocsAttachmentMail;
+use App\Mail\SendMailPatient;
 use App\Models\HealthProfessional;
 
 class CommonOperationController extends Controller
@@ -35,8 +36,12 @@ class CommonOperationController extends Controller
         try {
             // Retrieve the file details from the database
             $file = RequestWiseFile::where('id', $id)->first();
-            // Generate the file path
-            $path = (public_path() . '/storage/' . $file->file_name);
+            if ($file->is_finalize) {
+                $path = storage_path('app/encounterForm/' . $file->file_name);
+            } else {
+                // Generate the file path
+                $path = (public_path() . '/storage/' . $file->file_name);
+            }
 
             return response()->download($path);
         } catch (\Throwable $th) {
@@ -149,6 +154,53 @@ class CommonOperationController extends Controller
             }
 
             return redirect()->back()->with('mailDocsSent', 'Mail of all the selected documents is sent!');
+        }
+    }
+
+    public function sendMailPatient(Request $request)
+    {
+        $requestClient = request_Client::where('request_id', $request->requestId)->first();
+        try {
+
+            $user = Auth::user();
+            $provider = Provider::where('user_id', $user->id)->first();
+
+            $providerId = DB::raw("NULL");
+            $adminId = DB::raw("NULL");
+            $message = $request->message;
+
+            if ($provider) {
+                $roleId = 2;
+                $providerId = Provider::where('user_id', $user->id)->first()->id;
+                $provider = Provider::where('user_id', $user->id)->first();
+                Mail::to($requestClient->email)->send(new SendMailPatient($requestClient, $provider, $message));
+            } else {
+                $roleId = 1;
+                $adminId = Admin::where('user_id', $user->id)->first()->id;
+                $admin = Admin::where('user_id', $user->id)->first();
+                Mail::to($requestClient->email)->send(new SendMailPatient($requestClient, $admin, $message));
+            }
+
+            EmailLog::create([
+                'role_id' => $roleId,
+                'request_id' => $request->request_id,
+                'admin_id' => $adminId,
+                'provider_id' => $providerId,
+                'recipient_name' => $requestClient->first_name . " " . $requestClient->last_name,
+                'email_template' => 'sendMailPatient.blade.php',
+                'subject_name' => 'Send Mail to patient',
+                'email' => $requestClient->email,
+                'confirmation_number' => $requestClient->request->confirmation_no,
+                'create_date' => now(),
+                'sent_date' => now(),
+                'is_email_sent' => 1,
+                'sent_tries' => 1,
+                // 'action' => 4,
+            ]);
+
+            return redirect()->back()->with('successMessage', 'Mail sent to patient successfully!');
+        } catch (\Throwable $th) {
+            return view('errors.500');
         }
     }
 

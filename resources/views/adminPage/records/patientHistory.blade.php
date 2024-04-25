@@ -101,7 +101,7 @@
                                 <td>{{ $patient->email }}</td>
                                 <td>{{ $patient->phone_number }}</td>
                                 <td>{{ $patient->street }}, {{ $patient->city }}, {{ $patient->state }}</td>
-                                <td><a href="{{ route('patient.records', $patient->id) }}"
+                                <td><a href="{{ route('patient.records', Crypt::encrypt($patient->id)) }}"
                                         class="primary-empty">Explore</a></td>
                             </tr>
                         @endforeach

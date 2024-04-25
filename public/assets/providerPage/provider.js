@@ -4,6 +4,21 @@ $(document).ready(function () {
         $(".action-menu").hide();
     });
 
+    $(document).on("click", ".send-mail-btn", function (event) {
+        $(".send-mail").show();
+        $(".overlay").show();
+
+        let requestId = $(this).data("requestid");
+        let name = $(this).data("name");
+        let email = $(this).data("email");
+
+        console.log(requestId)
+
+        $(".requestId").val(requestId);
+        $(".displayPatientName").html(name);
+        $(".displayPatientEmail").html("(" + email + ")");
+    });
+
     // Showing action menu -> when clicked on action-btn
     $(document).on("click", ".action-btn", function (event) {
         event.stopPropagation();
@@ -120,7 +135,7 @@ $(document).ready(function () {
     });
 
     // For Send Aggrement Pop-up in pending listing page
-    $(document).on("click",".send-agreement-btn", function () {
+    $(document).on("click", ".send-agreement-btn", function () {
         $(".send-agreement").show();
         $(".overlay").show();
         $(".send-agreement-id").val($(this).data("id"));

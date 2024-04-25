@@ -90,7 +90,7 @@
                                     <input class="form-check-input master-checkbox" name="" type="checkbox"
                                         value="" id="flexCheckDefault">
                                 </th>
-                                <th>Staff <i class="bi bi-arrow-up"></i></th>
+                                <th>Staff</th>
                                 <th>Day</th>
                                 <th>Time</th>
                                 <th>Region</th>

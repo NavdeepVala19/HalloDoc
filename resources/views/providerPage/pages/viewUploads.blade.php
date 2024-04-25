@@ -126,8 +126,11 @@
                                         </td>
                                         <td>
                                             <i class="bi bi-filetype-doc doc-symbol"></i>
-                                            {{-- {{ $document->file_name }} --}}
-                                            {{ substr($document->file_name, 14) }}
+                                            @if ($document->is_finalize)
+                                                {{ $document->file_name }}
+                                            @else
+                                                {{ substr($document->file_name, 14) }}
+                                            @endif
                                         </td>
                                         <td>{{ $document->created_at }}</td>
                                         <td class="d-flex align-items-center justify-content-center gap-2">

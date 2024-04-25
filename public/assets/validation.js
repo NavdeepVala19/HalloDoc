@@ -192,6 +192,31 @@ $(document).ready(function () {
         };
     }
 
+    // Admin/Provider send mail Pop-Up Validation
+    $("#sendMailForm").validate({
+        rules: {
+            message: noteRules(),
+        },
+        messages: {
+            message: noteMessages("Message"),
+        },
+        errorPlacement: function (error, element) {
+            let errorBox = $("<div class='text-danger'></div>");
+            errorBox.append(error);
+            element.closest(".form-floating").append(errorBox);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            $(".loader").fadeIn("slow"); // Show spinner on valid submission
+            form.submit();
+        },
+    });
+
     // Provider Create Request Client Side Validation
     $("#providerCreateRequestForm").validate({
         rules: {
@@ -590,7 +615,7 @@ $(document).ready(function () {
                 required: false,
                 minlength: 5,
                 maxlength: 50,
-                notes: true,
+                alphaSpace: true,
             },
             heent: {
                 required: false,
@@ -1248,7 +1273,7 @@ $(document).ready(function () {
         rules: {
             password: {
                 required: true,
-                minlength: 5,
+                minlength: 8,
                 maxlength: 100,
             },
         },
