@@ -1,64 +1,97 @@
 $(document).ready(function () {
 
-    //* enable and disable the adminprofile page fields 
-        $("#admin-info-cancel-btn").on("click", function () {
-            $(".admin_first_name").attr("disabled", true);
-            $(".admin_last_name").attr("disabled", true);
-            $(".admin_email").attr("disabled", true);
-            $(".admin_confirm_email").attr("disabled", true);
-            $(".phone").attr("disabled", true);
 
-            $("#adminEditBtn1").show();
-            $(".admin-info-btns").hide();
-        });
+    // ** Fetching regions from regions table **
+    $.ajax({
+        url: "/admin-new",
+        type: "GET",
+        success: function (data) {
+            data.forEach(function (region) {
+                var current_value = $("#listing_state_admin_account").val();
+                if (current_value) {
+                    if (region.id != current_value) {
+                        $("#listing_state_admin_account").append(
+                            '<option value="' +
+                                region.id +
+                                '">' +
+                                region.region_name +
+                                "</option>"
+                        );
+                    }
+                } else {
+                    $("#listing_state_admin_account").append(
+                        '<option value="' +
+                            region.id +
+                            '">' +
+                            region.region_name +
+                            "</option>"
+                    );
+                }
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+    });
+    // ***
 
-        $("#admin-mail-cancel-btn").on("click", function () {
-            $(".admin_add1").attr("disabled",true);
-            $(".admin_add2").attr("disabled", true);
-            $(".city").attr("disabled", true);
-            $(".admin_state").attr("disabled", true);
-            $(".admin_zipcode").attr("disabled", true);
-            $(".admin_alt_phone").attr("disabled", true);
+    //* enable and disable the adminprofile page fields
+    $("#admin-info-cancel-btn").on("click", function () {
+        $(".admin_first_name").attr("disabled", true);
+        $(".admin_last_name").attr("disabled", true);
+        $(".admin_email").attr("disabled", true);
+        $(".admin_confirm_email").attr("disabled", true);
+        $(".phone").attr("disabled", true);
 
-            $("#adminEditBtn2").show();
-            $(".admin-mail-info-btns").hide();
-        });
+        $("#adminEditBtn1").show();
+        $(".admin-info-btns").hide();
+    });
 
-        $("#adminAccEditBtn").on("click", function () {
-            $(".admin_user_name").removeAttr("disabled");
-            $("#status-select").removeAttr("disabled");
-            $("#listing_role_admin_Account").removeAttr("disabled");
+    $("#admin-mail-cancel-btn").on("click", function () {
+        $(".admin_add1").attr("disabled", true);
+        $(".admin_add2").attr("disabled", true);
+        $(".city").attr("disabled", true);
+        $(".admin_state").attr("disabled", true);
+        $(".admin_zipcode").attr("disabled", true);
+        $(".admin_alt_phone").attr("disabled", true);
 
-            $("#adminAccEditBtn").hide();
-            $(".admin-acc-btns").show();
-        });
+        $("#adminEditBtn2").show();
+        $(".admin-mail-info-btns").hide();
+    });
 
-        $("#adminEditBtn1").on("click", function () {
-            $(".admin_first_name").removeAttr("disabled");
-            $(".admin_last_name").removeAttr("disabled");
-            $(".admin_email").removeAttr("disabled");
-            $(".admin_confirm_email").removeAttr("disabled");
-            $(".phone").removeAttr("disabled");
+    $("#adminAccEditBtn").on("click", function () {
+        $(".admin_user_name").removeAttr("disabled");
+        $("#status-select").removeAttr("disabled");
+        $("#listing_role_admin_Account").removeAttr("disabled");
 
-            $("#adminEditBtn1").hide();
-            $(".admin-info-btns").show();
-        });
+        $("#adminAccEditBtn").hide();
+        $(".admin-acc-btns").show();
+    });
 
-        $("#adminEditBtn2").on("click", function () {
-            $(".admin_add1").removeAttr("disabled");
-            $(".admin_add2").removeAttr("disabled");
-            $(".city").removeAttr("disabled");
-            $(".admin_state").removeAttr("disabled");
-            $(".admin_zipcode").removeAttr("disabled");
-            $(".admin_alt_phone").removeAttr("disabled");
-            $("#listing_state_admin_account").removeAttr("disabled");
+    $("#adminEditBtn1").on("click", function () {
+        $(".admin_first_name").removeAttr("disabled");
+        $(".admin_last_name").removeAttr("disabled");
+        $(".admin_email").removeAttr("disabled");
+        $(".admin_confirm_email").removeAttr("disabled");
+        $(".phone").removeAttr("disabled");
 
-            $("#adminEditBtn2").hide();
-            $(".admin-mail-info-btns").show();
-        });
+        $("#adminEditBtn1").hide();
+        $(".admin-info-btns").show();
+    });
 
+    $("#adminEditBtn2").on("click", function () {
+        $(".admin_add1").removeAttr("disabled");
+        $(".admin_add2").removeAttr("disabled");
+        $(".city").removeAttr("disabled");
+        $(".admin_state").removeAttr("disabled");
+        $(".admin_zipcode").removeAttr("disabled");
+        $(".admin_alt_phone").removeAttr("disabled");
+        $("#listing_state_admin_account").removeAttr("disabled");
 
-    
+        $("#adminEditBtn2").hide();
+        $(".admin-mail-info-btns").show();
+    });
+
     // * client side validation of admin profile edit
     $.validator.addMethod(
         "phoneUS",
@@ -73,22 +106,29 @@ $(document).ready(function () {
         "Please enter a valid phone number."
     );
 
+    $.validator.addMethod(
+        "stateCheck",
+        function (value, element) {
+            return value !== "";
+        },
+        "Please select a state."
+    );
 
-   $.validator.addMethod(
-    "city",
-    function (value, element) {
-        return /^[a-zA-Z ]+?$/.test(value);
-    },
-    "Please enter a valid city name with alphabets."
-);
+    $.validator.addMethod(
+        "city",
+        function (value, element) {
+            return /^[a-zA-Z ]+?$/.test(value);
+        },
+        "Please enter a valid city name with alphabets."
+    );
 
-$.validator.addMethod(
-    "state",
-    function (value, element) {
-        return /^[a-zA-Z ]+?$/.test(value);
-    },
-    "Please enter a valid state name with alphabets."
-);
+    $.validator.addMethod(
+        "state",
+        function (value, element) {
+            return /^[a-zA-Z ]+?$/.test(value);
+        },
+        "Please enter a valid state name with alphabets."
+    );
 
     $.validator.addMethod(
         "zipcode",
@@ -139,7 +179,6 @@ $.validator.addMethod(
         "Please enter a date between {0} and {1}."
     );
 
- 
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -148,7 +187,6 @@ $.validator.addMethod(
         "Please enter a only alphabets and numbers in street name. "
     );
 
-    
     $.validator.addMethod(
         "lettersLastName",
         function (value, element) {
@@ -161,8 +199,8 @@ $.validator.addMethod(
         rules: {
             password: {
                 required: true,
-                minlength: 3,
-                maxlength: 50,
+                minlength: 8,
+                maxlength: 30,
             },
         },
         messages: {
@@ -173,7 +211,7 @@ $.validator.addMethod(
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest(".errorMsg").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -183,14 +221,14 @@ $.validator.addMethod(
         },
     });
 
-       $.validator.addMethod(
-           "phoneIndia",
-           function (value, element) {
-               return this.optional(element) || iti.isValidNumber();
-           },
-           "Please enter a valid phone number."
-       );
-    
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     $("#adminEditProfileForm2").validate({
         rules: {
             first_name: {
@@ -213,9 +251,7 @@ $.validator.addMethod(
             },
             confirm_email: {
                 required: true,
-                minlength: 3,
-                maxlength: 20,
-                emailAddress: true,
+                equalTo: ".admin_email",
             },
             phone_number: {
                 required: true,
@@ -234,6 +270,7 @@ $.validator.addMethod(
             },
             confirm_email: {
                 required: "Please enter a confirm email",
+                equalTo: "Confirm email and email both must be same",
             },
             phone_number: {
                 required: "Please enter a valid phone_number",
@@ -242,7 +279,7 @@ $.validator.addMethod(
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest(".errorMsg").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");
@@ -276,7 +313,12 @@ $.validator.addMethod(
             },
             alt_mobile: {
                 required: true,
-                phoneUS: true,
+                minlength: 10,
+                maxlength: 10,
+            },
+            select_state: {
+                required: true,
+                stateCheck: true,
             },
         },
         messages: {
@@ -296,7 +338,7 @@ $.validator.addMethod(
             },
             zip: {
                 required: "Please enter a valid zipcode",
-                min: "Please enter positive number with 6 digits",
+                min: "Please enter positive 6 digits zipcode",
             },
             alt_mobile: {
                 required: "Please enter a valid alt_phone_number",
@@ -305,7 +347,7 @@ $.validator.addMethod(
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest(".form-floating").append(error);
+            element.closest(".errorMsg").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

@@ -46,6 +46,14 @@
 @endsection
 
 @section('content')
+    @if (session('message'))
+         <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('message') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
 <div class="m-5 spacing">
 
     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -115,10 +123,9 @@
                     <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{old('email' ,request()->input('email'))}}">
                     <label for="floatingInput">Email</label>
                 </div>
-
-                <input type="text" name="phone_number" class="form-control phone-number" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
+                <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
-            <div class=" mt-4 d-flex justify-content-end gap-2">
+            <div class="mt-4 d-flex justify-content-end gap-2">
                 <button class="primary-fill" type="submit">
                     Search
                 </button>
@@ -211,11 +218,8 @@
                     @endforeach
                 </tbody>
             </table>
-
             {{-- This ensures that the search criteria are preserved in the pagination links. --}}
             {{ $combinedData->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
-
-
         </div>
 
 
@@ -225,7 +229,6 @@
                 <div class="d-flex justify-content-center align-items-center">
                     <div class="no-record">No Records Found</div>
                 </div>
-
                 @endif
                 @foreach ( $combinedData as $data )
                 <div class="main-section">
@@ -265,7 +268,6 @@
                     <span><i class="bi bi-geo-alt"></i>zipcode : {{$data->zipcode}}</span>
                     <br>
                     <span><i class="bi bi-check2"></i>Request Status :
-
                         @if ($data->status ==1)
                         Unassigned
                         @elseif ($data->status ==2)
@@ -309,14 +311,12 @@
                 </div>
                 @endforeach
             </div>
-
+            {{-- {{ $combinedData->links('pagination::bootstrap-5') }} --}}
             {{ $combinedData->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
 
         </div>
     </div>
 </div>
-
-
 
 @endsection
 

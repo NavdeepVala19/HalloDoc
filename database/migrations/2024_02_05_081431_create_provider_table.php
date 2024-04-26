@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('email');
             $table->string('mobile')->nullable();
-            $table->integer('medical_license')->nullable();
+            $table->unsignedBigInteger('medical_license')->nullable();
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
             $table->string('city')->nullable();

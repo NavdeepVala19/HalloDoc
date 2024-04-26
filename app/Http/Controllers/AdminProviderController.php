@@ -230,10 +230,10 @@ class AdminProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required',
-            'medical_license' => 'required|alpha_num|max:20|min:3',
-            'npi_number' => 'required|numeric|min:3|max_digits:7',
-            'address1' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9-, ]+$/',
+            'phone_number' => 'required|min_digits:10|max_digits:10',
+            'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
+            'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
+            'address1' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9-, ]+$/',
             'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
@@ -247,6 +247,7 @@ class AdminProviderController extends Controller
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'non_disclosure_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
         ]);
+        dd("here");
 
         // store data of providers in users table
 
@@ -422,8 +423,8 @@ class AdminProviderController extends Controller
             'last_name' => 'required|min:3|max:15|alpha',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
-            'medical_license' => 'required|numeric|max_digits:10|min:3',
-            'npi_number' => 'required|numeric|min:3|max_digits:10',
+            'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
+            'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
         ]);
         
         $getProviderInformation = Provider::where('id', $id)->first();
@@ -447,7 +448,6 @@ class AdminProviderController extends Controller
         $updateProviderInfoUsers->save();
 
         $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
-        dd($updateProviderDataAllUsers);
 
         if (empty($updateProviderDataAllUsers))
         {
@@ -468,8 +468,8 @@ class AdminProviderController extends Controller
     public function providerMailInfoUpdate(Request $request, $id)
     {
         $request->validate([
-            'address1' => 'required|min:2|max:40',
-            'address2' => 'required|min:2|max:40',
+            'address1' => 'required|min:2|max:50',
+            'address2' => 'required|min:2|max:30',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
             'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
@@ -579,13 +579,14 @@ class AdminProviderController extends Controller
     // * delete provider account
     public function deleteProviderAccount($id)
     {
+        // dd($id);
         // soft delete in providers table
         $ProviderInfo = Provider::with('users')->where('id', $id)->first();
-        $ProviderInfo->delete();
-
+        
         //Soft delete in allusers table
         $providerDataAllUserDelete = allusers::where('user_id', $ProviderInfo->user_id)->first();
         $providerDataAllUserDelete->delete();
+        $ProviderInfo->delete();
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
     }

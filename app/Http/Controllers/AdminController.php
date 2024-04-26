@@ -739,7 +739,8 @@ class AdminController extends Controller
     // Records Page
     public function searchRecordsView()
     {
-        // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestStatus and Status
+          // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
+
         $combinedData = request_Client::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
@@ -760,15 +761,12 @@ class AdminController extends Controller
         ])
             ->join('request', 'request.id', '=', 'request_client.request_id')
             ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
-            ->leftJoin('request_status', 'request_status.request_id', '=', 'request_client.request_id')
             ->leftJoin('provider', function ($join) {
                 $join->on('request.physician_id', '=', 'provider.id');
             })
             ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
             ->orderByDesc('id')
             ->paginate(10);
-
-        // dd($combinedData);   
 
         Session::forget('request_status');
         Session::forget('request_type');
@@ -781,7 +779,7 @@ class AdminController extends Controller
         // Retrieve pagination parameters from the request
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
-
+        
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
 
         $session = session([
@@ -872,9 +870,13 @@ class AdminController extends Controller
     public function downloadFilteredData(Request $request)
     {
         $data = $this->exportFilteredSearchRecord($request);
-        $export = new SearchRecordExport($data);
 
-        return Excel::download($export, 'filtered_data.xls');
+        if($data->get()->isEmpty()){
+            return back()->with('message', 'no records to export to Excel');
+        }else{
+            $export = new SearchRecordExport($data);   
+            return Excel::download($export, 'filtered_data.xls');
+        }
     }
 
     public function deleteSearchRecordData($id)
@@ -1140,7 +1142,7 @@ class AdminController extends Controller
             'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
-            'alt_mobile' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
+            'alt_mobile' => 'required|max_digits:10|min_digits:10',
             'role' => 'required',
             'state' => 'required',
         ]);
@@ -1395,9 +1397,15 @@ class AdminController extends Controller
             $exportNewData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        $exportNew = new NewStatusExport($exportNewData);
-        return Excel::download($exportNew, 'NewData.xls');
+        if($exportNewData->get()->isEmpty()){
+            return back()->with('message', 'no cases found to export in Excel');
+        }else{
+            $exportNew = new NewStatusExport($exportNewData);
+            return Excel::download($exportNew, 'NewData.xls');
+        }
+
     }
+
     public function exportPending(Request $request)
     {
         $status = 'pending';
@@ -1412,8 +1420,13 @@ class AdminController extends Controller
             $exportPendingData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        $exportPending = new PendingStatusExport($exportPendingData);
-        return Excel::download($exportPending, 'PendingData.xls');
+        if ($exportPendingData->get()->isEmpty()) { 
+            return back()->with('message', 'no cases found to export in Excel');
+        } else {
+            $exportPending = new PendingStatusExport($exportPendingData);
+            return Excel::download($exportPending, 'PendingData.xls');
+        }
+
     }
 
     public function exportActive(Request $request)
@@ -1430,8 +1443,13 @@ class AdminController extends Controller
             $exportActiveData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        $exportActive = new ActiveStatusExport($exportActiveData);
-        return Excel::download($exportActive, 'ActiveData.xls');
+        if ($exportActiveData->get()->isEmpty()) {
+            return back()->with('message', 'no cases found to export in Excel');
+        } else {
+            $exportActive = new ActiveStatusExport($exportActiveData);
+            return Excel::download($exportActive, 'ActiveData.xls');
+        }
+
     }
 
     public function exportConclude(Request $request)
@@ -1448,8 +1466,13 @@ class AdminController extends Controller
             $exportConcludeData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        $exportConclude = new ConcludeStatusExport($exportConcludeData);
-        return Excel::download($exportConclude, 'ConcludeData.xls');
+        if ($exportConcludeData->get()->isEmpty()) {
+            return back()->with('message', 'no cases found to export in Excel');
+        } else {
+            $exportConclude = new ConcludeStatusExport($exportConcludeData);
+            return Excel::download($exportConclude, 'ConcludeData.xls');
+        }
+
     }
     public function exportToClose(Request $request)
     {
@@ -1465,8 +1488,14 @@ class AdminController extends Controller
             $exportToCloseData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        $exportToClose = new ToCloseStatusExport($exportToCloseData);
-        return Excel::download($exportToClose, 'ToCloseData.xls');
+        if ($exportToCloseData->get()->isEmpty()) {
+            return back()->with('message', 'no cases found to export in Excel');
+        } else {
+            $exportToClose = new ToCloseStatusExport($exportToCloseData);
+            return Excel::download($exportToClose, 'ToCloseData.xls');
+        }
+
+
     }
 
     public function exportUnpaid(Request $request)
@@ -1484,8 +1513,13 @@ class AdminController extends Controller
             $exportUnpaidData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
-        return Excel::download($exportUnpaid, 'UnPaidData.xls');
+        if ($exportUnpaidData->get()->isEmpty()) {
+            return back()->with('message', 'no cases found to export in Excel');
+        } else {
+            $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
+            return Excel::download($exportUnpaid, 'UnPaidData.xls');
+        }
+
     }
 
     // REMOVED FROM SRS
