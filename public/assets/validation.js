@@ -56,7 +56,7 @@ $(document).ready(function () {
             const regex = /^[a-zA-Z0-9 ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
-        "Only alpabets and spaces are allowed."
+        "Only alpabets, numbers and ,-_ are allowed."
     );
 
     // Only alphabets, Numbers & spaces allowed
@@ -1024,6 +1024,37 @@ $(document).ready(function () {
         },
     });
 
+    $("#concludeCareNotes").validate({
+        rules: {
+            providerNotes: {
+                required: false,
+                notes: true,
+                minlength: 5,
+                maxlength: 200,
+            },
+        },
+        messages: {
+            providerNotes: {
+                minlength: "Minimum 5 characters are required",
+                maxlength: "Maximum 200 characters allowed"
+            },
+        },
+        errorPlacement: function (error, element) {
+            let errorDiv = $("<div class='text-danger'></div>");
+            errorDiv.append(error);
+            element.closest(".form-floating").append(errorDiv);
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function (form) {
+            form.submit(); // Submit the form
+        },
+    });
+
     $(
         "#adminViewUploadOperationsForm, #providerViewUploadOperationsForm"
     ).validate({
@@ -1469,10 +1500,10 @@ $(document).ready(function () {
             shiftDate: {
                 required: "Shift Date is required to create shift",
             },
-            shiftTimeStart: {
+            shiftStartTime: {
                 required: "Shift Start Time is required",
             },
-            shiftTimeEnd: {
+            shiftEndTime: {
                 required: "Shift End Time is required.",
                 greaterThanStart:
                     "Shift End Time must be greater than Shift Start Time.",

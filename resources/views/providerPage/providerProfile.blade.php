@@ -124,11 +124,13 @@
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <input type="tel" name="phone_number" value="{{ $provider->mobile }}" class="form-control phone"
-                    id="telephone" disabled>
-                @error('phone_number')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
+                <div>
+                    <input type="tel" name="phone_number" value="{{ $provider->mobile }}"
+                        class="form-control phone" id="telephone" disabled>
+                    @error('phone_number')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="form-floating ">
                     <input type="text" name="medical_license" value="{{ $provider->medical_license }}"
@@ -140,7 +142,7 @@
                         id="floatingInput" placeholder="NPI Number" disabled>
                     <label for="floatingInput">NPI Number</label>
                 </div>
-                <div class="d-flex gap-4">
+                <span class="d-flex gap-2 flex-wrap">
                     @foreach ($regions as $region)
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="{{ $region->id }}"
@@ -153,7 +155,7 @@
                             </label>
                         </div>
                     @endforeach
-                </div>
+                </span>
             </div>
             <h3>Mailing & Billing Information</h3>
             <div class="grid-2">
