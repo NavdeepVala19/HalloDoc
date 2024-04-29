@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-floating" id="form-floating">
                         <textarea class="form-control note @error('symptoms') is-invalid @enderror" name='symptoms' placeholder="notes" id="floatingTextarea2" value="{{ old('symptoms') }}" style="height: 150px"></textarea>
-                        <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
+                        <label for="floatingTextarea2" class="symptoms-notes-label">Enter Brief Details of Symptoms(optional)</label>
                         @error('symptoms')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror

@@ -10,10 +10,48 @@
 @endsection
 
 @section('patientSiteContent')
+<<<<<<< HEAD
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h2 class="heading">User Profile</h2>
             <a href="{{ route('patientDashboardData') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+=======
+
+<div class="container form-container">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="heading">User Profile</h2>
+        <a href="{{ route('patientDashboardData') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+    </div>
+    {{-- Form Starts From Here --}}
+    <div class="section">
+        @csrf
+        <h3>General Information </h3>
+        <input type="hidden" name="email" value="{{Session::get('email')}}">
+        <div class="grid-2">
+            <div class="form-floating">
+                <input type="text" name="first_name" class="form-control first_name" id="floatingInput1" value="{{$getEmailData->first_name ? $getEmailData->first_name  : " " }}" disabled placeholder="First Name">
+                <label for="floatingInput1">First Name</label>
+                @error('first_name')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-floating">
+                <input type="text" name="last_name" class="form-control last_name" id="floatingInput2" value="{{$getEmailData->last_name ? $getEmailData->last_name : " " }}" disabled placeholder="Last Name">
+                <label for="floatingInput2">Last Name</label>
+                @error('last_name')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-floating">
+                <input type="date" class="form-control date_of_birth" id="floatingInput3" name="date_of_birth" placeholder="date of birth" disabled value="{{$getEmailData->date_of_birth ? $getEmailData->date_of_birth : " "}}">
+                <label for="floatingInput3">Date Of Birth</label>
+                @error('date_of_birth')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+>>>>>>> shivesh
         </div>
         {{-- Form Starts From Here --}}
         <div class="section">

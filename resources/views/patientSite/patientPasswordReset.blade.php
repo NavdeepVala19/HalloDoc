@@ -19,7 +19,7 @@
 
 
 <!-- main content -->
-<div class="container-fluid main-section w-45">
+<div class="container-fluid main-section w-45 patient-update-password">
     <div class="password-reset">
         <div class="details">
             <h1>Reset Password</h1>

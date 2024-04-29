@@ -899,10 +899,10 @@ class AdminController extends Controller
         $deleteRequestBusiness = RequestBusiness::where('request_id', $getRequestId)->forceDelete();
         $deleteRequestConcierge = RequestConcierge::where('request_id', $getRequestId)->forceDelete();
         $deleteBlockData = BlockRequest::where('request_id', $getRequestId)->forceDelete();
-        $deleteData = request_Client::where('id', $id)->forceDelete();
         $deleteRequestTableData = RequestTable::where('id', $getRequestId)->forceDelete();
+        $deleteData = request_Client::where('id', $id)->forceDelete();
 
-        return redirect()->back();
+        return redirect()->back()->with('message', 'record is permanently delete');
     }
 
     public function smsRecordsView()
@@ -1014,7 +1014,6 @@ class AdminController extends Controller
     public function updateBlockHistoryIsActive(Request $request)
     {
         $block = BlockRequest::find($request->blockId);
-
         $block->update(['is_active' => $request->is_active]);
     }
 
@@ -1114,18 +1113,24 @@ class AdminController extends Controller
 
         $requestMessage = $request->contact_msg;
 
-        if ($offDutyPhysicians) {
-            foreach ($offDutyPhysicians as $offDutyPhysician) {
-                try {
-                    Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
-                } catch (\Throwable $th) {
-                    return view('errors.500');
+        try {
+            if ($offDutyPhysicians) {
+                foreach ($offDutyPhysicians as $offDutyPhysician) {
+                    try {
+                        Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
+                    } catch (\Throwable $th) {
+                        return view('errors.500');
+                    }
                 }
+                return redirect()->back()->with('message', 'message is sent');
+            } else {
+                return redirect()->back()->with('message', 'No unschedule physician available!');
             }
-            return redirect()->back()->with('message', 'message is sent');
-        } else {
-            return redirect()->back()->with('message', 'No unschedule physician available!');
+        } catch (\Throwable $th) {
+            return view('errors.500');
         }
+
+    
     }
 
 

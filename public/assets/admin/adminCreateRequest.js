@@ -74,7 +74,7 @@ $(document).ready(function () {
             const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter alphabets."
+        "Please enter valid adminNote. adminNote should only contain alphabets, spaces,comma,dash,underscore and numbers."
     );
 
       $.validator.addMethod(
@@ -114,7 +114,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter a only alphabets and numbers in street name. "
+        "Please enter alphabets,dash,underscore,space and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -206,6 +206,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
+                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",
@@ -222,7 +223,8 @@ $(document).ready(function () {
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             adminNote: {
-                diseaseSymptoms: "Please enter alphabets.",
+                diseaseSymptoms:
+                    "Please enter valid adminNote. adminNote should only contain alphabets, spaces,comma,dash,underscore and numbers.",
                 maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
             date_of_birth: {

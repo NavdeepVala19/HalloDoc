@@ -219,7 +219,7 @@
                     </div>
 
                     <div class="provider-edit-form" style="height: 58px;">
-                        <input type="number" name="alt_phone_number" class="form-control phone alt-phone-provider @error('alt_phone_number') is-invalid @enderror" id="telephone" value="{{ $getProviderData->alt_phone }}" placeholder="Phone Number" disabled>
+                        <input type="number" name="alt_phone_number" class="form-control phone alt-phone-provider @error('alt_phone_number') is-invalid @enderror" id="telephone" value="{{ $getProviderData->alt_phone }}" placeholder="Phone Number" disabled min="0">
                         @error('alt_phone_number')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -295,7 +295,7 @@
                                 <tr class="border-bottom-table">
                                     <td>
                                         <div class="d-flex gap-2 align-items-center ">
-                                            <input class="form-check-input @error('independent_contract_check') is-invalid @enderror" type="checkbox" id="flexCheckDefault" @checked($getProviderData->IsAgreementDoc === 1)
+                                            <input class="form-check-input @error('independent_contract_check') is-invalid @enderror checkbox1" type="checkbox" id="flexCheckDefault" @checked($getProviderData->IsAgreementDoc === 1)
                                             name="independent_contract_check" value="1">
                                             <span class="ms-2">
                                                 Independent Contractor Agreement
@@ -303,10 +303,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="ms-4 btns provider-edit-form">
+                                        <div class=" btns provider-edit-form">
                                             <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> <span class="mobile-icons"> <i class="bi bi-cloud-arrow-up"></i></span> </label>
-                                             <input type="file" id="independent_contractor" class="independent-contractor-input @error('independent_contractor') is-invalid @enderror" name="independent_contractor" hidden>
-                                            <a href="{{ asset('storage/provider/' . $getProviderData->id . '_ICA.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
+                                            <input type="file" id="independent_contractor" class="independent-contractor-input @error('independent_contractor') is-invalid @enderror" name="independent_contractor" hidden>
+                                            <a href="{{ asset('storage/provider/' . $getProviderData->id . '_ICA.pdf') }}" class="primary-fill " id="view-btn1" type="button" download> <i class="bi bi-eye view-docs-eye"></i> <span class="view-text">View</span> </a>
                                             <p id="Contractor"></p>
                                             @error('independent_contractor')
                                             <div class="text-danger">{{ $message }}</div>
@@ -317,17 +317,17 @@
                                 <tr class="border-bottom-table">
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <input class="form-check-input @error('background_check') is-invalid @enderror" type="checkbox" value="1" id="flexCheckDefault" name="background_check" @checked($getProviderData->IsBackgroundDoc === 1)>
+                                            <input class="form-check-input @error('background_check') is-invalid @enderror checkbox2" type="checkbox" value="1" id="flexCheckDefault" name="background_check" @checked($getProviderData->IsBackgroundDoc === 1)>
                                             <span class="ms-2">
                                                 Background Check
                                             </span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="ms-4 btns provider-edit-form">
+                                        <div class=" btns provider-edit-form">
                                             <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <span class="mobile-icons"> <i class="bi bi-cloud-arrow-up"></i></span> </label>
                                             <input type="file" id="background-input" name="background_doc" hidden class="@error('background_doc') is-invalid @enderror">
-                                            <a href="{{ asset('storage/provider/' . $getProviderData->id . '_BC.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
+                                            <a href="{{ asset('storage/provider/' . $getProviderData->id . '_BC.pdf') }}" class="primary-fill" type="button" id="view-btn2" download> <i class="bi bi-eye view-docs-eye"></i><span class="view-text">View</span></a>
                                             <p id="Background"></p>
                                             @error('background_doc')
                                             <div class="text-danger">{{ $message }}</div>
@@ -338,17 +338,17 @@
                                 <tr class="border-bottom-table">
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <input class="form-check-input @error('hipaa_docs_check') is-invalid @enderror" type="checkbox" name="hipaa_docs_check" value="1" id="flexCheckDefault" name="HIPAA_check" @checked($getProviderData->IsTrainingDoc === 1)>
+                                            <input class="form-check-input @error('hipaa_docs_check') is-invalid @enderror checkbox3" type="checkbox" name="hipaa_docs_check" value="1" id="flexCheckDefault" name="HIPAA_check" @checked($getProviderData->IsTrainingDoc === 1)>
                                             <span class="ms-2">
                                                 HIPAA Compliance
                                             </span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="ms-4 btns provider-edit-form">
+                                        <div class=" btns provider-edit-form">
                                             <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <span class="mobile-icons"> <i class="bi bi-cloud-arrow-up"></i></span> </label>
                                             <input type="file" id="hipaa-input" hidden name="hipaa_docs" class="@error('hipaa_docs') is-invalid @enderror">
-                                            <a href="{{ asset('storage/provider/' . $getProviderData->id . '_HCA.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
+                                            <a href="{{ asset('storage/provider/' . $getProviderData->id . '_HCA.pdf') }}" class="primary-fill " type="button" id="view-btn3" download> <i class="bi bi-eye view-docs-eye"></i> <span class="view-text">View</span></a>
                                             <p id="HIPAA"></p>
                                             @error('hipaa_docs')
                                             <div class="text-danger">{{ $message }}</div>
@@ -359,14 +359,14 @@
                                 <tr class="border-bottom-table">
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <input class="form-check-input @error('non_disclosure_doc_check') is-invalid @enderror" type="checkbox" value="1" id="flexCheckDefault" name="non_disclosure_doc_check" @checked($getProviderData->IsNonDisclosureDoc === 1)>
+                                            <input class="form-check-input @error('non_disclosure_doc_check') is-invalid @enderror " type="checkbox" value="1" id="flexCheckDefault" name="non_disclosure_doc_check" @checked($getProviderData->IsNonDisclosureDoc === 1)>
                                             <span class="ms-2">
                                                 Non-disclosure Agreement
                                             </span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="ms-4 btns  provider-edit-form">
+                                        <div class=" btns  provider-edit-form">
                                             <label for="non-disclosure-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <span class="mobile-icons"> <i class="bi bi-cloud-arrow-up"></i></span> </label>
                                             <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc" class="@error('non_disclosure_doc') is-invalid @enderror">
                                             <p class="non-disclosure"></p>

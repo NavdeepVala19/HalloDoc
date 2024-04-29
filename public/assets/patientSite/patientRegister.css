@@ -213,6 +213,20 @@
     }
 }
 
+
+@media (max-width: 550px) {
+   .patient-update-password{
+    margin-top: 190px;
+   }
+}
+
+
+@media (max-width: 550px) {
+   .patient-register{
+    margin-top: 190px;
+   }
+}
+
 /********************* Main Content CSS End***********************/
 
 

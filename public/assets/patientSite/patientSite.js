@@ -43,9 +43,10 @@ $(document).ready(function () {
         if ($(".btn-me").hasClass("btn-active")) {
             $(window).attr("location", "/createPatientRequests");
         } else if ($(".btn-someone").hasClass("btn-active")) {
+            console.log("btn someone");
             $(window).attr("location", "/createSomeoneRequests");
-        } else {
-            alert('please select "Me" or "SomeOne Else"');
+        } else {            
+            alert('please select "Me" or "SomeOne Else" ');
         }
     });
 
@@ -122,7 +123,7 @@ $(document).ready(function () {
         function (value, element) {
             return /^[a-zA-Z ]+?$/.test(value);
         },
-        "Please enter a valid city name with alphabets."
+        "Please enter alphabets in city name."
     );
 
     $.validator.addMethod(
@@ -130,7 +131,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter a only alphabets and numbers in street name. "
+        "Please enter alphabets,dash,underscore,space and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -138,7 +139,7 @@ $(document).ready(function () {
         function (value, element) {
             return /^[a-zA-Z ]+?$/.test(value);
         },
-        "Please enter a valid state name with alphabets."
+        "Please enter alphabets in state ."
     );
 
     $.validator.addMethod(
@@ -250,6 +251,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
+                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",

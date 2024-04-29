@@ -9,7 +9,7 @@
 @section('patientContent')
 @include("loading")
 <!-- main content -->
-<div class="container-fluid main-section">
+<div class="container-fluid main-section patient-reset-password">
     <div class="reset-password">
         <div class="details">
             <div class="main-content">

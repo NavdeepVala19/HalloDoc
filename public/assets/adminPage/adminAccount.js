@@ -158,7 +158,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter a only alphabets and numbers in street name. "
+        "Please enter alphabets,dash,underscore,space and numbers in address1. "
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -305,10 +305,11 @@ $(document).ready(function () {
             },
             alt_mobile: {
                 required: "Please enter a mobile number",
-                phoneIndia: "Please enter valid phone number format....",
+                min: "Please enter a 10 digit positive number in alternate phone number.",
             },
             address1: {
                 required: "Please enter a address1",
+                street: "Please enter alphabets,dash,underscore,space and numbers in address1. ",
             },
             address2: {
                 required: "Please enter a address2",

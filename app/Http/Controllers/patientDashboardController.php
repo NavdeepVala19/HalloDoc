@@ -182,8 +182,6 @@ class patientDashboardController extends Controller
 
         return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
     }
-
-
     
     // create someone else request from patient dashboard
     public function createSomeOneElseRequest(Request $request)
@@ -326,27 +324,32 @@ class patientDashboardController extends Controller
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
+        try {
+            if ($isEmailStored == null) {
+                // send email
+                $emailAddress = $request->email;
+                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-        if ($isEmailStored == null) {
-            // send email
-            $emailAddress = $request->email;
-            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
-
-            EmailLog::create([
-                'role_id' => 3,
-                'request_id' =>  $newPatient->id,
-                'confirmation_number' => $confirmationNumber,
-                'is_email_sent' => 1,
-                'sent_tries' => 1,
-                'create_date' => now(),
-                'sent_date' => now(),
-                'email_template' => $request->email,
-                'subject_name' => 'Create account by clicking on below link with below email address',
-                'email' => $request->email,
-            ]);
-            return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-        }else{
-            return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
+                EmailLog::create([
+                    'role_id' => 3,
+                    'request_id' =>  $newPatient->id,
+                    'confirmation_number' => $confirmationNumber,
+                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
+                    'is_email_sent' => 1,
+                    'sent_tries' => 1,
+                    'create_date' => now(),
+                    'sent_date' => now(),
+                    'email_template' => $request->email,
+                    'subject_name' => 'Create account by clicking on below link with below email address',
+                    'email' => $request->email,
+                    'action' => 5,
+                ]);
+                return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+            } else {
+                return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
+            }
+        } catch (\Throwable $th) {
+            return view('errors.500');
         }
 
     }
@@ -357,7 +360,7 @@ class patientDashboardController extends Controller
         $email = $userData["email"];
 
         $userId = users::select('id')->where('email', $email);
-        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->paginate(10);
+        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->orderBy('id','desc')->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data', 'userData'));
     }

@@ -1,3 +1,4 @@
+
 .create-provider-btn {
     height: 40px;
 }
@@ -78,7 +79,8 @@
 
     .mobile-listing {
         display: block;
-        background-color: rgb(233, 245, 250)
+        /* background-color: rgb(233, 245, 250) */
+        background-color: var(--toggle-mobile-bg-color);
     }
 
     .details.active {

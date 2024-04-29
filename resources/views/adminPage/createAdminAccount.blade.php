@@ -158,7 +158,7 @@
                     @enderror
                 </div>
                 <div style="height: 58px;" class="errorMsg">
-                    <input type="number" name="alt_mobile" class="form-control phone" id="telephone" placeholder="mobile" value="{{ old('alt_mobile') }}">
+                    <input type="number" name="alt_mobile" class="form-control phone" id="telephone" placeholder="mobile" value="{{ old('alt_mobile') }}" min="10">
                     @error('alt_mobile')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

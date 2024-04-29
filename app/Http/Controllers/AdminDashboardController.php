@@ -152,28 +152,34 @@ class AdminDashboardController extends Controller
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        if ($isEmailStored == null) {
-            // send email
-            $emailAddress = $request->email;
-            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+        try {
+            if ($isEmailStored == null) {
+                // send email
+                $emailAddress = $request->email;
+                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-            EmailLog::create([
-                'role_id' => 3,
-                'request_id' =>  $requestData->id,
-                'confirmation_number' => $confirmationNumber,
-                'is_email_sent' => 1,
-                'recipient_name' => $request->first_name,
-                'sent_tries' => 1,
-                'create_date' => now(),
-                'sent_date' => now(),
-                'email_template' => $request->email,
-                'subject_name' => 'Create account by clicking on below link with below email address',
-                'email' => $request->email,
-            ]);
-            return redirect()->route('admin.status','new')->with('message', 'Email for create account is sent and Request is Submitted');
-        } else {
-            return redirect()->route('admin.status','new')->with('message', 'Request is Submitted');
+                EmailLog::create([
+                    'role_id' => 3,
+                    'request_id' =>  $requestData->id,
+                    'confirmation_number' => $confirmationNumber,
+                    'is_email_sent' => 1,
+                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
+                    'sent_tries' => 1,
+                    'create_date' => now(),
+                    'sent_date' => now(),
+                    'email_template' => $request->email,
+                    'subject_name' => 'Create account by clicking on below link with below email address',
+                    'email' => $request->email,
+                    'action' => 5,
+                ]);
+                return redirect()->route('admin.status', 'new')->with('message', 'Email for create account is sent and Request is Submitted');
+            } else {
+                return redirect()->route('admin.status', 'new')->with('message', 'Request is Submitted');
+            }
+        } catch (\Throwable $th) {
+            return view('errors.500');
         }
+
     }
 
     

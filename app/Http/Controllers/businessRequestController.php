@@ -37,7 +37,7 @@ class businessRequestController extends Controller
       'last_name' => 'required|min:3|max:15|alpha',
       'date_of_birth' => 'required|before:today',
       'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-      'phone_number' => 'required',
+      'phone_number' => 'required|min_digits:10|max_digits:10',
       'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
       'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
       'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
@@ -192,29 +192,36 @@ class businessRequestController extends Controller
       $requestBusiness->update(['confirmation_no' => $confirmationNumber]);
     }
 
+    try {
+      if ($isEmailStored == null) {
+        // send email
+        $emailAddress = $request->email;
+        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-    if ($isEmailStored == null) {
-      // send email
-      $emailAddress = $request->email;
-      Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
-
-      EmailLog::create([
-        'request_id' => $requestBusiness->id,
-        'confirmation_number' => $confirmationNumber,
-        'role_id' => 3,
-        'recipient_name' => $request->first_name,
-        'is_email_sent' => 1,
-        'sent_tries' => 1,
-        'create_date' => now(),
-        'sent_date' => now(),
-        'email_template' => $request->email,
-        'subject_name' => 'Create account by clicking on below link with below email address',
-        'email' => $request->email,
-      ]);
-      return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-    }else{
-      return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
+        EmailLog::create([
+          'request_id' => $requestBusiness->id,
+          'confirmation_number' => $confirmationNumber,
+          'role_id' => 3,
+          'recipient_name' =>
+          $request->first_name . ' ' . $request->last_name,
+          'is_email_sent' => 1,
+          'sent_tries' => 1,
+          'create_date' => now(),
+          'sent_date' => now(),
+          'email_template' => $request->email,
+          'subject_name' => 'Create account by clicking on below link with below email address',
+          'email' => $request->email,
+          'action' => 5,
+        ]);
+        return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+      } else {
+        return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
+      }
+    } catch (\Throwable $th) {
+      return view('errors.500');
     }
+
+
 
   }
 }

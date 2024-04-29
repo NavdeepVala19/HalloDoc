@@ -78,7 +78,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter a only alphabets and numbers in street name. "
+        "Please enter alphabets,dash,underscore,space and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -87,7 +87,7 @@ $(document).ready(function () {
             const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces, and numbers."
+        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces,comma,dash,underscore and numbers."
     );
 
     $.validator.addMethod(
@@ -166,7 +166,8 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: true,
-                phoneIndia: true,
+                minlength: 10,
+                maxlength: 10,
             },
             room: {
                 min: 0,
@@ -205,6 +206,7 @@ $(document).ready(function () {
                 required: true,
                 minlength: 2,
                 maxlength: 50,
+                street: true,
             },
             concierge_city: {
                 required: true,
@@ -244,10 +246,11 @@ $(document).ready(function () {
             },
             phone_number: {
                 required: "Please enter a mobile number",
-                phoneIndia: "Please enter valid phone number format....",
+                min: "Please enter a 10 digit positive number in phone number.",
             },
             street: {
                 required: "Please enter a street",
+                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",
