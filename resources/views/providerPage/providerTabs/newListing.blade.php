@@ -16,8 +16,8 @@
     <div class="overlay"></div>
     @include('loading')
 
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
+    {{-- Error or Success Message Alerts/Pop-ups --}}
+    @include('alertMessages.successMessage')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.providerSendLink')

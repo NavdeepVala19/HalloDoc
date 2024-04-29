@@ -106,7 +106,7 @@ required, without finalizing encounter form provider cannot conclude the case. -
                 </div>
                 <hr>
                 <div>
-                    <form action="{{ route('provider.conclude.care') }}" method="POST">
+                    <form action="{{ route('provider.conclude.care') }}" method="POST" id="concludeCareNotes">
                         @csrf
                         <input type="text" value="{{ $case->id }}" name="caseId" hidden>
                         <h5>Provider Notes</h5>

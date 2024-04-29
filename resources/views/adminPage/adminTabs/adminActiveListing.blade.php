@@ -13,11 +13,8 @@ giving service to the patient. --}}
     <div class="overlay"></div>
     @include('loading')
 
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
-    {{-- Order Created Successfully Pop-up Message --}}
-    @include('alertMessages.orderPlacedSuccess')
+    {{-- Error or Success Message Alerts/Pop-ups --}}
+    @include('alertMessages.successMessage')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.adminSendLink')

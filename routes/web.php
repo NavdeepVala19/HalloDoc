@@ -134,10 +134,10 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 // ****************************************************************************************************************************
 
 
-// ******************************* NAVDEEP's Work **********************************************
+// ******************************* NAVDEEP's WORK **********************************************
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
 Route::middleware('checkProviderLogin')->group(function () {
-    // Providers Dashboard page with New Users case listing
+    // Providers Dashboard page with New state case listing
     Route::get('/provider', [ProviderController::class, 'providerDashboard'])->name('provider.dashboard');
 
     // For Filtering the request
@@ -255,15 +255,20 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Assign Case pop-up, populate select menu with all physician regions (AJAX)
     Route::get('/physician-regions', [AdminActionsController::class, 'physicianRegions'])->name('physician.regions');
+    // Get particular physicians as per the region selected from dropdown
     Route::get('/physician/{id}', [AdminActionsController::class, 'getPhysicians'])->name('get.physician');
 
+    // Get all physicians other than the one who transferred the case
     Route::get('/newPhysicians/{requestId}/{regionId}', [AdminActionsController::class, 'getNewPhysicians'])->name('get.new.physician');
 
+    // Admin assign case -> to particular physician
     Route::post('/assign-case', [AdminActionsController::class, 'assignCase'])->name('admin.assign.case');
+    // Admin transfer case -> to physician other than the one who transferred case
     Route::post('/transfer-case-admin', [AdminActionsController::class, 'transferCase'])->name('admin.transfer.case');
 
-    // Cancel Case by admin
+    // Fetch Cancel Case (caseTag) options from database 
     Route::get('/cancel-case', [AdminActionsController::class, "cancelCaseOptions"]);
+    // Cancel Case by admin
     Route::post('cancel-case-data', [AdminActionsController::class, 'cancelCase'])->name('admin.cancel.case');
 
     // Block Case by admin
@@ -281,6 +286,7 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Admin View Uploads
     Route::get('admin/view/uploads/{id}', [AdminActionsController::class, 'viewUpload'])->name('admin.view.upload');
+    // Admin upload document from viewUploads page
     Route::post('admin/view/uploads/{id?}', [AdminActionsController::class, 'uploadDocument'])->name('admin.upload.doc');
 
     // ENCOUNTER FORM

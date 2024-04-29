@@ -16,21 +16,8 @@ patient's email address and phone number. Once the patient accepts the agreement
     <div class="overlay"></div>
     @include('loading')
 
-    {{-- Case Cleared Successfully --}}
-    @if (session('caseCleared'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('caseCleared') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- Order Created Successfully Pop-up Message --}}
-    @include('alertMessages.orderPlacedSuccess')
-
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
+    {{-- Error or Success Message Alerts/Pop-ups --}}
+    @include('alertMessages.successMessage')
 
     {{-- Clear Case Pop-up --}}
     {{-- This pop-up will open when admin clicks on “Clear case” link from Actions menu. From the pending and close

@@ -66,7 +66,7 @@ class AdminActionsController extends Controller
 
         $physician = Provider::where('id', $request->physician)->first();
         $physicianName = $physician->first_name . " " . $physician->last_name;
-        return redirect()->back()->with('assigned', "Case Assigned Successfully to physician - {$physicianName}");
+        return redirect()->back()->with('successMessage', "Case Assigned Successfully to physician - {$physicianName}");
     }
 
     // Admin Transfer Case to another physician
@@ -90,7 +90,7 @@ class AdminActionsController extends Controller
             'status' => 3,
             'physician_id' => $request->physician
         ]);
-        return redirect()->back()->with('transferredCase', 'Case Transferred to Another Physician');
+        return redirect()->back()->with('successMessage', 'Case Transferred to Another Physician');
     }
 
     // fetch all caseTag data from its table and show in cancelCase PopUp
@@ -142,7 +142,7 @@ class AdminActionsController extends Controller
             'status' => 10,
             'notes' => $request->block_reason,
         ]);
-        return redirect()->back()->with('CaseBlocked', 'Case Blocked Successfully!');
+        return redirect()->back()->with('successMessage', 'Case Blocked Successfully!');
     }
 
     // View case
@@ -347,7 +347,7 @@ class AdminActionsController extends Controller
             'request_id' => $request->requestId,
             'status' => 8,
         ]);
-        return redirect()->back()->with('caseCleared', 'Case Cleared Successfully');
+        return redirect()->back()->with('successMessage', 'Case Cleared Successfully');
     }
 
     // Show Close Case Page with Details
@@ -388,7 +388,7 @@ class AdminActionsController extends Controller
                 'request_id' => $request->requestId,
                 'request_status_id' => $statusId
             ]);
-            return redirect()->route('admin.status', 'unpaid')->with('caseClosed', 'Case Closed Successfully!');
+            return redirect()->route('admin.status', 'unpaid')->with('successMessage', 'Case Closed Successfully!');
         }
         return redirect()->back();
     }
@@ -428,7 +428,7 @@ class AdminActionsController extends Controller
 
         $status = RequestTable::where('id', $request->requestId)->first()->status;
 
-        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('orderPlaced', 'Order Created Successfully!');
+        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
     }
 
     public function downloadEncounterForm($requestId)

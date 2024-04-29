@@ -12,37 +12,17 @@
     @include('loading')
 
     {{-- Error or Success Message Alerts/Pop-ups --}}
+    @include('alertMessages.successMessage')
+
     {{-- Admin Logged In Successfully --}}
     @if (session('message'))
-         <div class="alert alert-success popup-message ">
+        <div class="alert alert-success popup-message ">
             <span>
                 {{ session('message') }}
             </span>
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
-
-    {{-- Case Assigned Successfully --}}
-    @if (session('assigned'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('assigned') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- Case Blocked Successfully --}}
-    @if (session('CaseBlocked'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('CaseBlocked') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    @include('alertMessages.successMessage')
 
     {{-- Cancel Case Pop-up --}}
     {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}

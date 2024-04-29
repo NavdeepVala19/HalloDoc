@@ -38,7 +38,7 @@ class ProviderActionsController extends Controller
             'admin_id' => DB::raw('NULL'),
             'TransToPhysicianId' => DB::raw('NULL')
         ]);
-        return redirect()->route('provider.status', 'pending')->with('caseAccepted', "You have Successfully Accepted Case");
+        return redirect()->route('provider.status', 'pending')->with('successMessage', "You have Successfully Accepted Case");
     }
 
     // Transfer Case
@@ -59,7 +59,7 @@ class ProviderActionsController extends Controller
             'physician_id' => DB::raw("NULL"),
             'status' => 1
         ]);
-        return redirect()->back()->with('transferredCase', 'Case Transferred to Admin');
+        return redirect()->back()->with('successMessage', 'Case Transferred to Admin');
     }
 
     // show notes page for particular request
@@ -186,7 +186,7 @@ class ProviderActionsController extends Controller
             'no_of_refill' => $request->refills,
         ]);
 
-        return redirect()->route('provider.status', 'active')->with('orderPlaced', 'Order Created Successfully!');
+        return redirect()->route('provider.status', 'active')->with('successMessage', 'Order Created Successfully!');
     }
 
     // Encounter pop-up as per action (consult, hous_call) selected perform particular tasks 
@@ -323,7 +323,7 @@ class ProviderActionsController extends Controller
                 'is_finalize' => true,
             ]);
 
-            return redirect()->route('provider.status', $status == 6 ? 'conclude' : 'active')->with('formFinalized', "Form Finalized Successfully");
+            return redirect()->route('provider.status', $status == 6 ? 'conclude' : 'active')->with('successMessage', "Form Finalized Successfully");
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -376,7 +376,7 @@ class ProviderActionsController extends Controller
             'physician_id' => $providerId
         ]);
         RequestNotes::where('request_id', $request->caseId)->update(['physician_notes' => $request->providerNotes]);
-        return redirect()->route('provider.status', 'conclude')->with('CaseConcluded', 'Case Concluded Successfully!');
+        return redirect()->route('provider.status', 'conclude')->with('successMessage', 'Case Concluded Successfully!');
     }
 
     // Upload Document from conclude Care page
