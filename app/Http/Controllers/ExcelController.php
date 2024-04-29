@@ -18,6 +18,7 @@ class ExcelController extends Controller
             'request_client.last_name',
             'request_client.date_of_birth',
             'request.first_name as request_first_name',
+            'request.last_name as request_last_name',
             'request_client.created_at',
             'request_client.phone_number',
             DB::raw("CONCAT(request_client.street,',',request_client.city,',',request_client.state) AS address"),

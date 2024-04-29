@@ -391,7 +391,7 @@ $(".hide-popup-btn").click(function () {
 
 
 
-//** */ client side validation in adminProviderCreateForm
+//** client side validation in adminProviderCreateForm
 
 $.validator.addMethod(
     "city",
@@ -416,7 +416,23 @@ $.validator.addMethod(
     },
     "Please enter alphabets in business name."
 );
+    
+   $.validator.addMethod(
+       "webUrl",
+       function (value, element) {
+           const requiredPrefix = "https://www.";
+           if (!value.startsWith(requiredPrefix)) {
+               return false;
+           }
 
+           // Remaining validation using the original regex (optional)
+           const urlRegex =
+               /^((https?:\/\/)?(www\.)?([a-zA-Z0-9\-_]+\.)+[a-zA-Z]{2,}|[a-zA-Z0-9]+\.[a-z]{2,})(\/[\w\.-]*)*(\?\S*)?$/;
+           return urlRegex.test(value.substring(requiredPrefix.length));
+       },
+       "Please enter a valid business website URL starting with https://www."
+   );
+    
 $.validator.addMethod(
     "address2",
     function (value, element) {
@@ -713,6 +729,7 @@ $("#createAdminProvider").validate({
             required: true,
             minlength: 10,
             maxlength: 50,
+            webUrl: true,
         },
         admin_notes: {
             required: true,
@@ -749,13 +766,11 @@ $("#createAdminProvider").validate({
         },
         first_name: {
             required: "Please enter a first_name",
-            lettersFirstName:
-                "Please enter only letters for your first name.",
+            lettersFirstName: "Please enter only letters for your first name.",
         },
         last_name: {
             required: "Please enter a last_name",
-            lettersLastName:
-                "Please enter only letters for your Last name.",
+            lettersLastName: "Please enter only letters for your Last name.",
         },
         email: {
             required: "Please enter a valid email",
@@ -1283,6 +1298,22 @@ $(document).ready(function () {
         "Please enter a valid business name."
     );
 
+   $.validator.addMethod(
+       "webUrl",
+       function (value, element) {
+           const requiredPrefix = "https://www.";
+           if (!value.startsWith(requiredPrefix)) {
+               return false;
+           }
+
+           // Remaining validation using the original regex (optional)
+           const urlRegex =
+               /^((https?:\/\/)?(www\.)?([a-zA-Z0-9\-_]+\.)+[a-zA-Z]{2,}|[a-zA-Z0-9]+\.[a-z]{2,})(\/[\w\.-]*)*(\?\S*)?$/;
+           return urlRegex.test(value.substring(requiredPrefix.length));
+       },
+       "Please enter a valid business website URL starting with https://www."
+   );
+
     $.validator.addMethod(
         "adminNotes",
         function (value, element) {
@@ -1305,6 +1336,7 @@ $(document).ready(function () {
                 required: false,
                 minlength: 10,
                 maxlength: 40,
+                webUrl: true,
             },
             admin_notes: {
                 required: true,

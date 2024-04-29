@@ -235,7 +235,6 @@
                                         </span>
                                     </div>
                                 </td>
-
                                 <td>
                                     <div class="ms-4 btns provider-form" >
                                         <label for="independent_contractor" class="upload primary-fill">  <i class="bi bi-cloud-arrow-up"></i> <span class="upload-txt">Upload</span> </label>

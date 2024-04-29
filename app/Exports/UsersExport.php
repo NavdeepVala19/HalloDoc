@@ -44,6 +44,8 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
             $patientMobile = null;
             $notes = null;
             $requestedDate = null;
+            $requestorFirstName = null;
+            $requestorLastName = null;
 
             if (isset($adminAll)) {
                 $patientName = $adminAll->first_name;
@@ -61,7 +63,10 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
                 $address = $adminAll->address;
             }
             if (isset($adminAll)) {
-                $requestorName = $adminAll->request_first_name;
+                $requestorFirstName = $adminAll->request_first_name;
+            }
+            if (isset($adminAll)) {
+                $requestorLastName = $adminAll->request_last_name;
             }
             if (isset($adminAll)) {
                 $notes = $adminAll->notes;
@@ -74,7 +79,7 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
             return [
                 'PatientName' => $patientName . ' ' . $patientLastName,
                 'Date_of_Birth' => $dateOfBirth,
-                'Requestor' => $requestorName,
+                'Requestor' => $requestorFirstName.' '. $requestorLastName,
                 'RequestedDate' => $requestedDate,
                 'Mobile' => $patientMobile,
                 'Address' => $address,

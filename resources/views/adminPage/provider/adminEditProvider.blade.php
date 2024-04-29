@@ -232,7 +232,6 @@
                         <button class="primary-fill" type="submit" id="providerMailSaveBtn">Save</button>
                         <button class="btn btn-danger" id="providerMailCancelBtn" type="button">Cancel</button>
                     </div>
-                    <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
                 </div>
             </form>
 
@@ -260,7 +259,7 @@
                     <input type="file" name="provider_photo" id="file-upload-request" hidden class="@error('provider_photo') is-invalid @enderror" disabled>
                     <label for="file-upload-request" class="upload-label">
                         <div class="p-2 file-label">
-                            Select File
+                            {{$getProviderData->photo ? $getProviderData->photo:"Select File"}}
                         </div>
                         <span class="primary-fill upload-btn">
                             <i class="bi bi-cloud-arrow-up me-2"></i>
@@ -306,7 +305,7 @@
                                     <td>
                                         <div class="ms-4 btns provider-edit-form">
                                             <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> <span class="mobile-icons"> <i class="bi bi-cloud-arrow-up"></i></span> </label>
-                                            <input type="file" name="independent_contractor" id="independent_contractor" hidden class="@error('independent_contractor') is-invalid @enderror">
+                                             <input type="file" id="independent_contractor" class="independent-contractor-input @error('independent_contractor') is-invalid @enderror" name="independent_contractor" hidden>
                                             <a href="{{ asset('storage/provider/' . $getProviderData->id . '_ICA.pdf') }}" class="primary-fill ms-4" type="button" download>View</a>
                                             <p id="Contractor"></p>
                                             @error('independent_contractor')
@@ -339,7 +338,7 @@
                                 <tr class="border-bottom-table">
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <input class="form-check-input @error('hipaa_docs') is-invalid @enderror" type="checkbox" name="hipaa_docs" value="1" id="flexCheckDefault" name="HIPAA_check" @checked($getProviderData->IsTrainingDoc === 1)>
+                                            <input class="form-check-input @error('hipaa_docs_check') is-invalid @enderror" type="checkbox" name="hipaa_docs_check" value="1" id="flexCheckDefault" name="HIPAA_check" @checked($getProviderData->IsTrainingDoc === 1)>
                                             <span class="ms-2">
                                                 HIPAA Compliance
                                             </span>
@@ -360,7 +359,7 @@
                                 <tr class="border-bottom-table">
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <input class="form-check-input @error('non_disclosure_doc') is-invalid @enderror" type="checkbox" value="1" id="flexCheckDefault" name="non_disclosure_doc" @checked($getProviderData->IsNonDisclosureDoc === 1)>
+                                            <input class="form-check-input @error('non_disclosure_doc_check') is-invalid @enderror" type="checkbox" value="1" id="flexCheckDefault" name="non_disclosure_doc_check" @checked($getProviderData->IsNonDisclosureDoc === 1)>
                                             <span class="ms-2">
                                                 Non-disclosure Agreement
                                             </span>

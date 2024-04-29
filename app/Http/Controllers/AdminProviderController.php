@@ -230,7 +230,7 @@ class AdminProviderController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|min_digits:10|max_digits:10',
+            'phone_number' => 'required',
             'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
             'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
             'address1' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9-, ]+$/',
@@ -247,7 +247,7 @@ class AdminProviderController extends Controller
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'non_disclosure_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
         ]);
-        dd("here");
+
 
         // store data of providers in users table
 
@@ -532,7 +532,7 @@ class AdminProviderController extends Controller
     // * edit onboarding information 
     public function providerDocumentsUpdate(Request $request, $id)
     {
-        $request->validate([
+          $request->validate([
             'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'background_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
@@ -540,10 +540,10 @@ class AdminProviderController extends Controller
         ]);
 
         $getProviderInformation = Provider::where('id', $id)->first();
-
-        if (isset($request->independent_doc)) {
+    
+        if (isset($request->independent_contractor)) {
             $getProviderInformation->IsAgreementDoc = 1;
-            $file = $request->file('independent_doc');
+            $file = $request->file('independent_contractor');
             $filename = $getProviderInformation->id . '_ICA' . '.' . "pdf";
             $path = $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
@@ -579,7 +579,6 @@ class AdminProviderController extends Controller
     // * delete provider account
     public function deleteProviderAccount($id)
     {
-        // dd($id);
         // soft delete in providers table
         $ProviderInfo = Provider::with('users')->where('id', $id)->first();
         
