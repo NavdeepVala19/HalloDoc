@@ -10,6 +10,40 @@ $(document).ready(function () {
         }
     });
 
+
+
+    $("#view-btn1").each(function (i, el) {
+        var isChecked = $(el).closest("tr").find(".checkbox1").is(':checked');
+        if (isChecked==false) {
+            $(el).hide()
+        }
+        else {
+            $(el).show()
+        }
+    })
+
+    $("#view-btn2").each(function (i, el) {
+        var isChecked = $(el).closest("tr").find(".checkbox2").is(":checked");
+
+        if (isChecked == false) {
+            $(el).hide();
+        } else {
+            $(el).show();
+        }
+    });
+
+    $("#view-btn3").each(function (i, el) {
+        var isChecked = $(el).closest("tr").find(".checkbox3").is(":checked");
+        if (isChecked == false) {
+            $(el).hide();
+        } else {
+            $(el).show();
+        }
+    });
+
+
+
+
     // **** This code is for sending msg through pop-up to sendMailToContactProvider Function in adminProvider Page ****
 
     $(".contact-btn").on("click", function () {
@@ -650,7 +684,7 @@ $("#createAdminProvider").validate({
         password: {
             required: true,
             minlength: 8,
-            maxlength: 20,
+            maxlength: 50,
             password: true,
         },
         first_name: {
@@ -714,7 +748,7 @@ $("#createAdminProvider").validate({
             required: true,
             zipcode: true,
         },
-        alt_phone_number: {
+        phone_number_alt: {
             required: true,
             maxlength: 10,
             minlength: 10,
@@ -765,11 +799,11 @@ $("#createAdminProvider").validate({
             required: "Please enter a password",
         },
         first_name: {
-            required: "Please enter a first_name",
+            required: "Please enter a first name",
             lettersFirstName: "Please enter only letters for your first name.",
         },
         last_name: {
-            required: "Please enter a last_name",
+            required: "Please enter a last name",
             lettersLastName: "Please enter only letters for your Last name.",
         },
         email: {
@@ -778,16 +812,16 @@ $("#createAdminProvider").validate({
                 "Please enter a valid email (format: alphanum@alpha.domain).",
         },
         phone_number: {
-            required: "Please enter a valid phone_number",
+            required: "Please enter a valid phone number",
             phoneIndia: "Please enter a valid phone number.",
         },
         medical_license: {
-            required: "Please enter a valid medical_license",
+            required: "Please enter a valid medical license",
             medicalLicense:
                 "Please enter a valid 10-digit medical license number.",
         },
         npi_number: {
-            required: "Please enter a valid npi_number",
+            required: "Please enter a valid npi number",
             npiNumber: "Please enter a valid 10-digit NPI number.",
         },
         address1: {
@@ -808,7 +842,7 @@ $("#createAdminProvider").validate({
             state: "Please enter alpbabets in state name.",
         },
         select_state: {
-            required: true,
+            required: "Please select state",
             stateCheck: true,
         },
         zip: {
@@ -816,25 +850,23 @@ $("#createAdminProvider").validate({
             min: "Please enter positive number with 6 digits",
             zipcode: "Please enter positive number with 6 digits",
         },
-        alt_phone_number: {
-            required: "Please enter a valid alt_phone_number",
+        phone_number_alt: {
+            required: "Please enter a valid alternate phone number",
+            min: "Please enter a 10 digit positive number in alternate phone number.",
         },
         business_name: {
-            required: "Please enter a valid business_name",
+            required: "Please enter a valid business name",
             businessname: "Please enter alphabets in business name.",
         },
         business_website: {
-            required: "Please enter a valid business_website",
-        },
-        phone_number_alt: {
-            required: "Please enter alternate phone number",
+            required: "Please enter a valid business website",
         },
         provider_photo: {
             customFile:
                 "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB.",
         },
         admin_notes: {
-            required: "Please enter a valid Admin_Notes",
+            required: "Please enter a valid Admin Notes",
             adminNotes: "Please enter alphabets, number in admin notes.",
         },
         independent_contractor: {
@@ -918,7 +950,7 @@ $(document).ready(function () {
             password: {
                 required: true,
                 minlength: 8,
-                maxlength: 20,
+                maxlength: 50,
                 password: true,
             },
             status_type: {
@@ -1235,6 +1267,7 @@ $(document).ready(function () {
             },
             alt_phone_number: {
                 required: "Please enter a valid alt_phone_number",
+                min: "Please enter a 10 digit positive number in alternate phone number.",
             },
         },
         errorElement: "span",

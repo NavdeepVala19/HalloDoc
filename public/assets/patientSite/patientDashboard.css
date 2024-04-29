@@ -90,9 +90,7 @@ h2 {
     display: none;
 }
 
-.new-request-create {
-    width: 50px;
-}
+
 
 @media(max-width:550px) {
     .table {
@@ -116,6 +114,25 @@ h2 {
 }
 
 
+
+@media (max-width: 450px) {
+    .symptoms-notes-label{
+        font-size: small;
+    }
+}
+
+
+@media (max-width: 375px) {
+    .symptoms-notes-label{
+        font-size: x-small;
+    }
+}
+
+@media (max-width: 320px) {
+    .symptoms-notes-label{
+        font-size: xx-small;
+    }
+}
 
 
 .pop-up {

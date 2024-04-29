@@ -5,7 +5,6 @@ $(document).ready(function () {
         var blockId = checkbox.attr('id').split('_')[1];
         var isActive = checkbox.prop('checked') ? 1 : 0; // Ternary operator to set isActive
 
-
         $.ajax({
             url: "/block-history/update",
             type: 'POST',

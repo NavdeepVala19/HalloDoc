@@ -51,8 +51,7 @@
             <input type="text" name="requestId" value="{{ $documents->first()->request_id }}" hidden>
             <div class="docs-download">
                 <h3>Documents</h3>
-                <input type="submit" value="Download" class="primary-empty btn down-button" id="docs_download"> 
-                <button class="primary-empty btn down-button-icon" type="submit" ><i class="bi bi-cloud-arrow-down"></i></button>
+                <button class="primary-empty btn down-button" type="submit" value="Download" id="docs_download"><i class="bi bi-cloud-arrow-down"></i><span class="download-btn">Download</span> </button>
             </div>
 
             <table class="table">
@@ -85,7 +84,7 @@
                 @foreach ($documents as $document)
                     <div class=" patient-content mt-4">
                         <div class="check-docs">
-                            <input class="form-check-input" type="checkbox" id="flexCheckDefault">
+                            <input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault" name="selected_files[]" value="{{ $document->id }}">
                             <p>{{ substr($document->file_name, 14) }}</p>
                         </div>
                         <div class="mb-3">{{ $document->first_name }}</div>

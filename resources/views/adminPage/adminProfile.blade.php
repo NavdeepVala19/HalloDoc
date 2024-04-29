@@ -196,7 +196,7 @@
                 </div>
 
                 <div style="height: 58px;" class="errorMsg">
-                    <input type="number" name="alt_mobile" class="form-control admin_alt_phone" id="telephone" placeholder="mobile" value="{{ $adminProfileData->alt_phone }}" disabled>
+                    <input type="number" name="alt_mobile" class="form-control admin_alt_phone" id="telephone" placeholder="mobile" value="{{ $adminProfileData->alt_phone }}" disabled min="10">
                     @error('alt_mobile')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

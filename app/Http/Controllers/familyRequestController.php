@@ -36,11 +36,10 @@ class familyRequestController extends Controller
             'city' => ['required','min:2','max:30', 'regex:/^[a-zA-Z ]+?$/'],
             'state' => ['required','min:2','max:30', 'regex:/^[a-zA-Z ]+?$/'],
             'symptoms' => ['regex:/^[a-zA-Z0-9 \-_,()]+$/','nullable','min:5','max:200'],
-
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required|before:today',
-            'phone_number' => 'required',
+            'phone_number' => 'required|min_digits:10|max_digits:10',
             'street' => 'required|min:2|max:50',
             'zipcode' => 'digits:6|gte:1',
             'family_first_name' => 'required|min:3|max:15|alpha',
@@ -172,30 +171,34 @@ class familyRequestController extends Controller
             $familyRequest->update(['confirmation_no' => $confirmationNumber]);
         }
 
+        try {
+            if ($isEmailStored == null) {
+                // send email
+                $emailAddress = $request->email;
+                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-        if ($isEmailStored == null) {
-
-            // send email
-            $emailAddress = $request->email;
-            Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
-
-            EmailLog::create([
-                'role_id' => 3,
-                'request_id' => $familyRequest->id,
-                'confirmation_number' => $confirmationNumber,
-                'is_email_sent' => 1,
-                'recipient_name' => $request->first_name,
-                'sent_tries' => 1,
-                'create_date' => now(),
-                'sent_date' => now(),
-                'email_template' => $request->email,
-                'subject_name' => 'Create account by clicking on below link with below email address',
-                'email' => $request->email,
-            ]);
-            return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-        }else{
-            return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
+                EmailLog::create([
+                    'role_id' => 3,
+                    'request_id' => $familyRequest->id,
+                    'confirmation_number' => $confirmationNumber,
+                    'is_email_sent' => 1,
+                    'recipient_name' => $request->first_name.' '.$request->last_name,
+                    'sent_tries' => 1,
+                    'create_date' => now(),
+                    'sent_date' => now(),
+                    'email_template' => $request->email,
+                    'subject_name' => 'Create account by clicking on below link with below email address',
+                    'email' => $request->email,
+                    'action'=>5,
+                ]);
+                return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+            } else {
+                return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
+            }
+        } catch (\Throwable $th) {
+            return view('errors.500');
         }
+
         
     }
 }

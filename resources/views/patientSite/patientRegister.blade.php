@@ -11,7 +11,7 @@
         </div>
     @endif
     <!-- main content -->
-    <div class="container-fluid main-section">
+    <div class="container-fluid main-section patient-register">
         <div class="password-reset">
             <div class="details">
                 <h1>Create Account</h1>

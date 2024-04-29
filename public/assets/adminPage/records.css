@@ -80,6 +80,7 @@ table td {
 @media (max-width: 820px) {
     .mobile-listing {
         display: block;
+        
     }
 
     #blockHistoryTable {
@@ -99,7 +100,7 @@ table td {
     }
 
     .mobile-list {
-        background-color: rgb(233, 245, 250);
+        background-color: var(--toggle-mobile-bg-color);
     }
 
     .spacing {

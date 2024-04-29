@@ -209,6 +209,13 @@
     }
 }
 
+
+@media (max-width: 550px) {
+   .patient_login{
+    margin-top: 190px;
+   }
+}
+
 /********************* Main Content CSS End***********************/
 
 

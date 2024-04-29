@@ -77,25 +77,7 @@
         </div>
         <div class="accordions">
             <!-- create a new request pop-up -->
-            <div class="pop-up-accordion new-request-create">
-                <div class="popup-heading-section d-flex align-items-center justify-content-between">
-                    <span>Create new Request</span>
-                    <button class="hide-popup-btn"><i class="bi bi-x-lg"></i></button>
-                </div>
-                <p class="m-2">Here I want to create new request</p>
-                <div class="p-4 d-flex align-items-center justify-content-center gap-2">
-                    <button class="primary-empty btn-me btn-active">
-                        me
-                    </button>
-                    <button class="primary-empty btn-someone">
-                        someone else
-                    </button>
-                </div>
-                <div class="p-2 d-flex align-items-center justify-content-end gap-2">
-                    <button class="primary-fill continue-btn">Continue</button>
-                    <button class="primary-empty hide-popup-btn">Cancel</button>
-                </div>
-            </div>
+       
             @foreach ($data as $patientData)
             <button class="accordion"> <i class="bi bi-clock"></i>
                 Created-Date:  {{date_format(date_create( $patientData->created_at), 'd-m-Y')}}</button>

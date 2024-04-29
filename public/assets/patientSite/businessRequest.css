@@ -146,6 +146,27 @@
     }
 }
 
+
+@media (max-width: 450px) {
+    .symptoms-notes-label{
+        font-size: small;
+    }
+}
+
+
+@media (max-width: 375px) {
+    .symptoms-notes-label{
+        font-size: x-small;
+    }
+}
+
+@media (max-width: 320px) {
+    .symptoms-notes-label{
+        font-size: xx-small;
+    }
+}
+
+
 @media (max-width:276px){
     .floatingTextarea2{
         font-size: 8px;

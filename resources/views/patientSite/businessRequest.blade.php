@@ -79,7 +79,7 @@
                     <div class="area-text">
                         <div class="form-floating" id="form-floating">
                             <textarea class="form-control text-area-box" placeholder="Leave a comment here" name="symptoms" id="floatingTextarea3" style="height: 150px" >{{ old('symptoms') }}</textarea>
-                            <label for="floatingTextarea2" class="floatingTextarea2">Enter Brief Details of
+                            <label for="floatingTextarea2" class="floatingTextarea2 symptoms-notes-label">Enter Brief Details of
                                 Symptoms(optional)</label>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                             @enderror
                         </div>
                         <div class="" style="height: 58px;" id="form-floating">
-                            <input type="tel" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}">
+                            <input type="number" name="phone_number" class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" placeholder="Phone Number" value="{{ old('phone_number') }}" min="0">
                             @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror

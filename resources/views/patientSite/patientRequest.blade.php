@@ -26,7 +26,7 @@
                         </div>
                         <div class="form-floating" id="form-floating">
                             <textarea class="form-control note" name='symptoms' placeholder="notes" id="floatingTextarea2" style="height: 150px">{{ old('symptoms') }}</textarea>
-                            <label for="floatingTextarea2">Enter Brief Details of Symptoms(optional)</label>
+                            <label for="floatingTextarea2" class="symptoms-notes-label">Enter Brief Details of Symptoms(optional)</label>
                         </div>
                     </div>
                     <!--  Patient FirstName, LastName ,DOB Field  -->

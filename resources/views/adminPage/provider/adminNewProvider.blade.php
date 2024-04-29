@@ -176,7 +176,7 @@
                     @enderror
                 </div>
                 <div class="provider-form" style="height: 58px;">
-                    <input type="number" name="phone_number_alt" class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="" placeholder="Phone Number" value="{{ old('phone_number_alt') }}">
+                    <input type="number" name="phone_number_alt" class="form-control phone @error('phone_number_alt') is-invalid @enderror" id="" placeholder="Phone Number" value="{{ old('phone_number_alt') }}" min="0">
                     @error('phone_number_alt')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -236,7 +236,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="ms-4 btns provider-form" >
+                                    <div class="ms-4 btns provider-form">
                                         <label for="independent_contractor" class="upload primary-fill">  <i class="bi bi-cloud-arrow-up"></i> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
                                         <div id="Contractor" class="p-2"></div>

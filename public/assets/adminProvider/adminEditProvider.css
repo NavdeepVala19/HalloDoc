@@ -35,6 +35,9 @@
     border-radius: 5px;
 }
 
+.btns{
+    margin: 15px;
+}
 
 table {
     border-collapse: separate;
@@ -79,11 +82,22 @@ input[type="checkbox"] {
     display: none;
 }
 
+.btns{
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 20px;
+}
+
 .mobile-icons{
     display: none;
 }
 .upload{
     cursor: pointer;
+}
+
+.view-docs-eye{
+    display: none;
 }
 
 
@@ -129,6 +143,11 @@ input[type="checkbox"] {
     .bi{
         display: block;
     }
+    .view-text{
+        display: none;
+    }
+
+ 
 }
 
 

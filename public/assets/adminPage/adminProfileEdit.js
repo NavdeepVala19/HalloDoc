@@ -184,7 +184,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter a only alphabets and numbers in street name. "
+        "Please enter alphabets,dash,underscore,space and numbers in address1. "
     );
 
     $.validator.addMethod(
@@ -342,6 +342,7 @@ $(document).ready(function () {
             },
             alt_mobile: {
                 required: "Please enter a valid alt_phone_number",
+                min: "Please enter a 10 digit positive number in alternate phone number.",
             },
         },
         errorElement: "span",

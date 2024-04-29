@@ -117,15 +117,15 @@
     padding: 8px 20px !important;
 }
 
-.down-button-icon {
+.bi-cloud-arrow-down {
     display: none;
 }
 
 @media (max-width: 550px) {
-    .down-button {
+    .download-btn{
         display: none;
     }
-    .down-button-icon {
+    .bi-cloud-arrow-down {
         display: block;
     }
     .upload-txt {

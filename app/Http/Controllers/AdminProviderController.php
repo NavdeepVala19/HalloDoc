@@ -108,103 +108,109 @@ class AdminProviderController extends Controller
 
         $enteredText = $request->contact_msg;
 
-        if ($request->contact == "email") {
-            // send email
-            $providerData = Provider::get()->where('id', $request->provider_id);
-            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+        try {
+            if ($request->contact == "email") {
+                // send email
+                $providerData = Provider::get()->where('id', $request->provider_id);
+                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
-            EmailLog::create([
-                'role_id' => 1,
-                'is_email_sent' => true,
-                'sent_tries' => 1,
-                'sent_date' => now(),
-                'email_template' => $enteredText,
-                'subject_name' => 'notification to provider',
-                'email' => $receipientEmail,
-                'provider_id' => $receipientId,
-            ]);
-        } else if ($request->contact == "sms") {
-            // send SMS
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+                EmailLog::create([
+                    'role_id' => 1,
+                    'is_email_sent' => true,
+                    'sent_tries' => 1,
+                    'sent_date' => now(),
+                    'email_template' => $enteredText,
+                    'subject_name' => 'notification to provider',
+                    'email' => $receipientEmail,
+                    'provider_id' => $receipientId,
+                ]);
+            } else if ($request->contact == "sms") {
+                // send SMS
+                $sid = getenv("TWILIO_SID");
+                $token = getenv("TWILIO_AUTH_TOKEN");
+                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-            $twilio = new Client($sid, $token);
+                $twilio = new Client($sid, $token);
 
-            $message = $twilio->messages
-                ->create(
-                    "+91 99780 71802", // to
+                $message = $twilio->messages
+                    ->create(
+                        "+91 99780 71802", // to
+                        [
+                            "body" => "$enteredText",
+                            "from" => $senderNumber,
+                        ]
+                    );
+
+                SMSLogs::create(
                     [
-                        "body" => "$enteredText",
-                        "from" => $senderNumber,
+                        'provider_id' => $receipientId,
+                        'mobile_number' => $receipientMobile,
+                        'created_date' => now(),
+                        'sent_date' => now(),
+                        'role_id' => 1,
+                        'recipient_name' => $receipientName,
+                        'sent_tries' => 1,
+                        'is_sms_sent' => 1,
+                        'action' => 1,
+                        'sms_template' => $enteredText,
                     ]
                 );
+            } else if ($request->contact == "both") {
+                // send email
+                $providerData = Provider::get()->where('id', $request->provider_id);
+                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
-            SMSLogs::create(
-                [
-                    'provider_id' => $receipientId,
-                    'mobile_number' => $receipientMobile,
-                    'created_date' => now(),
-                    'sent_date' => now(),
-                    'role_id' => 1,
-                    'recipient_name' => $receipientName,
-                    'sent_tries' => 1,
-                    'is_sms_sent' => 1,
-                    'action' => 1,
-                    'sms_template' => $enteredText,
-                ]
-            );
-        } else if ($request->contact == "both") {
-            // send email
-            $providerData = Provider::get()->where('id', $request->provider_id);
-            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+                // send SMS
+                $sid = getenv("TWILIO_SID");
+                $token = getenv("TWILIO_AUTH_TOKEN");
+                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
-            // send SMS
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-            $twilio = new Client(
-                $sid,
-                $token
-            );
-
-            $message = $twilio->messages
-                ->create(
-                    "+91 99780 71802", // to
-                    [
-                        "body" => "$enteredText",
-                        "from" => $senderNumber,
-                    ]
+                $twilio = new Client(
+                    $sid,
+                    $token
                 );
 
-            EmailLog::create([
-                'role_id' => 1,
-                'is_email_sent' => true,
-                'sent_tries' => 1,
-                'sent_date' => now(),
-                'email_template' => $enteredText,
-                'subject_name' => 'notification to provider',
-                'email' => $receipientEmail,
-                'provider_id' => $receipientId,
-            ]);
+                $message = $twilio->messages
+                    ->create(
+                        "+91 99780 71802", // to
+                        [
+                            "body" => "$enteredText",
+                            "from" => $senderNumber,
+                        ]
+                    );
 
-            SMSLogs::create(
-                [
-                    'provider_id' => $receipientId,
-                    'mobile_number' => $receipientMobile,
-                    'created_date' => now(),
-                    'sent_date' => now(),
+                EmailLog::create([
                     'role_id' => 1,
-                    'recipient_name' => $receipientName,
+                    'is_email_sent' => true,
                     'sent_tries' => 1,
-                    'is_sms_sent' => 1,
-                    'action' => 1,
-                    'sms_template' => $enteredText,
-                ]
-            );
+                    'sent_date' => now(),
+                    'email_template' => $enteredText,
+                    'subject_name' => 'notification to provider',
+                    'email' => $receipientEmail,
+                    'provider_id' => $receipientId,
+                ]);
+
+                SMSLogs::create(
+                    [
+                        'provider_id' => $receipientId,
+                        'mobile_number' => $receipientMobile,
+                        'created_date' => now(),
+                        'sent_date' => now(),
+                        'role_id' => 1,
+                        'recipient_name' => $receipientName,
+                        'sent_tries' => 1,
+                        'is_sms_sent' => 1,
+                        'action' => 1,
+                        'sms_template' => $enteredText,
+                    ]
+                );
+            }
+            return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
+        } catch (\Throwable $th) {
+            return view('errors.500');
         }
-        return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
+
+
     }
 
     public function stopNotifications(Request $request)
@@ -226,7 +232,7 @@ class AdminProviderController extends Controller
     {
         $request->validate([
             'user_name' => 'required|alpha|min:3|max:40',
-            'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
+            'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
@@ -386,7 +392,7 @@ class AdminProviderController extends Controller
 
         if (!empty($request->password)) {
             $request->validate([
-            'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
+            'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             ]);
             $updateProviderInfoUsers->password = Hash::make($request->password);
             $updateProviderInfoUsers->save();

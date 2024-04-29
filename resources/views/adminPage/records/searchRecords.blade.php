@@ -123,7 +123,7 @@
                     <input type="email" class="form-control email" id="floatingInput" placeholder="name@example.com" name="email" value="{{old('email' ,request()->input('email'))}}">
                     <label for="floatingInput">Email</label>
                 </div>
-                <input type="tel" name="phone_number" class="form-control phone-number" id="telephone" value="{{old('phone_number' ,request()->input('phone_number'))}}">
+                <input type="text" name="phone_number" class="form-control phone-number" placeholder="Phone Number" value="{{old('phone_number' ,request()->input('phone_number'))}}">
             </div>
             <div class="mt-4 d-flex justify-content-end gap-2">
                 <button class="primary-fill" type="submit">

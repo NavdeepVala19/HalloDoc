@@ -23,7 +23,7 @@
         <input type="hidden" name="email" value="{{Session::get('email')}}">
         <div class="grid-2">
             <div class="form-floating">
-                <input type="text" name="first_name" class="form-control first_name" id="floatingInput1" value="{{$getEmailData->first_name ? $getEmailData->first_name  : " " }}" disabled placeholder="First Name">
+                <input type="text" name="first_name" class="form-control first_name" id="floatingInput1" value="{{$getEmailData->first_name ? $getEmailData->first_name  : " " }}" disabled placeholder="First Name">
                 <label for="floatingInput1">First Name</label>
                 @error('first_name')
                 <div class="alert alert-danger">{{ $message }}</div>
