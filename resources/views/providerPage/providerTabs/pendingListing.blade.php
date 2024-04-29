@@ -19,39 +19,7 @@
     @include('loading')
 
     {{-- Error or Success Message Alerts/Pop-ups --}}
-    @if (session('caseAccepted'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('caseAccepted') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    @if (session('transferredCase'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('transferredCase') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- Request Created Successfully --}}
-    @if (session('requestCreated'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('requestCreated') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
-    {{-- Agreement Sent to patient Successfully --}}
-    @include('alertMessages.agreementSentSuccess')
+    @include('alertMessages.successMessage')
 
     {{-- Send Agreement Pop-up --}}
     {{-- This pop-up will open when admin/provider will click on “Send agreement” link from Actions menu. From the

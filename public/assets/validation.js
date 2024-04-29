@@ -1008,6 +1008,7 @@ $(document).ready(function () {
             },
         },
         errorPlacement: function (error, element) {
+            element.closest(".custom-file-input").find(".text-danger").remove();
             let errorDiv = $("<div class='text-danger'></div>");
             errorDiv.append(error);
             element.closest(".custom-file-input").append(errorDiv);
@@ -1036,7 +1037,7 @@ $(document).ready(function () {
         messages: {
             providerNotes: {
                 minlength: "Minimum 5 characters are required",
-                maxlength: "Maximum 200 characters allowed"
+                maxlength: "Maximum 200 characters allowed",
             },
         },
         errorPlacement: function (error, element) {

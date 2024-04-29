@@ -294,7 +294,7 @@ class CommonOperationController extends Controller
             return view('errors.500');
         }
 
-        return redirect()->back()->with('agreementSent', 'Agreement sent to patient successfully!');
+        return redirect()->back()->with('successMessage', 'Agreement sent to patient successfully!');
     }
 
     // Common Code for Admin/Provider

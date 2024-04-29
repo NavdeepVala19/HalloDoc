@@ -18,6 +18,9 @@ giving service to the patient. --}}
     <div class="overlay"></div>
     @include('loading')
 
+    {{-- Error or Success Message Alerts/Pop-ups --}}
+    @include('alertMessages.successMessage')
+
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.providerSendLink')
 
@@ -27,15 +30,6 @@ giving service to the patient. --}}
     {{-- Finalize Pop-up appears when the provider has finalized the encounter form --}}
     {{-- The pop-up will give download link of the medical-report(Encounter Form) --}}
     @include('popup.providerEncounterFinalized')
-
-    {{-- Encounter Form Finalized (Success Message) --}}
-    @include('alertMessages.formFinalizedSuccess')
-
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
-
-    {{-- Order Created Successfully Pop-up Message --}}
-    @include('alertMessages.orderPlacedSuccess')
 
     {{-- Send Mail to patient --}}
     @include('popup.sendMail')

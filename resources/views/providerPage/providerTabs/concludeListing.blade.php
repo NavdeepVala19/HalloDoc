@@ -17,28 +17,9 @@
     <div class="overlay"></div>
     @include('loading')
 
-    {{-- Encounter Form Finalized --}}
-    @if (session('encounterFormFinalized'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('encounterFormFinalized') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
+    {{-- Error or Success Message Alerts/Pop-ups --}}
+    @include('alertMessages.successMessage')
 
-    {{-- Case Concluded Successfully --}}
-    @if (session('CaseConcluded'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('CaseConcluded') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
-    {{-- SendLink Completed Successfully --}}
-    @include('alertMessages.sendLinkSuccess')
 
     {{-- Send Link pop-up -> used to send link of Submit Request Screen page to the patient via email and SMS --}}
     @include('popup.providerSendLink')
@@ -47,10 +28,6 @@
     {{-- The Encounter form should redirect to conclude page and will show these pop-up --}}
     {{-- The pop-up will give download link of the medical-report(Encounter Form) --}}
     @include('popup.providerEncounterFinalized')
-
-
-    {{-- Encounter Form Finalized (Success Message) --}}
-    @include('alertMessages.formFinalizedSuccess')
 
     {{-- Send Mail to patient --}}
     @include('popup.sendMail')

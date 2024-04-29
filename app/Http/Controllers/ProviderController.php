@@ -394,10 +394,10 @@ class ProviderController extends Controller
                 'subject_name' => 'Create account by clicking on below link with below email address',
                 'email' => $request->email,
             ]);
-            return redirect()->route('provider.status', 'pending')->with('requestCreated', 'Email for create account is sent & request created successfully!');
+            return redirect()->route('provider.status', 'pending')->with('successMessage', 'Email for create account is sent & request created successfully!');
         } else {
             // Redirect to provider status page with success message
-            return redirect()->route("provider.status", 'pending')->with('requestCreated', "Request Created Successfully!");
+            return redirect()->route("provider.status", 'pending')->with('successMessage', "Request Created Successfully!");
         }
     }
 
@@ -548,6 +548,6 @@ class ProviderController extends Controller
             'action' => 1,
         ]);
 
-        return redirect()->back()->with('linkSent', "Link Sent Successfully!");
+        return redirect()->back()->with('successMessage', "Link Sent Successfully!");
     }
 }
