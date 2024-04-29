@@ -243,6 +243,16 @@ class ProviderActionsController extends Controller
     {
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
+            'last_name' => 'required|min:3|max:15|alpha',
+            'location' => 'required',
+            'date_of_birth' => 'required',
+            'service_date' => 'required',
+            'mobile' => 'required',
+            'allergies' => 'required|min:5|max:200',
+            'treatment_plan' => 'required|min:5|max:200',
+            'medication_dispensed' => 'required|min:5|max:200',
+            'procedure' => 'required|min:5|max:200',
+            'followUp' => 'required|min:5|max:200',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
         ]);
 

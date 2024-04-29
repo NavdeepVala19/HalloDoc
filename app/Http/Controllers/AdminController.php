@@ -326,6 +326,7 @@ class AdminController extends Controller
             'role_id' => 1,
             'is_email_sent' => true,
             'sent_tries' => 1,
+            'create_date' => now(),
             'sent_date' => now(),
             'email_template' => 'mail.blade.php',
             'subject_name' => 'Create Request Link',
@@ -749,7 +750,7 @@ class AdminController extends Controller
     // Records Page
     public function searchRecordsView()
     {
-          // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
+        // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
 
         $combinedData = request_Client::distinct()->select([
             'request.request_type_id',
@@ -789,7 +790,7 @@ class AdminController extends Controller
         // Retrieve pagination parameters from the request
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
-        
+
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
 
         $session = session([
@@ -881,10 +882,10 @@ class AdminController extends Controller
     {
         $data = $this->exportFilteredSearchRecord($request);
 
-        if($data->get()->isEmpty()){
+        if ($data->get()->isEmpty()) {
             return back()->with('message', 'no records to export to Excel');
-        }else{
-            $export = new SearchRecordExport($data);   
+        } else {
+            $export = new SearchRecordExport($data);
             return Excel::download($export, 'filtered_data.xls');
         }
     }
@@ -893,13 +894,13 @@ class AdminController extends Controller
     {
         $getRequestId = request_Client::select('request_id')->where('id', $id)->first()->request_id;
 
-        $deleteData = request_Client::where('id', $id)->forceDelete();
-        $deleteRequestTableData = RequestTable::where('id', $getRequestId)->forceDelete();
         $deleteDocuments = RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
         $deleteRequestStatus = RequestStatus::where('request_id', $getRequestId)->forceDelete();
         $deleteRequestBusiness = RequestBusiness::where('request_id', $getRequestId)->forceDelete();
         $deleteRequestConcierge = RequestConcierge::where('request_id', $getRequestId)->forceDelete();
         $deleteBlockData = BlockRequest::where('request_id', $getRequestId)->forceDelete();
+        $deleteData = request_Client::where('id', $id)->forceDelete();
+        $deleteRequestTableData = RequestTable::where('id', $getRequestId)->forceDelete();
 
         return redirect()->back();
     }
@@ -1411,13 +1412,12 @@ class AdminController extends Controller
             $exportNewData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        if($exportNewData->get()->isEmpty()){
+        if ($exportNewData->get()->isEmpty()) {
             return back()->with('message', 'no cases found to export in Excel');
-        }else{
+        } else {
             $exportNew = new NewStatusExport($exportNewData);
             return Excel::download($exportNew, 'NewData.xls');
         }
-
     }
 
     public function exportPending(Request $request)
@@ -1434,13 +1434,12 @@ class AdminController extends Controller
             $exportPendingData = $this->fetchQuery($status, $category, $search, $regionName);
         }
 
-        if ($exportPendingData->get()->isEmpty()) { 
+        if ($exportPendingData->get()->isEmpty()) {
             return back()->with('message', 'no cases found to export in Excel');
         } else {
             $exportPending = new PendingStatusExport($exportPendingData);
             return Excel::download($exportPending, 'PendingData.xls');
         }
-
     }
 
     public function exportActive(Request $request)
@@ -1463,7 +1462,6 @@ class AdminController extends Controller
             $exportActive = new ActiveStatusExport($exportActiveData);
             return Excel::download($exportActive, 'ActiveData.xls');
         }
-
     }
 
     public function exportConclude(Request $request)
@@ -1486,7 +1484,6 @@ class AdminController extends Controller
             $exportConclude = new ConcludeStatusExport($exportConcludeData);
             return Excel::download($exportConclude, 'ConcludeData.xls');
         }
-
     }
     public function exportToClose(Request $request)
     {
@@ -1508,8 +1505,6 @@ class AdminController extends Controller
             $exportToClose = new ToCloseStatusExport($exportToCloseData);
             return Excel::download($exportToClose, 'ToCloseData.xls');
         }
-
-
     }
 
     public function exportUnpaid(Request $request)
@@ -1533,7 +1528,6 @@ class AdminController extends Controller
             $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
             return Excel::download($exportUnpaid, 'UnPaidData.xls');
         }
-
     }
 
     // REMOVED FROM SRS

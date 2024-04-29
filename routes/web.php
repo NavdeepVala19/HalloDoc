@@ -101,8 +101,6 @@ route::middleware('CheckPatientLogin')->group(function () {
 });
 //  *******************************************************************************************************
 
-
-
 //  ***************************************************************************************************************************************
 // it will show agreement page
 route::get('/patientAgreement/{data}', [patientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
@@ -111,7 +109,6 @@ Route::post('/agree-agreement', [patientDashboardController::class, 'agreeAgreem
 // Agreement Cancelled by patient
 Route::post('/cancel-agreement', [patientDashboardController::class, 'cancelAgreement'])->name('patient.cancel.agreement');
 //  ***************************************************************************************************************************************
-
 
 // **********************************************************ADMIN***************************************************************
 
@@ -132,7 +129,6 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 // route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 // ****************************************************************************************************************************
-
 
 // ******************************* NAVDEEP's WORK **********************************************
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
@@ -181,6 +177,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     // VIEW UPLOADS PAGE
     // View Uploads (currently showing all the documents in requestWiseFile table)
     Route::get('/view-uploads/{id?}', [ProviderActionsController::class, 'viewUpload'])->name('provider.view.upload');
+    // upload document from viewUploads page
     Route::post('/view-uploads/{id?}', [ProviderActionsController::class, 'uploadDocument'])->name('proivder.upload.doc');
 
     // VIEW CASE PAGE  
@@ -190,6 +187,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     // VIEW SEND ORDER PAGE
     // Send Order active state provider
     Route::get('/view-order/{id?}', [ProviderActionsController::class, 'viewOrder'])->name('provider.view.order');
+    // Store data from the form to the database table
     Route::post('/provider-send-order', [ProviderActionsController::class, 'sendOrder'])->name('provider.send.order');
 
     // when consult is selected from the encounter of active listing perform operation
@@ -304,10 +302,12 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // close case admin
     Route::get('/close-case/{id}', [AdminActionsController::class, 'closeCase'])->name('admin.close.case');
+    // admin closes case -> store the fetched data from form and change status for that particular request
     Route::post('/close-case', [AdminActionsController::class, 'closeCaseData'])->name('admin.close.case.save');
 
     // send orders admin page 
     Route::get('/admin-view-order/{id}', [AdminActionsController::class, 'viewOrder'])->name('admin.view.order');
+    // Admin send order data stored in database table
     Route::post('/admin-send-order', [AdminActionsController::class, 'sendOrder'])->name('admin.send.order');
 
     // Partners Page in Admin
@@ -317,26 +317,39 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Add Business Page
     Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
+    // add a new business from addBusiness page 
     Route::post('/add-business', [AdminController::class, 'addBusiness'])->name('add.business');
     // Update Business Page
     Route::get('/update-business/{id}', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
+    // Update already existing business details
     Route::post('/update-business', [AdminController::class, 'updateBusiness'])->name('update.business');
+    // Delete already existing business
     Route::get('/delete-business/{id}', [AdminController::class, 'deleteBusiness'])->name('delete.business');
 
-    // Account Roles Access Page
+    // Account Access Page
     Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
+    // Create a new role page 
     Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('admin.create.role.view');
+    // fetch all roles to show in the dropdown as per the account type
     Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('fetch.roles');
+    // create a new access, and store that data
     Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
+    // Delete already existing access
     Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
+    // Display Edit access page
     Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
+    // Edit an already existing access
     Route::post('/edit-access-data', [AdminController::class, 'editAccessData'])->name('admin.edit.access.data');
 
-    // Records Page 
+    // Email Logs Page 
     Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
+    // Search and filter email logs page
     Route::get('/search-email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+    // Patient History Page 
     Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
+    // searching and filtering of Patient Records Page 
     Route::get('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
+    // Display Patient Records Page 
     Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
 
     // ---------------------------- SCHEDULING ----------------------------

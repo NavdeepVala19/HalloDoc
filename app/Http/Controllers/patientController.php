@@ -41,9 +41,7 @@ class patientController extends Controller
             'room' => 'gte:0|nullable|max:1000'
         ]);
 
-
         $isEmailStored = users::where('email', $request->email)->first();
-        dd($isEmailStored->id);
 
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table

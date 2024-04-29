@@ -14,6 +14,14 @@ $(document).ready(function () {
     // Apply the stored theme or default to light theme
     if (themePref) {
         $("html").addClass(themePref); // Add the theme preference class
+
+        if (themePref == "light") {
+            $(".sun-icon").hide();
+            $(".moon-icon").show();
+        } else {
+            $(".sun-icon").show();
+            $(".moon-icon").hide();
+        }
     } else {
         $("html").addClass("light");
         localStorage.setItem("theme", "light");
@@ -25,6 +33,13 @@ $(document).ready(function () {
         const newTheme = currentTheme === "light" ? "dark" : "light";
 
         // Update body class and local storage
+        if (newTheme == "light") {
+            $(".sun-icon").hide();
+            $(".moon-icon").show();
+        } else {
+            $(".sun-icon").show();
+            $(".moon-icon").hide();
+        }
 
         $("html").removeClass(currentTheme).addClass(newTheme);
         localStorage.setItem("theme", newTheme);

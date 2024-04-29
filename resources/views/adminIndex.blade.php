@@ -17,8 +17,11 @@
                 <img class="doctor-logo" src="{{ URL::asset('/assets/11116016_415.jpg') }}" alt="">
             </div>
             <div class="col-lg-6 second-col">
-                <div class="moon-icon">
-                    <button class="primary-empty toggle-mode" id="toggle-mode"> <i class="bi bi-moon"></i></button>
+                <div class="icons">
+                    <button class="primary-empty toggle-mode" id="toggle-mode">
+                        <i class="bi bi-moon moon-icon"></i>
+                        <i class="bi bi-brightness-high sun-icon"></i>
+                    </button>
                 </div>
                 <div class="app-logo">
                     <a href=""><img class="hallodoc-logo" src="{{ URL::asset('/assets/logo.png') }}"

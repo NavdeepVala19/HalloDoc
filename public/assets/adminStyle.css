@@ -12,7 +12,7 @@
     height: 100%;
 }
 
-.moon-icon {
+.icons {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;

@@ -11,26 +11,39 @@
             @enderror
         </div>
         <div class="form-floating ">
-            <input type="text" name="last_name" class="form-control" id="floatingInput2" placeholder="Last Name"
-                value={{ $data->last_name ?? '' }}>
+            <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
+                id="floatingInput2" placeholder="Last Name" value={{ $data->last_name ?? '' }}>
             <label for="floatingInput2">Last Name</label>
+            @error('last_name')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
     </div>
     <div class="form-floating ">
-        <input type="text" name="location" class="form-control" id="floatingInput3" placeholder="location"
-            value="{{ $data->location ?? '' }}">
+        <input type="text" name="location" class="form-control @error('location') is-invalid @enderror"
+            id="floatingInput3" placeholder="location" value="{{ $data->location ?? '' }}">
         <label for="floatingInput3">Location</label>
+        @error('location')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
     <div class="grid-2">
         <div class="form-floating ">
-            <input type="date" name="date_of_birth" class="form-control date_of_birth" id="floatingInput4"
+            <input type="date" name="date_of_birth"
+                class="form-control date_of_birth @error('date_of_birth') is-invalid @enderror" id="floatingInput4"
                 placeholder="date of birth" value="{{ $data->date_of_birth ?? '' }}">
             <label for="floatingInput4">Date Of Birth</label>
+            @error('date_of_birth')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-floating ">
-            <input type="date" name="service_date" class="form-control" id="floatingInput5" placeholder="date"
-                value="{{ $data->service_date ?? '' }}">
+            <input type="date" name="service_date" class="form-control @error('service_date') is-invalid @enderror"
+                id="floatingInput5" placeholder="date" value="{{ $data->service_date ?? '' }}">
             <label for="floatingInput5">Date</label>
+            @error('service_date')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-floating">
             <div class="mobile-container">
@@ -64,8 +77,12 @@
             <label for="floatingTextarea3">Medications</label>
         </div>
         <div class="form-floating">
-            <textarea class="form-control note" name="allergies" placeholder="allergies" id="floatingTextarea4">{{ $data->allergies ?? '' }}</textarea>
+            <textarea class="form-control note  @error('allergies') is-invalid @enderror" name="allergies" placeholder="allergies"
+                id="floatingTextarea4">{{ $data->allergies ?? '' }}</textarea>
             <label for="floatingTextarea4">Allergies</label>
+            @error('allergies')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
     </div>
     <div class="grid-3">
@@ -75,8 +92,8 @@
             <label for="floatingInput7">Temp (degree C)</label>
         </div>
         <div class="form-floating ">
-            <input type="number" name="heart_rate" class="form-control" id="floatingInput8" placeholder="heart_rate"
-                value={{ $data->heart_rate ?? '' }}>
+            <input type="number" name="heart_rate" class="form-control" id="floatingInput8"
+                placeholder="heart_rate" value={{ $data->heart_rate ?? '' }}>
             <label for="floatingInput8">HR</label>
         </div>
         <div class="form-floating ">
@@ -146,21 +163,36 @@
             <label for="floatingTextarea13">Diagnosis</label>
         </div>
         <div class="form-floating">
-            <textarea class="form-control note" name="treatment_plan" placeholder="Treatment Plan" id="floatingTextarea14">{{ $data->treatment_plan ?? '' }}</textarea>
+            <textarea class="form-control note  @error('treatment_plan') is-invalid @enderror" name="treatment_plan"
+                placeholder="Treatment Plan" id="floatingTextarea14">{{ $data->treatment_plan ?? '' }}</textarea>
             <label for="floatingTextarea14">Treatment Plan</label>
+            @error('treatment_plan')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-floating">
-            <textarea class="form-control note" name="medication_dispensed" placeholder="Medications Dispensed"
-                id="floatingTextarea15">{{ $data->medication_dispensed ?? '' }}</textarea>
+            <textarea class="form-control note @error('medication_dispensed') is-invalid @enderror" name="medication_dispensed"
+                placeholder="Medications Dispensed" id="floatingTextarea15">{{ $data->medication_dispensed ?? '' }}</textarea>
             <label for="floatingTextarea15">Medication Dispensed</label>
+            @error('medication_dispensed')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-floating">
-            <textarea class="form-control note" name="procedure" placeholder="procedures" id="floatingTextarea16">{{ $data->procedure ?? '' }}</textarea>
+            <textarea class="form-control note @error('procedure') is-invalid @enderror" name="procedure"
+                placeholder="procedures" id="floatingTextarea16">{{ $data->procedure ?? '' }}</textarea>
             <label for="floatingTextarea16">Procedures</label>
+            @error('procedure')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
     </div>
     <div class="form-floating">
-        <textarea class="form-control note" name="followUp" placeholder="followup" id="floatingTextarea17">{{ $data->followUp ?? '' }}</textarea>
+        <textarea class="form-control note @error('followUp') is-invalid @enderror" name="followUp" placeholder="followup"
+            id="floatingTextarea17">{{ $data->followUp ?? '' }}</textarea>
         <label for="floatingTextarea17">Followup</label>
+        @error('followUp')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 </div>

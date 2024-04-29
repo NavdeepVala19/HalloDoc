@@ -112,11 +112,13 @@
                                     <td>{{ $vendor->fax_number }}</td>
                                     <td>{{ $vendor->phone_number }}</td>
                                     <td>{{ $vendor->business_contact }}</td>
-                                    <td class="d-flex gap-2 ">
-                                        <a href="{{ route('update.business.view', Crypt::encrypt($vendor->id)) }}"
-                                            class="primary-empty">Edit</a>
-                                        <a href="{{ route('delete.business', $vendor->id) }}"
-                                            class="primary-empty">Delete</a>
+                                    <td>
+                                        <div class="button-section">
+                                            <a href="{{ route('update.business.view', Crypt::encrypt($vendor->id)) }}"
+                                                class="primary-empty">Edit</a>
+                                            <a href="{{ route('delete.business', $vendor->id) }}"
+                                                class="primary-empty">Delete</a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endif
@@ -156,7 +158,8 @@
                             </span>
                         </div>
                         <div class="text-end mobile-btn">
-                            <a href="{{ route('update.business.view', Crypt::encrypt($vendor->id)) }}" class="primary-empty">Edit</a>
+                            <a href="{{ route('update.business.view', Crypt::encrypt($vendor->id)) }}"
+                                class="primary-empty">Edit</a>
                             <a href="{{ route('delete.business', $vendor->id) }}" class="primary-empty">Delete</a>
                         </div>
                     </div>

@@ -17,7 +17,8 @@
         </a>
         <a href="{{ route('logout') }}" class="logout-link primary-empty">Logout</a>
         <button class="primary-empty toggle-mode" id="toggle-mode">
-            <i class="bi bi-moon"></i>
+            <i class="bi bi-moon moon-icon"></i>
+            <i class="bi bi-brightness-high sun-icon"></i>
         </button>
     </div>
 </header>
