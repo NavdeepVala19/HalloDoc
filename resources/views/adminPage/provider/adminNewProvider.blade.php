@@ -235,12 +235,11 @@
                                         </span>
                                     </div>
                                 </td>
-
                                 <td>
                                     <div class="ms-4 btns provider-form" >
-                                        <label for="independent_contractor" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i> </label>
+                                        <label for="independent_contractor" class="upload primary-fill">  <i class="bi bi-cloud-arrow-up"></i> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="independent_contractor" class="independent-contractor-input" name="independent_contractor" hidden>
-                                        <p id="Contractor"></p>
+                                        <div id="Contractor" class="p-2"></div>
                                         @error('independent_contractor')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -259,9 +258,9 @@
 
                                 <td>
                                     <div class="ms-4 btns provider-form" >
-                                        <label for="background-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i> </label>
+                                        <label for="background-input" class="upload primary-fill">  <i class="bi bi-cloud-arrow-up"></i> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="background-input" name="background_doc" hidden>
-                                        <p id="Background"></p>
+                                        <div id="Background" class="p-2"></div>
                                         @error('background_doc')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -280,9 +279,10 @@
 
                                 <td>
                                     <div class="ms-4 btns provider-form" >
-                                        <label for="hipaa-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i> </label>
+                                        <label for="hipaa-input" class="upload primary-fill"> <i class="bi bi-cloud-arrow-up"></i> <span class="upload-txt">Upload</span>  </label>
                                         <input type="file" id="hipaa-input" hidden name="hipaa_docs">
-                                        <p id="HIPAA"></p>
+                                        
+                                        <div id="HIPAA" class="p-2"></div>
                                         @error('hipaa_docs')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -300,9 +300,10 @@
                                 </td>
                                 <td>
                                     <div class="ms-4 btns provider-form" >
-                                        <label for="non-disclosure-input" class="upload primary-fill"> <span class="upload-txt">Upload</span> <i class="bi bi-cloud-arrow-up"></i></label>
+                                        <label for="non-disclosure-input" class="upload primary-fill">  <i class="bi bi-cloud-arrow-up"></i> <span class="upload-txt">Upload</span> </label>
                                         <input type="file" id="non-disclosure-input" hidden name="non_disclosure_doc">
-                                        <p class="non-disclosure"></p>
+                                
+                                        <div class="non-disclosure" class="p-2"></div>
                                         @error('non_disclosure_doc')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror

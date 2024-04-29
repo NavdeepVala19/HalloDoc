@@ -1,4 +1,27 @@
 $(document).ready(function () {
+
+
+    // **** Fetching regions from regions table ****
+    $.ajax({
+        url: "/admin-account-state",
+        type: "GET",
+        success: function (data) {
+            data.forEach(function (region) {
+                $("#listing_state_admin_account").append(
+                    '<option value="' +
+                        region.id +
+                        '" class="state-name" >' +
+                        region.region_name +
+                        "</option>"
+                );
+            });
+        },
+        error: function (error) {
+            console.error(error);
+        },
+    });
+
+    
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {
@@ -198,7 +221,7 @@ $(document).ready(function () {
             },
             confirm_email: {
                 required: true,
-                emailAddress: true,
+                equalTo: ".email",
             },
             phone_number: {
                 required: true,
@@ -206,7 +229,8 @@ $(document).ready(function () {
             },
             alt_mobile: {
                 required: true,
-                phoneIndia: true,
+                maxlength: 10,
+                minlength: 10,
             },
             address1: {
                 required: true,
@@ -273,6 +297,7 @@ $(document).ready(function () {
             confirm_email: {
                 required:
                     "Please enter a valid email format (e.g., user@example.com).",
+                equalTo: "Confirm email and email both must be same",
             },
             phone_number: {
                 required: "Please enter a mobile number",
@@ -298,7 +323,7 @@ $(document).ready(function () {
             },
             zipcode: {
                 required: "Please enter a zipcode",
-                min: "Please enter positive number with 6 digits",
+                min: "Please enter positive 6 digits zipcode",
             },
             role: {
                 required: "Please select at least one role",
@@ -307,7 +332,7 @@ $(document).ready(function () {
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("text-danger");
-            element.closest("#form-floating").append(error);
+            element.closest(".errorMsg").append(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass("is-invalid").removeClass("is-valid");

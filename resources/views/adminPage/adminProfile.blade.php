@@ -52,9 +52,7 @@
         <h1 class="heading">My Profile</h1>
         <a href="{{route('admin.dashboard')}}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
-
     <div class="section">
-
         @if (Session::has('message'))
         <div class="alert alert-success popup-message" role="alert">
             {{ Session::get('message') }}
@@ -65,14 +63,14 @@
             @csrf
             <h3>Account Information</h3>
             <div class="grid-2">
-                <div class="form-floating ">
-                    <input type="text" name="user_name" class="form-control admin_user_name" id="floatingInput" placeholder="User Name" value="{{ $adminProfileData->users->username }}" disabled>
-                    <label for="floatingInput">User Name</label>
+                <div class="form-floating">
+                    <input type="text" name="user_name" class="form-control admin_user_name" id="floatingInput1" placeholder="User Name" value="{{ $adminProfileData->users->username }}" disabled>
+                    <label for="floatingInput1">User Name</label>
                 </div>
 
-                <div class="form-floating ">
-                    <input type="password" name="password" class="form-control admin-password" id="floatingInput" placeholder="password">
-                    <label for="floatingInput">Password</label>
+                <div class="form-floating errorMsg">
+                    <input type="password" name="password" class="form-control admin-password" id="floatingInput2" placeholder="password">
+                    <label for="floatingInput2">Password</label>
                     @error('password')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -105,38 +103,38 @@
         <form action="{{route('adminInfoUpdate', $adminProfileData->user_id)}}" method="post" id="adminEditProfileForm2">
             @csrf
             <div class="grid-2">
-                <div class="form-floating ">
-                    <input type="text" name="first_name" class="form-control admin_first_name" id="floatingInput" placeholder="First Name" value="{{ $adminProfileData->first_name }}" disabled>
-                    <label for="floatingInput">First Name</label>
+                <div class="form-floating errorMsg">
+                    <input type="text" name="first_name" class="form-control admin_first_name" id="floatingInput3" placeholder="First Name" value="{{ $adminProfileData->first_name }}" disabled>
+                    <label for="floatingInput3">First Name</label>
                     @error('first_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
-                    <input type="text" name="last_name" class="form-control admin_last_name" id="floatingInput" placeholder="Last Name" value="{{ $adminProfileData->last_name }}" disabled>
-                    <label for="floatingInput">Last Name</label>
+                <div class="form-floating errorMsg">
+                    <input type="text" name="last_name" class="form-control admin_last_name" id="floatingInput4" placeholder="Last Name" value="{{ $adminProfileData->last_name }}" disabled>
+                    <label for="floatingInput4">Last Name</label>
                     @error('last_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="form-floating ">
-                    <input type="email" class="form-control admin_email" id="floatingInput" name="email" placeholder="name@example.com" value="{{ $adminProfileData->email }}" disabled>
-                    <label for="floatingInput">Email</label>
+                <div class="form-floating errorMsg">
+                    <input type="email" class="form-control admin_email" id="floatingInput5" name="email" placeholder="name@example.com" value="{{ $adminProfileData->email }}" disabled>
+                    <label for="floatingInput5">Email</label>
                          @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="form-floating ">
-                    <input type="email" class="form-control admin_confirm_email" id="floatingInput" name="confirm_email" placeholder="name@example.com" value="{{ $adminProfileData->email }}" disabled>
-                    <label for="floatingInput">Confirm Email</label>
+                <div class="form-floating errorMsg">
+                    <input type="email" class="form-control admin_confirm_email" id="floatingInput6" name="confirm_email" placeholder="name@example.com" value="{{ $adminProfileData->email }}" disabled>
+                    <label for="floatingInput6">Confirm Email</label>
                     @error('confirm_email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="form-floating" style="height: 58px;">
+                <div class="form-floating errorMsg" style="height: 58px;">
                     <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ $adminProfileData->mobile }}" disabled>
                     @error('phone_number')
                     <div class="text-danger">{{ $message }}</div>
@@ -158,46 +156,47 @@
         <form action="{{route('adminMailInfoUpdate', $adminProfileData->user_id)}}" method="post" id="adminEditProfileForm3">
             @csrf
             <div class="grid-2">
-                <div class="form-floating ">
-                    <input type="text" name="address1" class="form-control admin_add1" id="floatingInput" placeholder="Address 1" value="{{ $adminProfileData->address1 }}" disabled>
-                    <label for="floatingInput">Address 1</label>
+                <div class="form-floating errorMsg">
+                    <input type="text" name="address1" class="form-control admin_add1" id="floatingInput7" placeholder="Address 1" value="{{ $adminProfileData->address1 }}" disabled>
+                    <label for="floatingInput7">Address 1</label>
                          @error('address1')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
-                    <input type="text" name="address2" class="form-control admin_add2" id="floatingInput" placeholder="Address 2" value="{{ $adminProfileData->address2 }}" disabled>
-                    <label for="floatingInput">Address 2</label>
+                <div class="form-floating errorMsg">
+                    <input type="text" name="address2" class="form-control admin_add2" id="floatingInput8" placeholder="Address 2" value="{{ $adminProfileData->address2 }}" disabled>
+                    <label for="floatingInput8">Address 2</label>
                          @error('address2')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating ">
-                    <input type="text" name="city" class="form-control city" id="floatingInput" placeholder="city" value="{{ $adminProfileData->city }}" disabled>
-                    <label for="floatingInput">City</label>
-                         @error('city')
+                <div class="form-floating errorMsg">
+                    <input type="text" name="city" class="form-control city" id="floatingInput9" placeholder="city" value="{{ $adminProfileData->city }}" disabled>
+                    <label for="floatingInput9">City</label>
+                    @error('city')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div>
                     {{-- Dropdown State Selection --}}
-                    <div class="form-floating">
+                    <div class="form-floating errorMsg">
                         <select class="form-select admin_state" id="listing_state_admin_account" aria-label="Floating label select example" disabled name="select_state">
+                            <option value="">Select State</option>
                             <option selected value="{{$adminProfileData->id }}">{{ $adminProfileData->region_name }}</option>
                         </select>
                         <label for="floatingSelect">State</label>
                     </div>
                 </div>
-                <div class="form-floating ">
-                    <input type="text" name="zip" class="form-control admin_zipcode" id="floatingInput" placeholder="zip" value="{{ $adminProfileData->zip }}" disabled>
-                    <label for="floatingInput">Zip</label>
+                <div class="form-floating errorMsg">
+                    <input type="number" name="zip" class="form-control admin_zipcode" id="floatingInput10" placeholder="zip" value="{{ $adminProfileData->zip }}" disabled min="0">
+                    <label for="floatingInput10">Zip</label>
                     @error('zip')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div style="height: 58px;">
-                    <input type="tel" name="alt_mobile" class="form-control admin_alt_phone" id="telephone" placeholder="mobile" value="{{ $adminProfileData->alt_phone }}" disabled>
+                <div style="height: 58px;" class="errorMsg">
+                    <input type="number" name="alt_mobile" class="form-control admin_alt_phone" id="telephone" placeholder="mobile" value="{{ $adminProfileData->alt_phone }}" disabled>
                     @error('alt_mobile')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

@@ -18,7 +18,7 @@
            </div>
        </div>
        <div class="details mt-3">
-           <span><i class="bi bi-person"></i> Role Name : {{$data->role->name}}</span>
+           <span><i class="bi bi-person"></i> Role Name :  {{ $data->role->name ?? " " }}</span>
            <br>
            <span><i class="bi bi-check2"></i>Status : {{ $data->status }} </span>
            <div class="p-2 d-flex align-items-center justify-content-end gap-2">

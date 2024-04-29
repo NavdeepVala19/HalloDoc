@@ -196,17 +196,18 @@ class AdminDashboardController extends Controller
                 'admin.user_id',
                 'alt_phone',
                 'role.name',
-                'regions.region_name'
+                'regions.region_name',
+                'regions.id'
             )
                 ->leftJoin('role', 'role.id', 'admin.role_id')
                 ->leftJoin('users', 'users.id', 'admin.user_id')
                 ->leftJoin('regions', 'regions.id', 'admin.region_id')
                 ->where('user_id', $id)
                 ->first();
+            
         return view('adminPage/adminProfile', compact('adminProfileData'));
         } catch (\Throwable $th) {
            return view('errors.404');
-
         }
     }
     public function adminProfilePage()
@@ -234,7 +235,6 @@ class AdminDashboardController extends Controller
             ->leftJoin('regions', 'regions.id', 'admin.region_id')
             ->where('user_id', $adminData->id)
             ->first();
-
 
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
@@ -264,8 +264,8 @@ class AdminDashboardController extends Controller
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'confirm_email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'confirm_email' => 'required|min:2|max:40|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
         ]);
 
@@ -302,7 +302,7 @@ class AdminDashboardController extends Controller
             'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
-            'alt_mobile' => 'required',
+            'alt_mobile' => 'required|min_digits:10|max_digits:10',
         ]);
 
 

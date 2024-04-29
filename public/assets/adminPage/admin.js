@@ -385,7 +385,7 @@ $(document).ready(function () {
         }
     });
 
-    // ****** Fetching regions from regions table *****
+    // ** Fetching regions from regions table *
     $.ajax({
         url: "/admin-new",
         type: "GET",
@@ -430,25 +430,7 @@ $(".role-selected").on("change", function () {
     });
 });
 
-// **** Fetching regions from regions table ****
-$.ajax({
-    url: "/admin-account-state",
-    type: "GET",
-    success: function (data) {
-        data.forEach(function (region) {
-            $("#listing_state_admin_account").append(
-                '<option value="' +
-                    region.id +
-                    '" class="state-name" >' +
-                    region.region_name +
-                    "</option>"
-            );
-        });
-    },
-    error: function (error) {
-        console.error(error);
-    },
-});
+
 
 // **** Fetching roles from role table ****
 $.ajax({

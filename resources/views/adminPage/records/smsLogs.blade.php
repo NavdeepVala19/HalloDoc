@@ -124,7 +124,7 @@
                     @foreach ($sms as $data)
                     <tr>
                         <td>{{ $data->recipient_name }}</td>
-                        <td>-</td>
+                        <td>{{$data->action}}</td>
                         <td>
                             @if ($data->role_id == 1)
                             admin
@@ -143,7 +143,7 @@
                             @endif
                         </td>
                         <td>{{ $data->sent_tries }}</td>
-                        <td>-</td>
+                        <td>{{$data->confirmation_number}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -204,7 +204,7 @@
                 </div>
             </div>
             @endforeach
-            {{ $sms->links('pagination::bootstrap-5') }}
+            {{  $sms->appends(request()->except('page'))->links('pagination::bootstrap-5')  }}
         </div>
 
     </div>

@@ -21,7 +21,7 @@
                             @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
                     </td>
                     <td class="data"> {{ $data->first_name }} {{ $data->last_name }}</td>
-                    <td class="data"> {{ $data->role->name }}</td>
+                    <td class="data">  {{ $data->role->name ?? " " }}</td>
                     <td class="data">
                         {{ in_array($data->id, $onCallPhysicianIds) ? 'Unavailable' : 'Available' }}
                     </td>
