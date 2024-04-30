@@ -245,7 +245,7 @@ nav {
     border-radius: 8px;
 }
 
-.primary-empty:hover {
+/* .primary-empty:hover {
     background-color: var(--blue);
     color: #fff;
 }
@@ -254,7 +254,7 @@ nav {
     border: 1px solid var(--blue);
     color: var(--blue);
     background-color: #fff;
-}
+} */
 
 .primary-fill {
     background-color: var(--blue);

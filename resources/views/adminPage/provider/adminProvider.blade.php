@@ -112,6 +112,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    
                         {{ $providersData->links('pagination::bootstrap-5') }}
                     </div>
 
