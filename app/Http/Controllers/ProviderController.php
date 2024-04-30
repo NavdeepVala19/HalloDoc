@@ -387,7 +387,7 @@ class ProviderController extends Controller
                 'provider_id' => $providerId,
                 'is_email_sent' => 1,
                 'sent_tries' => 1,
-                // 'action' => 5,
+                'action' => 5,
                 'create_date' => now(),
                 'sent_date' => now(),
                 'email_template' => 'Create Account With Provided Email',

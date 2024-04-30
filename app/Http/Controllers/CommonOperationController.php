@@ -195,7 +195,7 @@ class CommonOperationController extends Controller
                 'sent_date' => now(),
                 'is_email_sent' => 1,
                 'sent_tries' => 1,
-                // 'action' => 4,
+                'action' => 6,
             ]);
 
             return redirect()->back()->with('successMessage', 'Mail sent to patient successfully!');
