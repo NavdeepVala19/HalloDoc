@@ -75,6 +75,7 @@ $(document).on("click", ".pagination .page-link", function (event) {
 
 $(".listing-region").on("change", function (event) {
     event.preventDefault();
+
     var tab = $(".nav-link.active").attr("id");
     var words = tab.split("-");
 

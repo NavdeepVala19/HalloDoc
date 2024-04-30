@@ -6,7 +6,7 @@ $(document).ready(function () {
                const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
                return this.optional(element) || regex.test(value.trim());
            },
-           "Please enter valid Request Support Message."
+           "Please enter alphabets,comma,underscore In Request Support Message."
        );
     
     $("#requestDTYSupportForm").validate({
