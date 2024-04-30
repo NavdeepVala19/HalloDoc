@@ -12,7 +12,7 @@ $(document).ready(function () {
         let name = $(this).data("name");
         let email = $(this).data("email");
 
-        console.log(requestId)
+        console.log(requestId);
 
         $(".requestId").val(requestId);
         $(".displayPatientName").html(name);
@@ -169,6 +169,13 @@ $(document).ready(function () {
     });
 
     // ---------------- RESET FORMS WHEN POP-UPs ARE CLOSED ----------------------
+
+    $(".sendMailCancel").click(function () {
+        $('#sendMailForm').trigger('reset');
+        $('#sendMailForm').validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
     // Reset Form when pop-up is closed
     $(".providerTransferCancel").click(function () {
         $("#providerTransferCase").trigger("reset");
