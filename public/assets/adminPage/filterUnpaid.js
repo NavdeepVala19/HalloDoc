@@ -20,7 +20,7 @@ function fetchPaginatedResults(
             _token: token,
         },
         success: function (response) {
-            $(".table-responsive").html(response.html); // Update results area
+            $(".AdminUnpaidListingPage").html(response.html); // Update results area
             $(".adminNewListingPages").hide();
         },
         error: function (error) {

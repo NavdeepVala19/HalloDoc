@@ -95,10 +95,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z0-9 \-_,()/]+$/; // Allows letters, spaces,numbers,parentheses,comma,frwd slash
+            const regex = /^[a-zA-Z0-9 \-_.,()/]+$/; //Allows letters, spaces,numbers,parentheses,comma,frwd slash,fullstop
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms. Symptoms should only contain alphabets, spaces,comma,dash,underscore and numbers."
+        "Please enter valid symptoms. Symptoms should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers."
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -249,7 +249,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
-                street:"Please enter alphabets,dash,underscore,space and numbers in street name. "
+                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",
@@ -268,7 +268,7 @@ $(document).ready(function () {
             },
             symptoms: {
                 diseaseSymptoms:
-                    "Please enter valid symptoms. Symptoms should only contain alphabets, spaces,comma,dash,underscore and numbers.",
+                    "Please enter valid symptoms. Symptoms should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.",
                 maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
             docs: {

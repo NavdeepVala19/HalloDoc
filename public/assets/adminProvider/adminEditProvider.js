@@ -659,10 +659,10 @@ $.validator.addMethod(
 $.validator.addMethod(
     "adminNotes",
     function (value, element) {
-        const regex = /^[a-zA-Z0-9 \-_,/]+$/; // Allows letters, spaces, punctuation ,numbers, hyphens, underscores, commas, and forward slashes
+        const regex = /^[a-zA-Z0-9 \-_.,/]+$/; // Allows letters, spaces, punctuation ,numbers, hyphens, underscores, commas, and forward slashes
         return this.optional(element) || regex.test(value.trim());
     },
-    "Please enter alphabets, number in admin notes."
+    "Please enter alphabets,numbers, hyphens, underscores,fullstop, commas, and forward slashes in admin notes."
 );
 
 $("#createAdminProvider").validate({
@@ -867,7 +867,8 @@ $("#createAdminProvider").validate({
         },
         admin_notes: {
             required: "Please enter a valid Admin Notes",
-            adminNotes: "Please enter alphabets, number in admin notes.",
+            adminNotes:
+                "Please enter alphabets,numbers, hyphens, underscores,fullstop, commas, and forward slashes in admin notes.",
         },
         independent_contractor: {
             customFile:
@@ -1350,10 +1351,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "adminNotes",
         function (value, element) {
-            const regex = /^[a-zA-Z0-9 \-_,/]+$/; // Allows letters, spaces, punctuation ,numbers, hyphens, underscores, commas, and forward slashes
+            const regex = /^[a-zA-Z0-9 \-_.,/]+$/; // Allows letters, spaces, punctuation ,numbers, hyphens, underscores, commas, and forward slashes
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter alphabets, number in admin notes."
+        "Please enter alphabets,numbers,hyphens,underscores,commas,fullstop and forward slashes in admin notes."
     );
 
     $("#adminEditProviderForm4").validate({
@@ -1390,6 +1391,8 @@ $(document).ready(function () {
             },
             admin_notes: {
                 required: "Please enter a valid Admin_Notes",
+                adminNotes:
+                    "Please enter alphabets,numbers, hyphens, underscores,fullstop, commas, and forward slashes in admin notes.",
             },
         },
         errorElement: "span",

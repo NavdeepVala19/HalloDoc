@@ -71,10 +71,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z ,_-]+?$/; // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 \-_.,()/]+$/; //  Allows letters, spaces,numbers,parentheses,comma,frwd slash,fullstop
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid adminNote. adminNote should only contain alphabets, spaces,comma,dash,underscore and numbers."
+        "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers."
     );
 
       $.validator.addMethod(
@@ -224,8 +224,8 @@ $(document).ready(function () {
             },
             adminNote: {
                 diseaseSymptoms:
-                    "Please enter valid adminNote. adminNote should only contain alphabets, spaces,comma,dash,underscore and numbers.",
-                maxlength: "Symptoms details cannot exceed 200 characters.", // Optional: Message for exceeding limit
+                    "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.",
+                maxlength: "notes details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
             date_of_birth: {
                 dateRange:
