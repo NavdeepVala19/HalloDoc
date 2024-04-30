@@ -380,4 +380,7 @@ pending state, providers need to send an agreement link to patients. --}}
     <script defer src="{{ asset('assets/adminPage/filterToclose.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
+    <script>
+        let selectedRegionId = '{{ Session::get('regionId') }}';
+    </script>
 @endsection

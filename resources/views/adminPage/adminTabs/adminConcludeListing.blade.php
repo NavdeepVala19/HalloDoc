@@ -367,4 +367,7 @@ transferred into conclude state providers can finally conclude care for the pati
     <script defer src="{{ asset('assets/adminPage/filterConclude.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
+    <script>
+        let selectedRegionId = '{{ Session::get('regionId') }}';
+    </script>
 @endsection

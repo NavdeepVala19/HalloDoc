@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     // Show cancel-case pop-up
     $(document).on("click", ".cancel-case-btn", function () {
         $(".cancel-case").show();
@@ -390,9 +391,6 @@ $(document).ready(function () {
         url: "/admin-new",
         type: "GET",
         success: function (data) {
-            if (selectedRegionId) {
-                console.log(selectedRegionId);
-            }
             data.forEach(function (region) {
                 $(".listing-region").append(
                     // '<option value="' +
@@ -407,8 +405,8 @@ $(document).ready(function () {
                         (selectedRegionId == region.id ? " selected" : "") +
                         ">" +
                         region.region_name +
-                    "</option>" 
-                    
+                        "</option>"
+
                     // '<option value="' + region.id + '"' + (region.region_name == selectedRegionName ? selected : "") + '>' + region.region_name + '</option>'
 
                     // `<option value="${region.id}"  ${region.region_name} == ${selectedRegionName} ? 'selected' : ''>${region.region_name}</option>`
@@ -423,9 +421,7 @@ $(document).ready(function () {
             console.error(error);
         },
     });
-
 });
-
 
 // Display different roles checkboxes as per the roles selected
 $(".role-selected").on("change", function () {

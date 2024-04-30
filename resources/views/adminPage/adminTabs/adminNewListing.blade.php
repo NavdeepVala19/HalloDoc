@@ -165,7 +165,7 @@
                             value="{{ session('searchTerm') }}">
                     </div>
                     <select class="form-select listing-region">
-                        <option name="regions" selected value="all_regions" >All Regions</option>
+                        <option name="regions" selected value="all_regions">All Regions</option>
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -387,6 +387,5 @@
     <script defer src="{{ asset('assets/validation.js') }}"></script>
     <script>
            let selectedRegionId = '{{Session::get('regionId')}}';
-        //    console.log(selectedRegionId);
     </script>
 @endsection

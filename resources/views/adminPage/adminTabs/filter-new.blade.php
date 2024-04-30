@@ -1,8 +1,3 @@
-@section('css')
-    <link rel="stylesheet" href="{{ URL::asset('assets/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('assets/adminPage/admin.css') }}">
-@endsection
-
 <table class="table table-hover ">
     <thead class="table-secondary">
         <tr>

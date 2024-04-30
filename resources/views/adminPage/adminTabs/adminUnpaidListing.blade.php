@@ -368,4 +368,7 @@ patient's email address and phone number. Once the patient accepts the agreement
     <script defer src="{{ asset('assets/adminPage/filterUnpaid.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
+    <script>
+        let selectedRegionId = '{{ Session::get('regionId') }}';
+    </script>
 @endsection
