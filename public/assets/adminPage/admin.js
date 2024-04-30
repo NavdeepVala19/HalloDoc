@@ -174,7 +174,7 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click',".clear-btn",function () {
+    $(document).on("click", ".clear-btn", function () {
         $(".clear-case").show();
         $(".overlay").show();
 
@@ -450,8 +450,6 @@ $(".role-selected").on("change", function () {
         },
     });
 });
-
-
 
 // **** Fetching roles from role table ****
 $.ajax({

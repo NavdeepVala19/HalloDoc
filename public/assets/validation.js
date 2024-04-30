@@ -83,10 +83,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "alphaNumChar",
         function (value, element) {
-            const regex = /^[a-zA-Z0-9 ,_-]+?$/; // Allows letters, spaces, punctuation
+            const regex = /^[a-zA-Z0-9 ,_.-]+?$/;
             return this.optional(element) || regex.test(value.trim());
         },
-        "Only alphabets, Numbers and ,_- allowed"
+        "Only alphabets, Numbers and ,_-. allowed"
     );
 
     $.validator.addMethod(
@@ -198,7 +198,8 @@ $(document).ready(function () {
             message: noteRules(),
         },
         messages: {
-            message: noteMessages("Message"),
+            message:
+                "Please enter a message, minimum 5 and maximum 200 characters (alpha, num & ,-_)",
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
