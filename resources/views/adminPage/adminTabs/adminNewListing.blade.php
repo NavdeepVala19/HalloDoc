@@ -14,16 +14,7 @@
     {{-- Error or Success Message Alerts/Pop-ups --}}
     @include('alertMessages.successMessage')
 
-    {{-- Admin Logged In Successfully --}}
-    @if (session('message'))
-        <div class="alert alert-success popup-message ">
-            <span>
-                {{ session('message') }}
-            </span>
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-    @endif
-
+    
     {{-- Cancel Case Pop-up --}}
     {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}
     @include('popup.adminCancelCase')
@@ -174,7 +165,7 @@
                             value="{{ session('searchTerm') }}">
                     </div>
                     <select class="form-select listing-region">
-                        <option name="regions" selected value="all_regions">All Regions</option>
+                        <option name="regions" selected value="all_regions" >All Regions</option>
                     </select>
                 </form>
                 <div class="src-category d-flex gap-3 align-items-center">
@@ -394,4 +385,8 @@
     <script defer src="{{ asset('assets/adminPage/adminRegionFiltering.js') }}"></script>
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
+    <script>
+           let selectedRegionId = '{{Session::get('regionId')}}';
+        //    console.log(selectedRegionId);
+    </script>
 @endsection

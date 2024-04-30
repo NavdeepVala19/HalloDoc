@@ -233,6 +233,8 @@ class AdminController extends Controller
 
         if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
             if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
+                // dd($request->session()->get('regionId'));
+                $regionId = $request->session()->get('regionId');
                 return $this->cases($request, $status, $category);
             } else {
                 return view('errors.404');
@@ -1278,17 +1280,20 @@ class AdminController extends Controller
 
     public function filterPatientNew(Request $request)
     {
+        // Session::forget('regionId');
+        $request->session()->put('regionId', $request->regionId);
+
         $status = $request->status;
-        $regionId = $request->regionId;
+        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
 
-        $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-        $request->session()->put('regionName', $regionName);
+        $regionId = $request->session()->get('regionId');
 
         if ($regionId == 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
+            $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10); 
         } else {
+            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         }
 
@@ -1326,10 +1331,8 @@ class AdminController extends Controller
         $category = $request->category_value;
         $search = $request->search_value;
 
-
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
         $request->session()->put('regionName', $regionName);
-
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search)->orderByDesc('id')->paginate(10);
@@ -1368,7 +1371,6 @@ class AdminController extends Controller
         $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
-
 
         $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
         $request->session()->put('regionName', $regionName);
@@ -1418,7 +1420,7 @@ class AdminController extends Controller
         }
 
         if ($exportNewData->get()->isEmpty()) {
-            return back()->with('message', 'no cases found to export in Excel');
+            return back()->with('successMessage', 'no cases found to export in Excel');
         } else {
             $exportNew = new NewStatusExport($exportNewData);
             return Excel::download($exportNew, 'NewData.xls');
@@ -1440,7 +1442,7 @@ class AdminController extends Controller
         }
 
         if ($exportPendingData->get()->isEmpty()) {
-            return back()->with('message', 'no cases found to export in Excel');
+            return back()->with('successMessage', 'no cases found to export in Excel');
         } else {
             $exportPending = new PendingStatusExport($exportPendingData);
             return Excel::download($exportPending, 'PendingData.xls');
@@ -1462,7 +1464,7 @@ class AdminController extends Controller
         }
 
         if ($exportActiveData->get()->isEmpty()) {
-            return back()->with('message', 'no cases found to export in Excel');
+            return back()->with('successMessage', 'no cases found to export in Excel');
         } else {
             $exportActive = new ActiveStatusExport($exportActiveData);
             return Excel::download($exportActive, 'ActiveData.xls');
@@ -1484,7 +1486,7 @@ class AdminController extends Controller
         }
 
         if ($exportConcludeData->get()->isEmpty()) {
-            return back()->with('message', 'no cases found to export in Excel');
+            return back()->with('successMessage', 'no cases found to export in Excel');
         } else {
             $exportConclude = new ConcludeStatusExport($exportConcludeData);
             return Excel::download($exportConclude, 'ConcludeData.xls');
@@ -1505,7 +1507,7 @@ class AdminController extends Controller
         }
 
         if ($exportToCloseData->get()->isEmpty()) {
-            return back()->with('message', 'no cases found to export in Excel');
+            return back()->with('successMessage', 'no cases found to export in Excel');
         } else {
             $exportToClose = new ToCloseStatusExport($exportToCloseData);
             return Excel::download($exportToClose, 'ToCloseData.xls');
@@ -1528,7 +1530,7 @@ class AdminController extends Controller
         }
 
         if ($exportUnpaidData->get()->isEmpty()) {
-            return back()->with('message', 'no cases found to export in Excel');
+            return back()->with('successMessage', 'no cases found to export in Excel');
         } else {
             $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
             return Excel::download($exportUnpaid, 'UnPaidData.xls');
