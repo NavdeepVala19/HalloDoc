@@ -103,14 +103,14 @@
         </div>
         <div class="grid-2 blood-pressure">
             <div class="form-floating ">
-                <input type="number" name="sis_BP" class="form-control" id="floatingInput10"
+                <input type="number" name="sis_BP" class="form-control overflow-hidden" id="floatingInput10"
                     placeholder="blood pressure" value={{ $data->sis_BP ?? '' }}>
-                <label for="floatingInput10" style="font-size: 12px">Blood Pressure(systolic)</label>
+                <label for="floatingInput10">Blood Pressure(systolic)</label>
             </div>
             <div class="form-floating ">
                 <input type="number" name="dia_BP" class="form-control" id="floatingInput11"
                     placeholder="blood pressure" value={{ $data->dia_BP ?? '' }}>
-                <label for="floatingInput11" style="font-size: 12px">Blood Presure(diastolic)</label>
+                <label for="floatingInput11">Blood Presure(diastolic)</label>
             </div>
         </div>
         <div class="form-floating ">

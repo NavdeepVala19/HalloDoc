@@ -199,7 +199,7 @@ $(document).ready(function () {
         },
         messages: {
             message:
-                "Please enter a message, minimum 5 and maximum 200 characters (alpha, num & ,-_)",
+                "Please enter a message, minimum 5 and maximum 200 characters (alpha, num & ,-._)",
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -736,28 +736,28 @@ $(document).ready(function () {
                 maxlength: "Maximum length should be 200 characters",
             },
             temperature: {
-                min: "Minimum value could be -50",
-                max: "Maximum value could be 50",
+                min: "Temperature should be between -50 and 50",
+                max: "Temperature should be between -50 and 50",
             },
             heart_rate: {
-                min: "Minimum value could be 30",
-                max: "Maximum value could be 220",
+                min: "Heart Rate value should be between 30 and 220",
+                max: "Heart Rate value should be between 30 and 220",
             },
             repository_rate: {
-                min: "Minimum value could be 12",
-                max: "Maximum value could be 40",
+                min: "Repository Rate should be between 12 and 40",
+                max: "Repository Rate should be between 12 and 40",
             },
             sis_BP: {
-                min: "Minimum value could be 40",
-                max: "Maximum value could be 250",
+                min: "Systolic BP should be between 40 and 250",
+                max: "Systolic BP should be between 40 and 250",
             },
             dia_BP: {
-                min: "Minimum value could be 40",
-                max: "Maximum value could be 150",
+                min: "Diastolic BP should be between 40 and 250",
+                max: "Diastolic BP should be between 40 and 250",
             },
             oxygen: {
-                min: "Minimum value could be 70",
-                max: "Maximum value could be 100",
+                min: "Oxygen value should be between 70 and 100",
+                max: "Oxygen value should be between 70 and 100",
             },
             pain: {
                 minlength: "Minimum length should be 5 characters",

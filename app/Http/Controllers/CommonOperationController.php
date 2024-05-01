@@ -126,7 +126,7 @@ class CommonOperationController extends Controller
             $ids = $request->input('selected');
 
             $zip = new ZipArchive;
-            $zipFile = $email . '.zip';
+            $zipFile =  uniqid() . $email . '.zip';
 
             if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
                 foreach ($ids as $id) {
@@ -139,9 +139,11 @@ class CommonOperationController extends Controller
             }
             EmailLog::create([
                 'role_id' => 1,
+                'request_id' => $request->requestId,
                 'is_email_sent' => true,
                 'sent_tries' => 1,
                 'sent_date' => now(),
+                'create_date' => now(),
                 'email_template' => 'mail.blade.php',
                 'subject_name' => 'Documets Link Sent',
                 'email' => $email,

@@ -125,11 +125,7 @@ $(document).ready(function () {
         ) {
             $(".master-checkbox").prop("checked", false);
         }
-        if (
-            $(".child-checkbox:checked").length ==
-                $(".child-checkbox").length &&
-            $(".master-checkbox:not(:checked)").length > 0
-        ) {
+        if ($(".child-checkbox:not(:checked)").length == 0) {
             $(".master-checkbox").prop("checked", true);
         }
     });
@@ -168,11 +164,26 @@ $(document).ready(function () {
         $(".upload-label").text(fileName);
     });
 
+    // Provider profile
+    $(".reset-password-btn").on("click", function () {
+        $(".reset-password-container").hide();
+        $(".password-btn-container").show();
+
+        $(".password-field").attr("disabled", false);
+    });
+
+    $(".cancel-password-reset").on("click", function () {
+        $(".password-field").attr("disabled", true);
+
+        $(".reset-password-container").show();
+        $(".password-btn-container").hide();
+    });
+
     // ---------------- RESET FORMS WHEN POP-UPs ARE CLOSED ----------------------
 
     $(".sendMailCancel").click(function () {
-        $('#sendMailForm').trigger('reset');
-        $('#sendMailForm').validate().resetForm();
+        $("#sendMailForm").trigger("reset");
+        $("#sendMailForm").validate().resetForm();
         $(".pop-up form .form-control").removeClass("is-valid");
         $(".pop-up form .form-control").removeClass("is-invalid");
     });

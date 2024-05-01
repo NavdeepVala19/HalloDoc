@@ -84,8 +84,8 @@
                         <label for="floatingInput1">User Name</label>
                     </div>
                     <div class="form-floating ">
-                        <input type="password" name="password" value="{{ $userData->password }}"
-                            class="form-control @error('password')
+                        <input type="password" name="password" value="{{ $userData->password }}" disabled
+                            class="form-control password-field @error('password')
                             is-invalid
                         @enderror"
                             id="floatingInput2" placeholder="password">
@@ -95,8 +95,12 @@
                         @enderror
                     </div>
                 </div>
-                <div class="text-end">
-                    <button type="submit" class="primary-empty">Reset Password</button>
+                <div class="reset-password-container text-end">
+                    <button type="button" class="primary-empty reset-password-btn">Reset Password</button>
+                </div>
+                <div class="password-btn-container text-end">
+                    <button type="submit" class="primary-fill">Save</button>
+                    <button type="button" class="primary-empty cancel-password-reset">Cancel</button>
                 </div>
             </form>
             <h3>Physician Information</h3>
@@ -179,10 +183,8 @@
                     <div class="form-floating">
                         <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
                             disabled>
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            {{-- <option selected>Dwarka</option> --}}
+                            <option value="">{{ $provider->Regions->region_name }}</option>
                         </select>
                         <label for="floatingSelect">State</label>
                     </div>

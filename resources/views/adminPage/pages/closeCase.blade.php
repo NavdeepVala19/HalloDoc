@@ -103,7 +103,12 @@
                             @foreach ($files as $file)
                                 <tr>
                                     <td>
-                                        <i class="bi bi-filetype-doc doc-symbol"></i> {{ substr($file->file_name, 14) }}
+                                        <i class="bi bi-filetype-doc doc-symbol"></i>
+                                        @if ($file->is_finalize)
+                                            {{ $file->file_name }}
+                                        @else
+                                            {{ substr($file_name->file_name, 14) }}
+                                        @endif
                                     </td>
                                     <td>{{ $file->created_at }}</td>
                                     <td class="download-column">

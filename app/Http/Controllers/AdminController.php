@@ -1271,9 +1271,9 @@ class AdminController extends Controller
         // Apply search condition
         if ($searchTerm) {
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('first_name', 'like', "%$searchTerm%")
+                $query->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%")
                     ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', "%$searchTerm%");
+                        $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
                     });
             });
         }
@@ -1296,9 +1296,12 @@ class AdminController extends Controller
         $status = $request->status;
         // $regionId = $request->regionId;
         $category = $request->category_value;
-        $search = $request->search_value;
+        $search = $request->session()->get('searchTerm', null);
+        // $search = $request->search_value;
+        // dd($search);
 
         $regionId = $request->session()->get('regionId');
+
 
         if ($regionId == 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
@@ -1457,10 +1460,10 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-       
+
         $regionId = $request->session()->get('regionId');
 
-    
+
         if ($region == "All Regions") {
             $exportPendingData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
@@ -1482,10 +1485,10 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        
+
         $regionId = $request->session()->get('regionId');
 
-        
+
         if ($region == "All Regions") {
             $exportActiveData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
@@ -1507,7 +1510,7 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-       
+
         $regionId = $request->session()->get('regionId');
 
         if ($region == "All Regions") {

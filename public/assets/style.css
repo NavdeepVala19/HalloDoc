@@ -26,7 +26,7 @@
     /* --toggle-primary-bg-color: ; */
     --section-bg-color: #3f3f3f;
     --label-text-color: #000;
-     --toggle-mobile-bg-color: rgb(61, 78, 85);
+    --toggle-mobile-bg-color: rgb(61, 78, 85);
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -59,7 +59,8 @@ body {
     flex: 1;
 }
 
-.sun-icon, .moon-icon {
+.sun-icon,
+.moon-icon {
     display: none;
 }
 
@@ -237,6 +238,13 @@ nav {
 }
 
 /* ****************** COMMON STYLING **************************************** */
+.form-control + label {
+    max-width: 100%; /* Ensure label doesn't exceed input width */
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis; /* Add ellipsis (...) if text overflows */
+    white-space: nowrap; /* Prevent wrapping to multiple lines */
+}
+
 .primary-empty {
     border: 1px solid var(--blue);
     background-color: #fff;

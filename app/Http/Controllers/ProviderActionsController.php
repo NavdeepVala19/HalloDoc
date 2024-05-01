@@ -222,7 +222,7 @@ class ProviderActionsController extends Controller
             'status' => 6,
             'physician_id' => $providerId,
         ]);
-        return redirect()->route('provider.status', ['status' => 'conclude']);
+        return redirect()->route('provider.status', ['status' => 'conclude'])->with('successMessage', 'Case moved to conclude state.');
     }
     // show a new medical form or an existing one when clicked encounter button in conclude listing
     public function encounterFormView(Request $request, $id = "null")

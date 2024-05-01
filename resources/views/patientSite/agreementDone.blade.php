@@ -18,7 +18,7 @@
 
     <div class="container">
         <h2>You have already
-            @if ($caseStatus == 4)
+            @if ($caseStatus >= 4 && $caseStatus < 11)
                 accepted the agreement.
             @else
                 cancelled the agreement.

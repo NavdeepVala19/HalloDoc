@@ -43,13 +43,16 @@ class patientDashboardController extends Controller
         return view("patientSite/patientSomeoneRequest");
     }
 
+    // Display agreement page when clicked through email
     public function viewAgreement($data)
     {
         try {
             $id = Crypt::decrypt($data);
             $clientData = RequestTable::with('requestClient')->where('id', $id)->first();
-            if ($clientData->status == 4 || $clientData->status == 11) {
-                return view('patientSite.agreementDone')->with('caseStatus', $clientData->status);
+
+            // if ($clientData->status == 4 || $clientData->status == 11) {
+            if ($clientData->status >= 4) {
+                return view('patientSite.agreementDone')->with(['caseStatus' => $clientData->status]);
             }
             if (!empty($clientData)) {
                 return view("patientSite/patientAgreement", compact('clientData'));
@@ -182,7 +185,7 @@ class patientDashboardController extends Controller
 
         return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
     }
-    
+
     // create someone else request from patient dashboard
     public function createSomeOneElseRequest(Request $request)
     {
@@ -267,9 +270,7 @@ class patientDashboardController extends Controller
                 $path = $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
-
-
-        }else{
+        } else {
             $newPatient = new RequestTable();
             $newPatient->request_type_id = 1;
             $newPatient->user_id = $isEmailStored->id;
@@ -351,7 +352,6 @@ class patientDashboardController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
     }
 
     public function read()
@@ -360,7 +360,7 @@ class patientDashboardController extends Controller
         $email = $userData["email"];
 
         $userId = users::select('id')->where('email', $email);
-        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->orderBy('id','desc')->paginate(10);
+        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->orderBy('id', 'desc')->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data', 'userData'));
     }
