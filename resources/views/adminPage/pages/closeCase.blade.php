@@ -107,10 +107,12 @@
                                         @if ($file->is_finalize)
                                             {{ $file->file_name }}
                                         @else
-                                            {{ substr($file_name->file_name, 14) }}
+                                            {{ substr($file->file_name, 14) }}
                                         @endif
                                     </td>
-                                    <td>{{ $file->created_at }}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($file->created_at)->format('Y-m-d') }}
+                                    </td>
                                     <td class="download-column">
                                         <a href="{{ route('download', $file->id) }}" class="primary-empty"><i
                                                 class="bi bi-cloud-download"></i></a>

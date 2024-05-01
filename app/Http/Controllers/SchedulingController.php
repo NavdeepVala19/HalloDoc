@@ -14,12 +14,14 @@ use Illuminate\Support\Facades\Auth;
 
 class SchedulingController extends Controller
 {
+    // Display Admin Scheduling page
     public function schedulingCalendarView()
     {
         $regions = Regions::get();
         return view('adminPage.scheduling.scheduling', compact('regions'));
     }
 
+    // Fetch provider data to display in calendar (resources)
     public function providerData()
     {
         $providers = Provider::get();
@@ -33,8 +35,11 @@ class SchedulingController extends Controller
         }
         return response()->json($formattedData);
     }
+
+    // Filter shift as per the region selected
     public function shiftFilter($id)
     {
+        // If no region selected, return all the shifts
         if ($id == 0) {
             $shifts = Shift::with('shiftDetail')->get();
 
@@ -83,6 +88,8 @@ class SchedulingController extends Controller
 
         return response()->json($formattedShift->toArray());
     }
+
+    // Display ProvidersOnCall page with shift details
     public function providersOnCall()
     {
         $regions = Regions::get();
@@ -99,6 +106,7 @@ class SchedulingController extends Controller
 
         return view('adminPage.scheduling.providerOnCall', compact('regions', 'onCallPhysicians', 'offDutyPhysicians'));
     }
+
     // Filter Providers based on region selected for Providers on Call page (AJAX Call)
     public function filterProviderByRegion($id)
     {
@@ -111,7 +119,7 @@ class SchedulingController extends Controller
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
 
-
+        // If all regions selected display all the physicians
         if ($id == 0) {
             $onDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $onCallPhysicianIds)->pluck('provider_id')->unique()->toArray();
             $onCallPhysicians = Provider::whereIn('id', $onDutyFilterPhysicianIds)->get();
@@ -131,6 +139,8 @@ class SchedulingController extends Controller
             return response()->json($physicians);
         }
     }
+
+    // Display ShiftsForReview Page
     public function shiftsReviewView()
     {
         $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
@@ -138,6 +148,8 @@ class SchedulingController extends Controller
 
         return view('adminPage.scheduling.shiftsForReview', compact('shiftDetails', 'regions'));
     }
+
+    // create new shift
     public function createShiftData(Request $request)
     {
         $request->validate([
@@ -199,9 +211,10 @@ class SchedulingController extends Controller
         return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
 
+
+    // Get all the shifts from database and convert it into json format to be used by FullCalendar
     public function eventsData()
     {
-        // Get all the shifts from database and convert it into json format to be used by FullCalendar
         $shifts = Shift::with('shiftDetail')->get();
 
         $formattedShift = $shifts->map(function ($event) {
@@ -225,6 +238,7 @@ class SchedulingController extends Controller
         return response()->json($formattedShift->toArray());
     }
 
+    // Edit already existing shift
     public function editShift(Request $request)
     {
         if ($request['action'] == 'return') {
@@ -273,6 +287,7 @@ class SchedulingController extends Controller
             return redirect()->back()->with("shiftDeleted", "Shift Deleted Successfully!");
         }
     }
+    // Change status of shifts (Approved or Pending)
     public function shiftAction(Request $request)
     {
         if (empty($request->selected)) {
@@ -289,6 +304,7 @@ class SchedulingController extends Controller
             return redirect()->back();
         }
     }
+    // filter shifts in shiftsForReview page based on region selected
     public function filterRegions(Request $request)
     {
         $allShifts = ShiftDetailRegion::where('region_id', $request->regionId)->pluck('shift_detail_id')->toArray();

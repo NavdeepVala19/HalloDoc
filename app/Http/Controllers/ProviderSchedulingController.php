@@ -13,16 +13,20 @@ use Illuminate\Support\Facades\Auth;
 
 class ProviderSchedulingController extends Controller
 {
+    // Display Provider Scheduling page
     public function providerCalendarView()
     {
         return view('providerPage.scheduling.providerScheduling');
     }
+
+    // Fetch details of the logged In provider 
     public function providerInformation()
     {
         $data = Provider::where('user_id', Auth::user()->id)->first();
         $regions = PhysicianRegion::with('regions')->where('provider_id', $data->id)->get();
         return response()->json(['physicianId' => $data->id, 'allRegions' => $regions]);
     }
+    // Add new shift to the calendar
     public function providerShiftData(Request $request)
     {
         $request->validate([
@@ -87,9 +91,10 @@ class ProviderSchedulingController extends Controller
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
         return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
+
+    // Get all the shifts from database and convert it into json format to be used by FullCalendar
     public function providerShift()
     {
-        // Get all the shifts from database and convert it into json format to be used by FullCalendar
         $physician = Provider::where('user_id', Auth::user()->id)->first();
         $shifts = Shift::with('shiftDetail')->where('physician_id', $physician->id)->get();
         $formattedShift = $shifts->map(function ($event) {
@@ -113,6 +118,7 @@ class ProviderSchedulingController extends Controller
         return response()->json($formattedShift->toArray());
     }
 
+    // Edit already existing shifts
     public function providerEditShift(Request $request)
     {
         if ($request['action'] == 'save') {
