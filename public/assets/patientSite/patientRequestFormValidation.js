@@ -41,7 +41,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter alphabets,dash,underscore,space and numbers in street name. "
+        "Please enter alphabets,dash,underscore,space,comma and numbers in street name. "
     );
 
     $.validator.addMethod(
@@ -249,7 +249,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
+                street: "Please enter alphabets,dash,underscore,space,comma and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",

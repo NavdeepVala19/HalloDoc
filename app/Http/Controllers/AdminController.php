@@ -776,7 +776,7 @@ class AdminController extends Controller
             'request_client.city',
             'request_client.state',
             'request_client.zipcode',
-            'request_notes.patient_notes',
+            'request_client.notes',
             'request_notes.physician_notes',
             'request_notes.admin_notes',
             'request.status',

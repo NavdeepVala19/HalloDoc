@@ -143,7 +143,7 @@ $(document).ready(function () {
                 emailAddress: true,
             },
             date_of_birth: {
-                required: true,
+                required: false,
                 dateRange: [new Date("1900-01-01").toDateString()],
             },
             last_name: {
@@ -206,7 +206,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
+                street: "Please enter alphabets,dash,underscore,comma,space and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",
@@ -224,7 +224,7 @@ $(document).ready(function () {
             },
             adminNote: {
                 diseaseSymptoms:
-                    "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.",
+                "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.",
                 maxlength: "notes details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
             date_of_birth: {

@@ -55,7 +55,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9 &\-_.,]+$/);
         },
-        "Please enter a only alphabets of  business/property name."
+        "Please enter a only alphabets,numbers,dash,underscore,fullstop,ampersand in business/property name."
     );
 
     $.validator.addMethod(
@@ -262,10 +262,12 @@ $(document).ready(function () {
             phone_number: {
                 required: "Please enter a mobile number",
                 min: "Please enter a 10 digit positive number in phone number.",
+                minlength: "Please enter exactly 10 digits in phone number",
+                maxlength: "Please enter exactly 10 digits in phone number",
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,space and numbers in street name. ",
+                street: "Please enter alphabets,dash,underscore,space,comma and numbers in street name. ",
             },
             city: {
                 required: "Please enter a city",

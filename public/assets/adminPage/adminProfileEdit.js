@@ -127,7 +127,7 @@ $(document).ready(function () {
         function (value, element) {
             return /^[a-zA-Z ]+?$/.test(value);
         },
-        "Please enter a valid state name with alphabets."
+        "Please enter a valid address2 with alphabets."
     );
 
     $.validator.addMethod(
@@ -184,7 +184,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter alphabets,dash,underscore,space and numbers in address1. "
+        "Please enter alphabets,dash,underscore,space,comma and numbers in address1. "
     );
 
     $.validator.addMethod(
@@ -332,10 +332,6 @@ $(document).ready(function () {
                 required: "Please enter a city",
                 city: "Please enter alpbabets in city name.",
             },
-            state: {
-                required: "Please enter a state",
-                state: "Please enter alpbabets in state name.",
-            },
             zip: {
                 required: "Please enter a valid zipcode",
                 min: "Please enter positive 6 digits zipcode",
@@ -343,6 +339,12 @@ $(document).ready(function () {
             alt_mobile: {
                 required: "Please enter a valid alt_phone_number",
                 min: "Please enter a 10 digit positive number in alternate phone number.",
+                minlength: "Please enter exactly 10 digits in phone number",
+                maxlength: "Please enter exactly 10 digits in phone number",
+            },
+            select_state: {
+                required:"Please select state",
+                stateCheck:"Please select a state.",
             },
         },
         errorElement: "span",

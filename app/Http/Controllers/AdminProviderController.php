@@ -95,7 +95,7 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
-
+       
         $request->validate([
             'contact_msg' => 'required|min:2|max:100',
         ]);
@@ -124,7 +124,8 @@ class AdminProviderController extends Controller
                     'email' => $receipientEmail,
                     'provider_id' => $receipientId,
                 ]);
-            } else if ($request->contact == "sms") {
+            } 
+            else if ($request->contact == "sms") {
                 // send SMS
                 $sid = getenv("TWILIO_SID");
                 $token = getenv("TWILIO_AUTH_TOKEN");
@@ -155,7 +156,8 @@ class AdminProviderController extends Controller
                         'sms_template' => $enteredText,
                     ]
                 );
-            } else if ($request->contact == "both") {
+            }
+             else if ($request->contact == "both") {
                 // send email
                 $providerData = Provider::get()->where('id', $request->provider_id);
                 Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -219,6 +221,12 @@ class AdminProviderController extends Controller
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
 
+    public function stopNotificationsMobileView(Request $request)
+    {
+        $stopNotification = Provider::find($request->stopNotificationsCheckId);
+        $stopNotification->update(['is_notifications' => $request->is_notifications]);
+    }
+
 
     // * This code is for creating a new provider 
 
@@ -264,11 +272,9 @@ class AdminProviderController extends Controller
         $userProvider->phone_number = $request->phone_number;
         $userProvider->save();
 
-        // store data in physician region
-        $providerData = new Provider();
-
 
         // store data of providers in providers table
+        $providerData = new Provider();
         $providerData->user_id = $userProvider->id;
         $providerData->first_name = $request->first_name;
         $providerData->last_name = $request->last_name;
@@ -287,8 +293,8 @@ class AdminProviderController extends Controller
         $providerData->business_website = $request->business_website;
         $providerData->admin_notes = $request->admin_notes;
         $providerData->role_id = $request->role;
-
         $providerData->save();
+
         $physicianRegion = new PhysicianRegion();
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([

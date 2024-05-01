@@ -17,9 +17,7 @@
             @endif
             @foreach ($providersData as $data)
                 <tr>
-                    <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1"
-                            @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
-                    </td>
+                    <td class="checks"> <input class="form-check-input checkbox1" type="checkbox" value="1" @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}"> </td>
                     <td class="data"> {{ $data->first_name }} {{ $data->last_name }}</td>
                     <td class="data">  {{ $data->role->name ?? " " }}</td>
                     <td class="data">
@@ -83,7 +81,4 @@
         </form>
     </div>
 
-    @section('script')
-        <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-        <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
-    @endsection
+ 

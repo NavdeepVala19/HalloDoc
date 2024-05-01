@@ -101,7 +101,7 @@
                                     <td>{{ $data->mobile }}</td>
                                     <td>{{ $data->status }}</td>
                                     <td>123</td>
-                                    <td><a href="{{ route('admin.user.accessEdit',Crypt::encrypt( $data->user_id)) }}"
+                                    <td><a href="{{ route('admin.user.accessEdit', Crypt::encrypt($data->user_id)) }}"
                                             class="primary-empty" type="button">Edit</a></td>
                                 </tr>
                             @endforeach
@@ -130,8 +130,8 @@
                                 <span><i class="bi bi-journal"></i>Open Requests: 123</span>
                                 <br>
                                 <div class="d-flex justify-content-end">
-                                    <a href="{{ route('admin.user.accessEdit', Crypt::encrypt($data->user_id)) }}" class="primary-empty"
-                                        type="button">Edit</a>
+                                    <a href="{{ route('admin.user.accessEdit', Crypt::encrypt($data->user_id)) }}"
+                                        class="primary-empty" type="button">Edit</a>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
 
         </div>
     </div>
-    </div>
+
 @endsection
 
 @section('script')

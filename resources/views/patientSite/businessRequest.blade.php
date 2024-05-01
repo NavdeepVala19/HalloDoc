@@ -58,7 +58,7 @@
                         @enderror
                     </div>
                     <div class="form-floating" id="form-floating">
-                        <input type="number" class="form-control @error('case_number') is-invalid @enderror" id="floatingInput5" value="{{ old('case_number') }}" name="case_number" placeholder="Case Number (optional)" max:1000 min="0">
+                        <input type="number" class="form-control @error('case_number') is-invalid @enderror" id="floatingInput5" value="{{ old('case_number') }}" name="case_number" placeholder="Case Number (optional)" max:1000 min="1">
                         <label for="floatingInput5">Case Number (optional)</label>
                         @error('case_number')
                         <div class="text-danger">{{ $message }}</div>

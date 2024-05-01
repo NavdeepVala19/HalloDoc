@@ -406,6 +406,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     route::get('/providers-map-Locations', [AdminProviderController::class, 'providerMapLocations'])->name('providerMapLocation');
 
     Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
+    Route::post('/admin-providers/stopNotification/mobile', [AdminProviderController::class, 'stopNotificationsMobileView'])->name('admin.provider.stop.notification.mobile');
 
     route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('sendRequestSupport');
 

@@ -91,12 +91,12 @@
                                 @endif
                                 @foreach ($providersData as $data)
                                     <tr>
-                                        <td class="checks"> <input class="form-check-input checkbox1" type="checkbox"
-                                                value="1" @checked($data->is_notifications === 1)
-                                                id="checkbox_{{ $data->id }}">
+                                        <td class="checks">
+                                            <input class="form-check-input checkbox1" type="checkbox" value="1"
+                                            @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
                                         </td>
                                         <td class="data"> {{ $data->first_name }} {{ $data->last_name }}</td>
-                                        <td class="data"> {{ $data->role->name ?? " " }}</td>
+                                        <td class="data"> {{ $data->role->name ?? ' ' }}</td>
                                         <td class="data">
                                             {{ in_array($data->id, $onCallPhysicianIds) ? 'Unavailable' : 'Available' }}
                                         </td>
@@ -112,7 +112,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    
                         {{ $providersData->links('pagination::bootstrap-5') }}
                     </div>
 
@@ -162,6 +161,7 @@
                         </div>
                         </form>
                     </div>
+                    
                 </div>
 
                 <div class="mobile-listing">
@@ -173,8 +173,9 @@
                     @foreach ($providersData as $data)
                         <div class="mobile-list">
                             <div class="main-section mt-3">
-                                <h5 class="heading"> <input class="form-check-input checkbox1" type="checkbox"
-                                        value="1" @checked($data->is_notifications === 1) id="checkbox_{{ $data->id }}">
+                                <h5 class="heading"> 
+                                  <input class="form-check-input checkbox2" type="checkbox" value="1"
+                                            @checked($data->is_notifications === 1) id="checkbox1_{{ $data->id }}">
                                     {{ $data->first_name }} {{ $data->last_name }}
                                 </h5>
                                 <div class="detail-box">
@@ -188,13 +189,13 @@
                             </div>
                             <div class="details mt-3">
                                 <span><i class="bi bi-person"></i> Role Name :
-                                     {{ $data->role->name ?? " " }}</span>
+                                    {{ $data->role->name ?? ' ' }}</span>
                                 <br>
                                 <span><i class="bi bi-check2"></i>Status : {{ $data->status }} </span>
                                 <div class="p-2 d-flex align-items-center justify-content-end gap-2">
                                     <button type="button" data-id='{{ $data->id }}'
                                         class="primary-empty contact-btn mt-2 mb-2"
-                                        id="contact_btn_{{ $data->id }}">Contact</button>
+                                        id="contact_button_{{ $data->id }}">Contact</button>
                                     <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}" type="button"
                                         class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                 </div>
@@ -248,11 +249,14 @@
                         </div>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+
 @section('script')
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>

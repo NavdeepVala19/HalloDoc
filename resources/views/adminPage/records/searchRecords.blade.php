@@ -212,7 +212,7 @@
                         <td>{{$data->physician_first_name}}</td>
                         <td>{{$data->physician_notes}}</td>
                         <td>{{$data->admin_notes}}</td>
-                        <td>{{$data->patient_notes}}</td>
+                        <td>{{$data->notes}}</td>
                         <td class="text-center align-middle"> <a href="{{route('admin.search.records.delete', $data->id)}}" class="primary-empty" type="button">Delete</a> </td>
                     </tr>
                     @endforeach
