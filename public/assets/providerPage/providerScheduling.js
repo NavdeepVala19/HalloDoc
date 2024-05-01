@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var calendarEl = document.getElementById("calendar");
 
+    // Create new calendar view
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: "dayGridMonth",
         headerToolbar: {
@@ -61,6 +62,7 @@ $(document).ready(function () {
     });
     calendar.render();
 
+    // show and hide repeat section based on switch, checked or unchecked
     $(".repeat-switch").on("click", function () {
         if ($(".repeat-switch").is(":checked")) {
             $(".checkboxes-section .form-check-input").prop("disabled", false);
@@ -73,6 +75,7 @@ $(document).ready(function () {
         }
     });
 
+    // show add new shift pop-up
     $(".fc-customAddShift-button").click(function () {
         console.log("Button Clicked!!!");
         $(".physicianRegions option").remove();

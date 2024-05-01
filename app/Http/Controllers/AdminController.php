@@ -267,7 +267,6 @@ class AdminController extends Controller
     {
         // store searchTerm in session
         $request->session()->put('searchTerm', $request->search);
-        // dd($this->cases($request, $status, $category));
 
         return $this->cases($request, $status, $category);
     }

@@ -17,7 +17,7 @@
     <div class="overlay"></div>
 
     <div class="container">
-        <h2>You have already
+        <h2>You have 
             @if ($caseStatus >= 4 && $caseStatus < 11)
                 accepted the agreement.
             @else

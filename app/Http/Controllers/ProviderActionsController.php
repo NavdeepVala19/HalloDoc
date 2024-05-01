@@ -24,7 +24,7 @@ use App\Models\HealthProfessionalType;
 
 class ProviderActionsController extends Controller
 {
-    // Accept Case 
+    // Accept Case by provider (case/request status will change to accepted)
     public function acceptCase($id = null)
     {
         $providerId = Provider::where('user_id', Auth::user()->id)->first();
@@ -41,7 +41,7 @@ class ProviderActionsController extends Controller
         return redirect()->route('provider.status', 'pending')->with('successMessage', "You have Successfully Accepted Case");
     }
 
-    // Transfer Case
+    // Transfer Case from provider to admin
     public function transferCase(Request $request)
     {
         $request->validate([
@@ -103,7 +103,7 @@ class ProviderActionsController extends Controller
         return redirect()->route('provider.view.notes', compact('id'))->with('providerNoteAdded', 'Your Note Successfully Added');
     }
 
-    // View Uploads as per the id 
+    // View Uploads as per the particular request selected
     public function viewUpload(Request $request, $id = null)
     {
         try {
@@ -118,7 +118,7 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // View upload page upload Document feature
+    // View upload page -> upload Document feature
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
@@ -141,7 +141,7 @@ class ProviderActionsController extends Controller
         return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
     }
 
-    // show a particular case page as required
+    // Display view Case page as case/request selected
     public function viewCase($id)
     {
         try {

@@ -261,7 +261,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                         <i class="bi bi-circle-fill ms-1 red"></i>
                                     </span>
                                 @endif
-                                <button class="map-btn">Map Location</button>
+                                {{-- <button class="map-btn">Map Location</button> --}}
                             </div>
                         </div>
                         <div class="more-info ">

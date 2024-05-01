@@ -277,7 +277,7 @@ giving service to the patient. --}}
                                         {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     @endif
                                 </span>
-                                <button class="map-btn">Map Location</button>
+                                {{-- <button class="map-btn">Map Location</button> --}}
                             </div>
                         </div>
                         <div class="more-info ">
