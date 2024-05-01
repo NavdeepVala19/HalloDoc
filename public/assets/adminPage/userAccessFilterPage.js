@@ -154,7 +154,6 @@ $(document).on("click", ".pagination .page-link", function (event) {
         if (prevSibling.length && !prevSibling.hasClass("active")) {
             // Get the value of the next sibling
             var page = prevSibling.first(".page-link").text();
-            console.log(page);
         } else {
             console.log("There is no next sibling without the 'active' class.");
         }

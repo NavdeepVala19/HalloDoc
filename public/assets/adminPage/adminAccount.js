@@ -134,7 +134,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a valid address2."
+        "Please enter a alphabets in address2."
     );
 
     $.validator.addMethod(
@@ -306,10 +306,12 @@ $(document).ready(function () {
             alt_mobile: {
                 required: "Please enter a mobile number",
                 min: "Please enter a 10 digit positive number in alternate phone number.",
+                minlength: "Please enter exactly 10 digits in phone number",
+                maxlength: "Please enter exactly 10 digits in phone number",
             },
             address1: {
                 required: "Please enter a address1",
-                street: "Please enter alphabets,dash,underscore,space and numbers in address1. ",
+                street: "Please enter alphabets,dash,underscore,comma,space and numbers in address1. ",
             },
             address2: {
                 required: "Please enter a address2",

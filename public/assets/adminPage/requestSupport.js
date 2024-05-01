@@ -14,7 +14,7 @@ $(document).ready(function () {
             contact_msg: {
                 required: true,
                 minlength: 5,
-                maxlength: 100,
+                maxlength: 200,
                 requestSupportMessage: true,
             },
         },
