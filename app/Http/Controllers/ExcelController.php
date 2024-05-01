@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
 {
+    // * export All in admin listing pages
     public function exportAll()
     {
         $data = request_Client::select(

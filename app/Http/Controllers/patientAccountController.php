@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class patientAccountController extends Controller
 {
+
+    // * register patient 
     public function patientRegister()
     {
         return view("patientSite/patientRegister");

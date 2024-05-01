@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Session;
 class patientLoginController extends Controller
 {
 
+    // * patient login
     public function loginScreen()
     {
         return view("patientSite/patientLogin");
@@ -54,6 +55,7 @@ class patientLoginController extends Controller
     }
 
 
+    // * patient reset password
     public function resetpassword()
     {
         return view("patientSite/patientResetPassword");
@@ -85,6 +87,7 @@ class patientLoginController extends Controller
 
 
 
+    // * patient update password
     public function showResetPasswordForm($token)
     {
         return view('patientSite/patientPasswordReset', ['token' => $token]);
@@ -101,8 +104,8 @@ class patientLoginController extends Controller
         $updatePassword = users::where('token', $request->token)->first();
 
         if (!$updatePassword) {
-            return back()->with('error', 'Invalid token!');
-        }
+            return back()->with('error', 'invalid token!');
+        }   
         users::where([
             'token' => $request->token
         ])->update(['password' => Hash::make($request->new_password)]);

@@ -1,3 +1,5 @@
+// ** This code is for client side validation in admin create request on behalf of patient
+
 $(document).ready(function () {
     $.validator.addMethod(
         "lettersFirstName",
@@ -77,14 +79,14 @@ $(document).ready(function () {
         "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers."
     );
 
-      $.validator.addMethod(
-          "phoneIndia",
-          function (value, element) {
-              return this.optional(element) || iti.isValidNumber();
-          },
-          "Please enter a valid phone number."
-      );
-    
+    $.validator.addMethod(
+        "phoneIndia",
+        function (value, element) {
+            return this.optional(element) || iti.isValidNumber();
+        },
+        "Please enter a valid phone number."
+    );
+
     // Date Validation (params array will hold minimum and maximum date)
     $.validator.addMethod(
         "dateRange",
@@ -107,8 +109,6 @@ $(document).ready(function () {
         "Please enter a date between {0} and {1}."
     );
 
-    
-  
     $.validator.addMethod(
         "street",
         function (value, element) {
@@ -224,7 +224,7 @@ $(document).ready(function () {
             },
             adminNote: {
                 diseaseSymptoms:
-                "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.",
+                    "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.",
                 maxlength: "notes details cannot exceed 200 characters.", // Optional: Message for exceeding limit
             },
             date_of_birth: {

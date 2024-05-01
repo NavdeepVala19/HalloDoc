@@ -14,6 +14,8 @@ use Spatie\MediaLibrary\Support\MediaStream;
 
 class PatientViewDocumentsController extends Controller
 {
+
+    // * display view documents page
     public function patientViewDocument($id)
     {
         try {
@@ -38,6 +40,7 @@ class PatientViewDocumentsController extends Controller
         }
     }
 
+    // * upload document in request wise file 
     public function uploadDocs(Request $request)
     {
         $request->validate([
@@ -66,6 +69,8 @@ class PatientViewDocumentsController extends Controller
     }
 
 
+
+    // * download individual documents
     public function downloadOne($id)
     {
         try {
@@ -80,6 +85,7 @@ class PatientViewDocumentsController extends Controller
     }
 
 
+    // * download multiple documents in zip
     public function downloadSelectedFiles(Request $request)
     {
         try {

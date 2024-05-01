@@ -263,7 +263,7 @@ class AdminProviderController extends Controller
         ]);
 
 
-        // store data of providers in users table
+        //* store data of providers in users table
 
         $userProvider = new users();
         $userProvider->username = $request->user_name;
@@ -273,7 +273,7 @@ class AdminProviderController extends Controller
         $userProvider->save();
 
 
-        // store data of providers in providers table
+        //* store data of providers in providers table
         $providerData = new Provider();
         $providerData->user_id = $userProvider->id;
         $providerData->first_name = $request->first_name;
@@ -295,6 +295,7 @@ class AdminProviderController extends Controller
         $providerData->role_id = $request->role;
         $providerData->save();
 
+        // *store region in physician_region table
         $physicianRegion = new PhysicianRegion();
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([
@@ -306,13 +307,15 @@ class AdminProviderController extends Controller
         $data = PhysicianRegion::where('provider_id', $providerData->id)->pluck('id')->toArray();
         $ids = implode(',', $data);
 
-        // make entry in user_roles table to identify the user(whether it is admin or physician)
+
+        //* make entry in user_roles table to identify the user(whether it is admin or physician)
         $user_roles = new UserRoles();
         $user_roles->user_id = $userProvider->id;
         $user_roles->role_id = 2;
         $user_roles->save();
 
-        // store data in allusers table
+
+        //* store data in allusers table
         $providerAllUsers = new allusers();
         $providerAllUsers->user_id = $userProvider->id;
         $providerAllUsers->first_name = $request->first_name;
@@ -325,7 +328,9 @@ class AdminProviderController extends Controller
         $providerAllUsers->status = 'pending';
         $providerAllUsers->save();
 
-        // store documents in request_wise_file
+
+
+        //* store documents in local storage 
         $request_file = new RequestWiseFile();
 
         if (isset($request->provider_photo)) {
@@ -369,7 +374,6 @@ class AdminProviderController extends Controller
             $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
-
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is created');
     }
@@ -596,8 +600,12 @@ class AdminProviderController extends Controller
         
         //Soft delete in allusers table
         $providerDataAllUserDelete = allusers::where('user_id', $ProviderInfo->user_id)->first();
+        $deletePhysicianRegion = PhysicianRegion::where('provider_id', $id)->first();
+        $deletePhysicianRegion->delete();
         $providerDataAllUserDelete->delete();
         $ProviderInfo->delete();
+
+
 
         return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
     }

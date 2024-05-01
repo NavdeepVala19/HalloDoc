@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Session;
 
 class patientProfileController extends Controller
 {
-    public function patientEdit(Request $request)
+
+    // * display patient profile edit page
+    public function patientEdit()
     {
         $userData = Auth::user();
         $email = $userData["email"];
@@ -24,6 +26,8 @@ class patientProfileController extends Controller
         return view("patientSite/patientProfile", compact('getEmailData'));
     }
 
+
+     // * edit patient profile without disable field
     public function patientprofileEdit($id)
     {
         try {
@@ -37,6 +41,7 @@ class patientProfileController extends Controller
         }
     }
 
+// * update patient profile data
     public function patientUpdate(Request $request)
     {
         $request->validate([
@@ -82,6 +87,8 @@ class patientProfileController extends Controller
         return redirect()->route('patientDashboardData')->with('message', 'profile is updated successfully');
     }
 
+
+    // * display map location of patient
     public function patientMapLocation()
     {
         $userData = Auth::user();

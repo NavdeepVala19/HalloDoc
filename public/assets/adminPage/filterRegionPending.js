@@ -1,4 +1,4 @@
-// Filter Patient by Region in Pending
+//* Filter Patient by Region in Admin Pending Listing
 function fetchPaginatedResults(
     selectedId,
     activeStatus,

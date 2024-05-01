@@ -1,5 +1,6 @@
+// ** This code is for client side validation in all family/friend form
+
 $(document).ready(function () {
-    // ** This code is for client side validation in all family/friend form
     $.validator.addMethod(
         "lettersFirstName",
         function (value, element) {

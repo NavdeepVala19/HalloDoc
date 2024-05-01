@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-
     // ** Fetching regions from regions table **
     $.ajax({
         url: "/admin-new",

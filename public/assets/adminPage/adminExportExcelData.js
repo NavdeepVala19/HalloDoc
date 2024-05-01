@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
 
-    // this code is for admin/new
+    //* this code is for admin/new export
     $('#filterExportBtnNew').click(function (e) {
         e.preventDefault();
 
@@ -18,8 +18,8 @@ $(document).ready(function () {
 
     })
 
-
-    // this code is for admin/pending
+ 
+    //* this code is for admin/pending export
     $('#filterExportBtnPending').click(function (e) {
         e.preventDefault();
 
@@ -37,7 +37,7 @@ $(document).ready(function () {
     })
 
 
-    // this code is for admin/active
+    //* this code is for admin/active export
     $('#filterExportBtnActive').click(function (e) {
         e.preventDefault();
 
@@ -54,7 +54,7 @@ $(document).ready(function () {
 
     })
 
-    // this code is for admin/conclude
+    //* this code is for admin/conclude export
     $('#filterExportBtnConclude').click(function (e) {
         e.preventDefault();
 
@@ -71,8 +71,8 @@ $(document).ready(function () {
 
     })
 
-
-    // this code is for admin/toclose
+ 
+    //* this code is for admin/toclose export
     $('#filterExportBtnToClose').click(function (e) {
         e.preventDefault();
 
@@ -90,7 +90,7 @@ $(document).ready(function () {
     })
 
 
-    // this code is for admin/unpaid
+    //* this code is for admin/unpaid export
     $('#filterExportBtnUnPaid').click(function (e) {
         e.preventDefault();
 

@@ -1,3 +1,5 @@
+// ** This code is for client side validation in SomeOne Else Request
+
 $(document).ready(function () {
     $.validator.addMethod(
         "lettersFirstName",

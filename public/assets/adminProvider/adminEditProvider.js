@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Create Request Upload file, show file name in label
+    //* Create Request Upload file, show file name in label
     $("#file-upload-request").on("change", function () {
         var fileName = $(this).val().split("\\").pop();
         if (fileName) {
@@ -247,10 +247,8 @@ $(document).ready(function () {
     // ***
 
     // * check/uncheck  checkbox in adminProviderlisting
-    $(".contact-btn[id]").each(function (i, el) {
-        // console.log(el);
+    $(".contact-btn[id]").each(function (el) {
         var isChecked = $(el).closest("tr").find(".checkbox1").is(":checked");
-        // console.log(isChecked);
         if (isChecked == true) {
             $(el).attr("disabled", "true");
         } else {
@@ -258,7 +256,23 @@ $(document).ready(function () {
         }
     });
 
-    // This code is for enable/disable contact button as per checkbox
+    // * check/uncheck  checkbox in adminProviderlisting in mobile view
+    $(".contact-provider-btn").each(function (el) {
+        var thisItem = $(this);
+        var btn = $(this).parent();
+        var detailDiv = btn.parent();
+        var prevDiv = detailDiv.prev();
+        var checkbox = prevDiv.find("input");
+        var checkedValue = checkbox.is(":checked");
+
+        if (checkedValue == true) {
+            thisItem.attr("disabled", "true");
+        } else {
+            thisItem.removeAttr("disabled");
+        }
+    });
+
+    //* This code is for enable/disable contact button as per checkbox
     $(document).on("change", ".checkbox1", function (e) {
         var token = $('meta[name="csrf-token"]').attr("content");
         var checkbox = $(this);
@@ -288,8 +302,7 @@ $(document).ready(function () {
         });
     });
 
-
-
+    //* This code is for enable/disable contact button as per checkbox in  mobile view
     $(document).on("change", ".checkbox2", function (e) {
         var token = $('meta[name="csrf-token"]').attr("content");
         var checkbox = $(this);
@@ -431,6 +444,7 @@ $(document).ready(function () {
         $(".pop-up form .form-control").removeClass("is-valid");
         $(".pop-up form .form-control").removeClass("is-invalid");
     });
+
 
     //** client side validation in adminProviderCreateForm
 
@@ -1491,6 +1505,7 @@ $(document).ready(function () {
     });
 });
 
+
 // * filter provider according to regions
 function fetchPaginatedResults(selectedId, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
@@ -1556,6 +1571,8 @@ $("#listing-region-admin-provider").on("change", function (event) {
     fetchPaginatedResults(selectedId, 1);
 });
 
+
+// * filter provider according to regions in mobile view
 function fetchPaginatedResultsMobileView(selectedId, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
 

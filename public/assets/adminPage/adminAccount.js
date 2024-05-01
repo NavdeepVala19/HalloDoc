@@ -1,6 +1,6 @@
+// ** This code is for client side validation in admin create account 
+
 $(document).ready(function () {
-
-
     // **** Fetching regions from regions table ****
     $.ajax({
         url: "/admin-account-state",
@@ -21,7 +21,6 @@ $(document).ready(function () {
         },
     });
 
-    
     $.validator.addMethod(
         "phoneUS",
         function (phone_number, element) {

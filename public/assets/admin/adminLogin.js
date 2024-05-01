@@ -1,6 +1,6 @@
+// ** This code is for client side validation in admin login,reset and update password
+
 $(document).ready(function () {
-
-
     $.validator.addMethod(
         "emailAddress",
         function (email, element) {
@@ -86,5 +86,4 @@ $(document).ready(function () {
             form.submit(); // Submit the form
         },
     });
-
 });

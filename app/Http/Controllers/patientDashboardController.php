@@ -185,7 +185,7 @@ class patientDashboardController extends Controller
 
         return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
     }
-
+    
     // create someone else request from patient dashboard
     public function createSomeOneElseRequest(Request $request)
     {
