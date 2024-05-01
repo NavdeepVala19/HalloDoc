@@ -167,7 +167,7 @@
                 <h3>Location Information</h3>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="region" value="{{ $data->region_id }}" class="form-control"
+                        <input type="text" name="region" value="{{ $data->requestClient->state }}" class="form-control"
                             id="floatingInput" placeholder="region" disabled>
                         <label for="floatingInput">Region</label>
                         @error('region')

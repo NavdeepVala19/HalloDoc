@@ -13,6 +13,9 @@
     width: 100%;
     height: 40px;
 }
+.password-btn-container {
+    display: none;
+}
 
 /* .custom-file-input input[type="file"] {
     display: none;

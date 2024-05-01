@@ -110,7 +110,7 @@
                         <td>Action</td>
                         <td>Role Name</td>
                         <td>Email Id</td>
-                        <td>Create Date <i class="bi bi-arrow-down"></i></td>
+                        <td>Create Date</td>
                         <td>Sent Date</td>
                         <td>Sent</td>
                         <td>Sent Tries</td>

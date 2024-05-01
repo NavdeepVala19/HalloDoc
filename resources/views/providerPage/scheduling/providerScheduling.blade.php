@@ -23,6 +23,7 @@
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
+    
     {{-- Shift Added/Create Successfully --}}
     @if (session('shiftAdded'))
         <div class="alert alert-success popup-message ">

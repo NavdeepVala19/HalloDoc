@@ -14,7 +14,7 @@
     {{-- Error or Success Message Alerts/Pop-ups --}}
     @include('alertMessages.successMessage')
 
-    
+
     {{-- Cancel Case Pop-up --}}
     {{-- This pop-up will open when admin will click on “Cancel case” link from Actions menu. Admin can cancel the request using this pop-up. --}}
     @include('popup.adminCancelCase')
@@ -223,7 +223,9 @@
                                     </td>
                                     <td>{{ $case->requestClient->date_of_birth }}</td>
                                     <td>{{ $case->first_name }} {{ $case->last_name }}</td>
-                                    <td>{{ $case->created_at }}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
+                                    </td>
                                     <td class="mobile-column">
                                         @if ($case->request_type_id == 1)
                                             <div class="listing-mobile-container">
@@ -324,7 +326,7 @@
                                         {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                     @endif
                                 </span>
-                                <button class="map-btn">Map Location</button>
+                                {{-- <button class="map-btn">Map Location</button> --}}
                             </div>
                         </div>
                         <div class="more-info">
@@ -386,6 +388,6 @@
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
     <script defer src="{{ asset('assets/validation.js') }}"></script>
     <script>
-           let selectedRegionId = '{{Session::get('regionId')}}';
+        let selectedRegionId = '{{ Session::get('regionId') }}';
     </script>
 @endsection

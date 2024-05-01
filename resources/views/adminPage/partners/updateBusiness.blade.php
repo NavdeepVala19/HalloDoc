@@ -85,7 +85,7 @@
                     <div class="form-floating">
                         <select id="floatingSelect" name="profession"
                             class="form-select @error('profession') is-invalid @enderror"">
-                            <option selected>Select Profession</option>
+                            <option selected disabled>Select Profession</option>
                             @foreach ($professions as $profession)
                                 <option value="{{ $profession->id }}"
                                     {{ $vendor->profession == $profession->id ? 'selected="selected"' : '' }}>

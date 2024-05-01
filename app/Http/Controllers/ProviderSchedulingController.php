@@ -34,9 +34,12 @@ class ProviderSchedulingController extends Controller
         // Check whether the shift created for provider is already having shift for that time period
         $shifts = Shift::with('shiftDetail')->get();
         $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
+        $userId = Auth::user()->id;
+        $providerId = Provider::where('user_id', $userId)->first()->id;
+
         // check for each shifts, whether it have the same time period or in-between time period
         foreach ($currentShifts as $currentShift) {
-            if ($currentShift->physician_id == $request->physician) {
+            if ($currentShift->physician_id == $providerId) {
                 // for the currentShift if the physician_id matches requested physician check for the time period
                 $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
                 $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;
@@ -116,9 +119,13 @@ class ProviderSchedulingController extends Controller
             // Check whether the shift created for provider is already having shift for that time period
             $shifts = Shift::with('shiftDetail')->get();
             $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
+
+            $userId = Auth::user()->id;
+            $providerId = Provider::where('user_id', $userId)->first()->id;
+
             // check for each shifts, whether it have the same time period or in-between time period
             foreach ($currentShifts as $currentShift) {
-                if ($currentShift->physician_id == $request->physician) {
+                if ($currentShift->physician_id == $providerId) {
                     // for the currentShift if the physician_id matches requested physician check for the time period
                     $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
                     $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;

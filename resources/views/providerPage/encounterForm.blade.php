@@ -64,9 +64,7 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $('.finalize-btn').click(function() {
-                $("#loading-icon").fadeIn("slow");
-            })
+
             // Get the pre-filled values from the input fields
             var initialFirstName = $("#providerEncounterForm #floatingInput1").val();
             var initialLastName = $("#providerEncounterForm #floatingInput2").val();
@@ -177,6 +175,7 @@
                 } else {
                     // Proceed with finalization
                     window.location.href = "{{ route('encounter.finalized', $requestId) }}";
+                    $("#loading-icon").fadeIn("slow");
                 }
             });
 
