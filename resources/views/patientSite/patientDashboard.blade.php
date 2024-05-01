@@ -22,7 +22,7 @@
     <div class="content shadow">
         <div class="button">
             <button class="btn primary-empty create-btn mt-2 me-2 mb-2">Create new Request</button>
-            <button class="btn primary-empty plus create-new-request-btn"><i class="bi bi-plus"></i></button>
+            <button class="btn primary-empty plus create-new-request-btn"> <i class="bi bi-plus"></i> </button>
         </div>
 
         <div class="listing-table patient-history-table">
@@ -77,7 +77,6 @@
         </div>
         <div class="accordions">
             <!-- create a new request pop-up -->
-       
             @foreach ($data as $patientData)
             <button class="accordion"> <i class="bi bi-clock"></i>
                 Created-Date:  {{date_format(date_create( $patientData->created_at), 'd-m-Y')}}</button>

@@ -1,3 +1,5 @@
+
+// ** This code is for client side validation in view documents file uploading
 $(document).ready(function () {
 
     $.validator.addMethod(

@@ -24,24 +24,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class patientDashboardController extends Controller
 {
-    public function patientDashboard()
-    {
-        return view("patientSite/patientDashboard");
-    }
 
-
-    public function createNewRequest()
-    {
-        $userData = Auth::user();
-        $email = $userData["email"];
-
-        return view("patientSite/patientNewRequest", compact('email'));
-    }
-
-    public function createSomeoneRequest()
-    {
-        return view("patientSite/patientSomeoneRequest");
-    }
 
     public function viewAgreement($data)
     {
@@ -104,6 +87,14 @@ class patientDashboardController extends Controller
 
 
     //  create me request in patient Dashboard
+    public function createNewRequest()
+    {
+        $userData = Auth::user();
+        $email = $userData["email"];
+
+        return view("patientSite/patientNewRequest", compact('email'));
+    }
+
     public function createNewPatient(Request $request)
     {
         $userData = Auth::user();
@@ -182,8 +173,15 @@ class patientDashboardController extends Controller
 
         return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
     }
-    
+
+
     // create someone else request from patient dashboard
+
+    public function createSomeoneRequest()
+    {
+        return view("patientSite/patientSomeoneRequest");
+    }
+
     public function createSomeOneElseRequest(Request $request)
     {
         $request->validate([
@@ -354,6 +352,8 @@ class patientDashboardController extends Controller
 
     }
 
+
+    // * patient dashboard
     public function read()
     {
         $userData = Auth::user();

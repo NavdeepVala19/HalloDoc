@@ -1,4 +1,4 @@
-// this code is of client side validation of patient update password and patient register
+//* this code is of client side validation of patient update password and patient register
 
 $(document).ready(function () {
     $.validator.addMethod(

@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    // Create Request Upload file, show file name in label
+
+    // *Create Request Upload file, show file name in label
     $("#file-upload-request").on("change", function () {
         var fileName = $(this).val().split("\\").pop();
         if (fileName) {
@@ -16,12 +17,12 @@ $(document).ready(function () {
     });
 
     $(".create-new-request-btn").click(function () {
-        $(".new-request-create").show();
+         $(".new-request").show();
         $(".overlay").show();
     });
 
     $(".hide-popup-btn").click(function () {
-        $(".new-request-create").hide();
+        $(".new-request").hide();
         $(".overlay").hide();
     });
 
@@ -75,6 +76,7 @@ $(document).ready(function () {
             $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
         }
     });
+    
 
     // ** This code is for client side validation of patientProfileEdit
 

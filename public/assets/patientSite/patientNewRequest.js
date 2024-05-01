@@ -1,3 +1,5 @@
+// ** This code is for client side validation in patient ME request
+
 $(document).ready(function () {
     $.validator.addMethod(
         "lettersFirstName",
@@ -108,7 +110,14 @@ $(document).ready(function () {
                 .toLowerCase();
 
             // Allowed extensions
-            var allowedExtensions = [ "jpg","jpeg","png","pdf","doc","docx",];
+            var allowedExtensions = [
+                "jpg",
+                "jpeg",
+                "png",
+                "pdf",
+                "doc",
+                "docx",
+            ];
 
             // Check extension
             if ($.inArray(extension, allowedExtensions) === -1) {

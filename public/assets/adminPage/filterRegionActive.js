@@ -1,4 +1,4 @@
-// Filter Patient by Region in active
+//* Filter Patient by Region in admin active listing
 function fetchPaginatedResults(
     selectedId,
     activeStatus,

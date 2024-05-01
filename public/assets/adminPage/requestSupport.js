@@ -1,5 +1,7 @@
-$(document).ready(function () {
 
+// ** This code is for client side validation in send request supoort message
+
+$(document).ready(function () {
        $.validator.addMethod(
            "requestSupportMessage",
            function (value, element) {

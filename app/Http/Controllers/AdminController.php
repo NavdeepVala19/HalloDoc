@@ -761,7 +761,8 @@ class AdminController extends Controller
 
     // --------- 6.5 : Blocked History ----
 
-    // Records Page
+
+    //* Search Records Page
     public function searchRecordsView()
     {
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
@@ -799,6 +800,7 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
 
+    // *search records filtering
     public function searchRecordSearching(Request $request)
     {
         // Retrieve pagination parameters from the request
@@ -831,6 +833,8 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
 
+// * common function for filtering and exporting to excel 
+// * this function fetch data as per the request
     public function exportFilteredSearchRecord($request)
     {
         $todayDate = now();
@@ -892,6 +896,7 @@ class AdminController extends Controller
         return $combinedData;
     }
 
+    // * export data to excel
     public function downloadFilteredData(Request $request)
     {
         $data = $this->exportFilteredSearchRecord($request);
@@ -904,6 +909,7 @@ class AdminController extends Controller
         }
     }
 
+    // *delete records permanently
     public function deleteSearchRecordData($id)
     {
         $getRequestId = request_Client::select('request_id')->where('id', $id)->first()->request_id;
@@ -919,6 +925,7 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'record is permanently delete');
     }
 
+// * SMS Logs 
     public function smsRecordsView()
     {
         $sms = SMSLogs::paginate(10);
@@ -926,6 +933,7 @@ class AdminController extends Controller
         return view('adminPage.records.smsLogs', compact('sms'));
     }
 
+    // * SMS Logs Filtering
     public function searchSMSLogs(Request $request)
     {
         // Retrieve pagination parameters from the request
@@ -969,6 +977,8 @@ class AdminController extends Controller
         return view('adminPage.records.smsLogs', compact('sms'));
     }
 
+
+    // *Block History 
     public function blockHistoryView()
     {
         $blockData = BlockRequest::select(
@@ -987,6 +997,7 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
+    // * Block History Filtering
     public function blockHistroySearchData(Request $request)
     {
         $blockData = BlockRequest::select(
@@ -1025,12 +1036,15 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
+// * Block history update isActive 
     public function updateBlockHistoryIsActive(Request $request)
     {
         $block = BlockRequest::find($request->blockId);
         $block->update(['is_active' => $request->is_active]);
     }
 
+
+    //* unblock in block history
     public function unBlockPatientInBlockHistoryPage($id)
     {
         $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
@@ -1040,6 +1054,8 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'patient is unblock');
     }
 
+
+    // * user access page
     public function UserAccess()
     {
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
@@ -1051,6 +1067,8 @@ class AdminController extends Controller
         return view('adminPage.access.userAccess', compact('userAccessData'));
     }
 
+
+    // * route user as per account type
     public function UserAccessEdit($id)
     {
         try {
@@ -1071,6 +1089,8 @@ class AdminController extends Controller
         }
     }
 
+
+    // * ajax rendering in user access page
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
@@ -1090,6 +1110,8 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    // * ajax rendering user access page in mobile view
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
 
@@ -1110,6 +1132,8 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    // * send request support message in adminlisting 
     public function sendRequestSupport(Request $request)
     {
         $request->validate([
@@ -1146,7 +1170,7 @@ class AdminController extends Controller
     }
 
 
-    // fetching regions from regions table and show in All Regions drop-down button
+    //* fetching regions from regions table and show in All Regions drop-down button
     public function fetchRegions()
     {
         $fetchedRegions = Regions::get();
@@ -1154,12 +1178,15 @@ class AdminController extends Controller
     }
 
 
+    // * displaying create admin account page
     public function adminAccount()
     {
         $regions = Regions::get();
         return view("adminPage.createAdminAccount", compact('regions'));
     }
 
+
+    // * create admin New Account
     public function createAdminAccount(Request $request)
     {
         $request->validate([
@@ -1241,13 +1268,15 @@ class AdminController extends Controller
         return redirect()->route('admin.user.access');
     }
 
-
+// * fetch state for admin account create
     public function fetchRegionsForState()
     {
         $fetchedRegions = Regions::get();
         return response()->json($fetchedRegions);
     }
 
+
+    // * fetch roles for admin account create
     public function fetchRolesForAdminAccountCreate()
     {
         $fetchedRoles = Role::select('id', 'name')->where('account_type', 'admin')->get();
@@ -1255,6 +1284,7 @@ class AdminController extends Controller
     }
 
 
+    // * common function for filtering and exporting data in admin listing
     public function fetchQuery($status, $category, $searchTerm, $region)
     {
         if (is_array($this->getStatusId($status))) {
@@ -1288,6 +1318,8 @@ class AdminController extends Controller
         return $query;
     }
 
+
+    // * ajax filtering in admin New listing
     public function filterPatientNew(Request $request)
     {
         // Session::forget('regionId');
@@ -1311,6 +1343,7 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+    // * ajax filtering in admin Pending listing
     public function filterPatientPending(Request $request)
     {
         // Session::forget('regionId');
@@ -1335,6 +1368,7 @@ class AdminController extends Controller
     }
 
 
+    // * ajax filtering in admin active listing
     public function filterPatientActive(Request $request)
     {
         // Session::forget('regionId');
@@ -1358,6 +1392,8 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    // * ajax filtering in admin conclude listing
     public function filterPatientConclude(Request $request)
     {
         // Session::forget('regionId');
@@ -1381,6 +1417,8 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    // * ajax filtering in admin toclose listing
     public function filterPatientToClose(Request $request)
     {
         // Session::forget('regionId');
@@ -1404,6 +1442,8 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+// * ajax filtering in admin unpaid listing
     public function filterPatientUnpaid(Request $request)
     {
         // Session::forget('regionId');
@@ -1427,6 +1467,8 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    // * export data to excel in admin New listing
     public function exportNew(Request $request)
     {
         $status = 'new';
@@ -1451,6 +1493,7 @@ class AdminController extends Controller
         }
     }
 
+     // * export data to excel in admin pending listing
     public function exportPending(Request $request)
     {
         $status = 'pending';
@@ -1476,6 +1519,7 @@ class AdminController extends Controller
         }
     }
 
+     // * export data to excel in admin active listing
     public function exportActive(Request $request)
     {
         $status = 'active';
@@ -1501,6 +1545,8 @@ class AdminController extends Controller
         }
     }
 
+
+     // * export data to excel in conclude New listing
     public function exportConclude(Request $request)
     {
         $status = 'conclude';
@@ -1524,6 +1570,9 @@ class AdminController extends Controller
             return Excel::download($exportConclude, 'ConcludeData.xls');
         }
     }
+
+
+     // * export data to excel in admin toclose listing
     public function exportToClose(Request $request)
     {
         $status = 'toclose';
@@ -1547,6 +1596,7 @@ class AdminController extends Controller
         }
     }
 
+ // * export data to excel in admin unpaid listing
     public function exportUnpaid(Request $request)
     {
         $status = 'unpaid';
