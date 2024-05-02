@@ -43,12 +43,14 @@
                                    -
                                @endif
                            </td>
-                           <td>{{ $case->created_at }}</td>
+                           <td>
+                               {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
+                           </td>
                            <td>
                                {{ $case->requestClient->street }},
                                {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                            </td>
-                           <td>{{ $case->notes }}</td>
+                           <td>{{ $case->requestClient->notes ? $case->requestClient->notes : '-' }}</td>
                            <td>
                                <div class="action-container">
                                    <button class="table-btn action-btn" data-id={{ $case->id }}>Actions</button>

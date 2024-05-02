@@ -195,11 +195,19 @@ $(document).ready(function () {
     // Admin/Provider send mail Pop-Up Validation
     $("#sendMailForm").validate({
         rules: {
-            message: noteRules(),
+            message: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            message:
-                "Please enter a message, minimum 5 and maximum 200 characters (alpha, num & ,-._)",
+            message: {
+                required: "Please enter a message to send to patient.",
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -319,11 +327,19 @@ $(document).ready(function () {
     $("#cancelCaseForm").validate({
         rules: {
             case_tag: "required",
-            reason: noteRules(),
+            reason: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            case_tag: "Select A Case Tag To Cancel the Case",
-            reason: noteMessages("Notes"),
+            case_tag: "Reason for cancellation is required",
+            reason: {
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             var errorDiv = $('<div class="text-danger"></div>');
@@ -408,10 +424,19 @@ $(document).ready(function () {
     // Provider Transfer Request
     $("#providerTransferCase").validate({
         rules: {
-            notes: noteRules(),
+            notes: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            notes: noteMessages("Transfer Note"),
+            notes: {
+                required: "Please enter transfer note for admin.",
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -438,9 +463,8 @@ $(document).ready(function () {
             notes: noteRules(),
         },
         messages: {
-            region: "Select at least one region.",
-            physician:
-                "Select physician whom you want to assign these case to.",
+            region: "Select any one region to filter physicians.",
+            physician: "Select physician to assign these case.",
             assign_note: noteMessages("Assign case note"),
             notes: noteMessages("Transfer note"),
         },
@@ -463,10 +487,19 @@ $(document).ready(function () {
     // Admin Block Case Pop-Up Validation
     $("#adminBlockCase").validate({
         rules: {
-            block_reason: noteRules(),
+            block_reason: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            block_reason: noteMessages("Block reason"),
+            block_reason: {
+                required: "Please enter reason for blocking request.",
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");

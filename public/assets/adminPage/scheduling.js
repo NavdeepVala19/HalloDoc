@@ -70,9 +70,9 @@ $(document).ready(function () {
         resourceAreaWidth: "20%",
         // Format of the time to be displayed as title
         dayHeaderFormat: {
-            day: "numeric",
+            // day: "numeric",
             weekday: "short",
-            omitComma: true,
+            // omitComma: true,
         },
         // want to show title in date-title rather than on calendar
         datesSet: function (view) {
@@ -168,7 +168,6 @@ $(document).ready(function () {
         type: "GET",
         success: function (response) {
             response.map(function (event) {
-                console.log(event);
                 var shiftDate = event.shiftDate;
                 var shiftStartTime = event.startTime;
                 var shiftEndTime = event.endTime;

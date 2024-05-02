@@ -104,7 +104,7 @@ class AdminActionsController extends Controller
     {
         $request->validate([
             'case_tag' => 'required|in:1,2,3,4',
-            'reason' => 'required|min:5|max:200'
+            'reason' => 'nullable|min:5|max:200'
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 2,
@@ -123,7 +123,7 @@ class AdminActionsController extends Controller
     public function blockCase(Request $request)
     {
         $request->validate([
-            'block_reason' => 'required|max:100'
+            'block_reason' => 'required|min:5|max:200'
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table

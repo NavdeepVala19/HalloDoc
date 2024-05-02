@@ -35,7 +35,9 @@
                          </td>
                          <td>{{ $case->requestClient->date_of_birth }}</td>
                          <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
-                         <td>{{ $case->created_at }}</td>
+                         <td>
+                            {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
+                        </td>
                          <td class="mobile-column">
                              @if ($case->request_type_id == 1)
                                  <div class="listing-mobile-container">
@@ -154,7 +156,7 @@
                      <br>
                      <span>
                          <i class="bi bi-calendar3"></i> Date of services :
-                         {{ $case->created_at }}
+                         {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
                      </span>
                      <br>
                      <span>

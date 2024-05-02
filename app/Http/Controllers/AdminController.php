@@ -707,6 +707,7 @@ class AdminController extends Controller
     public function patientHistoryView()
     {
         $patients = request_Client::paginate(10);
+
         return view('adminPage.records.patientHistory', compact('patients'));
     }
     public function searchPatientData(Request $request)
@@ -832,8 +833,8 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
 
-// * common function for filtering and exporting to excel 
-// * this function fetch data as per the request
+    // * common function for filtering and exporting to excel 
+    // * this function fetch data as per the request
     public function exportFilteredSearchRecord($request)
     {
         $todayDate = now();
@@ -924,7 +925,7 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'record is permanently delete');
     }
 
-// * SMS Logs 
+    // * SMS Logs 
     public function smsRecordsView()
     {
         $sms = SMSLogs::paginate(10);
@@ -1035,7 +1036,7 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-// * Block history update isActive 
+    // * Block history update isActive 
     public function updateBlockHistoryIsActive(Request $request)
     {
         $block = BlockRequest::find($request->blockId);
@@ -1267,7 +1268,7 @@ class AdminController extends Controller
         return redirect()->route('admin.user.access');
     }
 
-// * fetch state for admin account create
+    // * fetch state for admin account create
     public function fetchRegionsForState()
     {
         $fetchedRegions = Regions::get();
@@ -1445,7 +1446,7 @@ class AdminController extends Controller
     }
 
 
-// * ajax filtering in admin unpaid listing
+    // * ajax filtering in admin unpaid listing
     public function filterPatientUnpaid(Request $request)
     {
         // Session::forget('regionId');
@@ -1495,7 +1496,7 @@ class AdminController extends Controller
         }
     }
 
-     // * export data to excel in admin pending listing
+    // * export data to excel in admin pending listing
     public function exportPending(Request $request)
     {
         $status = 'pending';
@@ -1521,7 +1522,7 @@ class AdminController extends Controller
         }
     }
 
-     // * export data to excel in admin active listing
+    // * export data to excel in admin active listing
     public function exportActive(Request $request)
     {
         $status = 'active';
@@ -1548,7 +1549,7 @@ class AdminController extends Controller
     }
 
 
-     // * export data to excel in conclude New listing
+    // * export data to excel in conclude New listing
     public function exportConclude(Request $request)
     {
         $status = 'conclude';
@@ -1574,7 +1575,7 @@ class AdminController extends Controller
     }
 
 
-     // * export data to excel in admin toclose listing
+    // * export data to excel in admin toclose listing
     public function exportToClose(Request $request)
     {
         $status = 'toclose';
@@ -1598,7 +1599,7 @@ class AdminController extends Controller
         }
     }
 
- // * export data to excel in admin unpaid listing
+    // * export data to excel in admin unpaid listing
     public function exportUnpaid(Request $request)
     {
         $status = 'unpaid';

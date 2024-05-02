@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     // Show cancel-case pop-up
     $(document).on("click", ".cancel-case-btn", function () {
         $(".cancel-case").show();
@@ -40,9 +39,7 @@ $(document).ready(function () {
         $(".requestId").val($(this).data("id"));
         $(".physicianRegions")
             .empty()
-            .append(
-                '<option value="" selected disabled>Narrow Search by Region</option>'
-            );
+            .append("<option selected disabled>Regions</option>");
 
         // Assign Case Pop-up -> populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
@@ -150,9 +147,7 @@ $(document).ready(function () {
         $(".requestId").val($(this).data("id"));
         $(".physicianRegionsTransferCase")
             .empty()
-            .append(
-                '<option value="" selected disabled>Narrow Search by Region</option>'
-            );
+            .append('<option selected disabled>Regions</option>');
 
         // populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
@@ -305,9 +300,7 @@ $(document).ready(function () {
     $(document).on("click", ".adminAssignCancel", function () {
         $(".pop-up .selectPhysician")
             .empty()
-            .append(
-                '<option value="" selected disabled>Select Physician</option>'
-            );
+            .append("<option selected disabled>Physicians</option>");
         $("#adminAssignCase").trigger("reset");
         $("#adminAssignCase").validate().resetForm();
         $(".pop-up form .form-control, .pop-up form .form-select").removeClass(

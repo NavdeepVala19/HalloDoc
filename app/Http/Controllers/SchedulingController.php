@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PhysicianRegion;
+use Carbon\Carbon;
 use App\Models\Shift;
 use App\Models\Regions;
 use App\Models\Provider;
 use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
+use App\Models\PhysicianRegion;
 use App\Models\ShiftDetailRegion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -153,7 +154,7 @@ class SchedulingController extends Controller
     public function createShiftData(Request $request)
     {
         $request->validate([
-            'region' => 'required',
+            'region' => 'required|in:1,2,3,4,5',
             'physician' => 'required',
             'shiftDate' => 'required',
             'shiftStartTime' => 'required',
@@ -177,17 +178,43 @@ class SchedulingController extends Controller
                 }
             }
         };
+
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
         } else {
             $weekDays = null;
         }
-        $request->validate(['region' => 'required|in:1,2,3,4,5']);
+
         if ($request['is_repeat'] == true) {
             $is_repeat = 1;
         } else {
             $is_repeat = 0;
         }
+
+        // if ($is_repeat == 1) {
+        //     // dd(Carbon::now()->format('Y-m-d'));
+        //     // dd(Carbon::parse('next sunday')->toDateString());
+        //     // get current date
+        //     foreach ($request->checkbox as $weekDay) {
+        //         if ($request->repeatEnd == 2) {
+        //             $shiftStartDate = Carbon::parse()->toDateString();
+        //         } else if ($request->repeatEnd == 3) {
+        //         } else {
+        //         }
+        //         dump($request->repeatEnd, $weekDay);
+        //         // $repeatShiftDate = 
+        //         // $shiftDetail = ShiftDetail::create([
+        //         //     // 'shift_id' => $shift->id,
+        //         //     // 'shift_date' => ,
+        //         //     'start_time' => $request['shiftStartTime'],
+        //         //     'end_time' => $request['shiftEndTime'],
+        //         //     'status' => 2
+        //         // ]);
+        //     }
+        //     dd('completed', $request->all());
+        // }
+
+
         $shift =  Shift::create([
             'physician_id' => $request['physician'],
             'start_date' => $request['shiftDate'],
@@ -203,11 +230,14 @@ class SchedulingController extends Controller
             'end_time' => $request['shiftEndTime'],
             'status' => 2
         ]);
+
         $shiftDetailRegion = ShiftDetailRegion::create([
             'shift_detail_id' => $shiftDetail->id,
             'region_id' => $request['region']
         ]);
+
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
+
         return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
 

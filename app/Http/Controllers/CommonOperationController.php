@@ -137,9 +137,13 @@ class CommonOperationController extends Controller
                 }
                 $zip->close();
             }
+            $patient = RequestTable::where('id', $request->requestId)->first();
+
             EmailLog::create([
                 'role_id' => 1,
                 'request_id' => $request->requestId,
+                'recipient_name' => $patient->first_name . " " . $patient->last_name,
+                'confirmation_number' => $patient->confirmation_no,
                 'is_email_sent' => true,
                 'sent_tries' => 1,
                 'sent_date' => now(),
@@ -147,6 +151,7 @@ class CommonOperationController extends Controller
                 'email_template' => 'mail.blade.php',
                 'subject_name' => 'Documets Link Sent',
                 'email' => $email,
+                'action' => 6
             ]);
 
             try {
