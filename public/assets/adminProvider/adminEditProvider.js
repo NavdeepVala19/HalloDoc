@@ -247,17 +247,21 @@ $(document).ready(function () {
     // ***
 
     // * check/uncheck  checkbox in adminProviderlisting
-    $(".contact-btn[id]").each(function (el) {
-        var isChecked = $(el).closest("tr").find(".checkbox1").is(":checked");
-        if (isChecked == true) {
-            $(el).attr("disabled", "true");
+    $(".contact_your_provider").each(function () {
+        var itemClose = $(this).parent();
+        var parentItem = itemClose.parent();
+        var checkBoxItem = parentItem.find('.checkbox1');
+        var isCheckedCheck = checkBoxItem.is(':checked');
+ 
+        if (isCheckedCheck == true) {
+            $(this).attr("disabled", "true");
         } else {
-            $(el).removeAttr("disabled");
+            $(this).removeAttr("disabled");
         }
     });
 
-    // * check/uncheck  checkbox in adminProviderlisting in mobile view
-    $(".contact-provider-btn").each(function (el) {
+    // * check/uncheck checkbox in adminProviderlisting in mobile view
+    $(".contact-provider-btn").each(function () {
         var thisItem = $(this);
         var btn = $(this).parent();
         var detailDiv = btn.parent();
@@ -1520,6 +1524,19 @@ function fetchPaginatedResults(selectedId, page) {
         },
         success: function (response) {
             $("#adminProviderData").html(response.html); // Update results area
+
+            // * check/uncheck  checkbox in adminProviderlisting
+            $(".contact_your_provider").each(function () {
+                var itemClose = $(this).parent();
+                var parentItem = itemClose.parent();
+                var checkBoxItem = parentItem.find(".checkbox1");
+                var isCheckedCheck = checkBoxItem.is(":checked");
+                if (isCheckedCheck == true) {
+                    $(this).attr("disabled", "true");
+                } else {
+                    $(this).removeAttr("disabled");
+                }
+            });
         },
     });
 }
@@ -1587,13 +1604,27 @@ function fetchPaginatedResultsMobileView(selectedId, page) {
         success: function (response) {
             $(".mobile-listing").html(response.html); // Update results area
 
+            // * check/uncheck checkbox in adminProviderlisting in mobile view
+            $(".contact-provider-btn").each(function () {
+                var thisItem = $(this);
+                var btn = $(this).parent();
+                var detailDiv = btn.parent();
+                var prevDiv = detailDiv.prev();
+                var checkbox = prevDiv.find("input");
+                var checkedValue = checkbox.is(":checked");
+
+                if (checkedValue == true) {
+                    thisItem.attr("disabled", "true");
+                } else {
+                    thisItem.removeAttr("disabled");
+                }
+            });
+
             $(".main-section").click(function () {
                 // Target the next sibling .more-info element specifically
                 $(this).next(".details").toggleClass("active");
 
-                $(".details")
-                    .not($(this).next(".details"))
-                    .removeClass("active");
+                $(".details").not($(this).next(".details")).removeClass("active");
             });
         },
     });

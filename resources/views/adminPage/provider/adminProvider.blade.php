@@ -103,7 +103,7 @@
                                         <td class="data"> {{ $data->status }} </td>
                                         <td class="data gap-1">
                                             <button type="button" data-id='{{ $data->id }}'
-                                                class="primary-empty contact-btn mt-2 mb-2"
+                                                class="primary-empty contact-btn mt-2 mb-2 contact_your_provider"
                                                 id="contact_btn_{{ $data->id }}">Contact</button>
                                             <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}"
                                                 type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
