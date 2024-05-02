@@ -73,7 +73,10 @@ class AdminLoginController extends Controller
         ]);
 
         $user = users::where('email', $request->email)->first();
-        if ($user == null) {
+
+        $userRolesData = UserRoles::where('user_id', $user->id)->first();
+
+        if ($user == null || $userRolesData->role_id == 3) {
             return back()->with('error', 'no such email is registered');
         }
 
@@ -87,14 +90,21 @@ class AdminLoginController extends Controller
             $message->subject('Reset Password');
         });
 
-        return redirect()->route('adminLogin')->with('message', 'We have e-mailed your password reset link!');
+        return redirect()->route('adminLogin')->with('message', 'E-mail is sent for password reset');
     }
 
     // this code is to update/reset password
 
     public function showUpdatePasswordForm($token)
     {
-        return view('admin/adminPasswordUpdate', ['token' => $token]);
+        
+        $userData = users::where('token', $token)->first();
+        if ($userData) {
+            return view('admin/adminPasswordUpdate', ['token' => $token]);
+        } else {
+            return view('admin/adminPasswordUpdateSuccess');
+        }
+
     }
 
     public function submitUpdatePasswordForm(Request $request)

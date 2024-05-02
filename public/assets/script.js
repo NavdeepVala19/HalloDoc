@@ -70,6 +70,10 @@ $(document).ready(function () {
         $(".invalid-popup-message").fadeOut("slow");
     }, 2000);
 
+    setTimeout(function () {
+        $(".error-message").fadeOut("slow");
+    }, 2000);
+
     // No space are allowed directly when input field is empty
     $(
         'textarea, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="date"], input[type="url"]'

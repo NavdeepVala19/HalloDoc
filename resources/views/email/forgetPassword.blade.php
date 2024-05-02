@@ -95,15 +95,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
 <div class="container">
-
     <header class="header px-3 border-bottom shadow bg-body-tertiary">
         <div>
             <a href=""><img class="logo img-fluid" src="{{ URL::asset('/assets/logo.png') }}" alt=""></a>
         </div>
     </header>
-
     <h2>Forgot Your Password ?</h2>
-
     <h4>
         Click on Below Button To Reset Password
     </h4>

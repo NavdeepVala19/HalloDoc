@@ -144,7 +144,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="contact" value="both"
                                         id="flexRadioDefault">
-                                    <label class="form-check-label" for="flexRadioDefault">
+                                    <label class="form-check-label" for="flexRadioDefault"> 
                                         Both
                                     </label>
                                 </div>
