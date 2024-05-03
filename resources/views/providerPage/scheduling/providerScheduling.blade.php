@@ -23,7 +23,7 @@
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
-    
+
     {{-- Shift Added/Create Successfully --}}
     @if (session('shiftAdded'))
         <div class="alert alert-success popup-message ">
@@ -183,6 +183,7 @@
         <form action="{{ route('provider.edit.shift') }}" method="POST" id="providerEditShiftForm" class="m-4">
             @csrf
             <input type="text" name="shiftId" value="" class="shiftId" hidden>
+            <input type="text" name="shiftDetailId" class="shiftDetailId" hidden>
             <div>
                 <select name="region" class="form-select region-view-shift" id="floatingSelect"
                     aria-label="Floating label select example" disabled>

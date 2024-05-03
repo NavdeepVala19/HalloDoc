@@ -55,6 +55,7 @@ $(document).ready(function () {
             );
 
             $(".shiftId").val(info.event.extendedProps.shiftId);
+            $(".shiftDetailId").val(info.event.extendedProps.shiftDetailId);
             $(".shiftDate").val(shiftDate);
             $(".shiftStartTime").val(startTime);
             $(".shiftEndTime").val(endTime);
@@ -131,48 +132,6 @@ $(document).ready(function () {
                     endTimeParts[1]
                 );
 
-                var repeatEnd = new Date(event.shiftDate);
-                if (event.is_repeat == 1) {
-                    // will execute these code if shift are repeated
-                    let startDate = new Date(event.shiftDate);
-                    let recurrStartDate = startDate.setDate(
-                        startDate.getDate() + 1
-                    );
-                    if (event.repeat_upto == 2) {
-                        repeatEnd.setDate(repeatEnd.getDate() + 14);
-                    } else if (event.repeat_upto == 3) {
-                        repeatEnd.setDate(repeatEnd.getDate() + 21);
-                    } else if (event.repeat_upto == 4) {
-                        repeatEnd.setDate(repeatEnd.getDate() + 28);
-                    }
-                    repeatEnd.toISOString().split("T")[0];
-                    eventData = {
-                        title: event.title,
-                        resourceId: event.resourceId,
-                        daysOfWeek: event.week_days,
-                        startTime: event.startTime,
-                        endTime: event.endTime,
-                        startRecur: recurrStartDate,
-                        endRecur: repeatEnd,
-                        textColor: "#000",
-                        extendedProps: {
-                            shiftId: event.shiftId,
-                            physicianId: event.physician_id,
-                            physicianName: event.title,
-                            regionId: event.region_id,
-                            regionName: event.region_name,
-                        },
-                        backgroundColor:
-                            event.status == "approved"
-                                ? "rgb(167, 204, 163)"
-                                : "rgb(240, 173, 212)",
-                        className:
-                            event.status == "approved"
-                                ? "approved-shift-style"
-                                : "pending-shift-style",
-                    };
-                    events.push(eventData);
-                }
                 eventData = {
                     title: event.title,
                     start: startTime,
@@ -181,6 +140,7 @@ $(document).ready(function () {
                     textColor: "#000",
                     extendedProps: {
                         shiftId: event.shiftId,
+                        shiftDetailId: event.shiftDetailId,
                         physicianId: event.physician_id,
                         physicianName: event.title,
                         regionId: event.region_id,

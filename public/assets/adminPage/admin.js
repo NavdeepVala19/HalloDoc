@@ -300,7 +300,7 @@ $(document).ready(function () {
     $(document).on("click", ".adminAssignCancel", function () {
         $(".pop-up .selectPhysician")
             .empty()
-            .append("<option selected disabled>Physicians</option>");
+            .append("<option selected disabled>Select physicians</option>");
         $("#adminAssignCase").trigger("reset");
         $("#adminAssignCase").validate().resetForm();
         $(".pop-up form .form-control, .pop-up form .form-select").removeClass(

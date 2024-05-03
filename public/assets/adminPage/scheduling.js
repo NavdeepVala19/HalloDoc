@@ -151,6 +151,7 @@ $(document).ready(function () {
             );
 
             $(".shiftId").val(info.event.extendedProps.shiftId);
+            $(".shiftDetailId").val(info.event.extendedProps.shiftDetailId);
             $(".shiftDate").val(shiftDate);
             $(".shiftStartTime").val(startTime);
             $(".shiftEndTime").val(endTime);
@@ -159,6 +160,7 @@ $(document).ready(function () {
     // Render calendar as per the above mentioned rules
     calendar.render();
 
+    // ----------------------------- NEW CODE (Every shift is individually creating, including recurring shifts) -------------------------------------
     // An empty events array, which will store all the events that need to be rendered in calendar
     var events = [];
     var eventData;
@@ -192,51 +194,6 @@ $(document).ready(function () {
                     endTimeParts[1]
                 );
 
-                var repeatEnd = new Date(event.shiftDate);
-
-                // check whether shift is repeated or not
-                if (event.is_repeat == 1) {
-                    // will execute these code if shift are repeated
-                    let startDate = new Date(event.shiftDate);
-                    let recurrStartDate = startDate.setDate(
-                        startDate.getDate() + 1
-                    );
-                    if (event.repeat_upto == 2) {
-                        repeatEnd.setDate(repeatEnd.getDate() + 14);
-                    } else if (event.repeat_upto == 3) {
-                        repeatEnd.setDate(repeatEnd.getDate() + 21);
-                    } else if (event.repeat_upto == 4) {
-                        repeatEnd.setDate(repeatEnd.getDate() + 28);
-                    }
-                    repeatEnd.toISOString().split("T")[0];
-
-                    recurringData = {
-                        title: event.title,
-                        resourceId: event.resourceId,
-                        daysOfWeek: event.week_days,
-                        startTime: event.startTime,
-                        endTime: event.endTime,
-                        startRecur: recurrStartDate,
-                        endRecur: repeatEnd,
-                        textColor: "#000",
-                        extendedProps: {
-                            shiftId: event.shiftId,
-                            physicianId: event.physician_id,
-                            physicianName: event.title,
-                            regionId: event.region_id,
-                            regionName: event.region_name,
-                        },
-                        backgroundColor:
-                            event.status == "approved"
-                                ? "rgb(167, 204, 163)"
-                                : "rgb(240, 173, 212)",
-                        className:
-                            event.status == "approved"
-                                ? "approved-shift-style"
-                                : "pending-shift-style",
-                    };
-                    events.push(recurringData);
-                }
                 eventData = {
                     title: event.title,
                     start: startTime,
@@ -245,6 +202,7 @@ $(document).ready(function () {
                     textColor: "#000",
                     extendedProps: {
                         shiftId: event.shiftId,
+                        shiftDetailId: event.shiftDetailId,
                         physicianId: event.physician_id,
                         physicianName: event.title,
                         regionId: event.region_id,
@@ -259,36 +217,13 @@ $(document).ready(function () {
                             ? "approved-shift-style"
                             : "pending-shift-style",
                 };
+
                 events.push(eventData);
+
                 return events;
             });
             calendar.addEventSource(events);
         },
-    });
-
-    // when edit button is clicked on view-shift pop-up, enable input fields
-    $(".edit-btn").click(function () {
-        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
-            "disabled",
-            false
-        );
-        $(".save-btn").show();
-        $(".edit-btn").hide();
-    });
-
-    // reset form when pop-up is closed and disable all fields
-    $(".view-shift-close").click(function () {
-        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
-            "disabled",
-            true
-        );
-        $(".save-btn").hide();
-        $(".edit-btn").show();
-
-        $("#adminEditShiftForm").trigger("reset");
-        $("#adminEditShiftForm").validate().resetForm();
-        $(".pop-up form .form-control").removeClass("is-valid");
-        $(".pop-up form .form-control").removeClass("is-invalid");
     });
 
     // Filter shifts based on region selected
@@ -325,50 +260,6 @@ $(document).ready(function () {
                         endTimeParts[1]
                     );
 
-                    var repeatEnd = new Date(event.shiftDate);
-
-                    if (event.is_repeat == 1) {
-                        let startDate = new Date(event.shiftDate);
-                        let recurrStartDate = startDate.setDate(
-                            startDate.getDate() + 1
-                        );
-                        if (event.repeat_upto == 2) {
-                            repeatEnd.setDate(repeatEnd.getDate() + 14);
-                        } else if (event.repeat_upto == 3) {
-                            repeatEnd.setDate(repeatEnd.getDate() + 21);
-                        } else if (event.repeat_upto == 4) {
-                            repeatEnd.setDate(repeatEnd.getDate() + 28);
-                        }
-                        repeatEnd.toISOString().split("T")[0];
-
-                        eventData = {
-                            title: event.title,
-                            resourceId: event.resourceId,
-                            daysOfWeek: event.week_days,
-                            startTime: event.startTime,
-                            endTime: event.endTime,
-                            startRecur: recurrStartDate,
-                            endRecur: repeatEnd,
-                            textColor: "#000",
-                            extendedProps: {
-                                shiftId: event.shiftId,
-                                physicianId: event.physician_id,
-                                physicianName: event.title,
-                                regionId: event.region_id,
-                                regionName: event.region_name,
-                            },
-                            backgroundColor:
-                                event.status == "approved"
-                                    ? "rgb(167, 204, 163)"
-                                    : "rgb(240, 173, 212)",
-                            className:
-                                event.status == "approved"
-                                    ? "approved-shift-style"
-                                    : "pending-shift-style",
-                        };
-                        events.push(eventData);
-                    }
-
                     eventData = {
                         title: event.title,
                         start: startTime,
@@ -391,7 +282,9 @@ $(document).ready(function () {
                                 ? "approved-shift-style"
                                 : "pending-shift-style",
                     };
+
                     events.push(eventData);
+
                     return events;
                 });
                 calendar.addEventSource(events);
@@ -399,8 +292,37 @@ $(document).ready(function () {
         });
     });
 
+    // when edit button is clicked on view-shift pop-up, enable input fields
+    $(".edit-btn").click(function () {
+        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
+            "disabled",
+            false
+        );
+        $(".save-btn").show();
+        $(".edit-btn").hide();
+    });
+
+    // reset form when pop-up is closed and disable all fields
+    $(".view-shift-close").click(function () {
+        $(".shiftDateInput, .shiftStartTimeInput, .shiftEndTimeInput").attr(
+            "disabled",
+            true
+        );
+        $(".save-btn").hide();
+        $(".edit-btn").show();
+
+        $("#adminEditShiftForm").trigger("reset");
+        $("#adminEditShiftForm").validate().resetForm();
+        $(".pop-up form .form-control").removeClass("is-valid");
+        $(".pop-up form .form-control").removeClass("is-invalid");
+    });
+
     // reset form when pop-up is closed
     $(".addShiftCancel").click(function () {
+        $(".pop-up .physicianSelection")
+            .empty()
+            .append("<option selected disabled>Physicians</option>");
+
         $("#adminAddShiftForm").trigger("reset");
         $("#adminAddShiftForm").validate().resetForm();
         $(

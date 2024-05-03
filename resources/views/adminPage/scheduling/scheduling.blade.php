@@ -131,7 +131,7 @@
                 <div class="form-floating">
                     <select name="physician" class="form-select physicianSelection @error('physician') is-invalid @enderror"
                         id="floatingSelect2">
-                        <option selected disabled>Select</option>
+                        <option selected disabled>Select physician</option>
                     </select>
                     <label for="floatingSelect2">Physician</label>
                     @error('physician')
@@ -250,6 +250,7 @@
         <form action="{{ route('admin.edit.shift') }}" method="POST" id="adminEditShiftForm" class="m-4">
             @csrf
             <input type="text" name="shiftId" class="shiftId" hidden>
+            <input type="text" name="shiftDetailId" class="shiftDetailId" hidden>
             <div>
                 <select name="region" class="form-select region-view-shift" id="floatingSelect"
                     aria-label="Floating label select example" disabled>

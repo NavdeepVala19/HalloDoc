@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DatePeriod;
+use Carbon\Carbon;
 use App\Models\Shift;
 use App\Models\Regions;
 use App\Models\Provider;
+use Carbon\CarbonInterval;
 use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
 use App\Models\PhysicianRegion;
@@ -26,6 +29,7 @@ class ProviderSchedulingController extends Controller
         $regions = PhysicianRegion::with('regions')->where('provider_id', $data->id)->get();
         return response()->json(['physicianId' => $data->id, 'allRegions' => $regions]);
     }
+
     // Add new shift to the calendar
     public function providerShiftData(Request $request)
     {
@@ -89,6 +93,53 @@ class ProviderSchedulingController extends Controller
         ]);
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
+
+        if ($is_repeat == 1) {
+            $startDate = Carbon::parse($request['shiftDate']);
+            $endDate = Carbon::parse($request['shiftDate']);
+
+            // Set the end date based on the value of repeatEnd
+            switch ($request['repeatEnd']) {
+                case 2:
+                    $endDate->addDays(14);
+                    break;
+                case 3:
+                    $endDate->addDays(21);
+                    break;
+                case 4:
+                    $endDate->addDays(28);
+                    break;
+                default:
+                    // Set the end date to the start date if repeatEnd is not 2, 3, or 4
+                    $endDate = $startDate;
+                    break;
+            }
+
+            // Create a DatePeriod object to generate a range of dates between the start and end dates
+            $interval = CarbonInterval::day();
+            $dateRange = new DatePeriod($startDate, $interval, $endDate);
+
+            // Loop through the range of dates and create a ShiftDetail record for each date that is selected
+            foreach ($dateRange as $date) {
+                if (in_array($date->format('w'), $request->checkbox)) {
+                    $shiftDetail = ShiftDetail::create([
+                        'shift_id' => $shift->id,
+                        'shift_date' => $date->format('Y-m-d'),
+                        'start_time' => $request['shiftStartTime'],
+                        'end_time' => $request['shiftEndTime'],
+                        'status' => 1
+                    ]);
+
+                    $shiftDetailRegion = ShiftDetailRegion::create([
+                        'shift_detail_id' => $shiftDetail->id,
+                        'region_id' => $request['region']
+                    ]);
+
+                    ShiftDetail::where('id', $shiftDetail->id)->update(['region_id' => $shiftDetailRegion->id]);
+                }
+            }
+        }
+
         return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
 
@@ -96,22 +147,27 @@ class ProviderSchedulingController extends Controller
     public function providerShift()
     {
         $physician = Provider::where('user_id', Auth::user()->id)->first();
-        $shifts = Shift::with('shiftDetail')->where('physician_id', $physician->id)->get();
-        $formattedShift = $shifts->map(function ($event) {
+
+        $shiftDetails = ShiftDetail::with('getShiftData')->whereHas('getShiftData', function ($query) use ($physician) {
+            $query->where('physician_id', $physician->id);
+        })->get();
+
+        $formattedShift = $shiftDetails->map(function ($event) {
             return [
-                'shiftId' => $event->id,
-                'title' => $event->provider->first_name . " " . $event->provider->last_name,
-                'shiftDate' => $event->shiftDetail->shift_date,
-                'startTime' => $event->shiftDetail->start_time,
-                'endTime' => $event->shiftDetail->end_time,
-                'resourceId' => $event->physician_id,
-                'physician_id' => $event->physician_id,
-                'region_id' => $event->shiftDetail->shiftDetailRegion->region_id,
-                'region_name' => $event->shiftDetail->shiftDetailRegion->region->region_name,
-                'is_repeat' => $event->is_repeat,
-                'week_days' => explode(',', $event->week_days),
-                'repeat_upto' => $event->repeat_upto,
-                'status' => $event->shiftDetail->status
+                'shiftId' => $event->getShiftData->id,
+                'shiftDetailId' => $event->id,
+                'title' => $event->getShiftData->provider->first_name . " " . $event->getShiftData->provider->last_name,
+                'shiftDate' => $event->shift_date,
+                'startTime' => $event->start_time,
+                'endTime' => $event->end_time,
+                'resourceId' => $event->getShiftData->physician_id,
+                'physician_id' => $event->getShiftData->physician_id,
+                'region_id' => $event->shiftDetailRegion->region_id,
+                'region_name' => $event->shiftDetailRegion->region->region_name,
+                'is_repeat' => $event->getShiftData->is_repeat,
+                'week_days' => explode(',', $event->getShiftData->week_days),
+                'repeat_upto' => $event->getShiftData->repeat_upto,
+                'status' => $event->status
             ];
         });
 
@@ -144,19 +200,24 @@ class ProviderSchedulingController extends Controller
                     }
                 }
             };
-            Shift::where('id', $request->shiftId)->update([
-                'start_date' => $request->shiftDate,
-            ]);
-            ShiftDetail::where('shift_id', $request->shiftId)->update([
+
+            ShiftDetail::where('id', $request->shiftDetailId)->update([
                 'shift_date' => $request->shiftDate,
                 'start_time' => $request->shiftTimeStart,
                 'end_time' => $request->shiftTimeEnd,
-                'modified_by' => Auth::user()->id
+                'modified_by' => "Provider"
             ]);
 
             return redirect()->back()->with('shiftEdited', 'Shift Edited Successfully!');
         } else if ($request['action'] == 'delete') {
-            Shift::where('id', $request->shiftId)->delete();
+            ShiftDetail::where('id', $request->shiftDetailId)->delete();
+            ShiftDetailRegion::where('shift_detail_id', $request->shiftDetailId)->delete();
+
+            $data = ShiftDetail::where('shift_id', $request->shiftId)->get();
+
+            if ($data->isEmpty()) {
+                Shift::where('id', $request->shiftId)->delete();
+            }
             return redirect()->back()->with("shiftDeleted", "Shift Deleted Successfully!");
         }
     }

@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('shift_detail_region', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('shift_detail_id');
-            $table->foreign('shift_detail_id')->references('id')->on('shift_detail');
+            // $table->unsignedBigInteger('shift_detail_id');
+            // $table->foreign('shift_detail_id')->references('id')->on('shift_detail');
+            $table->integer('shift_detail_id')->nullable();
             $table->unsignedBigInteger('region_id');
             $table->foreign('region_id')->references('id')->on('regions');
             $table->softDeletes();

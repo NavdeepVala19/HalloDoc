@@ -1398,27 +1398,6 @@ $(document).ready(function () {
         },
         "Minimum duration of shift allowed is for 30Minutes."
     );
-    $.validator.addMethod(
-        "minTime30Start",
-        function (value, element, params) {
-            var endTime = $(params).val();
-
-            var endTimeParts = endTime.split(":");
-            var startTimeParts = value.split(":");
-            var endTimeInMinutes =
-                parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
-            var startTimeInMinutes =
-                parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
-
-            console.log(startTimeInMinutes);
-            console.log(endTimeInMinutes + 30);
-            if (startTimeInMinutes + 30 > endTimeInMinutes) {
-                return false;
-            }
-            return value < endTime;
-        },
-        "Minimum duration of shift allowed is for 30Minutes."
-    );
     // Validation added for shiftStartTime to be always greater than or equal to current time
     $.validator.addMethod(
         "startTime",
@@ -1446,13 +1425,12 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date().toDateString(),
-                    new Date("2030-1-1").toDateString(),
+                    new Date("2025-1-1").toDateString(),
                 ],
             },
             shiftTimeStart: {
                 required: true,
                 startTime: ".shiftDate",
-                minTime30Start: "#endTime",
             },
             shiftTimeEnd: {
                 required: true,
@@ -1503,13 +1481,12 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date().toDateString(),
-                    new Date("2050-1-1").toDateString(),
+                    new Date("2025-1-1").toDateString(),
                 ],
             },
             shiftStartTime: {
                 required: true,
                 startTime: ".shiftDate",
-                minTime30Start: "#floatingInput3",
             },
             shiftEndTime: {
                 required: true,
