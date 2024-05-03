@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for first name."
+        "Please enter only Alphabets of your first name."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for Last name."
+        "Please enter only Alphabets of your Last name."
     );
 
     $.validator.addMethod(
@@ -211,7 +211,7 @@ $(document).ready(function () {
                 zipcode: true,
             },
             room: {
-                min: 0,
+                min: 1,
                 max: 1000,
                 nonNegativeOptional: true,
             },
@@ -224,22 +224,22 @@ $(document).ready(function () {
             },
         },
         messages: {
-            email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
-            },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter a firstname",
+                lettersFirstName:
+                    "Please enter only Alphabets of your first name.",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter a lastname",
+                lettersLastName:
+                    "Please enter only Alphabets of your Last name.",
             },
             phone_number: {
                 required: "Please enter a mobile number",
                 phoneIndia: "Please enter valid phone number format....",
             },
             date_of_birth: {
-                required: "Please enter a valid date of birth",
+                required: "Please enter a date of birth",
                 dateRange:
                     "Date of Birth should be between " +
                     new Date("1900-01-01").toDateString() +
@@ -263,6 +263,7 @@ $(document).ready(function () {
                 min: "Please enter 6 digits positive zipcode",
             },
             room: {
+                min: "Please enter room number greater than 0",
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             symptoms: {

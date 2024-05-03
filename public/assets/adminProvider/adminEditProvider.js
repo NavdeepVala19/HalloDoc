@@ -250,9 +250,9 @@ $(document).ready(function () {
     $(".contact_your_provider").each(function () {
         var itemClose = $(this).parent();
         var parentItem = itemClose.parent();
-        var checkBoxItem = parentItem.find('.checkbox1');
-        var isCheckedCheck = checkBoxItem.is(':checked');
- 
+        var checkBoxItem = parentItem.find(".checkbox1");
+        var isCheckedCheck = checkBoxItem.is(":checked");
+
         if (isCheckedCheck == true) {
             $(this).attr("disabled", "true");
         } else {
@@ -337,7 +337,6 @@ $(document).ready(function () {
             },
         });
     });
-
 
     //***  This code is showing contact your provider pop-up ****
 
@@ -448,7 +447,6 @@ $(document).ready(function () {
         $(".pop-up form .form-control").removeClass("is-valid");
         $(".pop-up form .form-control").removeClass("is-invalid");
     });
-
 
     //** client side validation in adminProviderCreateForm
 
@@ -817,46 +815,46 @@ $(document).ready(function () {
                 roleCheck: "Please select role",
             },
             user_name: {
-                required: "Please enter a username",
+                required: "Please enter a username of provider",
             },
             password: {
                 required: "Please enter a password",
             },
             first_name: {
-                required: "Please enter a first name",
+                required: "Please enter first name of provider",
                 lettersFirstName:
-                    "Please enter only letters for your first name.",
+                    "Please enter only letters in first name of provider.",
             },
             last_name: {
-                required: "Please enter a last name",
+                required: "Please enter last name of provider",
                 lettersLastName:
-                    "Please enter only letters for your Last name.",
+                    "Please enter only letters in Last name of provider.",
             },
             email: {
-                required: "Please enter a valid email",
+                required: "Please enter an email of provider",
                 emailAddress:
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             phone_number: {
-                required: "Please enter a valid phone number",
+                required: "Please enter a phone number of provider",
                 phoneIndia: "Please enter a valid phone number.",
             },
             medical_license: {
-                required: "Please enter a valid medical license",
+                required: "Please enter medical license of provider",
                 medicalLicense:
                     "Please enter a valid 10-digit medical license number.",
             },
             npi_number: {
-                required: "Please enter a valid npi number",
+                required: "Please enter npi number of provider",
                 npiNumber: "Please enter a valid 10-digit NPI number.",
             },
             address1: {
-                required: "Please enter a valid address1",
+                required: "Please enter address1 of provider",
                 address1:
                     "Please enter a only alphabets numbers,comma,underscore,dash,in address1 . ",
             },
             address2: {
-                required: "Please enter a valid address2",
+                required: "Please enter address2 of provider",
                 address2: "Please enter alphabets and space in address2.",
             },
             city: {
@@ -872,29 +870,29 @@ $(document).ready(function () {
                 stateCheck: true,
             },
             zip: {
-                required: "Please enter a valid zipcode",
+                required: "Please enter a zipcode",
                 min: "Please enter positive number with 6 digits",
                 zipcode: "Please enter positive number with 6 digits",
             },
             phone_number_alt: {
-                required: "Please enter a valid alternate phone number",
+                required: "Please enter an alternate phone number of provider",
                 min: "Please enter a 10 digit positive number in alternate phone number.",
                 minlength: "Please enter exactly 10 digits in phone number",
                 maxlength: "Please enter exactly 10 digits in phone number",
             },
             business_name: {
-                required: "Please enter a valid business name",
+                required: "Please enter a business name of provider",
                 businessname: "Please enter alphabets in business name.",
             },
             business_website: {
-                required: "Please enter a valid business website",
+                required: "Please enter a business website of provider",
             },
             provider_photo: {
                 customFile:
                     "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB.",
             },
             admin_notes: {
-                required: "Please enter a valid Admin Notes",
+                required: "Please enter a Admin Notes",
                 adminNotes:
                     "Please enter alphabets,numbers, hyphens, underscores,fullstop, commas, and forward slashes in admin notes.",
             },
@@ -989,7 +987,7 @@ $(document).ready(function () {
         },
         messages: {
             user_name: {
-                required: "Please enter a valid username",
+                required: "Please enter a username of provider",
             },
             password: {
                 required: "Please enter a password",
@@ -1122,24 +1120,24 @@ $(document).ready(function () {
         },
         messages: {
             first_name: {
-                required: "Please enter a valid first_name",
+                required: "Please enter a first name of provider",
             },
             last_name: {
-                required: "Please enter a valid last_name",
+                required: "Please enter a last name of provider",
             },
             email: {
-                required: "Please enter a valid email",
+                required: "Please enter a email of provider",
             },
             phone_number: {
-                required: "Please enter a valid phone_number",
+                required: "Please enter a phone number of provider",
             },
             medical_license: {
-                required: "Please enter a valid medical_license",
+                required: "Please enter a medical license of provider",
                 medicalLicense:
                     "Please enter a valid 10-digit medical license number.",
             },
             npi_number: {
-                required: "Please enter a valid npi_number",
+                required: "Please enter a npi number of provider",
                 npiNumber: "Please enter a valid 10-digit NPI number.",
             },
         },
@@ -1264,12 +1262,12 @@ $(document).ready(function () {
         },
         messages: {
             address1: {
-                required: "Please enter a valid address1",
+                required: "Please enter address1 of provider",
                 address1:
                     "Please enter a only alphabets numbers,comma,underscore,dash,in address1 . ",
             },
             address2: {
-                required: "Please enter a valid address2",
+                required: "Please enter address2 of provider",
                 address2: "Please enter alphabets and space in address2.",
             },
             city: {
@@ -1281,7 +1279,7 @@ $(document).ready(function () {
                 stateCheck: "Please select a state.",
             },
             zip: {
-                required: "Please enter a valid zipcode",
+                required: "Please enter a zipcode",
                 min: "Please enter positive number with 6 digits",
             },
             alt_phone_number: {
@@ -1401,13 +1399,13 @@ $(document).ready(function () {
         },
         messages: {
             business_name: {
-                required: "Please enter a valid business_name",
+                required: "Please enter a business name of provider",
             },
             business_website: {
-                required: "Please enter a valid business_website",
+                required: "Please enter a business website of provider",
             },
             admin_notes: {
-                required: "Please enter a valid Admin_Notes",
+                required: "Please enter a Admin Notes",
                 adminNotes:
                     "Please enter alphabets,numbers, hyphens, underscores,fullstop, commas, and forward slashes in admin notes.",
             },
@@ -1509,7 +1507,6 @@ $(document).ready(function () {
     });
 });
 
-
 // * filter provider according to regions
 function fetchPaginatedResults(selectedId, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
@@ -1588,7 +1585,6 @@ $("#listing-region-admin-provider").on("change", function (event) {
     fetchPaginatedResults(selectedId, 1);
 });
 
-
 // * filter provider according to regions in mobile view
 function fetchPaginatedResultsMobileView(selectedId, page) {
     var token = $('meta[name="csrf-token"]').attr("content");
@@ -1624,7 +1620,9 @@ function fetchPaginatedResultsMobileView(selectedId, page) {
                 // Target the next sibling .more-info element specifically
                 $(this).next(".details").toggleClass("active");
 
-                $(".details").not($(this).next(".details")).removeClass("active");
+                $(".details")
+                    .not($(this).next(".details"))
+                    .removeClass("active");
             });
         },
     });
@@ -1632,6 +1630,7 @@ function fetchPaginatedResultsMobileView(selectedId, page) {
 
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
+
     var page;
     page = $(this).text();
 
@@ -1663,6 +1662,47 @@ $(document).on("click", ".pagination .page-link", function (event) {
         } else {
             console.log("There is no next sibling without the 'active' class.");
         }
+    }
+
+    if (page === "Next »") {
+        var pageValue = $(this).attr("href");
+
+        // Use regular expression to match the digit at the end of the "pageValue"
+        const regex = /\d+$/; // match one or more digits
+
+        const match = pageValue.match(regex);
+
+        if (match) {
+
+            // Extracted digit is the first element of the match array
+            const pageNumber = match[0];
+            var page = pageNumber;
+
+            // This will output "pageNumber (1,2,3,....)"
+            // console.log(pageNumber);
+
+        } else {
+            console.log("No page number found in the string");
+        }
+    } else if (page === "« Previous") {
+          var pageValue = $(this).attr("href");
+
+          // Use regular expression to match the digit at the end of the "pageValue"
+          const regex = /\d+$/; // match one or more digits
+
+          const match = pageValue.match(regex);
+  
+          if (match) {
+              // Extracted digit is the first element of the match array
+              const pageNumber = match[0];
+              var page = pageNumber;
+
+
+              // This will output "pageNumber (1,2,3,....)"
+              //   console.log(pageNumber); 
+          } else {
+              console.log("No page number found in the string");
+          }
     }
 
     var selectedId = $("#listing-region-admin-provider").val();

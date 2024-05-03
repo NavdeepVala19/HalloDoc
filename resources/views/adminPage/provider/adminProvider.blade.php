@@ -45,7 +45,6 @@
         </ul>
     </div>
 @endsection
-
 @section('content')
     @include('loading')
     <div class="overlay"> </div>
@@ -54,8 +53,7 @@
             {{ session('message') }}
         </h6>
     @endif
-
-    <div class="container">
+    <div class="container mt-2">
         <h2>Provider Information</h2>
         <div class="main-info-content">
             <div class="main-info-content">
@@ -163,7 +161,6 @@
                     </div>
                     
                 </div>
-
                 <div class="mobile-listing">
                     @if ($providersData->isEmpty())
                         <div class="d-flex justify-content-center align-items-center">
@@ -202,7 +199,9 @@
                             </div>
                         </div>
                     @endforeach
-                    {{ $providersData->links('pagination::bootstrap-5') }}
+                    <div>
+                        {{ $providersData->links('pagination::bootstrap-5') }}
+                    </div>
 
                     <!-- contact your provider pop-up -->
                     <div class="pop-up new-provider-pop-up">
@@ -249,7 +248,6 @@
                         </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>

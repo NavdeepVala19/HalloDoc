@@ -55,14 +55,14 @@
             <h3>Account Information</h3>
             <div class="grid-3">
                 <div class="form-floating errorMsg">
-                    <input type="text" name="user_name" class="form-control" id="floatingInput1" placeholder="User Name" value="{{ old('user_name') }}">
+                    <input type="text" name="user_name" class="form-control" id="floatingInput1" placeholder="User Name" value="{{ old('user_name') }}" autocomplete="off">
                     <label for="floatingInput1">User Name</label>
                     @error('user_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg"> 
-                    <input type="password" name="password" class="form-control" id="floatingInput2" placeholder="password" value="{{ old('password') }}">
+                    <input type="password" name="password" class="form-control" id="floatingInput2" placeholder="password"  autocomplete="off" value="{{ old('password') }}">
                     <label for="floatingInput2">Password</label>
                     @error('password')
                     <div class="text-danger">{{ $message }}</div>
@@ -77,35 +77,35 @@
             <h3>Administrator Information</h3>
             <div class="grid-2">
                 <div class="form-floating errorMsg" >
-                    <input type="text" name="first_name" class="form-control" id="floatingInput3" placeholder="First Name" value="{{ old('first_name') }}">
+                    <input type="text" name="first_name" class="form-control" id="floatingInput3" placeholder="First Name"  autocomplete="off" value="{{ old('first_name') }}">
                     <label for="floatingInput3">First Name</label>
                     @error('first_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="text" name="last_name" class="form-control" id="floatingInput4" placeholder="Last Name" value="{{ old('last_name') }}">
+                    <input type="text" name="last_name" class="form-control" id="floatingInput4" placeholder="Last Name" autocomplete="off" value="{{ old('last_name') }}">
                     <label for="floatingInput4">Last Name</label>
                     @error('last_name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="email" class="form-control email" id="floatingInput5" name="email" placeholder="name@example.com" value="{{ old('email') }}">
+                    <input type="email" class="form-control email" id="floatingInput5" name="email" placeholder="name@example.com" autocomplete="off" value="{{ old('email') }}">
                     <label for="floatingInput5">Email</label>
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="email" class="form-control" id="floatingInput6" name="confirm_email" placeholder="name@example.com" value="{{ old('confirm_email') }}">
+                    <input type="email" class="form-control" id="floatingInput6" name="confirm_email" placeholder="name@example.com" autocomplete="off" value="{{ old('confirm_email') }}">
                     <label for="floatingInput6">Confirm Email</label>
                     @error('confirm_email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg" style="height: 58px;">
-                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ old('phone_number') }}">
+                    <input type="tel" name="phone_number" class="form-control phone" id="telephone" value="{{ old('phone_number') }}" autocomplete="off">
                     @error('phone_number')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -123,21 +123,21 @@
             <h3>Mailing & Billing Information</h3>
             <div class="grid-2">
                 <div class="form-floating errorMsg">
-                    <input type="text" name="address1" class="form-control" id="floatingInput7" placeholder="Address 1" value="{{ old('address1') }}">
+                    <input type="text" name="address1" class="form-control" id="floatingInput7" placeholder="Address 1" value="{{ old('address1') }}" autocomplete="off">
                     <label for="floatingInput7">Address 1</label>
                     @error('address1')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="text" name="address2" class="form-control" id="floatingInput8" placeholder="Address 2" value="{{ old('address2') }}">
+                    <input type="text" name="address2" class="form-control" id="floatingInput8" placeholder="Address 2" value="{{ old('address2') }}" autocomplete="off">
                     <label for="floatingInput8">Address 2</label>
                     @error('address2')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="text" name="city" class="form-control" id="floatingInput9" placeholder="city" value="{{ old('city') }}">
+                    <input type="text" name="city" class="form-control" id="floatingInput9" placeholder="city" value="{{ old('city') }}" autocomplete="off">
                     <label for="floatingInput9">City</label>
                     @error('city')
                     <div class="text-danger">{{ $message }}</div>
@@ -151,14 +151,14 @@
                     </div>
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="text" name="zip" class="form-control" id="floatingInput10" placeholder="zip" value="{{ old('zip') }}" min="0">
+                    <input type="text" name="zip" class="form-control" id="floatingInput10" placeholder="zip" value="{{ old('zip') }}" min="0" autocomplete="off">
                     <label for="floatingInput10">Zip</label>
                     @error('zip')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div style="height: 58px;" class="errorMsg">
-                    <input type="number" name="alt_mobile" class="form-control phone" id="telephone" placeholder="mobile" value="{{ old('alt_mobile') }}" min="10">
+                    <input type="number" name="alt_mobile" class="form-control phone" id="telephone" placeholder="mobile" value="{{ old('alt_mobile') }}" min="10" autocomplete="off">
                     @error('alt_mobile')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

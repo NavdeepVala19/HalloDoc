@@ -23,7 +23,7 @@
                     </div>
                     <div class=" grid-2">
                         <div class="form-floating" id="form-floating">
-                            <input type="text" class="form-control @error('family_first_name') is-invalid @enderror"
+                            <input type="text" class="form-control @error('family_first_name') is-invalid @enderror" autocomplete="off"
                                 id="floatingInput1" value="{{ old('family_first_name') }}" name="family_first_name"
                                 placeholder="Your First Name">
                             <label for="floatingInput1">Your First Name</label>
@@ -32,7 +32,7 @@
                             @enderror
                         </div>
                         <div class="form-floating" id="form-floating">
-                            <input type="text" class="form-control @error('family_last_name') is-invalid @enderror"
+                            <input type="text" class="form-control @error('family_last_name') is-invalid @enderror" autocomplete="off"
                                 id="floatingInput2" value="{{ old('family_last_name') }}" name="family_last_name"
                                 placeholder="Your Last Name">
                             <label for="floatingInput2">Your Last Name</label>
@@ -43,7 +43,7 @@
 
                         <div class="form-floating" style="height: 58px;" id="form-floating">
                             <input type="tel" name="family_phone_number"
-                                class="form-control phone @error('family_phone_number') is-invalid @enderror" id="telephone"
+                                class="form-control phone @error('family_phone_number') is-invalid @enderror" id="telephone" autocomplete="off"
                                 value="{{ old('family_phone_number') }}">
                             @error('family_phone_number')
                                 <div class="text-danger">{{ $message }}</div>
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="form-floating" id="form-floating">
-                            <input type="email" class="form-control email @error('family_email') is-invalid @enderror"
+                            <input type="email" class="form-control email @error('family_email') is-invalid @enderror" autocomplete="off"
                                 id="floatingInput3" placeholder="name@example.com" name="family_email"
                                 value="{{ old('family_email') }}">
                             <label for="floatingInput3">Email</label>
@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="form-floating" id="form-floating">
-                            <input type="text" class="form-control @error('family_relation') is-invalid @enderror"
+                            <input type="text" class="form-control @error('family_relation') is-invalid @enderror" autocomplete="off"
                                 id="floatingInput4" value="{{ old('family_relation') }}" name="family_relation"
                                 placeholder="Relation with Patient">
                             <label for="floatingInput4">Relation with Patient</label>
@@ -79,7 +79,7 @@
                             <h4>Patient Information</h4>
                         </div>
                         <div class="form-floating" id="form-floating">
-                            <textarea class="form-control note" name='symptoms' placeholder="notes" id="floatingTextarea2" style="height: 150px">{{ old('symptoms') }}</textarea>
+                            <textarea class="form-control note" name='symptoms' placeholder="notes" id="floatingTextarea2 autocomplete="off"" style="height: 150px">{{ old('symptoms') }}</textarea>
                             <label for="floatingTextarea2" class="symptoms-notes-label">Enter Brief Details of Symptoms(optional)</label>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                     <div class=" grid-2">
                         <div class="form-floating" id="form-floating">
                             <input type="text" name="first_name"
-                                class="form-control first_name @error('first_name') is-invalid @enderror"
+                                class="form-control first_name @error('first_name') is-invalid @enderror" autocomplete="off"
                                 id="floatingInput5" placeholder="First Name" value="{{ old('first_name') }}">
                             <label for="floatingInput5">First Name</label>
                             @error('first_name')
@@ -98,7 +98,7 @@
                         </div>
                         <div class="form-floating" id="form-floating">
                             <input type="text" name="last_name"
-                                class="form-control last_name @error('last_name') is-invalid @enderror" id="floatingInput6"
+                                class="form-control last_name @error('last_name') is-invalid @enderror" id="floatingInput6" autocomplete="off"
                                 placeholder="Last Name" value="{{ old('last_name') }}">
                             <label for="floatingInput6">Last Name</label>
                             @error('last_name')
@@ -108,7 +108,7 @@
 
                         <div class="form-floating" id="form-floating">
                             <input type="date"
-                                class="form-control date_of_birth @error('date_of_birth') is-invalid @enderror"
+                                class="form-control date_of_birth @error('date_of_birth') is-invalid @enderror" autocomplete="off"
                                 id="floatingInput7" name="date_of_birth" placeholder="date of birth"
                                 value="{{ old('date_of_birth') }}">
                             <label for="floatingInput7">Date Of Birth</label>
@@ -126,7 +126,7 @@
                         </div>
                         <div class="grid-2">
                             <div class="form-floating" id="form-floating">
-                                <input type="email" class="form-control email @error('email') is-invalid @enderror"
+                                <input type="email" class="form-control email @error('email') is-invalid @enderror" autocomplete="off"
                                     id="floatingInput8" placeholder="name@example.com" name="email"
                                     value="{{ old('email') }}">
                                 <label for="floatingInput8">Email</label>
@@ -136,7 +136,7 @@
                             </div>
                             <div class="" style="height: 58px;" id="form-floating">
                                 <input type="number" name="phone_number"
-                                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                                    class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" autocomplete="off"
                                     value="{{ old('phone_number') }}" placeholder="Phone Number" min="0">
                                 @error('phone_number')
                                     <div class="text-danger">{{ $message }}</div>
@@ -153,7 +153,7 @@
                         <div class="grid-2">
                             <div class="form-floating" id="form-floating">
                                 <input type="text" name="street"
-                                    class="form-control street @error('street') is-invalid @enderror" id="floatingInput9"
+                                    class="form-control street @error('street') is-invalid @enderror" id="floatingInput9" autocomplete="off"
                                     placeholder="Street" value="{{ old('street') }}">
                                 <label for="floatingInput9">Street</label>
                                 @error('street')
@@ -162,7 +162,7 @@
                             </div>
                             <div class="form-floating" id="form-floating">
                                 <input type="text" name="city"
-                                    class="form-control city @error('city') is-invalid @enderror" id="floatingInput10"
+                                    class="form-control city @error('city') is-invalid @enderror" id="floatingInput10" autocomplete="off"
                                     placeholder="City" value="{{ old('city') }}">
                                 <label for="floatingInput10">City</label>
                                 @error('city')
@@ -171,7 +171,7 @@
                             </div>
                             <div class="form-floating" id="form-floating">
                                 <input type="text" name="state"
-                                    class="form-control state @error('state') is-invalid @enderror" id="floatingInput11"
+                                    class="form-control state @error('state') is-invalid @enderror" id="floatingInput11" autocomplete="off"
                                     placeholder="State" value="{{ old('state') }}">
                                 <label for="floatingInput11">State</label>
                                 @error('state')
@@ -180,7 +180,7 @@
                             </div>
                             <div class="form-floating w-100" id="form-floating">
                                 <input type="number" name="zipcode"
-                                    class="form-control zipcode @error('zipcode') is-invalid @enderror"
+                                    class="form-control zipcode @error('zipcode') is-invalid @enderror" autocomplete="off"
                                     id="floatingInput12" placeholder="Zipcode" value="{{ old('zipcode') }}"
                                     min="0">
                                 <label for="floatingInput12">Zipcode</label>
@@ -190,7 +190,7 @@
                             </div>
                             <div class="form-floating" id="form-floating">
                                 <input type="number" name="room"
-                                    class="form-control room @error('room') is-invalid @enderror" id="floatingInput13"
+                                    class="form-control room @error('room') is-invalid @enderror" id="floatingInput13" autocomplete="off"
                                     placeholder="room" value="{{ old('room') }}" min="0">
                                 <label for="floatingInput13">Room (optional)</label>
                                 @error('room')

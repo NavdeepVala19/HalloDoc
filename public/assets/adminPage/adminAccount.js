@@ -69,14 +69,14 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your User name."
+        "Please enter  only Alphabets of User name."
     );
     $.validator.addMethod(
         "lettersFirstName",
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only Alphabets of First name."
     );
 
     $.validator.addMethod(
@@ -95,7 +95,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only Alphabets of Last name."
     );
 
     $.validator.addMethod(
@@ -270,7 +270,6 @@ $(document).ready(function () {
 
             "region_id[]": {
                 atLeastOneChecked: true,
-                required: true,
             },
         },
         messages: {
@@ -284,14 +283,14 @@ $(document).ready(function () {
                 required: "Please enter a password",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter a firstname",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter a lastname",
             },
             email: {
                 required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                    "Please enter a email.",
             },
             confirm_email: {
                 required:
@@ -320,7 +319,7 @@ $(document).ready(function () {
                 city: "Please enter alpbabets in city name.",
             },
             state: {
-                required: "Please enter a state",
+                required: "Please select a state",
                 state: "Please enter alpbabets in state name.",
             },
             zipcode: {
@@ -328,7 +327,7 @@ $(document).ready(function () {
                 min: "Please enter positive 6 digits zipcode",
             },
             role: {
-                required: "Please select at least one role",
+                required: "Please select a role",
             },
         },
         errorElement: "span",

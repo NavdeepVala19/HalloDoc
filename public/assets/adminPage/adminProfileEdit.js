@@ -203,7 +203,7 @@ $(document).ready(function () {
         },
         messages: {
             password: {
-                required: "Please enter a valid password",
+                required: "Please enter a password",
             },
         },
         errorElement: "span",

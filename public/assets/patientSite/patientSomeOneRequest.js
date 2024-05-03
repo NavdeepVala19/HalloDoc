@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for first name."
+        "Please enter only Alphabets of your first name."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for Last name."
+        "Please enter only Alphabets of your Last name."
     );
 
     $.validator.addMethod(
@@ -221,7 +221,7 @@ $(document).ready(function () {
                 zipcode: true,
             },
             room: {
-                min: 0,
+                min: 1,
                 max: 1000,
                 nonNegativeOptional: true,
             },
@@ -240,17 +240,20 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                required: "Please enter email of patient",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter firstname of patient",
+                lettersFirstName:
+                    "Please enter only Alphabets of first name of patient.",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter lastname of patient",
+                lettersLastName:
+                    "Please enter only Alphabets of Last name of patient.",
             },
             date_of_birth: {
-                required: "Please enter a date of birth",
+                required: "Please enter date of birth of patient",
                 dateRange:
                     "Date of Birth should be between " +
                     new Date("1900-01-01").toDateString() +
@@ -258,8 +261,7 @@ $(document).ready(function () {
                     new Date().toDateString(),
             },
             phone_number: {
-                required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                required: "Please enter mobile number of patient",
             },
             street: {
                 required: "Please enter a street",
@@ -278,6 +280,7 @@ $(document).ready(function () {
                 min: "Please enter positive number with 6 digits",
             },
             room: {
+                min: "Please enter room number greater than 0",
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             patient_note: {
@@ -291,7 +294,7 @@ $(document).ready(function () {
             },
             relation: {
                 relation:
-                    "Please enter only letters and dash for your relation",
+                    "Please enter valid relation (Format : alphabets-alphabets).",
             },
         },
         errorElement: "span",

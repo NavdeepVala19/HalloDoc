@@ -159,6 +159,44 @@ $(document).on("click", ".pagination .page-link", function (event) {
         }
     }
 
+     if (page === "Next »") {
+         var pageValue = $(this).attr("href");
+
+         // Use regular expression to match the digit at the end of the "pageValue"
+         const regex = /\d+$/; // match one or more digits
+
+         const match = pageValue.match(regex);
+
+         if (match) {
+             // Extracted digit is the first element of the match array
+             const pageNumber = match[0];
+             var page = pageNumber;
+
+             // This will output "pageNumber (1,2,3,....)"
+             // console.log(pageNumber);
+         } else {
+             console.log("No page number found in the string");
+         }
+     } else if (page === "« Previous") {
+         var pageValue = $(this).attr("href");
+
+         // Use regular expression to match the digit at the end of the "pageValue"
+         const regex = /\d+$/; // match one or more digits
+
+         const match = pageValue.match(regex);
+
+         if (match) {
+             // Extracted digit is the first element of the match array
+             const pageNumber = match[0];
+             var page = pageNumber;
+
+             // This will output "pageNumber (1,2,3,....)"
+             //   console.log(pageNumber);
+         } else {
+             console.log("No page number found in the string");
+         }
+     }
+
     var selectedAccount = $("#accountTypeMobile").val();
     fetchPaginatedUserAccessMobileData(selectedAccount, page);
 });
