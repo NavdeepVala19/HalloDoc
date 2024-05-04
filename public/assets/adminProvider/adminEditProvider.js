@@ -511,14 +511,14 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your User name."
+        "Please enter only Alphabets in  User name."
     );
     $.validator.addMethod(
         "lettersFirstName",
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only Alphabets in first name."
     );
 
     $.validator.addMethod(
@@ -1628,81 +1628,42 @@ function fetchPaginatedResultsMobileView(selectedId, page) {
     });
 }
 
+
+
 $(document).on("click", ".pagination .page-link", function (event) {
     event.preventDefault();
 
-    var page;
-    page = $(this).text();
+     var page;
+     page = $(this).text();
+   
+    if (page === "›" || page === "Next »") {
+            var pageNumberAttr = $(this).attr("href"); // it gives href attribute
+            const regex = /\d+$/; // match one or more digits
 
-    if (page === "›") {
-        // Get the <li> element with the class "active"
-        var activeListItem = $(".pagination .page-item.active");
+            const matchRegex = pageNumberAttr.match(regex); // match with defined regex with value which gives href and it will output of type object
 
-        // Get the next sibling of the active <li> element
-        var nextSibling = activeListItem.next();
+            if (matchRegex) {
+                // Extracted digit is the first element of the match object
 
-        // Check if the next sibling exists and does not have the "active" class
-        if (nextSibling.length && !nextSibling.hasClass("active")) {
-            // Get the value of the next sibling
-            var page = nextSibling.first(".page-link").text();
-        } else {
-            console.log("There is no next sibling without the 'active' class.");
-        }
-    } else if (page === "‹") {
-        // Get the <li> element with the class "active"
-        var activeListItem = $(".pagination .page-item.active");
+                const pageNumber = matchRegex[0]; // This will output "pageNumber (1,2,3,....)"
+                var page = pageNumber;
+            } else {
+                console.log("there is no page number found");
+            }
+    } else if (page === "‹" || page === "« Previous") {
+            var pageNumberAttr = $(this).attr("href"); // it gives href attribute
+            const regex = /\d+$/; // match one or more digits
 
-        // Get the next sibling of the active <li> element
-        var prevSibling = activeListItem.prev();
+            const matchRegex = pageNumberAttr.match(regex); // match with defined regex with value which gives href and it will output of type object
 
-        // Check if the next sibling exists and does not have the "active" class
-        if (prevSibling.length && !prevSibling.hasClass("active")) {
-            // Get the value of the next sibling
-            var page = prevSibling.first(".page-link").text();
-        } else {
-            console.log("There is no next sibling without the 'active' class.");
-        }
-    }
+            if (matchRegex) {
+                // Extracted digit is the first element of the match object
 
-    if (page === "Next »") {
-        var pageValue = $(this).attr("href");
-
-        // Use regular expression to match the digit at the end of the "pageValue"
-        const regex = /\d+$/; // match one or more digits
-
-        const match = pageValue.match(regex);
-
-        if (match) {
-
-            // Extracted digit is the first element of the match array
-            const pageNumber = match[0];
-            var page = pageNumber;
-
-            // This will output "pageNumber (1,2,3,....)"
-            // console.log(pageNumber);
-
-        } else {
-            console.log("No page number found in the string");
-        }
-    } else if (page === "« Previous") {
-          var pageValue = $(this).attr("href");
-
-          // Use regular expression to match the digit at the end of the "pageValue"
-          const regex = /\d+$/; // match one or more digits
-
-          const match = pageValue.match(regex);
-  
-          if (match) {
-              // Extracted digit is the first element of the match array
-              const pageNumber = match[0];
-              var page = pageNumber;
-
-
-              // This will output "pageNumber (1,2,3,....)"
-              //   console.log(pageNumber); 
-          } else {
-              console.log("No page number found in the string");
-          }
+                const pageNumber = matchRegex[0]; // This will output "pageNumber (1,2,3,....)"
+                var page = pageNumber;
+            } else {
+                console.log("there is no page number found");
+            }
     }
 
     var selectedId = $("#listing-region-admin-provider").val();
@@ -1711,6 +1672,7 @@ $(document).on("click", ".pagination .page-link", function (event) {
 
 $("#listing-region-admin-provider").on("change", function (event) {
     event.preventDefault();
+    
     var selectedId = $(this).val();
     fetchPaginatedResultsMobileView(selectedId, 1);
 });

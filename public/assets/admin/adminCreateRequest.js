@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only Alphabets for first name of patient."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only Alphabets for last name of patient."
     );
 
     $.validator.addMethod(
@@ -114,7 +114,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter alphabets,dash,underscore,space and numbers in street name. "
+        "only alphabets,dash,underscore,space,comma and numbers are allow in street name. "
     );
 
     $.validator.addMethod(
@@ -206,7 +206,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,comma,space and numbers in street name. ",
+                street: "only alphabets,dash,underscore,space,comma and numbers are allow in street name. ",
             },
             city: {
                 required: "Please enter a city",

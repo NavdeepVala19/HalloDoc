@@ -133,7 +133,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a alphabets in address2."
+        "Please enter alphabets in address2."
     );
 
     $.validator.addMethod(
@@ -157,7 +157,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter alphabets,dash,underscore,space and numbers in address1. "
+        "only alphabets,dash,underscore,comma,space and numbers in address1. "
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -294,7 +294,7 @@ $(document).ready(function () {
             },
             confirm_email: {
                 required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                    "Please enter confirm email",
                 equalTo: "Confirm email and email both must be same",
             },
             phone_number: {
@@ -309,10 +309,10 @@ $(document).ready(function () {
             },
             address1: {
                 required: "Please enter a address1",
-                street: "Please enter alphabets,dash,underscore,comma,space and numbers in address1. ",
+                street: "only alphabets,dash,underscore,comma,space and numbers in address1. ",
             },
             address2: {
-                required: "Please enter a address2",
+                required: "Please enter address2",
             },
             city: {
                 required: "Please enter a city",

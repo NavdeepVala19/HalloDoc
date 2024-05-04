@@ -151,7 +151,7 @@
                     </div>
                 </div>
                 <div class="form-floating errorMsg">
-                    <input type="text" name="zip" class="form-control" id="floatingInput10" placeholder="zip" value="{{ old('zip') }}" min="0" autocomplete="off">
+                    <input type="text" name="zip" class="form-control" id="floatingInput10" placeholder="zip" value="{{ old('zip') }}" min="1" autocomplete="off">
                     <label for="floatingInput10">Zip</label>
                     @error('zip')
                     <div class="text-danger">{{ $message }}</div>
