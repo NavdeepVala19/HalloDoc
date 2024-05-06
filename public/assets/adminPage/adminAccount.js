@@ -69,14 +69,14 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your User name."
+        "Please enter  only Alphabets of User name."
     );
     $.validator.addMethod(
         "lettersFirstName",
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only Alphabets of First name."
     );
 
     $.validator.addMethod(
@@ -95,7 +95,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only Alphabets of Last name."
     );
 
     $.validator.addMethod(
@@ -133,7 +133,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z ,_-]+?$/);
         },
-        "Please enter a alphabets in address2."
+        "Please enter alphabets in address2."
     );
 
     $.validator.addMethod(
@@ -157,7 +157,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter alphabets,dash,underscore,space and numbers in address1. "
+        "only alphabets,dash,underscore,comma,space and numbers in address1. "
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -270,7 +270,6 @@ $(document).ready(function () {
 
             "region_id[]": {
                 atLeastOneChecked: true,
-                required: true,
             },
         },
         messages: {
@@ -284,18 +283,18 @@ $(document).ready(function () {
                 required: "Please enter a password",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter a firstname",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter a lastname",
             },
             email: {
                 required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                    "Please enter a email.",
             },
             confirm_email: {
                 required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                    "Please enter confirm email",
                 equalTo: "Confirm email and email both must be same",
             },
             phone_number: {
@@ -310,17 +309,17 @@ $(document).ready(function () {
             },
             address1: {
                 required: "Please enter a address1",
-                street: "Please enter alphabets,dash,underscore,comma,space and numbers in address1. ",
+                street: "only alphabets,dash,underscore,comma,space and numbers in address1. ",
             },
             address2: {
-                required: "Please enter a address2",
+                required: "Please enter address2",
             },
             city: {
                 required: "Please enter a city",
                 city: "Please enter alpbabets in city name.",
             },
             state: {
-                required: "Please enter a state",
+                required: "Please select a state",
                 state: "Please enter alpbabets in state name.",
             },
             zipcode: {
@@ -328,7 +327,7 @@ $(document).ready(function () {
                 min: "Please enter positive 6 digits zipcode",
             },
             role: {
-                required: "Please select at least one role",
+                required: "Please select a role",
             },
         },
         errorElement: "span",

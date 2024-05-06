@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for first name."
+        "Please enter only Alphabets of your first name."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for Last name."
+        "Please enter only Alphabets of your Last name."
     );
 
     $.validator.addMethod(
@@ -25,7 +25,7 @@ $(document).ready(function () {
                 /^[a-zA-Z]+(?:-[a-zA-Z]+)*$/.test(value)
             );
         },
-        "Please enter only letters and dash for your relation."
+        "Please enter valid relation (Format : alphabets-alphabets)."
     );
 
     $.validator.addMethod(
@@ -235,7 +235,7 @@ $(document).ready(function () {
                 lettersFirstName: true,
             },
             room: {
-                min: 0,
+                min: 1,
                 max: 1000,
                 nonNegativeOptional: true,
             },
@@ -273,19 +273,22 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                required: "Please enter an email of patient",
                 emailAddress:
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter firstname of patient",
+                lettersFirstName:
+                    "Please enter only Alphabets of first name of patient.",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter lastname of patient",
+                lettersLastName:
+                    "Please enter only Alphabets of Last name of patient.",
             },
             date_of_birth: {
-                required: "Please enter a date of birth",
+                required: "Please enter date of birth of patient",
                 dateRange:
                     "Date of Birth should be between " +
                     new Date("1900-01-01").toDateString() +
@@ -293,14 +296,14 @@ $(document).ready(function () {
                     new Date().toDateString(),
             },
             phone_number: {
-                required: "Please enter a mobile number",
+                required: "Please enter mobile number of patient",
                 min: "Please enter a 10 digit positive number in phone number.",
                 minlength: "Please enter exactly 10 digits in phone number",
                 maxlength: "Please enter exactly 10 digits in phone number",
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,space,comma and numbers in street name. ",
+                street: "Only alphabets,dash,underscore,space,comma and numbers are allowed in street name. ",
             },
             city: {
                 required: "Please enter a city",
@@ -316,27 +319,30 @@ $(document).ready(function () {
                 zipcode: "Please enter a 6 digit positive number in zipcode.",
             },
             family_first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter your firstname ",
+                lettersFirstName:
+                    "Please enter only Alphabets of your first name.",
             },
             family_last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter your lastname",
+                lettersLastName:
+                    "Please enter only Alphabets of your Last name.",
             },
             family_phone_number: {
-                required: "Please enter a mobile number",
-                phoneUS: "Please enter valid phone number format....",
+                required: "Please enter your mobile number",
             },
             family_relation: {
-                required: "Please enter a relation ",
+                required: "Please enter your relation with Patient",
             },
             family_email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                required: "Please enter your email",
             },
             docs: {
                 customFile:
                     "Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB. ",
             },
             room: {
+                min: "Please enter room number greater than 0",
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             symptoms: {

@@ -24,6 +24,14 @@ class patientController extends Controller
         return view('patientSite/patientRequest');
     }
 
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     */
+
     public function create(Request $request)
     {
         $request->validate([

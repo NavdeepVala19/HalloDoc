@@ -5,21 +5,6 @@
 @endsection
 
 @section('patientContent')
-    @if (Session::has('message'))
-        <div class="alert alert-warning popup-message" role="alert">
-            {{ Session::get('message') }}
-        </div>
-    @endif
-    @if (Session::has('error'))
-        <div class="alert alert-danger popup-message" role="alert">
-            {{ Session::get('error') }}
-        </div>
-    @endif
-    @if (Session::has('success'))
-        <div class="alert alert-success popup-message" role="alert">
-            {{ Session::get('success') }}
-        </div>
-    @endif
     <!-- main content -->
     <div class="container-fluid main-section patient_login">
         <div class="patient-login">
@@ -36,7 +21,7 @@
                         <i class="bi bi-person-circle person-logo"></i>
                         <input type="email" class="form-control @error('email') is-invalid @enderror"
                             id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" name="email"
-                            value="{{ old('email') }}">
+                            autocomplete="off" value="{{ old('email') }}">
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -48,6 +33,29 @@
                         @error('password')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                    </div>
+                    <div>
+                        @if (Session::has('error'))
+                            <div class="text-danger error-message text-center" role="alert">
+                                <span>
+                                    {{ Session::get('error') }}
+                                </span>
+                            </div>
+                        @endif
+                        @if (Session::has('message'))
+                            <div class="text-success error-message text-center" role="alert">
+                                <span>
+                                    {{ Session::get('message') }}
+                                </span>
+                            </div>
+                        @endif
+                        @if (Session::has('success'))
+                            <div class="text-success error-message text-center" role="alert">
+                                <span>
+                                    {{ Session::get('success') }}
+                                </span>
+                            </div>
+                        @endif
                     </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Log In</button>

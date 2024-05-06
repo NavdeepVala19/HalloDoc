@@ -4,15 +4,7 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/admin/adminResetPassword.css') }}">
 @endsection
 
-
 @section('adminContent')
-    @if (session('error'))
-        <div class="alert alert-danger invalid-popup-message ">
-            <span>
-                {{ session('error') }}
-            </span>
-        </div>
-    @endif
     <!-- main content -->
     <div class="container-fluid main-section mt-5">
         <div class="main-container2">
@@ -38,6 +30,15 @@
                         @error('confirm_password')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                    </div>
+                    <div>
+                        @if (Session::has('error'))
+                            <div class="text-danger error-message text-center" role="alert">
+                                <span>
+                                    {{ Session::get('error') }}
+                                </span>
+                            </div>
+                        @endif
                     </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">

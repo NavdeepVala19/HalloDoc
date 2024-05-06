@@ -227,6 +227,10 @@
    }
 }
 
+#showUpdateText{
+    display: none;
+}
+
 /********************* Main Content CSS End***********************/
 
 

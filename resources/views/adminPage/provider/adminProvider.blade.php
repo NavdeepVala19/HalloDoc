@@ -45,7 +45,6 @@
         </ul>
     </div>
 @endsection
-
 @section('content')
     @include('loading')
     <div class="overlay"> </div>
@@ -54,8 +53,7 @@
             {{ session('message') }}
         </h6>
     @endif
-
-    <div class="container">
+    <div class="container mt-2">
         <h2>Provider Information</h2>
         <div class="main-info-content">
             <div class="main-info-content">
@@ -103,7 +101,7 @@
                                         <td class="data"> {{ $data->status }} </td>
                                         <td class="data gap-1">
                                             <button type="button" data-id='{{ $data->id }}'
-                                                class="primary-empty contact-btn mt-2 mb-2"
+                                                class="primary-empty contact-btn mt-2 mb-2 contact_your_provider"
                                                 id="contact_btn_{{ $data->id }}">Contact</button>
                                             <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}"
                                                 type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
@@ -144,7 +142,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="contact" value="both"
                                         id="flexRadioDefault">
-                                    <label class="form-check-label" for="flexRadioDefault">
+                                    <label class="form-check-label" for="flexRadioDefault"> 
                                         Both
                                     </label>
                                 </div>
@@ -163,7 +161,6 @@
                     </div>
                     
                 </div>
-
                 <div class="mobile-listing">
                     @if ($providersData->isEmpty())
                         <div class="d-flex justify-content-center align-items-center">
@@ -202,7 +199,9 @@
                             </div>
                         </div>
                     @endforeach
-                    {{ $providersData->links('pagination::bootstrap-5') }}
+                    <div>
+                        {{ $providersData->links('pagination::bootstrap-5') }}
+                    </div>
 
                     <!-- contact your provider pop-up -->
                     <div class="pop-up new-provider-pop-up">
@@ -249,7 +248,6 @@
                         </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>

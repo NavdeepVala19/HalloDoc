@@ -14,13 +14,22 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminLoginController extends Controller
 {
-    // this code is for login input credentials
+
+    /**
+     * show adminLogin page
+     */
 
     public function adminLogin()
     {
         return view("admin/adminLogin");
     }
 
+
+    /**
+     *@param $request user enter credentials
+
+     * verify that user is admin or provider and if user entered credentials are valid it redirects to dashboard according to role
+     */
     public function userLogin(Request $request)
     {
         $request->validate([
@@ -59,12 +68,21 @@ class AdminLoginController extends Controller
         }
     }
 
-    // this code is for entering email for reset password
-
+ 
+    /**
+     * show password reset form
+     */
     public function adminResetPassword()
     {
         return view("admin/adminResetPassword");
     }
+
+
+    /**
+     *@param $request user input email
+
+     * send email to entered email if email not exist it shows error message 
+     */
 
     public function submitForgetPasswordForm(Request $request)
     {
@@ -73,7 +91,10 @@ class AdminLoginController extends Controller
         ]);
 
         $user = users::where('email', $request->email)->first();
-        if ($user == null) {
+
+        $userRolesData = UserRoles::where('user_id', $user->id)->first();
+
+        if ($user == null || $userRolesData->role_id == 3) {
             return back()->with('error', 'no such email is registered');
         }
 
@@ -87,15 +108,35 @@ class AdminLoginController extends Controller
             $message->subject('Reset Password');
         });
 
-        return redirect()->route('adminLogin')->with('message', 'We have e-mailed your password reset link!');
+        return redirect()->route('adminLogin')->with('message', 'E-mail is sent for password reset');
     }
 
-    // this code is to update/reset password
+
+    /**
+     *@param $token which was generate when email is sent and store in users table at enter entered email
+
+     * shows password update form and if password is already updated it shows password update success form
+     */
 
     public function showUpdatePasswordForm($token)
     {
-        return view('admin/adminPasswordUpdate', ['token' => $token]);
+        
+        $userData = users::where('token', $token)->first();
+        if ($userData) {
+            return view('admin/adminPasswordUpdate', ['token' => $token]);
+        } else {
+            return view('admin/adminPasswordUpdateSuccess');
+        }
+
     }
+
+
+    /**
+     *@param $request   $request->token which was generated when email was sent 
+
+     * password updated of users(admin/provider) and after successfully update password token gets deleted 
+     */
+
 
     public function submitUpdatePasswordForm(Request $request)
     {

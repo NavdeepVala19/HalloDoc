@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your first name."
+        "Please enter only Alphabets for first name of patient."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for your Last name."
+        "Please enter only Alphabets for last name of patient."
     );
 
     $.validator.addMethod(
@@ -114,7 +114,7 @@ $(document).ready(function () {
         function (value, element) {
             return value.match(/^[a-zA-Z0-9\s,_-]+?$/);
         },
-        "Please enter alphabets,dash,underscore,space and numbers in street name. "
+        "only alphabets,dash,underscore,space,comma and numbers are allow in street name. "
     );
 
     $.validator.addMethod(
@@ -178,7 +178,7 @@ $(document).ready(function () {
                 zipcode: true,
             },
             room: {
-                min: 0,
+                min: 1,
                 max: 1000,
                 nonNegativeOptional: true,
             },
@@ -190,23 +190,23 @@ $(document).ready(function () {
         messages: {
             email: {
                 required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                    "Please enter email of patient",
                 emailAddress:
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter firstname of patient",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter lastname of patient",
             },
             phone_number: {
-                required: "Please enter a mobile number",
+                required: "Please enter mobile number of patient",
                 phoneIndia: "Please enter valid phone number format....",
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,comma,space and numbers in street name. ",
+                street: "only alphabets,dash,underscore,space,comma and numbers are allow in street name. ",
             },
             city: {
                 required: "Please enter a city",
@@ -217,9 +217,10 @@ $(document).ready(function () {
                 state: "Please enter alpbabets in state name.",
             },
             zip: {
-                min: "Please enter positive number with 6 digits",
+                min: "Please enter 6 digits positive zipcode",
             },
             room: {
+                min: "Please enter room number greater than 0",
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             adminNote: {

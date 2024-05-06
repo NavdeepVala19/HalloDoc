@@ -4,7 +4,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for first name."
+        "Please enter only Alphabets of your first name."
     );
 
     $.validator.addMethod(
@@ -12,7 +12,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for Last name."
+        "Please enter only Alphabets of your Last name."
     );
 
     $.validator.addMethod(
@@ -95,10 +95,10 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z0-9 \-_.,()/]+$/; //Allows letters, spaces,numbers,parentheses,comma,frwd slash,fullstop
+            const regex = /^[a-zA-Z0-9 \-_.,()]+$/;  //Allows letters, spaces,numbers,parentheses,comma,frwd slash,fullstop
             return this.optional(element) || regex.test(value.trim());
         },
-        "Please enter valid symptoms. Symptoms should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers."
+        "Please enter valid symptoms.This input allow only alphabets,comma,dash,underscore,parentheses,fullstop and numbers."
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -208,7 +208,7 @@ $(document).ready(function () {
                 zipcode: true,
             },
             room: {
-                min: 0,
+                min: 1,
                 max: 1000,
                 nonNegativeOptional: true,
             },
@@ -223,17 +223,19 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                required: "Please enter email",
                 emailAddress:
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
             first_name: {
-                required:
-                    "Please enter a firstname between 3 and 15 character.",
+                required: "Please enter a firstname",
+                lettersFirstName:
+                    "Please enter only Alphabets of your first name.",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character.",
+                required: "Please enter a lastname",
+                lettersLastName:
+                    "Please enter only Alphabets of your Last name.",
             },
             date_of_birth: {
                 required: "Please enter a date of birth.",
@@ -249,7 +251,7 @@ $(document).ready(function () {
             },
             street: {
                 required: "Please enter a street",
-                street: "Please enter alphabets,dash,underscore,space,comma and numbers in street name. ",
+                street: "Only alphabets,dash,underscore,space,comma and numbers are allowed in street name. ",
             },
             city: {
                 required: "Please enter a city",
@@ -264,6 +266,7 @@ $(document).ready(function () {
                 min: "Please enter a 6 digit positive number in zipcode.",
             },
             room: {
+                min: "Please enter room number greater than 0",
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             symptoms: {

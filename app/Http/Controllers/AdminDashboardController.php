@@ -21,11 +21,23 @@ use Illuminate\Support\Facades\Crypt;
 class AdminDashboardController extends Controller
 {
 
-    //* adminCreate Request on behalf of patient
+    /**
+     * shows admin request page(form)
+     *
+     * from this page admin can create request on behalf of patient
+     */
+
     public function createNewRequest()
     {
         return view('adminPage/adminRequest');
     }
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     */
 
     public function createAdminPatientRequest(Request $request)
     {
@@ -182,9 +194,11 @@ class AdminDashboardController extends Controller
 
     }
 
-    
+    /**
+     *@param $id    $id is the id of users table 
 
-    //* adminProfile Edit
+     * this page will show when admin edit their profile through user access page 
+     */
     public function adminProfile($id)
     {
         try {
@@ -216,6 +230,12 @@ class AdminDashboardController extends Controller
            return view('errors.404');
         }
     }
+
+
+    /**
+     * this page will show admin profile edit and admin can route to this page from any page
+     */
+
     public function adminProfilePage()
     {
         $adminData = Auth::user();
@@ -246,7 +266,13 @@ class AdminDashboardController extends Controller
     }
 
 
-    //* admin change password
+    /**
+     *@param $request the input which is enter by user(admin)
+     *@param $id  id of users table 
+
+     * it will update password in users table
+     */
+
     public function adminChangePassword(Request $request, $id)
     {
         $request->validate([
@@ -263,7 +289,13 @@ class AdminDashboardController extends Controller
     }
 
 
-    //* admin administrastor information update
+    /**
+     *@param $request the input which is enter by user
+     *@param $id  id of users table
+
+     * it will update firstname,lastname,email,mobile in allusers and admin table
+     */
+
     public function adminInfoUpdate(Request $request, $id)
     {
 
@@ -278,7 +310,6 @@ class AdminDashboardController extends Controller
         // Update in admin table
 
         $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
-
 
         $updateAdminInformation->first_name = $request->first_name;
         $updateAdminInformation->last_name = $request->last_name;
@@ -297,10 +328,25 @@ class AdminDashboardController extends Controller
         $updateAdminInfoAllUsers->mobile = $request->phone_number;
         $updateAdminInfoAllUsers->save();
 
+        // update email and phone number in users table
+
+        $updateUserInfo = users::where('id', $id)->first();
+        $updateUserInfo->email = $request->email;
+        $updateUserInfo->phone_number = $request->phone_number;
+        $updateUserInfo->save();
+
         return back()->with('message', 'Your Administration Information is updated successfully');
     }
 
-    //* admin mailing and billing information update 
+
+    /**
+     *@param $request the input which is enter by user
+     *@param $id  id of users table
+
+     * it will update address1,address2 ,city,zip ,state,alternate mobile in admin and allusers table
+     */
+
+
     public function adminMailInfoUpdate(Request $request, $id)
     {
         $request->validate([
@@ -322,7 +368,6 @@ class AdminDashboardController extends Controller
         $updateAdminInformation->alt_phone = $request->alt_mobile;
         $updateAdminInformation->region_id = $request->select_state;
         $updateAdminInformation->save();
-
 
 
         // update Data in allusers table 

@@ -26,6 +26,10 @@ class AdminProviderController extends Controller
 
     // * This code is for listing Providers Details
 
+    /**
+     * this shows listing of providersname,status,role,call status
+     */
+
     public function readProvidersInfo()
     {
         try {
@@ -48,7 +52,9 @@ class AdminProviderController extends Controller
 
 
 
-    // * This code is for Filtering Physician through regions 
+    /**
+     * this function perform  filtering of physician by region through ajax and it lists providersname,status,role,call status
+     */
 
     public function filterPhysicianThroughRegions(Request $request)
     {
@@ -70,6 +76,10 @@ class AdminProviderController extends Controller
         return response()->json(['html' => $data]);
     }
 
+
+    /**
+    * this functions perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
+     */
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
         $currentDate = now()->toDateString();
@@ -91,7 +101,14 @@ class AdminProviderController extends Controller
 
 
 
-    // **This code is for Sending Mail and SMS 
+    // **This code is for Sending Mail and SMS
+
+    /**
+     *@param $request the input which is enter by user
+     *@param  $id   id of selected provider
+
+     *this function perform send email and sms to provider 
+     */
 
     public function sendMailToContactProvider(Request $request, $id)
     {
@@ -215,12 +232,22 @@ class AdminProviderController extends Controller
 
     }
 
+
+    /**
+     *@param $request  $request have id of selected provider and value of check and uncheck of checkbox
+
+     * this function perform stop notification through ajax 
+     */
+
     public function stopNotifications(Request $request)
     {
         $stopNotification = Provider::find($request->stopNotificationsCheckId);
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
 
+    /**
+     * This function perform same as above in mobile view
+     */
     public function stopNotificationsMobileView(Request $request)
     {
         $stopNotification = Provider::find($request->stopNotificationsCheckId);
@@ -228,13 +255,22 @@ class AdminProviderController extends Controller
     }
 
 
-    // * This code is for creating a new provider 
+
+    /**
+       * this display create new provider account page
+     */
 
     public function newProvider()
     {
         $regions = Regions::get();
         return view('/adminPage/provider/adminNewProvider', compact('regions'));
     }
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it stores data in provider,user,allusers and physician_region table
+     */
 
     public function adminCreateNewProvider(Request $request)
     {
@@ -263,7 +299,7 @@ class AdminProviderController extends Controller
         ]);
 
 
-        //* store data of providers in users table
+        // store data of providers in users table
 
         $userProvider = new users();
         $userProvider->username = $request->user_name;
@@ -273,7 +309,7 @@ class AdminProviderController extends Controller
         $userProvider->save();
 
 
-        //* store data of providers in providers table
+        // store data of providers in providers table
         $providerData = new Provider();
         $providerData->user_id = $userProvider->id;
         $providerData->first_name = $request->first_name;
@@ -295,7 +331,7 @@ class AdminProviderController extends Controller
         $providerData->role_id = $request->role;
         $providerData->save();
 
-        // *store region in physician_region table
+        // store region in physician_region table
         $physicianRegion = new PhysicianRegion();
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([
@@ -308,14 +344,14 @@ class AdminProviderController extends Controller
         $ids = implode(',', $data);
 
 
-        //* make entry in user_roles table to identify the user(whether it is admin or physician)
+        // make entry in user_roles table to identify the user(whether it is admin or physician)
         $user_roles = new UserRoles();
         $user_roles->user_id = $userProvider->id;
         $user_roles->role_id = 2;
         $user_roles->save();
 
 
-        //* store data in allusers table
+        // store data in allusers table
         $providerAllUsers = new allusers();
         $providerAllUsers->user_id = $userProvider->id;
         $providerAllUsers->first_name = $request->first_name;
@@ -330,8 +366,7 @@ class AdminProviderController extends Controller
 
 
 
-        //* store documents in local storage 
-        $request_file = new RequestWiseFile();
+        // store documents in local storage 
 
         if (isset($request->provider_photo)) {
             $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
@@ -380,7 +415,11 @@ class AdminProviderController extends Controller
 
 
 
-    // * display edit provider page
+    /**
+     *@param $id   id of provider table
+
+     * this display edit provider page 
+     */
     public function editProvider($id)
     {
         try {
@@ -392,7 +431,14 @@ class AdminProviderController extends Controller
         }
     }
 
-    // *edit provider account information
+    /**
+     *@param $request the input which is enter by user
+     *@param $id id of selected provider
+
+     * it update password and username in users table 
+     * it update role and status in provider table
+     * and also update status in allusers table
+     */
     public function updateProviderAccountInfo(Request $request, $id)
     {
         // update data of providers in users table
@@ -430,8 +476,14 @@ class AdminProviderController extends Controller
         return back()->with('message', 'account information is updated');
     }
 
+    /**
+     *@param $request the input which is enter by user
+     *@param  $id  id of provider 
 
-    // * edit physician information
+     * update firstname,lastname,email,mobile,medical license and npi number in provider table
+     * update firstname,lastname,email,mobile in allusers table
+     * update email and mobile in users table
+     */
     public function providerInfoUpdate(Request $request, $id)
     {
         $request->validate([
@@ -480,7 +532,14 @@ class AdminProviderController extends Controller
     }
 
 
-    // ** edit providers mailing and billing information
+    /**
+     *@param $request the input which is enter by user
+     *@param $id  id of provider
+
+     * update address1,address2,city,zipcode,state,alternate phone number in provider table
+     * update address1,city,zipcode in allusers table
+     */
+
     public function providerMailInfoUpdate(Request $request, $id)
     {
         $request->validate([
@@ -517,7 +576,12 @@ class AdminProviderController extends Controller
     }
 
 
-    // * edit provider profile 
+    /**
+     *@param $request the input which is enter by user
+     *@param $id  id of provider table
+
+     * update businessname,website,adminnotes,provider_photo in provider table
+     */
     public function providerProfileUpdate(Request $request, $id)
     {
         $request->validate([
@@ -545,7 +609,14 @@ class AdminProviderController extends Controller
     }
 
 
-    // * edit onboarding information 
+
+
+    /**
+     *@param $request the input which is enter by user
+
+     * update onboarding document in local storage
+     */
+
     public function providerDocumentsUpdate(Request $request, $id)
     {
           $request->validate([
@@ -593,6 +664,12 @@ class AdminProviderController extends Controller
     }
 
     // * delete provider account
+
+    /**
+     *@param $id  id of provider
+
+     * delete(softDelete) provider account from allusers and provider table
+     */
     public function deleteProviderAccount($id)
     {
         // soft delete in providers table
@@ -611,7 +688,11 @@ class AdminProviderController extends Controller
     }
 
 
-    //  * fetch roles name and display through ajax
+
+    /**
+     * fetch role name from role table and display through ajax
+     */
+
     public function fetchRolesName()
     {
         $fetchRoleName = Role::select('id', 'name')->where('account_type', 'physician')->get();
@@ -619,7 +700,7 @@ class AdminProviderController extends Controller
     }
 
 
-    // *** Show Provider Location ***
+    // Show Provider Location
     public function providerLocations()
     {
         $providers = Provider::get();

@@ -12,30 +12,33 @@
             <div class="details">
                 <h1>Reset Your Password</h1>
             </div>
-            @if (Session::has('message'))
-                <div class="alert alert-success invalid-popup-message" role="alert">
-                    {{ Session::get('message') }}
-                </div>
-            @endif
-
-            @if (Session::has('error'))
-                <div class="alert alert-danger invalid-popup-message" role="alert">
-                    {{ Session::get('error') }}
-                </div>
-            @endif
-
             <div class="form">
                 <form action="{{ route('adminForgotPassword') }}" method="post" id="adminLogin">
                     @csrf
                     <div class="mb-4 username" id="adminLog">
                         <i class="bi bi-person-circle person-logo"></i>
-                        <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder=" email"
+                        <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder=" email" autocomplete="off"
                             name="email">
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
+                    <div>
+                        @if (Session::has('error'))
+                            <div class="text-danger error-message text-center" role="alert">
+                                <span>
+                                    {{ Session::get('error') }}
+                                </span>
+                            </div>
+                        @endif
+                        @if (Session::has('message'))
+                            <div class="text-danger error-message text-center" role="alert">
+                                <span>
+                                    {{ Session::get('message') }}
+                                </span>
+                            </div>
+                        @endif
+                    </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Reset Password</button>
                         <div class="back-login"> <a href="{{ route('adminLogin') }}"> <i class="bi bi-chevron-left"></i>

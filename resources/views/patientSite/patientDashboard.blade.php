@@ -89,10 +89,8 @@
                             Cancelled
                             @elseif ($patientData->status ==3)
                             Accepted
-                            @elseif ($patientData->status ==4 )
-                            MDEnRoute
-                            @elseif ($patientData->status ==5 )
-                            MDOnSite
+                            @elseif ($patientData->status ==4 || $patientData->status == 5 )
+                            Active
                             @elseif ($patientData->status ==6 )
                             Conclude
                             @elseif ($patientData->status ==7 )
@@ -103,6 +101,8 @@
                             UnPaid
                             @elseif ($patientData->status ==10 )
                             Block
+                            @elseif ($patientData->status ==11 )
+                            Cancelled By Patient
                             @endif
                 </div>
                 @if ($patientData->requestWiseFile == null)

@@ -107,6 +107,19 @@ class patientDashboardController extends Controller
 
 
     //  create me request in patient Dashboard
+    public function createNewRequest()
+    {
+        $userData = Auth::user();
+        $email = $userData["email"];
+
+        return view("patientSite/patientNewRequest", compact('email'));
+    }
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it stores request in request_client and request table 
+     */
     public function createNewPatient(Request $request)
     {
         $userData = Auth::user();
@@ -127,7 +140,6 @@ class patientDashboardController extends Controller
         ]);
 
         $isEmailStored = users::where('email', $email)->first();
-
 
         $newPatient = new RequestTable();
         $newPatient->request_type_id = 1;
@@ -187,6 +199,19 @@ class patientDashboardController extends Controller
     }
     
     // create someone else request from patient dashboard
+
+    public function createSomeoneRequest()
+    {
+        return view("patientSite/patientSomeoneRequest");
+    }
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     */
+
     public function createSomeOneElseRequest(Request $request)
     {
         $request->validate([
@@ -354,6 +379,11 @@ class patientDashboardController extends Controller
         }
     }
 
+
+    /**
+     * when patient login after creating account he/she will land to dashboard page,
+     * which shows request created date ,request status and show if document is uploaded or not
+     */
     public function read()
     {
         $userData = Auth::user();

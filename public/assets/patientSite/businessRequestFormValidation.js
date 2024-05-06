@@ -6,7 +6,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for first name."
+        "Please enter only Alphabets of your first name."
     );
 
     $.validator.addMethod(
@@ -14,7 +14,7 @@ $(document).ready(function () {
         function (value, element) {
             return this.optional(element) || /^[a-zA-Z]+$/.test(value);
         },
-        "Please enter only letters for Last name."
+        "Please enter only Alphabets of your Last name."
     );
 
     // Date Validation (params array will hold minimum and maximum date)
@@ -226,13 +226,13 @@ $(document).ready(function () {
                 business: true,
             },
             room: {
-                min: 0,
+                min: 1,
                 max: 1000,
                 nonNegativeOptional: true,
             },
             case_number: {
                 case: true,
-                min: 0,
+                min: 1,
                 max: 1000,
             },
             symptoms: {
@@ -242,17 +242,20 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                required: "Please enter email of patient.",
             },
             first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter firstname of patient",
+                lettersFirstName:
+                    "Please enter only Alphabets of first name of Patient.",
             },
             last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter lastname of patient",
+                lettersLastName:
+                    "Please enter only Alphabets of Last name of Patient.",
             },
             date_of_birth: {
-                required: "Please enter a date of birth",
+                required: "Please enter date of birth of patient",
                 dateRange:
                     "Date of Birth should be between " +
                     new Date("1900-01-01").toDateString() +
@@ -260,7 +263,7 @@ $(document).ready(function () {
                     new Date().toDateString(),
             },
             phone_number: {
-                required: "Please enter a mobile number",
+                required: "Please enter mobile number of patient",
                 min: "Please enter a 10 digit positive number in phone number.",
                 minlength: "Please enter exactly 10 digits in phone number",
                 maxlength: "Please enter exactly 10 digits in phone number",
@@ -283,21 +286,25 @@ $(document).ready(function () {
                 zipcode: "Please enter a positive 6 digit zipcode",
             },
             room: {
+                min: "Please enter room number greater than 0",
                 nonNegativeOptional: "Please enter a valid room number.",
             },
             business_first_name: {
-                required: "Please enter a firstname between 3 and 15 character",
+                required: "Please enter your firstname",
+                lettersFirstName:
+                    "Please enter only Alphabets of your first name.",
             },
             business_last_name: {
-                required: "Please enter a lastname between 3 and 15 character",
+                required: "Please enter your lastname",
+                lettersLastName:
+                    "Please enter only Alphabets of your Last name.",
             },
             business_mobile: {
-                required: "Please enter a mobile number",
+                required: "Please enter your mobile number",
                 phoneIndia: "Please enter valid phone number format....",
             },
             business_email: {
-                required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                required: "Please enter your email",
             },
             business_property_name: {
                 required: "Please enter a business/property name",

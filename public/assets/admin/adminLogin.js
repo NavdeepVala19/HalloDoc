@@ -48,7 +48,7 @@ $(document).ready(function () {
         messages: {
             email: {
                 required:
-                    "Please enter a valid email format (e.g., user@example.com).",
+                    "Please enter a email",
                 emailAddress:
                     "Please enter a valid email (format: alphanum@alpha.domain).",
             },
