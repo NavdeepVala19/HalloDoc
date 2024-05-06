@@ -762,7 +762,12 @@ class AdminController extends Controller
     // --------- 6.5 : Blocked History ----
 
 
-    //* Search Records Page
+
+    /**
+     * list of  search records 
+     * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
+     * physician note,admin note,patient note
+     */
     public function searchRecordsView()
     {
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
@@ -801,6 +806,12 @@ class AdminController extends Controller
     }
 
     // *search records filtering
+
+    /**
+     *@param $request the input which is use to filter data in search records
+
+     * filter records as per input
+     */
     public function searchRecordSearching(Request $request)
     {
         // Retrieve pagination parameters from the request
@@ -833,8 +844,15 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
 
-// * common function for filtering and exporting to excel 
-// * this function fetch data as per the request
+
+
+    /**
+     *@param $request the input which is use to filter data in search records
+
+     * common function for filtering and exporting to excel
+     * it filter as per request
+     */
+
     public function exportFilteredSearchRecord($request)
     {
         $todayDate = now();
@@ -896,7 +914,12 @@ class AdminController extends Controller
         return $combinedData;
     }
 
-    // * export data to excel
+    /**
+     *@param $request the input which is use to filter data in search records
+
+     * export data to excel 
+     */
+
     public function downloadFilteredData(Request $request)
     {
         $data = $this->exportFilteredSearchRecord($request);
@@ -909,7 +932,12 @@ class AdminController extends Controller
         }
     }
 
-    // *delete records permanently
+    /**
+     *@param $id  id of request table
+
+     * delete record permanently from request client ,request,block_request,request_concierge,request_business,request_status,request_wise_file
+     */
+
     public function deleteSearchRecordData($id)
     {
         $getRequestId = request_Client::select('request_id')->where('id', $id)->first()->request_id;
@@ -925,7 +953,13 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'record is permanently delete');
     }
 
-// * SMS Logs 
+
+    /**
+     * listing of sms 
+     * 
+     * it list receipient name ,action,role_name,mobile,create_date,sent_date,confirmation_number,is_sent_sent_tries
+     */
+
     public function smsRecordsView()
     {
         $sms = SMSLogs::paginate(10);
@@ -933,7 +967,12 @@ class AdminController extends Controller
         return view('adminPage.records.smsLogs', compact('sms'));
     }
 
-    // * SMS Logs Filtering
+    /**
+     *@param $request the input which is enter by admin to filter data
+
+     * filter sms logs
+     */
+
     public function searchSMSLogs(Request $request)
     {
         // Retrieve pagination parameters from the request
@@ -979,6 +1018,12 @@ class AdminController extends Controller
 
 
     // *Block History 
+
+    /**
+     * List of block request
+     * 
+     * it list patient name,mobile,email,created date and notes
+     */
     public function blockHistoryView()
     {
         $blockData = BlockRequest::select(
@@ -997,7 +1042,11 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-    // * Block History Filtering
+    /**
+     *@param $request the input which is enter by admin to filter data
+
+     * it filter data according to request
+     */
     public function blockHistroySearchData(Request $request)
     {
         $blockData = BlockRequest::select(
@@ -1036,7 +1085,13 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-// * Block history update isActive 
+    // * Block history update isActive 
+
+    /**
+     *@param $request the input which is check or uncheck by admin
+
+     * it check and unccheck checkbox in is_Active columns of listing through ajax
+     */
     public function updateBlockHistoryIsActive(Request $request)
     {
         $block = BlockRequest::find($request->blockId);
@@ -1045,6 +1100,12 @@ class AdminController extends Controller
 
 
     //* unblock in block history
+
+    /**
+     *@param $id  id of request table
+
+     * unblock patient and set status 1 in request_Status and request table
+     */
     public function unBlockPatientInBlockHistoryPage($id)
     {
         $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
@@ -1055,7 +1116,9 @@ class AdminController extends Controller
     }
 
 
-    // * user access page
+    /**
+    *listing of user access page
+     */
     public function UserAccess()
     {
         $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
@@ -1069,6 +1132,12 @@ class AdminController extends Controller
 
 
     // * route user as per account type
+
+    /**
+     *@param $id  id of user table
+
+     * route admin to edit account page as per accountType(admin/provider)
+     */
     public function UserAccessEdit($id)
     {
         try {
@@ -1091,6 +1160,10 @@ class AdminController extends Controller
 
 
     // * ajax rendering in user access page
+
+    /**
+     * filtering listing in user access page through ajax 
+     */
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
         $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
@@ -1111,7 +1184,9 @@ class AdminController extends Controller
     }
 
 
-    // * ajax rendering user access page in mobile view
+    /**
+      * same as above in mobile view
+     */
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
 
@@ -1133,7 +1208,11 @@ class AdminController extends Controller
     }
 
 
-    // * send request support message in adminlisting 
+    /**
+     *@param $request the input which is enter by user
+
+     * send email to all unscheduled physician
+     */ 
     public function sendRequestSupport(Request $request)
     {
         $request->validate([
@@ -1170,7 +1249,9 @@ class AdminController extends Controller
     }
 
 
-    //* fetching regions from regions table and show in All Regions drop-down button
+    /**
+    *fetch region from region table and show in all region drop down button
+     */
     public function fetchRegions()
     {
         $fetchedRegions = Regions::get();
@@ -1178,15 +1259,21 @@ class AdminController extends Controller
     }
 
 
-    // * displaying create admin account page
+     /**
+     *displaying create admin account page
+     */
     public function adminAccount()
     {
         $regions = Regions::get();
         return view("adminPage.createAdminAccount", compact('regions'));
     }
 
+    /**
+     *@param $request the input which is enter by user
 
-    // * create admin New Account
+     * it stores data in admin ,users,allusers and make role_id 1 in user_roles
+     */
+
     public function createAdminAccount(Request $request)
     {
         $request->validate([
@@ -1268,7 +1355,11 @@ class AdminController extends Controller
         return redirect()->route('admin.user.access');
     }
 
-// * fetch state for admin account create
+   
+    /**
+     *fetch state for admin account create through ajax
+     */
+
     public function fetchRegionsForState()
     {
         $fetchedRegions = Regions::get();
@@ -1276,15 +1367,19 @@ class AdminController extends Controller
     }
 
 
-    // * fetch roles for admin account create
+    /**
+     *fetch roles for admin account create through ajax
+     */
     public function fetchRolesForAdminAccountCreate()
     {
         $fetchedRoles = Role::select('id', 'name')->where('account_type', 'admin')->get();
         return response()->json($fetchedRoles);
     }
 
+    /**
+     *common function for filtering and exporting data in admin listing
+     */
 
-    // * common function for filtering and exporting data in admin listing
     public function fetchQuery($status, $category, $searchTerm, $region)
     {
         if (is_array($this->getStatusId($status))) {
@@ -1319,7 +1414,12 @@ class AdminController extends Controller
     }
 
 
-    // * ajax filtering in admin New listing
+    /**
+     *@param $request which contains region_id,status,category,search_value
+
+     * it filter data in admin new listing through regions
+     */
+
     public function filterPatientNew(Request $request)
     {
         // Session::forget('regionId');
@@ -1343,7 +1443,12 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
-    // * ajax filtering in admin Pending listing
+
+    /**
+     *@param $request which contains region_id,status,category,search_value
+
+     * it filter data in admin pending listing through regions
+     */
     public function filterPatientPending(Request $request)
     {
         // Session::forget('regionId');
@@ -1367,8 +1472,11 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
+    /**
+     *@param $request which contains region_id,status,category,search_value
 
-    // * ajax filtering in admin active listing
+     * it filter data in admin active listing through regions
+     */
     public function filterPatientActive(Request $request)
     {
         // Session::forget('regionId');
@@ -1393,7 +1501,11 @@ class AdminController extends Controller
     }
 
 
-    // * ajax filtering in admin conclude listing
+    /**
+     *@param $request which contains region_id,status,category,search_value
+
+     * it filter data in admin conclude listing through regions
+     */
     public function filterPatientConclude(Request $request)
     {
         // Session::forget('regionId');
@@ -1418,7 +1530,11 @@ class AdminController extends Controller
     }
 
 
-    // * ajax filtering in admin toclose listing
+    /**
+     *@param $request which contains region_id,status,category,search_value
+
+     * it filter data in admin toclose listing through regions
+     */
     public function filterPatientToClose(Request $request)
     {
         // Session::forget('regionId');
@@ -1443,7 +1559,11 @@ class AdminController extends Controller
     }
 
 
-// * ajax filtering in admin unpaid listing
+    /**
+     *@param $request which contains region_id,status,category,search_value
+
+     * it filter data in admin unpaid listing through regions
+     */
     public function filterPatientUnpaid(Request $request)
     {
         // Session::forget('regionId');
@@ -1468,7 +1588,13 @@ class AdminController extends Controller
     }
 
 
-    // * export data to excel in admin New listing
+
+    /**
+     *@param $request which contains region_id,category,search_value
+
+     * it export data to excel in admin new listing
+     */
+
     public function exportNew(Request $request)
     {
         $status = 'new';
@@ -1493,7 +1619,12 @@ class AdminController extends Controller
         }
     }
 
-     // * export data to excel in admin pending listing
+
+    /**
+     *@param $request which contains region_id,category,search_value
+
+     * it export data to excel in admin pending listing
+     */
     public function exportPending(Request $request)
     {
         $status = 'pending';
@@ -1519,7 +1650,11 @@ class AdminController extends Controller
         }
     }
 
-     // * export data to excel in admin active listing
+     /**
+     *@param $request which contains region_id,category,search_value
+
+     * it export data to excel in admin active listing
+     */
     public function exportActive(Request $request)
     {
         $status = 'active';
@@ -1546,7 +1681,11 @@ class AdminController extends Controller
     }
 
 
-     // * export data to excel in conclude New listing
+    /**
+     *@param $request which contains region_id,category,search_value
+
+     * it export data to excel in admin conclude listing
+     */
     public function exportConclude(Request $request)
     {
         $status = 'conclude';
@@ -1572,7 +1711,12 @@ class AdminController extends Controller
     }
 
 
-     // * export data to excel in admin toclose listing
+
+    /**
+     *@param $request which contains region_id,category,search_value
+
+     * it export data to excel in admin toclose listing
+     */
     public function exportToClose(Request $request)
     {
         $status = 'toclose';
@@ -1596,7 +1740,12 @@ class AdminController extends Controller
         }
     }
 
- // * export data to excel in admin unpaid listing
+
+    /**
+     *@param $request which contains region_id,category,search_value
+
+     * it export data to excel in admin unpaid listing
+     */
     public function exportUnpaid(Request $request)
     {
         $status = 'unpaid';

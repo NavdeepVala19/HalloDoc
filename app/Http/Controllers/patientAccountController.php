@@ -13,11 +13,23 @@ use Illuminate\Support\Facades\DB;
 class patientAccountController extends Controller
 {
 
-    // * register patient 
+    /**
+     *it will display patient register page
+     */
+
     public function patientRegister()
     {
         return view("patientSite/patientRegister");
     }
+
+
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it stores email and password in users table
+     */
+
 
     public function createAccount(Request $request)
     {

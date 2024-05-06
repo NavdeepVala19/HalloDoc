@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Session;
 class patientProfileController extends Controller
 {
 
-    // * display patient profile edit page
+    /**
+     *display patient profile edit page
+     */
     public function patientEdit()
     {
         $userData = Auth::user();
@@ -27,7 +29,11 @@ class patientProfileController extends Controller
     }
 
 
-     // * edit patient profile without disable field
+    /**
+     * @param $id of allusers table
+     * 
+     * the page through which patient can edit their profile
+     */
     public function patientprofileEdit($id)
     {
         try {
@@ -41,7 +47,13 @@ class patientProfileController extends Controller
         }
     }
 
-// * update patient profile data
+    // * update patient profile data
+
+    /**
+     *@param $request the input which is enter by user
+
+     *patient update their data in users, allusers table
+     */
     public function patientUpdate(Request $request)
     {
         $request->validate([
@@ -88,7 +100,12 @@ class patientProfileController extends Controller
     }
 
 
-    // * display map location of patient
+
+    
+    /**
+    * patient can see their location on google map
+    */
+
     public function patientMapLocation()
     {
         $userData = Auth::user();

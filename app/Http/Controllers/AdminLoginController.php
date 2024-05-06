@@ -14,13 +14,22 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminLoginController extends Controller
 {
-    // this code is for login input credentials
+
+    /**
+     * show adminLogin page
+     */
 
     public function adminLogin()
     {
         return view("admin/adminLogin");
     }
 
+
+    /**
+     *@param $request user enter credentials
+
+     * verify that user is admin or provider and if user entered credentials are valid it redirects to dashboard according to role
+     */
     public function userLogin(Request $request)
     {
         $request->validate([
@@ -59,12 +68,21 @@ class AdminLoginController extends Controller
         }
     }
 
-    // this code is for entering email for reset password
-
+ 
+    /**
+     * show password reset form
+     */
     public function adminResetPassword()
     {
         return view("admin/adminResetPassword");
     }
+
+
+    /**
+     *@param $request user input email
+
+     * send email to entered email if email not exist it shows error message 
+     */
 
     public function submitForgetPasswordForm(Request $request)
     {
@@ -93,7 +111,12 @@ class AdminLoginController extends Controller
         return redirect()->route('adminLogin')->with('message', 'E-mail is sent for password reset');
     }
 
-    // this code is to update/reset password
+
+    /**
+     *@param $token which was generate when email is sent and store in users table at enter entered email
+
+     * shows password update form and if password is already updated it shows password update success form
+     */
 
     public function showUpdatePasswordForm($token)
     {
@@ -106,6 +129,14 @@ class AdminLoginController extends Controller
         }
 
     }
+
+
+    /**
+     *@param $request   $request->token which was generated when email was sent 
+
+     * password updated of users(admin/provider) and after successfully update password token gets deleted 
+     */
+
 
     public function submitUpdatePasswordForm(Request $request)
     {

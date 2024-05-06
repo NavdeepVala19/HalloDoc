@@ -20,11 +20,20 @@ use Illuminate\Support\Facades\Session;
 class patientLoginController extends Controller
 {
 
-    // * patient login
+    /**
+     *display patient login screen
+     */
+
     public function loginScreen()
     {
         return view("patientSite/patientLogin");
     }
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it verfies user(patient) credentials are valid or not
+     */
 
     public function userLogin(Request $request)
     {
@@ -55,11 +64,21 @@ class patientLoginController extends Controller
     }
 
 
-    // * patient reset password
+    /**
+    * it will show reset password form
+     */
+
     public function resetpassword()
     {
         return view("patientSite/patientResetPassword");
     }
+
+
+    /**
+     *@param $request the input which is enter by user
+
+     * it checks email in users table and send reset password form to that email
+     */
 
     public function submitForgetPasswordForm(Request $request)
     {
@@ -92,6 +111,13 @@ class patientLoginController extends Controller
 
 
     // * patient update password
+
+    /**
+     *@param $token which was generated when user enter email in password reset form and stores in users table where user enter email 
+
+     * it shows password update form
+     * if password is already update then it shows password update success page
+     */
     public function showResetPasswordForm($token)
     {
         $userData = users::where('token', $token)->first();
@@ -104,6 +130,11 @@ class patientLoginController extends Controller
     }
 
 
+    /**
+     *@param $request the password which is enter by user and 
+
+     * it update password of patient and delete token 
+     */
     public function submitResetPasswordForm(Request $request)
     {
         $request->validate([
@@ -125,6 +156,10 @@ class patientLoginController extends Controller
         return redirect('/patient_login')->with('success', 'Your password has been changed!');
     }
 
+
+    /**
+     * it logout user(patient) 
+     */
     public function logout()
     {
         Auth::logout();

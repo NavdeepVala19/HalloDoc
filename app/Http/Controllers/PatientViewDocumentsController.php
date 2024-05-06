@@ -15,7 +15,12 @@ use Spatie\MediaLibrary\Support\MediaStream;
 class PatientViewDocumentsController extends Controller
 {
 
-    // * display view documents page
+    /**
+     *@param $id  id of request table and in request_wise_file it is request_id
+
+     * show user(patient) firstname , confirmation number, filename, created_at
+     */
+
     public function patientViewDocument($id)
     {
         try {
@@ -40,7 +45,12 @@ class PatientViewDocumentsController extends Controller
         }
     }
 
-    // * upload document in request wise file 
+    /**
+     *@param $request  request_id which is hidden input in view documents page
+
+     * upload document in request_wise_file at $request->request_wise_file_id
+     */
+
     public function uploadDocs(Request $request)
     {
         $request->validate([
@@ -68,9 +78,12 @@ class PatientViewDocumentsController extends Controller
         }
     }
 
+    /**
+     *@param $request id which is the id of request_wise_file table
 
+     * download individual documents
+     */
 
-    // * download individual documents
     public function downloadOne($id)
     {
         try {
@@ -84,8 +97,12 @@ class PatientViewDocumentsController extends Controller
         }
     }
 
+    /**
+     *@param $request  request_id which is hidden input in view documents page
 
-    // * download multiple documents in zip
+     * download multiple documents
+     */
+
     public function downloadSelectedFiles(Request $request)
     {
         try {
