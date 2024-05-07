@@ -16,13 +16,21 @@ use Illuminate\Support\Facades\Auth;
 
 class ProviderSchedulingController extends Controller
 {
-    // Display Provider Scheduling page
+    /**
+     * Display the provider scheduling page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function providerCalendarView()
     {
         return view('providerPage.scheduling.providerScheduling');
     }
 
-    // Fetch details of the logged In provider 
+    /**
+     * Fetch details of the logged-in provider.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function providerInformation()
     {
         $data = Provider::where('user_id', Auth::user()->id)->first();
@@ -30,7 +38,12 @@ class ProviderSchedulingController extends Controller
         return response()->json(['physicianId' => $data->id, 'allRegions' => $regions]);
     }
 
-    // Add new shift to the calendar
+    /**
+     * Add a new shift to the calendar.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function providerShiftData(Request $request)
     {
         $request->validate([
@@ -143,7 +156,11 @@ class ProviderSchedulingController extends Controller
         return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
     }
 
-    // Get all the shifts from database and convert it into json format to be used by FullCalendar
+    /**
+     * Get all shifts from the database and convert them into JSON format for use by FullCalendar.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function providerShift()
     {
         $physician = Provider::where('user_id', Auth::user()->id)->first();
@@ -174,7 +191,12 @@ class ProviderSchedulingController extends Controller
         return response()->json($formattedShift->toArray());
     }
 
-    // Edit already existing shifts
+    /**
+     * Edit already existing shifts.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function providerEditShift(Request $request)
     {
         if ($request['action'] == 'save') {

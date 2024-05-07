@@ -23,14 +23,23 @@ use App\Models\HealthProfessionalType;
 
 class AdminActionsController extends Controller
 {
-    // Assign case - All physician Regions
+    /**
+     * Assign case - All physician Regions
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function physicianRegions()
     {
         $regions = Regions::get();
         return response()->json($regions);
     }
 
-    // AJAX call for Physician listing in dropdown selection
+    /**
+     * AJAX call for Physician listing in dropdown selection
+     *
+     * @param  int|null  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPhysicians($id = null)
     {
         $physiciansId = PhysicianRegion::where('region_id', $id)->pluck('provider_id')->toArray();
@@ -38,7 +47,13 @@ class AdminActionsController extends Controller
         return response()->json($physicians);
     }
 
-    // AJAX call for (Remaining) Physician for listing in dropdown selection 
+    /**
+     * AJAX call for (Remaining) Physician for listing in dropdown selection 
+     *
+     * @param  int  $requestId
+     * @param  int  $regionId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNewPhysicians($requestId, $regionId)
     {
         $oldPhysicianId = RequestTable::where('id', $requestId)->where('status', 3)->orderByDesc('id')->first()->physician_id;
@@ -47,7 +62,12 @@ class AdminActionsController extends Controller
         return response()->json($physicians);
     }
 
-    // Admin assign Case to provider  
+    /**
+     * Assign a case to a provider (physician).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function assignCase(Request $request)
     {
         $request->validate([
@@ -69,7 +89,12 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('successMessage', "Case Assigned Successfully to physician - {$physicianName}");
     }
 
-    // Admin Transfer Case to another physician
+    /**
+     * Admin transfer a case to another physician.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function transferCase(Request $request)
     {
         $request->validate([
@@ -93,13 +118,23 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('successMessage', 'Case Transferred to Another Physician');
     }
 
-    // fetch all caseTag data from its table and show in cancelCase PopUp
+    /**
+     * Fetch all case tag data from its table and show in cancel case popup.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function cancelCaseOptions()
     {
         $reasons = caseTag::all();
         return response()->json($reasons);
     }
-    // Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog
+
+    /**
+     * Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function cancelCase(Request $request)
     {
         $request->validate([
@@ -119,7 +154,12 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('successMessage', 'Case Cancelled (Moved to ToClose State)');
     }
 
-    // Admin Blocks patient
+    /**
+     * Admin Blocks patient.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function blockCase(Request $request)
     {
         $request->validate([
@@ -145,7 +185,12 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('successMessage', 'Case Blocked Successfully!');
     }
 
-    // View case
+    /**
+     * View a case.
+     *
+     * @param  string  $id
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function viewCase($id)
     {
         try {
@@ -161,6 +206,12 @@ class AdminActionsController extends Controller
         }
     }
 
+    /**
+     * Edit case information.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function editCase(Request $request)
     {
         $request->validate([
@@ -190,7 +241,12 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('caseEdited', "Information updated successfully!");
     }
 
-    // View Notes
+    /**
+     * View notes for a case.
+     *
+     * @param  string $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function viewNote($id)
     {
         try {
@@ -208,7 +264,12 @@ class AdminActionsController extends Controller
         }
     }
 
-    // Store Admin Note to display in ViewNotes Page
+    /**
+     * Store an admin note to display in the ViewNotes page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeNote(Request $request)
     {
         $request->validate([
@@ -232,7 +293,12 @@ class AdminActionsController extends Controller
         return redirect()->route('admin.view.note', compact('id'))->with('adminNoteAdded', 'Your Note Successfully Added');
     }
 
-    // Display View Upload Page with the data
+    /**
+     * Display the view upload page with the data.
+     *
+     * @param  string  $id
+     * @return \Illuminate\View\View
+     */
     public function viewUpload($id)
     {
         try {
@@ -245,7 +311,13 @@ class AdminActionsController extends Controller
         }
     }
 
-    // Upload Document from viewUpload Page
+    /**
+     * Upload a document from the view upload page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
@@ -265,7 +337,13 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
     }
 
-    // show a new medical form or an existing one when clicked encounter button in conclude listing
+    /**
+     * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response
+     */
     public function encounterFormView(Request $request, $id = "null")
     {
         try {
@@ -279,7 +357,12 @@ class AdminActionsController extends Controller
         }
     }
 
-    // Store Encounter Form (Medical Form) data, changes made by admin
+    /**
+     * Store Encounter Form (Medical Form) data, changes made by admin.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function encounterForm(Request $request)
     {
         $request->validate([
@@ -346,7 +429,12 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
     }
 
-    // Clear Case -> change status for particular case to "Clear"
+    /**
+     * Clear Case - Change status for a particular case to "Clear".
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function clearCase(Request $request)
     {
         RequestTable::where('id', $request->requestId)->update([
@@ -359,7 +447,13 @@ class AdminActionsController extends Controller
         return redirect()->back()->with('successMessage', 'Case Cleared Successfully');
     }
 
-    // Show Close Case Page with Details
+    /**
+     * Show Close Case Page with Details.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $id
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function closeCase(Request $request, $id = null)
     {
         try {
@@ -372,7 +466,14 @@ class AdminActionsController extends Controller
             return view('errors.404');
         }
     }
-    // Close Case -> particular case will move from toClose state to unpaid state1
+
+
+    /**
+     * Close Case -> particular case will move from toClose state to unpaid state.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function closeCaseData(Request $request)
     {
         if ($request->input('closeCaseBtn') == 'Save') {
@@ -402,7 +503,12 @@ class AdminActionsController extends Controller
         return redirect()->back();
     }
 
-    // Display ViewOrder Page with the details
+    /**
+     * Display ViewOrder Page with the details.
+     *
+     * @param  string|null  $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function viewOrder($id = null)
     {
         try {
@@ -416,7 +522,12 @@ class AdminActionsController extends Controller
         }
     }
 
-    // Send orders from action menu 
+    /**
+     * Send orders from action menu.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function sendOrder(Request $request)
     {
         $request->validate([
@@ -440,6 +551,12 @@ class AdminActionsController extends Controller
         return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
     }
 
+    /**
+     * Download the encounter form.
+     *
+     * @param  int  $requestId
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function downloadEncounterForm($requestId)
     {
         $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first()->file_name;

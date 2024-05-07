@@ -24,7 +24,12 @@ use App\Models\HealthProfessionalType;
 
 class ProviderActionsController extends Controller
 {
-    // Accept Case by provider (case/request status will change to accepted)
+    /**
+     * Accept Case by provider (case/request status will change to accepted)
+     *
+     * @param string $category different category names.
+     * @return int different types of request_type_id.
+     */
     public function acceptCase($id = null)
     {
         $providerId = Provider::where('user_id', Auth::user()->id)->first();
@@ -41,13 +46,20 @@ class ProviderActionsController extends Controller
         return redirect()->route('provider.status', 'pending')->with('successMessage', "You have Successfully Accepted Case");
     }
 
-    // Transfer Case from provider to admin
+    /**
+     * Transfer a case from provider to admin.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function transferCase(Request $request)
     {
         $request->validate([
             'notes' => 'required|min:5|max:200',
         ]);
+        // Retrieve provider ID from RequestTable based on the request ID
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
+        // Create a new record in RequestStatus for the transferred case
         RequestStatus::create([
             'request_id' => $request->requestId,
             'status' => 1,
@@ -55,6 +67,7 @@ class ProviderActionsController extends Controller
             'physician_id' => $providerId,
             'notes' => $request->notes
         ]);
+        // Update RequestTable to reflect the transfer
         RequestTable::where('id', $request->requestId)->update([
             'physician_id' => DB::raw("NULL"),
             'status' => 1
@@ -62,10 +75,16 @@ class ProviderActionsController extends Controller
         return redirect()->back()->with('successMessage', 'Case Transferred to Admin');
     }
 
-    // show notes page for particular request
+    /**
+     * Display the notes page for a particular request.
+     *
+     * @param string|null $id
+     * @return \Illuminate\View\View
+     */
     public function viewNote($id = null)
     {
         try {
+            // Decrypt the request ID
             $requestId = Crypt::decrypt($id);
 
             $data = RequestTable::where('id', $requestId)->first();
@@ -79,13 +98,22 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // Store the note in physician_note
+    /**
+     * Store the physician's note in the database.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeNote(Request $request)
     {
         $request->validate([
             'physician_note' => 'required|min:5|max:200'
         ]);
+
+        // Check if a note already exists for the request
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
+
+        // Update the existing note if found, otherwise create a new one
         if (!empty($requestNote)) {
             RequestNotes::where('request_id', $request->requestId)->update([
                 'physician_notes' => $request->physician_note,
@@ -103,7 +131,13 @@ class ProviderActionsController extends Controller
         return redirect()->route('provider.view.notes', compact('id'))->with('providerNoteAdded', 'Your Note Successfully Added');
     }
 
-    // View Uploads as per the particular request selected
+    /**
+     * View uploads associated with a particular request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string|null $id
+     * @return \Illuminate\View\View
+     */
     public function viewUpload(Request $request, $id = null)
     {
         try {
@@ -118,7 +152,13 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // View upload page -> upload Document feature
+    /**
+     * Upload a document for a particular request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string|null $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
@@ -141,7 +181,12 @@ class ProviderActionsController extends Controller
         return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
     }
 
-    // Display view Case page as case/request selected
+    /**
+     * Display the view case page for a selected request.
+     *
+     * @param string $id
+     * @return \Illuminate\View\View
+     */
     public function viewCase($id)
     {
         try {
@@ -154,7 +199,13 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // View Order Page -> Display page and show data
+    /**
+     * Display the view order page and show associated data.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string|null $id
+     * @return \Illuminate\View\View
+     */
     public function viewOrder(Request $request, $id = null)
     {
         try {
@@ -168,7 +219,12 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // Send orders from action menu 
+    /**
+     * Send orders from the action menu.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function sendOrder(Request $request)
     {
         $request->validate([
@@ -189,7 +245,12 @@ class ProviderActionsController extends Controller
         return redirect()->route('provider.status', 'active')->with('successMessage', 'Order Created Successfully!');
     }
 
-    // Encounter pop-up as per action (consult, hous_call) selected perform particular tasks 
+    /**
+     * Handle encounter pop-up actions based on selected action (consult, house_call).
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function encounter(Request $request)
     {
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -212,7 +273,13 @@ class ProviderActionsController extends Controller
             return redirect()->route('provider.status', ['status' => 'conclude']);
         }
     }
-    // HouseCall button clicked from active listing page
+
+    /**
+     * Handle house call button clicked from the active listing page.
+     *
+     * @param string $requestId
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function encounterHouseCall($requestId)
     {
         $providerId = RequestTable::where('id', $requestId)->first()->physician_id;
@@ -224,7 +291,14 @@ class ProviderActionsController extends Controller
         ]);
         return redirect()->route('provider.status', ['status' => 'conclude'])->with('successMessage', 'Case moved to conclude state.');
     }
-    // show a new medical form or an existing one when clicked encounter button in conclude listing
+
+    /**
+     * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $id
+     * @return \Illuminate\View\View
+     */
     public function encounterFormView(Request $request, $id = "null")
     {
         try {
@@ -238,7 +312,12 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // Store Encounter Form (Medical Form) Data 
+    /**
+     * Store encounter form (medical form) data.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function encounterForm(Request $request)
     {
         $request->validate([
@@ -305,7 +384,12 @@ class ProviderActionsController extends Controller
         return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
     }
 
-    // Encounter Form (Medical Form Finalized) By provider (Generate PDF and Store in RequestWiseFile)
+    /**
+     * Finalize encounter form (medical form) by provider (generate PDF and store in RequestWiseFile).
+     *
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function encounterFinalized($id)
     {
         $data = MedicalReport::where('request_id', $id)->first();
@@ -338,7 +422,13 @@ class ProviderActionsController extends Controller
             dd($th);
         }
     }
-    // Download MedicalForm - encounterFinalized pop-up action
+
+    /**
+     * Download the medical form (encounter finalized) - encounterFinalized pop-up action.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\View\View
+     */
     public function downloadMedicalForm(Request $request)
     {
         $file = RequestWiseFile::where('request_id', $request->requestId)->where('is_finalize', 1)->first();
@@ -350,7 +440,12 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // View Conclude Care Page -> Display page and show data
+    /**
+     * Display the view conclude care page and show associated data.
+     *
+     * @param string $id
+     * @return \Illuminate\View\View
+     */
     public function viewConcludeCare($id)
     {
         try {
@@ -365,7 +460,13 @@ class ProviderActionsController extends Controller
         }
     }
 
-    // Conclude Care functionality -> Provider Conclude care from conclude state which will move to toclose-state
+    /**
+     * Conclude care functionality.
+     * Provider concludes care from conclude state which will move to toclose-state.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function concludeCare(Request $request)
     {
         $encounterForm = RequestWiseFile::where('request_id', $request->caseId)->where('is_finalize', true)->first();
@@ -389,7 +490,12 @@ class ProviderActionsController extends Controller
         return redirect()->route('provider.status', 'conclude')->with('successMessage', 'Case Concluded Successfully!');
     }
 
-    // Upload Document from conclude Care page
+    /**
+     * Upload document from conclude care page.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function uploadDocsConcludeCare(Request $request)
     {
         $providerId = RequestTable::where('id', $request->caseId)->first()->physician_id;

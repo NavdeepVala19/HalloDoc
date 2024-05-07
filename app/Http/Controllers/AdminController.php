@@ -497,7 +497,12 @@ class AdminController extends Controller
         return redirect()->route('admin.partners')->with('businessAdded', 'Business Added Successfully!');
     }
 
-    // update Business Page
+    /**
+     * Display the form to update the business page.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function updateBusinessView($id)
     {
         try {
@@ -511,7 +516,12 @@ class AdminController extends Controller
         }
     }
 
-    // Update business Data 
+    /**
+     * Update business data based on the provided request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateBusiness(Request $request)
     {
         $request->validate([
@@ -541,7 +551,12 @@ class AdminController extends Controller
         return redirect()->back()->with('changesSaved', 'Changes Saved Successfully!');
     }
 
-    // Delete Business From the vendors page
+    /**
+     * Delete a business from the vendors page.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteBusiness($id = null)
     {
         HealthProfessional::where('id', $id)->delete();
@@ -550,20 +565,35 @@ class AdminController extends Controller
     // -------------------- 5. Access -------------------------------
     // --------- 5.1 : User Access --------
     // --------- 5.2 : Account Access -----
-    // Access Page
+
+    /**
+     * Display the access page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function accessView()
     {
         $roles = Role::orderByDesc('id')->get();
         return view('adminPage.access.access', compact('roles'));
     }
-    // Create a new Role Page View
+
+    /**
+     * Display the create role page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function createRoleView()
     {
         $menus = Menu::get();
         return view('adminPage.access.createRole', compact('menus'));
     }
 
-    // Fetch Roles data from Menu Table
+    /**
+     * Fetch roles data from the Menu table based on the given ID.
+     *
+     * @param int|null $id The ID of the account type (optional).
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function fetchRoles($id = null)
     {
         if ($id == 0) {
@@ -578,7 +608,12 @@ class AdminController extends Controller
         }
     }
 
-    // Creating different Access for different roles
+    /**
+     * Creating different Access for different roles
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request containing role information and menu checkboxes.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function createAccess(Request $request)
     {
         $request->validate([
@@ -601,14 +636,24 @@ class AdminController extends Controller
         return redirect()->route('admin.access.view')->with('accessOperation', 'New access created successfully!');
     }
 
-    // Delete complete role
+    /**
+     * Deletes a complete role.
+     *
+     * @param int|null $id The ID of the role to be deleted.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteAccess($id = null)
     {
         Role::where('id', $id)->delete();
         return redirect()->back()->with('accessOperation', 'Access role deleted successfully!');
     }
 
-    // show edit Access Page with pre-filled data
+    /**
+     * Displays the edit Access Page with pre-filled data.
+     *
+     * @param int|null $id The ID of the role to be edited.
+     * @return \Illuminate\View\View
+     */
     public function editAccess($id = null)
     {
         try {
@@ -622,7 +667,13 @@ class AdminController extends Controller
             return view('errors.404');
         }
     }
-    // Edit Access of a role previously created
+
+    /**
+     * Edit Access of a role previously created.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request containing the role data.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function editAccessData(Request $request)
     {
         $request->validate([
@@ -649,14 +700,24 @@ class AdminController extends Controller
     // -------------------- 6. Records -------------------------------
     // --------- 6.1 : Search Records -----
     // --------- 6.2 : Email Logs ---------
-    // Display EmailLogs pages with all the log data
+    /**
+     * Display EmailLogs pages with all the log data.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function emailRecordsView()
     {
         $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
 
         return view('adminPage.records.emailLogs', compact('emails'));
     }
-    // Search/Filter EmailLogs 
+
+    /**
+     * Search/filter EmailLogs.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function searchEmail(Request $request)
     {
         $roleId = $request->get('role_id');
@@ -704,12 +765,24 @@ class AdminController extends Controller
     }
     // --------- 6.3 : SMS Logs -----------
     // --------- 6.4 : Patient Records ----
+    /**
+     * Display the patient history page.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function patientHistoryView()
     {
         $patients = request_Client::paginate(10);
 
         return view('adminPage.records.patientHistory', compact('patients'));
     }
+
+    /**
+     * Search patient data based on provided criteria.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function searchPatientData(Request $request)
     {
         $firstName = $request->first_name;
@@ -736,6 +809,13 @@ class AdminController extends Controller
 
         return view('adminPage.records.patientHistory', compact('patients', 'firstName', 'lastName', 'email', 'phoneNumber'));
     }
+
+    /**
+     * Display patient records view.
+     *
+     * @param  string|null  $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function patientRecordsView($id = null)
     {
         try {
@@ -753,7 +833,11 @@ class AdminController extends Controller
         }
     }
 
-    // Display patient records page
+    /**
+     * Display patient records page.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function patientViews()
     {
         return view('adminPage.records.patientRecords');

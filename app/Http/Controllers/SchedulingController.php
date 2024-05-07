@@ -16,14 +16,22 @@ use Illuminate\Support\Facades\Auth;
 
 class SchedulingController extends Controller
 {
-    // Display Admin Scheduling page
+    /**
+     * Display the Admin Scheduling page.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function schedulingCalendarView()
     {
         $regions = Regions::get();
         return view('adminPage.scheduling.scheduling', compact('regions'));
     }
 
-    // Fetch provider data to display in calendar (resources)
+    /**
+     * Fetch provider data to display in the calendar as resources.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function providerData()
     {
         $providers = Provider::get();
@@ -38,7 +46,12 @@ class SchedulingController extends Controller
         return response()->json($formattedData);
     }
 
-    // Filter shift as per the region selected
+    /**
+     * Filter shifts based on the region selected.
+     *
+     * @param int $id The ID of the region to filter shifts by.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function shiftFilter($id)
     {
         // If no region selected, return all the shifts
@@ -92,7 +105,11 @@ class SchedulingController extends Controller
         return response()->json($formattedShift->toArray());
     }
 
-    // Display ProvidersOnCall page with shift details
+    /**
+     * Display the ProvidersOnCall page with shift details.
+     *
+     * @return \Illuminate\View\View
+     */
     public function providersOnCall()
     {
         $regions = Regions::get();
@@ -110,7 +127,12 @@ class SchedulingController extends Controller
         return view('adminPage.scheduling.providerOnCall', compact('regions', 'onCallPhysicians', 'offDutyPhysicians'));
     }
 
-    // Filter Providers based on region selected for Providers on Call page (AJAX Call)
+    /**
+     * Filter providers based on region selected for Providers on Call page (AJAX Call).
+     *
+     * @param int $id The ID of the selected region.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function filterProviderByRegion($id)
     {
         $currentDate = now()->toDateString();
@@ -143,8 +165,11 @@ class SchedulingController extends Controller
         }
     }
 
-
-    // Display ShiftsForReview Page
+    /**
+     * Display the ShiftsForReview Page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function shiftsReviewView()
     {
         $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
@@ -153,7 +178,12 @@ class SchedulingController extends Controller
         return view('adminPage.scheduling.shiftsForReview', compact('shiftDetails', 'regions'));
     }
 
-    // create new shift
+    /**
+     * Create a new shift.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function createShiftData(Request $request)
     {
         $request->validate([
@@ -267,7 +297,11 @@ class SchedulingController extends Controller
     }
 
 
-    // Get all the shifts from database and convert it into json format to be used by FullCalendar
+    /**
+     * Get all shifts from the database and convert them into JSON format for FullCalendar.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function eventsData()
     {
         $shiftDetails = ShiftDetail::with(['getShiftData', 'shiftDetailRegion'])->get();
@@ -294,7 +328,12 @@ class SchedulingController extends Controller
         return response()->json($formattedShift->toArray());
     }
 
-    // Edit already existing shift
+    /**
+     * Edit an existing shift.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function editShift(Request $request)
     {
         if ($request['action'] == 'return') {
@@ -349,7 +388,12 @@ class SchedulingController extends Controller
         }
     }
 
-    // Change status of shifts (Approved or Pending)
+    /**
+     * Change the status of shifts (Approved or Pending).
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function shiftAction(Request $request)
     {
         if (empty($request->selected)) {
@@ -376,7 +420,13 @@ class SchedulingController extends Controller
             return redirect()->back();
         }
     }
-    // filter shifts in shiftsForReview page based on region selected
+
+    /**
+     * Filter shifts in shiftsForReview page based on region selected.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function filterRegions(Request $request)
     {
         $allShifts = ShiftDetailRegion::where('region_id', $request->regionId)->pluck('shift_detail_id')->toArray();
