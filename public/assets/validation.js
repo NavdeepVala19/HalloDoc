@@ -930,10 +930,10 @@ $(document).ready(function () {
         },
         messages: {
             profession: {
-                required: "Select Profession to get Vendors option",
+                required: "Select Profession to get Business/Vendors option",
             },
             vendor_id: {
-                required: "Select Particular Vendor to have it's details",
+                required: "Select Particular Business/Vendor to have it's details",
             },
             business_contact: {
                 required: "Enter Business Contact to send Order",

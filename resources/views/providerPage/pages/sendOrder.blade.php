@@ -61,7 +61,7 @@
                             is-invalid
                         @enderror"
                             id="floatingSelect2" aria-label="Floating label select example">
-                            <option selected disabled>Buisness</option>
+                            <option selected disabled>Business</option>
                         </select>
                         <label for="floatingSelect2">Select Business</label>
                         @error('vendor_id')
@@ -71,7 +71,8 @@
                     <div class="form-floating ">
                         <input type="text" name="business_contact"
                             class="form-control business_contact @error('business_contact') is-invalid @enderror"
-                            id="floatingInput3" placeholder="Business Contact" value="{{ old('business_contact') }}" disabled>
+                            id="floatingInput3" placeholder="Business Contact" value="{{ old('business_contact') }}"
+                            disabled>
                         <label for="floatingInput3">Business Contact</label>
                         @error('business_contact')
                             <div class="text-danger">{{ $message }}</div>
@@ -101,7 +102,8 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-floating">
-                        <select name="refills" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                        <select name="refills" class="form-select" id="floatingSelect"
+                            aria-label="Floating label select example">
                             <option selected disabled>Not Required</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>

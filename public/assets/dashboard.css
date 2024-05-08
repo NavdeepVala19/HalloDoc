@@ -277,7 +277,6 @@
     display: none;
 }
 
-
 /* *********************** TABLE DATA ************************************ */
 .table-btn {
     background: none;
@@ -418,11 +417,15 @@ td {
 }
 /* ******* VIEW CASE ******* */
 .edit-case-btn,
-.save-case-btn {
+.save-case-btn,
+.cancel-edit-btn {
     height: 50px !important;
     width: 120px !important;
 }
 .save-case-btn {
+    display: none;
+}
+.cancel-edit-btn {
     display: none;
 }
 /******************************* All Pop-ups Styling**************************************/

@@ -162,13 +162,14 @@
                     <div>
                         <button type="button" class="primary-empty edit-case-btn">Edit</button>
                         <button type="submit" class="primary-fill save-case-btn">Save</button>
+                        {{-- <button type="button" class="primary-empty cancel-edit-btn">Cancel</button> --}}
                     </div>
                 </div>
                 <h3>Location Information</h3>
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="region" value="{{ $data->requestClient->state }}" class="form-control"
-                            id="floatingInput" placeholder="region" disabled>
+                        <input type="text" name="region" value="{{ $data->requestClient->state }}"
+                            class="form-control" id="floatingInput" placeholder="region" disabled>
                         <label for="floatingInput">Region</label>
                         @error('region')
                             <div class="alert text-danger">{{ $message }}</div>

@@ -147,7 +147,7 @@ $(document).ready(function () {
         $(".requestId").val($(this).data("id"));
         $(".physicianRegionsTransferCase")
             .empty()
-            .append('<option selected disabled>Regions</option>');
+            .append("<option selected disabled>Regions</option>");
 
         // populate select menu with all physician Regions available, admin can filter through these regions
         $.ajax({
@@ -183,6 +183,16 @@ $(document).ready(function () {
         ).removeAttr("disabled");
         $(".edit-case-btn").hide();
         $(".save-case-btn").show();
+        $(".cancel-edit-btn").show();
+    });
+
+    $(".cancel-edit-btn").click(function () {
+        $(
+            ".firstName, .lastName, .dob, .phoneNumber, .email, .patientNotes"
+        ).attr("disabled", true);
+        $(".edit-case-btn").show();
+        $(".save-case-btn").hide();
+        $(".cancel-edit-btn").hide();
     });
 
     $(".edit-btn").click(function () {

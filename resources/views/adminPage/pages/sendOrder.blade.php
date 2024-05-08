@@ -86,7 +86,7 @@
                             is-invalid
                         @enderror"
                             id="floatingSelect2" aria-label="Floating label select example">
-                            <option selected disabled>Buisness</option>
+                            <option selected disabled>Business</option>
                         </select>
                         <label for="floatingSelect2">Select Business</label>
                         @error('vendor_id')
