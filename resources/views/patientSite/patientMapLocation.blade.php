@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-<a href="{{route('patientDashboardData')}}" class="">Dashboard</a>
+<a href="{{route('patient.dashboard')}}" class="">Dashboard</a>
 <a href="" class="active-link">Profile</a>
 @endsection
 
@@ -13,7 +13,7 @@
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">User Profile</h2>
-        <a href="{{ route('patientProfile') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+        <a href="{{ route('patient.profile.view') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
     <div class="section">

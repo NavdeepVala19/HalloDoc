@@ -42,10 +42,10 @@ $(document).ready(function () {
 
     $(".continue-btn").click(function () {
         if ($(".btn-me").hasClass("btn-active")) {
-            $(window).attr("location", "/createPatientRequests");
+            $(window).attr("location", "/patient/submit-requests");
         } else if ($(".btn-someone").hasClass("btn-active")) {
             console.log("btn someone");
-            $(window).attr("location", "/createSomeoneRequests");
+            $(window).attr("location", "/patient/submit-someone-requests");
         } else {            
             alert('please select "Me" or "SomeOne Else" ');
         }

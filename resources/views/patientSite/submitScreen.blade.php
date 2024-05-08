@@ -23,11 +23,10 @@
 
         <!-- this div is for main content -->
         <div class=" main-container d-flex flex-column justify-content-evenly align-items-center ">
-            <a href="{{ route('patient') }}" class="case patient submitType" type="button">PATIENT</a>
-            <a href="{{ route('family') }}" class="case family submitType" type="button">FAMILY/FRIEND</a>
-            <a href="{{ route('concierge') }}" class="case conceirge submitType" type="button" id="conceirge">CONCEIRGE</a>
-            <a href="{{ route('business') }}" class="case business submitType" type="button" id="business">BUSINESS
-                PARTNERS</a>
+            <a href="{{ route('patient.request.submit.view') }}" class="case patient submitType" type="button">PATIENT</a>
+            <a href="{{ route('family.request.submit.view') }}" class="case family submitType" type="button">FAMILY/FRIEND</a>
+            <a href="{{ route('concierge.request.submit.view') }}" class="case conceirge submitType" type="button" id="conceirge">CONCEIRGE</a>
+            <a href="{{ route('business.request.submit.view') }}" class="case business submitType" type="button" id="business">BUSINESS PARTNERS</a>
         </div>
     </div>
 @endsection

@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Crypt;
 class patientDashboardController extends Controller
 {
 
-
     public function viewAgreement($data)
     {
         try {
@@ -175,7 +174,7 @@ class patientDashboardController extends Controller
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
+        return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
     }
 
 
@@ -353,9 +352,9 @@ class patientDashboardController extends Controller
                     'email' => $request->email,
                     'action' => 5,
                 ]);
-                return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+                return redirect()->route('patient.dashboard')->with('message', 'Email for Create Account is Sent and Request is Submitted');
             } else {
-                return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
+                return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
             }
         } catch (\Throwable $th) {
             return view('errors.500');

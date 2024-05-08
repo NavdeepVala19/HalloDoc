@@ -11,7 +11,7 @@
             {{-- Admin UserName or Provider UserName will be fetched and showed here --}}
           <strong> {{Auth::user()->username}} </strong>
         </span>
-        <a href="{{ route('patientLogOut') }}" class="logout-link primary-empty logout-btn">Logout</a>
+        <a href="{{ route('patient.log.out') }}" class="logout-link primary-empty logout-btn">Logout</a>
         <button class="primary-empty toggle-mode" id="toggle-mode">
             <i class="bi bi-moon moon-icon"></i>
             <i class="bi bi-brightness-high sun-icon"></i>

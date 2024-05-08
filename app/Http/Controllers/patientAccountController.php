@@ -16,12 +16,11 @@ class patientAccountController extends Controller
     /**
      *it will display patient register page
      */
-
+    
     public function patientRegister()
     {
         return view("patientSite/patientRegister");
     }
-
 
 
     /**
@@ -45,12 +44,12 @@ class patientAccountController extends Controller
 
             if ($user != null) {
                 if($user->password != null && $user->email != null){
-                    return redirect()->route('loginScreen')->with('message', 'account with this email already exist');
+                    return redirect()->route('patient.login.view')->with('message', 'account with this email already exist');
                 } 
                 else if ($user->password == null && $user->email != null) {
                     $user->password = Hash::make($request->password);
                     $user->save();
-                    return redirect()->route('loginScreen')->with('success', 'login with your registered credentials');
+                    return redirect()->route('patient.login.view')->with('success', 'login with your registered credentials');
                 }
             } 
             else if($user == null) {

@@ -13,7 +13,7 @@
                 <h1>Reset Your Password</h1>
             </div>
             <div class="form">
-                <form action="{{ route('adminForgotPassword') }}" method="post" id="adminLogin">
+                <form action="{{ route('admin.forgot.password') }}" method="post" id="adminLogin">
                     @csrf
                     <div class="mb-4 username" id="adminLog">
                         <i class="bi bi-person-circle person-logo"></i>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Reset Password</button>
-                        <div class="back-login"> <a href="{{ route('adminLogin') }}"> <i class="bi bi-chevron-left"></i>
+                        <div class="back-login"> <a href="{{ route('login') }}"> <i class="bi bi-chevron-left"></i>
                                 Back To Login</a> </div>
                     </div>
                 </form>

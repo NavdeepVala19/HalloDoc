@@ -104,6 +104,6 @@
     <h4>
         Click on Below Button To Reset Password
     </h4>
-    <a href="{{ route('reset.password', $token) }}" type="button" class="case submitType" id="patient">Reset Password</a>
+    <a href="{{ route('patient.reset.password.view', Crypt::encrypt($token)) }}" type="button" class="case submitType" id="patient">Reset Password</a>
 
 </div>

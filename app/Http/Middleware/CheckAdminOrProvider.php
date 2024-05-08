@@ -23,9 +23,9 @@ class CheckAdminOrProvider
             if ($roleId == 1 || $roleId == 2) {
                 return $next($request);
             } else {
-                return redirect()->route('adminLogin');
+                return redirect()->route('login');
             }
         }
-        return redirect()->route('adminLogin');
+        return redirect()->route('login');
     }
 }

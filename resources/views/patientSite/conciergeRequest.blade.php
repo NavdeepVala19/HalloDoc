@@ -14,7 +14,7 @@
         </div>
         <div class="patient-container">
             <!-- Concierge Information -->
-            <form action="{{ route('conciergeRequests') }}" method="post" id="patientRequestForm">
+            <form action="{{ route('concierge.request.submit') }}" method="post" id="patientRequestForm">
                 @csrf
                 <div class="Concierge-inputs">
                     <div class="Concierge-inputs">

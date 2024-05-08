@@ -18,7 +18,7 @@
             Providers
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.providers.list') }}">Provider</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
             <li><a class="dropdown-item" href="#">Invoicing</a></li>
         </ul>

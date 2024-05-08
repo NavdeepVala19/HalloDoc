@@ -16,7 +16,7 @@
             </div>
 
             <div class="form">
-                <form action="{{ route('adminLoggedIn') }}" method="post" id="adminLogin">
+                <form action="{{ route('admin.login') }}" method="post" id="adminLogin">
                     @csrf
                     <input type="hidden" name="latitude" id="lat">
                     <input type="hidden" name="longitude" id="lng">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Log In</button>
-                        <div class="forgot-pass"> <a href="{{ route('adminresetpassword') }}">Forgot Password?</a> </div>
+                        <div class="forgot-pass"> <a href="{{ route('admin.reset.password.view') }}">Forgot Password?</a> </div>
                     </div>
                 </form>
             </div>

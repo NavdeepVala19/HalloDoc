@@ -13,7 +13,7 @@
                 < Back</a>
         </div>
         <div class="patient-container">
-            <form action="{{ route('familyRequests') }}" method="post" enctype="multipart/form-data"
+            <form action="{{ route('family.request.submit') }}" method="post" enctype="multipart/form-data"
                 id="patientRequestForm">
                 @csrf
                 <!-- Family/Friend Information -->

@@ -98,6 +98,9 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
                 case 10:
                     $request_status = 'Block';
                     break;
+                case 11:
+                    $request_status = 'CancelledByPatient';
+                    break;
 
                 default:
                     $request_status = '';

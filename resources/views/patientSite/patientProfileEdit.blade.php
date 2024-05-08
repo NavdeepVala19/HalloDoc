@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('patientDashboardData') }}" class="">Dashboard</a>
+    <a href="{{ route('patient.dashboard') }}" class="">Dashboard</a>
     <a href="" class="active-link">Profile</a>
 @endsection
 
@@ -13,12 +13,12 @@
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h2 class="heading">User Profile</h2>
-            <a href="{{ route('patientDashboardData') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('patient.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
         {{-- Form Starts From Here --}}
         <div class="section">
-            <form action="{{ route('patientProfileEdited') }}" method="post" id="patientProfileEditForm">
+            <form action="{{ route('patient.profile.edited') }}" method="post" id="patientProfileEditForm">
                 @csrf
                 <h3>General Information </h3>
                 <!-- <input type="hidden" name="email" value="{{ Session::get('email') }}"> -->
@@ -110,13 +110,13 @@
                             @enderror
                             <span class="errorMsg"></span>
                         </div>
-                        <a href="{{ route('patientLocationOnMap') }}" class="primary-empty d-flex gap-2"> <i
+                        <a href="{{ route('patient.location.on.map') }}" class="primary-empty d-flex gap-2"> <i
                                 class="bi bi-geo-alt"></i> Map</a>
                     </div>
                 </div>
                 <div class="text-end">
                     <button class="primary-fill me-2" type="submit" id="patientProfileSubmitBtn">Submit</button>
-                    <a href="{{ route('patientProfile') }}" class="primary-empty" type="reset"
+                    <a href="{{ route('patient.profile.view') }}" class="primary-empty" type="reset"
                         id="patientProfileCancelBtn">Cancel </a>
                 </div>
             </form>

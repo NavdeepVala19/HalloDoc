@@ -23,10 +23,10 @@ class checkAdminLogin
             if ($roleId == 1) {
                 return $next($request);
             } else {
-                return redirect()->route('adminLogin');
+                return redirect()->route('login');
             }
         }
 
-        return redirect()->route('adminLogin');
+        return redirect()->route('login');
     }
 }

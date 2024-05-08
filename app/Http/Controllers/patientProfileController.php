@@ -96,7 +96,7 @@ class patientProfileController extends Controller
 
         $updateAllUserData = allusers::where('email', $userData['email'])->update($updateAllUser);
 
-        return redirect()->route('patientDashboardData')->with('message', 'profile is updated successfully');
+        return redirect()->route('patient.dashboard')->with('message', 'profile is updated successfully');
     }
 
 

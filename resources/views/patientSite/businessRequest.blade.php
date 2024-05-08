@@ -14,7 +14,7 @@
         <a href="{{route('submitRequest')}}" type="button" class="primary-empty">
             < Back</a>
     </div>
-    <form action="{{route('businessRequests')}}" method="post" id="patientRequestForm">
+    <form action="{{route('business.request.submit')}}" method="post" id="patientRequestForm">
         @csrf
         <div class="patient-container">
             <!-- Business Information -->

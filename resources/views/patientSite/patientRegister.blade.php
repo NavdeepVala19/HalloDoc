@@ -17,7 +17,7 @@
                 <h1>Create Account</h1>
             </div>
             <div class="form">
-                <form action="{{ route('patientRegistered') }}" method="post" id="patientRegister">
+                <form action="{{ route('patient.registered') }}" method="post" id="patientRegister">
                     @csrf
                     <div class="mb-4 email register">
                         <i class="bi bi-person-circle person-logo"></i>

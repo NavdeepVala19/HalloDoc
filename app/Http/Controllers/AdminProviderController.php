@@ -224,7 +224,7 @@ class AdminProviderController extends Controller
                     ]
                 );
             }
-            return redirect()->route('adminProvidersInfo')->with('message', 'Your message has been sent successfully.');
+            return redirect()->route('admin.providers.list')->with('message', 'Your message has been sent successfully.');
         } catch (\Throwable $th) {
             return view('errors.500');
         }
@@ -410,7 +410,7 @@ class AdminProviderController extends Controller
             $providerData->save();
         }
 
-        return redirect()->route('adminProvidersInfo')->with('message', 'account is created');
+        return redirect()->route('admin.providers.list')->with('message', 'account is created');
     }
 
 
@@ -684,7 +684,7 @@ class AdminProviderController extends Controller
 
 
 
-        return redirect()->route('adminProvidersInfo')->with('message', 'account is deleted');
+        return redirect()->route('admin.providers.list')->with('message', 'account is deleted');
     }
 
 

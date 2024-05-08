@@ -51,10 +51,10 @@ class patientLoginController extends Controller
             $patientCredentials = Auth::user();
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
             if($userRolesData == null){
-                return redirect()->route('loginScreen')->with('error', 'submit request with registered email');
+                return redirect()->route('patient.login.view')->with('error', 'submit request with registered email');
             }
             else if ($userRolesData->role_id == 3) {
-                return redirect()->route('patientDashboardData');
+                return redirect()->route('patient.dashboard');
             } else {
                 return back()->with('error', 'Invalid credentials');
             }
@@ -105,12 +105,10 @@ class patientLoginController extends Controller
             $message->subject('Reset Password');
         });
 
-        return redirect()->route('loginScreen')->with('success', 'E-mail is sent for password reset.');
+        return redirect()->route('patient.login.view')->with('success', 'E-mail is sent for password reset.');
     }
 
 
-
-    // * patient update password
 
     /**
      *@param $token which was generated when user enter email in password reset form and stores in users table where user enter email 
@@ -120,21 +118,28 @@ class patientLoginController extends Controller
      */
     public function showResetPasswordForm($token)
     {
-        $userData = users::where('token', $token)->first();
-        if($userData){
-            return view('patientSite/patientPasswordReset', ['token' => $token]);
-        }else{
-            return view('patientSite/passwordUpdatedSuccess');
+        try {
+            $tokenValue = Crypt::decrypt($token);
+            $userData = users::where('token', $tokenValue)->first();
+
+            if ($userData) {
+                return view('patientSite/patientPasswordReset', ['token' => $tokenValue]);
+            } else {
+                return view('patientSite/passwordUpdatedSuccess');
+            } 
+        } catch (\Throwable $th) {
+            return view('errors.404');
         }
 
     }
 
 
     /**
-     *@param $request the password which is enter by user and 
+     *@param $request  the password which is enter by user
 
      * it update password of patient and delete token 
      */
+    
     public function submitResetPasswordForm(Request $request)
     {
         $request->validate([
@@ -153,17 +158,19 @@ class patientLoginController extends Controller
 
         users::where(['token' => $request->token])->update(['token' => ""]);
 
-        return redirect('/patient_login')->with('success', 'Your password has been changed!');
+        return redirect()->route('patient.login.view')->with('success', 'Your password has been changed!');
     }
 
 
     /**
      * it logout user(patient) 
      */
+
+     
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('loginScreen');
+        return redirect()->route('patient.login.view');
     }
 
 
@@ -198,7 +205,7 @@ class patientLoginController extends Controller
     //             ->withErrors($errors)
     //             ->withInput($request->except('email'));
     //         } else if ($userRolesData->role_id == 3) {
-    //             return redirect()->route('patientDashboardData');
+    //             return redirect()->route('patient.dashboard');
     //         } else {
     //             return back()->with('error', 'Invalid credentials');
     //         }

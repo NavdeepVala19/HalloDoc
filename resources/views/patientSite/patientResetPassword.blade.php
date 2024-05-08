@@ -11,7 +11,7 @@
         <div class="reset-password">
             <div class="details">
                 <div class="main-content">
-                    <a href="{{ route('loginScreen') }}"><i class="bi bi-chevron-left"></i> Back</a>
+                    <a href="{{ route('patient.login.view') }}"><i class="bi bi-chevron-left"></i> Back</a>
                 </div>
                 <h1>Reset Your Password</h1>
             </div>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Reset Password</button>
-                        <div class="back-login"> <a href="{{ route('loginScreen') }}"> <i class="bi bi-chevron-left"></i>
+                        <div class="back-login"> <a href="{{ route('patient.login.view') }}"> <i class="bi bi-chevron-left"></i>
                                 Back To Login</a> </div>
                     </div>
                 </form>
