@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\User;
 use App\Models\users;
 use App\Models\allusers;
@@ -78,7 +77,6 @@ class patientProfileController extends Controller
             'username' => $request->input('first_name') . $request->input('last_name'),
         ];
 
-
         // update Data in allusers table 
         $updateAllUser = [
             'first_name' => $request->input('first_name'),
@@ -92,19 +90,19 @@ class patientProfileController extends Controller
             'zipcode' => $request->input('zipcode')
         ];
 
-        $updateUser = users::where('email', $userData['email'])->update($updateUserData);
+        users::where('email', $userData['email'])->update($updateUserData);
 
-        $updateAllUserData = allusers::where('email', $userData['email'])->update($updateAllUser);
+        allusers::where('email', $userData['email'])->update($updateAllUser);
 
         return redirect()->route('patientDashboardData')->with('message', 'profile is updated successfully');
     }
 
 
 
-    
+
     /**
-    * patient can see their location on google map
-    */
+     * patient can see their location on google map
+     */
 
     public function patientMapLocation()
     {

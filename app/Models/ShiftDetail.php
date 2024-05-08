@@ -11,7 +11,7 @@ class ShiftDetail extends Model
     use HasFactory;
     use SoftDeletes;
     
-    protected  $table = 'shift_detail';
+    protected $table = 'shift_detail';
 
     protected $guarded = [];
 

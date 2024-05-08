@@ -17,8 +17,9 @@ class DocsAttachmentMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $email;
-    public $file;
+    protected $email;
+    protected $file;
+
     public function __construct($email, $file)
     {
         $this->email = $email;

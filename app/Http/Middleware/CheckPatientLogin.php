@@ -20,10 +20,8 @@ class CheckPatientLogin
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
-            if ($roleId == 3) {
+            if ($roleId === 3) {
                 return $next($request);
-            } else {
-                return redirect()->route('loginScreen');
             }
         }
 

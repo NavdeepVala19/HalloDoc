@@ -40,7 +40,7 @@ class CommonOperationController extends Controller
                 $path = storage_path('app/encounterForm/' . $file->file_name);
             } else {
                 // Generate the file path
-                $path = (public_path() . '/storage/' . $file->file_name);
+                $path = public_path() . '/storage/' . $file->file_name;
             }
 
             return response()->download($path);
@@ -97,13 +97,13 @@ class CommonOperationController extends Controller
                 $ids = $request->input('selected');
             }
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
             $zipFile = uniqid() . "-" . 'documents.zip';
 
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
                     $file = RequestWiseFile::where('id', $id)->first();
-                    $path = (public_path() . '/storage/' . $file->file_name);
+                    $path = public_path() . '/storage/' . $file->file_name;
 
                     $zip->addFile($path, $file->file_name);
                 }
@@ -125,13 +125,13 @@ class CommonOperationController extends Controller
 
             $ids = $request->input('selected');
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
             $zipFile =  uniqid() . $email . '.zip';
 
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
                     $file = RequestWiseFile::where('id', $id)->first();
-                    $path = (public_path() . '/storage/' . $file->file_name);
+                    $path = public_path() . '/storage/' . $file->file_name;
 
                     $zip->addFile($path, $file->file_name);
                 }
@@ -295,7 +295,7 @@ class CommonOperationController extends Controller
 
             $twilio = new Client($sid, $token);
 
-            $message = $twilio->messages
+            $twilio->messages
                 ->create(
                     "+91 99780 71802", // to
                     [
@@ -314,11 +314,10 @@ class CommonOperationController extends Controller
     /**
      * Fetch business values (health_professional values) based on the profession selected.
      *
-     * @param \Illuminate\Http\Request $request The HTTP request.
      * @param int $id The ID of the selected profession.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function fetchBusiness(Request $request, $id)
+    public function fetchBusiness($id)
     {
         $business = HealthProfessional::where('profession', $id)->get();
         return response()->json($business);

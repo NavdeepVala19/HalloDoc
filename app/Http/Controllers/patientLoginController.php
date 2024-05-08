@@ -50,10 +50,9 @@ class patientLoginController extends Controller
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-            if($userRolesData == null){
+            if ($userRolesData == null) {
                 return redirect()->route('loginScreen')->with('error', 'submit request with registered email');
-            }
-            else if ($userRolesData->role_id == 3) {
+            } else if ($userRolesData->role_id == 3) {
                 return redirect()->route('patientDashboardData');
             } else {
                 return back()->with('error', 'Invalid credentials');
@@ -65,7 +64,7 @@ class patientLoginController extends Controller
 
 
     /**
-    * it will show reset password form
+     * it will show reset password form
      */
 
     public function resetpassword()
@@ -89,17 +88,17 @@ class patientLoginController extends Controller
         $user = users::where('email', $request->email)->first();
         $userRolesData = UserRoles::where('user_id', $user->id)->first();
 
-        if ($user == null || $userRolesData->role_id == 1 || $userRolesData->role_id == 2 ) {
+        if ($user == null || $userRolesData->role_id == 1 || $userRolesData->role_id == 2) {
             return back()->with('error', 'no such email is registered');
         }
-        
+
         $token = Str::random(64);
         $user->token = $token;
         $user->save();
 
 
         $userToken = users::where('email', $request->email)->first()->token;
-   
+
         Mail::send('email.forgetPassword', ['token' => $userToken], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Reset Password');
@@ -121,12 +120,11 @@ class patientLoginController extends Controller
     public function showResetPasswordForm($token)
     {
         $userData = users::where('token', $token)->first();
-        if($userData){
+        if ($userData) {
             return view('patientSite/patientPasswordReset', ['token' => $token]);
-        }else{
+        } else {
             return view('patientSite/passwordUpdatedSuccess');
         }
-
     }
 
 
@@ -146,7 +144,7 @@ class patientLoginController extends Controller
 
         if (!$updatePassword) {
             return back()->with('error', 'invalid token!');
-        }   
+        }
         users::where([
             'token' => $request->token
         ])->update(['password' => Hash::make($request->new_password)]);

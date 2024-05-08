@@ -142,7 +142,7 @@ class SchedulingController extends Controller
             ->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
 
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-        $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
+        // $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
 
         // If all regions selected display all the physicians
         if ($id == 0) {
@@ -153,16 +153,15 @@ class SchedulingController extends Controller
 
             $physicians = ['onDutyPhysicians' => $onCallPhysicians, 'offDutyPhysicians' => $offDutyPhysicians];
             return response()->json($physicians);
-        } else {
-            $onDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $onCallPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
-            $onCallPhysicians = Provider::whereIn('id', $onDutyFilterPhysicianIds)->get();
-
-            $offDutyFilterPhysicianIds = PhysicianRegion::whereNotIn('provider_id', $onCallPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
-            $offDutyPhysicians = Provider::whereIn('id', $offDutyFilterPhysicianIds)->get();
-
-            $physicians = ['onDutyPhysicians' => $onCallPhysicians, 'offDutyPhysicians' => $offDutyPhysicians];
-            return response()->json($physicians);
         }
+        $onDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $onCallPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
+        $onCallPhysicians = Provider::whereIn('id', $onDutyFilterPhysicianIds)->get();
+
+        $offDutyFilterPhysicianIds = PhysicianRegion::whereNotIn('provider_id', $onCallPhysicianIds)->where('region_id', $id)->pluck('provider_id')->unique()->toArray();
+        $offDutyPhysicians = Provider::whereIn('id', $offDutyFilterPhysicianIds)->get();
+
+        $physicians = ['onDutyPhysicians' => $onCallPhysicians, 'offDutyPhysicians' => $offDutyPhysicians];
+        return response()->json($physicians);
     }
 
     /**
@@ -210,7 +209,7 @@ class SchedulingController extends Controller
                     return redirect()->back()->with('shiftOverlap', "Provider you selected have an shift during the time period you provided");
                 }
             }
-        };
+        }
 
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
@@ -332,6 +331,7 @@ class SchedulingController extends Controller
      * Edit an existing shift.
      *
      * @param \Illuminate\Http\Request $request
+     * 
      * @return \Illuminate\Http\RedirectResponse
      */
     public function editShift(Request $request)
@@ -341,10 +341,9 @@ class SchedulingController extends Controller
             if ($status->status == 'approved') {
                 ShiftDetail::where('id', $request->shiftDetailId)->update(['status' => 1]);
                 return redirect()->back()->with('shiftPending', 'Shift Status changed from Approved to Pending');
-            } else {
-                ShiftDetail::where('id', $request->shiftDetailId)->update(['status' => 2]);
-                return redirect()->back()->with('shiftApproved', 'Shift Status changed from Pending to Approved');
             }
+            ShiftDetail::where('id', $request->shiftDetailId)->update(['status' => 2]);
+            return redirect()->back()->with('shiftApproved', 'Shift Status changed from Pending to Approved');
         } else if ($request['action'] == 'save') {
             // Check whether the shift created for provider is already having shift for that time period
             $shifts = Shift::with('shiftDetail')->get();
@@ -364,7 +363,7 @@ class SchedulingController extends Controller
                         return redirect()->back()->with('shiftOverlap', "You have an shift during the time period you provided");
                     }
                 }
-            };
+            }
 
             ShiftDetail::where('id', $request->shiftDetailId)->update([
                 'shift_date' => $request->shiftDate,
@@ -392,6 +391,7 @@ class SchedulingController extends Controller
      * Change the status of shifts (Approved or Pending).
      *
      * @param \Illuminate\Http\Request $request
+     * 
      * @return \Illuminate\Http\RedirectResponse
      */
     public function shiftAction(Request $request)
@@ -425,6 +425,7 @@ class SchedulingController extends Controller
      * Filter shifts in shiftsForReview page based on region selected.
      *
      * @param \Illuminate\Http\Request $request
+     * 
      * @return \Illuminate\Http\JsonResponse
      */
     public function filterRegions(Request $request)

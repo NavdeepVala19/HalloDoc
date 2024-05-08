@@ -72,13 +72,13 @@ class AdminProviderController extends Controller
             $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $data = view('/adminPage/provider/adminProviderFilterData')->with(['providersData'=> $providersData,'onCallPhysicianIds' => $onCallPhysicianIds])->render();
+        $data = view('/adminPage/provider/adminProviderFilterData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
 
 
     /**
-    * this functions perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
+     * this functions perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
      */
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
@@ -95,7 +95,7 @@ class AdminProviderController extends Controller
             $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData'=> $providersData,'onCallPhysicianIds' => $onCallPhysicianIds])->render();
+        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
 
@@ -112,7 +112,7 @@ class AdminProviderController extends Controller
 
     public function sendMailToContactProvider(Request $request, $id)
     {
-       
+
         $request->validate([
             'contact_msg' => 'required|min:2|max:100',
         ]);
@@ -141,8 +141,7 @@ class AdminProviderController extends Controller
                     'email' => $receipientEmail,
                     'provider_id' => $receipientId,
                 ]);
-            } 
-            else if ($request->contact == "sms") {
+            } else if ($request->contact == "sms") {
                 // send SMS
                 $sid = getenv("TWILIO_SID");
                 $token = getenv("TWILIO_AUTH_TOKEN");
@@ -150,11 +149,11 @@ class AdminProviderController extends Controller
 
                 $twilio = new Client($sid, $token);
 
-                $message = $twilio->messages
+                $twilio->messages
                     ->create(
                         "+91 99780 71802", // to
                         [
-                            "body" => "$enteredText",
+                            "body" => "{$enteredText}",
                             "from" => $senderNumber,
                         ]
                     );
@@ -173,8 +172,7 @@ class AdminProviderController extends Controller
                         'sms_template' => $enteredText,
                     ]
                 );
-            }
-             else if ($request->contact == "both") {
+            } else if ($request->contact == "both") {
                 // send email
                 $providerData = Provider::get()->where('id', $request->provider_id);
                 Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -189,11 +187,11 @@ class AdminProviderController extends Controller
                     $token
                 );
 
-                $message = $twilio->messages
+                $twilio->messages
                     ->create(
                         "+91 99780 71802", // to
                         [
-                            "body" => "$enteredText",
+                            "body" => "{$enteredText}",
                             "from" => $senderNumber,
                         ]
                     );
@@ -228,8 +226,6 @@ class AdminProviderController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
-
     }
 
 
@@ -257,7 +253,7 @@ class AdminProviderController extends Controller
 
 
     /**
-       * this display create new provider account page
+     * this display create new provider account page
      */
 
     public function newProvider()
@@ -332,7 +328,6 @@ class AdminProviderController extends Controller
         $providerData->save();
 
         // store region in physician_region table
-        $physicianRegion = new PhysicianRegion();
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([
                 'provider_id' => $providerData->id,
@@ -340,16 +335,11 @@ class AdminProviderController extends Controller
             ]);
         }
 
-        $data = PhysicianRegion::where('provider_id', $providerData->id)->pluck('id')->toArray();
-        $ids = implode(',', $data);
-
-
         // make entry in user_roles table to identify the user(whether it is admin or physician)
         $user_roles = new UserRoles();
         $user_roles->user_id = $userProvider->id;
         $user_roles->role_id = 2;
         $user_roles->save();
-
 
         // store data in allusers table
         $providerAllUsers = new allusers();
@@ -378,7 +368,7 @@ class AdminProviderController extends Controller
             $providerData->IsAgreementDoc = 1;
 
             $file = $request->file('independent_contractor');
-            $filename = $providerData->id . '_ICA' . '.' . "pdf";
+            $filename = $providerData->id . '_ICA.pdf';
             $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
@@ -387,7 +377,7 @@ class AdminProviderController extends Controller
             $providerData->IsBackgroundDoc = 1;
 
             $file = $request->file('background_doc');
-            $filename = $providerData->id . '_BC' . '.' . "pdf";
+            $filename = $providerData->id . '_BC.pdf';
             $path = $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
@@ -396,8 +386,8 @@ class AdminProviderController extends Controller
             $providerData->IsTrainingDoc = 1;
 
             $file = $request->file('hipaa_docs');
-            $filename = $providerData->id . '_HCA' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $providerData->id . '_HCA.pdf';
+            $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
@@ -405,8 +395,8 @@ class AdminProviderController extends Controller
             $providerData->IsNonDisclosureDoc = 1;
 
             $file = $request->file('non_disclosure_doc');
-            $filename = $providerData->id . '_NDD' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $providerData->id . '_NDD.pdf';
+            $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
@@ -448,13 +438,13 @@ class AdminProviderController extends Controller
 
         if (!empty($request->password)) {
             $request->validate([
-            'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
+                'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             ]);
             $updateProviderInfoUsers->password = Hash::make($request->password);
             $updateProviderInfoUsers->save();
         } else {
-             $request->validate([
-            'user_name' => 'required|alpha|min:3|max:40',
+            $request->validate([
+                'user_name' => 'required|alpha|min:3|max:40',
             ]);
 
             $updateProviderInfoUsers->username = $request->user_name;
@@ -494,7 +484,7 @@ class AdminProviderController extends Controller
             'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
             'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
         ]);
-        
+
         $getProviderInformation = Provider::where('id', $id)->first();
 
         $getProviderInformation->first_name = $request->first_name;
@@ -508,7 +498,7 @@ class AdminProviderController extends Controller
         // update data in allusers table
 
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
-    
+
         // update data in users table
         $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider)->first();
         $updateProviderInfoUsers->email = $request->email;
@@ -517,8 +507,7 @@ class AdminProviderController extends Controller
 
         $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
 
-        if (empty($updateProviderDataAllUsers))
-        {
+        if (empty($updateProviderDataAllUsers)) {
             return back()->with('message', 'Physician information is updated');
         } else {
             $updateProviderDataAllUsers->first_name = $request->first_name;
@@ -528,7 +517,6 @@ class AdminProviderController extends Controller
             $updateProviderDataAllUsers->save();
         }
         return back()->with('message', 'Physician information is updated');
-        
     }
 
 
@@ -599,7 +587,7 @@ class AdminProviderController extends Controller
 
         if (isset($request->provider_photo)) {
             $getProviderInformation->photo = $request->file('provider_photo')->getClientOriginalName();
-            $path = $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
+            $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
             $getProviderInformation->save();
         }
 
@@ -619,7 +607,7 @@ class AdminProviderController extends Controller
 
     public function providerDocumentsUpdate(Request $request, $id)
     {
-          $request->validate([
+        $request->validate([
             'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'background_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
@@ -627,11 +615,11 @@ class AdminProviderController extends Controller
         ]);
 
         $getProviderInformation = Provider::where('id', $id)->first();
-    
+
         if (isset($request->independent_contractor)) {
             $getProviderInformation->IsAgreementDoc = 1;
             $file = $request->file('independent_contractor');
-            $filename = $getProviderInformation->id . '_ICA' . '.' . "pdf";
+            $filename = $getProviderInformation->id . '_ICA.pdf';
             $path = $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
@@ -639,7 +627,7 @@ class AdminProviderController extends Controller
         if (isset($request->background_doc)) {
             $getProviderInformation->IsBackgroundDoc = 1;
             $file = $request->file('background_doc');
-            $filename = $getProviderInformation->id . '_BC' . '.' . "pdf";
+            $filename = $getProviderInformation->id . '_BC.pdf';
             $path = $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
@@ -647,16 +635,16 @@ class AdminProviderController extends Controller
         if (isset($request->hipaa_docs)) {
             $getProviderInformation->IsTrainingDoc = 1;
             $file = $request->file('hipaa_docs');
-            $filename = $getProviderInformation->id . '_HCA' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $getProviderInformation->id . '_HCA.pdf';
+            $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
 
         if (isset($request->non_disclosure_doc)) {
             $getProviderInformation->IsNonDisclosureDoc = 1;
             $file = $request->file('non_disclosure_doc');
-            $filename = $getProviderInformation->id . '_NDD' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $getProviderInformation->id . '_NDD.pdf';
+            $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
 
@@ -674,7 +662,7 @@ class AdminProviderController extends Controller
     {
         // soft delete in providers table
         $ProviderInfo = Provider::with('users')->where('id', $id)->first();
-        
+
         //Soft delete in allusers table
         $providerDataAllUserDelete = allusers::where('user_id', $ProviderInfo->user_id)->first();
         $deletePhysicianRegion = PhysicianRegion::where('provider_id', $id)->first();

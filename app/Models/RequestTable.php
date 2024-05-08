@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\request_Client;
 use App\Models\Status;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RequestTable extends Model
@@ -41,7 +41,7 @@ class RequestTable extends Model
         'case_tag_physician',
         'patient_account_id',
         'created_user_id',
-        'created_at'
+        'created_at',
     ];
 
     public function allusers()

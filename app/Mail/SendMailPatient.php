@@ -16,9 +16,9 @@ class SendMailPatient extends Mailable
     /**
      * Create a new message instance.
      */
-    public $data;
-    public $sender;
-    public $note;
+    protected $data;
+    protected $sender;
+    protected $note;
 
     public function __construct($data, $sender, $note)
     {
@@ -33,7 +33,7 @@ class SendMailPatient extends Mailable
     public function envelope(): Envelope
     {
         if ($this->sender->users) {
-            if ($this->sender->users->userRoles->role_id == 1) {
+            if ($this->sender->users->userRoles->role_id === 1) {
                 $subject = "Message from Admin";
             } else {
                 $subject = "Message from Provider";

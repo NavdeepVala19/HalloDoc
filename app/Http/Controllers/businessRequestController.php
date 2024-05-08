@@ -29,7 +29,7 @@ class businessRequestController extends Controller
   {
     return view('patientSite/businessRequest');
   }
-  
+
 
   /**
    *@param $request the input which is enter by user
@@ -40,25 +40,27 @@ class businessRequestController extends Controller
 
   public function create(Request $request)
   {
-    $request->validate([
-      'first_name' => 'required|min:3|max:15|alpha',
-      'last_name' => 'required|min:3|max:15|alpha',
-      'date_of_birth' => 'required|before:today',
-      'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-      'phone_number' => 'required|min_digits:10|max_digits:10',
-      'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-      'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-      'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-      'zipcode' => 'digits:6|gte:1',
-      'business_first_name' => 'required|min:3|max:15|alpha',
-      'business_last_name' => 'required|min:3|max:15|alpha',
-      'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-      'business_mobile' => 'required',
-      'business_property_name' => 'required|min:2|max:30',
-      'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-      'case_number' => 'nullable|min:0|max:1000',
-      'room' => 'nullable|min:0|max:1000'
-    ]);
+    $request->validate(
+      [
+        'first_name' => 'required|min:3|max:15|alpha',
+        'last_name' => 'required|min:3|max:15|alpha',
+        'date_of_birth' => 'required|before:today',
+        'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+        'phone_number' => 'required|min_digits:10|max_digits:10',
+        'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+        'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+        'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+        'zipcode' => 'digits:6|gte:1',
+        'business_first_name' => 'required|min:3|max:15|alpha',
+        'business_last_name' => 'required|min:3|max:15|alpha',
+        'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+        'business_mobile' => 'required',
+        'business_property_name' => 'required|min:2|max:30',
+        'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
+        'case_number' => 'nullable|min:0|max:1000',
+        'room' => 'nullable|min:0|max:1000'
+      ]
+    );
 
 
     $isEmailStored = users::where('email', $request->email)->first();
@@ -134,7 +136,7 @@ class businessRequestController extends Controller
       $businessRequest->request_id = $requestBusiness->id;
       $businessRequest->business_id = $business->id;
       $businessRequest->save();
-    }else{
+    } else {
       $requestBusiness = new RequestTable();
       $requestBusiness->status = 1;
       $requestBusiness->user_id = $isEmailStored->id;
@@ -182,7 +184,7 @@ class businessRequestController extends Controller
       $businessRequest->save();
     }
 
-   // confirmation number
+    // confirmation number
     $currentTime = Carbon::now();
     $currentDate = $currentTime->format('Y');
 
@@ -206,21 +208,22 @@ class businessRequestController extends Controller
         $emailAddress = $request->email;
         Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
 
-        EmailLog::create([
-          'request_id' => $requestBusiness->id,
-          'confirmation_number' => $confirmationNumber,
-          'role_id' => 3,
-          'recipient_name' =>
-          $request->first_name . ' ' . $request->last_name,
-          'is_email_sent' => 1,
-          'sent_tries' => 1,
-          'create_date' => now(),
-          'sent_date' => now(),
-          'email_template' => $request->email,
-          'subject_name' => 'Create account by clicking on below link with below email address',
-          'email' => $request->email,
-          'action' => 5,
-        ]);
+        EmailLog::create(
+          [
+            'request_id' => $requestBusiness->id,
+            'confirmation_number' => $confirmationNumber,
+            'role_id' => 3,
+            'recipient_name' => $request->first_name . ' ' . $request->last_name,
+            'is_email_sent' => 1,
+            'sent_tries' => 1,
+            'create_date' => now(),
+            'sent_date' => now(),
+            'email_template' => $request->email,
+            'subject_name' => 'Create account by clicking on below link with below email address',
+            'email' => $request->email,
+            'action' => 5,
+          ]
+        );
         return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
       } else {
         return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
@@ -228,7 +231,5 @@ class businessRequestController extends Controller
     } catch (\Throwable $th) {
       return view('errors.500');
     }
-
-
   }
 }

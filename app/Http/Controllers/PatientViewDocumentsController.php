@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use ZipArchive;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
@@ -41,7 +40,6 @@ class PatientViewDocumentsController extends Controller
             return view('patientSite/patientViewDocument', compact('documents'));
         } catch (\Throwable $th) {
             return view('errors.404');
-
         }
     }
 
@@ -56,9 +54,6 @@ class PatientViewDocumentsController extends Controller
         $request->validate([
             'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
         ]);
-  
-        $userData = Auth::user();
-        $email = $userData["email"];
 
         $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
 
@@ -66,12 +61,11 @@ class PatientViewDocumentsController extends Controller
             // store documents in request_wise_file table
             $request_file = new RequestWiseFile();
             $request_file->request_id = $requestWiseData->first()->request_id;
-            $request_file->file_name = uniqid() . '_' .$request->file('document')->getClientOriginalName();
-            $path = $request->file('document')->storeAs('public', $request_file->file_name);
+            $request_file->file_name = uniqid() . '_' . $request->file('document')->getClientOriginalName();
+            $request->file('document')->storeAs('public', $request_file->file_name);
             $request_file->save();
             return back();
-        }
-        else{
+        } else {
             $request->validate([
                 'document' => 'required|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             ]);
@@ -89,11 +83,10 @@ class PatientViewDocumentsController extends Controller
         try {
             $id = Crypt::decrypt($id);
             $file = RequestWiseFile::where('id', $id)->first();
-            $path = (public_path() . '/storage/' . $file->file_name);
+            $path = public_path() . '/storage/' . $file->file_name;
             return response()->download($path);
         } catch (\Throwable $th) {
             return view('errors.500');
-
         }
     }
 
@@ -106,33 +99,31 @@ class PatientViewDocumentsController extends Controller
     public function downloadSelectedFiles(Request $request)
     {
         try {
-           
-        if (empty($request->input('selected_files'))) {
-            $data = RequestWiseFile::where('request_id', $request->requestId)->get();
-            if ($data->isEmpty()) {
-                return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+
+            if (empty($request->input('selected_files'))) {
+                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+                if ($data->isEmpty()) {
+                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+                }
+                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+            } else {
+                $ids = $request->input('selected_files');
             }
-            $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
 
-        } else {
-            $ids = $request->input('selected_files');
-        }
+            $zip = new ZipArchive();
+            $zipFile = 'documents.zip';
 
-        $zip = new ZipArchive;
-        $zipFile = 'documents.zip';
-
-        if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
-            foreach ($ids as $id) {
-                $file = RequestWiseFile::where('id', $id)->first();
-                $path = (public_path() . '/storage/' . $file->file_name);
-                $zip->addFile($path, $file->file_name);
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
+                foreach ($ids as $id) {
+                    $file = RequestWiseFile::where('id', $id)->first();
+                    $path = public_path() . '/storage/' . $file->file_name;
+                    $zip->addFile($path, $file->file_name);
+                }
+                $zip->close();
             }
-            $zip->close();
-        }
-        return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+            return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
     }
 }

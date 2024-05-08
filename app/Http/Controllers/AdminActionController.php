@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 use App\Models\Orders;
-use App\Models\caseTag;
+use App\Models\CaseTag;
 use App\Models\Regions;
 use App\Models\Provider;
 use App\Models\BlockRequest;
@@ -21,7 +21,7 @@ use App\Models\RequestWiseFile;
 use App\Models\HealthProfessional;
 use App\Models\HealthProfessionalType;
 
-class AdminActionsController extends Controller
+class AdminActionController extends Controller
 {
     /**
      * Assign case - All physician Regions
@@ -125,7 +125,7 @@ class AdminActionsController extends Controller
      */
     public function cancelCaseOptions()
     {
-        $reasons = caseTag::all();
+        $reasons = CaseTag::all();
         return response()->json($reasons);
     }
 
@@ -196,12 +196,9 @@ class AdminActionsController extends Controller
         try {
             $requestId = Crypt::decrypt($id);
             $data = RequestTable::where('id', $requestId)->first();
-            if (empty($data)) {
-                return redirect()->back()->with('wrongCase', "Case doesn't exist");
-            }
+
             return view('adminPage.pages.viewCase', compact('data'));
         } catch (\Throwable $th) {
-            //throw $th;
             return view('errors.404');
         }
     }
@@ -327,7 +324,8 @@ class AdminActionsController extends Controller
         ]);
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
 
-        $path = $request->file('document')->storeAs('public', $fileName);
+        $request->file('document')->storeAs('public', $fileName);
+
         RequestWiseFile::create([
             'request_id' => $id,
             'file_name' => $fileName,
@@ -340,11 +338,10 @@ class AdminActionsController extends Controller
     /**
      * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $id
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function encounterFormView(Request $request, $id = "null")
+    public function encounterFormView($id = "null")
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -450,11 +447,10 @@ class AdminActionsController extends Controller
     /**
      * Show Close Case Page with Details.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $id
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function closeCase(Request $request, $id = null)
+    public function closeCase($id = null)
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -476,7 +472,7 @@ class AdminActionsController extends Controller
      */
     public function closeCaseData(Request $request)
     {
-        if ($request->input('closeCaseBtn') == 'Save') {
+        if ($request->input('closeCaseBtn') === 'Save') {
             $request->validate([
                 'phone_number' => 'required',
                 'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
@@ -485,7 +481,7 @@ class AdminActionsController extends Controller
                 'phone_number' => $request->phone_number,
                 'email' => $request->email
             ]);
-        } else if ($request->input('closeCaseBtn') == 'Close Case') {
+        } else if ($request->input('closeCaseBtn') === 'Close Case') {
             $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
             RequestTable::where('id', $request->requestId)->update(['status' => 9]);
             RequestStatus::create([
@@ -548,7 +544,7 @@ class AdminActionsController extends Controller
 
         $status = RequestTable::where('id', $request->requestId)->first()->status;
 
-        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
+        return redirect()->route('admin.status', $status === 4 || $status === 5 ? 'active' : ($status === 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
     }
 
     /**
@@ -561,7 +557,7 @@ class AdminActionsController extends Controller
     {
         $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first()->file_name;
 
-        $path = (storage_path() . '/app/encounterForm/' . $encounterFile);
-        return  response()->download($path);
+        $path = storage_path() . '/app/encounterForm/' . $encounterFile;
+        return response()->download($path);
     }
 }

@@ -22,7 +22,7 @@ use App\Models\RequestWiseFile;
 use App\Models\HealthProfessional;
 use App\Models\HealthProfessionalType;
 
-class ProviderActionsController extends Controller
+class ProviderActionController extends Controller
 {
     /**
      * Accept Case by provider (case/request status will change to accepted)
@@ -134,11 +134,10 @@ class ProviderActionsController extends Controller
     /**
      * View uploads associated with a particular request.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string|null $id
      * @return \Illuminate\View\View
      */
-    public function viewUpload(Request $request, $id = null)
+    public function viewUpload($id = null)
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -168,7 +167,7 @@ class ProviderActionsController extends Controller
         ]);
 
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-        $path = $request->file('document')->storeAs('public', $fileName);
+        $request->file('document')->storeAs('public', $fileName);
 
         $providerId = RequestTable::where('id', $id)->first()->physician_id;
 
@@ -202,18 +201,17 @@ class ProviderActionsController extends Controller
     /**
      * Display the view order page and show associated data.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string|null $id
      * @return \Illuminate\View\View
      */
-    public function viewOrder(Request $request, $id = null)
+    public function viewOrder($id = null)
     {
         try {
             $requestId = Crypt::decrypt($id);
 
             $data = RequestTable::where('id', $requestId)->first();
             $types = HealthProfessionalType::get();
-            return view('providerPage.pages.sendOrder',  compact('requestId', 'types', 'data'));
+            return view('providerPage.pages.sendOrder', compact('requestId', 'types', 'data'));
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -295,11 +293,10 @@ class ProviderActionsController extends Controller
     /**
      * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string $id
      * @return \Illuminate\View\View
      */
-    public function encounterFormView(Request $request, $id = "null")
+    public function encounterFormView($id = "null")
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -419,7 +416,7 @@ class ProviderActionsController extends Controller
 
             return redirect()->route('provider.status', $status == 6 ? 'conclude' : 'active')->with('successMessage', "Form Finalized Successfully");
         } catch (\Throwable $th) {
-            dd($th);
+            return view('errors.500');
         }
     }
 

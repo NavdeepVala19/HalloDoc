@@ -53,7 +53,7 @@ class conciergeRequestController extends Controller
             'concierge_city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'concierge_zip_code' => 'digits:6|gte:1',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-            'room'=>'gte:1|nullable|max_digits:4|numeric|lt:1000'
+            'room' => 'gte:1|nullable|max_digits:4|numeric|lt:1000'
         ]);
 
         $isEmailStored = users::where('email', $request->email)->first();
@@ -126,8 +126,7 @@ class conciergeRequestController extends Controller
             $conciergeRequest->request_id = $requestConcierge->id;
             $conciergeRequest->concierge_id = $concierge->id;
             $conciergeRequest->save();
-
-        }else{
+        } else {
 
             // concierge request into request table
             $requestConcierge = new RequestTable();
@@ -175,7 +174,7 @@ class conciergeRequestController extends Controller
             $conciergeRequest->save();
         }
 
-        
+
         // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
@@ -201,8 +200,7 @@ class conciergeRequestController extends Controller
                     'confirmation_number' => $confirmationNumber,
                     'role_id' => 3,
                     'is_email_sent' => 1,
-                    'recipient_name' =>
-                    $request->first_name . ' ' . $request->last_name,
+                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
                     'sent_tries' => 1,
                     'create_date' => now(),
                     'sent_date' => now(),
@@ -217,7 +215,6 @@ class conciergeRequestController extends Controller
             }
         } catch (\Throwable $th) {
             return view('errors.500');
-        }    
-          
+        }
     }
 }

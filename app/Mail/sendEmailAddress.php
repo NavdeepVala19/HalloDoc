@@ -17,7 +17,7 @@ class sendEmailAddress extends Mailable
      * Create a new message instance.
      */
 
-    public $emailAddress;
+    protected $emailAddress;
 
     public function __construct($email)
     {

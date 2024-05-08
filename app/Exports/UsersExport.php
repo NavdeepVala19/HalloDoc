@@ -53,7 +53,7 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
             if (isset($adminAll)) {
                 $patientLastName = $adminAll->last_name;
             }
-            if (isset($adminAll) ) {
+            if (isset($adminAll)) {
                 $patientMobile = $adminAll->phone_number;
             }
             if (isset($adminAll)) {

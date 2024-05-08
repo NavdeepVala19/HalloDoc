@@ -44,19 +44,16 @@ class patientAccountController extends Controller
             $user = users::where("email", $request->email)->first();
 
             if ($user != null) {
-                if($user->password != null && $user->email != null){
+                if ($user->password != null && $user->email != null) {
                     return redirect()->route('loginScreen')->with('message', 'account with this email already exist');
-                } 
-                else if ($user->password == null && $user->email != null) {
+                } else if ($user->password == null && $user->email != null) {
                     $user->password = Hash::make($request->password);
                     $user->save();
                     return redirect()->route('loginScreen')->with('success', 'login with your registered credentials');
                 }
-            } 
-            else if($user == null) {
+            } else if ($user == null) {
                 return redirect()->back()->with('message', 'no single request was created from this email To create account first submit request');
-            } 
-
+            }
         }
     }
 }

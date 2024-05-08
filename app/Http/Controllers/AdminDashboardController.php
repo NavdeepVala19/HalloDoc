@@ -44,13 +44,13 @@ class AdminDashboardController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth'=> 'before:today',
+            'date_of_birth' => 'before:today',
             'phone_number' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'street' => 'min:2|max:50',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'state' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'room'=>'gte:1|nullable',
+            'room' => 'gte:1|nullable',
             'zip' => 'digits:6|nullable|gte:1',
             'adminNote' => 'nullable|min:5|max:200',
         ]);
@@ -113,8 +113,7 @@ class AdminDashboardController extends Controller
             $request_notes->admin_notes = $request->adminNote;
             $request_notes->created_by = 'admin';
             $request_notes->save();
-
-        }else{
+        } else {
             $requestData = new RequestTable();
             $requestData->user_id = $isEmailStored->id;
             $requestData->request_type_id = 1;
@@ -147,7 +146,7 @@ class AdminDashboardController extends Controller
             $request_notes->save();
         }
 
-         // confirmation number
+        // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -191,7 +190,6 @@ class AdminDashboardController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
     }
 
     /**
@@ -224,10 +222,10 @@ class AdminDashboardController extends Controller
                 ->leftJoin('regions', 'regions.id', 'admin.region_id')
                 ->where('user_id', $id)
                 ->first();
-            
-        return view('adminPage/adminProfile', compact('adminProfileData'));
+
+            return view('adminPage/adminProfile', compact('adminProfileData'));
         } catch (\Throwable $th) {
-           return view('errors.404');
+            return view('errors.404');
         }
     }
 
@@ -283,7 +281,8 @@ class AdminDashboardController extends Controller
         $updateUserData = [
             'password' => Hash::make($request->password),
         ];
-        $updateAdminInfoInUsers = users::where('id', $id)->first()->update($updateUserData);
+
+        users::where('id', $id)->first()->update($updateUserData);
 
         return back()->with('message', 'Your password is updated successfully');
     }

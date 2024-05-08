@@ -40,11 +40,11 @@ class familyRequestController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'email' => ['required','email','min:2','max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
-            'family_email' => ['required','email','min:2','max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
-            'city' => ['required','min:2','max:30', 'regex:/^[a-zA-Z ]+?$/'],
-            'state' => ['required','min:2','max:30', 'regex:/^[a-zA-Z ]+?$/'],
-            'symptoms' => ['regex:/^[a-zA-Z0-9 \-_,()]+$/','nullable','min:5','max:200'],
+            'email' => ['required', 'email', 'min:2', 'max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
+            'family_email' => ['required', 'email', 'min:2', 'max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
+            'city' => ['required', 'min:2', 'max:30', 'regex:/^[a-zA-Z ]+?$/'],
+            'state' => ['required', 'min:2', 'max:30', 'regex:/^[a-zA-Z ]+?$/'],
+            'symptoms' => ['regex:/^[a-zA-Z0-9 \-_,()]+$/', 'nullable', 'min:5', 'max:200'],
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required|before:today',
@@ -120,10 +120,10 @@ class familyRequestController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $familyRequest->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
-        }else{
+        } else {
             $familyRequest = new RequestTable();
             $familyRequest->user_id = $isEmailStored->id;
             $familyRequest->request_type_id = 2;
@@ -157,13 +157,13 @@ class familyRequestController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $familyRequest->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
         }
 
 
-         // confirmation number
+        // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -191,14 +191,14 @@ class familyRequestController extends Controller
                     'request_id' => $familyRequest->id,
                     'confirmation_number' => $confirmationNumber,
                     'is_email_sent' => 1,
-                    'recipient_name' => $request->first_name.' '.$request->last_name,
+                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
                     'sent_tries' => 1,
                     'create_date' => now(),
                     'sent_date' => now(),
                     'email_template' => $request->email,
                     'subject_name' => 'Create account by clicking on below link with below email address',
                     'email' => $request->email,
-                    'action'=>5,
+                    'action' => 5,
                 ]);
                 return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
             } else {
@@ -207,7 +207,5 @@ class familyRequestController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
-        
     }
 }

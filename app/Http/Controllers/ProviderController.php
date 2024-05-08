@@ -49,15 +49,15 @@ class ProviderController extends Controller
     |   3. Different category selection
     |   4. Search Term request
     */
-    const CATEGORY_PATIENT = 1;
-    const CATEGORY_FAMILY = 2;
-    const CATEGORY_CONCIERGE = 3;
-    const CATEGORY_BUSINESS = 4;
+    public const CATEGORY_PATIENT = 1;
+    public const CATEGORY_FAMILY = 2;
+    public const CATEGORY_CONCIERGE = 3;
+    public const CATEGORY_BUSINESS = 4;
 
-    const STATUS_NEW = 1;
-    const STATUS_PENDING = 3;
-    const STATUS_ACTIVE = [4, 5];
-    const STATUS_CONCLUDE = 6;
+    public const STATUS_NEW = 1;
+    public const STATUS_PENDING = 3;
+    public const STATUS_ACTIVE = [4, 5];
+    public const STATUS_CONCLUDE = 6;
 
     /**
      * Get category id from the name of category
@@ -146,7 +146,7 @@ class ProviderController extends Controller
         // Apply search condition(Enter condition only when any search query is requested)
         if (isset($searchTerm) && !empty($searchTerm)) {
             $query->whereHas('requestClient', function ($q) use ($searchTerm) {
-                $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
+                $q->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%");
             });
         }
 
@@ -192,9 +192,8 @@ class ProviderController extends Controller
 
         if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude') {
             return $this->cases($request, $status);
-        } else {
-            return view('errors.404');
         }
+        return view('errors.404');
     }
 
     /**
@@ -213,12 +212,9 @@ class ProviderController extends Controller
         if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude') {
             if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
                 return $this->cases($request, $status, $category);
-            } else {
-                return view('errors.404');
             }
-        } else {
-            return view('errors.404');
         }
+        return view('errors.404');
     }
 
     /**
@@ -395,10 +391,9 @@ class ProviderController extends Controller
                 'email' => $request->email,
             ]);
             return redirect()->route('provider.status', 'pending')->with('successMessage', 'Email for create account is sent & request created successfully!');
-        } else {
-            // Redirect to provider status page with success message
-            return redirect()->route("provider.status", 'pending')->with('successMessage', "Request Created Successfully!");
         }
+        // Redirect to provider status page with success message
+        return redirect()->route("provider.status", 'pending')->with('successMessage', "Request Created Successfully!");
     }
 
     /**
@@ -496,11 +491,11 @@ class ProviderController extends Controller
 
             $twilio = new Client($sid, $token);
 
-            $message = $twilio->messages
+            $twilio->messages
                 ->create(
                     "+91 99780 71802", // to
                     [
-                        "body" => "Hii $request->first_name $request->last_name, Click on the this link to create request:$link",
+                        "body" => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
                         "from" =>  $senderNumber
                     ]
                 );

@@ -2,35 +2,36 @@
 
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelController;
 
 // All Patient Related functionality -> controllers
-use App\Http\Controllers\patientController;
-use App\Http\Controllers\patientLoginController;
-use App\Http\Controllers\familyRequestController;
-use App\Http\Controllers\patientAccountController;
-use App\Http\Controllers\patientProfileController;
 use App\Http\Controllers\businessRequestController;
 use App\Http\Controllers\conciergeRequestController;
+use App\Http\Controllers\familyRequestController;
+use App\Http\Controllers\patientAccountController;
+use App\Http\Controllers\patientController;
 use App\Http\Controllers\patientDashboardController;
+use App\Http\Controllers\patientLoginController;
+use App\Http\Controllers\patientProfileController;
 use App\Http\Controllers\PatientViewDocumentsController;
 
 // All Admin Related functionality -> controllers
+use App\Http\Controllers\AdminActionController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminActionsController;
-use App\Http\Controllers\AdminLoginController;
-use App\Http\Controllers\SchedulingController;
-use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminProviderController;
+use App\Http\Controllers\SchedulingController;
 
 // All Provider Related functionality -> controllers
+use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
-use App\Http\Controllers\ProviderActionsController;
 use App\Http\Controllers\ProviderSchedulingController;
 
 // Common functionality between Admin/Provider -> controllers
 use App\Http\Controllers\CommonOperationController;
+
+use Illuminate\Support\Facades\Route;
 
 // ******************************* SHIVESH **********************************************
 
@@ -74,7 +75,6 @@ Route::get('reset-password/{token}', [patientLoginController::class, 'showResetP
 Route::post('reset-password', [patientLoginController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
 route::middleware('CheckPatientLogin')->group(function () {
-
     route::get('/patient_logout', [patientLoginController::class, 'logout'])->name('patientLogOut');
 
     //  ******* Patient Dashboard **********x
@@ -132,6 +132,8 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 
 // ******************************* NAVDEEP's WORK **********************************************
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
+// Route::prefix('provider')->group(function () {
+// });
 Route::middleware('checkProviderLogin')->group(function () {
     // Providers Dashboard page with New state case listing
     Route::get('/provider', [ProviderController::class, 'providerDashboard'])->name('provider.dashboard');
@@ -164,60 +166,60 @@ Route::middleware('checkProviderLogin')->group(function () {
 
     // ************** DIFFERENT ACTIONS FROM ACTION MENU ***************
     // Accept Case by provider
-    Route::get('/accept-case/{id}', [ProviderActionsController::class, 'acceptCase'])->name('provider.accept.case');
+    Route::get('/accept-case/{id}', [ProviderActionController::class, 'acceptCase'])->name('provider.accept.case');
     // Transfer Case to admin by provider
-    Route::post('/transfer-case', [ProviderActionsController::class, 'transferCase'])->name('provider.transfer.case');
+    Route::post('/transfer-case', [ProviderActionController::class, 'transferCase'])->name('provider.transfer.case');
 
     // VIEW NOTES PAGE
     // show view notes page as per the id
-    Route::get('/provider/view/notes/{id}', [ProviderActionsController::class, 'viewNote'])->name('provider.view.notes');
+    Route::get('/provider/view/notes/{id}', [ProviderActionController::class, 'viewNote'])->name('provider.view.notes');
     // Store notes saved by provider
-    Route::post('/provider/view/notes/store', [ProviderActionsController::class, 'storeNote'])->name('provider.store.note');
+    Route::post('/provider/view/notes/store', [ProviderActionController::class, 'storeNote'])->name('provider.store.note');
 
     // VIEW UPLOADS PAGE
     // View Uploads (currently showing all the documents in requestWiseFile table)
-    Route::get('/view-uploads/{id?}', [ProviderActionsController::class, 'viewUpload'])->name('provider.view.upload');
+    Route::get('/view-uploads/{id?}', [ProviderActionController::class, 'viewUpload'])->name('provider.view.upload');
     // upload document from viewUploads page
-    Route::post('/view-uploads/{id?}', [ProviderActionsController::class, 'uploadDocument'])->name('proivder.upload.doc');
+    Route::post('/view-uploads/{id?}', [ProviderActionController::class, 'uploadDocument'])->name('proivder.upload.doc');
 
     // VIEW CASE PAGE  
     // show view case page as per the id
-    Route::get('provider/view/case/{id?}', [ProviderActionsController::class, 'viewCase'])->name('provider.view.case');
+    Route::get('provider/view/case/{id?}', [ProviderActionController::class, 'viewCase'])->name('provider.view.case');
 
     // VIEW SEND ORDER PAGE
     // Send Order active state provider
-    Route::get('/view-order/{id?}', [ProviderActionsController::class, 'viewOrder'])->name('provider.view.order');
+    Route::get('/view-order/{id?}', [ProviderActionController::class, 'viewOrder'])->name('provider.view.order');
     // Store data from the form to the database table
-    Route::post('/provider-send-order', [ProviderActionsController::class, 'sendOrder'])->name('provider.send.order');
+    Route::post('/provider-send-order', [ProviderActionController::class, 'sendOrder'])->name('provider.send.order');
 
     // when consult is selected from the encounter of active listing perform operation
-    Route::get('/provider-encounter', [ProviderActionsController::class, 'encounter'])->name("provider.active.encounter");
+    Route::get('/provider-encounter', [ProviderActionController::class, 'encounter'])->name("provider.active.encounter");
 
     // When clicked on House Call From active page, change it's state to conlude
-    Route::get('/provider-housecall-encounter/{requestId}', [ProviderActionsController::class, 'encounterHouseCall'])->name('provider.houseCall.encounter');
+    Route::get('/provider-housecall-encounter/{requestId}', [ProviderActionController::class, 'encounterHouseCall'])->name('provider.houseCall.encounter');
 
     // ENCOUNTER FORM
-    // Show Encounter Form when clicked on Encounter from Conclude State
+    // Display Encounter Form page when clicked on Encounter from Conclude State
     Route::get(
         '/encounter-form/{id?}',
-        [ProviderActionsController::class, 'encounterFormView']
+        [ProviderActionController::class, 'encounterFormView']
     )->name('provider.encounter.form');
 
     // Data of the medical-form (encounter-form) -> Create data if no previous entries done, otherwise update form with current data
-    Route::post('/medical-form', [ProviderActionsController::class, 'encounterForm'])->name('encounter.form.data');
+    Route::post('/medical-form', [ProviderActionController::class, 'encounterForm'])->name('encounter.form.data');
 
     // Encounter (Medical Form Finalized) by Provider
-    Route::get('/encounter-finalized/{id}', [ProviderActionsController::class, 'encounterFinalized'])->name('encounter.finalized');
+    Route::get('/encounter-finalized/{id}', [ProviderActionController::class, 'encounterFinalized'])->name('encounter.finalized');
 
     // Download The medical-form when clicked from encounter finalized pop-up from conclude state
-    Route::post('/download-medical-form', [ProviderActionsController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
+    Route::post('/download-medical-form', [ProviderActionController::class, 'downloadMedicalForm'])->name('provider.download.encounterForm');
 
     // Conclude Care Page view -> conclude state -> Provider
-    Route::get('/conclude-care/{id}', [ProviderActionsController::class, 'viewConcludeCare'])->name('provider.conclude.care.view');
+    Route::get('/conclude-care/{id}', [ProviderActionController::class, 'viewConcludeCare'])->name('provider.conclude.care.view');
     // Conclude Care implementation
-    Route::post('/conclude-care', [ProviderActionsController::class, 'concludeCare'])->name('provider.conclude.care');
+    Route::post('/conclude-care', [ProviderActionController::class, 'concludeCare'])->name('provider.conclude.care');
     // conclude Care upload docs
-    Route::post('/upload-document-conclude-care', [ProviderActionsController::class, 'uploadDocsConcludeCare'])->name('upload.conclude.care.docs');
+    Route::post('/upload-document-conclude-care', [ProviderActionController::class, 'uploadDocsConcludeCare'])->name('upload.conclude.care.docs');
 
     // Provider Scheduling
     // Scheduling Calendar view 
@@ -252,63 +254,63 @@ Route::middleware('checkAdminLogin')->group(function () {
     Route::post('/admin/send/mail/patient', [AdminController::class, 'sendMail'])->name('admin.send.mail');
 
     // Assign Case pop-up, populate select menu with all physician regions (AJAX)
-    Route::get('/physician-regions', [AdminActionsController::class, 'physicianRegions'])->name('physician.regions');
+    Route::get('/physician-regions', [AdminActionController::class, 'physicianRegions'])->name('physician.regions');
     // Get particular physicians as per the region selected from dropdown
-    Route::get('/physician/{id}', [AdminActionsController::class, 'getPhysicians'])->name('get.physician');
+    Route::get('/physician/{id}', [AdminActionController::class, 'getPhysicians'])->name('get.physician');
 
     // Get all physicians other than the one who transferred the case
-    Route::get('/newPhysicians/{requestId}/{regionId}', [AdminActionsController::class, 'getNewPhysicians'])->name('get.new.physician');
+    Route::get('/newPhysicians/{requestId}/{regionId}', [AdminActionController::class, 'getNewPhysicians'])->name('get.new.physician');
 
     // Admin assign case -> to particular physician
-    Route::post('/assign-case', [AdminActionsController::class, 'assignCase'])->name('admin.assign.case');
+    Route::post('/assign-case', [AdminActionController::class, 'assignCase'])->name('admin.assign.case');
     // Admin transfer case -> to physician other than the one who transferred case
-    Route::post('/transfer-case-admin', [AdminActionsController::class, 'transferCase'])->name('admin.transfer.case');
+    Route::post('/transfer-case-admin', [AdminActionController::class, 'transferCase'])->name('admin.transfer.case');
 
-    // Fetch Cancel Case (caseTag) options from database 
-    Route::get('/cancel-case', [AdminActionsController::class, "cancelCaseOptions"]);
+    // Fetch Cancel Case (CaseTag) options from database 
+    Route::get('/cancel-case', [AdminActionController::class, "cancelCaseOptions"]);
     // Cancel Case by admin
-    Route::post('cancel-case-data', [AdminActionsController::class, 'cancelCase'])->name('admin.cancel.case');
+    Route::post('cancel-case-data', [AdminActionController::class, 'cancelCase'])->name('admin.cancel.case');
 
     // Block Case by admin
-    Route::post('block-case', [AdminActionsController::class, 'blockCase'])->name('admin.block.case');
+    Route::post('block-case', [AdminActionController::class, 'blockCase'])->name('admin.block.case');
 
     // Admin View Case
-    Route::get('admin/view/case/{id}', [AdminActionsController::class, 'viewCase'])->name('admin.view.case');
+    Route::get('admin/view/case/{id}', [AdminActionController::class, 'viewCase'])->name('admin.view.case');
     // Admin Edit Case
-    Route::post('admin/view/case/edit', [AdminActionsController::class, 'editCase'])->name('admin.edit.case');
+    Route::post('admin/view/case/edit', [AdminActionController::class, 'editCase'])->name('admin.edit.case');
 
     // Admin View Notes
-    Route::get('admin/view/notes/{id}', [AdminActionsController::class, 'viewNote'])->name('admin.view.note');
+    Route::get('admin/view/notes/{id}', [AdminActionController::class, 'viewNote'])->name('admin.view.note');
     // Store Additional Note entered by Admin 
-    Route::post('/admin/view/notes/store', [AdminActionsController::class, 'storeNote'])->name('admin.store.note');
+    Route::post('/admin/view/notes/store', [AdminActionController::class, 'storeNote'])->name('admin.store.note');
 
     // Admin View Uploads
-    Route::get('admin/view/uploads/{id}', [AdminActionsController::class, 'viewUpload'])->name('admin.view.upload');
+    Route::get('admin/view/uploads/{id}', [AdminActionController::class, 'viewUpload'])->name('admin.view.upload');
     // Admin upload document from viewUploads page
-    Route::post('admin/view/uploads/{id?}', [AdminActionsController::class, 'uploadDocument'])->name('admin.upload.doc');
+    Route::post('admin/view/uploads/{id?}', [AdminActionController::class, 'uploadDocument'])->name('admin.upload.doc');
 
     // ENCOUNTER FORM
     // Show Encounter Form when clicked on Encounter from Conclude State
-    Route::get('/admin-encounter-form/{id?}', [AdminActionsController::class, 'encounterFormView'])->name('admin.encounter.form');
+    Route::get('/admin-encounter-form/{id?}', [AdminActionController::class, 'encounterFormView'])->name('admin.encounter.form');
 
     // Changes Saved from admin on Medical Form(Encounter Form)
-    Route::post('/admin-medical-form', [AdminActionsController::class, 'encounterForm'])->name('admin.medical.data');
+    Route::post('/admin-medical-form', [AdminActionController::class, 'encounterForm'])->name('admin.medical.data');
 
     // Download Encounter form on clicking view button
-    Route::get('/download-encounter-form/{requestId}', [AdminActionsController::class, 'downloadEncounterForm'])->name('download.encounter.form');
+    Route::get('/download-encounter-form/{requestId}', [AdminActionController::class, 'downloadEncounterForm'])->name('download.encounter.form');
 
     // Clear Case by admin pending and close state
-    Route::post('clear-case', [AdminActionsController::class, 'clearCase'])->name('admin.clear.case');
+    Route::post('clear-case', [AdminActionController::class, 'clearCase'])->name('admin.clear.case');
 
     // close case admin
-    Route::get('/close-case/{id}', [AdminActionsController::class, 'closeCase'])->name('admin.close.case');
+    Route::get('/close-case/{id}', [AdminActionController::class, 'closeCase'])->name('admin.close.case');
     // admin closes case -> store the fetched data from form and change status for that particular request
-    Route::post('/close-case', [AdminActionsController::class, 'closeCaseData'])->name('admin.close.case.save');
+    Route::post('/close-case', [AdminActionController::class, 'closeCaseData'])->name('admin.close.case.save');
 
     // send orders admin page 
-    Route::get('/admin-view-order/{id}', [AdminActionsController::class, 'viewOrder'])->name('admin.view.order');
+    Route::get('/admin-view-order/{id}', [AdminActionController::class, 'viewOrder'])->name('admin.view.order');
     // Admin send order data stored in database table
-    Route::post('/admin-send-order', [AdminActionsController::class, 'sendOrder'])->name('admin.send.order');
+    Route::post('/admin-send-order', [AdminActionController::class, 'sendOrder'])->name('admin.send.order');
 
     // Partners Page in Admin
     Route::get('/partners/{id?}', [AdminController::class, 'viewPartners'])->name('admin.partners');

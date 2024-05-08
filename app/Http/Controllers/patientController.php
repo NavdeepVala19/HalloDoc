@@ -106,11 +106,10 @@ class patientController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $requestData->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
-
-        }else{
+        } else {
 
             $requestData = new RequestTable();
             $requestData->user_id = $isEmailStored->id;
@@ -142,13 +141,12 @@ class patientController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $requestData->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
-
         }
 
-         // confirmation number
+        // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -192,6 +190,5 @@ class patientController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
     }
 }

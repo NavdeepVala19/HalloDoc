@@ -13,7 +13,7 @@ class Status extends Model
 
     protected $fillable = [
         'id',
-        'status_type'
+        'status_type',
     ];
 
 }

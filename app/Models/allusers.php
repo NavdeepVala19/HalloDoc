@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\UserRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class allusers extends Model
@@ -29,7 +29,7 @@ class allusers extends Model
         'int_year',
         'int_date',
         'region_id',
-        'user_id'
+        'user_id',
     ];
 
 
