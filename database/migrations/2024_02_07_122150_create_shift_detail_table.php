@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('shift_detail', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('shift_id');
-            $table->foreign('shift_id')->references('id')->on('shift');
+            // $table->unsignedBigInteger('shift_id');
+            // $table->foreign('shift_id')->references('id')->on('shift');
+            $table->integer('shift_id')->nullable();
             $table->date('shift_date');
-            $table->unsignedBigInteger('region_id')->nullable();
-            $table->foreign('region_id')->references('id')->on('shift_detail_region');
+            // $table->unsignedBigInteger('region_id')->nullable();
+            // $table->foreign('region_id')->references('id')->on('shift_detail_region');
+            $table->integer('region_id')->nullable();
             $table->time('start_time');
             $table->time('end_time');
             $table->enum('status', ['pending', 'approved']);

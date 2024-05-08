@@ -217,7 +217,9 @@ patient's email address and phone number. Once the patient accepts the agreement
                                                 -
                                             @endif
                                         </td>
-                                        <td>{{ $case->created_at }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
+                                        </td>
                                         <td class="mobile-column">
                                             @if ($case->request_type_id == 1)
                                                 <div class="listing-mobile-container">
@@ -311,7 +313,7 @@ patient's email address and phone number. Once the patient accepts the agreement
                                             {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                         @endif
                                     </span>
-                                    <button class="map-btn">Map Location</button>
+                                    {{-- <button class="map-btn">Map Location</button> --}}
                                 </div>
                             </div>
                             <div class="more-info ">
@@ -330,7 +332,7 @@ patient's email address and phone number. Once the patient accepts the agreement
                                     <br>
                                     <span>
                                         <i class="bi bi-calendar3"></i> Date of services :
-                                        {{ $case->created_at }}
+                                        {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
                                     </span>
                                     <br>
                                     <span>

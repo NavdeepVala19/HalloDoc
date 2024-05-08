@@ -248,7 +248,9 @@ pending state, providers need to send an agreement link to patients. --}}
                                                 {{ $case->provider->first_name }} {{ $case->provider->last_name }}
                                             @endif
                                         </td>
-                                        <td>{{ $case->created_at }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
+                                        </td>
                                         <td class="mobile-column">
                                             @if ($case->request_type_id == 1)
                                                 <div class="listing-mobile-container">
@@ -277,7 +279,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                         <td>{{ $case->requestClient->street }},
                                             {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                         </td>
-                                        <td>{{ $case->requestClient->notes }}</td>
+                                        <td>{{ $case->requestClient->notes ? $case->requestClient->notes : '-' }}</td>
                                         <td>
                                             <div class="action-container">
                                                 <button class="table-btn action-btn">Actions</button>
@@ -352,7 +354,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                             {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                         @endif
                                     </span>
-                                    <button class="map-btn">Map Location</button>
+                                    {{-- <button class="map-btn">Map Location</button> --}}
                                 </div>
                             </div>
                             <div class="more-info ">
@@ -381,7 +383,7 @@ pending state, providers need to send an agreement link to patients. --}}
                                     <br>
                                     <span>
                                         <i class="bi bi-calendar3"></i> Date of services :
-                                        {{ $case->created_at }}
+                                        {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
                                     </span>
                                     <br>
                                     <span>

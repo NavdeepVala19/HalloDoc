@@ -208,10 +208,13 @@ giving service to the patient. --}}
                                                 </button>
                                             </div>
                                         </td>
-                                        <td>{{ $case->requestClient->date_of_birth }}</td>
+                                        <td>{{ $case->requestClient->date_of_birth ? $case->requestClient->date_of_birth : '-' }}
+                                        </td>
                                         <td>{{ $case->first_name }} {{ $case->last_name }}</td>
                                         <td>{{ $case->provider->first_name }} {{ $case->provider->last_name }}</td>
-                                        <td>{{ $case->created_at }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
+                                        </td>
                                         <td class="mobile-column">
                                             @if ($case->request_type_id == 1)
                                                 <div class="listing-mobile-container">
@@ -240,7 +243,7 @@ giving service to the patient. --}}
                                         <td>{{ $case->requestClient->street }},
                                             {{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                         </td>
-                                        <td>Notes</td>
+                                        <td>{{ $case->requestClient->notes ? $case->requestClient->notes : '-' }}</td>
                                         <td>
                                             <div class="action-container">
                                                 <button class="table-btn action-btn"
@@ -311,7 +314,7 @@ giving service to the patient. --}}
                                             {{ $case->requestClient->street }},{{ $case->requestClient->city }},{{ $case->requestClient->state }}
                                         @endif
                                     </span>
-                                    <button class="map-btn">Map Location</button>
+                                    {{-- <button class="map-btn">Map Location</button> --}}
                                 </div>
                             </div>
                             <div class="more-info ">
@@ -349,7 +352,7 @@ giving service to the patient. --}}
                                     <span>
                                         <i class="bi bi-calendar3"></i> Date of services :
                                         @isset($case->requestClient)
-                                            {{ $case->created_at }}
+                                            {{ \Carbon\Carbon::parse($case->created_at)->format('Y-m-d') }}
                                         @endisset
                                     </span>
                                     <br>

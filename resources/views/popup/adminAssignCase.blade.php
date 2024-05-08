@@ -24,7 +24,7 @@ to providers based on patient’s region using this pop-up. --}}
                 is-invalid
                 @enderror"
                     name="physician" id="floatingSelect2" aria-label="Floating label select example" required>
-                    <option disabled selected>Select Physician</option>
+                    <option disabled selected>Physicians</option>
                 </select>
                 <label for="floatingSelect2">Select Physician</label>
                 @error('physician')

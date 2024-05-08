@@ -195,11 +195,19 @@ $(document).ready(function () {
     // Admin/Provider send mail Pop-Up Validation
     $("#sendMailForm").validate({
         rules: {
-            message: noteRules(),
+            message: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            message:
-                "Please enter a message, minimum 5 and maximum 200 characters (alpha, num & ,-._)",
+            message: {
+                required: "Please enter a message to send to patient.",
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -319,11 +327,19 @@ $(document).ready(function () {
     $("#cancelCaseForm").validate({
         rules: {
             case_tag: "required",
-            reason: noteRules(),
+            reason: {
+                required: false,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            case_tag: "Select A Case Tag To Cancel the Case",
-            reason: noteMessages("Notes"),
+            case_tag: "Reason for cancellation is required",
+            reason: {
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             var errorDiv = $('<div class="text-danger"></div>');
@@ -408,10 +424,19 @@ $(document).ready(function () {
     // Provider Transfer Request
     $("#providerTransferCase").validate({
         rules: {
-            notes: noteRules(),
+            notes: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            notes: noteMessages("Transfer Note"),
+            notes: {
+                required: "Please enter transfer note for admin.",
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -438,9 +463,8 @@ $(document).ready(function () {
             notes: noteRules(),
         },
         messages: {
-            region: "Select at least one region.",
-            physician:
-                "Select physician whom you want to assign these case to.",
+            region: "Select any one region to filter physicians.",
+            physician: "Select physician to assign these case.",
             assign_note: noteMessages("Assign case note"),
             notes: noteMessages("Transfer note"),
         },
@@ -463,10 +487,19 @@ $(document).ready(function () {
     // Admin Block Case Pop-Up Validation
     $("#adminBlockCase").validate({
         rules: {
-            block_reason: noteRules(),
+            block_reason: {
+                required: true,
+                minlength: 5,
+                maxlength: 200,
+                alphaNumChar: true,
+            },
         },
         messages: {
-            block_reason: noteMessages("Block reason"),
+            block_reason: {
+                required: "Please enter reason for blocking request.",
+                minlength: "Minimum 5 characters are needed.",
+                maxlength: "Maximum 200 characters are allowed.",
+            },
         },
         errorPlacement: function (error, element) {
             let errorBox = $("<div class='text-danger'></div>");
@@ -897,10 +930,10 @@ $(document).ready(function () {
         },
         messages: {
             profession: {
-                required: "Select Profession to get Vendors option",
+                required: "Select Profession to get Business/Vendors option",
             },
             vendor_id: {
-                required: "Select Particular Vendor to have it's details",
+                required: "Select Particular Business/Vendor to have it's details",
             },
             business_contact: {
                 required: "Enter Business Contact to send Order",
@@ -1365,27 +1398,6 @@ $(document).ready(function () {
         },
         "Minimum duration of shift allowed is for 30Minutes."
     );
-    $.validator.addMethod(
-        "minTime30Start",
-        function (value, element, params) {
-            var endTime = $(params).val();
-
-            var endTimeParts = endTime.split(":");
-            var startTimeParts = value.split(":");
-            var endTimeInMinutes =
-                parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
-            var startTimeInMinutes =
-                parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
-
-            console.log(startTimeInMinutes);
-            console.log(endTimeInMinutes + 30);
-            if (startTimeInMinutes + 30 > endTimeInMinutes) {
-                return false;
-            }
-            return value < endTime;
-        },
-        "Minimum duration of shift allowed is for 30Minutes."
-    );
     // Validation added for shiftStartTime to be always greater than or equal to current time
     $.validator.addMethod(
         "startTime",
@@ -1413,13 +1425,12 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date().toDateString(),
-                    new Date("2030-1-1").toDateString(),
+                    new Date("2025-1-1").toDateString(),
                 ],
             },
             shiftTimeStart: {
                 required: true,
                 startTime: ".shiftDate",
-                minTime30Start: "#endTime",
             },
             shiftTimeEnd: {
                 required: true,
@@ -1470,13 +1481,12 @@ $(document).ready(function () {
                 required: true,
                 dateRange: [
                     new Date().toDateString(),
-                    new Date("2050-1-1").toDateString(),
+                    new Date("2025-1-1").toDateString(),
                 ],
             },
             shiftStartTime: {
                 required: true,
                 startTime: ".shiftDate",
-                minTime30Start: "#floatingInput3",
             },
             shiftEndTime: {
                 required: true,

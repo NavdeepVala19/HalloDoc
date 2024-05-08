@@ -137,9 +137,13 @@ class CommonOperationController extends Controller
                 }
                 $zip->close();
             }
+            $patient = RequestTable::where('id', $request->requestId)->first();
+
             EmailLog::create([
                 'role_id' => 1,
                 'request_id' => $request->requestId,
+                'recipient_name' => $patient->first_name . " " . $patient->last_name,
+                'confirmation_number' => $patient->confirmation_no,
                 'is_email_sent' => true,
                 'sent_tries' => 1,
                 'sent_date' => now(),
@@ -147,6 +151,7 @@ class CommonOperationController extends Controller
                 'email_template' => 'mail.blade.php',
                 'subject_name' => 'Documets Link Sent',
                 'email' => $email,
+                'action' => 6
             ]);
 
             try {
@@ -159,6 +164,12 @@ class CommonOperationController extends Controller
         }
     }
 
+    /**
+     * Send email to patient.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function sendMailPatient(Request $request)
     {
         $requestClient = request_Client::where('request_id', $request->requestId)->first();
@@ -300,13 +311,25 @@ class CommonOperationController extends Controller
     }
 
     // Common Code for Admin/Provider
-    // Fetch business values (health_professional values) as per the profession selected in Send Orders page
+    /**
+     * Fetch business values (health_professional values) based on the profession selected.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request.
+     * @param int $id The ID of the selected profession.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function fetchBusiness(Request $request, $id)
     {
         $business = HealthProfessional::where('profession', $id)->get();
         return response()->json($business);
     }
-    // Ajax call for fetching business data and showing in the page
+
+    /**
+     * Fetches business data based on the provided ID and returns it as a JSON response.
+     *
+     * @param int $id The ID of the business data to fetch.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function fetchBusinessData($id)
     {
         $businessData = HealthProfessional::where('id', $id)->first();

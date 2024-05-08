@@ -24,7 +24,7 @@ can transfer assigned request to another physician. --}}
                 is-invalid
                 @enderror"
                      id="floatingSelect2" aria-label="Floating label select example" name="physician">
-                     <option selected disabled>Select Physician</option>
+                     <option selected disabled>Physicians</option>
                  </select>
                  <label for="floatingSelect2">Select Physician</label>
                  @error('physician')
