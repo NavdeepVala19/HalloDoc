@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use DatePeriod;
 use Carbon\Carbon;
-use App\Models\Shift;
-use App\Models\Regions;
-use App\Models\Provider;
 use Carbon\CarbonInterval;
-use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Shift;
+use App\Models\Provider;
+use App\Models\ShiftDetail;
 use App\Models\PhysicianRegion;
 use App\Models\ShiftDetailRegion;
-use Illuminate\Support\Facades\Auth;
 
 class ProviderSchedulingController extends Controller
 {
@@ -72,7 +71,7 @@ class ProviderSchedulingController extends Controller
                     return redirect()->back()->with('shiftOverlap', "You have an shift during the time period you provided");
                 }
             }
-        };
+        }
 
         if ($request->checkbox) {
             $weekDays = implode(',', $request->checkbox);
@@ -221,7 +220,7 @@ class ProviderSchedulingController extends Controller
                         return redirect()->back()->with('shiftOverlap', "You have an shift during the time period you provided");
                     }
                 }
-            };
+            }
 
             ShiftDetail::where('id', $request->shiftDetailId)->update([
                 'shift_date' => $request->shiftDate,

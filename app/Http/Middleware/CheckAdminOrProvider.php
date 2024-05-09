@@ -20,10 +20,8 @@ class CheckAdminOrProvider
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
-            if ($roleId == 1 || $roleId == 2) {
+            if ($roleId === 1 || $roleId === 2) {
                 return $next($request);
-            } else {
-                return redirect()->route('login');
             }
         }
         return redirect()->route('login');

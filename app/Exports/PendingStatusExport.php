@@ -2,12 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
 class PendingStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
@@ -47,23 +44,13 @@ class PendingStatusExport implements FromCollection, WithCustomCsvSettings, With
 
             if (isset($adminPending) && $adminPending->requestClient) {
                 $patientName = $adminPending->requestClient->first_name;
-            }
-            if (isset($adminPending) && $adminPending->requestClient) {
                 $patientLastName = $adminPending->requestClient->last_name;
-            }
-            if (isset($adminPending) && $adminPending->requestClient) {
                 $dateOfBirth = $adminPending->requestClient->date_of_birth;
-            }
-
-            if (isset($adminPending) && $adminPending->requestClient) {
                 $street = $adminPending->requestClient->street;
-            }
-            if (isset($adminPending) && $adminPending->requestClient) {
                 $city = $adminPending->requestClient->city;
-            }
-            if (isset($adminPending) && $adminPending->requestClient) {
                 $state = $adminPending->requestClient->state;
             }
+
             return [
                 'PatientName' => $patientName . ' ' . $patientLastName,
                 'Date of Birth' => $dateOfBirth,

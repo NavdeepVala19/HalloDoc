@@ -2,9 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
@@ -53,7 +50,7 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
             if (isset($adminAll)) {
                 $patientLastName = $adminAll->last_name;
             }
-            if (isset($adminAll) ) {
+            if (isset($adminAll)) {
                 $patientMobile = $adminAll->phone_number;
             }
             if (isset($adminAll)) {

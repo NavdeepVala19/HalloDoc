@@ -52,9 +52,6 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
                 $patientLastName = $adminUnpaid->requestClient->last_name;
             }
             if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $dateOfBirth = $adminUnpaid->requestClient->date_of_birth;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
                 $patientMobile = $adminUnpaid->requestClient->phone_number;
             }
             if (isset($adminUnpaid) && $adminUnpaid->requestClient) {

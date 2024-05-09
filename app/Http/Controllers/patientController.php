@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\UserRoles;
 use Carbon\Carbon;
-use App\Models\users;
-use App\Models\allusers;
+use App\Models\Users;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\RequestTable;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
 
-use App\Mail\sendEmailAddress;
+use App\Mail\SendEmailAddress;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -49,17 +49,17 @@ class patientController extends Controller
             'room' => 'gte:0|nullable|max:1000'
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->first();
+        $isEmailStored = Users::where('email', $request->email)->first();
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
-            $requestEmail = new users();
+            $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
 
             // store all details of patient in allUsers table
-            $requestUsers = new allusers();
+            $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
             $requestUsers->last_name = $request->last_name;
@@ -86,7 +86,7 @@ class patientController extends Controller
             $requestData->status = 1;
             $requestData->save();
 
-            $patientRequest = new request_Client();
+            $patientRequest = new RequestClient();
             $patientRequest->request_id = $requestData->id;
             $patientRequest->first_name = $request->first_name;
             $patientRequest->last_name = $request->last_name;
@@ -106,11 +106,10 @@ class patientController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $requestData->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
-
-        }else{
+        } else {
 
             $requestData = new RequestTable();
             $requestData->user_id = $isEmailStored->id;
@@ -122,7 +121,7 @@ class patientController extends Controller
             $requestData->status = 1;
             $requestData->save();
 
-            $patientRequest = new request_Client();
+            $patientRequest = new RequestClient();
             $patientRequest->request_id = $requestData->id;
             $patientRequest->first_name = $request->first_name;
             $patientRequest->last_name = $request->last_name;
@@ -142,13 +141,12 @@ class patientController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $requestData->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
-
         }
 
-         // confirmation number
+        // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
 
@@ -161,7 +159,8 @@ class patientController extends Controller
 
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
-        if (!empty($requestData->id)) {
+        // if (!empty($requestData->id)) {
+        if ($requestData->id) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
 
@@ -169,7 +168,7 @@ class patientController extends Controller
             if ($isEmailStored == null) {
                 // send email
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,
@@ -192,6 +191,5 @@ class patientController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class sendEmailAddress extends Mailable
+class SendEmailAddress extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -17,7 +17,7 @@ class sendEmailAddress extends Mailable
      * Create a new message instance.
      */
 
-    public $emailAddress;
+    protected $emailAddress;
 
     public function __construct($email)
     {

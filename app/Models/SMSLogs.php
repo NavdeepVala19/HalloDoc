@@ -22,7 +22,7 @@ class SMSLogs extends Model
         'is_sms_sent',
         'sent_tries',
         'action',
-        'role_id'
+        'role_id',
     ];
 
 

@@ -8,7 +8,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-
 use Illuminate\Mail\Mailables\Address;
 
 class SendAgreement extends Mailable
@@ -18,7 +17,7 @@ class SendAgreement extends Mailable
     /**
      * Create a new message instance.
      */
-    public $data;
+    protected $data;
     public function __construct($data)
     {
         $this->data = $data;

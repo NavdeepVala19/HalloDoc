@@ -27,7 +27,7 @@ class Admin extends Model
 
     public function users()
     {
-        return $this->belongsTo(users::class, 'user_id','id');
+        return $this->belongsTo(Users::class, 'user_id', 'id');
     }
 
     public function RoleMenu(){

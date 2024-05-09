@@ -2,12 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
 class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
@@ -42,24 +39,14 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
             $street = null;
             $city = null;
             $state = null;
-            $PatientMobile = null;
+            $patientMobile = null;
 
             if (isset($adminConclude) && $adminConclude->requestClient) {
                 $patientName = $adminConclude->requestClient->first_name;
-            }
-            if (isset($adminConclude) && $adminConclude->requestClient) {
                 $dateOfBirth = $adminConclude->requestClient->date_of_birth;
-            }
-            if (isset($adminConclude) && $adminConclude->requestClient) {
-                $PatientMobile = $adminConclude->requestClient->phone_number;
-            }
-            if (isset($adminConclude) && $adminConclude->requestClient) {
+                $patientMobile = $adminConclude->requestClient->phone_number;
                 $street = $adminConclude->requestClient->street;
-            }
-            if (isset($adminConclude) && $adminConclude->requestClient) {
                 $city = $adminConclude->requestClient->city;
-            }
-            if (isset($adminConclude) && $adminConclude->requestClient) {
                 $state = $adminConclude->requestClient->state;
             }
 
@@ -68,7 +55,7 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
                 'Date of Birth' => $dateOfBirth,
                 'PhysicianName' => $adminConclude->provider->first_name . ' ' . $adminConclude->provider->last_name,
                 'RequestedDate' => $adminConclude->created_at,
-                'PatientMobile' => $PatientMobile,
+                'PatientMobile' => $patientMobile,
                 'RequestorMobile' => $adminConclude->phone_number,
                 'Address' => $street . ',' . $city . ',' . $state,
             ];

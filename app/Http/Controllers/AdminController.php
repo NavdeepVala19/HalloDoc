@@ -15,10 +15,10 @@ use App\Models\Role;
 use App\Models\Admin;
 use App\Models\Roles;
 use App\Models\Menu;
-use App\Models\users;
+use App\Models\Users;
 use App\Models\Regions;
 use App\Models\SMSLogs;
-use App\Models\allusers;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RoleMenu;
@@ -28,7 +28,7 @@ use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
 use App\Models\RequestTable;
 use App\Models\RequestStatus;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
 use App\Models\RequestConcierge;
@@ -50,7 +50,6 @@ use App\Exports\PendingStatusExport;
 use App\Exports\ToCloseStatusExport;
 use App\Exports\ConcludeStatusExport;
 
-
 class AdminController extends Controller
 {
     /*
@@ -64,17 +63,17 @@ class AdminController extends Controller
     |   3. Different category selection
     |   4. Search Term request
     */
-    const CATEGORY_PATIENT = 1;
-    const CATEGORY_FAMILY = 2;
-    const CATEGORY_CONCIERGE = 3;
-    const CATEGORY_BUSINESS = 4;
+    public const CATEGORY_PATIENT = 1;
+    public const CATEGORY_FAMILY = 2;
+    public const CATEGORY_CONCIERGE = 3;
+    public const CATEGORY_BUSINESS = 4;
 
-    const STATUS_NEW = 1;
-    const STATUS_PENDING = 3;
-    const STATUS_ACTIVE = [4, 5];
-    const STATUS_CONCLUDE = 6;
-    const STATUS_TOCLOSE = [2, 7, 11];
-    const STATUS_UNPAID = 9;
+    public const STATUS_NEW = 1;
+    public const STATUS_PENDING = 3;
+    public const STATUS_ACTIVE = [4, 5];
+    public const STATUS_CONCLUDE = 6;
+    public const STATUS_TOCLOSE = [2, 7, 11];
+    public const STATUS_UNPAID = 9;
 
     /**
      * Get category id from the name of category
@@ -119,9 +118,9 @@ class AdminController extends Controller
     }
 
     /**
-     *  Counts Total Number of cases for different status 
+     *  Counts Total Number of cases for different status
      *
-     * @return int[] total number of cases, as per the status.
+     * @return int array[] total number of cases, as per the status.
      */
     public function totalCasesCount()
     {
@@ -129,7 +128,7 @@ class AdminController extends Controller
         return [
             // unassigned case(Status = 1) -> assigned to provider but not accepted
             'newCase' => RequestTable::where('status', self::STATUS_NEW)->count(),
-            // pending state(Status = 3) -> Accepted by provider 
+            // pending state(Status = 3) -> Accepted by provider
             'pendingCase' => RequestTable::where('status', self::STATUS_PENDING)->count(),
             // Active State(Status = 4,5) -> MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider[HouseCall])
             'activeCase' => RequestTable::whereIn('status', self::STATUS_ACTIVE)->count(),
@@ -159,7 +158,6 @@ class AdminController extends Controller
             $query = RequestTable::with('requestClient')->where('status', $this->getStatusId($status));
         }
 
-
         // Filter by Category if not 'all'
         if ($category !== 'all') {
             $query->where('request_type_id', $this->getCategoryId($category));
@@ -169,16 +167,16 @@ class AdminController extends Controller
         if ($regionId !== 'all_regions') {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
             $query->whereHas('requestClient', function ($q) use ($regionName) {
-                $q->where('state', 'like', "%$regionName%");
+                $q->where('state', 'like', "%{$regionName}%");
             });
         }
 
         // Apply search condition
         if ($searchTerm) {
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%")
+                $query->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%")
                     ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
+                        $q->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%");
                     });
             });
         }
@@ -224,11 +222,10 @@ class AdminController extends Controller
     {
         // Forget from session whenever a new status is opened
         Session::forget(['searchTerm', 'category', 'regionId']);
-        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
+        if ($status === 'new' || $status === 'pending' || $status === 'active' || $status === 'conclude' || $status === 'toclose' || $status === 'unpaid') {
             return $this->cases($request, $status);
-        } else {
-            return view('errors.404');
         }
+        return view('errors.404');
     }
 
     /**
@@ -244,15 +241,10 @@ class AdminController extends Controller
         // Store category in the session
         $request->session()->put('category', $category);
 
-        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude' || $status == 'toclose' || $status == 'unpaid') {
-            if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
-                return $this->cases($request, $status, $category);
-            } else {
-                return view('errors.404');
-            }
-        } else {
-            return view('errors.404');
+        if ($status === 'new' || $status === 'pending' || $status === 'active' || $status === 'conclude' || $status === 'toclose' || $status === 'unpaid' && $category === 'all' || $category === 'patient' || $category === 'family' || $category === 'business' || $category === 'concierge') {
+            return $this->cases($request, $status, $category);
         }
+        return view('errors.404');
     }
 
     /**
@@ -279,16 +271,16 @@ class AdminController extends Controller
     | Admin Dashboard different functionality
     |   1. Send Link (sendMail)
     |   2. Create Request
-    |   3. Export 
-    |   4. Export All 
-    |   5. Request DTY Support 
+    |   3. Export
+    |   4. Export All
+    |   5. Request DTY Support
     */
 
     // -------------------- 1. Send Link (sendMail) -------------------
     /**
      * Send Mail to patient with link to create request page
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendMail(Request $request)
@@ -303,7 +295,7 @@ class AdminController extends Controller
         $firstname = $request->first_name;
         $lastname = $request->last_name;
 
-        // Route name 
+        // Route name
         $routeName = 'submitRequest';
 
         // Generate the link using route() helper (assuming route parameter is optional)
@@ -316,18 +308,18 @@ class AdminController extends Controller
         }
 
         try {
-            // send SMS 
+            // send SMS
             $sid = getenv("TWILIO_SID");
             $token = getenv("TWILIO_AUTH_TOKEN");
             $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
             $twilio = new Client($sid, $token);
 
-            $message = $twilio->messages
+            $twilio->messages
                 ->create(
                     "+91 99780 71802", // to
                     [
-                        "body" => "Hii $firstname $lastname, Click on the this link to create request:$link",
+                        "body" => "Hii {$firstname} {$lastname}, Click on the this link to create request:{$link}",
                         "from" =>  $senderNumber
                     ]
                 );
@@ -377,15 +369,15 @@ class AdminController extends Controller
     | Admin Dashboard Menu-bar pages functionality
     |   1. Provider Location
     |   2. My Profile
-    |   3. Providers 
+    |   3. Providers
     |       3.1 : Provider
     |       3.2 : Scheduling
     |   4. Partners
-    |   5. Access  
-    |       5.1 : User Access 
-    |       5.2 : Account Access 
-    |   6. Records  
-    |       6.1 : Search Records 
+    |   5. Access
+    |       5.1 : User Access
+    |       5.2 : Account Access
+    |   6. Records
+    |       6.1 : Search Records
     |       6.2 : Email Logs
     |       6.3 : SMS Logs
     |       6.4 : Patient Records
@@ -400,16 +392,16 @@ class AdminController extends Controller
     // Admin Scheduling -> Implementation and functionality is in Scheduling Controller
     // -------------------- 4. Partners -----------------------------
     /**
-     * Display Partners/Vendors page 
+     * Display Partners/Vendors page
      *
-     * @param int $id healthProfessionalType id to show selection on dropdown 
+     * @param int $id healthProfessionalType id to show selection on dropdown
      * @return \Illuminate\View\View partners page
      */
     public function viewPartners($id = null)
     {
         if ($id == null || $id == '0') {
             $vendors = HealthProfessional::with('healthProfessionalType')->orderByDesc('id')->paginate(10);
-        } else if ($id) {
+        } elseif ($id) {
             $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->orderByDesc('id')->paginate(10);
         }
         $professions = HealthProfessionalType::get();
@@ -423,7 +415,7 @@ class AdminController extends Controller
      *
      * Filtering partners based on healthProfessionalType or by search term query to search by business name
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\View\View partners page
      */
     public function searchPartners(Request $request)
@@ -435,13 +427,13 @@ class AdminController extends Controller
         $query = HealthProfessional::with('healthProfessionalType');
 
         if ($search) {
-            $query->where('vendor_name', 'like', "%$search%");
+            $query->where('vendor_name', 'like', "%{$search}%");
         }
 
-        if ($id != 0) {
+        if ($id !== 0) {
             $query->where('profession', $id);
             if ($search) {
-                $query->where('profession', $id)->where('vendor_name', 'like', "%$search%");
+                $query->where('profession', $id)->where('vendor_name', 'like', "%{$search}%");
             }
         }
 
@@ -463,7 +455,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Add Business entry in partners/vendors 
+     * Add Business entry in partners/vendors
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
@@ -596,13 +588,15 @@ class AdminController extends Controller
      */
     public function fetchRoles($id = null)
     {
-        if ($id == 0) {
+        if ($id === 0) {
             $menus = Menu::get();
             return response()->json($menus);
-        } else if ($id == 1) {
+        }
+        if ($id === 1) {
             $menus = Menu::where('account_type', 'Admin')->get();
             return response()->json($menus);
-        } else if ($id == 2) {
+        }
+        if ($id === 2) {
             $menus = Menu::where('account_type', 'Physician')->get();
             return response()->json($menus);
         }
@@ -621,13 +615,13 @@ class AdminController extends Controller
             'role' => 'required',
             'menu_checkbox' => 'required'
         ]);
-        if ($request->role_name == 1) {
+        if ($request->role_name === 1) {
             $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
-        } else if ($request->role_name == 2) {
+        } elseif ($request->role_name === 2) {
             $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'physician']);
         }
 
-        foreach ($request->input('menu_checkbox') as $key => $value) {
+        foreach ($request->input('menu_checkbox') as $value) {
             RoleMenu::create([
                 'role_id' => $roleId,
                 'menu_id' => $value
@@ -689,7 +683,7 @@ class AdminController extends Controller
 
         RoleMenu::where('role_id', $request->roleId)->delete();
 
-        foreach ($request->input('menu_checkbox') as $key => $value) {
+        foreach ($request->input('menu_checkbox') as $value) {
             RoleMenu::create([
                 'role_id' => $request->roleId,
                 'menu_id' => $value
@@ -749,12 +743,12 @@ class AdminController extends Controller
 
         // Filter based on created_date (exact match)
         if ($createdDate) {
-            $emails->where('created_at', 'Like',  "%$createdDate%");
+            $emails->where('created_at', 'Like', "%{$createdDate}%");
         }
 
         // Filter based on sent_date (exact match)
         if ($sentDate) {
-            $emails->where('sent_date', 'Like',  "%$sentDate%");
+            $emails->where('sent_date', 'Like', "%{$sentDate}%");
         }
 
         // Paginate results (10 items per page)
@@ -772,7 +766,7 @@ class AdminController extends Controller
      */
     public function patientHistoryView()
     {
-        $patients = request_Client::paginate(10);
+        $patients = RequestClient::paginate(10);
 
         return view('adminPage.records.patientHistory', compact('patients'));
     }
@@ -790,19 +784,19 @@ class AdminController extends Controller
         $email = $request->email;
         $phoneNumber = $request->phone_number;
 
-        $patients = request_Client::query();
+        $patients = RequestClient::query();
 
         if ($firstName) {
-            $patients->where('first_name', 'LIKE', "%$firstName%");
+            $patients->where('first_name', 'LIKE', "%{$firstName}%");
         }
         if ($lastName) {
-            $patients->where('last_name', 'LIKE', "%$lastName%");
+            $patients->where('last_name', 'LIKE', "%{$lastName}%");
         }
         if ($email) {
-            $patients->where('email', 'LIKE', "%$email%");
+            $patients->where('email', 'LIKE', "%{$email}%");
         }
         if ($phoneNumber) {
-            $patients->where('phone_number', 'LIKE', "%$phoneNumber%");
+            $patients->where('phone_number', 'LIKE', "%{$phoneNumber}%");
         }
 
         $patients = $patients->paginate(10);
@@ -820,16 +814,16 @@ class AdminController extends Controller
     {
         try {
             $id = Crypt::decrypt($id);
-            $email = request_Client::where('id', $id)->pluck('email')->first();
-            $data = request_Client::with(['request'])->where('email', $email)->get();
+            $email = RequestClient::where('id', $id)->pluck('email')->first();
+            $data = RequestClient::with(['request'])->where('email', $email)->get();
 
-            $requestId = request_Client::where('id', $id)->first()->request_id;
+            $requestId = RequestClient::where('id', $id)->first()->request_id;
             $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
             $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
 
             return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
         } catch (\Throwable $th) {
-            return view('errors.404');;
+            return view('errors.404');
         }
     }
 
@@ -848,7 +842,7 @@ class AdminController extends Controller
 
 
     /**
-     * list of  search records 
+     * list of  search records
      * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
      * physician note,admin note,patient note
      */
@@ -856,7 +850,7 @@ class AdminController extends Controller
     {
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
 
-        $combinedData = request_Client::distinct()->select([
+        $combinedData = RequestClient::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
             'request_client.id',
@@ -904,7 +898,7 @@ class AdminController extends Controller
 
         $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
 
-        $session = session([
+        session([
             'patient_name' => $request->patient_name,
             'from_date_of_service' => $request->from_date_of_service,
             'to_date_of_service' => $request->to_date_of_service,
@@ -913,13 +907,15 @@ class AdminController extends Controller
             'provider_name' => $request->provider_name,
         ]);
 
-        if (!empty($request->request_status)) {
+        // if (!empty($request->request_status)) {
+        if ($request->has('request_status')) {
             Session::put('request_status', $request->request_status);
         } else {
             Session::forget('request_status');
         }
 
-        if (!empty($request->request_type)) {
+        // if (!empty($request->request_type)) {
+        if ($request->has('request_type')) {
             Session::put('request_type', $request->request_type);
         } else {
             Session::forget('request_type');
@@ -941,7 +937,7 @@ class AdminController extends Controller
     {
         $todayDate = now();
 
-        $combinedData = request_Client::distinct()->select([
+        $combinedData = RequestClient::distinct()->select([
             'request_client.first_name',
             'request.request_type_id',
             'request_client.email',
@@ -967,32 +963,40 @@ class AdminController extends Controller
             ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
             ->orderByDesc('id');
 
-        if (!empty($request->patient_name)) {
-            // $combinedData = $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
+        // if (!empty($request->patient_name)) {
+        if ($request->patient_name) {
             $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
-        if (!empty($request->email)) {
+        // if (!empty($request->email)) {
+        if ($request->email) {
             $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
         }
-        if (!empty($request->phone_number)) {
+        // if (!empty($request->phone_number)) {
+        if ($request->phone_number) {
             $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
         }
-        if (!empty($request->request_type)) {
+        // if (!empty($request->request_type)) {
+        if ($request->request_type) {
             $combinedData->where('request.request_type_id', $request->request_type);
         }
-        if (!empty($request->provider_name)) {
+        // if (!empty($request->provider_name)) {
+        if ($request->provider_name) {
             $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
         }
-        if (!empty($request->request_status)) {
+        // if (!empty($request->request_status)) {
+        if ($request->request_status) {
             $combinedData->where('request.status', $request->request_status);
         }
-        if (!empty($request->from_date_of_service)) {
+        // if (!empty($request->from_date_of_service)) {
+        if ($request->from_date_of_service) {
             $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $todayDate]);
         }
-        if (!empty($request->to_date_of_service)) {
+        // if (!empty($request->to_date_of_service)) {
+        if ($request->to_date_of_service) {
             $combinedData->where('request_client.created_at', "<", $request->to_date_of_service);
         }
-        if (!empty($request->from_date_of_service) && !empty($request->to_date_of_service)) {
+        // if (!empty($request->from_date_of_service) && !empty($request->to_date_of_service)) {
+        if ($request->from_date_of_service && $request->to_date_of_service) {
             $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service,]);
         }
         return $combinedData;
@@ -1001,7 +1005,7 @@ class AdminController extends Controller
     /**
      *@param $request the input which is use to filter data in search records
 
-     * export data to excel 
+     * export data to excel
      */
 
     public function downloadFilteredData(Request $request)
@@ -1024,23 +1028,23 @@ class AdminController extends Controller
 
     public function deleteSearchRecordData($id)
     {
-        $getRequestId = request_Client::select('request_id')->where('id', $id)->first()->request_id;
+        $getRequestId = RequestClient::select('request_id')->where('id', $id)->first()->request_id;
 
-        $deleteDocuments = RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
-        $deleteRequestStatus = RequestStatus::where('request_id', $getRequestId)->forceDelete();
-        $deleteRequestBusiness = RequestBusiness::where('request_id', $getRequestId)->forceDelete();
-        $deleteRequestConcierge = RequestConcierge::where('request_id', $getRequestId)->forceDelete();
-        $deleteBlockData = BlockRequest::where('request_id', $getRequestId)->forceDelete();
-        $deleteRequestTableData = RequestTable::where('id', $getRequestId)->forceDelete();
-        $deleteData = request_Client::where('id', $id)->forceDelete();
+        RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
+        RequestStatus::where('request_id', $getRequestId)->forceDelete();
+        RequestBusiness::where('request_id', $getRequestId)->forceDelete();
+        RequestConcierge::where('request_id', $getRequestId)->forceDelete();
+        BlockRequest::where('request_id', $getRequestId)->forceDelete();
+        RequestTable::where('id', $getRequestId)->forceDelete();
+        RequestClient::where('id', $id)->forceDelete();
 
         return redirect()->back()->with('message', 'record is permanently delete');
     }
 
 
     /**
-     * listing of sms 
-     * 
+     * listing of sms
+     *
      * it list receipient name ,action,role_name,mobile,create_date,sent_date,confirmation_number,is_sent_sent_tries
      */
 
@@ -1065,24 +1069,29 @@ class AdminController extends Controller
 
         $sms = SMSLogs::select();
 
-        if (!empty($request->receiver_name)) {
+        // if (!empty($request->receiver_name)) {
+        if ($request->receiver_name) {
             $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
         }
-        if (!empty($request->phone_number)) {
+        // if (!empty($request->phone_number)) {
+        if ($request->phone_number) {
             $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
         }
-        if (!empty($request->created_date)) {
+        // if (!empty($request->created_date)) {
+        if ($request->created_date) {
             $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
         }
-        if (!empty($request->sent_date)) {
+        // if (!empty($request->sent_date)) {
+        if ($request->sent_date) {
             $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
         }
-        if (!empty($request->role_type)) {
+        // if (!empty($request->role_type)) {
+        if ($request->role_type) {
             $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
         }
         $sms = $sms->paginate($perPage, ['*'], 'page', $page);
 
-        $session = session(
+        session(
             [
                 'receiver_name' => $request->input('receiver_name'),
                 'phone_number' => $request->input('phone_number'),
@@ -1091,7 +1100,8 @@ class AdminController extends Controller
             ]
         );
 
-        if (!empty($request->role_type)) {
+        // if (!empty($request->role_type)) {
+        if ($request->role_type) {
             Session::put('role_type', $request->role_type);
         } else {
             Session::forget('role_type');
@@ -1101,11 +1111,11 @@ class AdminController extends Controller
     }
 
 
-    // *Block History 
+    // *Block History
 
     /**
      * List of block request
-     * 
+     *
      * it list patient name,mobile,email,created date and notes
      */
     public function blockHistoryView()
@@ -1146,21 +1156,25 @@ class AdminController extends Controller
         )
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
 
-        if (!empty($request->patient_name)) {
+        // if (!empty($request->patient_name)) {
+        if ($request->patient_name) {
             $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
-        if (!empty($request->email)) {
+        // if (!empty($request->email)) {
+        if ($request->email) {
             $blockData->where('block_request.email', "like", "%" . $request->email . "%");
         }
-        if (!empty($request->phone_number)) {
+        // if (!empty($request->phone_number)) {
+        if ($request->phone_number) {
             $blockData->where('block_request.phone_number', "like", "%" . $request->phone_number . "%");
         }
-        if (!empty($request->date)) {
+        // if (!empty($request->date)) {
+        if ($request->date) {
             $blockData->where('block_request.created_at', "like", "%" . $request->date . "%");
         }
         $blockData = $blockData->paginate(10);
 
-        $session = session([
+        session([
             'patient_name' => $request->patient_name,
             'date' => $request->date,
             'email' => $request->email,
@@ -1170,7 +1184,7 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-    // * Block history update isActive 
+    // * Block history update isActive
 
     /**
      *@param $request the input which is check or uncheck by admin
@@ -1193,20 +1207,20 @@ class AdminController extends Controller
      */
     public function unBlockPatientInBlockHistoryPage($id)
     {
-        $statusUpdateRequestTable = RequestTable::where('id', $id)->update(['status' => 1]);
-        $statusUpdateRequestStatus = RequestStatus::where('request_id', $id)->update(['status' => 1]);
+        RequestTable::where('id', $id)->update(['status' => 1]);
+        RequestStatus::where('request_id', $id)->update(['status' => 1]);
 
-        $unBlockData = BlockRequest::where('request_id', $id)->delete();
+        BlockRequest::where('request_id', $id)->delete();
         return redirect()->back()->with('message', 'patient is unblock');
     }
 
 
     /**
-    *listing of user access page
+     *listing of user access page
      */
     public function UserAccess()
     {
-        $userAccessData = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+        $userAccessData = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
             ->whereIn('user_roles.role_id', [1, 2])
@@ -1227,19 +1241,19 @@ class AdminController extends Controller
     {
         try {
             $id = Crypt::decrypt($id);
-            $UserAccessRoleName = Roles::select('name')
+            $userAccessRoleName = Roles::select('name')
                 ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
                 ->where('user_roles.user_id', $id)
                 ->get();
 
-            if ($UserAccessRoleName->first()->name == 'admin') {
+            if ($userAccessRoleName->first()->name === 'admin') {
                 return redirect()->route('edit.admin.profile', ['id' =>  Crypt::encrypt($id)]);
-            } else if ($UserAccessRoleName->first()->name == 'physician') {
+            } elseif ($userAccessRoleName->first()->name === 'physician') {
                 $getProviderId = Provider::where('user_id', $id);
                 return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
             }
         } catch (\Throwable $th) {
-            return view('errors.404');;
+            return view('errors.404');
         }
     }
 
@@ -1247,18 +1261,18 @@ class AdminController extends Controller
     // * ajax rendering in user access page
 
     /**
-     * filtering listing in user access page through ajax 
+     * filtering listing in user access page through ajax
      */
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
-        $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
+        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
 
-        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+        $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
             ->whereIn('user_roles.role_id', [1, 2]);
 
-        if (!empty($account) && isset($account)) {
+        if ($account) {
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
         }
         $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
@@ -1270,19 +1284,19 @@ class AdminController extends Controller
 
 
     /**
-      * same as above in mobile view
+     * same as above in mobile view
      */
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
 
-        $account = $request->selectedAccount == "all" ? '' : $request->selectedAccount;
+        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
 
-        $userAccessDataFiltering = allusers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
+        $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
             ->whereIn('user_roles.role_id', [1, 2]);
 
-        if (!empty($account) && isset($account)) {
+        if ($account) {
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
         }
         $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
@@ -1297,7 +1311,7 @@ class AdminController extends Controller
      *@param $request the input which is enter by user
 
      * send email to all unscheduled physician
-     */ 
+     */
     public function sendRequestSupport(Request $request)
     {
         $request->validate([
@@ -1333,9 +1347,8 @@ class AdminController extends Controller
         }
     }
 
-
     /**
-    *fetch region from region table and show in all region drop down button
+     *fetch region from region table and show in all region drop down button
      */
     
     public function fetchRegions()
@@ -1344,8 +1357,7 @@ class AdminController extends Controller
         return response()->json($fetchedRegions);
     }
 
-
-     /**
+    /**
      *displaying create admin account page
      */
     public function adminAccount()
@@ -1367,7 +1379,7 @@ class AdminController extends Controller
             'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'email' => 'required|email|min:2|max:40|unique:App\Models\Users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'confirm_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
             'address1' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9\s,_-]+?$/',
@@ -1381,7 +1393,7 @@ class AdminController extends Controller
 
         // Store Data in users table
 
-        $adminCredentialsData = new users();
+        $adminCredentialsData = new Users();
         $adminCredentialsData->username = $request->user_name;
         $adminCredentialsData->password = Hash::make($request->password);
         $adminCredentialsData->email = $request->email;
@@ -1414,19 +1426,14 @@ class AdminController extends Controller
             ]);
         }
 
-        $data = AdminRegion::where('admin_id', $storeAdminData->id)->pluck('id')->toArray();
-        $ids = implode(',', $data);
-
-
         // make entry in user_roles table to identify the user(whether it is admin or physician)
         $user_roles = new UserRoles();
         $user_roles->user_id = $adminCredentialsData->id;
         $user_roles->role_id = 1;
         $user_roles->save();
 
-
-        // store data in allusers table 
-        $adminAllUserData = new allusers();
+        // store data in allusers table
+        $adminAllUserData = new AllUsers();
         $adminAllUserData->user_id = $adminCredentialsData->id;
         $adminAllUserData->first_name = $request->first_name;
         $adminAllUserData->last_name = $request->last_name;
@@ -1441,7 +1448,7 @@ class AdminController extends Controller
         return redirect()->route('admin.user.access');
     }
 
-   
+
     /**
      *fetch state for admin account create through ajax
      */
@@ -1482,14 +1489,14 @@ class AdminController extends Controller
         // Apply search condition
         if ($searchTerm) {
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%")
+                $query->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%")
                     ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', "%$searchTerm%")->orWhere('last_name', 'like', "%$searchTerm%");
+                        $q->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%");
                     });
             });
         }
 
-        // Filter Regions 
+        // Filter Regions
         if ($region) {
             $query->whereHas('requestClient', function ($query) use ($region) {
                 $query->where('state', 'like', '%' . $region . '%');
@@ -1508,20 +1515,16 @@ class AdminController extends Controller
 
     public function filterPatientNew(Request $request)
     {
-        // Session::forget('regionId');
         $request->session()->put('regionId', $request->regionId);
 
         $status = $request->status;
-        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->session()->get('searchTerm', null);
-        // $search = $request->search_value;
-        // dd($search);
 
         $regionId = $request->session()->get('regionId');
 
 
-        if ($regionId == 'all_regions') {
+        if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1540,17 +1543,15 @@ class AdminController extends Controller
      */
     public function filterPatientPending(Request $request)
     {
-        // Session::forget('regionId');
         $request->session()->put('regionId', $request->regionId);
 
         $status = $request->status;
-        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
 
         $regionId = $request->session()->get('regionId');
 
-        if ($regionId == 'all_regions') {
+        if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1568,17 +1569,15 @@ class AdminController extends Controller
      */
     public function filterPatientActive(Request $request)
     {
-        // Session::forget('regionId');
         $request->session()->put('regionId', $request->regionId);
 
         $status = $request->status;
-        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
 
         $regionId = $request->session()->get('regionId');
 
-        if ($regionId == 'all_regions') {
+        if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1597,17 +1596,15 @@ class AdminController extends Controller
      */
     public function filterPatientConclude(Request $request)
     {
-        // Session::forget('regionId');
         $request->session()->put('regionId', $request->regionId);
 
         $status = $request->status;
-        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
 
         $regionId = $request->session()->get('regionId');
 
-        if ($regionId == 'all_regions') {
+        if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1626,17 +1623,15 @@ class AdminController extends Controller
      */
     public function filterPatientToClose(Request $request)
     {
-        // Session::forget('regionId');
         $request->session()->put('regionId', $request->regionId);
 
         $status = $request->status;
-        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
 
         $regionId = $request->session()->get('regionId');
 
-        if ($regionId == 'all_regions') {
+        if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1655,17 +1650,15 @@ class AdminController extends Controller
      */
     public function filterPatientUnpaid(Request $request)
     {
-        // Session::forget('regionId');
         $request->session()->put('regionId', $request->regionId);
 
         $status = $request->status;
-        // $regionId = $request->regionId;
         $category = $request->category_value;
         $search = $request->search_value;
 
         $regionId = $request->session()->get('regionId');
 
-        if ($regionId == 'all_regions') {
+        if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1693,7 +1686,7 @@ class AdminController extends Controller
 
         $regionId = $request->session()->get('regionId');
 
-        if ($region == "All Regions") {
+        if ($region === "All Regions") {
             $exportNewData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1739,7 +1732,7 @@ class AdminController extends Controller
         }
     }
 
-     /**
+    /**
      *@param $request which contains region_id,category,search_value
 
      * it export data to excel in admin active listing
@@ -1869,20 +1862,16 @@ class AdminController extends Controller
     // search cancel case in Cancel History Page
     public function searchCancelCase(Request $request)
     {
-        $name = $request->name;
-        $email = $request->email;
-        $date = $request->date;
-        $phone_number = $request->phone_number;
         $query = RequestStatus::where('status', 2);
 
         $query->whereHas('request', function ($query) use ($request) {
             $query->whereHas('requestClient', function ($clientQuery) use ($request) {
                 $clientQuery->where(function ($subQuery) use ($request) {
-                    $subQuery->where('first_name', 'LIKE', "%$request->name%")->orWhere('last_name', 'LIKE', "%$request->name%");
+                    $subQuery->where('first_name', 'LIKE', "%{$request->name}%")->orWhere('last_name', 'LIKE', "%{$request->name}%");
                 })->when($request->email, function ($query) use ($request) {
-                    return $query->where('email', 'LIKE', "%$request->email%");
+                    return $query->where('email', 'LIKE', "%{$request->email}%");
                 })->when($request->phone_number, function ($query) use ($request) {
-                    return $query->where('phone_number', 'LIKE', "%$request->phone_number%");
+                    return $query->where('phone_number', 'LIKE', "%{$request->phone_number}%");
                 })->when($request->date, function ($query) use ($request) {
                     return $query->where('request.updated_at', $request->date);
                 });

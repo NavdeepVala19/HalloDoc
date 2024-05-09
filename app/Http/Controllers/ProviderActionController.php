@@ -22,7 +22,7 @@ use App\Models\RequestWiseFile;
 use App\Models\HealthProfessional;
 use App\Models\HealthProfessionalType;
 
-class ProviderActionsController extends Controller
+class ProviderActionController extends Controller
 {
     /**
      * Accept Case by provider (case/request status will change to accepted)
@@ -114,7 +114,8 @@ class ProviderActionsController extends Controller
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
 
         // Update the existing note if found, otherwise create a new one
-        if (!empty($requestNote)) {
+        // if (!empty($requestNote)) {
+        if ($requestNote) {
             RequestNotes::where('request_id', $request->requestId)->update([
                 'physician_notes' => $request->physician_note,
             ]);
@@ -134,11 +135,10 @@ class ProviderActionsController extends Controller
     /**
      * View uploads associated with a particular request.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string|null $id
      * @return \Illuminate\View\View
      */
-    public function viewUpload(Request $request, $id = null)
+    public function viewUpload($id = null)
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -168,7 +168,7 @@ class ProviderActionsController extends Controller
         ]);
 
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-        $path = $request->file('document')->storeAs('public', $fileName);
+        $request->file('document')->storeAs('public', $fileName);
 
         $providerId = RequestTable::where('id', $id)->first()->physician_id;
 
@@ -202,18 +202,17 @@ class ProviderActionsController extends Controller
     /**
      * Display the view order page and show associated data.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string|null $id
      * @return \Illuminate\View\View
      */
-    public function viewOrder(Request $request, $id = null)
+    public function viewOrder($id = null)
     {
         try {
             $requestId = Crypt::decrypt($id);
 
             $data = RequestTable::where('id', $requestId)->first();
             $types = HealthProfessionalType::get();
-            return view('providerPage.pages.sendOrder',  compact('requestId', 'types', 'data'));
+            return view('providerPage.pages.sendOrder', compact('requestId', 'types', 'data'));
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -263,7 +262,8 @@ class ProviderActionsController extends Controller
                 'physician_id' => $providerId,
             ]);
             return redirect()->route('provider.status', ['status' => 'active']);
-        } else if ($request->consult == 1) {
+        }
+        if ($request->consult == 1) {
             RequestTable::where('id', $request->requestId)->update(['status' => 6, 'call_type' => 2]);
             RequestStatus::create([
                 'request_id' => $request->requestId,
@@ -295,11 +295,10 @@ class ProviderActionsController extends Controller
     /**
      * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string $id
      * @return \Illuminate\View\View
      */
-    public function encounterFormView(Request $request, $id = "null")
+    public function encounterFormView($id = "null")
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -393,7 +392,8 @@ class ProviderActionsController extends Controller
     public function encounterFinalized($id)
     {
         $data = MedicalReport::where('request_id', $id)->first();
-        if (empty($data)) {
+        // if (empty($data)) {
+        if (!$data) {
             return redirect()->back()->with('saveFormToFinalize', 'First Create and Save Form to Finalize it!')->withInput();
         }
         try {
@@ -419,7 +419,7 @@ class ProviderActionsController extends Controller
 
             return redirect()->route('provider.status', $status == 6 ? 'conclude' : 'active')->with('successMessage', "Form Finalized Successfully");
         } catch (\Throwable $th) {
-            dd($th);
+            return view('errors.500');
         }
     }
 
@@ -471,7 +471,8 @@ class ProviderActionsController extends Controller
     {
         $encounterForm = RequestWiseFile::where('request_id', $request->caseId)->where('is_finalize', true)->first();
 
-        if (empty($encounterForm)) {
+        // if (empty($encounterForm)) {
+        if (!$encounterForm) {
             return redirect()->back()->with('encounterFormRequired', 'Encounter Form need to be finalized to conclude Case!');
         }
 

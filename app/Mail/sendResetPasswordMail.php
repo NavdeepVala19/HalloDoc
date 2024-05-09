@@ -8,14 +8,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class sendResetPasswordMail extends Mailable
+class SendResetPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public $mail_items;
+    protected $mail_items;
 
     public function __construct(private $data)
     {
@@ -27,7 +27,6 @@ class sendResetPasswordMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        
         return new Envelope(
             subject: 'Send Reset Password Mail',
         );
@@ -38,7 +37,6 @@ class sendResetPasswordMail extends Mailable
      */
     public function content(): Content
     {
-
         return new Content(
             view: 'email.forgetPassword',
         );
@@ -51,7 +49,6 @@ class sendResetPasswordMail extends Mailable
      */
     public function attachments(): array
     {
-
         return [];
     }
 }

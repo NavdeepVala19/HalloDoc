@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\caseTag;
+use App\Models\CaseTag;
 
 class caseTagSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class caseTagSeeder extends Seeder
      */
     public function run(): void
     {
-        caseTag::insert([
+        CaseTag::insert([
             ['id' => 1, 'case_name' => 'Cost Issue'],
             ['id' => 2, 'case_name' => 'Inappropriate for service'],
             ['id' => 3, 'case_name' => 'Provider not available'],

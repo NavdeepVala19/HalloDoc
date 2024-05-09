@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(TwilioService::class, function ($app) {
+        $this->app->bind(TwilioService::class, function () {
             return new TwilioService();
         });
     }
@@ -24,6 +24,4 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
     }
-
-
 }

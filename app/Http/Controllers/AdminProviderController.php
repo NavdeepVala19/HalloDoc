@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactProvider;
+use App\Models\AllUsers;
+use App\Models\Users;
 use App\Models\Role;
-use App\Models\users;
 use App\Models\Regions;
 use App\Models\SMSLogs;
-use Twilio\Rest\Client;
-use App\Models\allusers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
 use App\Models\ShiftDetail;
-use Illuminate\Http\Request;
-use App\Mail\ContactProvider;
 use App\Models\PhysicianRegion;
-use App\Models\RequestWiseFile;
 use App\Models\PhysicianLocation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use Twilio\Rest\Client;
 
 class AdminProviderController extends Controller
 {
@@ -45,7 +44,6 @@ class AdminProviderController extends Controller
 
             return view('/adminPage/provider/adminProvider', compact('providersData', 'onCallPhysicianIds'));
         } catch (\Throwable $th) {
-            //throw $th;
             return view('errors.500');
         }
     }
@@ -72,13 +70,13 @@ class AdminProviderController extends Controller
             $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $data = view('/adminPage/provider/adminProviderFilterData')->with(['providersData'=> $providersData,'onCallPhysicianIds' => $onCallPhysicianIds])->render();
+        $data = view('/adminPage/provider/adminProviderFilterData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
 
 
     /**
-    * this functions perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
+     * this functions perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
      */
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
@@ -95,7 +93,7 @@ class AdminProviderController extends Controller
             $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData'=> $providersData,'onCallPhysicianIds' => $onCallPhysicianIds])->render();
+        $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
 
@@ -107,12 +105,10 @@ class AdminProviderController extends Controller
      *@param $request the input which is enter by user
      *@param  $id   id of selected provider
 
-     *this function perform send email and sms to provider 
+     *this function perform send email and sms to provider
      */
-
     public function sendMailToContactProvider(Request $request, $id)
     {
-       
         $request->validate([
             'contact_msg' => 'required|min:2|max:100',
         ]);
@@ -141,8 +137,7 @@ class AdminProviderController extends Controller
                     'email' => $receipientEmail,
                     'provider_id' => $receipientId,
                 ]);
-            } 
-            else if ($request->contact == "sms") {
+            } elseif ($request->contact == "sms") {
                 // send SMS
                 $sid = getenv("TWILIO_SID");
                 $token = getenv("TWILIO_AUTH_TOKEN");
@@ -150,11 +145,11 @@ class AdminProviderController extends Controller
 
                 $twilio = new Client($sid, $token);
 
-                $message = $twilio->messages
+                $twilio->messages
                     ->create(
                         "+91 99780 71802", // to
                         [
-                            "body" => "$enteredText",
+                            "body" => "{$enteredText}",
                             "from" => $senderNumber,
                         ]
                     );
@@ -173,8 +168,7 @@ class AdminProviderController extends Controller
                         'sms_template' => $enteredText,
                     ]
                 );
-            }
-             else if ($request->contact == "both") {
+            } elseif ($request->contact == "both") {
                 // send email
                 $providerData = Provider::get()->where('id', $request->provider_id);
                 Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -189,11 +183,11 @@ class AdminProviderController extends Controller
                     $token
                 );
 
-                $message = $twilio->messages
+                $twilio->messages
                     ->create(
                         "+91 99780 71802", // to
                         [
-                            "body" => "$enteredText",
+                            "body" => "{$enteredText}",
                             "from" => $senderNumber,
                         ]
                     );
@@ -228,17 +222,13 @@ class AdminProviderController extends Controller
         } catch (\Throwable $th) {
             return view('errors.500');
         }
-
-
     }
-
 
     /**
      *@param $request  $request have id of selected provider and value of check and uncheck of checkbox
 
      * this function perform stop notification through ajax 
      */
-
     public function stopNotifications(Request $request)
     {
         $stopNotification = Provider::find($request->stopNotificationsCheckId);
@@ -254,12 +244,9 @@ class AdminProviderController extends Controller
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
 
-
-
     /**
-       * this display create new provider account page
+     * this display create new provider account page
      */
-
     public function newProvider()
     {
         $regions = Regions::get();
@@ -279,7 +266,7 @@ class AdminProviderController extends Controller
             'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'email' => 'required|email|min:2|max:40|unique:App\Models\users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'email' => 'required|email|min:2|max:40|unique:App\Models\Users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
             'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
             'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
@@ -298,16 +285,13 @@ class AdminProviderController extends Controller
             'non_disclosure_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
         ]);
 
-
         // store data of providers in users table
-
-        $userProvider = new users();
+        $userProvider = new Users();
         $userProvider->username = $request->user_name;
         $userProvider->password = Hash::make($request->password);
         $userProvider->email = $request->email;
         $userProvider->phone_number = $request->phone_number;
         $userProvider->save();
-
 
         // store data of providers in providers table
         $providerData = new Provider();
@@ -332,7 +316,6 @@ class AdminProviderController extends Controller
         $providerData->save();
 
         // store region in physician_region table
-        $physicianRegion = new PhysicianRegion();
         foreach ($request->region_id as $region) {
             PhysicianRegion::create([
                 'provider_id' => $providerData->id,
@@ -340,19 +323,14 @@ class AdminProviderController extends Controller
             ]);
         }
 
-        $data = PhysicianRegion::where('provider_id', $providerData->id)->pluck('id')->toArray();
-        $ids = implode(',', $data);
-
-
         // make entry in user_roles table to identify the user(whether it is admin or physician)
         $user_roles = new UserRoles();
         $user_roles->user_id = $userProvider->id;
         $user_roles->role_id = 2;
         $user_roles->save();
 
-
         // store data in allusers table
-        $providerAllUsers = new allusers();
+        $providerAllUsers = new AllUsers();
         $providerAllUsers->user_id = $userProvider->id;
         $providerAllUsers->first_name = $request->first_name;
         $providerAllUsers->last_name = $request->last_name;
@@ -364,13 +342,10 @@ class AdminProviderController extends Controller
         $providerAllUsers->status = 'pending';
         $providerAllUsers->save();
 
-
-
-        // store documents in local storage 
-
+        // store documents in local storage
         if (isset($request->provider_photo)) {
             $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
-            $path = $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
+            $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
             $providerData->save();
         }
 
@@ -378,8 +353,8 @@ class AdminProviderController extends Controller
             $providerData->IsAgreementDoc = 1;
 
             $file = $request->file('independent_contractor');
-            $filename = $providerData->id . '_ICA' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $providerData->id . '_ICA.pdf';
+            $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
@@ -387,8 +362,8 @@ class AdminProviderController extends Controller
             $providerData->IsBackgroundDoc = 1;
 
             $file = $request->file('background_doc');
-            $filename = $providerData->id . '_BC' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $providerData->id . '_BC.pdf';
+            $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
@@ -396,8 +371,8 @@ class AdminProviderController extends Controller
             $providerData->IsTrainingDoc = 1;
 
             $file = $request->file('hipaa_docs');
-            $filename = $providerData->id . '_HCA' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $providerData->id . '_HCA.pdf';
+            $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
@@ -405,20 +380,18 @@ class AdminProviderController extends Controller
             $providerData->IsNonDisclosureDoc = 1;
 
             $file = $request->file('non_disclosure_doc');
-            $filename = $providerData->id . '_NDD' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $providerData->id . '_NDD.pdf';
+            $file->storeAs('public/provider', $filename);
             $providerData->save();
         }
 
         return redirect()->route('admin.providers.list')->with('message', 'account is created');
     }
 
-
-
     /**
      *@param $id   id of provider table
 
-     * this display edit provider page 
+     * this display edit provider page
      */
     public function editProvider($id)
     {
@@ -435,7 +408,7 @@ class AdminProviderController extends Controller
      *@param $request the input which is enter by user
      *@param $id id of selected provider
 
-     * it update password and username in users table 
+     * it update password and username in users table
      * it update role and status in provider table
      * and also update status in allusers table
      */
@@ -443,18 +416,18 @@ class AdminProviderController extends Controller
     {
         // update data of providers in users table
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
-        $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider->first()->user_id)->first();
+        $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider->first()->user_id)->first();
 
-
-        if (!empty($request->password)) {
+        // if (!empty($request->password)) {
+        if ($request->password) {
             $request->validate([
-            'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
+                'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             ]);
             $updateProviderInfoUsers->password = Hash::make($request->password);
             $updateProviderInfoUsers->save();
         } else {
-             $request->validate([
-            'user_name' => 'required|alpha|min:3|max:40',
+            $request->validate([
+                'user_name' => 'required|alpha|min:3|max:40',
             ]);
 
             $updateProviderInfoUsers->username = $request->user_name;
@@ -466,8 +439,9 @@ class AdminProviderController extends Controller
             $getProviderData->role_id = $request->role;
             $getProviderData->save();
 
-            $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
-            if (!empty($updateProviderDataAllUsers)) {
+            $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
+            // if (!empty($updateProviderDataAllUsers)) {
+            if ($updateProviderDataAllUsers) {
                 $updateProviderDataAllUsers->status = $request->status_type;
                 $updateProviderDataAllUsers->save();
             }
@@ -478,7 +452,7 @@ class AdminProviderController extends Controller
 
     /**
      *@param $request the input which is enter by user
-     *@param  $id  id of provider 
+     *@param  $id  id of provider
 
      * update firstname,lastname,email,mobile,medical license and npi number in provider table
      * update firstname,lastname,email,mobile in allusers table
@@ -494,7 +468,7 @@ class AdminProviderController extends Controller
             'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
             'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
         ]);
-        
+
         $getProviderInformation = Provider::where('id', $id)->first();
 
         $getProviderInformation->first_name = $request->first_name;
@@ -508,17 +482,17 @@ class AdminProviderController extends Controller
         // update data in allusers table
 
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
-    
+
         // update data in users table
-        $updateProviderInfoUsers = users::where('id', $getUserIdFromProvider)->first();
+        $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider)->first();
         $updateProviderInfoUsers->email = $request->email;
         $updateProviderInfoUsers->phone_number = $request->phone_number;
         $updateProviderInfoUsers->save();
 
-        $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
+        $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
 
-        if (empty($updateProviderDataAllUsers))
-        {
+        if (!$updateProviderDataAllUsers) {
+            dd('here');
             return back()->with('message', 'Physician information is updated');
         } else {
             $updateProviderDataAllUsers->first_name = $request->first_name;
@@ -528,7 +502,6 @@ class AdminProviderController extends Controller
             $updateProviderDataAllUsers->save();
         }
         return back()->with('message', 'Physician information is updated');
-        
     }
 
 
@@ -562,10 +535,10 @@ class AdminProviderController extends Controller
 
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
 
+        $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
         if (empty($updateProviderDataAllUsers)) {
             return back()->with('message', 'Mailing and Billing information is updated');
         } else {
-            $updateProviderDataAllUsers = allusers::where('user_id', $getUserIdFromProvider)->first();
             $updateProviderDataAllUsers->street = $request->address1;
             $updateProviderDataAllUsers->city = $request->city;
             $updateProviderDataAllUsers->zipcode = $request->zip;
@@ -599,7 +572,7 @@ class AdminProviderController extends Controller
 
         if (isset($request->provider_photo)) {
             $getProviderInformation->photo = $request->file('provider_photo')->getClientOriginalName();
-            $path = $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
+            $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
             $getProviderInformation->save();
         }
 
@@ -608,18 +581,14 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Provider Profile information is updated');
     }
 
-
-
-
     /**
      *@param $request the input which is enter by user
 
      * update onboarding document in local storage
      */
-
     public function providerDocumentsUpdate(Request $request, $id)
     {
-          $request->validate([
+        $request->validate([
             'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'background_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
             'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
@@ -627,36 +596,36 @@ class AdminProviderController extends Controller
         ]);
 
         $getProviderInformation = Provider::where('id', $id)->first();
-    
+
         if (isset($request->independent_contractor)) {
             $getProviderInformation->IsAgreementDoc = 1;
             $file = $request->file('independent_contractor');
-            $filename = $getProviderInformation->id . '_ICA' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $getProviderInformation->id . '_ICA.pdf';
+            $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
 
         if (isset($request->background_doc)) {
             $getProviderInformation->IsBackgroundDoc = 1;
             $file = $request->file('background_doc');
-            $filename = $getProviderInformation->id . '_BC' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $getProviderInformation->id . '_BC.pdf';
+            $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
 
         if (isset($request->hipaa_docs)) {
             $getProviderInformation->IsTrainingDoc = 1;
             $file = $request->file('hipaa_docs');
-            $filename = $getProviderInformation->id . '_HCA' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $getProviderInformation->id . '_HCA.pdf';
+            $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
 
         if (isset($request->non_disclosure_doc)) {
             $getProviderInformation->IsNonDisclosureDoc = 1;
             $file = $request->file('non_disclosure_doc');
-            $filename = $getProviderInformation->id . '_NDD' . '.' . "pdf";
-            $path = $file->storeAs('public/provider', $filename);
+            $filename = $getProviderInformation->id . '_NDD.pdf';
+            $file->storeAs('public/provider', $filename);
             $getProviderInformation->save();
         }
 
@@ -673,32 +642,25 @@ class AdminProviderController extends Controller
     public function deleteProviderAccount($id)
     {
         // soft delete in providers table
-        $ProviderInfo = Provider::with('users')->where('id', $id)->first();
-        
-        //Soft delete in allusers table
-        $providerDataAllUserDelete = allusers::where('user_id', $ProviderInfo->user_id)->first();
-        $deletePhysicianRegion = PhysicianRegion::where('provider_id', $id)->first();
-        $deletePhysicianRegion->delete();
-        $providerDataAllUserDelete->delete();
-        $ProviderInfo->delete();
+        $providerInfo = Provider::with('users')->where('id', $id)->first();
 
+        //Soft delete in allusers table
+        AllUsers::where('user_id', $providerInfo->user_id)->delete();
+        PhysicianRegion::where('provider_id', $id)->delete();
+        Users::where('id', $providerInfo->user_id)->delete();
 
 
         return redirect()->route('admin.providers.list')->with('message', 'account is deleted');
     }
 
-
-
     /**
      * fetch role name from role table and display through ajax
      */
-
     public function fetchRolesName()
     {
         $fetchRoleName = Role::select('id', 'name')->where('account_type', 'physician')->get();
         return response()->json($fetchRoleName);
     }
-
 
     // Show Provider Location
     public function providerLocations()

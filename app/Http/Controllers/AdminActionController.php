@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-
+use App\Models\BlockRequest;
 use App\Models\Orders;
-use App\Models\caseTag;
+use App\Models\CaseTag;
 use App\Models\Regions;
 use App\Models\Provider;
-use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use App\Models\MedicalReport;
 use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-use App\Models\request_Client;
-use App\Models\PhysicianRegion;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
+use App\Models\PhysicianRegion;
 use App\Models\HealthProfessional;
 use App\Models\HealthProfessionalType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
-class AdminActionsController extends Controller
+class AdminActionController extends Controller
 {
     /**
      * Assign case - All physician Regions
@@ -48,7 +47,7 @@ class AdminActionsController extends Controller
     }
 
     /**
-     * AJAX call for (Remaining) Physician for listing in dropdown selection 
+     * AJAX call for (Remaining) Physician for listing in dropdown selection
      *
      * @param  int  $requestId
      * @param  int  $regionId
@@ -125,7 +124,7 @@ class AdminActionsController extends Controller
      */
     public function cancelCaseOptions()
     {
-        $reasons = caseTag::all();
+        $reasons = CaseTag::all();
         return response()->json($reasons);
     }
 
@@ -167,7 +166,7 @@ class AdminActionsController extends Controller
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
-        $client = request_Client::where('request_id', $request->requestId)->first();
+        $client = RequestClient::where('request_id', $request->requestId)->first();
         BlockRequest::create([
             'request_id' => $request->requestId,
             'reason' => $request->block_reason,
@@ -196,12 +195,9 @@ class AdminActionsController extends Controller
         try {
             $requestId = Crypt::decrypt($id);
             $data = RequestTable::where('id', $requestId)->first();
-            if (empty($data)) {
-                return redirect()->back()->with('wrongCase', "Case doesn't exist");
-            }
+
             return view('adminPage.pages.viewCase', compact('data'));
         } catch (\Throwable $th) {
-            //throw $th;
             return view('errors.404');
         }
     }
@@ -231,7 +227,7 @@ class AdminActionsController extends Controller
             'last_name' => $lastName,
         ]);
 
-        request_Client::where('request_id', $request->requestId)->update([
+        RequestClient::where('request_id', $request->requestId)->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
             'date_of_birth' => $dateOfBirth,
@@ -276,7 +272,8 @@ class AdminActionsController extends Controller
             'admin_note' => 'required||min:5|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
-        if (!empty($requestNote)) {
+        // if (!empty($requestNote)) {
+        if ($requestNote) {
             RequestNotes::where('request_id', $request->requestId)->update([
                 'admin_notes' => $request->admin_note,
             ]);
@@ -327,7 +324,8 @@ class AdminActionsController extends Controller
         ]);
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
 
-        $path = $request->file('document')->storeAs('public', $fileName);
+        $request->file('document')->storeAs('public', $fileName);
+
         RequestWiseFile::create([
             'request_id' => $id,
             'file_name' => $fileName,
@@ -340,11 +338,10 @@ class AdminActionsController extends Controller
     /**
      * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $id
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function encounterFormView(Request $request, $id = "null")
+    public function encounterFormView($id = "null")
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -450,11 +447,10 @@ class AdminActionsController extends Controller
     /**
      * Show Close Case Page with Details.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $id
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function closeCase(Request $request, $id = null)
+    public function closeCase($id = null)
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -476,16 +472,16 @@ class AdminActionsController extends Controller
      */
     public function closeCaseData(Request $request)
     {
-        if ($request->input('closeCaseBtn') == 'Save') {
+        if ($request->input('closeCaseBtn') === 'Save') {
             $request->validate([
                 'phone_number' => 'required',
                 'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
             ]);
-            request_Client::where('request_id', $request->requestId)->update([
+            RequestClient::where('request_id', $request->requestId)->update([
                 'phone_number' => $request->phone_number,
                 'email' => $request->email
             ]);
-        } else if ($request->input('closeCaseBtn') == 'Close Case') {
+        } elseif ($request->input('closeCaseBtn') === 'Close Case') {
             $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
             RequestTable::where('id', $request->requestId)->update(['status' => 9]);
             RequestStatus::create([
@@ -548,7 +544,7 @@ class AdminActionsController extends Controller
 
         $status = RequestTable::where('id', $request->requestId)->first()->status;
 
-        return redirect()->route('admin.status', $status == 4 || $status == 5 ? 'active' : ($status == 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
+        return redirect()->route('admin.status', $status === 4 || $status === 5 ? 'active' : ($status === 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
     }
 
     /**
@@ -561,7 +557,7 @@ class AdminActionsController extends Controller
     {
         $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first()->file_name;
 
-        $path = (storage_path() . '/app/encounterForm/' . $encounterFile);
-        return  response()->download($path);
+        $path = storage_path() . '/app/encounterForm/' . $encounterFile;
+        return response()->download($path);
     }
 }

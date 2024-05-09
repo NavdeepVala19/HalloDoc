@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\RequestClient;
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\request_Client;
-use App\Models\Status;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RequestTable extends Model
@@ -41,19 +41,18 @@ class RequestTable extends Model
         'case_tag_physician',
         'patient_account_id',
         'created_user_id',
-        'created_at'
+        'created_at',
     ];
 
     public function allusers()
     {
-        return $this->belongsTo(allusers::class);
+        return $this->belongsTo(AllUsers::class);
     }
 
     // Making relationship with requestClient table
     public function requestClient()
     {
-        // return $this->belongsTo(request_Client::class);
-        return $this->hasOne(request_Client::class, 'request_id');
+        return $this->hasOne(RequestClient::class, 'request_id');
     }
 
     public function requestStatus()
@@ -65,11 +64,6 @@ class RequestTable extends Model
     {
         return $this->hasOne(RequestStatus::class, 'request_id')->where('status', 6)->orderBy('id', 'desc');
     }
-
-    // public function status()
-    // {
-    //     return $this->belongsTo(RequestStatus::class);
-    // }
 
     public function status()
     {

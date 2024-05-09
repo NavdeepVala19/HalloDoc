@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\UserRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class allusers extends Model
+class AllUsers extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -29,18 +29,17 @@ class allusers extends Model
         'int_year',
         'int_date',
         'region_id',
-        'user_id'
+        'user_id',
     ];
 
 
     public function users()
     {
-        return $this->belongsTo(users::class);
+        return $this->belongsTo(Users::class);
     }
 
     public function request()
     {
-        // return $this->hasMany(request::class);
         return $this->hasMany('App\Model\request', 'user_id', 'user_id');
     }
 
@@ -52,6 +51,6 @@ class allusers extends Model
 
     public function provider()
     {
-        return $this->belongsTo(allusers::class, 'user_id', 'user_id');
+        return $this->belongsTo(AllUsers::class, 'user_id', 'user_id');
     }
 }

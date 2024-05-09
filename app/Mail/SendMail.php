@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -19,10 +18,10 @@ class SendMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $data;
+    protected $data;
     public function __construct($data)
     {
-        $this->data = $data; 
+        $this->data = $data;
     }
 
     /**

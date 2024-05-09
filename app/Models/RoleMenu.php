@@ -13,8 +13,8 @@ class RoleMenu extends Model
     protected $guarded = [];
 
 
-    public function Menu(){
+    public function Menu()
+    {
         return $this->belongsTo(Menu::class, 'menu_id', 'id');
     }
-    
 }

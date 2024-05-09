@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class checkProviderLogin
+class CheckProviderLogin
 {
     /**
      * Handle an incoming request.
@@ -20,10 +20,8 @@ class checkProviderLogin
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
-            if ($roleId == 2) {
+            if ($roleId === 2) {
                 return $next($request);
-            } else {
-                return redirect()->route('login');
             }
         }
         return redirect()->route('login');

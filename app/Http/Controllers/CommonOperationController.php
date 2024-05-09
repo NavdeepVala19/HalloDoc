@@ -2,34 +2,32 @@
 
 namespace App\Http\Controllers;
 
-// For Sending SMS & Email
-use Twilio\Rest\Client;
-use Illuminate\Support\Facades\Mail;
-
-use ZipArchive;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\Admin;
-use App\Models\SMSLogs;
 use App\Models\EmailLog;
+use App\Models\SMSLogs;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
 use App\Models\RequestTable;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
 use App\Mail\DocsAttachmentMail;
 use App\Mail\SendMailPatient;
 use App\Models\HealthProfessional;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Twilio\Rest\Client;
+use ZipArchive;
+
 
 class CommonOperationController extends Controller
 {
     /**
      * Download any sinlge file function
      *
-     * @param int $id id of document/image to be downloaded 
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse 
+     * @param int $id id of document/image to be downloaded
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($id = null)
     {
@@ -40,7 +38,7 @@ class CommonOperationController extends Controller
                 $path = storage_path('app/encounterForm/' . $file->file_name);
             } else {
                 // Generate the file path
-                $path = (public_path() . '/storage/' . $file->file_name);
+                $path = public_path() . '/storage/' . $file->file_name;
             }
 
             return response()->download($path);
@@ -70,10 +68,11 @@ class CommonOperationController extends Controller
      */
     public function operations(Request $request)
     {
-        $email = request_Client::where('request_id', $request->requestId)->first()->email;
+        $email = RequestClient::where('request_id', $request->requestId)->first()->email;
         // Delete All Documents or Delete the selected documents
-        if ($request->input('operation') == 'delete_all') {
-            if (empty($request->input('selected'))) {
+        if ($request->input('operation') === 'delete_all') {
+            // if (empty($request->input('selected'))) {
+            if (!$request->selected) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
@@ -85,9 +84,11 @@ class CommonOperationController extends Controller
             RequestWiseFile::whereIn('id', $ids)->delete();
 
             return redirect()->back();
-        } else if ($request->input('operation') == 'download_all') {
+        }
+        if ($request->input('operation') === 'download_all') {
             // Download All Documents or Download the selected documents
-            if (empty($request->input('selected'))) {
+            // if (empty($request->input('selected'))) {
+            if (!$request->selected) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to download!');
@@ -97,20 +98,21 @@ class CommonOperationController extends Controller
                 $ids = $request->input('selected');
             }
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
             $zipFile = uniqid() . "-" . 'documents.zip';
 
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
                     $file = RequestWiseFile::where('id', $id)->first();
-                    $path = (public_path() . '/storage/' . $file->file_name);
+                    $path = public_path() . '/storage/' . $file->file_name;
 
                     $zip->addFile($path, $file->file_name);
                 }
                 $zip->close();
             }
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
-        } else if ($request->input('operation') == 'send_mail') {
+        }
+        if ($request->input('operation') === 'send_mail') {
             // Send Mail of Selected Documents as attachment
             $data = RequestWiseFile::where('request_id', $request->requestId)->get();
             if ($data->isEmpty()) {
@@ -125,13 +127,13 @@ class CommonOperationController extends Controller
 
             $ids = $request->input('selected');
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
             $zipFile =  uniqid() . $email . '.zip';
 
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === TRUE) {
+            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
                     $file = RequestWiseFile::where('id', $id)->first();
-                    $path = (public_path() . '/storage/' . $file->file_name);
+                    $path = public_path() . '/storage/' . $file->file_name;
 
                     $zip->addFile($path, $file->file_name);
                 }
@@ -172,7 +174,7 @@ class CommonOperationController extends Controller
      */
     public function sendMailPatient(Request $request)
     {
-        $requestClient = request_Client::where('request_id', $request->requestId)->first();
+        $requestClient = RequestClient::where('request_id', $request->requestId)->first();
         try {
 
             $user = Auth::user();
@@ -220,7 +222,7 @@ class CommonOperationController extends Controller
     /**
      * Provider/Admin Send Agreement Link to Patient from Pending State
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendAgreementLink(Request $request)
@@ -288,14 +290,14 @@ class CommonOperationController extends Controller
         }
 
         try {
-            // send SMS 
+            // send SMS
             $sid = getenv("TWILIO_SID");
             $token = getenv("TWILIO_AUTH_TOKEN");
             $senderNumber = getenv("TWILIO_PHONE_NUMBER");
 
             $twilio = new Client($sid, $token);
 
-            $message = $twilio->messages
+            $twilio->messages
                 ->create(
                     "+91 99780 71802", // to
                     [
@@ -314,11 +316,10 @@ class CommonOperationController extends Controller
     /**
      * Fetch business values (health_professional values) based on the profession selected.
      *
-     * @param \Illuminate\Http\Request $request The HTTP request.
      * @param int $id The ID of the selected profession.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function fetchBusiness(Request $request, $id)
+    public function fetchBusiness($id)
     {
         $business = HealthProfessional::where('profession', $id)->get();
         return response()->json($business);

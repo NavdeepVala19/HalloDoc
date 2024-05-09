@@ -2,34 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\users;
-use App\Models\Orders;
-use App\Models\allusers;
+use App\Mail\SendEmailAddress;
+use App\Models\AllUsers;
 use App\Models\Business;
 use App\Models\EmailLog;
-use App\Models\UserRoles;
-use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\RequestStatus;
-use App\Mail\sendEmailAddress;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use App\Models\RequestBusiness;
+use App\Models\Users;
+use App\Models\UserRoles;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-// use App\Models\User;
 
 // this controller is responsible for creating/storing the business request
-
-
 class businessRequestController extends Controller
 {
   public function businessRequests()
   {
     return view('patientSite/businessRequest');
   }
-  
+
 
   /**
    *@param $request the input which is enter by user
@@ -60,19 +54,18 @@ class businessRequestController extends Controller
       'room' => 'nullable|min:0|max:1000'
     ]);
 
-
-    $isEmailStored = users::where('email', $request->email)->first();
+    $isEmailStored = Users::where('email', $request->email)->first();
 
     if ($isEmailStored == null) {
       // store email and phoneNumber in users table
-      $requestEmail = new users();
+      $requestEmail = new Users();
       $requestEmail->username = $request->first_name . " " . $request->last_name;
       $requestEmail->email = $request->email;
       $requestEmail->phone_number = $request->phone_number;
       $requestEmail->save();
 
       // store all details of patient in allUsers table
-      $requestUsers = new allusers();
+      $requestUsers = new AllUsers();
       $requestUsers->user_id = $requestEmail->id;
       $requestUsers->first_name = $request->first_name;
       $requestUsers->last_name = $request->last_name;
@@ -102,7 +95,6 @@ class businessRequestController extends Controller
       $requestBusiness->save();
 
       // business data store in business field
-
       $business = new Business();
       $business->phone_number = $request->business_mobile;
       $business->address1 = $request->street;
@@ -112,8 +104,7 @@ class businessRequestController extends Controller
       $business->save();
 
       //business request store in request table
-
-      $patientRequest = new request_Client();
+      $patientRequest = new RequestClient();
       $patientRequest->request_id = $requestBusiness->id;
       $patientRequest->first_name = $request->first_name;
       $patientRequest->last_name = $request->last_name;
@@ -128,13 +119,12 @@ class businessRequestController extends Controller
       $patientRequest->notes = $request->symptoms;
       $patientRequest->save();
 
-
-      // store data in request business table 
+      // store data in request business table
       $businessRequest = new RequestBusiness();
       $businessRequest->request_id = $requestBusiness->id;
       $businessRequest->business_id = $business->id;
       $businessRequest->save();
-    }else{
+    } else {
       $requestBusiness = new RequestTable();
       $requestBusiness->status = 1;
       $requestBusiness->user_id = $isEmailStored->id;
@@ -148,7 +138,6 @@ class businessRequestController extends Controller
       $requestBusiness->save();
 
       // business data store in business field
-
       $business = new Business();
       $business->phone_number = $request->business_mobile;
       $business->address1 = $request->street;
@@ -158,8 +147,7 @@ class businessRequestController extends Controller
       $business->save();
 
       //business request store in request table
-
-      $patientRequest = new request_Client();
+      $patientRequest = new RequestClient();
       $patientRequest->request_id = $requestBusiness->id;
       $patientRequest->first_name = $request->first_name;
       $patientRequest->last_name = $request->last_name;
@@ -174,21 +162,19 @@ class businessRequestController extends Controller
       $patientRequest->notes = $request->symptoms;
       $patientRequest->save();
 
-
-      // store data in request business table 
+      // store data in request business table
       $businessRequest = new RequestBusiness();
       $businessRequest->request_id = $requestBusiness->id;
       $businessRequest->business_id = $business->id;
       $businessRequest->save();
     }
 
-   // confirmation number
+    // confirmation number
     $currentTime = Carbon::now();
     $currentDate = $currentTime->format('Y');
 
     $todayDate = $currentTime->format('Y-m-d');
     $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
 
     $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
     $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
@@ -196,7 +182,8 @@ class businessRequestController extends Controller
 
     $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
-    if (!empty($requestBusiness->id)) {
+    // if (!empty($requestBusiness->id)) {
+    if ($requestBusiness->id) {
       $requestBusiness->update(['confirmation_no' => $confirmationNumber]);
     }
 
@@ -204,14 +191,13 @@ class businessRequestController extends Controller
       if ($isEmailStored == null) {
         // send email
         $emailAddress = $request->email;
-        Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+        Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
 
         EmailLog::create([
           'request_id' => $requestBusiness->id,
           'confirmation_number' => $confirmationNumber,
           'role_id' => 3,
-          'recipient_name' =>
-          $request->first_name . ' ' . $request->last_name,
+          'recipient_name' => $request->first_name . ' ' . $request->last_name,
           'is_email_sent' => 1,
           'sent_tries' => 1,
           'create_date' => now(),
@@ -221,6 +207,7 @@ class businessRequestController extends Controller
           'email' => $request->email,
           'action' => 5,
         ]);
+
         return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
       } else {
         return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
@@ -228,7 +215,5 @@ class businessRequestController extends Controller
     } catch (\Throwable $th) {
       return view('errors.500');
     }
-
-
   }
 }

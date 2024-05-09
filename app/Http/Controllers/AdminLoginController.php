@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\users;
 use App\Models\Provider;
-use App\Models\UserRoles;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\PhysicianLocation;
+use App\Models\UserRoles;
+use App\Models\Users;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class AdminLoginController extends Controller
 {
@@ -57,11 +57,13 @@ class AdminLoginController extends Controller
                 ]);
             }
 
+            if ($userRolesData->role_id == 1) {
+                return redirect()->route('admin.dashboard');
+            }
             if ($userRolesData->role_id == 2) {
                 return redirect()->route('provider.dashboard');
-            } else if ($userRolesData->role_id == 1) {
-                return redirect()->route('admin.dashboard');
-            } else if ($userRolesData->role_id == 3) {
+            }
+            if ($userRolesData->role_id == 3) {
                 return back()->with('error', 'invalid credentials');
             }
         } else {
@@ -69,7 +71,7 @@ class AdminLoginController extends Controller
         }
     }
 
- 
+
     /**
      * show password reset form
      */
@@ -82,7 +84,7 @@ class AdminLoginController extends Controller
     /**
      *@param $request user input email
 
-     * send email to entered email if email not exist it shows error message 
+     * send email to entered email if email not exist it shows error message
      */
 
     public function submitForgetPasswordForm(Request $request)
@@ -91,7 +93,7 @@ class AdminLoginController extends Controller
             'email' => 'required|email',
         ]);
 
-        $user = users::where('email', $request->email)->first();
+        $user = Users::where('email', $request->email)->first();
 
         $userRolesData = UserRoles::where('user_id', $user->id)->first();
 
@@ -120,8 +122,8 @@ class AdminLoginController extends Controller
      */
 
     public function showUpdatePasswordForm($token)
-    {        
-        try{
+    {
+        try {
             $tokenValue = Crypt::decrypt($token);
             $userData = users::where('token', $tokenValue)->first();
             if ($userData) {
@@ -129,41 +131,35 @@ class AdminLoginController extends Controller
             } else {
                 return view('admin/adminPasswordUpdateSuccess');
             }
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return view('errors.404');
         }
-
-
     }
 
 
     /**
-     *@param $request   $request->token which was generated when email was sent 
+     *@param $request   $request->token which was generated when email was sent
 
-     * password updated of users(admin/provider) and after successfully update password token gets deleted 
+     * password updated of users(admin/provider) and after successfully update password token gets deleted
      */
-
-
     public function submitUpdatePasswordForm(Request $request)
     {
-
         $request->validate([
             'confirm_password' => 'required|min:8|max:20',
             'new_password' => 'required|same:confirm_password|min:8|max:20',
-
         ]);
 
-        $updatePassword = users::where('token', $request->token)->first();
+        $updatePassword = Users::where('token', $request->token)->first();
 
         if (!$updatePassword) {
             return back()->with('error', 'Invalid token!');
         }
 
-        users::where([
+        Users::where([
             'token' => $request->token,
         ])->update(['password' => Hash::make($request->new_password)]);
 
-        users::where(['token' => $request->token])->update(['token' => ""]);
+        Users::where(['token' => $request->token])->update(['token' => ""]);
 
         return redirect()->route('login')->with('message', 'Your password has been changed!');
     }

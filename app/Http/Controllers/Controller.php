@@ -16,12 +16,9 @@ class Controller extends BaseController
         return view('patientSite/patientSite');
     }
 
-
     // * display submit screen of patient site
     public function submitScreen()
     {
         return view('patientSite.submitScreen');
     }
-
-
 }
