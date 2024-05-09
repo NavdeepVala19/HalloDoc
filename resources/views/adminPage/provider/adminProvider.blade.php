@@ -10,14 +10,14 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('provider.location') }}">Provider Location</a>
     <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.providers.list') }}">Provider</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
             <li><a class="dropdown-item" href="#">Invoicing</a></li>
         </ul>
@@ -63,7 +63,7 @@
                             <option selected value="all">All</option>
                         </select>
                         <div class="provider-btn">
-                            <a href="{{ route('adminNewProvider') }}" type="button"
+                            <a href="{{ route('admin.create.new.provider') }}" type="button"
                                 class="btn primary-fill create-provider-btn mt-1 me-2 mb-2">Create Provider Account</a>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                             <button type="button" data-id='{{ $data->id }}'
                                                 class="primary-empty contact-btn mt-2 mb-2 contact_your_provider"
                                                 id="contact_btn_{{ $data->id }}">Contact</button>
-                                            <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}"
+                                            <a href="{{ route('admin.edit.providers', Crypt::encrypt($data->id)) }}"
                                                 type="button" class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                         </td>
                                     </tr>
@@ -121,7 +121,7 @@
                         </div>
                         <p class="mt-4 ms-3">Choose communication to send message</p>
                         <div class="ms-3">
-                            <form action="{{ route('sendMailToProvider', Crypt::encrypt($data->id)) }}" method="post"
+                            <form action="{{ route('send.msg.to.provider', Crypt::encrypt($data->id)) }}" method="post"
                                 id="ContactProviderForm">
                                 @csrf
                                 <input type="text" name="provider_id" class="provider_id" hidden>
@@ -193,7 +193,7 @@
                                     <button type="button" data-id='{{ $data->id }}'
                                         class="primary-empty contact-btn contact-provider-btn mt-2 mb-2"
                                         id="contact_button_{{ $data->id }}">Contact</button>
-                                    <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}" type="button"
+                                    <a href="{{ route('admin.edit.providers', Crypt::encrypt($data->id)) }}" type="button"
                                         class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
                         </div>
                         <p class="mt-4 ms-3">Choose communication to send message</p>
                         <div class="ms-3">
-                            <form action="{{ route('sendMailToProvider', $data->id) }}" method="post"
+                            <form action="{{ route('send.msg.to.provider', $data->id) }}" method="post"
                                 id="ContactProviderForm">
                                 @csrf
                                 <input type="text" name="provider_id" class="provider_id" hidden>

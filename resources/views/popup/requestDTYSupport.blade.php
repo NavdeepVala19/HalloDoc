@@ -4,7 +4,7 @@
         <span>Request Support</span>
         <button class="hide-popup-btn requestDTYClose"><i class="bi bi-x-lg"></i></button>
     </div>
-    <form action="{{ route('sendRequestSupport') }}" method="POST" id="requestDTYSupportForm">
+    <form action="{{ route('send.request_support') }}" method="POST" id="requestDTYSupportForm">
         @csrf
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
             <p>To all unscheduled Physicians:We are short on coverage and needs additional support On Call to respond to Requests</p>

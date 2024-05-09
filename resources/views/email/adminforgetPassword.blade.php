@@ -110,6 +110,6 @@
 <h4>
     You can reset password from this link:
 </h4>
-<a href="{{ route('updatePassword', $token) }}" type="button" class="case submitType" id="patient">Reset Password</a>
+<a href="{{ route('admin.update.password.view',  Crypt::encrypt($token)) }}" type="button" class="case submitType" id="patient">Reset Password</a>
 
 </div>

@@ -7,7 +7,7 @@
 
 @section('nav-links')
 <a href="" class="active-link">Dashboard</a>
-<a href="{{ route('patientProfile') }}" class="">Profile</a>
+<a href="{{ route('patient.profile.view') }}" class="">Profile</a>
 @endsection
 
 @section('patientSiteContent')
@@ -61,12 +61,14 @@
                             UnPaid
                             @elseif ($patientData->status ==10 )
                             Block
+                            @elseif ($patientData->status ==11 )
+                            Cancelled By Patient
                             @endif
                         </td>
                         <td style="height: 5%;">
                             @if ($patientData->requestWiseFile == null)
                             @else
-                            <a href="{{ route('patientViewDocsFile',  Crypt::encrypt($patientData->id)) }}" type="button" class="primary-empty btn ">Documents</a>
+                            <a href="{{ route('patient.documents.view',  Crypt::encrypt($patientData->id)) }}" type="button" class="primary-empty btn ">Documents</a>
                             @endif
                         </td>
                         @endforeach
@@ -109,7 +111,7 @@
                 -
                 @else
                 <div>
-                    <a href="{{ route('patientViewDocsFile', Crypt::encrypt($patientData->id)) }}" type="button" class="primary-empty btn ">Documents</a>
+                    <a href="{{ route('patient.documents.view', Crypt::encrypt($patientData->id)) }}" type="button" class="primary-empty btn ">Documents</a>
                 </div>
                 @endif
             </div>

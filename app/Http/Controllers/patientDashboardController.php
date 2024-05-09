@@ -29,21 +29,6 @@ class patientDashboardController extends Controller
         return view("patientSite/patientDashboard");
     }
 
-
-    public function createNewRequest()
-    {
-        $userData = Auth::user();
-        $email = $userData["email"];
-
-        return view("patientSite/patientNewRequest", compact('email'));
-    }
-
-    public function createSomeoneRequest()
-    {
-        return view("patientSite/patientSomeoneRequest");
-    }
-
-    // Display agreement page when clicked through email
     public function viewAgreement($data)
     {
         try {
@@ -195,7 +180,7 @@ class patientDashboardController extends Controller
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
+        return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
     }
     
     // create someone else request from patient dashboard
@@ -370,9 +355,9 @@ class patientDashboardController extends Controller
                     'email' => $request->email,
                     'action' => 5,
                 ]);
-                return redirect()->route('patientDashboardData')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+                return redirect()->route('patient.dashboard')->with('message', 'Email for Create Account is Sent and Request is Submitted');
             } else {
-                return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
+                return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
             }
         } catch (\Throwable $th) {
             return view('errors.500');

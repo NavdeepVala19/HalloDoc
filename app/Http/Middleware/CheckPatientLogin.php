@@ -23,10 +23,10 @@ class CheckPatientLogin
             if ($roleId == 3) {
                 return $next($request);
             } else {
-                return redirect()->route('loginScreen');
+                return redirect()->route('patient.login.view');
             }
         }
 
-        return redirect()->route('loginScreen');
+        return redirect()->route('patient.login.view');
     }
 }

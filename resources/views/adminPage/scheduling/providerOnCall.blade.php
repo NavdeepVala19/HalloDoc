@@ -12,14 +12,14 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('provider.location') }}">Provider Location</a>
     <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Providers
         </button>
         <ul class="dropdown-menu records-menu">
-            <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.providers.list') }}">Provider</a></li>
             <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
             <li><a class="dropdown-item" href="#">Invoicing</a></li>
         </ul>

@@ -5,7 +5,7 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('patientDashboardData') }}" class="">Dashboard</a>
+    <a href="{{ route('patient.dashboard') }}" class="">Dashboard</a>
     <a href="" class="active-link">Profile</a>
 @endsection
 
@@ -13,7 +13,7 @@
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h2 class="heading">User Profile</h2>
-            <a href="{{ route('patientDashboardData') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+            <a href="{{ route('patient.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         {{-- Form Starts From Here --}}
         <div class="section">
@@ -106,12 +106,12 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <a href="{{ route('patientLocationOnMap') }}" class="primary-empty d-flex gap-2"> <i
+                    <a href="{{ route('patient.location.on.map') }}" class="primary-empty d-flex gap-2"> <i
                             class="bi bi-geo-alt"></i> Map</a>
                 </div>
             </div>
             <div class="text-end">
-                <a href="{{ route('patientProfileEditData', Crypt::encrypt($getEmailData->id)) }}"
+                <a href="{{ route('patient.profile.edit.view', Crypt::encrypt($getEmailData->id)) }}"
                     class="primary-fill">Edit</a>
             </div>
         </div>

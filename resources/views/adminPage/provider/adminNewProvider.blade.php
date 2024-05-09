@@ -7,14 +7,14 @@
 @endsection
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="{{ route('provider.location') }}">Provider Location</a>
 <a href="{{ route('admin.profile.editing') }}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
     </button>
     <ul class="dropdown-menu records-menu">
-        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.providers.list') }}">Provider</a></li>
         <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
         <li><a class="dropdown-item" href="#">Invoicing</a></li>
     </ul>
@@ -47,11 +47,11 @@
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">Create New Physician Account</h2>
-        <a href="{{ route('adminProvidersInfo') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+        <a href="{{ route('admin.providers.list') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
 
     <div class="section">
-        <form action="{{ route('adminCreateNewProvider') }}" method="POST" enctype="multipart/form-data" id="createAdminProvider">
+        <form action="{{ route('admin.created.provider') }}" method="POST" enctype="multipart/form-data" id="createAdminProvider">
             @csrf
             <h3>Account Information</h3>
             <div class="grid-3">

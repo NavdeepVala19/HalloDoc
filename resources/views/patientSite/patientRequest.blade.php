@@ -15,7 +15,7 @@
         </div>
 
         <div class="patient-container">
-            <form action="{{ route('patientRequests') }}" method="post" enctype="multipart/form-data"
+            <form action="{{ route('patient.request.submit') }}" method="post" enctype="multipart/form-data"
                 id="patientRequestForm">
                 @csrf
                 <div class="patient-details">

@@ -4,18 +4,17 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/patientSite/patientNewRequest.css') }}">
 @endsection
 
-
 @section('patientSiteContent')
 @include('loading')
 <div class="container">
 
     <!-- this div is for heading and back button -->
     <div class="header_part">
-        <a href="{{route('patientDashboardData')}}" type="button" class="primary-empty">
+        <a href="{{route('patient.dashboard')}}" type="button" class="primary-empty">
             < Back</a>
     </div>
     <div class="patient-container">
-        <form action="{{route('createdSomeoneRequests')}}" method="post" enctype="multipart/form-data" id="patientSomeOneRequest">
+        <form action="{{route('request.someone.submitted')}}" method="post" enctype="multipart/form-data" id="patientSomeOneRequest">
             @csrf
             <div class="patient-details">
                 <!-- Symptoms Detail Field -->
@@ -162,7 +161,7 @@
                 <!--  SUBMIT and CANCEL Buttons -->
                 <div class="buttons">
                     <button class="primary-fill me-2" type="submit" >Submit</button>
-                    <a href="{{route('patientDashboardData')}}" class="primary-empty " type="button">Cancel</a>
+                    <a href="{{route('patient.dashboard')}}" class="primary-empty " type="button">Cancel</a>
                 </div>
 
             </div>

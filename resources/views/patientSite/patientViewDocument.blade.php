@@ -5,8 +5,8 @@
 @endsection
 
 @section('nav-links')
-    <a href="{{ route('patientDashboardData') }}" class="active-link">Dashboard</a>
-    <a href="{{ route('patientProfile') }}" class="">Profile</a>
+    <a href="{{ route('patient.dashboard') }}" class="active-link">Dashboard</a>
+    <a href="{{ route('patient.profile.view') }}" class="">Profile</a>
 @endsection
 
 @section('patientSiteContent')
@@ -16,10 +16,10 @@
         <div class="head-btn">
             <h2>Documents</h2>
             <a type="button" class="primary-empty btn d-flex justify-content-center align-items-center"
-                href="{{ route('patientDashboardData') }}"> <i class="bi bi-chevron-left"></i> Back</a>
+                href="{{ route('patient.dashboard') }}"> <i class="bi bi-chevron-left"></i> Back</a>
         </div>
 
-        <form action="{{ route('patientViewDocuments') }}" method="post" enctype="multipart/form-data"
+        <form action="{{ route('patient.upload.document') }}" method="post" enctype="multipart/form-data"
             id="patientUploadDocs">
             @csrf
             <input type="hidden" name="request_wise_file_id" value="{{ $documents[0]->request_id }}">
@@ -46,7 +46,7 @@
             </div>
         </form>
 
-        <form action="{{ route('downloadAllFiles') }}" method="post">
+        <form action="{{ route('patient.download.multiple.files') }}" method="post">
             @csrf
             <input type="text" name="requestId" value="{{ $documents->first()->request_id }}" hidden>
             <div class="docs-download">
@@ -73,7 +73,7 @@
                             <td><i class="bi bi-filetype-doc"></i>{{ substr($document->file_name, 14) }}</td>
                             <td>{{ $document->first_name }}</td>
                             <td>{{ date_format(date_create($document->created_date), 'd-m-Y') }}</td>
-                            <td> <a href="{{ route('downloadOne', Crypt::encrypt($document->id)) }}"
+                            <td> <a href="{{ route('patient.download.one.document', Crypt::encrypt($document->id)) }}"
                                     class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
                         </tr>
                     @endforeach
@@ -89,7 +89,7 @@
                         </div>
                         <div class="mb-3">{{ $document->first_name }}</div>
                         <p>{{ $document->created_at }}</p>
-                        <a href="{{ route('downloadOne', Crypt::encrypt($document->id)) }}"
+                        <a href="{{ route('patient.download.one.document', Crypt::encrypt($document->id)) }}"
                             class="primary-empty cloud-down" type="button"> <i class="bi bi-cloud-download "></i>
                         </a>
                     </div>

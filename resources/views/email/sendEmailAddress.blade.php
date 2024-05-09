@@ -117,7 +117,7 @@
     <!-- this div is for main content -->
     <div class=" main-container">
         <div class="case">
-            <a href="{{route('patientRegister')}}" class="submitType" type="button" id="patient">Create Account</a>
+            <a href="{{route('patient.register.view')}}" class="submitType" type="button" id="patient">Create Account</a>
         </div>
     </div>
 </div>

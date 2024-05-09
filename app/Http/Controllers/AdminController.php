@@ -1012,7 +1012,7 @@ class AdminController extends Controller
             return back()->with('message', 'no records to export to Excel');
         } else {
             $export = new SearchRecordExport($data);
-            return Excel::download($export, 'filtered_data.xls');
+            return Excel::download($export, 'search_record_filtered_data.xls');
         }
     }
 
@@ -1046,7 +1046,7 @@ class AdminController extends Controller
 
     public function smsRecordsView()
     {
-        $sms = SMSLogs::paginate(10);
+        $sms = SMSLogs::orderByDesc('id')->paginate(10);
         Session::forget('role_type');
         return view('adminPage.records.smsLogs', compact('sms'));
     }
@@ -1121,6 +1121,7 @@ class AdminController extends Controller
             DB::raw('DATE(block_request.created_at) as created_date'),
         )
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
+            ->orderByDesc('id')
             ->paginate(10);
 
         return view('adminPage.records.blockHistory', compact('blockData'));
@@ -1232,10 +1233,10 @@ class AdminController extends Controller
                 ->get();
 
             if ($UserAccessRoleName->first()->name == 'admin') {
-                return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
+                return redirect()->route('edit.admin.profile', ['id' =>  Crypt::encrypt($id)]);
             } else if ($UserAccessRoleName->first()->name == 'physician') {
                 $getProviderId = Provider::where('user_id', $id);
-                return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
+                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
             }
         } catch (\Throwable $th) {
             return view('errors.404');;
@@ -1336,6 +1337,7 @@ class AdminController extends Controller
     /**
     *fetch region from region table and show in all region drop down button
      */
+    
     public function fetchRegions()
     {
         $fetchedRegions = Regions::get();

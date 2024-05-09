@@ -11,6 +11,7 @@ use App\Models\PhysicianLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminLoginController extends Controller
 {
@@ -108,7 +109,7 @@ class AdminLoginController extends Controller
             $message->subject('Reset Password');
         });
 
-        return redirect()->route('adminLogin')->with('message', 'E-mail is sent for password reset');
+        return redirect()->route('login')->with('message', 'E-mail is sent for password reset');
     }
 
 
@@ -119,14 +120,19 @@ class AdminLoginController extends Controller
      */
 
     public function showUpdatePasswordForm($token)
-    {
-        
-        $userData = users::where('token', $token)->first();
-        if ($userData) {
-            return view('admin/adminPasswordUpdate', ['token' => $token]);
-        } else {
-            return view('admin/adminPasswordUpdateSuccess');
+    {        
+        try{
+            $tokenValue = Crypt::decrypt($token);
+            $userData = users::where('token', $tokenValue)->first();
+            if ($userData) {
+                return view('admin/adminPasswordUpdate', ['token' => $tokenValue]);
+            } else {
+                return view('admin/adminPasswordUpdateSuccess');
+            }
+        }catch (\Throwable $th) {
+            return view('errors.404');
         }
+
 
     }
 
@@ -159,7 +165,7 @@ class AdminLoginController extends Controller
 
         users::where(['token' => $request->token])->update(['token' => ""]);
 
-        return redirect()->route('adminLogin')->with('message', 'Your password has been changed!');
+        return redirect()->route('login')->with('message', 'Your password has been changed!');
     }
 
     public function logout()
@@ -173,6 +179,6 @@ class AdminLoginController extends Controller
         }
 
         Auth::logout();
-        return redirect()->route('adminLogin');
+        return redirect()->route('login');
     }
 }

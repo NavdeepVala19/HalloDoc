@@ -10,12 +10,12 @@
         <div class="patient-login">
             <div class="details">
                 <div class="main-content">
-                    <a href="{{ route('patientSite') }}"><i class="bi bi-chevron-left"></i> Back</a>
+                    <a href="{{ route('patient.home_page') }}"><i class="bi bi-chevron-left"></i> Back</a>
                 </div>
                 <h1>Login To Your Account</h1>
             </div>
             <div class="form">
-                <form action="{{ route('patient_logged_in') }}" method="post" id="patientLogin">
+                <form action="{{ route('patient.login') }}" method="post" id="patientLogin">
                     @csrf
                     <div class="mb-4 email patientLogin">
                         <i class="bi bi-person-circle person-logo"></i>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Log In</button>
-                        <div class="forgot-pass"> <a href="{{ route('forgot_password') }}">Forgot Password?</a> </div>
+                        <div class="forgot-pass"> <a href="{{ route('patient.forgot.password') }}">Forgot Password?</a> </div>
                     </div>
                 </form>
             </div>

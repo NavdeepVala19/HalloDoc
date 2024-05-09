@@ -7,14 +7,14 @@
 
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="{{ route('provider.location') }}">Provider Location</a>
 <a href="{{ route('admin.profile.editing') }}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
     </button>
     <ul class="dropdown-menu records-menu">
-        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.providers.list') }}">Provider</a></li>
         <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
         <li><a class="dropdown-item" href="#">Invoicing</a></li>
     </ul>
@@ -50,7 +50,7 @@
         <a href="{{route('admin.user.access')}}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
     <div class="section">
-        <form action="{{route('adminAccountCreated')}}" method="POST" id="createAdminAccountForm">
+        <form action="{{route('new.admin.created')}}" method="POST" id="createAdminAccountForm">
             @csrf
             <h3>Account Information</h3>
             <div class="grid-3">

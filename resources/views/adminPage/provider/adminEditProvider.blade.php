@@ -7,14 +7,14 @@
 @endsection
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="{{ route('provider.location') }}">Provider Location</a>
 <a href="{{ route('admin.profile.editing') }}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Providers
     </button>
     <ul class="dropdown-menu records-menu">
-        <li><a class="dropdown-item" href="{{ route('adminProvidersInfo') }}">Provider</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.providers.list') }}">Provider</a></li>
         <li><a class="dropdown-item" href="{{ route('admin.scheduling') }}">Scheduling</a></li>
         <li><a class="dropdown-item" href="#">Invoicing</a></li>
     </ul>
@@ -47,7 +47,7 @@
 <div class="container form-container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="heading">Edit Physician Account</h2>
-        <a href="{{ route('adminProvidersInfo') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
+        <a href="{{ route('admin.providers.list') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
     </div>
     <div class="section">
         @if (Session::has('message'))
@@ -56,7 +56,7 @@
         </div>
         @endif
        
-            <form action="{{ route('updateProviderAccountInfo', $getProviderData->id) }}" method="POST" id="adminEditProviderForm1">
+            <form action="{{ route('update.account.info.providers', $getProviderData->id) }}" method="POST" id="adminEditProviderForm1">
                 @csrf
                 <h3>Account Information</h3>
                 <div class="grid-2">
@@ -114,7 +114,7 @@
 
 
             <h3>Physician Information</h3>
-            <form action="{{ route('providerInfoUpdate', $getProviderData->id) }}" method="post" id="adminEditProviderForm2">
+            <form action="{{ route('update.info.providers', $getProviderData->id) }}" method="post" id="adminEditProviderForm2">
                 @csrf
                 <div class="grid-2">
                     <div class="form-floating provider-edit-form">
@@ -172,7 +172,7 @@
 
             <h3>Mailing & Billing Information</h3>
 
-            <form action="{{ route('providerMailInfoUpdate', $getProviderData->id) }}" method="post" id="adminEditProviderForm3">
+            <form action="{{ route('update.mailing.providers', $getProviderData->id) }}" method="post" id="adminEditProviderForm3">
                 @csrf
                 <div class="grid-2">
                     <div class="form-floating  provider-edit-form">
@@ -237,7 +237,7 @@
 
             <h3>Provider Profile</h3>
 
-            <form action="{{ route('providerProfileUpdate', $getProviderData->id) }}" method="post" enctype="multipart/form-data" id="adminEditProviderForm4">
+            <form action="{{ route('update.profile.providers', $getProviderData->id) }}" method="post" enctype="multipart/form-data" id="adminEditProviderForm4">
                 @csrf
                 <div class="grid-2">
                     <div class="form-floating provider-edit-form">
@@ -287,7 +287,7 @@
             <hr>
             <div>
                 <h3>Onboarding</h3>
-                <form action="{{ route('providerDocumentsUpdate', $getProviderData->id) }}" method="post" enctype="multipart/form-data" id="adminEditProviderForm5">
+                <form action="{{ route('update.documents.providers', $getProviderData->id) }}" method="post" enctype="multipart/form-data" id="adminEditProviderForm5">
                     @csrf
                     <div class="table mt-4">
                         <table>
@@ -383,7 +383,7 @@
             <hr>
             <div class="d-flex flex-row justify-content-end gap-3">
                 <button class="primary-fill" type="submit">Save</button>
-                <a href="{{ route('deleteProviderAccount', $getProviderData->id) }}" class="btn btn-danger">Delete
+                <a href="{{ route('delete.provider_account', $getProviderData->id) }}" class="btn btn-danger">Delete
                     Account</a>
             </div>
             </form>

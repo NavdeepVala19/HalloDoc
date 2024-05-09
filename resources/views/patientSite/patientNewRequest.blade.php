@@ -8,11 +8,11 @@
     <div class="container mb-3">
         <!-- this div is for heading and back button -->
         <div class="header_part">
-            <a href="{{ route('patientDashboardData') }}" type="button" class="primary-empty">
+            <a href="{{ route('patient.dashboard') }}" type="button" class="primary-empty">
                 < Back</a>
         </div>
         <div class="patient-container">
-            <form action="{{ route('createdPatientRequests') }}" method="post" enctype="multipart/form-data"
+            <form action="{{ route('patient.new.request.submitted') }}" method="post" enctype="multipart/form-data"
                 id="patientNewRequest">
                 @csrf
                 <div class="patient-details">
@@ -167,7 +167,7 @@
                     <!--  SUBMIT and CANCEL Buttons -->
                     <div class="buttons">
                         <button class="primary-fill me-2" type="submit">Submit</button>
-                        <a href="{{ route('patientDashboardData') }}" type="button" class="primary-empty">Cancel</a>
+                        <a href="{{ route('patient.dashboard') }}" type="button" class="primary-empty">Cancel</a>
                     </div>
                 </div>
             </form>
