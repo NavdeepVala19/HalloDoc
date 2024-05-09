@@ -10,7 +10,7 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('provider.location') }}">Provider Location</a>
     <a href="{{ route('admin.profile.editing') }}" class="active-link">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -59,7 +59,7 @@
         </div>
         @endif
 
-        <form action="{{ route('adminChangePassword', $adminProfileData->user_id) }}" method="POST" id="adminEditProfileForm1">
+        <form action="{{ route('admin.password.update', $adminProfileData->user_id) }}" method="POST" id="adminEditProfileForm1">
             @csrf
             <h3>Account Information</h3>
             <div class="grid-2">
@@ -100,7 +100,7 @@
 
         <h3 class="mt-2">Administrator Information</h3>
 
-        <form action="{{route('adminInfoUpdate', $adminProfileData->user_id)}}" method="post" id="adminEditProfileForm2">
+        <form action="{{route('admin.info.update', $adminProfileData->user_id)}}" method="post" id="adminEditProfileForm2">
             @csrf
             <div class="grid-2">
                 <div class="form-floating errorMsg">
@@ -153,7 +153,7 @@
 
         <h3 class="mt-2">Mailing & Billing Information</h3>
 
-        <form action="{{route('adminMailInfoUpdate', $adminProfileData->user_id)}}" method="post" id="adminEditProfileForm3">
+        <form action="{{route('admin.mail.info.update', $adminProfileData->user_id)}}" method="post" id="adminEditProfileForm3">
             @csrf
             <div class="grid-2">
                 <div class="form-floating errorMsg">

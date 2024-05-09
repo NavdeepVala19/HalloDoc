@@ -14,7 +14,7 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('provider.location') }}">Provider Location</a>
     <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -74,9 +74,9 @@
                         </div>
 
                         <div class="mt-4" id="createAccBtns">
-                            <a href="{{ route('createAdminAccount') }}" class="primary-fill" id="createAdmin">Create
+                            <a href="{{ route('create.new.admin.view') }}" class="primary-fill" id="createAdmin">Create
                                 Admin</a>
-                            <a href="{{ route('adminNewProvider') }}" class="primary-fill" id="createPhysician">Create
+                            <a href="{{ route('admin.create.new.provider') }}" class="primary-fill" id="createPhysician">Create
                                 Physician</a>
                         </div>
                     </div>

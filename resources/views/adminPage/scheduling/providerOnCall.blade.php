@@ -12,7 +12,7 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('provider.location') }}">Provider Location</a>
     <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">

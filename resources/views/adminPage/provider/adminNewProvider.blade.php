@@ -7,7 +7,7 @@
 @endsection
 @section('nav-links')
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-<a href="{{ route('providerLocation') }}">Provider Location</a>
+<a href="{{ route('provider.location') }}">Provider Location</a>
 <a href="{{ route('admin.profile.editing') }}">My Profile</a>
 <div class="dropdown record-navigation">
     <button class="record-btn active-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -51,7 +51,7 @@
     </div>
 
     <div class="section">
-        <form action="{{ route('adminCreateNewProvider') }}" method="POST" enctype="multipart/form-data" id="createAdminProvider">
+        <form action="{{ route('admin.created.provider') }}" method="POST" enctype="multipart/form-data" id="createAdminProvider">
             @csrf
             <h3>Account Information</h3>
             <div class="grid-3">

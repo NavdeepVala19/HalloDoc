@@ -16,7 +16,7 @@
         <!-- this div is for heading and back button -->
         <div class="header_part">
             <h1 class="heading">I am a..</h1>
-            <a href="{{ route('patientSite') }}" type="button"
+            <a href="{{ route('patient.home_page') }}" type="button"
                 class="primary-empty d-flex justify-content-center align-items-center"> <i class="bi bi-chevron-left"></i>
                 Back</a>
         </div>

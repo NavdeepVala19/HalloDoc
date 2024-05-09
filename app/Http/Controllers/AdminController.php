@@ -1149,10 +1149,10 @@ class AdminController extends Controller
                 ->get();
 
             if ($UserAccessRoleName->first()->name == 'admin') {
-                return redirect()->route('adminProfile', ['id' =>  Crypt::encrypt($id)]);
+                return redirect()->route('edit.admin.profile', ['id' =>  Crypt::encrypt($id)]);
             } else if ($UserAccessRoleName->first()->name == 'physician') {
                 $getProviderId = Provider::where('user_id', $id);
-                return redirect()->route('adminEditProvider', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
+                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
             }
         } catch (\Throwable $th) {
             return view('errors.404');;
@@ -1253,6 +1253,7 @@ class AdminController extends Controller
     /**
     *fetch region from region table and show in all region drop down button
      */
+    
     public function fetchRegions()
     {
         $fetchedRegions = Regions::get();

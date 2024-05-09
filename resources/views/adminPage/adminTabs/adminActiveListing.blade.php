@@ -106,26 +106,26 @@ giving service to the patient. --}}
                         Send Link
                     </span>
                 </button>
-                <a href="{{ route('adminPatientRequest') }}" class="primary-fill">
+                <a href="{{ route('submit.patient.request.view') }}" class="primary-fill">
                     <i class="bi bi-pencil-square"></i>
                     <span class="txt">
                         Create Requests
                     </span>
                 </a>
-                <a href="{{ route('exportActive') }}" class="primary-fill" id="filterExportBtnActive">
+                <a href="{{ route('export.active_data') }}" class="primary-fill" id="filterExportBtnActive">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <form action="{{ route('exportActive') }}" method="POST" id="filterExport">
+                <form action="{{ route('export.active_data') }}" method="POST" id="filterExport">
                     @csrf
                     <input name="filter_search" value="" hidden>
                     <input name="filter_region" value="" hidden>
                     <input name="filter_category" value="" hidden>
                     <button type="submit" hidden>export</button>
                 </form>
-                <a href="{{ route('exportAll') }}" class="primary-fill">
+                <a href="{{ route('export.all_data') }}" class="primary-fill">
                     <i class="bi bi-send-arrow-down-fill"></i>
                     <span class="txt">
                         Export All

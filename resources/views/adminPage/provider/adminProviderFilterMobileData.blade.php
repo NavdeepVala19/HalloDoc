@@ -29,7 +29,7 @@
                    <button type="button" data-id='{{ $data->id }}'
                        class="primary-empty contact-btn contact-provider-btn mt-2 mb-2"
                        id="contact_button_{{ $data->id }}">Contact</button>
-                   <a href="{{ route('adminEditProvider', Crypt::encrypt($data->id)) }}" type="button"
+                   <a href="{{ route('admin.edit.providers', Crypt::encrypt($data->id)) }}" type="button"
                        class="primary-empty btn edit-btn mt-2 mb-2">Edit</a>
                </div>
            </div>

@@ -9,7 +9,7 @@
 
 @section('nav-links')
     <a href="{{ route('admin.dashboard') }}" class="active-link">Dashboard</a>
-    <a href="{{ route('providerLocation') }}">Provider Location</a>
+    <a href="{{ route('provider.location') }}">Provider Location</a>
     <a href="{{ route('admin.profile.editing') }}">My Profile</a>
     <div class="dropdown record-navigation">
         <button class="record-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -53,7 +53,7 @@
             <a href="{{ route('admin.dashboard') }}" class="primary-empty"><i class="bi bi-chevron-left"></i> Back</a>
         </div>
         <div class="section">
-            <form action="{{ route('adminCreatedPatientRequest') }}" method="POST" id="adminCreateRequestForm">
+            <form action="{{ route('admin.submit.patient.request') }}" method="POST" id="adminCreateRequestForm">
                 @csrf
                 <h3>Patient</h3>
                 <div class="mb-4 form-grid">
