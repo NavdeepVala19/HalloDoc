@@ -29,6 +29,6 @@ class RequestStatus extends Model
     }
     public function requestClient()
     {
-        return $this->hasOne(request_Client::class, 'request_id', 'request_id');
+        return $this->hasOne(RequestClient::class, 'request_id', 'request_id');
     }
 }

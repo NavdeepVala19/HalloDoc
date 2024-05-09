@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class allusers extends Model
+class AllUsers extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -35,12 +35,11 @@ class allusers extends Model
 
     public function users()
     {
-        return $this->belongsTo(users::class);
+        return $this->belongsTo(Users::class);
     }
 
     public function request()
     {
-        // return $this->hasMany(request::class);
         return $this->hasMany('App\Model\request', 'user_id', 'user_id');
     }
 
@@ -52,6 +51,6 @@ class allusers extends Model
 
     public function provider()
     {
-        return $this->belongsTo(allusers::class, 'user_id', 'user_id');
+        return $this->belongsTo(AllUsers::class, 'user_id', 'user_id');
     }
 }

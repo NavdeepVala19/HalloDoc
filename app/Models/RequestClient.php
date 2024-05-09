@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\RequestTable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-use App\Models\RequestTable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class request_Client extends Model
+class RequestClient extends Model
 {
     use HasFactory;
     use SoftDeletes;

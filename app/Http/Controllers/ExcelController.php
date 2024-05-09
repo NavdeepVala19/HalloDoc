@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -13,7 +13,7 @@ class ExcelController extends Controller
     // * export All in admin listing pages
     public function exportAll()
     {
-        $data = request_Client::select(
+        $data = RequestClient::select(
             'request_client.first_name',
             'request_client.last_name',
             'request_client.date_of_birth',

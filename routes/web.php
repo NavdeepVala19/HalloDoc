@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Controllers\Controller;
-
-use App\Http\Controllers\ExcelController;
-
-// All Patient Related functionality -> controllers
+use App\Http\Controllers\AdminActionController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\businessRequestController;
+use App\Http\Controllers\CommonOperationController;
 use App\Http\Controllers\conciergeRequestController;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\familyRequestController;
 use App\Http\Controllers\patientAccountController;
 use App\Http\Controllers\patientController;
@@ -14,23 +17,10 @@ use App\Http\Controllers\patientDashboardController;
 use App\Http\Controllers\patientLoginController;
 use App\Http\Controllers\patientProfileController;
 use App\Http\Controllers\PatientViewDocumentsController;
-
-// All Admin Related functionality -> controllers
-use App\Http\Controllers\AdminActionController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminLoginController;
-use App\Http\Controllers\AdminProviderController;
-use App\Http\Controllers\SchedulingController;
-
-// All Provider Related functionality -> controllers
 use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderSchedulingController;
-
-// Common functionality between Admin/Provider -> controllers
-use App\Http\Controllers\CommonOperationController;
-
+use App\Http\Controllers\SchedulingController;
 use Illuminate\Support\Facades\Route;
 
 // ******************************* SHIVESH **********************************************
@@ -134,7 +124,7 @@ Route::post('updatedPassword', [AdminLoginController::class, 'submitUpdatePasswo
 // ************** PROVIDER DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
 // Route::prefix('provider')->group(function () {
 // });
-Route::middleware('checkProviderLogin')->group(function () {
+Route::middleware('CheckProviderLogin')->group(function () {
     // Providers Dashboard page with New state case listing
     Route::get('/provider', [ProviderController::class, 'providerDashboard'])->name('provider.dashboard');
 
@@ -161,7 +151,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
     // Provider Reset Password (MyProfile)
     Route::post('/provider-reset-password', [ProviderController::class, 'resetPassword'])->name('provider.reset.password');
-    // Provider Edit Profile Send message (Email) to Admin 
+    // Provider Edit Profile Send message (Email) to Admin
     Route::post('/provider-edit-profile', [ProviderController::class, 'editProfileMessage'])->name('provider.edit.profile');
 
     // ************** DIFFERENT ACTIONS FROM ACTION MENU ***************
@@ -182,7 +172,7 @@ Route::middleware('checkProviderLogin')->group(function () {
     // upload document from viewUploads page
     Route::post('/view-uploads/{id?}', [ProviderActionController::class, 'uploadDocument'])->name('proivder.upload.doc');
 
-    // VIEW CASE PAGE  
+    // VIEW CASE PAGE
     // show view case page as per the id
     Route::get('provider/view/case/{id?}', [ProviderActionController::class, 'viewCase'])->name('provider.view.case');
 
@@ -222,13 +212,13 @@ Route::middleware('checkProviderLogin')->group(function () {
     Route::post('/upload-document-conclude-care', [ProviderActionController::class, 'uploadDocsConcludeCare'])->name('upload.conclude.care.docs');
 
     // Provider Scheduling
-    // Scheduling Calendar view 
+    // Scheduling Calendar view
     Route::get('/provider-scheduling', [ProviderSchedulingController::class, 'providerCalendarView'])->name('provider.scheduling');
     // Provider information for add new shift
     Route::get('/provider-information', [ProviderSchedulingController::class, 'providerInformation'])->name('provider.information');
     // Provider created Shift data
     Route::post('/provider-create-shift', [ProviderSchedulingController::class, 'providerShiftData'])->name('physician.scheduling.data');
-    // Provider shift data 
+    // Provider shift data
     Route::get('/provider-shift', [ProviderSchedulingController::class, 'providerShift'])->name('provider.shift');
     // Provider Edit Shift
     Route::post('/provider-edit-shift', [ProviderSchedulingController::class, 'providerEditShift'])->name('provider.edit.shift');
@@ -236,7 +226,7 @@ Route::middleware('checkProviderLogin')->group(function () {
 
 // ************** ADMIN DASHBOARD (LISTING, SEARCHING & FILTERING) ***************
 // Admin Dashboard page with New Users case listing
-Route::middleware('checkAdminLogin')->group(function () {
+Route::middleware('CheckAdminLogin')->group(function () {
     // Redirect to default new page when hit with just /admin in route
     Route::get('/admin', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
 
@@ -266,7 +256,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Admin transfer case -> to physician other than the one who transferred case
     Route::post('/transfer-case-admin', [AdminActionController::class, 'transferCase'])->name('admin.transfer.case');
 
-    // Fetch Cancel Case (CaseTag) options from database 
+    // Fetch Cancel Case (CaseTag) options from database
     Route::get('/cancel-case', [AdminActionController::class, "cancelCaseOptions"]);
     // Cancel Case by admin
     Route::post('cancel-case-data', [AdminActionController::class, 'cancelCase'])->name('admin.cancel.case');
@@ -281,7 +271,7 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Admin View Notes
     Route::get('admin/view/notes/{id}', [AdminActionController::class, 'viewNote'])->name('admin.view.note');
-    // Store Additional Note entered by Admin 
+    // Store Additional Note entered by Admin
     Route::post('/admin/view/notes/store', [AdminActionController::class, 'storeNote'])->name('admin.store.note');
 
     // Admin View Uploads
@@ -307,7 +297,7 @@ Route::middleware('checkAdminLogin')->group(function () {
     // admin closes case -> store the fetched data from form and change status for that particular request
     Route::post('/close-case', [AdminActionController::class, 'closeCaseData'])->name('admin.close.case.save');
 
-    // send orders admin page 
+    // send orders admin page
     Route::get('/admin-view-order/{id}', [AdminActionController::class, 'viewOrder'])->name('admin.view.order');
     // Admin send order data stored in database table
     Route::post('/admin-send-order', [AdminActionController::class, 'sendOrder'])->name('admin.send.order');
@@ -319,7 +309,7 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Add Business Page
     Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
-    // add a new business from addBusiness page 
+    // add a new business from addBusiness page
     Route::post('/add-business', [AdminController::class, 'addBusiness'])->name('add.business');
     // Update Business Page
     Route::get('/update-business/{id}', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
@@ -330,7 +320,7 @@ Route::middleware('checkAdminLogin')->group(function () {
 
     // Account Access Page
     Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
-    // Create a new role page 
+    // Create a new role page
     Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('admin.create.role.view');
     // fetch all roles to show in the dropdown as per the account type
     Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('fetch.roles');
@@ -343,20 +333,20 @@ Route::middleware('checkAdminLogin')->group(function () {
     // Edit an already existing access
     Route::post('/edit-access-data', [AdminController::class, 'editAccessData'])->name('admin.edit.access.data');
 
-    // Email Logs Page 
+    // Email Logs Page
     Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
     // Search and filter email logs page
     Route::get('/search-email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
-    // Patient History Page 
+    // Patient History Page
     Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
-    // searching and filtering of Patient Records Page 
+    // searching and filtering of Patient Records Page
     Route::get('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
-    // Display Patient Records Page 
+    // Display Patient Records Page
     Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
 
     // ---------------------------- SCHEDULING ----------------------------
     // Admin Scheduling
-    // Scheduling Calendar view 
+    // Scheduling Calendar view
     Route::get('/scheduling', [SchedulingController::class, 'schedulingCalendarView'])->name('admin.scheduling');
     // Scheduling Filter by region
     Route::get('/scheduling/region/{id}', [SchedulingController::class, 'shiftFilter'])->name('admin.scheduling.filter');

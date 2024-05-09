@@ -3,20 +3,16 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\users;
-use App\Models\allusers;
+use App\Models\Users;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\UserRoles;
-use App\Models\RequestWise;
-use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
-use App\Models\RequestStatus;
-use App\Mail\sendEmailAddress;
-use App\Models\request_Client;
+use App\Mail\SendEmailAddress;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\Mail;
-use App\Models\User;
 
 // this controller is responsible for creating/storing the family request
 
@@ -59,11 +55,11 @@ class familyRequestController extends Controller
             'room' => 'gte:1|nullable|max:1000'
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->first();
+        $isEmailStored = Users::where('email', $request->email)->first();
 
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
-            $requestEmail = new users();
+            $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
@@ -71,7 +67,7 @@ class familyRequestController extends Controller
 
             // store all details of patient in allUsers table
 
-            $requestUsers = new allusers();
+            $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
             $requestUsers->last_name = $request->last_name;
@@ -99,7 +95,7 @@ class familyRequestController extends Controller
             $familyRequest->status = 1;
             $familyRequest->save();
 
-            $patientRequest = new request_Client();
+            $patientRequest = new RequestClient();
             $patientRequest->request_id = $familyRequest->id;
             $patientRequest->first_name = $request->first_name;
             $patientRequest->last_name = $request->last_name;
@@ -136,7 +132,7 @@ class familyRequestController extends Controller
             $familyRequest->save();
 
 
-            $patientRequest = new request_Client();
+            $patientRequest = new RequestClient();
             $patientRequest->request_id = $familyRequest->id;
             $patientRequest->first_name = $request->first_name;
             $patientRequest->last_name = $request->last_name;
@@ -176,7 +172,8 @@ class familyRequestController extends Controller
 
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
-        if (!empty($familyRequest->id)) {
+        // if (!empty($familyRequest->id)) {
+        if ($familyRequest->id) {
             $familyRequest->update(['confirmation_no' => $confirmationNumber]);
         }
 
@@ -184,7 +181,7 @@ class familyRequestController extends Controller
             if ($isEmailStored == null) {
                 // send email
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,

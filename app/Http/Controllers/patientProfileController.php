@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\users;
-use App\Models\allusers;
-use App\Models\RequestTable;
+use App\Models\Users;
+use App\Models\AllUsers;
 use Illuminate\Http\Request;
-use App\Models\request_Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Session;
 
 class patientProfileController extends Controller
 {
-
     /**
      *display patient profile edit page
      */
@@ -23,22 +18,22 @@ class patientProfileController extends Controller
         $userData = Auth::user();
         $email = $userData["email"];
 
-        $getEmailData = allusers::where('email', '=', $email)->first();
+        $getEmailData = AllUsers::where('email', '=', $email)->first();
         return view("patientSite/patientProfile", compact('getEmailData'));
     }
 
-
     /**
      * @param $id of allusers table
-     * 
+     *
      * the page through which patient can edit their profile
      */
     public function patientprofileEdit($id)
     {
         try {
             $id = Crypt::decrypt($id);
-            $getPatientData = allusers::where('id', '=', $id)->first();
-            if (!empty($getPatientData)) {
+            $getPatientData = AllUsers::where('id', '=', $id)->first();
+            // if (!empty($getPatientData)) {
+            if ($getPatientData) {
                 return view("patientSite/patientProfileEdit", compact('getPatientData'));
             }
         } catch (\Throwable $th) {
@@ -77,7 +72,7 @@ class patientProfileController extends Controller
             'username' => $request->input('first_name') . $request->input('last_name'),
         ];
 
-        // update Data in allusers table 
+        // update Data in allusers table
         $updateAllUser = [
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -90,25 +85,21 @@ class patientProfileController extends Controller
             'zipcode' => $request->input('zipcode')
         ];
 
-        users::where('email', $userData['email'])->update($updateUserData);
+        Users::where('email', $userData['email'])->update($updateUserData);
 
-        allusers::where('email', $userData['email'])->update($updateAllUser);
+        AllUsers::where('email', $userData['email'])->update($updateAllUser);
 
         return redirect()->route('patientDashboardData')->with('message', 'profile is updated successfully');
     }
 
-
-
-
     /**
      * patient can see their location on google map
      */
-
     public function patientMapLocation()
     {
         $userData = Auth::user();
         $email = $userData["email"];
-        $getEmailData = allusers::where('email', '=', $email)->first();
+        $getEmailData = AllUsers::where('email', '=', $email)->first();
         $address = $getEmailData->street . $getEmailData->city . $getEmailData->state;
 
         return view('patientSite.patientMapLocation', compact('address'));

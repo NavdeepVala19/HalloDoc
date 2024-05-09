@@ -114,7 +114,8 @@ class ProviderActionController extends Controller
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
 
         // Update the existing note if found, otherwise create a new one
-        if (!empty($requestNote)) {
+        // if (!empty($requestNote)) {
+        if ($requestNote) {
             RequestNotes::where('request_id', $request->requestId)->update([
                 'physician_notes' => $request->physician_note,
             ]);
@@ -261,7 +262,8 @@ class ProviderActionController extends Controller
                 'physician_id' => $providerId,
             ]);
             return redirect()->route('provider.status', ['status' => 'active']);
-        } else if ($request->consult == 1) {
+        }
+        if ($request->consult == 1) {
             RequestTable::where('id', $request->requestId)->update(['status' => 6, 'call_type' => 2]);
             RequestStatus::create([
                 'request_id' => $request->requestId,
@@ -390,7 +392,8 @@ class ProviderActionController extends Controller
     public function encounterFinalized($id)
     {
         $data = MedicalReport::where('request_id', $id)->first();
-        if (empty($data)) {
+        // if (empty($data)) {
+        if (!$data) {
             return redirect()->back()->with('saveFormToFinalize', 'First Create and Save Form to Finalize it!')->withInput();
         }
         try {
@@ -468,7 +471,8 @@ class ProviderActionController extends Controller
     {
         $encounterForm = RequestWiseFile::where('request_id', $request->caseId)->where('is_finalize', true)->first();
 
-        if (empty($encounterForm)) {
+        // if (empty($encounterForm)) {
+        if (!$encounterForm) {
             return redirect()->back()->with('encounterFormRequired', 'Encounter Form need to be finalized to conclude Case!');
         }
 

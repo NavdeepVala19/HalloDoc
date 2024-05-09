@@ -8,7 +8,7 @@ use App\Models\AdminRegion;
 use App\Models\Role;
 use App\Models\RoleMenu;
 use App\Models\UserRoles;
-use App\Models\users;
+use App\Models\Users;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -20,7 +20,7 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = users::create([
+        $user = Users::create([
             'id' => 1,
             'username' => 'HalloDoc-Admin',
             'password' => Hash::make('admin123'),

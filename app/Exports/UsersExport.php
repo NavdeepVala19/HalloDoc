@@ -2,9 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;

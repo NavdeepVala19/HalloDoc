@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\users;
+use App\Models\Users;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +21,7 @@ class Provider extends Model
 
     public function users()
     {
-        return $this->belongsTo(users::class, 'user_id');
+        return $this->belongsTo(Users::class, 'user_id');
     }
 
     public function role()

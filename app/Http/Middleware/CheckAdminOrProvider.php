@@ -22,8 +22,6 @@ class CheckAdminOrProvider
             $roleId = UserRoles::where('user_id', $userId)->first()->role_id;
             if ($roleId === 1 || $roleId === 2) {
                 return $next($request);
-            } else {
-                return redirect()->route('adminLogin');
             }
         }
         return redirect()->route('adminLogin');

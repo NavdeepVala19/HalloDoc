@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use App\Mail\SendEmailAddress;
 use App\Models\Admin;
-use App\Models\users;
-use App\Models\allusers;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\UserRoles;
+use App\Models\Users;
+use App\Models\RequestClient;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Mail\sendEmailAddress;
-use App\Models\request_Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -55,18 +55,18 @@ class AdminDashboardController extends Controller
             'adminNote' => 'nullable|min:5|max:200',
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->first();
+        $isEmailStored = Users::where('email', $request->email)->first();
 
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
-            $requestEmail = new users();
+            $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
 
             // store all details of patient in allUsers table
-            $requestUsers = new allusers();
+            $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
             $requestUsers->last_name = $request->last_name;
@@ -93,7 +93,7 @@ class AdminDashboardController extends Controller
             $requestData->phone_number = $request->phone_number;
             $requestData->save();
 
-            $adminPatientRequest = new request_Client();
+            $adminPatientRequest = new RequestClient();
             $adminPatientRequest->request_id = $requestData->id;
             $adminPatientRequest->first_name = $request->first_name;
             $adminPatientRequest->last_name = $request->last_name;
@@ -124,7 +124,7 @@ class AdminDashboardController extends Controller
             $requestData->status = 1;
             $requestData->save();
 
-            $adminPatientRequest = new request_Client();
+            $adminPatientRequest = new RequestClient();
             $adminPatientRequest->request_id = $requestData->id;
             $adminPatientRequest->first_name = $request->first_name;
             $adminPatientRequest->last_name = $request->last_name;
@@ -159,15 +159,16 @@ class AdminDashboardController extends Controller
 
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
-        if (!empty($requestData->id)) {
+        // if (!empty($requestData->id)) {
+        if ($requestData->id) {
             $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
 
         try {
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 // send email
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,
@@ -193,9 +194,9 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     *@param $id    $id is the id of users table 
+     *@param $id    $id is the id of users table
 
-     * this page will show when admin edit their profile through user access page 
+     * this page will show when admin edit their profile through user access page
      */
     public function adminProfile($id)
     {
@@ -233,7 +234,6 @@ class AdminDashboardController extends Controller
     /**
      * this page will show admin profile edit and admin can route to this page from any page
      */
-
     public function adminProfilePage()
     {
         $adminData = Auth::user();
@@ -263,14 +263,12 @@ class AdminDashboardController extends Controller
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 
-
     /**
      *@param $request the input which is enter by user(admin)
-     *@param $id  id of users table 
+     *@param $id  id of users table
 
      * it will update password in users table
      */
-
     public function adminChangePassword(Request $request, $id)
     {
         $request->validate([
@@ -282,11 +280,10 @@ class AdminDashboardController extends Controller
             'password' => Hash::make($request->password),
         ];
 
-        users::where('id', $id)->first()->update($updateUserData);
+        Users::where('id', $id)->first()->update($updateUserData);
 
         return back()->with('message', 'Your password is updated successfully');
     }
-
 
     /**
      *@param $request the input which is enter by user
@@ -294,10 +291,8 @@ class AdminDashboardController extends Controller
 
      * it will update firstname,lastname,email,mobile in allusers and admin table
      */
-
     public function adminInfoUpdate(Request $request, $id)
     {
-
         $request->validate([
             'first_name' => 'required|min:2|max:30',
             'last_name' => 'required|min:2|max:30',
@@ -317,9 +312,9 @@ class AdminDashboardController extends Controller
 
         $updateAdminInformation->save();
 
-        // update Data in allusers table 
+        // update Data in allusers table
 
-        $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
+        $updateAdminInfoAllUsers = AllUsers::where('user_id', $id)->first();
 
         $updateAdminInfoAllUsers->first_name = $request->first_name;
         $updateAdminInfoAllUsers->last_name = $request->last_name;
@@ -329,7 +324,7 @@ class AdminDashboardController extends Controller
 
         // update email and phone number in users table
 
-        $updateUserInfo = users::where('id', $id)->first();
+        $updateUserInfo = Users::where('id', $id)->first();
         $updateUserInfo->email = $request->email;
         $updateUserInfo->phone_number = $request->phone_number;
         $updateUserInfo->save();
@@ -344,8 +339,6 @@ class AdminDashboardController extends Controller
 
      * it will update address1,address2 ,city,zip ,state,alternate mobile in admin and allusers table
      */
-
-
     public function adminMailInfoUpdate(Request $request, $id)
     {
         $request->validate([
@@ -355,7 +348,6 @@ class AdminDashboardController extends Controller
             'zip' => 'digits:6',
             'alt_mobile' => 'required|min_digits:10|max_digits:10',
         ]);
-
 
         // Update in admin table
         $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
@@ -368,14 +360,12 @@ class AdminDashboardController extends Controller
         $updateAdminInformation->region_id = $request->select_state;
         $updateAdminInformation->save();
 
-
-        // update Data in allusers table 
-        $updateAdminInfoAllUsers = allusers::where('user_id', $id)->first();
+        // update Data in allusers table
+        $updateAdminInfoAllUsers = AllUsers::where('user_id', $id)->first();
         $updateAdminInfoAllUsers->city = $request->city;
         $updateAdminInfoAllUsers->street = $request->address1;
         $updateAdminInfoAllUsers->zipcode = $request->zip;
         $updateAdminInfoAllUsers->save();
-
 
         return back()->with('message', 'Your Mailing and Billing Information is updated successfully');
     }

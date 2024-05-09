@@ -2,34 +2,32 @@
 
 namespace App\Http\Controllers;
 
-// For Sending SMS & Email
-use Twilio\Rest\Client;
-use Illuminate\Support\Facades\Mail;
-
-use ZipArchive;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\Admin;
-use App\Models\SMSLogs;
 use App\Models\EmailLog;
+use App\Models\SMSLogs;
 use App\Models\Provider;
 use App\Mail\SendAgreement;
 use App\Models\RequestTable;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
 use App\Mail\DocsAttachmentMail;
 use App\Mail\SendMailPatient;
 use App\Models\HealthProfessional;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Twilio\Rest\Client;
+use ZipArchive;
+
 
 class CommonOperationController extends Controller
 {
     /**
      * Download any sinlge file function
      *
-     * @param int $id id of document/image to be downloaded 
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse 
+     * @param int $id id of document/image to be downloaded
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($id = null)
     {
@@ -70,10 +68,11 @@ class CommonOperationController extends Controller
      */
     public function operations(Request $request)
     {
-        $email = request_Client::where('request_id', $request->requestId)->first()->email;
+        $email = RequestClient::where('request_id', $request->requestId)->first()->email;
         // Delete All Documents or Delete the selected documents
-        if ($request->input('operation') == 'delete_all') {
-            if (empty($request->input('selected'))) {
+        if ($request->input('operation') === 'delete_all') {
+            // if (empty($request->input('selected'))) {
+            if (!$request->selected) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
@@ -85,9 +84,11 @@ class CommonOperationController extends Controller
             RequestWiseFile::whereIn('id', $ids)->delete();
 
             return redirect()->back();
-        } else if ($request->input('operation') == 'download_all') {
+        }
+        if ($request->input('operation') === 'download_all') {
             // Download All Documents or Download the selected documents
-            if (empty($request->input('selected'))) {
+            // if (empty($request->input('selected'))) {
+            if (!$request->selected) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to download!');
@@ -110,7 +111,8 @@ class CommonOperationController extends Controller
                 $zip->close();
             }
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
-        } else if ($request->input('operation') == 'send_mail') {
+        }
+        if ($request->input('operation') === 'send_mail') {
             // Send Mail of Selected Documents as attachment
             $data = RequestWiseFile::where('request_id', $request->requestId)->get();
             if ($data->isEmpty()) {
@@ -172,7 +174,7 @@ class CommonOperationController extends Controller
      */
     public function sendMailPatient(Request $request)
     {
-        $requestClient = request_Client::where('request_id', $request->requestId)->first();
+        $requestClient = RequestClient::where('request_id', $request->requestId)->first();
         try {
 
             $user = Auth::user();
@@ -220,7 +222,7 @@ class CommonOperationController extends Controller
     /**
      * Provider/Admin Send Agreement Link to Patient from Pending State
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendAgreementLink(Request $request)
@@ -288,7 +290,7 @@ class CommonOperationController extends Controller
         }
 
         try {
-            // send SMS 
+            // send SMS
             $sid = getenv("TWILIO_SID");
             $token = getenv("TWILIO_AUTH_TOKEN");
             $senderNumber = getenv("TWILIO_PHONE_NUMBER");

@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\users;
-use App\Models\Status;
-use App\Models\allusers;
+use App\Mail\SendEmailAddress;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\UserRoles;
-use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use Illuminate\Http\Request;
 use App\Models\RequestStatus;
-use App\Http\Controllers\view;
-use App\Mail\sendEmailAddress;
-use App\Models\request_Client;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
+use App\Models\Users;
+use App\Models\UserRoles;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -24,25 +21,6 @@ use Illuminate\Support\Facades\Crypt;
 
 class patientDashboardController extends Controller
 {
-    public function patientDashboard()
-    {
-        return view("patientSite/patientDashboard");
-    }
-
-
-    public function createNewRequest()
-    {
-        $userData = Auth::user();
-        $email = $userData["email"];
-
-        return view("patientSite/patientNewRequest", compact('email'));
-    }
-
-    public function createSomeoneRequest()
-    {
-        return view("patientSite/patientSomeoneRequest");
-    }
-
     // Display agreement page when clicked through email
     public function viewAgreement($data)
     {
@@ -139,7 +117,7 @@ class patientDashboardController extends Controller
             'room' => 'gte:1|nullable|max:1000'
         ]);
 
-        $isEmailStored = users::where('email', $email)->first();
+        $isEmailStored = Users::where('email', $email)->first();
 
         $newPatient = new RequestTable();
         $newPatient->request_type_id = 1;
@@ -152,7 +130,7 @@ class patientDashboardController extends Controller
         $newPatient->status = 1;
         $newPatient->save();
 
-        $newPatientRequest = new request_Client();
+        $newPatientRequest = new RequestClient();
         $newPatientRequest->request_id = $newPatient->id;
         $newPatientRequest->first_name = $request->first_name;
         $newPatientRequest->last_name = $request->last_name;
@@ -174,7 +152,7 @@ class patientDashboardController extends Controller
             $request_file = new RequestWiseFile();
             $request_file->request_id = $newPatient->id;
             $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+            $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
 
@@ -197,7 +175,7 @@ class patientDashboardController extends Controller
 
         return redirect()->route('patientDashboardData')->with('message', 'Request is Submitted');
     }
-    
+
     // create someone else request from patient dashboard
 
     public function createSomeoneRequest()
@@ -230,11 +208,11 @@ class patientDashboardController extends Controller
             'relation' => 'nullable|alpha'
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->first();
+        $isEmailStored = Users::where('email', $request->email)->first();
 
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
-            $requestEmail = new users();
+            $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
@@ -242,7 +220,7 @@ class patientDashboardController extends Controller
 
             // store all details of patient in allUsers table
 
-            $requestUsers = new allusers();
+            $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
             $requestUsers->last_name = $request->last_name;
@@ -260,7 +238,7 @@ class patientDashboardController extends Controller
             $userRolesEntry->save();
 
             $newPatient = new RequestTable();
-            $newPatient->request_type_id = 1;
+            $newPatient->request_type_id = 2;
             $newPatient->user_id = $requestEmail->id;
             $newPatient->first_name = $request->first_name;
             $newPatient->last_name = $request->last_name;
@@ -270,7 +248,7 @@ class patientDashboardController extends Controller
             $newPatient->status = 1;
             $newPatient->save();
 
-            $newPatientRequest = new request_Client();
+            $newPatientRequest = new RequestClient();
             $newPatientRequest->request_id = $newPatient->id;
             $newPatientRequest->first_name = $request->first_name;
             $newPatientRequest->last_name = $request->last_name;
@@ -292,12 +270,12 @@ class patientDashboardController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $newPatient->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
         } else {
             $newPatient = new RequestTable();
-            $newPatient->request_type_id = 1;
+            $newPatient->request_type_id = 2;
             $newPatient->user_id = $isEmailStored->id;
             $newPatient->first_name = $request->first_name;
             $newPatient->last_name = $request->last_name;
@@ -307,7 +285,7 @@ class patientDashboardController extends Controller
             $newPatient->status = 1;
             $newPatient->save();
 
-            $newPatientRequest = new request_Client();
+            $newPatientRequest = new RequestClient();
             $newPatientRequest->request_id = $newPatient->id;
             $newPatientRequest->first_name = $request->first_name;
             $newPatientRequest->last_name = $request->last_name;
@@ -328,7 +306,7 @@ class patientDashboardController extends Controller
                 $request_file = new RequestWiseFile();
                 $request_file->request_id = $newPatient->id;
                 $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-                $path = $request->file('docs')->storeAs('public', $request_file->file_name);
+                $request->file('docs')->storeAs('public', $request_file->file_name);
                 $request_file->save();
             }
         }
@@ -354,7 +332,7 @@ class patientDashboardController extends Controller
             if ($isEmailStored == null) {
                 // send email
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,
@@ -389,7 +367,7 @@ class patientDashboardController extends Controller
         $userData = Auth::user();
         $email = $userData["email"];
 
-        $userId = users::select('id')->where('email', $email);
+        $userId = Users::select('id')->where('email', $email);
         $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->orderBy('id', 'desc')->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data', 'userData'));

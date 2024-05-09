@@ -2,32 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\users;
-use App\Models\allusers;
-use App\Models\EmailLog;
+use App\Mail\SendEmailAddress;
+use App\Models\AllUsers;
 use App\Models\Concierge;
-use App\Models\UserRoles;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-
-use App\Mail\sendEmailAddress;
-use App\Models\request_Client;
+use App\Models\EmailLog;
+use App\Models\RequestClient;
 use App\Models\RequestConcierge;
+use App\Models\RequestTable;
+use App\Models\UserRoles;
+use App\Models\Users;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-// use App\Models\User;
 
 // this controller is responsible for creating/storing the concierge request
-
 class conciergeRequestController extends Controller
 {
-
     public function conciergeRequests()
     {
         return view('patientSite/conciergeRequest');
     }
-
 
     /**
      *@param $request the input which is enter by user
@@ -56,19 +51,18 @@ class conciergeRequestController extends Controller
             'room' => 'gte:1|nullable|max_digits:4|numeric|lt:1000'
         ]);
 
-        $isEmailStored = users::where('email', $request->email)->first();
+        $isEmailStored = Users::where('email', $request->email)->first();
 
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
-            $requestEmail = new users();
+            $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
 
             // store all details of patient in allUsers table
-
-            $requestUsers = new allusers();
+            $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
             $requestUsers->last_name = $request->last_name;
@@ -97,7 +91,7 @@ class conciergeRequestController extends Controller
             $requestConcierge->relation_name = $request->concierge_hotel_name;
             $requestConcierge->save();
 
-            $patientRequest = new request_Client();
+            $patientRequest = new RequestClient();
             $patientRequest->request_id = $requestConcierge->id;
             $patientRequest->first_name = $request->first_name;
             $patientRequest->last_name = $request->last_name;
@@ -127,7 +121,6 @@ class conciergeRequestController extends Controller
             $conciergeRequest->concierge_id = $concierge->id;
             $conciergeRequest->save();
         } else {
-
             // concierge request into request table
             $requestConcierge = new RequestTable();
             $requestConcierge->status = 1;
@@ -140,7 +133,6 @@ class conciergeRequestController extends Controller
             $requestConcierge->relation_name = $request->concierge_hotel_name;
             $requestConcierge->save();
 
-
             // concierge request into concierge table
             $concierge = new Concierge();
             $concierge->name = $request->concierge_first_name;
@@ -151,8 +143,7 @@ class conciergeRequestController extends Controller
             $concierge->zipcode = $request->concierge_zip_code;
             $concierge->save();
 
-
-            $patientRequest = new request_Client();
+            $patientRequest = new RequestClient();
             $patientRequest->request_id = $requestConcierge->id;
             $patientRequest->first_name = $request->first_name;
             $patientRequest->last_name = $request->last_name;
@@ -174,7 +165,6 @@ class conciergeRequestController extends Controller
             $conciergeRequest->save();
         }
 
-
         // confirmation number
         $currentTime = Carbon::now();
         $currentDate = $currentTime->format('Y');
@@ -184,8 +174,8 @@ class conciergeRequestController extends Controller
 
         $confirmationNumber = substr($request->concierge_state, 0, 2) . $currentDate . substr($request->last_name, 0, 2) . substr($request->first_name, 0, 2) . '00' . $entriesCount;
 
-
-        if (!empty($requestConcierge->id)) {
+        // if (!empty($requestConcierge->id)) {
+        if ($requestConcierge->id) {
             $requestConcierge->update(['confirmation_no' => $confirmationNumber]);
         }
 
@@ -193,7 +183,7 @@ class conciergeRequestController extends Controller
             if ($isEmailStored == null) {
                 // send email
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'request_id' => $requestConcierge->id,

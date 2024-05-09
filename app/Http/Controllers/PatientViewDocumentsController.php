@@ -3,23 +3,18 @@
 namespace App\Http\Controllers;
 
 use ZipArchive;
-use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Spatie\MediaLibrary\Support\MediaStream;
 
 class PatientViewDocumentsController extends Controller
 {
-
     /**
      *@param $id  id of request table and in request_wise_file it is request_id
 
      * show user(patient) firstname , confirmation number, filename, created_at
      */
-
     public function patientViewDocument($id)
     {
         try {
@@ -48,7 +43,6 @@ class PatientViewDocumentsController extends Controller
 
      * upload document in request_wise_file at $request->request_wise_file_id
      */
-
     public function uploadDocs(Request $request)
     {
         $request->validate([
@@ -77,7 +71,6 @@ class PatientViewDocumentsController extends Controller
 
      * download individual documents
      */
-
     public function downloadOne($id)
     {
         try {
@@ -95,7 +88,6 @@ class PatientViewDocumentsController extends Controller
 
      * download multiple documents
      */
-
     public function downloadSelectedFiles(Request $request)
     {
         try {

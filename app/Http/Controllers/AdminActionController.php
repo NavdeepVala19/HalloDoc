@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-
+use App\Models\BlockRequest;
 use App\Models\Orders;
 use App\Models\CaseTag;
 use App\Models\Regions;
 use App\Models\Provider;
-use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use App\Models\MedicalReport;
 use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-use App\Models\request_Client;
-use App\Models\PhysicianRegion;
+use App\Models\RequestClient;
 use App\Models\RequestWiseFile;
+use App\Models\PhysicianRegion;
 use App\Models\HealthProfessional;
 use App\Models\HealthProfessionalType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminActionController extends Controller
 {
@@ -48,7 +47,7 @@ class AdminActionController extends Controller
     }
 
     /**
-     * AJAX call for (Remaining) Physician for listing in dropdown selection 
+     * AJAX call for (Remaining) Physician for listing in dropdown selection
      *
      * @param  int  $requestId
      * @param  int  $regionId
@@ -167,7 +166,7 @@ class AdminActionController extends Controller
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
-        $client = request_Client::where('request_id', $request->requestId)->first();
+        $client = RequestClient::where('request_id', $request->requestId)->first();
         BlockRequest::create([
             'request_id' => $request->requestId,
             'reason' => $request->block_reason,
@@ -228,7 +227,7 @@ class AdminActionController extends Controller
             'last_name' => $lastName,
         ]);
 
-        request_Client::where('request_id', $request->requestId)->update([
+        RequestClient::where('request_id', $request->requestId)->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
             'date_of_birth' => $dateOfBirth,
@@ -273,7 +272,8 @@ class AdminActionController extends Controller
             'admin_note' => 'required||min:5|max:200'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
-        if (!empty($requestNote)) {
+        // if (!empty($requestNote)) {
+        if ($requestNote) {
             RequestNotes::where('request_id', $request->requestId)->update([
                 'admin_notes' => $request->admin_note,
             ]);
@@ -477,11 +477,11 @@ class AdminActionController extends Controller
                 'phone_number' => 'required',
                 'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
             ]);
-            request_Client::where('request_id', $request->requestId)->update([
+            RequestClient::where('request_id', $request->requestId)->update([
                 'phone_number' => $request->phone_number,
                 'email' => $request->email
             ]);
-        } else if ($request->input('closeCaseBtn') === 'Close Case') {
+        } elseif ($request->input('closeCaseBtn') === 'Close Case') {
             $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
             RequestTable::where('id', $request->requestId)->update(['status' => 9]);
             RequestStatus::create([

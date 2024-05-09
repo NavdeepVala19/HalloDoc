@@ -2,12 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
 class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
@@ -47,23 +44,11 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
 
             if (isset($adminNew) && $adminNew->requestClient) {
                 $patientName = $adminNew->requestClient->first_name;
-            }
-            if (isset($adminNew) && $adminNew->requestClient) {
                 $patientLastName = $adminNew->requestClient->last_name;
-            }
-            if (isset($adminNew) && $adminNew->requestClient) {
                 $patientMobile = $adminNew->requestClient->phone_number;
-            }
-            if (isset($adminNew) && $adminNew->requestClient) {
                 $dateOfBirth = $adminNew->requestClient->date_of_birth;
-            }
-            if (isset($adminNew) && $adminNew->requestClient) {
                 $street = $adminNew->requestClient->street;
-            }
-            if (isset($adminNew) && $adminNew->requestClient) {
                 $city = $adminNew->requestClient->city;
-            }
-            if (isset($adminNew) && $adminNew->requestClient) {
                 $state = $adminNew->requestClient->state;
             }
 

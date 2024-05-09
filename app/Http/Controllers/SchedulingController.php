@@ -217,7 +217,7 @@ class SchedulingController extends Controller
             $weekDays = null;
         }
 
-        if ($request['is_repeat'] == true) {
+        if ($request['is_repeat']) {
             $is_repeat = 1;
         } else {
             $is_repeat = 0;
@@ -331,7 +331,6 @@ class SchedulingController extends Controller
      * Edit an existing shift.
      *
      * @param \Illuminate\Http\Request $request
-     * 
      * @return \Illuminate\Http\RedirectResponse
      */
     public function editShift(Request $request)
@@ -344,7 +343,7 @@ class SchedulingController extends Controller
             }
             ShiftDetail::where('id', $request->shiftDetailId)->update(['status' => 2]);
             return redirect()->back()->with('shiftApproved', 'Shift Status changed from Pending to Approved');
-        } else if ($request['action'] == 'save') {
+        } elseif ($request['action'] == 'save') {
             // Check whether the shift created for provider is already having shift for that time period
             $shifts = Shift::with('shiftDetail')->get();
             $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
@@ -391,15 +390,15 @@ class SchedulingController extends Controller
      * Change the status of shifts (Approved or Pending).
      *
      * @param \Illuminate\Http\Request $request
-     * 
      * @return \Illuminate\Http\RedirectResponse
      */
     public function shiftAction(Request $request)
     {
-        if (empty($request->selected)) {
+        // if (empty($request->selected)) {
+        if (!$request->selected) {
             return redirect()->back()->with('selectOption', "Select Atleast one shift for performing operation!");
         }
-        if ($request->action == 'approve') {
+        if ($request->action === 'approve') {
             ShiftDetail::whereIn('id', $request->selected)->update(['status' => 2]);
             return redirect()->back();
         } else {
@@ -425,14 +424,13 @@ class SchedulingController extends Controller
      * Filter shifts in shiftsForReview page based on region selected.
      *
      * @param \Illuminate\Http\Request $request
-     * 
      * @return \Illuminate\Http\JsonResponse
      */
     public function filterRegions(Request $request)
     {
         $allShifts = ShiftDetailRegion::where('region_id', $request->regionId)->pluck('shift_detail_id')->toArray();
         $shiftDetails = ShiftDetail::whereHas('getShiftData')->whereIn('id', $allShifts)->where('status', 'pending')->paginate(10);
-        if ($request->regionId == 0) {
+        if ($request->regionId === 0) {
             $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
             $data = view('adminPage.scheduling.filteredShifts')->with('shiftDetails', $shiftDetails)->render();
         } else {

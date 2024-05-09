@@ -2,22 +2,18 @@
 
 namespace App\Exports;
 
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
     private $data;
 
-
     public function __construct($data)
     {
         $this->data = $data;
     }
-
 
     public function getCsvSettings(): array
     {
@@ -28,7 +24,6 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
     {
         return ['PatientName', 'Requestor', 'Email', 'Phone_Number', 'Address', 'Zip', 'Request Status', 'Physician', 'Physician Note', 'Admin Note', 'Patient Note'];
     }
-
 
     /**
      * @return \Illuminate\Support\Collection

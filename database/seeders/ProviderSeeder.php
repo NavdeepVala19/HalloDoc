@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
-use App\Models\users;
+use App\Models\Users;
 use App\Models\Provider;
 use App\Models\RoleMenu;
 use App\Models\PhysicianRegion;
@@ -18,7 +18,7 @@ class ProviderSeeder extends Seeder
      */
     public function run(): void
     {
-        $firstProviderUser = users::create([
+        $firstProviderUser = Users::create([
             'id' => 2,
             'username' => 'FirstPhysician',
             'password' => Hash::make('physician1'),
@@ -72,7 +72,7 @@ class ProviderSeeder extends Seeder
             'role_id' => 2
         ]);
 
-        $secondProviderUser = users::create([
+        $secondProviderUser = Users::create([
             'id' => 3,
             'username' => 'SecondPhysician',
             'password' => Hash::make('physician2'),
@@ -96,7 +96,7 @@ class ProviderSeeder extends Seeder
             'role_id' => 2
         ]);
 
-        $thirdProviderUser = users::create([
+        $thirdProviderUser = Users::create([
             'id' => 4,
             'username' => 'ThirdPhysician',
             'password' => Hash::make('physician3'),

@@ -2,12 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\RequestTable;
-use App\Models\request_Client;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
@@ -35,7 +32,6 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
         $adminActiveData = $this->data->get();
 
         return collect($adminActiveData)->map(function ($adminActive) {
-
             $patientName = null;
             $patientLastName = null;
             $dateOfBirth = null;
@@ -46,26 +42,13 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
 
             if (isset($adminActive) && $adminActive->requestClient) {
                 $patientName = $adminActive->requestClient->first_name;
-            }
-            if (isset($adminActive) && $adminActive->requestClient) {
                 $patientLastName = $adminActive->requestClient->last_name;
-            }
-            if (isset($adminActive) && $adminActive->requestClient) {
                 $dateOfBirth = $adminActive->requestClient->date_of_birth;
-            }
-            if (isset($adminActive) && $adminActive->requestClient) {
                 $patientMobile = $adminActive->requestClient->phone_number;
-            }
-            if (isset($adminActive) && $adminActive->requestClient) {
                 $street = $adminActive->requestClient->street;
-            }
-            if (isset($adminActive) && $adminActive->requestClient) {
                 $city = $adminActive->requestClient->city;
-            }
-            if (isset($adminActive) && $adminActive->requestClient) {
                 $state = $adminActive->requestClient->state;
             }
-
 
             return [
                 'PatientName' => $patientName . ' ' . $patientLastName,

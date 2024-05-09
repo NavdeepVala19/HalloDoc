@@ -8,13 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class users extends Model
+class Users extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'users';
-
-    use SoftDeletes;
 
     protected $fillable = [
         'username',
@@ -22,22 +21,6 @@ class users extends Model
         'email',
         'phone_number',
     ];
-
-    public function allusers()
-    {
-        return $this->hasMany(allusers::class);
-    }
-    public function userRoles()
-    {
-        return $this->hasOne(UserRoles::class, 'user_id', 'id');
-    }
-
-    public function provider()
-    {
-        return $this->belongsTo(Provider::class, 'user_id');
-    }
-
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -58,4 +41,18 @@ class users extends Model
         'email_verified_at' => 'datetime',
         'password_hash' => 'hashed',
     ];
+
+    public function allusers()
+    {
+        return $this->hasMany(AllUsers::class);
+    }
+    public function userRoles()
+    {
+        return $this->hasOne(UserRoles::class, 'user_id', 'id');
+    }
+
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class, 'user_id');
+    }
 }

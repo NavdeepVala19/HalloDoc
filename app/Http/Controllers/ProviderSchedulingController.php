@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Regions;
 use App\Models\Shift;
 use App\Models\Provider;
 use App\Models\ShiftDetail;

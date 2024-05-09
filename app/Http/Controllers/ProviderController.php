@@ -7,12 +7,12 @@ use Carbon\Carbon;
 // Different Models used in these Controller
 use App\Models\User;
 use App\Models\Admin;
-use App\Models\users;
+use App\Models\Users;
 use App\Mail\SendMail;
 use App\Models\Regions;
 use App\Models\SMSLogs;
 use Twilio\Rest\Client;
-use App\Models\allusers;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
@@ -24,8 +24,8 @@ use Illuminate\Http\Request;
 
 // For sending Mails
 use App\Mail\ProviderRequest;
-use App\Mail\sendEmailAddress;
-use App\Models\request_Client;
+use App\Mail\SendEmailAddress;
+use App\Models\RequestClient;
 
 // For Sending SMS
 use App\Models\PhysicianRegion;
@@ -40,7 +40,7 @@ class ProviderController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Provider Listing (Cases with different status, category and searchTerm) 
+    | Provider Listing (Cases with different status, category and searchTerm)
     |--------------------------------------------------------------------------
     |
     | Provider Listing pages functionality -> with particullar provider LoggedIn
@@ -111,7 +111,7 @@ class ProviderController extends Controller
         return [
             // unassigned case(Status = 1) -> assigned to provider but not accepted
             'newCase' => RequestTable::where('status', self::STATUS_NEW)->where('physician_id', $providerId)->count(),
-            // pending state(Status = 3) -> Accepted by provider 
+            // pending state(Status = 3) -> Accepted by provider
             'pendingCase' => RequestTable::where('status', self::STATUS_PENDING)->where('physician_id', $providerId)->count(),
             // Active State(Status = 4,5) -> MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider[HouseCall])
             'activeCase' => RequestTable::whereIn('status', self::STATUS_ACTIVE)->where('physician_id', $providerId)->count(),
@@ -144,7 +144,8 @@ class ProviderController extends Controller
         }
 
         // Apply search condition(Enter condition only when any search query is requested)
-        if (isset($searchTerm) && !empty($searchTerm)) {
+        // if (isset($searchTerm) && !empty($searchTerm)) {
+        if (isset($searchTerm) && $searchTerm) {
             $query->whereHas('requestClient', function ($q) use ($searchTerm) {
                 $q->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%");
             });
@@ -190,7 +191,7 @@ class ProviderController extends Controller
         // Forget from session whenever a new status is opened
         Session::forget(['searchTerm', 'category']);
 
-        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude') {
+        if ($status === 'new' || $status === 'pending' || $status === 'active' || $status === 'conclude') {
             return $this->cases($request, $status);
         }
         return view('errors.404');
@@ -209,10 +210,8 @@ class ProviderController extends Controller
         // Store category in the session
         $request->session()->put('category', $category);
 
-        if ($status == 'new' || $status == 'pending' || $status == 'active' || $status == 'conclude') {
-            if ($category == 'all' || $category == 'patient' || $category == 'family' || $category == 'business' || $category == 'concierge') {
-                return $this->cases($request, $status, $category);
-            }
+        if ($status === 'new' || $status === 'pending' || $status === 'active' || $status === 'conclude' && $category === 'all' || $category === 'patient' || $category === 'family' || $category === 'business' || $category === 'concierge') {
+            return $this->cases($request, $status, $category);
         }
         return view('errors.404');
     }
@@ -267,22 +266,22 @@ class ProviderController extends Controller
         ]);
 
         // check if email already exists in users table
-        $isEmailStored = users::where('email', $request->email)->first();
+        $isEmailStored = Users::where('email', $request->email)->first();
 
         $user = Auth::user();
         $providerId = Provider::where('user_id', $user->id)->first()->id;
 
         // If email doesn't exist, store email, username, phone_number in users table
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             // store email and phoneNumber in users table
-            $requestEmail = new users();
+            $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
 
             // store all details of patient in allUsers table
-            $requestUsers = new allusers();
+            $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;
             $requestUsers->last_name = $request->last_name;
@@ -324,8 +323,8 @@ class ProviderController extends Controller
             $requestTable->save();
         }
 
-        // Store client details in request_Client table
-        $requestClient = new request_Client();
+        // Store client details in RequestClient table
+        $requestClient = new RequestClient();
         $requestClient->request_id = $requestTable->id;
         $requestClient->first_name = $request->first_name;
         $requestClient->last_name = $request->last_name;
@@ -357,16 +356,17 @@ class ProviderController extends Controller
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
         // Update RequestTable with confirmation number
-        if (!empty($requestTable->id)) {
+        // if (!empty($requestTable->id)) {
+        if ($requestTable->id) {
             $requestTable->update(['confirmation_no' => $confirmationNumber]);
         }
 
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             // Send email to user
             $emailAddress = $request->email;
 
             try {
-                Mail::to($request->email)->send(new sendEmailAddress($emailAddress));
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
             } catch (\Throwable $th) {
                 return view('errors.500');
             }
@@ -413,7 +413,7 @@ class ProviderController extends Controller
     /**
      * Reset password of provider
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function resetPassword(Request $request)
@@ -433,7 +433,7 @@ class ProviderController extends Controller
     /**
      * Provider send an email to Admin with the request of changes needed in the profile
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function editProfileMessage(Request $request)
@@ -467,7 +467,7 @@ class ProviderController extends Controller
     /**
      * Send Mail to patient with link to create request page
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendMail(Request $request)
@@ -475,7 +475,7 @@ class ProviderController extends Controller
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route('submitRequest');
 
-        // Validation 
+        // Validation
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
