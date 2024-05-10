@@ -492,7 +492,6 @@ class AdminProviderController extends Controller
         $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
 
         if (!$updateProviderDataAllUsers) {
-            dd('here');
             return back()->with('message', 'Physician information is updated');
         } else {
             $updateProviderDataAllUsers->first_name = $request->first_name;

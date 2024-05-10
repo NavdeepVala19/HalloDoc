@@ -12,7 +12,7 @@
                 <h1>Reset Password</h1>
             </div>
             <div class="form">
-                <form action="{{ route('patient.update.passwor') }}" method="post" id="patientPasswordUpdate">
+                <form action="{{ route('patient.update.password') }}" method="post" id="patientPasswordUpdate">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
                     <div class="mb-4 password register">

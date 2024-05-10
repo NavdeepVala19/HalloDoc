@@ -189,7 +189,8 @@ class patientController extends Controller
                 return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
             }
         } catch (\Throwable $th) {
-            return view('errors.500');
+            dd($th);
+            // return view('errors.500');
         }
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 class patientLoginController extends Controller
 {
@@ -43,7 +44,7 @@ class patientLoginController extends Controller
             if ($userRolesData == null) {
                 return redirect()->route('patient.login.view')->with('error', 'submit request with registered email');
             } elseif ($userRolesData->role_id === 3) {
-                return redirect()->route('patientDashboardData');
+                return redirect()->route('patient.dashboard');
             } else {
                 return back()->with('error', 'Invalid credentials');
             }

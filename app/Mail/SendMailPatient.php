@@ -16,9 +16,9 @@ class SendMailPatient extends Mailable
     /**
      * Create a new message instance.
      */
-    protected $data;
-    protected $sender;
-    protected $note;
+    public $data;
+    public $sender;
+    public $note;
 
     public function __construct($data, $sender, $note)
     {

@@ -17,7 +17,7 @@ class RequestSupportMessage extends Mailable
      * Create a new message instance.
      */
 
-     protected $requestSupportMessage;
+    public $requestSupportMessage;
 
     public function __construct($message)
     {
