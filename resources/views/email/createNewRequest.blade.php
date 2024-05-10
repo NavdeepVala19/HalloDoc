@@ -110,6 +110,6 @@
 
 <h4> Hii, {{ $data['first_name'] }} {{ $data['last_name'] }} Click on the below link to new create request</h4>
 
-<a href="{{ route('submitRequest') }}"  type="button" class="case submitType" id="patient">Create Request</a>
+<a href="{{ route('submit.request') }}"  type="button" class="case submitType" id="patient">Create Request</a>
 
 </div>

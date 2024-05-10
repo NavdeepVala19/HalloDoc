@@ -9,7 +9,7 @@
 
     <div class="container mb-3">
         <div class="header_part">
-            <a href="{{ route('submitRequest') }}" type="button" class="primary-empty">
+            <a href="{{ route('submit.request') }}" type="button" class="primary-empty">
                 < Back</a>
         </div>
         <div class="patient-container">
@@ -214,7 +214,7 @@
                     <!--  SUBMIT and CANCEL Buttons -->
                     <div class="buttons">
                         <button class="primary-fill btn-submit" type="submit">Submit</button>
-                        <a href="{{ route('submitRequest') }}" type="button" class="primary-empty">Cancel </a>
+                        <a href="{{ route('submit.request') }}" type="button" class="primary-empty">Cancel </a>
                     </div>
             </form>
         </div>

@@ -473,7 +473,7 @@ class ProviderController extends Controller
     public function sendMail(Request $request)
     {
         // Generate the link using route() helper (assuming route parameter is optional)
-        $link = route('submitRequest');
+        $link = route('submit.request');
 
         // Validation
         $request->validate([

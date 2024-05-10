@@ -301,7 +301,7 @@ class CommonOperationController extends Controller
                 ->create(
                     "+91 99780 71802", // to
                     [
-                        "body" => "Hii " .  $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patientAgreement/' . $id),
+                        "body" => "Hii " .  $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patient-agreement/' . $id),
                         "from" =>  $senderNumber
                     ]
                 );

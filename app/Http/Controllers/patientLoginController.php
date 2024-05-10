@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 class patientLoginController extends Controller
 {
@@ -72,7 +73,9 @@ class patientLoginController extends Controller
         ]);
 
         $user = Users::where('email', $request->email)->first();
-        $userRolesData = UserRoles::where('user_id', $user->id)->first();
+        if ($user) {
+            $userRolesData = UserRoles::where('user_id', $user->id)->first();
+        }
 
         if ($user == null || $userRolesData->role_id == 1 || $userRolesData->role_id == 2) {
             return back()->with('error', 'no such email is registered');
@@ -110,7 +113,7 @@ class patientLoginController extends Controller
                 return view('patientSite/patientPasswordReset', ['token' => $tokenValue]);
             } else {
                 return view('patientSite/passwordUpdatedSuccess');
-            } 
+            }
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -121,7 +124,7 @@ class patientLoginController extends Controller
 
      * it update password of patient and delete token
      */
-    
+
     public function submitResetPasswordForm(Request $request)
     {
         $request->validate([
@@ -147,7 +150,7 @@ class patientLoginController extends Controller
      * it logout user(patient)
      */
 
-     
+
     public function logout()
     {
         Auth::logout();

@@ -56,7 +56,6 @@ class AdminLoginController extends Controller
                     'longitude' => $request->longitude,
                 ]);
             }
-
             if ($userRolesData->role_id == 1) {
                 return redirect()->route('admin.dashboard');
             }
@@ -86,7 +85,6 @@ class AdminLoginController extends Controller
 
      * send email to entered email if email not exist it shows error message
      */
-
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([
@@ -95,7 +93,9 @@ class AdminLoginController extends Controller
 
         $user = Users::where('email', $request->email)->first();
 
-        $userRolesData = UserRoles::where('user_id', $user->id)->first();
+        if ($user) {
+            $userRolesData = UserRoles::where('user_id', $user->id)->first();
+        }
 
         if ($user == null || $userRolesData->role_id == 3) {
             return back()->with('error', 'no such email is registered');

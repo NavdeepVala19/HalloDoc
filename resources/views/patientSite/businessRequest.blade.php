@@ -11,7 +11,7 @@
 <div class="container mb-3">
     <!-- this div is for back button -->
     <div class="header_part">
-        <a href="{{route('submitRequest')}}" type="button" class="primary-empty">
+        <a href="{{route('submit.request')}}" type="button" class="primary-empty">
             < Back</a>
     </div>
     <form action="{{route('business.request.submit')}}" method="post" id="patientRequestForm">
@@ -182,7 +182,7 @@
 
                 <div class="buttons">
                     <button class="primary-fill btn-submit" type="submit">Submit</button>
-                    <a href="{{route('submitRequest')}}" type="button" class="primary-empty">Cancel </a>
+                    <a href="{{route('submit.request')}}" type="button" class="primary-empty">Cancel </a>
                 </div>
 
 

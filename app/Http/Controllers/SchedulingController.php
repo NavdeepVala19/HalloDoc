@@ -229,7 +229,7 @@ class SchedulingController extends Controller
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
-            'created_by' => Auth::user()->id
+            'created_by' => 1
         ]);
         $shiftDetail = ShiftDetail::create([
             'shift_id' => $shift->id,

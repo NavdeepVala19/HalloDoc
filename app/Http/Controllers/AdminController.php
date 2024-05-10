@@ -296,7 +296,7 @@ class AdminController extends Controller
         $lastname = $request->last_name;
 
         // Route name
-        $routeName = 'submitRequest';
+        $routeName = 'submit.request';
 
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route($routeName);
@@ -588,15 +588,15 @@ class AdminController extends Controller
      */
     public function fetchRoles($id = null)
     {
-        if ($id === 0) {
+        if ($id === '0') {
             $menus = Menu::get();
             return response()->json($menus);
         }
-        if ($id === 1) {
+        if ($id == '1') {
             $menus = Menu::where('account_type', 'Admin')->get();
             return response()->json($menus);
         }
-        if ($id === 2) {
+        if ($id == '2') {
             $menus = Menu::where('account_type', 'Physician')->get();
             return response()->json($menus);
         }
@@ -1350,7 +1350,7 @@ class AdminController extends Controller
     /**
      *fetch region from region table and show in all region drop down button
      */
-    
+
     public function fetchRegions()
     {
         $fetchedRegions = Regions::get();

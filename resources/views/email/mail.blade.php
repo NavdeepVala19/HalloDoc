@@ -107,7 +107,7 @@
     <div class=" main-container">
         <p> Hii, {{ $data['first_name'] }} {{ $data['last_name'] }} Click on the below link to create request</p>
         <div class="case">
-            <a href="{{ route('submitRequest') }}">Create Request</a>
+            <a href="{{ route('submit.request') }}">Create Request</a>
         </div>
     </div>
 </div>

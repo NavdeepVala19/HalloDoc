@@ -11,7 +11,7 @@
 <!-- main content -->
 <div>
         <div class="main-container">
-                <a href="{{route('submitRequest')}}" class="submitType request" type="button">Submit A Request</a>
+                <a href="{{route('submit.request')}}" class="submitType request" type="button">Submit A Request</a>
                 <a href="{{route('patient.login.view')}}" class="submitType patients" type="button">Registered Patients</a>
         </div>
 </div>

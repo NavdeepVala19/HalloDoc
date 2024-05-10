@@ -90,6 +90,7 @@ class ProviderSchedulingController extends Controller
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
+            'created_by' => 2,
         ]);
 
         $shiftDetail = ShiftDetail::create([
@@ -97,11 +98,12 @@ class ProviderSchedulingController extends Controller
             'shift_date' => $request['shiftDate'],
             'start_time' => $request['shiftStartTime'],
             'end_time' => $request['shiftEndTime'],
-            'status' => 1
+            'status' => 1,
         ]);
+
         $shiftDetailRegion = ShiftDetailRegion::create([
             'shift_detail_id' => $shiftDetail->id,
-            'region_id' => $request['region']
+            'region_id' => $request['region'],
         ]);
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);

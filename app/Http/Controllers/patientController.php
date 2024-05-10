@@ -184,9 +184,9 @@ class patientController extends Controller
                     'email' => $request->email,
                     'action' => 5,
                 ]);
-                return redirect()->route('submitRequest')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+                return redirect()->route('submit.request')->with('message', 'Email for Create Account is Sent and Request is Submitted');
             } else {
-                return redirect()->route('submitRequest')->with('message', 'Request is Submitted');
+                return redirect()->route('submit.request')->with('message', 'Request is Submitted');
             }
         } catch (\Throwable $th) {
             return view('errors.500');

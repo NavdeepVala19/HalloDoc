@@ -22,7 +22,7 @@ return new class extends Migration
 
             // check
             $table->unsignedBigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('role');
+            $table->foreign('created_by')->references('id')->on('roles');
 
             $table->timestamps();
             $table->softDeletes();

@@ -35,7 +35,7 @@ route::get('/', [Controller::class, 'patientSite'])->name('patient.home_page');
 
 
 //* Types of request
-route::get('/submit-requests', [Controller::class, 'submitScreen'])->name('submitRequest');
+route::get('/submit-requests', [Controller::class, 'submitScreen'])->name('submit.request');
 
 //* Patient request create
 route::get('/submit-requests/patient', [PatientController::class, 'patientRequests'])->name('patient.request.submit.view');
@@ -103,7 +103,7 @@ route::middleware('CheckPatientLogin')->group(function () {
 
 //  ***************************************************************************************************************************************
 // it will show agreement page
-route::get('/patientAgreement/{data}', [PatientDashboardController::class, 'viewAgreement'])->name('patientAgreement');
+route::get('/patient-agreement/{data}', [PatientDashboardController::class, 'viewAgreement'])->name('patient.agreement');
 // Agreement Agreed by patient
 Route::post('/agree-agreement', [PatientDashboardController::class, 'agreeAgreement'])->name('patient.agree.agreement');
 // Agreement Cancelled by patient
@@ -114,9 +114,9 @@ Route::post('/cancel-agreement', [PatientDashboardController::class, 'cancelAgre
 
 //* admin/provider LogIn
 route::get('/login', [AdminLoginController::class, 'adminLogin'])->name('login');
-route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
-
 route::post('/admin-logged-in', [AdminLoginController::class, 'userLogin'])->name('admin.login');
+
+route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
 
 //* admin/provider ResetPassword
 route::get('/reset-password', [AdminLoginController::class, 'adminResetPassword'])->name('admin.reset.password.view');
