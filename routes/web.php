@@ -421,12 +421,7 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-    route::post('/filter-new', [AdminController::class, 'filterPatientNew'])->name("filter.region_new");
-    route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name("filter.region_pending");
-    route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name("filter.region_active");
-    route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name("filter.region_conclude");
-    route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name("filter.region_toclose");
-    route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name("filter.region_unpaid");
+    route::post('/filter-new', [AdminController::class, 'filterPatient'])->name("filter.region_new");
 
     Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
     Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');

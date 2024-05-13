@@ -1495,12 +1495,12 @@ class AdminController extends Controller
                     });
             });
         }
-
+    
         // Filter Regions
         if ($region) {
             $query->whereHas('requestClient', function ($query) use ($region) {
                 $query->where('state', 'like', '%' . $region . '%');
-            })->where('status', $this->getStatusId($status));
+            });
         }
 
         return $query;
@@ -1513,42 +1513,12 @@ class AdminController extends Controller
      * it filter data in admin new listing through regions
      */
 
-    public function filterPatientNew(Request $request)
+    public function filterPatient(Request $request)
     {
         $request->session()->put('regionId', $request->regionId);
-
         $status = $request->status;
         $category = $request->category_value;
         $search = $request->session()->get('searchTerm', null);
-
-        $regionId = $request->session()->get('regionId');
-
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-new')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin pending listing through regions
-     */
-    public function filterPatientPending(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
         $regionId = $request->session()->get('regionId');
 
         if ($regionId === 'all_regions') {
@@ -1558,117 +1528,13 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         }
 
-        $data = view('adminPage.adminTabs.filter-pending')->with('cases', $cases)->render();
+        $bladeFileName = 'filter-' . $request->status;
+        $bladeFilePath = 'adminPage.adminTabs.' . $bladeFileName;
+
+        // $data = view('adminPage.adminTabs.filter-new')->with('cases', $cases)->render();
+        $data = view($bladeFilePath)->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
     }
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin active listing through regions
-     */
-    public function filterPatientActive(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-active')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin conclude listing through regions
-     */
-    public function filterPatientConclude(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-conclude')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin toclose listing through regions
-     */
-    public function filterPatientToClose(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-toClose')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin unpaid listing through regions
-     */
-    public function filterPatientUnpaid(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-unpaid')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
 
 
     /**

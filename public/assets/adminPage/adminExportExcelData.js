@@ -8,6 +8,7 @@ $(document).ready(function () {
         var search_value = $(".search-patient").val();
         var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").find('option:selected').text();
         var category_value = $(".filter-btn.active-filter").attr('data-category');
+        
 
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);

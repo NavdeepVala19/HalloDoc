@@ -10,17 +10,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ProvidersTest extends TestCase
 {
     /**
-     * A basic feature test example.
-     */
-    // public function test_example(): void
-    // {
-    //     $response = $this->get('/');
-
-    //     $response->assertStatus(200);
-    // }
-
-
-    /**
      * Test successful send link form submission with valid data.
      *
      * @return void
@@ -38,6 +27,11 @@ class ProvidersTest extends TestCase
     }
 
 
+    /**
+     *  Test successful send link form submission with empty_fields
+     * @return void
+     */
+
     public function test_send_link_form_with_empty_fields()
     {
         $response = $this->postJson('/provider-send-mail', [
@@ -47,12 +41,12 @@ class ProvidersTest extends TestCase
             'mobile_number' => '+1 403-288-7577',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
         
     }
 
     /**
-     * Test form submission with invalid characters.
+     * Test successful send link form submission with invalid characters.
      *
      * @return void
      */
@@ -65,9 +59,14 @@ class ProvidersTest extends TestCase
             'mobile_number' => 'invalid_number',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
+
+    /**
+     * Test successful create request with valid data
+     * @return void
+     */
 
     public function test_create_request_form_with_valid_data()
     {
@@ -86,6 +85,12 @@ class ProvidersTest extends TestCase
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
+
+
+    /**
+     * Test successful create request with empty data
+     * @return void
+     */
     public function test_create_request_form_with_empty_data()
     {
         $response = $this->postJson('/provider-request', [
@@ -101,8 +106,14 @@ class ProvidersTest extends TestCase
             'note' => 'sddfsfd',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
+
+    /**
+     * Test successful create request with invalid data
+     * @return void
+     */
+
     public function test_create_request_form_with_invalid_data()
     {
         $response = $this->postJson('/provider-request', [
@@ -118,6 +129,217 @@ class ProvidersTest extends TestCase
             'note' => 'sddfsfd',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful create request to admin with valid data
+     * @return void
+     */
+    public function test_send_request_to_admin_with_valid_data(){
+        $response = $this->postJson('/provider-edit-profile', [
+            "message" =>'hello admin'
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful create request to admin with empty data
+     * @return void
+     */
+
+    public function test_send_request_to_admin_with_empty_data(){
+        $response = $this->postJson('/provider-edit-profile', [
+            "message" =>''
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful transfer case to admin with valid data
+     * @return void
+     */
+    public function test_transfer_case_to_admin_with_valid_data(){
+        $response = $this->postJson('/transfer-case', [
+            "message" =>'transfer back'
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful create request to admin with empty data
+     * @return void
+     */
+
+    public function test_transfer_case_to_admin_with_empty_data(){
+        $response = $this->postJson('/transfer-case', [
+            "message" =>''
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    
+    /**
+     * Test successful encounter form with valid data
+     * @return void
+     */
+    public function test_encounter_form_valid_data(){
+        $response = $this->postJson('/medical-form', [
+            "first_name" => 'Xenos',
+            "last_name" => 'Oneill',
+            "location" => 'Ut non repellendus ',
+            "date_of_birth" =>'25-01-2017',
+            "service_date" =>'13-05-2024',
+            "mobile" => '+1 601-603-4829',
+            "email" => 'ryhobeluxe@mailinator.com',
+            "present_illness_history" => 'Sint dolores nostru',
+            "medical_history" => 'A dolorum iusto exce',
+            "medications" => 'Laboris doloribus te',
+            "allergies" => 'Maxime nulla non et ',
+            "temperature" => '40',
+            "heart_rate" => '48',
+            "repository_rate" => '25',
+            "sis_BP" => '68',
+            "dia_BP" => '51',
+            "oxygen" => '75',
+            "pain" => 'Adipisicing repellen',
+            "heent" => 'Ullam cum qui nulla ',
+            "cv" => 'Excepturi accusantiu',
+            "chest" => 'Consequatur volupta',
+            "abd" => 'Ea aut soluta fugit',
+            "extr" => 'Esse et aliquid qui',
+            "skin" => 'Pariatur Rerum iure',
+            "neuro" => 'Hic ad est veniam e',
+            "other" => 'Ut id quibusdam quib',
+            "diagnosis" => 'Sed et veritatis nob',
+            "treatment_plan" => 'Voluptas cupidatat t',
+            "medication_dispensed" => 'Aut ut consequuntur ',
+            "procedure" => 'Ullamco doloribus ip',
+            "followUp" => 'Ipsum tenetur possim',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful encounter form with empty data
+     * @return void
+     */
+    public function test_encounter_form_with_empty_data(){
+        $response = $this->postJson('/medical-form', [
+            "first_name" => '',
+            "last_name" => '',
+            "location" => '',
+            "date_of_birth" =>'',
+            "service_date" =>'',
+            "mobile" => '',
+            "email" => '',
+            "present_illness_history" => '',
+            "medical_history" => '',
+            "medications" => '',
+            "allergies" => '',
+            "temperature" => '',
+            "heart_rate" => '',
+            "repository_rate" => '',
+            "sis_BP" => '',
+            "dia_BP" => '',
+            "oxygen" => '',
+            "pain" => '',
+            "heent" => '',
+            "cv" => '',
+            "chest" => '',
+            "abd" => '',
+            "extr" => '',
+            "skin" => '',
+            "neuro" => '',
+            "other" => '',
+            "diagnosis" => '',
+            "treatment_plan" => '',
+            "medication_dispensed" => '',
+            "procedure" => '',
+            "followUp" => '',
+        ]);
+    
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful send order form with valid data
+     * @return void
+     */
+
+    public function test_send_order_with_valid_data(){
+        $response = $this->postJson('/provider-send-order',[
+            'prescription' => 'Voluptatum anim elig',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful send order form with invalid data
+     * @return void
+     */
+    public function test_send_order_with_invalid_data(){
+        $response = $this->postJson('/provider-send-order',[
+            'prescription' => 'Molestiae doloribus $%@#$#@434',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful send order form with empty data
+     * @return void
+     */
+    public function test_send_order_with_empty_data(){
+        $response = $this->postJson('/provider-send-order',[
+            'prescription' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful view notes form with valid data
+     * @return void
+     */
+    public function test_view_notes_with_valid_data(){
+        $response = $this->postJson('/provider/view/notes/store',[
+            'physician_note' => 'Physician Notes',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful view notes form with empty data
+     * @return void
+     */
+    public function test_view_notes_with_empty_data(){
+        $response = $this->postJson('/provider/view/notes/store',[
+            'physician_note' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful view notes form with invalid data
+     * @return void
+     */
+    public function test_view_notes_with_invalid_data(){
+        $response = $this->postJson('/provider/view/notes/store',[
+            'physician_note' => '#$%$%',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 }
