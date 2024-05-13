@@ -16,9 +16,9 @@ class ProviderRequest extends Mailable
     /**
      * Create a new message instance.
      */
-    protected $admin;
-    protected $provider;
-    protected $data;
+    public $admin;
+    public $provider;
+    public $data;
 
     public function __construct($admin, $provider, $data)
     {

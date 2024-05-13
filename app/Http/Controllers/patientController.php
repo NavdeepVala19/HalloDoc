@@ -110,7 +110,6 @@ class patientController extends Controller
                 $request_file->save();
             }
         } else {
-
             $requestData = new RequestTable();
             $requestData->user_id = $isEmailStored->id;
             $requestData->request_type_id = 1;

@@ -41,7 +41,7 @@ route::get('/submit-requests', [Controller::class, 'submitScreen'])->name('submi
 route::get('/submit-requests/patient', [PatientController::class, 'patientRequests'])->name('patient.request.submit.view');
 Route::post('/patient-created', [PatientController::class, 'create'])->name('patient.request.submit');
 
-//* Family request creating 
+//* Family request creating
 route::get('/submit-requests/family', [FamilyRequestController::class, 'familyRequests'])->name('family.request.submit.view');
 Route::post('/family-created', [FamilyRequestController::class, 'create'])->name('family.request.submit');
 
@@ -62,7 +62,7 @@ route::post('/patient-registered', [PatientAccountController::class, 'createAcco
 route::get('/patient/login', [PatientLoginController::class, 'loginScreen'])->name('patient.login.view');
 route::post('/patient/logged-in', [PatientLoginController::class, 'userLogin'])->name('patient.login');
 
-//* Reset password of patient 
+//* Reset password of patient
 route::get('/patient/forgot-password', [PatientLoginController::class, 'resetpassword'])->name('patient.forgot.password');
 route::post('/patient/forgot-password-link', [PatientLoginController::class, 'submitForgetPasswordForm'])->name('forgot.password');
 
@@ -75,10 +75,10 @@ route::middleware('CheckPatientLogin')->group(function () {
     //* Patient logout
     route::get('/patient/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
 
-    //* Patient Dashboard 
+    //* Patient Dashboard
     route::get('/patient/dashboard', [PatientDashboardController::class, 'read'])->name('patient.dashboard');
 
-    //* Edit profile of patient 
+    //* Edit profile of patient
     route::get('/patient/profile', [PatientProfileController::class, 'patientEdit'])->name('patient.profile.view');
     route::get('/patient/profile-edit/{id}', [PatientProfileController::class, 'patientprofileEdit'])->name('patient.profile.edit.view');
     route::post('/patient/profile-updated', [PatientProfileController::class, 'patientUpdate'])->name('patient.profile.edited');

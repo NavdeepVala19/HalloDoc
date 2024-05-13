@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-
 // Different Models used in these Controller
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Users;
@@ -16,25 +15,28 @@ use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
-use App\Models\RequestNotes;
-use App\Models\requestTable;
-
-// For Date Formatting
-use Illuminate\Http\Request;
 
 // For sending Mails
-use App\Mail\ProviderRequest;
-use App\Mail\SendEmailAddress;
-use App\Models\RequestClient;
+use App\Models\RequestNotes;
+use App\Models\requestTable;
+use Illuminate\Http\Request;
 
 // For Sending SMS
-use App\Models\PhysicianRegion;
+use App\Mail\ProviderRequest;
+use App\Models\RequestClient;
 
+use App\Mail\SendEmailAddress;
 // Common facades used for different functionalities
+use App\Models\PhysicianRegion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
+// For Date Formatting
 use Illuminate\Support\Facades\Mail;
+
+use App\Http\Requests\SendMailRequest;
 use Illuminate\Support\Facades\Session;
+use App\Http\Requests\ProviderCreateRequest;
 
 class ProviderController extends Controller
 {
@@ -251,20 +253,8 @@ class ProviderController extends Controller
      * @param Request $request HTTP Request object
      * @return \Illuminate\Http\RedirectResponse provider status page
      */
-    public function createRequest(Request $request)
+    public function createRequest(ProviderCreateRequest $request)
     {
-        // Validate input
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'phone_number' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'street' => 'required|min:3|max:30',
-            'city' => 'required|min:5|max:30',
-            'state' => 'required|min:5|max:30',
-            'zipcode' => 'digits:6',
-        ]);
-
         // check if email already exists in users table
         $isEmailStored = Users::where('email', $request->email)->first();
 
@@ -421,6 +411,7 @@ class ProviderController extends Controller
         $request->validate([
             'password' => 'required|min:5'
         ]);
+
         $userId = Provider::where('id', $request->providerId)->first()->user_id;
 
         User::where('id', $userId)->update([
@@ -470,18 +461,10 @@ class ProviderController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
-    public function sendMail(Request $request)
+    public function sendMail(SendMailRequest $request)
     {
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route('submit.request');
-
-        // Validation
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'phone_number' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
-        ]);
 
         try {
             // send SMS Logic

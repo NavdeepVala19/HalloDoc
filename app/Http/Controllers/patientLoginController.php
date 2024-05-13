@@ -44,7 +44,7 @@ class patientLoginController extends Controller
             if ($userRolesData == null) {
                 return redirect()->route('patient.login.view')->with('error', 'submit request with registered email');
             } elseif ($userRolesData->role_id === 3) {
-                return redirect()->route('patientDashboardData');
+                return redirect()->route('patient.dashboard');
             } else {
                 return back()->with('error', 'Invalid credentials');
             }

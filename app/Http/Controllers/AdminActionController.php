@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlockRequest;
 use App\Models\Orders;
 use App\Models\CaseTag;
 use App\Models\Regions;
 use App\Models\Provider;
+use App\Models\BlockRequest;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
+use Illuminate\Http\Request;
 use App\Models\MedicalReport;
+use App\Models\RequestClient;
 use App\Models\RequestClosed;
 use App\Models\RequestStatus;
-use App\Models\RequestClient;
-use App\Models\RequestWiseFile;
 use App\Models\PhysicianRegion;
+use App\Models\RequestWiseFile;
 use App\Models\HealthProfessional;
-use App\Models\HealthProfessionalType;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\HealthProfessionalType;
+use App\Http\Requests\EncounterFormRequest;
 
 class AdminActionController extends Controller
 {
@@ -360,23 +361,8 @@ class AdminActionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function encounterForm(Request $request)
+    public function encounterForm(EncounterFormRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'location' => 'required',
-            'date_of_birth' => 'required',
-            'service_date' => 'required',
-            'mobile' => 'required',
-            'allergies' => 'required|min:5|max:200',
-            'treatment_plan' => 'required|min:5|max:200',
-            'medication_dispensed' => 'required|min:5|max:200',
-            'procedure' => 'required|min:5|max:200',
-            'followUp' => 'required|min:5|max:200',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-        ]);
-
         $report = MedicalReport::where("request_id", $request->request_id)->first();
 
         $array = [

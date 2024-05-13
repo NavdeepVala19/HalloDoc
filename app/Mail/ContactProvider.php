@@ -17,7 +17,7 @@ class ContactProvider extends Mailable
      * Create a new message instance.
      */
 
-     protected $enteredText;
+     public $enteredText;
 
     public function __construct($enteredText)
     {

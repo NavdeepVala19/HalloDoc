@@ -15,7 +15,7 @@ class SendResetPasswordMail extends Mailable
     /**
      * Create a new message instance.
      */
-    protected $mail_items;
+    public $mail_items;
 
     public function __construct(private $data)
     {

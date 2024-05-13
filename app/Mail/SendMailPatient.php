@@ -16,9 +16,9 @@ class SendMailPatient extends Mailable
     /**
      * Create a new message instance.
      */
-    protected $data;
-    protected $sender;
-    protected $note;
+    private $data;
+    private $sender;
+    private $note;
 
     public function __construct($data, $sender, $note)
     {
@@ -52,6 +52,11 @@ class SendMailPatient extends Mailable
     {
         return new Content(
             view: 'email.sendMailPatient',
+            with: [
+                'data' => $this->data,
+                'sender' => $this->sender,
+                'note' => $this->note,
+            ]
         );
     }
 
