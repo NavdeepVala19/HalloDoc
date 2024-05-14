@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Crypt;
 class patientProfileController extends Controller
 {
     /**
-     *display patient profile edit page
+     * display patient profile edit page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientEdit()
     {
@@ -22,10 +23,12 @@ class patientProfileController extends Controller
         return view("patientSite/patientProfile", compact('getEmailData'));
     }
 
+
+
     /**
-     * @param $id of allusers table
-     *
      * the page through which patient can edit their profile
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientprofileEdit($id)
     {
@@ -41,12 +44,11 @@ class patientProfileController extends Controller
         }
     }
 
-    // * update patient profile data
 
     /**
-     *@param $request the input which is enter by user
-
-     *patient update their data in users, allusers table
+     * patient update their data in users, allusers table
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function patientUpdate(Request $request)
     {
@@ -92,8 +94,10 @@ class patientProfileController extends Controller
         return redirect()->route('patient.dashboard')->with('message', 'profile is updated successfully');
     }
 
+
     /**
      * patient can see their location on google map
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientMapLocation()
     {

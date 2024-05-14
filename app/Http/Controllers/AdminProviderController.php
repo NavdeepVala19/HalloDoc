@@ -23,12 +23,10 @@ use Twilio\Rest\Client;
 class AdminProviderController extends Controller
 {
 
-    // * This code is for listing Providers Details
-
     /**
-     * this shows listing of providersname,status,role,call status
+     * listing of providersname,status,role,call status
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-
     public function readProvidersInfo()
     {
         try {
@@ -49,9 +47,10 @@ class AdminProviderController extends Controller
     }
 
 
-
     /**
-     * this function perform  filtering of physician by region through ajax and it lists providersname,status,role,call status
+     * filtering of physician by region through ajax and it lists providersname,status,role,call status
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
 
     public function filterPhysicianThroughRegions(Request $request)
@@ -76,7 +75,9 @@ class AdminProviderController extends Controller
 
 
     /**
-     * this functions perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
+     * perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function filterPhysicianThroughRegionsMobileView(Request $request)
     {
@@ -98,14 +99,11 @@ class AdminProviderController extends Controller
     }
 
 
-
-    // **This code is for Sending Mail and SMS
-
     /**
-     *@param $request the input which is enter by user
-     *@param  $id   id of selected provider
-
-     *this function perform send email and sms to provider
+     * this function perform send email and sms to provider
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function sendMailToContactProvider(Request $request, $id)
     {
@@ -225,9 +223,9 @@ class AdminProviderController extends Controller
     }
 
     /**
-     *@param $request  $request have id of selected provider and value of check and uncheck of checkbox
-
-     * this function perform stop notification through ajax 
+     *  this function perform stop notification through ajax 
+     * @param \Illuminate\Http\Request $request
+     * @return void
      */
     public function stopNotifications(Request $request)
     {
@@ -235,8 +233,11 @@ class AdminProviderController extends Controller
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
 
+
     /**
      * This function perform same as above in mobile view
+     * @param \Illuminate\Http\Request $request
+     * @return void
      */
     public function stopNotificationsMobileView(Request $request)
     {
@@ -244,8 +245,10 @@ class AdminProviderController extends Controller
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
 
+
     /**
-     * this display create new provider account page
+     * display create new provider account page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function newProvider()
     {
@@ -253,12 +256,12 @@ class AdminProviderController extends Controller
         return view('/adminPage/provider/adminNewProvider', compact('regions'));
     }
 
+
     /**
-     *@param $request the input which is enter by user
-
      * it stores data in provider,user,allusers and physician_region table
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-
     public function adminCreateNewProvider(Request $request)
     {
         $request->validate([
@@ -388,10 +391,11 @@ class AdminProviderController extends Controller
         return redirect()->route('admin.providers.list')->with('message', 'account is created');
     }
 
-    /**
-     *@param $id   id of provider table
 
-     * this display edit provider page
+    /**
+     * display edit provider page
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function editProvider($id)
     {
@@ -405,12 +409,13 @@ class AdminProviderController extends Controller
     }
 
     /**
-     *@param $request the input which is enter by user
-     *@param $id id of selected provider
-
      * it update password and username in users table
      * it update role and status in provider table
      * and also update status in allusers table
+     
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateProviderAccountInfo(Request $request, $id)
     {
@@ -450,13 +455,15 @@ class AdminProviderController extends Controller
         return back()->with('message', 'account information is updated');
     }
 
-    /**
-     *@param $request the input which is enter by user
-     *@param  $id  id of provider
 
+    /**
      * update firstname,lastname,email,mobile,medical license and npi number in provider table
      * update firstname,lastname,email,mobile in allusers table
      * update email and mobile in users table
+ 
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function providerInfoUpdate(Request $request, $id)
     {
@@ -505,11 +512,11 @@ class AdminProviderController extends Controller
 
 
     /**
-     *@param $request the input which is enter by user
-     *@param $id  id of provider
-
      * update address1,address2,city,zipcode,state,alternate phone number in provider table
      * update address1,city,zipcode in allusers table
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
 
     public function providerMailInfoUpdate(Request $request, $id)
@@ -547,12 +554,11 @@ class AdminProviderController extends Controller
         }
     }
 
-
     /**
-     *@param $request the input which is enter by user
-     *@param $id  id of provider table
-
-     * update businessname,website,adminnotes,provider_photo in provider table
+     *  update businessname,website,adminnotes,provider_photo in provider table
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function providerProfileUpdate(Request $request, $id)
     {
@@ -580,11 +586,14 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Provider Profile information is updated');
     }
 
-    /**
-     *@param $request the input which is enter by user
 
+    /**
      * update onboarding document in local storage
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
+
     public function providerDocumentsUpdate(Request $request, $id)
     {
         $request->validate([
@@ -631,12 +640,10 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Document is uploaded');
     }
 
-    // * delete provider account
-
     /**
-     *@param $id  id of provider
-
-     * delete(softDelete) provider account from allusers and provider table
+     *delete(softDelete) provider account from allusers,physicianRegion,users and provider table
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteProviderAccount($id)
     {
@@ -652,8 +659,10 @@ class AdminProviderController extends Controller
         return redirect()->route('admin.providers.list')->with('message', 'account is deleted');
     }
 
+
     /**
      * fetch role name from role table and display through ajax
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function fetchRolesName()
     {
@@ -661,12 +670,16 @@ class AdminProviderController extends Controller
         return response()->json($fetchRoleName);
     }
 
-    // Show Provider Location
+
+    /**
+     * Show Provider Location
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function providerLocations()
     {
-        $providers = Provider::get();
-
-        return view('adminPage/provider/providerLocation', compact("providers"));
+        // $providers = Provider::get();
+        // return view('adminPage/provider/providerLocation', compact("providers"));
+        return view('adminPage/provider/providerLocation');
     }
 
     public function providerMapLocations()

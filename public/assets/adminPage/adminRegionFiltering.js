@@ -87,10 +87,9 @@ $(".listing-region").on("change", function (event) {
 
     var tab = $(".nav-link.active").attr("id");
     var words = tab.split("-");
-
-    var selectedId = $(this).val();
     var activeStatus = words[1];
 
+    var selectedId = $(this).val();
     var search_value = $(".search-patient").val();
     var category_value = $(".filter-btn.active-filter").attr("data-category");
     fetchPaginatedResults(

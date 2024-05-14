@@ -54,11 +54,12 @@
         </div>
 
         <div id="map-container" style="width:100%;height:660px" class="mt-3">
-           <iframe src="https://www.google.com/maps?q=[
+           {{-- <iframe src="https://www.google.com/maps?q=[
                     @foreach ($providers as $data )
                             {{$data->address1}}+{{$data->address2}}+{{$data->city}}
                     @endforeach
-                ]&output=embed" style="width:100%;height:660px"></iframe>
+                ]&output=embed" style="width:100%;height:660px"></iframe> --}}
+                <iframe src="https://www.google.com/maps?q=TatvaSoft House, Near Shivalik Business Center Sarkhej - Gandhinagar Highway, Rajpath Rangoli Rd, Ahmedabad, Gujarat 380054&output=embed" style="width:100%;height:660px"></iframe>
         </div>
     </div>
 

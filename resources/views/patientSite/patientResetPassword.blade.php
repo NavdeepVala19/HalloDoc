@@ -20,7 +20,7 @@
                     @csrf
                     <div class="mb-4 username patientLogin">
                         <i class="bi bi-person-circle person-logo"></i>
-                        <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder=" email" autocomplete="off"
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder=" email" autocomplete="off"
                             name="email">
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>

@@ -807,6 +807,13 @@ class AdminController extends Controller
      * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
      * physician note,admin note,patient note
      */
+
+    /**
+     * list of  search records
+     * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
+     * physician note,admin note,patient note
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function searchRecordsView()
     {
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
@@ -844,12 +851,11 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords', compact('combinedData'));
     }
 
-    // *search records filtering
 
     /**
-     *@param $request the input which is use to filter data in search records
-
      * filter records as per input
+     * @param \Illuminate\Http\Request $request (the input which is use to filter data in search records)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function searchRecordSearching(Request $request)
     {
@@ -886,14 +892,12 @@ class AdminController extends Controller
     }
 
 
-
     /**
-     *@param $request the input which is use to filter data in search records
-
      * common function for filtering and exporting to excel
      * it filter as per request
+     * @param mixed $request (the input which is use to filter data in search records)
+     * @return RequestClient
      */
-
     public function exportFilteredSearchRecord($request)
     {
         $todayDate = now();
@@ -964,11 +968,10 @@ class AdminController extends Controller
     }
 
     /**
-     *@param $request the input which is use to filter data in search records
-
-     * export data to excel
+     * export filtered data to excel
+     * @param \Illuminate\Http\Request $request ( the input which is use to filter data in search records)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-
     public function downloadFilteredData(Request $request)
     {
         $data = $this->exportFilteredSearchRecord($request);
@@ -981,12 +984,12 @@ class AdminController extends Controller
         }
     }
 
+
     /**
-     *@param $id  id of request table
-
      * delete record permanently from request client ,request,block_request,request_concierge,request_business,request_status,request_wise_file
+     * @param mixed $id  (id of request table)
+     * @return \Illuminate\Http\RedirectResponse
      */
-
     public function deleteSearchRecordData($id)
     {
         $getRequestId = RequestClient::select('request_id')->where('id', $id)->first()->request_id;
@@ -1004,11 +1007,9 @@ class AdminController extends Controller
 
 
     /**
-     * listing of sms
-     *
-     * it list receipient name ,action,role_name,mobile,create_date,sent_date,confirmation_number,is_sent_sent_tries
+     * list receipient name ,action,role_name,mobile,create_date,sent_date,confirmation_number,is_sent_sent_tries
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-
     public function smsRecordsView()
     {
         $sms = SMSLogs::orderByDesc('id')->paginate(10);
@@ -1016,10 +1017,11 @@ class AdminController extends Controller
         return view('adminPage.records.smsLogs', compact('sms'));
     }
 
-    /**
-     *@param $request the input which is enter by admin to filter data
 
+    /**
      * filter sms logs
+     * @param \Illuminate\Http\Request $request  (the input which is enter by admin to filter data)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
 
     public function searchSMSLogs(Request $request)
@@ -1072,12 +1074,11 @@ class AdminController extends Controller
     }
 
 
-    // *Block History
 
     /**
      * List of block request
-     *
-     * it list patient name,mobile,email,created date and notes
+     * list patient name,mobile,email,created date and notes
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function blockHistoryView()
     {
@@ -1098,10 +1099,11 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-    /**
-     *@param $request the input which is enter by admin to filter data
 
-     * it filter data according to request
+    /**
+     * filter data according to request 
+     * @param \Illuminate\Http\Request $request (input which is enter by admin to filter data)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function blockHistroySearchData(Request $request)
     {
@@ -1145,12 +1147,10 @@ class AdminController extends Controller
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
-    // * Block history update isActive
-
     /**
-     *@param $request the input which is check or uncheck by admin
-
      * it check and unccheck checkbox in is_Active columns of listing through ajax
+     * @param \Illuminate\Http\Request $request (input which is check or uncheck by admin)
+     * @return void
      */
     public function updateBlockHistoryIsActive(Request $request)
     {
@@ -1159,12 +1159,10 @@ class AdminController extends Controller
     }
 
 
-    //* unblock in block history
-
     /**
-     *@param $id  id of request table
-
      * unblock patient and set status 1 in request_Status and request table
+     * @param mixed $id (id of request table)
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function unBlockPatientInBlockHistoryPage($id)
     {
@@ -1175,9 +1173,9 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'patient is unblock');
     }
 
-
     /**
-     *listing of user access page
+     * listing of user access page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function UserAccess()
     {
@@ -1191,12 +1189,10 @@ class AdminController extends Controller
     }
 
 
-    // * route user as per account type
-
     /**
-     *@param $id  id of user table
-
-     * route admin to edit account page as per accountType(admin/provider)
+     *  route admin to edit account page as per accountType(admin/provider)
+     * @param mixed $id (id of user table)
+     * @return mixed|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function UserAccessEdit($id)
     {
@@ -1219,10 +1215,10 @@ class AdminController extends Controller
     }
 
 
-    // * ajax rendering in user access page
-
     /**
      * filtering listing in user access page through ajax
+     * @param \Illuminate\Http\Request $request (account type(all/admin/provider))
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
@@ -1243,9 +1239,10 @@ class AdminController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
     /**
-     * same as above in mobile view
+     *same as above in mobile view
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
@@ -1269,9 +1266,9 @@ class AdminController extends Controller
 
 
     /**
-     *@param $request the input which is enter by user
-
      * send email to all unscheduled physician
+     * @param \Illuminate\Http\Request $request (message)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function sendRequestSupport(Request $request)
     {
@@ -1308,8 +1305,10 @@ class AdminController extends Controller
         }
     }
 
+
     /**
      *fetch region from region table and show in all region drop down button
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function fetchRegions()
     {
@@ -1318,7 +1317,8 @@ class AdminController extends Controller
     }
 
     /**
-     *displaying create admin account page
+     * displaying create admin account page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function adminAccount()
     {
@@ -1326,10 +1326,12 @@ class AdminController extends Controller
         return view("adminPage.createAdminAccount", compact('regions'));
     }
 
-    /**
-     *@param $request the input which is enter by user
+ 
 
-     * it stores data in admin ,users,allusers and make role_id 1 in user_roles
+    /**
+     * it stores data in admin ,users,allusers and make role_id '1' in user_roles
+     * @param \Illuminate\Http\Request
+     * @return mixed|\Illuminate\Http\RedirectResponse
      */
 
     public function createAdminAccount(Request $request)
@@ -1410,7 +1412,8 @@ class AdminController extends Controller
 
 
     /**
-     *fetch state for admin account create through ajax
+     * fetch state for admin account create through ajax
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
 
     public function fetchRegionsForState()
@@ -1419,9 +1422,9 @@ class AdminController extends Controller
         return response()->json($fetchedRegions);
     }
 
-
     /**
      *fetch roles for admin account create through ajax
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function fetchRolesForAdminAccountCreate()
     {
@@ -1429,8 +1432,14 @@ class AdminController extends Controller
         return response()->json($fetchedRoles);
     }
 
+  
     /**
-     *common function for filtering and exporting data in admin listing
+     * common function for filtering and exporting data in admin listing
+     * @param mixed $status
+     * @param mixed $category
+     * @param mixed $searchTerm
+     * @param mixed $region
+     * @return \Illuminate\Database\Eloquent\Builder
      */
 
     public function fetchQuery($status, $category, $searchTerm, $region)
@@ -1455,61 +1464,30 @@ class AdminController extends Controller
                     });
             });
         }
-
+    
         // Filter Regions
         if ($region) {
             $query->whereHas('requestClient', function ($query) use ($region) {
                 $query->where('state', 'like', '%' . $region . '%');
-            })->where('status', $this->getStatusId($status));
+            });
         }
 
         return $query;
     }
 
-
     /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin new listing through regions
+     * filter data in admin new listing through regions 
+     * @param \Illuminate\Http\Request $request (region_id,status,category,search_value)
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
-
-    public function filterPatientNew(Request $request)
+    public function filterPatient(Request $request)
     {
         $request->session()->put('regionId', $request->regionId);
-
         $status = $request->status;
         $category = $request->category_value;
         $search = $request->session()->get('searchTerm', null);
-
-        $regionId = $request->session()->get('regionId');
-
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-new')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin pending listing through regions
-     */
-    public function filterPatientPending(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
+        // $regionId = $request->session()->get('regionId');
+        $regionId =session('regionId');
 
         if ($regionId === 'all_regions') {
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
@@ -1518,123 +1496,18 @@ class AdminController extends Controller
             $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         }
 
-        $data = view('adminPage.adminTabs.filter-pending')->with('cases', $cases)->render();
+        $bladeFileName = 'filter-' . $request->status;
+        $bladeFilePath = 'adminPage.adminTabs.' . $bladeFileName;
+
+        // $data = view('adminPage.adminTabs.filter-new')->with('cases', $cases)->render();
+        $data = view($bladeFilePath)->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
     }
 
     /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin active listing through regions
-     */
-    public function filterPatientActive(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-active')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin conclude listing through regions
-     */
-    public function filterPatientConclude(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-conclude')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin toclose listing through regions
-     */
-    public function filterPatientToClose(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-toClose')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-    /**
-     *@param $request which contains region_id,status,category,search_value
-
-     * it filter data in admin unpaid listing through regions
-     */
-    public function filterPatientUnpaid(Request $request)
-    {
-        $request->session()->put('regionId', $request->regionId);
-
-        $status = $request->status;
-        $category = $request->category_value;
-        $search = $request->search_value;
-
-        $regionId = $request->session()->get('regionId');
-
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
-
-        $data = view('adminPage.adminTabs.filter-unpaid')->with('cases', $cases)->render();
-        return response()->json(['html' => $data]);
-    }
-
-
-
-    /**
-     *@param $request which contains region_id,category,search_value
-
      * it export data to excel in admin new listing
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
 
     public function exportNew(Request $request)
@@ -1661,11 +1534,10 @@ class AdminController extends Controller
         }
     }
 
-
     /**
-     *@param $request which contains region_id,category,search_value
-
      * it export data to excel in admin pending listing
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function exportPending(Request $request)
     {
@@ -1691,10 +1563,11 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     *@param $request which contains region_id,category,search_value
 
-     * it export data to excel in admin active listing
+    /**
+     *  it export data to excel in admin active listing
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function exportActive(Request $request)
     {
@@ -1723,9 +1596,9 @@ class AdminController extends Controller
 
 
     /**
-     *@param $request which contains region_id,category,search_value
-
      * it export data to excel in admin conclude listing
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function exportConclude(Request $request)
     {
@@ -1752,11 +1625,10 @@ class AdminController extends Controller
     }
 
 
-
     /**
-     *@param $request which contains region_id,category,search_value
-
      * it export data to excel in admin toclose listing
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function exportToClose(Request $request)
     {
@@ -1781,11 +1653,10 @@ class AdminController extends Controller
         }
     }
 
-
     /**
-     *@param $request which contains region_id,category,search_value
-
-     * it export data to excel in admin unpaid listing
+     *  it export data to excel in admin unpaid listing
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function exportUnpaid(Request $request)
     {

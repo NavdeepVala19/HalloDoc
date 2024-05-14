@@ -19,16 +19,21 @@ use Illuminate\Support\Facades\Mail;
 // this controller is responsible for creating/storing the concierge request
 class conciergeRequestController extends Controller
 {
+    /**
+     * display concierge request page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function conciergeRequests()
     {
         return view('patientSite/conciergeRequest');
     }
 
-    /**
-     *@param $request the input which is enter by user
 
+    /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function create(Request $request)
     {

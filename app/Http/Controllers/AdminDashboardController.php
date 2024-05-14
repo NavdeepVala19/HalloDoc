@@ -23,8 +23,8 @@ class AdminDashboardController extends Controller
 
     /**
      * shows admin request page(form)
-     *
-     * from this page admin can create request on behalf of patient
+     *  from this page admin can create request on behalf of patient
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
 
     public function createNewRequest()
@@ -32,11 +32,12 @@ class AdminDashboardController extends Controller
         return view('adminPage/adminRequest');
     }
 
-    /**
-     *@param $request the input which is enter by user
 
+    /**
      * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     * @param \Illuminate\Http\Request $request  (the input which is enter by user)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
     public function createAdminPatientRequest(Request $request)
@@ -193,10 +194,11 @@ class AdminDashboardController extends Controller
         }
     }
 
-    /**
-     *@param $id    $id is the id of users table
 
+    /**
      * this page will show when admin edit their profile through user access page
+     * @param mixed $id ( $id is the id of users table)
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function adminProfile($id)
     {
@@ -233,6 +235,7 @@ class AdminDashboardController extends Controller
 
     /**
      * this page will show admin profile edit and admin can route to this page from any page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function adminProfilePage()
     {
@@ -263,11 +266,12 @@ class AdminDashboardController extends Controller
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 
-    /**
-     *@param $request the input which is enter by user(admin)
-     *@param $id  id of users table
 
+    /**
      * it will update password in users table
+     * @param \Illuminate\Http\Request $request  (the input which is enter by user(admin))
+     * @param mixed $id (id of users table)
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function adminChangePassword(Request $request, $id)
     {
@@ -285,11 +289,12 @@ class AdminDashboardController extends Controller
         return back()->with('message', 'Your password is updated successfully');
     }
 
-    /**
-     *@param $request the input which is enter by user
-     *@param $id  id of users table
 
+    /**
      * it will update firstname,lastname,email,mobile in allusers and admin table
+     * @param \Illuminate\Http\Request $request  (the input which is enter by user)
+     * @param mixed $id (id of users table)
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function adminInfoUpdate(Request $request, $id)
     {
@@ -334,10 +339,10 @@ class AdminDashboardController extends Controller
 
 
     /**
-     *@param $request the input which is enter by user
-     *@param $id  id of users table
-
      * it will update address1,address2 ,city,zip ,state,alternate mobile in admin and allusers table
+     * @param \Illuminate\Http\Request $request  (the input which is enter by user)
+     * @param mixed $id (id of users table)
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function adminMailInfoUpdate(Request $request, $id)
     {
