@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
+
+// Different Models used in these Controller
 use App\Models\Role;
 use App\Models\Admin;
 use App\Models\Roles;
+use App\Models\Menu;
 use App\Models\Users;
-use App\Mail\SendLink;
 use App\Models\Regions;
-
-// Different Models used in these Controller
 use App\Models\SMSLogs;
-use Twilio\Rest\Client;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\Provider;
@@ -22,36 +27,28 @@ use App\Models\AdminRegion;
 use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
 use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\RequestClient;
 use App\Models\RequestStatus;
+use App\Models\RequestClient;
 use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
-use App\Exports\NewStatusExport;
 use App\Models\RequestConcierge;
 use App\Models\HealthProfessional;
-use Illuminate\Support\Facades\DB;
+use App\Models\HealthProfessionalType;
+
+// For sending Mails
+use App\Mail\SendLink;
+use Twilio\Rest\Client;
+use App\Mail\RequestSupportMessage;
+
+// Export Data with Excel
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\NewStatusExport;
 use App\Exports\ActiveStatusExport;
 use App\Exports\SearchRecordExport;
 use App\Exports\UnPaidStatusExport;
-
-// For sending Mails
-use App\Mail\RequestSupportMessage;
 use App\Exports\PendingStatusExport;
 use App\Exports\ToCloseStatusExport;
-
-// Export Data with Excel
-use App\Http\Requests\AccessRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
-use Illuminate\Support\Facades\Crypt;
-use App\Http\Requests\BusinessRequest;
-use App\Http\Requests\SendMailRequest;
-use App\Models\HealthProfessionalType;
-use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -208,7 +205,9 @@ class AdminController extends Controller
 
         $cases = $query->orderByDesc('id')->paginate(10);
         $viewName = 'adminPage.adminTabs.admin' . ucfirst($status) . 'Listing';
-
+        // $viewName = 'adminPage.adminTabs.filter-' . ucfirst($status);
+        // $data = view($viewName, compact('cases', 'count', 'userData'))->render();
+        // return response()->json(['html' => $data]);
         return view($viewName, compact('cases', 'count', 'userData'));
     }
 
@@ -284,13 +283,20 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
-    public function sendMail(SendMailRequest $request)
+    public function sendMail(Request $request)
     {
+        $request->validate([
+            'first_name' => 'required|alpha|min:5|max:30',
+            'last_name' => 'required|alpha|min:5|max:30',
+            'phone_number' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
+        ]);
+
         $firstname = $request->first_name;
         $lastname = $request->last_name;
 
         // Route name
-        $routeName = 'submit.request';
+        $routeName = 'submitRequest';
 
         // Generate the link using route() helper (assuming route parameter is optional)
         $link = route($routeName);
@@ -454,8 +460,19 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
-    public function addBusiness(BusinessRequest $request)
+    public function addBusiness(Request $request)
     {
+        $request->validate([
+            'business_name' => 'required',
+            'profession' => 'required|numeric',
+            'fax_number' => 'required|numeric',
+            'mobile' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'business_contact' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+        ]);
         HealthProfessional::create([
             'vendor_name' => $request->business_name,
             'profession' => $request->profession,
@@ -497,8 +514,20 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateBusiness(BusinessRequest $request)
+    public function updateBusiness(Request $request)
     {
+        $request->validate([
+            'business_name' => 'required',
+            'profession' => 'required|numeric',
+            'fax_number' => 'required|numeric',
+            'mobile' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'business_contact' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+        ]);
+
         HealthProfessional::where('id', $request->vendor_id)->update([
             'vendor_name' => $request->business_name,
             'profession' => $request->profession,
@@ -511,7 +540,6 @@ class AdminController extends Controller
             'state' => $request->state,
             'zip' => $request->zip
         ]);
-
         return redirect()->back()->with('changesSaved', 'Changes Saved Successfully!');
     }
 
@@ -560,15 +588,15 @@ class AdminController extends Controller
      */
     public function fetchRoles($id = null)
     {
-        if ($id === '0') {
+        if ($id === 0) {
             $menus = Menu::get();
             return response()->json($menus);
         }
-        if ($id == '1') {
+        if ($id === 1) {
             $menus = Menu::where('account_type', 'Admin')->get();
             return response()->json($menus);
         }
-        if ($id == '2') {
+        if ($id === 2) {
             $menus = Menu::where('account_type', 'Physician')->get();
             return response()->json($menus);
         }
@@ -580,8 +608,13 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request The HTTP request containing role information and menu checkboxes.
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createAccess(AccessRequest $request)
+    public function createAccess(Request $request)
     {
+        $request->validate([
+            'role_name' => 'required',
+            'role' => 'required',
+            'menu_checkbox' => 'required'
+        ]);
         if ($request->role_name === 1) {
             $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
         } elseif ($request->role_name === 2) {
@@ -635,8 +668,14 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request The HTTP request containing the role data.
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function editAccessData(AccessRequest $request)
+    public function editAccessData(Request $request)
     {
+        $request->validate([
+            'role_name' => 'required',
+            'role' => 'required',
+            'menu_checkbox' => 'required'
+        ]);
+
         Role::where('id', $request->roleId)->update([
             'name' => $request->role,
             // 'account_type' => $request->role,
@@ -1547,6 +1586,7 @@ class AdminController extends Controller
         $region = $request->filter_region;
 
         $regionId = $request->session()->get('regionId');
+
 
         if ($region == "All Regions") {
             $exportPendingData = $this->buildQuery($status, $category, $search, $regionId);

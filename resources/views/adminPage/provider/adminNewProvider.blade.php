@@ -69,7 +69,7 @@
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-floating role-select provider-form" >
+                <div class="form-floating role-select provider-form provider-edit-form">
                     <select class="form-select @error('role') is-invalid @enderror" id="provider_role" name="role" value="{{ old('role') }}">
                         <option selected value="">Role</option>
                     </select>
@@ -165,7 +165,9 @@
                             <option value="4">Bhavnagar</option>
                             <option value="5">Ahmedabad</option>
                         </select>
-                        </input>
+                    @error('select_state')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                     </div>
                 </div>
                 <div class="form-floating provider-form" >
@@ -329,5 +331,5 @@
 
     @section('script')
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>
-    <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script>
+    {{-- <script defer src="{{ URL::asset('assets/adminProvider/adminEditProvider.js') }}"></script> --}}
     @endsection

@@ -9,10 +9,13 @@ use App\Models\EmailLog;
 use App\Models\UserRoles;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
-use App\Mail\SendEmailAddress;
 use App\Models\RequestClient;
+use App\Mail\SendEmailAddress;
 use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CreateFamilyRequest;
+use App\Http\Requests\CreatePatientRequest;
 
 // this controller is responsible for creating/storing the family request
 
@@ -36,31 +39,46 @@ class familyRequestController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function create(Request $request)
+    public function create(CreatePatientRequest $request , CreateFamilyRequest $familyRequestValidation)
     {
-        $request->validate([
-            'family_first_name' => 'required|min:3|max:15|alpha',
-            'family_last_name' => 'required|min:3|max:15|alpha',
-            'family_phone_number' => 'required',
-            'family_email' => ['required', 'email', 'min:2', 'max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
-            'family_relation' => 'required|alpha',
-            'symptoms' => ['regex:/^[a-zA-Z0-9 \-_,()]+$/', 'nullable', 'min:5', 'max:200'],
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required|before:today',
-            'email' => ['required', 'email', 'min:2', 'max:40', 'regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'],
-            'phone_number' => 'required|min_digits:10|max_digits:10',
-            'street' => 'required|min:2|max:50',
-            'city' => ['required', 'min:2', 'max:30', 'regex:/^[a-zA-Z ]+?$/'],
-            'state' => ['required', 'min:2', 'max:30', 'regex:/^[a-zA-Z ]+?$/'],
-            'zipcode' => 'digits:6|gte:1',
-            'room' => 'gte:1|nullable|max:1000',
-            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
-        ]);
+        $patientData = $request->all();
+        $patientRules = $request->rules();
 
+        $familyData = $familyRequestValidation->all();
+        $familyRules = $familyRequestValidation->rules();
+
+        // Create validator instances for both requests
+        $patientValidator = Validator::make($patientData, $patientRules);
+
+        $familyValidator = Validator::make($familyData, $familyRules);
+
+        // Check if any validation fails
+        if ($patientValidator->fails() || $familyValidator->fails()) {
+            // Merge errors from both validators
+            $errors = $patientValidator->errors()->merge($familyValidator->errors());
+
+            // Handle validation failure, return error response or perform desired action
+            return response()->json(['errors' => $errors], 422);
+        }
+
+        // // Validate both requests simultaneously and return errors if any
+        // $data = array_merge($request->all(), $familyRequestValidation->all());
+    
+        // // Define the rules for both requests
+        // $rules = array_merge($request->rules(), $familyRequestValidation->rules());
+
+        // // Validate the merged data with the merged rules
+        // $validator = Validator::make($data, $rules);
+
+        // if ($validator->fails()) {
+        //     dd($validator->errors());
+        //     return back()->withErrors($validator->errors());
+        // }
+
+        dd("here");
         $isEmailStored = Users::where('email', $request->email)->first();
-
         if ($isEmailStored == null) {
+
             // store email and phoneNumber in users table
             $requestEmail = new Users();
             $requestEmail->username = $request->first_name . " " . $request->last_name;
@@ -69,7 +87,6 @@ class familyRequestController extends Controller
             $requestEmail->save();
 
             // store all details of patient in allUsers table
-
             $requestUsers = new AllUsers();
             $requestUsers->user_id = $requestEmail->id;
             $requestUsers->first_name = $request->first_name;

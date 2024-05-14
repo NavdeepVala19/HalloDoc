@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ContactProvider;
-use App\Models\AllUsers;
-use App\Models\Users;
 use App\Models\Role;
+use App\Models\Users;
 use App\Models\Regions;
 use App\Models\SMSLogs;
+use Twilio\Rest\Client;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\UserRoles;
 use App\Models\ShiftDetail;
+use Illuminate\Http\Request;
+use App\Mail\ContactProvider;
 use App\Models\PhysicianRegion;
 use App\Models\PhysicianLocation;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
-use Twilio\Rest\Client;
+use App\Http\Requests\CreateNewProvider;
 
 class AdminProviderController extends Controller
 {
@@ -262,32 +263,8 @@ class AdminProviderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function adminCreateNewProvider(Request $request)
+    public function adminCreateNewProvider(CreateNewProvider $request)
     {
-        $request->validate([
-            'user_name' => 'required|alpha|min:3|max:40',
-            'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'email' => 'required|email|min:2|max:40|unique:App\Models\Users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required',
-            'medical_license' => 'required|numeric|max_digits:10|min_digits:10',
-            'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
-            'address1' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9-, ]+$/',
-            'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'zip' => 'digits:6',
-            'phone_number_alt' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'provider_photo' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'business_website' => 'required|url|max:40|min:10',
-            'admin_notes' => 'required|min:5|max:200|',
-            'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'background_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'hipaa_docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'non_disclosure_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-        ]);
-
         // store data of providers in users table
         $userProvider = new Users();
         $userProvider->username = $request->user_name;

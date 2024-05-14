@@ -70,32 +70,32 @@ Route::get('patient/reset-password/{token}', [PatientLoginController::class, 'sh
 Route::post('patient/update-password', [PatientLoginController::class, 'submitResetPasswordForm'])->name('patient.update.password');
 
 
-route::middleware('CheckPatientLogin')->group(function () {
+route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
 
     //* Patient logout
-    route::get('/patient/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
+    route::get('/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
 
     //* Patient Dashboard 
-    route::get('/patient/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient.dashboard');
+    route::get('/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient.dashboard');
 
     //* Edit profile of patient
     route::get('/patient/profile', [PatientProfileController::class, 'patientEdit'])->name('patient.profile.view');
-    route::get('/patient/profile-edit/{id}', [PatientProfileController::class, 'patientprofileEdit'])->name('patient.profile.edit.view');
-    route::post('/patient/profile-updated', [PatientProfileController::class, 'patientUpdate'])->name('patient.profile.edited');
-    route::get('/patient/map-location', [PatientProfileController::class, 'patientMapLocation'])->name('patient.location.on.map');
+    route::get('/profile-edit/{id}', [PatientProfileController::class, 'patientprofileEdit'])->name('patient.profile.edit.view');
+    route::post('/profile-updated', [PatientProfileController::class, 'patientUpdate'])->name('patient.profile.edited');
+    route::get('/map-location', [PatientProfileController::class, 'patientMapLocation'])->name('patient.location.on.map');
 
     //* Create New Request or Someone else request from Patient Dashboard
-    route::get('/patient/submit-requests', [PatientDashboardController::class, 'createNewRequest'])->name('patient.submit.new.request');
-    route::post('/patient/submitted-patient-requests', [PatientDashboardController::class, 'createNewPatient'])->name('patient.new.request.submitted');
+    route::get('/submit-requests', [PatientDashboardController::class, 'createNewRequest'])->name('patient.submit.new.request');
+    route::post('/submitted-patient-requests', [PatientDashboardController::class, 'createNewPatient'])->name('patient.new.request.submitted');
 
-    route::get('/patient/submit-someone-requests', [PatientDashboardController::class, 'createSomeoneRequest'])->name('submit.someone.request');
-    route::post('/patient/submitted-someone-requests', [PatientDashboardController::class, 'createSomeOneElseRequest'])->name('request.someone.submitted');
+    route::get('/submit-someone-requests', [PatientDashboardController::class, 'createSomeoneRequest'])->name('submit.someone.request');
+    route::post('/submitted-someone-requests', [PatientDashboardController::class, 'createSomeOneElseRequest'])->name('request.someone.submitted');
 
     //* View Documents
-    route::get('/patient/view-documents/{id}', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patient.documents.view');
-    route::post('/patient/upload-documents', [PatientViewDocumentsController::class, 'uploadDocs'])->name('patient.upload.document');
-    route::get('/patient/single-downloads/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('patient.download.one.document');
-    route::post('/patient/multiple-downloads', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('patient.download.multiple.files');
+    route::get('/view-documents/{id}', [PatientViewDocumentsController::class, 'patientViewDocument'])->name('patient.documents.view');
+    route::post('/upload-documents', [PatientViewDocumentsController::class, 'uploadDocs'])->name('patient.upload.document');
+    route::get('/single-downloads/{id}', [PatientViewDocumentsController::class, 'downloadOne'])->name('patient.download.one.document');
+    route::post('/multiple-downloads', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('patient.download.multiple.files');
 });
 //  *******************************************************************************************************
 

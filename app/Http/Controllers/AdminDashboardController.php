@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendEmailAddress;
+use Carbon\Carbon;
 use App\Models\Admin;
+use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\UserRoles;
-use App\Models\Users;
-use App\Models\RequestClient;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\RequestClient;
+use App\Mail\SendEmailAddress;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Requests\AdminCreateRequest;
 
 class AdminDashboardController extends Controller
 {
@@ -40,24 +41,10 @@ class AdminDashboardController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function createAdminPatientRequest(Request $request)
+    public function createAdminPatientRequest(AdminCreateRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'before:today',
-            'phone_number' => 'required',
-            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'street' => 'min:2|max:50',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'room' => 'gte:1|nullable',
-            'zip' => 'digits:6|nullable|gte:1',
-            'adminNote' => 'nullable|min:5|max:200',
-        ]);
 
         $isEmailStored = Users::where('email', $request->email)->first();
-
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table
             $requestEmail = new Users();

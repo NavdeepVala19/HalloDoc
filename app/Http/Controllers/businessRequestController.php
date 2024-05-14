@@ -52,9 +52,9 @@ class businessRequestController extends Controller
       'zipcode' => 'digits:6|gte:1',
       'business_first_name' => 'required|min:3|max:15|alpha',
       'business_last_name' => 'required|min:3|max:15|alpha',
-      'business_email' => 'required|email|min:2|max:30|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+      'business_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
       'business_mobile' => 'required',
-      'business_property_name' => 'required|min:2|max:30',
+      'business_property_name' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9 &\-_.,]+$/',
       'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
       'case_number' => 'nullable|min:0|max:1000',
       'room' => 'nullable|min:0|max:1000'

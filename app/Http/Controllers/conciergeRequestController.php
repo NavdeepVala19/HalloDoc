@@ -43,17 +43,17 @@ class conciergeRequestController extends Controller
             'date_of_birth' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required|min_digits:10|max_digits:10',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
+            'room' => 'gte:1|nullable|max_digits:4|numeric|lt:1000',
             'concierge_first_name' => 'required|min:3|max:15|alpha',
             'concierge_last_name' => 'required|min:3|max:15|alpha',
             'concierge_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'concierge_mobile' => 'required',
-            'concierge_hotel_name' => 'required|min:2|max:50|regex:/^[a-zA-Z ,_-]+?$/',
+            'concierge_hotel_name' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9 &\-_.,]+$/',
             'concierge_street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
             'concierge_state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'concierge_city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'concierge_zip_code' => 'digits:6|gte:1',
-            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-            'room' => 'gte:1|nullable|max_digits:4|numeric|lt:1000'
         ]);
 
         $isEmailStored = Users::where('email', $request->email)->first();

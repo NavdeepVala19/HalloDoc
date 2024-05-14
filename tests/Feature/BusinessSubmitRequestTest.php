@@ -64,7 +64,7 @@ class BusinessSubmitRequestTest extends TestCase
             'room' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
+        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.re quest')->assertSessionHas('message', 'Request is Submitted');
     }
 
     /**

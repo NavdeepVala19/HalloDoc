@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePatientRequest;
 use App\Models\UserRoles;
 use Carbon\Carbon;
 use App\Models\Users;
@@ -31,30 +32,15 @@ class PatientController extends Controller
 
 
     /**
-     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
      * 
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     
-    public function create(Request $request)
+    public function create(CreatePatientRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required|before:today',
-            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required',
-            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'zipcode' => 'digits:6|gte:1',
-            'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
-            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-            'room' => 'gte:0|nullable|max:1000'
-        ]);
-
         $isEmailStored = Users::where('email', $request->email)->first();
         if ($isEmailStored == null) {
             // store email and phoneNumber in users table

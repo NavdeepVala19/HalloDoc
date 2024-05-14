@@ -73,7 +73,7 @@ $(document).ready(function () {
     $.validator.addMethod(
         "diseaseSymptoms",
         function (value, element) {
-            const regex = /^[a-zA-Z0-9 \-_.,()/]+$/; //  Allows letters, spaces,numbers,parentheses,comma,frwd slash,fullstop
+            const regex = /^[a-zA-Z0-9 \-_.,()]+$/; //  Allows letters, spaces,numbers,parentheses,comma,frwd slash,fullstop
             return this.optional(element) || regex.test(value.trim());
         },
         "Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers."
