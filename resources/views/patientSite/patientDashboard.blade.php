@@ -43,14 +43,12 @@
                         <td style="height: 5%;">
                             @if ($patientData->status ==1)
                             Unassigned
-                            @elseif ($patientData->status ==2)
+                            @elseif ($patientData->status ==2 )
                             Cancelled
                             @elseif ($patientData->status ==3)
                             Accepted
-                            @elseif ($patientData->status ==4 )
-                            MDEnRoute
-                            @elseif ($patientData->status ==5 )
-                            MDOnSite
+                            @elseif ($patientData->status ==4 || $patientData->status == 5 )
+                            Active
                             @elseif ($patientData->status ==6 )
                             Conclude
                             @elseif ($patientData->status ==7 )

@@ -15,7 +15,7 @@ class AdminTest extends TestCase
      */
     public function test_assign_case_with_valid_data()
     {
-        $response = $this->postJson('/admin/view/case/edit', [
+        $response = $this->postJson('/assign-case', [
             'assign_note' => 'Physician Notes',
         ]);
 
@@ -28,7 +28,7 @@ class AdminTest extends TestCase
      */
     public function test_assign_case_with_invalid_data()
     {
-        $response = $this->postJson('/admin/view/case/edit', [
+        $response = $this->postJson('/assign-case', [
             'assign_note' => '$#%$^',
         ]);
 
@@ -41,7 +41,7 @@ class AdminTest extends TestCase
      */
     public function test_assign_case_with_empty_data()
     {
-        $response = $this->postJson('/admin/view/case/edit', [
+        $response = $this->postJson('/assign-case', [
             'assign_note' => '',
         ]);
 
@@ -55,7 +55,7 @@ class AdminTest extends TestCase
      */
     public function test_view_case_with_valid_data()
     {
-        $response = $this->postJson('/assign-case', [
+        $response = $this->postJson('/admin/view/case/edit', [
             'patient_notes' => 'Physician Notes',
             'first_name' => 'Denton',
             'last_name' => 'Wise',
@@ -71,7 +71,7 @@ class AdminTest extends TestCase
      */
     public function test_view_case_with_invalid_data()
     {
-        $response = $this->postJson('/assign-case', [
+        $response = $this->postJson('/admin/view/case/edit', [
             'patient_notes' => 'Physician Notes',
             'first_name' => 'Denton',
             'last_name' => 'Wise',
@@ -87,7 +87,7 @@ class AdminTest extends TestCase
      */
     public function test_view_case_with_empty_data()
     {
-        $response = $this->postJson('/assign-case', [
+        $response = $this->postJson('/admin/view/case/edit', [
             'patient_notes' => '',
             'first_name' => '',
             'last_name' => '',
@@ -188,7 +188,7 @@ class AdminTest extends TestCase
      */
     public function test_add_business_with_valid_data()
     {
-        $response = $this->postJson('/close-case', [
+        $response = $this->postJson('/add-business', [
             'business_name' => 'Garrison',
             'fax_number' => '4610',
             'mobile' => '+1 776-977-4023',
@@ -209,7 +209,7 @@ class AdminTest extends TestCase
      */
     public function test_add_business_with_invalid_data()
     {
-        $response = $this->postJson('/close-case', [
+        $response = $this->postJson('/add-business', [
             'business_name' => 'Garrison 44',
             'fax_number' => '4610454455454',
             'mobile' => '+1 776-977-402345',
@@ -230,7 +230,7 @@ class AdminTest extends TestCase
      */
     public function test_add_business_with_empty_data()
     {
-        $response = $this->postJson('/close-case', [
+        $response = $this->postJson('/add-business', [
             'business_name' => '',
             'fax_number' => '',
             'mobile' => '',
@@ -281,6 +281,152 @@ class AdminTest extends TestCase
     {
         $response = $this->postJson('/send-mail', [
             'message' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful cancel case form with valid data
+     * @return void
+     */
+    public function test_cancel_case_with_valid_data()
+    {
+        $response = $this->postJson('/cancel-case-data', [
+            'case_tag'=>'cost_issue',
+            'reason' => 'cancel this case',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful cancel case form with invalid data
+     * @return void
+     */
+    public function test_cancel_case_with_invalid_data()
+    {
+        $response = $this->postJson('/cancel-case-data', [
+            'case_tag'=>'',
+            'reason' => '$#^%^$#%$^&',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful cancel case form with empty data
+     * @return void
+     */
+    public function test_cancel_case_with_empty_data()
+    {
+        $response = $this->postJson('/cancel-case-data', [
+            'case_tag' => '',
+            'reason' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful schedule shift with valid data
+     * @return void
+     */
+    public function test_scheduled_shift_with_valid_data()
+    {
+        $response = $this->postJson('/create-shift', [
+            'region' => 'somnath',
+            'physician' => 'doctor_don',
+            'shiftDate' => '20-05-2024',
+            'shiftStartTime' => '10:00',
+            'shiftEndTime' => '11:00',
+            'checkbox' => '1',
+            'repeatEnd' => '2',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful schedule shift with invalid data
+     * @return void
+     */
+    public function test_scheduled_shift_with_invalid_data()
+    {
+        $response = $this->postJson('/create-shift', [
+            'region' => 'somnath',
+            'physician' => 'doctor_don',
+            'shiftDate' => '1-05-2024',
+            'shiftStartTime' => '10:00',
+            'shiftEndTime' => '9:00',
+            'checkbox' => '1',
+            'repeatEnd' => '2',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test successful schedule shift with valid data
+     * @return void
+     */
+    public function test_scheduled_shift_with_empty_data()
+    {
+        $response = $this->postJson('/create-shift', [
+            'region' => '',
+            'physician' => '',
+            'shiftDate' => '',
+            'shiftStartTime' => '',
+            'shiftEndTime' => '',
+            'checkbox' => '',
+            'repeatEnd' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful create role with valid data
+     * @return void
+     */
+    public function test_create_role_with_valid_data()
+    {
+        $response = $this->postJson('/create-shift', [
+            'role_name' => '1',
+            'menu_checkbox'=> '1'
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful create role with valid data
+     * @return void
+     */
+    public function test_create_role_with_invalid_data()
+    {
+        $response = $this->postJson('/create-shift', [
+            'role_name' => '3',
+            'menu_checkbox'=> '40'
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful create role with valid data
+     * @return void
+     */
+    public function test_create_role_with_empty_data()
+    {
+        $response = $this->postJson('/create-shift', [
+            'role_name' => '',
+            'menu_checkbox'=> ''
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);

@@ -13,18 +13,21 @@ use Illuminate\Support\Facades\Crypt;
 
 class patientLoginController extends Controller
 {
+
     /**
      *display patient login screen
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function loginScreen()
     {
         return view("patientSite/patientLogin");
     }
 
-    /**
-     *@param $request the input which is enter by user
 
+    /**
      * it verfies user(patient) credentials are valid or not
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\RedirectResponse
      */
     public function userLogin(Request $request)
     {
@@ -49,22 +52,32 @@ class patientLoginController extends Controller
                 return back()->with('error', 'Invalid credentials');
             }
         } else {
-            return back()->with('error', 'Invalid credentials');
+            $user = Users::where("email", $request->email)->first();
+
+            if ($user == null) {
+                return back()->with('error', 'We could not find an account associated with that email address , Please enter correct email');
+
+            } else {
+                return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
+            }
         }
     }
 
+
     /**
-     * it will show reset password form
+     *  display reset password form
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function resetpassword()
     {
         return view("patientSite/patientResetPassword");
     }
 
-    /**
-     *@param $request the input which is enter by user
 
+    /**
      * it checks email in users table and send reset password form to that email
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function submitForgetPasswordForm(Request $request)
     {
@@ -93,13 +106,12 @@ class patientLoginController extends Controller
         return redirect()->route('patient.login.view')->with('success', 'E-mail is sent for password reset.');
     }
 
-    // * patient update password
 
     /**
-     *@param $token which was generated when user enter email in password reset form and stores in users table where user enter email
-
      * it shows password update form
      * if password is already update then it shows password update success page
+     * @param mixed $token
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function showResetPasswordForm($token)
     {
@@ -117,12 +129,13 @@ class patientLoginController extends Controller
         }
     }
 
-    /**
-     *@param $request the password which is enter by user and
 
-     * it update password of patient and delete token
+    /**
+     * update password of patient and delete token
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    
+
     public function submitResetPasswordForm(Request $request)
     {
         $request->validate([
@@ -144,16 +157,17 @@ class patientLoginController extends Controller
         return redirect()->route('patient.login.view')->with('success', 'Your password has been changed!');
     }
 
-    /**
-     * it logout user(patient)
-     */
 
-     
+    /**
+     * logout user(patient)
+     * @return mixed|\Illuminate\Http\RedirectResponse
+     */
     public function logout()
     {
         Auth::logout();
         return redirect()->route('patient.login.view');
     }
+
 
     // Learning Purpose
 

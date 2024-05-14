@@ -103,7 +103,7 @@ $(document).ready(function () {
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin-new-exportUnPaid");
+        $("#filterExport").attr("action", "/admin-unpaid-exportUnPaid");
         $('#filterExport').submit();
 
     })

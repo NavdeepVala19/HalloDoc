@@ -16,9 +16,14 @@ use App\Mail\SendEmailAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class patientController extends Controller
+class PatientController extends Controller
 {
     // this controller is responsible for creating/storing the patient request
+
+    /**
+     * display patient request form
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function patientRequests()
     {
         return view('patientSite/patientRequest');
@@ -26,12 +31,13 @@ class patientController extends Controller
 
 
     /**
-     *@param $request the input which is enter by user
-
      * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-
+    
     public function create(Request $request)
     {
         $request->validate([

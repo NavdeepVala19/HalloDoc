@@ -76,7 +76,7 @@ route::middleware('CheckPatientLogin')->group(function () {
     route::get('/patient/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
 
     //* Patient Dashboard 
-    route::get('/patient/dashboard', [PatientDashboardController::class, 'read'])->name('patient.dashboard');
+    route::get('/patient/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient.dashboard');
 
     //* Edit profile of patient 
     route::get('/patient/profile', [PatientProfileController::class, 'patientEdit'])->name('patient.profile.view');
@@ -413,29 +413,26 @@ Route::middleware('CheckAdminLogin')->group(function () {
     route::post('/admin-active-exportActive', [AdminController::class, 'exportActive'])->name('export.active_data');
     route::post('/admin-conclude-exportConclude', [AdminController::class, 'exportConclude'])->name('export.conclude_data');
     route::post('/admin-toclose-exportToClose', [AdminController::class, 'exportToClose'])->name('export.toclose_data');
-    route::post('/admin-new-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('export.unpaid_data');
+    route::post('/admin-unpaid-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('export.unpaid_data');
     route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('export.all_data');
 
     route::get('/admin-submit-requests', [AdminDashboardController::class, 'createNewRequest'])->name('submit.patient.request.view');
     route::post('/admin-submitted-requests', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('admin.submit.patient.request');
 
     route::get('/admin-new', [AdminController::class, 'fetchRegions']);
-
     route::post('/filter-new', [AdminController::class, 'filterPatient'])->name("filter.region_new");
 
     Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
     Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
+    route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
+    route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
 
     route::get('/admin-profile-edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
     route::get('/admin-profile-update/{id}', [AdminDashboardController::class, 'adminProfile'])->name('edit.admin.profile');
 
-
     route::post('/admin-update-password/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('admin.password.update');
     route::post('/admin-info-updates/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('admin.info.update');
     route::post('/admin-mail-updates/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('admin.mail.info.update');
-
-    route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
-    route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
 
     route::get('/admin-create-new-admin', [AdminController::class, 'adminAccount'])->name('create.new.admin.view');
     route::post('/admin-new-account-created', [AdminController::class, 'createAdminAccount'])->name('new.admin.created');

@@ -84,7 +84,12 @@ class patientDashboardController extends Controller
     }
 
 
-    //  create me request in patient Dashboard
+    //  
+
+    /**
+     * create me request in patient Dashboard
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function createNewRequest()
     {
         $userData = Auth::user();
@@ -94,9 +99,9 @@ class patientDashboardController extends Controller
     }
 
     /**
-     *@param $request the input which is enter by user
-
-     * it stores request in request_client and request table 
+     *  it stores request in request_client and request table 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function createNewPatient(Request $request)
     {
@@ -176,18 +181,22 @@ class patientDashboardController extends Controller
         return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
     }
 
-    // create someone else request from patient dashboard
 
+    /**
+     * create someone else request from patient dashboard
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function createSomeoneRequest()
     {
         return view("patientSite/patientSomeoneRequest");
     }
 
-    /**
-     *@param $request the input which is enter by user
 
+    /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
     public function createSomeOneElseRequest(Request $request)
@@ -361,8 +370,9 @@ class patientDashboardController extends Controller
     /**
      * when patient login after creating account he/she will land to dashboard page,
      * which shows request created date ,request status and show if document is uploaded or not
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function read()
+    public function patientDashboard()
     {
         $userData = Auth::user();
         $email = $userData["email"];

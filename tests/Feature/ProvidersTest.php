@@ -342,4 +342,154 @@ class ProvidersTest extends TestCase
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
+
+
+
+    /**
+     * Test successful reset password in my profile with valid data
+     * @return void
+     */
+    public function test_reset_password_in_my_profile_with_valid_data()
+    {
+        $response = $this->postJson('/provider-reset-password', [
+            'password' => 'doctor@gmail.com',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful reset password in my profile with invalid data
+     * @return void
+     */
+    public function test_reset_password_in_my_profile_with_invalid_data()
+    {
+        $response = $this->postJson('/provider-reset-password', [
+            'password' => 'do54',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful reset password in my profile with empty data
+     * @return void
+     */
+    public function test_reset_password_in_my_profile_with_empty_data()
+    {
+        $response = $this->postJson('/provider-reset-password', [
+            'password' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful schedule shift with valid data
+     * @return void
+     */
+    public function test_schedule_shift_with_valid_data()
+    {
+        $response = $this->postJson('/provider-create-shift', [
+            'region' => 'somnath',
+            'shiftDate' => '15-05-2024',
+            'shiftStartTime' => '11:00',
+            'shiftEndTime' => '12:00',
+            'checkbox' => '1',
+            'repeatEnd' => '2',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+
+    /**
+     * Test successful schedule shift with invalid data
+     * @return void
+     */
+    public function test_schedule_shift_with_invalid_data()
+    {
+        $response = $this->postJson('/provider-create-shift', [
+            'region' => 'somnath',
+            'shiftDate' => '11-05-2024',
+            'shiftStartTime' => '15:00',
+            'shiftEndTime' => '12:00',
+            'checkbox' => '7',
+            'repeatEnd' => '5',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful schedule shift with empty data
+     * @return void
+     */
+    public function test_schedule_shift_with_empty_data()
+    {
+        $response = $this->postJson('/provider-create-shift', [
+            'region' => '',
+            'shiftDate' => '',
+            'shiftStartTime' => '',
+            'shiftEndTime' => '',
+            'checkbox' => '',
+            'repeatEnd' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful edit scheduled shift with valid data
+     * @return void
+     */
+    public function test_edit_scheduled_shift_with_valid_data()
+    {
+        $response = $this->postJson('/provider-edit-shift', [
+            'shiftDate' => '22-05-2024',
+            'shiftStartTime' => '12:00',
+            'shiftEndTime' => '14:00',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful edit scheduled shift with invalid data
+     * @return void
+     */
+    public function test_edit_scheduled_shift_with_invalid_data()
+    {
+        $response = $this->postJson('/provider-edit-shift', [
+            'shiftDate' => '2-05-2024',
+            'shiftStartTime' => '15:00',
+            'shiftEndTime' => '13:00',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * Test successful edit scheduled shift with valid data
+     * @return void
+     */
+    public function test_edit_scheduled_shift_with_empty_data()
+    {
+        $response = $this->postJson('/provider-edit-shift', [
+            'shiftDate' => '',
+            'shiftStartTime' => '',
+            'shiftEndTime' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
 }

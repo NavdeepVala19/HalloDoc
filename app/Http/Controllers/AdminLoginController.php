@@ -17,9 +17,9 @@ class AdminLoginController extends Controller
 {
 
     /**
-     * show adminLogin page
+     * show Login page for admin and provider
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-
     public function adminLogin()
     {
         return view("admin/adminLogin");
@@ -27,9 +27,9 @@ class AdminLoginController extends Controller
 
 
     /**
-     *@param $request user enter credentials
-
      * verify that user is admin or provider and if user entered credentials are valid it redirects to dashboard according to role
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\RedirectResponse
      */
     public function userLogin(Request $request)
     {
@@ -67,13 +67,19 @@ class AdminLoginController extends Controller
                 return back()->with('error', 'invalid credentials');
             }
         } else {
-            return back()->with('error', 'invalid credentials');
+            $user = Users::where("email", $request->email)->first();
+
+            if ($user == null) {
+                return back()->with('error', 'We could not find an account associated with that email address , Please enter correct email');
+            } else {
+                return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
+            }
         }
     }
 
-
     /**
      * show password reset form
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function adminResetPassword()
     {
@@ -82,9 +88,9 @@ class AdminLoginController extends Controller
 
 
     /**
-     *@param $request user input email
-
-     * send email to entered email if email not exist it shows error message
+     *  send email to entered email if email not exist it shows error message
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
 
     public function submitForgetPasswordForm(Request $request)
@@ -116,11 +122,10 @@ class AdminLoginController extends Controller
 
 
     /**
-     *@param $token which was generate when email is sent and store in users table at enter entered email
-
      * shows password update form and if password is already updated it shows password update success form
+     * @param mixed $token
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-
     public function showUpdatePasswordForm($token)
     {
         try {
@@ -138,9 +143,9 @@ class AdminLoginController extends Controller
 
 
     /**
-     *@param $request   $request->token which was generated when email was sent
-
      * password updated of users(admin/provider) and after successfully update password token gets deleted
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function submitUpdatePasswordForm(Request $request)
     {
@@ -164,17 +169,24 @@ class AdminLoginController extends Controller
         return redirect()->route('login')->with('message', 'Your password has been changed!');
     }
 
-    public function logout()
+
+    /**
+     * logout user(admin/provider)
+     * @return mixed|\Illuminate\Http\RedirectResponse
+     */
+ public function logout()
     {
-        $userData = Auth::user();
-        $userRolesData = UserRoles::where('user_id', $userData->id)->first();
-
-        if ($userRolesData->role_id == 2) {
-            $providersData = Provider::where('email', $userData->email)->first();
-            PhysicianLocation::where('provider_id', $providersData->id)->forceDelete();
-        }
-
         Auth::logout();
         return redirect()->route('login');
+
+        // $userData = Auth::user();
+        // $userRolesData = UserRoles::where('user_id', $userData->id)->first();
+
+        // if ($userRolesData->role_id == 2) {
+        //     $providersData = Provider::where('email', $userData->email)->first();
+        //     PhysicianLocation::where('provider_id', $providersData->id)->forceDelete();
+        // }
+
+       
     }
 }

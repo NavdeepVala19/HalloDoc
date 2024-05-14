@@ -9,18 +9,21 @@ use Illuminate\Support\Facades\Hash; // Import the Hash facade
 
 class patientAccountController extends Controller
 {
+
     /**
-     *it will display patient register page
+     * display patient register page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientRegister()
     {
         return view("patientSite/patientRegister");
     }
 
+   
     /**
-     *@param $request the input which is enter by user
-
-     * it stores email and password in users table
+     *stores email and password in users table
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function createAccount(Request $request)
     {
