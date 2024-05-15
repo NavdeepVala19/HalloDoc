@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Session;
-
-// Different Models used in these Controller
+use App\Models\Menu;
 use App\Models\Role;
 use App\Models\Admin;
 use App\Models\Roles;
-use App\Models\Menu;
 use App\Models\Users;
+use App\Mail\SendLink;
 use App\Models\Regions;
+
+// Different Models used in these Controller
 use App\Models\SMSLogs;
+use Twilio\Rest\Client;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
 use App\Models\Provider;
@@ -27,28 +22,34 @@ use App\Models\AdminRegion;
 use App\Models\ShiftDetail;
 use App\Models\BlockRequest;
 use App\Models\RequestTable;
-use App\Models\RequestStatus;
+use Illuminate\Http\Request;
 use App\Models\RequestClient;
+use App\Models\RequestStatus;
 use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
+use App\Exports\NewStatusExport;
 use App\Models\RequestConcierge;
 use App\Models\HealthProfessional;
-use App\Models\HealthProfessionalType;
-
-// For sending Mails
-use App\Mail\SendLink;
-use Twilio\Rest\Client;
-use App\Mail\RequestSupportMessage;
-
-// Export Data with Excel
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\NewStatusExport;
+use Illuminate\Support\Facades\DB;
 use App\Exports\ActiveStatusExport;
 use App\Exports\SearchRecordExport;
 use App\Exports\UnPaidStatusExport;
+
+// For sending Mails
+use App\Mail\RequestSupportMessage;
 use App\Exports\PendingStatusExport;
 use App\Exports\ToCloseStatusExport;
+
+// Export Data with Excel
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
+use Illuminate\Support\Facades\Crypt;
+use App\Models\HealthProfessionalType;
+use App\Http\Requests\AdminProfileForm;
+use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -1373,27 +1374,9 @@ class AdminController extends Controller
      * @return mixed|\Illuminate\Http\RedirectResponse
      */
 
-    public function createAdminAccount(Request $request)
+    public function createAdminAccount(AdminProfileForm $request)
     {
-        $request->validate([
-            'user_name' => 'required|alpha|min:3|max:40',
-            'password' => 'required|min:8|max:20|regex:/^\S(.*\S)?$/',
-            'first_name' => 'required|min:3|max:15|alpha',
-            'last_name' => 'required|min:3|max:15|alpha',
-            'email' => 'required|email|min:2|max:40|unique:App\Models\Users,email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'confirm_email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
-            'address1' => 'required|min:2|max:30|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-            'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'zip' => 'digits:6',
-            'alt_mobile' => 'required|max_digits:10|min_digits:10',
-            'role' => 'required',
-            'state' => 'required',
-        ]);
-
         // Store Data in users table
-
         $adminCredentialsData = new Users();
         $adminCredentialsData->username = $request->user_name;
         $adminCredentialsData->password = Hash::make($request->password);

@@ -10,4 +10,9 @@ class RequestConcierge extends Model
     use HasFactory;
 
     protected $table = 'request_concierge';
+
+    protected $fillable = [
+        'request_id',
+        'concierge_id',
+    ];
 }

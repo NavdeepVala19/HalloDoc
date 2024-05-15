@@ -53,31 +53,42 @@ class CreatePatientRequest extends FormRequest
             'first_name.min' =>  $min_message.' 3 Alphabets',
             'first_name.max' => $max_message.' 15 Alphabets',
             'first_name.alpha' => $only_alphabets . ' in First name',
+
             'last_name.required' => $enter . ' Last Name',
             'last_name.min' =>$min_message . ' 3 Alphabets',
             'last_name.max' =>$max_message . ' 15 Alphabets',
             'last_name.alpha' => $only_alphabets .' in Last name',
+
             'date_of_birth.required' =>  $enter . ' Date of Birth',
             'date_of_birth.before' =>  $enter . ' Date of Birth Before Today',
+
             'email.required' =>  $enter . ' Email',
             'email.max' =>  $max_message.' 40 characters in Email',
             'email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
+
             'phone_number.required' => $enter. ' Phone Number',
+
             'street.required'=> $enter . ' a street',
             'street.max'=> $max_message." 50 alphabets in street",
             'street.regex'=> 'Only alphabets,dash,underscore,space,comma and numbers are allowed in street name.',
+
             'city.required'=> $enter .' a city',
             'city.regex' => 'Please enter alpbabets in city name.',
             'city.max' => $max_message.' 30 alphabets in city',
+
             'state.required'=> $enter .' a state',
             'state.regex'=> 'Please enter alpbabets in state name.',
             'state.max'=>$max_message.' 30 alphabets in state',
+
             'zipcode.digits'=>'Please enter 6 digits zipcode',
             'zipcode.gte'=> 'Please enter a 6 digit positive number in zipcode.',
+
             'docs.mimes'=> 'Please select a valid file (JPG, PNG, PDF, DOC) with a size less than 2MB.',
+
             'symptoms.min'=> $min_message . ' 5 character',
             'symptoms.max'=> $max_message . ' 200 character',
             'symptoms.regex'=> 'Please enter valid symptoms. Symptoms should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.',
+            
             'room.max'=> $max_message . ' a number less than 1000',
             'room.gte'=> 'Please enter room number greater than 0',
         ];

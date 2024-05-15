@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash; // Import the Hash facade
 
 class patientAccountController extends Controller
 {
-
     /**
      * display patient register page
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -19,7 +18,6 @@ class patientAccountController extends Controller
         return view("patientSite/patientRegister");
     }
 
-   
     /**
      *stores email and password in users table
      * @param \Illuminate\Http\Request $request

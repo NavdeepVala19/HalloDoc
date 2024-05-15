@@ -219,6 +219,7 @@ $(document).ready(function () {
         success: function (data) {
             data.forEach(function (role) {
                 var currentRoleValue = $("#provider_role").val();
+                console.log(currentRoleValue);
                 if (currentRoleValue) {
                     if (role.id != currentRoleValue) {
                         $("#provider_role").append(

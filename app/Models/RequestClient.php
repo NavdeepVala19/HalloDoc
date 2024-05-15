@@ -41,6 +41,7 @@ class RequestClient extends Model
         'IsReservationReminderSent',
         'Latitude',
         'Longitude',
+        'date_of_birth'
     ];
 
     public function request()

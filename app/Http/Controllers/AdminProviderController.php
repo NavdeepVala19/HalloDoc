@@ -16,10 +16,10 @@ use Illuminate\Http\Request;
 use App\Mail\ContactProvider;
 use App\Models\PhysicianRegion;
 use App\Models\PhysicianLocation;
+use App\Http\Requests\ProviderForm;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
-use App\Http\Requests\CreateNewProvider;
 
 class AdminProviderController extends Controller
 {
@@ -39,8 +39,6 @@ class AdminProviderController extends Controller
             $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
 
             $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
-
-
             return view('/adminPage/provider/adminProvider', compact('providersData', 'onCallPhysicianIds'));
         } catch (\Throwable $th) {
             return view('errors.500');
@@ -263,7 +261,7 @@ class AdminProviderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function adminCreateNewProvider(CreateNewProvider $request)
+    public function adminCreateNewProvider(ProviderForm $request)
     {
         // store data of providers in users table
         $userProvider = new Users();
@@ -624,13 +622,14 @@ class AdminProviderController extends Controller
      */
     public function deleteProviderAccount($id)
     {
-        // soft delete in providers table
-        $providerInfo = Provider::with('users')->where('id', $id)->first();
+        // soft delete 
+        $providerInfo = Provider::where('id', $id)->first();
 
         //Soft delete in allusers table
         AllUsers::where('user_id', $providerInfo->user_id)->delete();
         PhysicianRegion::where('provider_id', $id)->delete();
         Users::where('id', $providerInfo->user_id)->delete();
+        Provider::where('id', $id)->delete();
 
 
         return redirect()->route('admin.providers.list')->with('message', 'account is deleted');
