@@ -2,19 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\UserRoles;
 use Carbon\Carbon;
+use App\Models\Admin;
 use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
+use App\Models\UserRoles;
+use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use App\Models\RequestClient;
-use App\Models\RequestWiseFile;
 use App\Mail\SendEmailAddress;
+use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\Mail;
 
 
-class PatientRequestSubmitService
+class AdminCreateRequestService
 {
     /**
      * it generates confirmation number
@@ -35,10 +37,15 @@ class PatientRequestSubmitService
         return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
     }
 
+
+    /**
+     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     */
     public function storeRequest($request)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
-    
+
         // Store user details if email is not already stored
         if ($isEmailStored == null) {
             $requestEmail = new Users();
@@ -64,9 +71,9 @@ class PatientRequestSubmitService
             $userRolesEntry = new UserRoles();
             $userRolesEntry->role_id = 3;
             $userRolesEntry->user_id = $requestEmail->id;
-            $userRolesEntry->save();    
+            $userRolesEntry->save();
         }
-        
+
         $requestData = new RequestTable();
         $requestData->user_id = $isEmailStored ? $isEmailStored->id : $requestEmail->id;
         $requestData->request_type_id = 1;
@@ -96,15 +103,11 @@ class PatientRequestSubmitService
         ]));
         $patientRequest->save();
 
-        // Store documents in request_wise_file table
-        if ($request->hasFile('docs')) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $requestData->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
 
-        }
+        RequestNotes::create([
+            'admin_notes' => $request->adminNote,
+            'request_id' => $requestData->id,
+        ]);
 
         // Generate confirmation number
         $confirmationNumber = $this->generateConfirmationNumber($request);
@@ -140,5 +143,108 @@ class PatientRequestSubmitService
         }
     }
 
-}
+    public function adminProfileEditThroughUserAccessPage($id)
+    {
+        $adminData = Admin::select(
+            'admin.first_name',
+            'admin.last_name',
+            'admin.email',
+            'admin.mobile',
+            'admin.address1',
+            'admin.address2',
+            'admin.city',
+            'admin.zip',
+            'admin.status',
+            'admin.user_id',
+            'alt_phone',
+            'role.name',
+            'regions.region_name',
+            'regions.id'
+        )
+            ->leftJoin('role', 'role.id', 'admin.role_id')
+            ->leftJoin('users', 'users.id', 'admin.user_id')
+            ->leftJoin('regions', 'regions.id', 'admin.region_id')
+            ->where('user_id', $id)
+            ->first();
 
+        return $adminData;
+    }
+
+    public function adminProfile($id)
+    {
+        $adminProfileData = Admin::select(
+            'admin.first_name',
+            'admin.last_name',
+            'admin.email',
+            'admin.mobile',
+            'admin.address1',
+            'admin.address2',
+            'admin.city',
+            'admin.zip',
+            'admin.status',
+            'admin.user_id',
+            'alt_phone',
+            'role.name',
+            'regions.region_name',
+            'regions.id'
+        )
+            ->leftJoin('role', 'role.id', 'admin.role_id')
+            ->leftJoin('users', 'users.id', 'admin.user_id')
+            ->leftJoin('regions', 'regions.id', 'admin.region_id')
+            ->where('user_id', $id)
+            ->first();
+
+        return $adminProfileData;
+    }
+
+    public function updateAdminInformation($request, $id)
+    {
+        // Update in admin table
+        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
+        $updateAdminInformation->first_name = $request->first_name;
+        $updateAdminInformation->last_name = $request->last_name;
+        $updateAdminInformation->email = $request->email;
+        $updateAdminInformation->mobile = $request->phone_number;
+        $updateAdminInformation->save();
+
+        // update Data in allusers table
+        $updateAdminInfoAllUsers = AllUsers::where('user_id', $id)->first();
+        $updateAdminInfoAllUsers->first_name = $request->first_name;
+        $updateAdminInfoAllUsers->last_name = $request->last_name;
+        $updateAdminInfoAllUsers->email = $request->email;
+        $updateAdminInfoAllUsers->mobile = $request->phone_number;
+        $updateAdminInfoAllUsers->save();
+
+        // update email and phone number in users table
+
+        $updateUserInfo = Users::where('id', $id)->first();
+        $updateUserInfo->email = $request->email;
+        $updateUserInfo->phone_number = $request->phone_number;
+        $updateUserInfo->save();
+
+        return true;
+    }
+
+    public function updateAdminMailInformation($request, $id)
+    {
+        // Update in admin table
+        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
+
+        $updateAdminInformation->city = $request->city;
+        $updateAdminInformation->address1 = $request->address1;
+        $updateAdminInformation->address2 = $request->address2;
+        $updateAdminInformation->zip = $request->zip;
+        $updateAdminInformation->alt_phone = $request->alt_mobile;
+        $updateAdminInformation->region_id = $request->select_state;
+        $updateAdminInformation->save();
+
+        // update Data in allusers table
+        $updateAdminInfoAllUsers = AllUsers::where('user_id', $id)->first();
+        $updateAdminInfoAllUsers->city = $request->city;
+        $updateAdminInfoAllUsers->street = $request->address1;
+        $updateAdminInfoAllUsers->zipcode = $request->zip;
+        $updateAdminInfoAllUsers->save();
+
+        return true;
+    }
+}

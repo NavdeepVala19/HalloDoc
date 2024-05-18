@@ -7,16 +7,14 @@ use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\Business;
 use App\Models\EmailLog;
-use App\Models\Concierge;
 use App\Models\UserRoles;
 use App\Models\RequestTable;
 use App\Models\RequestClient;
 use App\Mail\SendEmailAddress;
 use App\Models\RequestBusiness;
-use App\Models\RequestConcierge;
 use Illuminate\Support\Facades\Mail;
 
-class ConciergeRequestSubmitService
+class BusinessRequestSubmitService
 {
 
     /**
@@ -38,6 +36,7 @@ class ConciergeRequestSubmitService
         return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
     }
 
+    
     public function storeBusinessRequest($request)
     {
         $isEmailStored = Users::where('email', $request->email)->first();

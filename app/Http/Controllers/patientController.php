@@ -30,7 +30,6 @@ class PatientController extends Controller
     public function create(CreatePatientRequest $request , PatientRequestSubmitService $requestSubmitService)
     {
         $patientRequest = $requestSubmitService->storeRequest($request);
-        dd($patientRequest);
         $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
         return redirect()->route('submit.request')->with('message', $redirectMsg);

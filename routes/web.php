@@ -126,7 +126,6 @@ route::post('/reset-password-link', [AdminLoginController::class, 'submitForgetP
 Route::get('/update-password/{token}', [AdminLoginController::class, 'showUpdatePasswordForm'])->name('admin.update.password.view');
 Route::post('/updated-password', [AdminLoginController::class, 'submitUpdatePasswordForm'])->name('admin.password.updated');
 
-// route::post('/admin/send-sms',[AdminDashboardController::class,'sendSMS'])->name('sendingSMS');
 // ****************************************************************************************************************************
 
 // ******************************* NAVDEEP's WORK **********************************************

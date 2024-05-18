@@ -20,6 +20,7 @@ use App\Http\Requests\ProviderForm;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use App\Services\AdminProviderService;
 
 class AdminProviderController extends Controller
 {
@@ -28,17 +29,12 @@ class AdminProviderController extends Controller
      * listing of providersname,status,role,call status
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function readProvidersInfo()
+    public function readProvidersInfo(AdminProviderService $adminProviderService)
     {
         try {
-            $currentDate = now()->toDateString();
-            $currentTime = now()->format('H:i');
-
-            $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
-
-            $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-
-            $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
+            $providers = $adminProviderService->ProvidersList();
+            $onCallPhysicianIds = $providers['onCallPhysicianIds'];
+            $providersData = $providers['providersData'];
             return view('/adminPage/provider/adminProvider', compact('providersData', 'onCallPhysicianIds'));
         } catch (\Throwable $th) {
             return view('errors.500');
@@ -52,21 +48,11 @@ class AdminProviderController extends Controller
      * @return mixed|\Illuminate\Http\JsonResponse
      */
 
-    public function filterPhysicianThroughRegions(Request $request)
+    public function filterPhysicianThroughRegions(Request $request,AdminProviderService $adminProviderService)
     {
-        $currentDate = now()->toDateString();
-        $currentTime = now()->format('H:i');
-
-        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
-
-        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-
-        if ($request->selectedId == "all") {
-            $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
-        } else {
-            $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
-            $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
-        }
+        $providers = $adminProviderService->filterProviderList($request);
+        $onCallPhysicianIds = $providers['onCallPhysicianIds'];
+        $providersData = $providers['providersData'];
 
         $data = view('/adminPage/provider/adminProviderFilterData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
@@ -78,20 +64,11 @@ class AdminProviderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function filterPhysicianThroughRegionsMobileView(Request $request)
+    public function filterPhysicianThroughRegionsMobileView(Request $request,AdminProviderService $adminProviderService)
     {
-        $currentDate = now()->toDateString();
-        $currentTime = now()->format('H:i');
-
-        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
-
-        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-        if ($request->selectedId == "all") {
-            $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
-        } else {
-            $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
-            $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
-        }
+        $providers = $adminProviderService->filterProviderList($request);
+        $onCallPhysicianIds = $providers['onCallPhysicianIds'];
+        $providersData = $providers['providersData'];
 
         $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
@@ -104,117 +81,13 @@ class AdminProviderController extends Controller
      * @param mixed $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function sendMailToContactProvider(Request $request, $id)
+    public function sendMailToContactProvider(Request $request, $id,AdminProviderService $adminProviderService)
     {
         $request->validate([
             'contact_msg' => 'required|min:2|max:100',
         ]);
-
-        $receipientData = Provider::where('id', $id)->get();
-        $receipientId = $id;
-        $receipientName = $receipientData->first()->first_name;
-        $receipientEmail = $receipientData->first()->email;
-        $receipientMobile = $receipientData->first()->mobile;
-
-        $enteredText = $request->contact_msg;
-
         try {
-            if ($request->contact == "email") {
-                // send email
-                $providerData = Provider::get()->where('id', $request->provider_id);
-                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
-
-                EmailLog::create([
-                    'role_id' => 1,
-                    'is_email_sent' => true,
-                    'sent_tries' => 1,
-                    'sent_date' => now(),
-                    'email_template' => $enteredText,
-                    'subject_name' => 'notification to provider',
-                    'email' => $receipientEmail,
-                    'provider_id' => $receipientId,
-                ]);
-            } elseif ($request->contact == "sms") {
-                // send SMS
-                $sid = getenv("TWILIO_SID");
-                $token = getenv("TWILIO_AUTH_TOKEN");
-                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-                $twilio = new Client($sid, $token);
-
-                $twilio->messages
-                    ->create(
-                        "+91 99780 71802", // to
-                        [
-                            "body" => "{$enteredText}",
-                            "from" => $senderNumber,
-                        ]
-                    );
-
-                SMSLogs::create(
-                    [
-                        'provider_id' => $receipientId,
-                        'mobile_number' => $receipientMobile,
-                        'created_date' => now(),
-                        'sent_date' => now(),
-                        'role_id' => 1,
-                        'recipient_name' => $receipientName,
-                        'sent_tries' => 1,
-                        'is_sms_sent' => 1,
-                        'action' => 1,
-                        'sms_template' => $enteredText,
-                    ]
-                );
-            } elseif ($request->contact == "both") {
-                // send email
-                $providerData = Provider::get()->where('id', $request->provider_id);
-                Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
-
-                // send SMS
-                $sid = getenv("TWILIO_SID");
-                $token = getenv("TWILIO_AUTH_TOKEN");
-                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
-
-                $twilio = new Client(
-                    $sid,
-                    $token
-                );
-
-                $twilio->messages
-                    ->create(
-                        "+91 99780 71802", // to
-                        [
-                            "body" => "{$enteredText}",
-                            "from" => $senderNumber,
-                        ]
-                    );
-
-                EmailLog::create([
-                    'role_id' => 1,
-                    'is_email_sent' => true,
-                    'sent_tries' => 1,
-                    'sent_date' => now(),
-                    'email_template' => $enteredText,
-                    'subject_name' => 'notification to provider',
-                    'email' => $receipientEmail,
-                    'provider_id' => $receipientId,
-                ]);
-
-                SMSLogs::create(
-                    [
-                        'provider_id' => $receipientId,
-                        'mobile_number' => $receipientMobile,
-                        'created_date' => now(),
-                        'sent_date' => now(),
-                        'role_id' => 1,
-                        'recipient_name' => $receipientName,
-                        'sent_tries' => 1,
-                        'is_sms_sent' => 1,
-                        'action' => 1,
-                        'sms_template' => $enteredText,
-                    ]
-                );
-            }
+            $adminProviderService->contactToProvider($request,$id);
             return redirect()->route('admin.providers.list')->with('message', 'Your message has been sent successfully.');
         } catch (\Throwable $th) {
             return view('errors.500');
@@ -261,108 +134,9 @@ class AdminProviderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function adminCreateNewProvider(ProviderForm $request)
+    public function adminCreateNewProvider(ProviderForm $request,AdminProviderService $adminProviderService)
     {
-        // store data of providers in users table
-        $userProvider = new Users();
-        $userProvider->username = $request->user_name;
-        $userProvider->password = Hash::make($request->password);
-        $userProvider->email = $request->email;
-        $userProvider->phone_number = $request->phone_number;
-        $userProvider->save();
-
-        // store data of providers in providers table
-        $providerData = new Provider();
-        $providerData->user_id = $userProvider->id;
-        $providerData->first_name = $request->first_name;
-        $providerData->last_name = $request->last_name;
-        $providerData->email = $request->email;
-        $providerData->mobile = $request->phone_number;
-        $providerData->alt_phone = $request->phone_number_alt;
-        $providerData->medical_license = $request->medical_license;
-        $providerData->npi_number = $request->npi_number;
-        $providerData->address1 = $request->address1;
-        $providerData->address2 = $request->address2;
-        $providerData->city = $request->city;
-        $providerData->zip = $request->zip;
-        $providerData->status = 'pending';
-        $providerData->regions_id = $request->select_state;
-        $providerData->business_name = $request->business_name;
-        $providerData->business_website = $request->business_website;
-        $providerData->admin_notes = $request->admin_notes;
-        $providerData->role_id = $request->role;
-        $providerData->save();
-
-        // store region in physician_region table
-        foreach ($request->region_id as $region) {
-            PhysicianRegion::create([
-                'provider_id' => $providerData->id,
-                'region_id' => $region,
-            ]);
-        }
-
-        // make entry in user_roles table to identify the user(whether it is admin or physician)
-        $user_roles = new UserRoles();
-        $user_roles->user_id = $userProvider->id;
-        $user_roles->role_id = 2;
-        $user_roles->save();
-
-        // store data in allusers table
-        $providerAllUsers = new AllUsers();
-        $providerAllUsers->user_id = $userProvider->id;
-        $providerAllUsers->first_name = $request->first_name;
-        $providerAllUsers->last_name = $request->last_name;
-        $providerAllUsers->email = $request->email;
-        $providerAllUsers->mobile = $request->phone_number;
-        $providerAllUsers->street = $request->address1;
-        $providerAllUsers->city = $request->city;
-        $providerAllUsers->zipcode = $request->zip;
-        $providerAllUsers->status = 'pending';
-        $providerAllUsers->save();
-
-        // store documents in local storage
-        if (isset($request->provider_photo)) {
-            $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
-            $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
-            $providerData->save();
-        }
-
-        if (isset($request->independent_contractor)) {
-            $providerData->IsAgreementDoc = 1;
-
-            $file = $request->file('independent_contractor');
-            $filename = $providerData->id . '_ICA.pdf';
-            $file->storeAs('public/provider', $filename);
-            $providerData->save();
-        }
-
-        if (isset($request->background_doc)) {
-            $providerData->IsBackgroundDoc = 1;
-
-            $file = $request->file('background_doc');
-            $filename = $providerData->id . '_BC.pdf';
-            $file->storeAs('public/provider', $filename);
-            $providerData->save();
-        }
-
-        if (isset($request->hipaa_docs)) {
-            $providerData->IsTrainingDoc = 1;
-
-            $file = $request->file('hipaa_docs');
-            $filename = $providerData->id . '_HCA.pdf';
-            $file->storeAs('public/provider', $filename);
-            $providerData->save();
-        }
-
-        if (isset($request->non_disclosure_doc)) {
-            $providerData->IsNonDisclosureDoc = 1;
-
-            $file = $request->file('non_disclosure_doc');
-            $filename = $providerData->id . '_NDD.pdf';
-            $file->storeAs('public/provider', $filename);
-            $providerData->save();
-        }
-
+        $adminProviderService->createNewProvider($request);
         return redirect()->route('admin.providers.list')->with('message', 'account is created');
     }
 
@@ -414,13 +188,11 @@ class AdminProviderController extends Controller
             $updateProviderInfoUsers->save();
 
             $getProviderData = Provider::where('id', $id)->first();
-
             $getProviderData->status = $request->status_type;
             $getProviderData->role_id = $request->role;
             $getProviderData->save();
 
             $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
-            // if (!empty($updateProviderDataAllUsers)) {
             if ($updateProviderDataAllUsers) {
                 $updateProviderDataAllUsers->status = $request->status_type;
                 $updateProviderDataAllUsers->save();
@@ -440,7 +212,7 @@ class AdminProviderController extends Controller
      * @param mixed $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function providerInfoUpdate(Request $request, $id)
+    public function providerInfoUpdate(Request $request, $id,AdminProviderService $adminProviderService)
     {
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
@@ -451,37 +223,7 @@ class AdminProviderController extends Controller
             'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
         ]);
 
-        $getProviderInformation = Provider::where('id', $id)->first();
-
-        $getProviderInformation->first_name = $request->first_name;
-        $getProviderInformation->last_name = $request->last_name;
-        $getProviderInformation->email = $request->email;
-        $getProviderInformation->mobile = $request->phone_number;
-        $getProviderInformation->medical_license = $request->medical_license;
-        $getProviderInformation->npi_number = $request->npi_number;
-        $getProviderInformation->save();
-
-        // update data in allusers table
-
-        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
-
-        // update data in users table
-        $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider)->first();
-        $updateProviderInfoUsers->email = $request->email;
-        $updateProviderInfoUsers->phone_number = $request->phone_number;
-        $updateProviderInfoUsers->save();
-
-        $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
-
-        if (!$updateProviderDataAllUsers) {
-            return back()->with('message', 'Physician information is updated');
-        } else {
-            $updateProviderDataAllUsers->first_name = $request->first_name;
-            $updateProviderDataAllUsers->last_name = $request->last_name;
-            $updateProviderDataAllUsers->email = $request->email;
-            $updateProviderDataAllUsers->mobile = $request->phone_number;
-            $updateProviderDataAllUsers->save();
-        }
+        $adminProviderService->updatePhysicianInformation($request,$id);
         return back()->with('message', 'Physician information is updated');
     }
 
@@ -494,7 +236,7 @@ class AdminProviderController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function providerMailInfoUpdate(Request $request, $id)
+    public function providerMailInfoUpdate(Request $request, $id,AdminProviderService $adminProviderService)
     {
         $request->validate([
             'address1' => 'required|min:2|max:50',
@@ -504,29 +246,8 @@ class AdminProviderController extends Controller
             'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);
 
-        $getProviderInformation = Provider::with('users')->where('id', $id)->first();
-
-        $getProviderInformation->city = $request->city;
-        $getProviderInformation->address1 = $request->address1;
-        $getProviderInformation->address2 = $request->address2;
-        $getProviderInformation->zip = $request->zip;
-        $getProviderInformation->alt_phone = $request->alt_phone_number;
-        $getProviderInformation->regions_id = $request->regions;
-        $getProviderInformation->save();
-
-        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
-
-        $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
-        if (empty($updateProviderDataAllUsers)) {
-            return back()->with('message', 'Mailing and Billing information is updated');
-        } else {
-            $updateProviderDataAllUsers->street = $request->address1;
-            $updateProviderDataAllUsers->city = $request->city;
-            $updateProviderDataAllUsers->zipcode = $request->zip;
-            $updateProviderDataAllUsers->save();
-
-            return back()->with('message', 'Mailing and Billing information is updated');
-        }
+        $adminProviderService->updatePhysicianMailInformation($request,$id);
+        return back()->with('message', 'Mailing and Billing information is updated');
     }
 
     /**
@@ -535,7 +256,7 @@ class AdminProviderController extends Controller
      * @param mixed $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function providerProfileUpdate(Request $request, $id)
+    public function providerProfileUpdate(Request $request, $id,AdminProviderService $adminProviderService)
     {
         $request->validate([
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -544,20 +265,7 @@ class AdminProviderController extends Controller
             'admin_notes' => 'nullable|min:5|max:200|',
         ]);
 
-        $getProviderInformation = Provider::where('id', $id)->first();
-
-        $getProviderInformation->business_name = $request->business_name;
-        $getProviderInformation->business_website = $request->business_website;
-        $getProviderInformation->admin_notes = $request->admin_notes;
-
-        if (isset($request->provider_photo)) {
-            $getProviderInformation->photo = $request->file('provider_photo')->getClientOriginalName();
-            $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
-            $getProviderInformation->save();
-        }
-
-        $getProviderInformation->save();
-
+        $adminProviderService->updateProviderProfile($request,$id);
         return back()->with('message', 'Provider Profile information is updated');
     }
 
@@ -569,7 +277,7 @@ class AdminProviderController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function providerDocumentsUpdate(Request $request, $id)
+    public function providerDocumentsUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'independent_contractor' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
@@ -578,40 +286,7 @@ class AdminProviderController extends Controller
             'non_disclosure_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
         ]);
 
-        $getProviderInformation = Provider::where('id', $id)->first();
-
-        if (isset($request->independent_contractor)) {
-            $getProviderInformation->IsAgreementDoc = 1;
-            $file = $request->file('independent_contractor');
-            $filename = $getProviderInformation->id . '_ICA.pdf';
-            $file->storeAs('public/provider', $filename);
-            $getProviderInformation->save();
-        }
-
-        if (isset($request->background_doc)) {
-            $getProviderInformation->IsBackgroundDoc = 1;
-            $file = $request->file('background_doc');
-            $filename = $getProviderInformation->id . '_BC.pdf';
-            $file->storeAs('public/provider', $filename);
-            $getProviderInformation->save();
-        }
-
-        if (isset($request->hipaa_docs)) {
-            $getProviderInformation->IsTrainingDoc = 1;
-            $file = $request->file('hipaa_docs');
-            $filename = $getProviderInformation->id . '_HCA.pdf';
-            $file->storeAs('public/provider', $filename);
-            $getProviderInformation->save();
-        }
-
-        if (isset($request->non_disclosure_doc)) {
-            $getProviderInformation->IsNonDisclosureDoc = 1;
-            $file = $request->file('non_disclosure_doc');
-            $filename = $getProviderInformation->id . '_NDD.pdf';
-            $file->storeAs('public/provider', $filename);
-            $getProviderInformation->save();
-        }
-
+        $adminProviderService->updateProviderDocumentsUpdate($request,$id);
         return back()->with('message', 'Document is uploaded');
     }
 

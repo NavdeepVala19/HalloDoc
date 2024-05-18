@@ -8,9 +8,9 @@ use App\Models\Admin;
 use App\Models\Roles;
 use App\Models\Users;
 use App\Mail\SendLink;
-use App\Models\Regions;
 
 // Different Models used in these Controller
+use App\Models\Regions;
 use App\Models\SMSLogs;
 use Twilio\Rest\Client;
 use App\Models\AllUsers;
@@ -29,18 +29,20 @@ use App\Models\RequestBusiness;
 use App\Models\RequestWiseFile;
 use App\Exports\NewStatusExport;
 use App\Models\RequestConcierge;
+use App\Services\RecordsService;
 use App\Models\HealthProfessional;
 use Illuminate\Support\Facades\DB;
 use App\Exports\ActiveStatusExport;
-use App\Exports\SearchRecordExport;
-use App\Exports\UnPaidStatusExport;
 
 // For sending Mails
+use App\Exports\SearchRecordExport;
+use App\Exports\UnPaidStatusExport;
 use App\Mail\RequestSupportMessage;
-use App\Exports\PendingStatusExport;
-use App\Exports\ToCloseStatusExport;
 
 // Export Data with Excel
+use App\Services\UserAccessService;
+use App\Exports\PendingStatusExport;
+use App\Exports\ToCloseStatusExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -48,8 +50,11 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConcludeStatusExport;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\HealthProfessionalType;
+
+// Services
 use App\Http\Requests\AdminProfileForm;
 use Illuminate\Support\Facades\Session;
+
 
 class AdminController extends Controller
 {
@@ -854,37 +859,9 @@ class AdminController extends Controller
      * physician note,admin note,patient note
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function searchRecordsView()
+    public function searchRecordsView(RecordsService $recordsService)
     {
-        // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider
-
-        $combinedData = RequestClient::distinct()->select([
-            'request.request_type_id',
-            'request_client.first_name',
-            'request_client.id',
-            'request_client.email',
-            'request_client.phone_number',
-            'request_client.street',
-            'request_client.city',
-            'request_client.state',
-            'request_client.zipcode',
-            'request_client.notes',
-            'request_notes.physician_notes',
-            'request_notes.admin_notes',
-            'request.status',
-            'provider.first_name as physician_first_name',
-            DB::raw('DATE(request_client.created_at) as created_date'),
-            DB::raw('DATE(request_closed.created_at) as closed_date'),
-        ])
-            ->join('request', 'request.id', '=', 'request_client.request_id')
-            ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
-            ->leftJoin('provider', function ($join) {
-                $join->on('request.physician_id', '=', 'provider.id');
-            })
-            ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
-            ->orderByDesc('id')
-            ->paginate(10);
-
+        $combinedData=$recordsService->searchRecordsListing();
         Session::forget('request_status');
         Session::forget('request_type');
 
@@ -897,14 +874,9 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request (the input which is use to filter data in search records)
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function searchRecordSearching(Request $request)
+    public function searchRecordSearching(Request $request,RecordsService $recordsService)
     {
-        // Retrieve pagination parameters from the request
-        $page = $request->input('page', 1);
-        $perPage = $request->input('per_page', 10);
-
-        $combinedData = $this->exportFilteredSearchRecord($request)->paginate($perPage, ['*'], 'page', $page);
-
+        $combinedData = $recordsService->searchRecords($request);
         session([
             'patient_name' => $request->patient_name,
             'from_date_of_service' => $request->from_date_of_service,
@@ -938,72 +910,9 @@ class AdminController extends Controller
      * @param mixed $request (the input which is use to filter data in search records)
      * @return RequestClient
      */
-    public function exportFilteredSearchRecord($request)
+    public function exportFilteredSearchRecord($request,RecordsService $recordsService)
     {
-        $todayDate = now();
-
-        $combinedData = RequestClient::distinct()->select([
-            'request_client.first_name',
-            'request.request_type_id',
-            'request_client.email',
-            'request_client.phone_number',
-            'request_client.street',
-            'request_client.city',
-            'request_client.state',
-            'request_client.zipcode',
-            'request.status',
-            'provider.first_name as physician_first_name',
-            'request_notes.physician_notes',
-            'request_notes.admin_notes',
-            'request_notes.patient_notes',
-            'request_client.id',
-            DB::raw('DATE(request_client.created_at) as created_date'),
-            DB::raw('DATE(request_closed.created_at) as closed_date'),
-        ])
-            ->join('request', 'request.id', '=', 'request_client.request_id')
-            ->leftJoin('request_notes', 'request_notes.request_id', '=', 'request_client.request_id')
-            ->leftJoin('provider', function ($join) {
-                $join->on('request.physician_id', '=', 'provider.id');
-            })
-            ->leftJoin('request_closed', 'request_closed.request_id', '=', 'request_client.request_id')
-            ->orderByDesc('id');
-
-        // if (!empty($request->patient_name)) {
-        if ($request->patient_name) {
-            $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
-        }
-        // if (!empty($request->email)) {
-        if ($request->email) {
-            $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
-        }
-        // if (!empty($request->phone_number)) {
-        if ($request->phone_number) {
-            $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
-        }
-        // if (!empty($request->request_type)) {
-        if ($request->request_type) {
-            $combinedData->where('request.request_type_id', $request->request_type);
-        }
-        // if (!empty($request->provider_name)) {
-        if ($request->provider_name) {
-            $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
-        }
-        // if (!empty($request->request_status)) {
-        if ($request->request_status) {
-            $combinedData->where('request.status', $request->request_status);
-        }
-        // if (!empty($request->from_date_of_service)) {
-        if ($request->from_date_of_service) {
-            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $todayDate]);
-        }
-        // if (!empty($request->to_date_of_service)) {
-        if ($request->to_date_of_service) {
-            $combinedData->where('request_client.created_at', "<", $request->to_date_of_service);
-        }
-        // if (!empty($request->from_date_of_service) && !empty($request->to_date_of_service)) {
-        if ($request->from_date_of_service && $request->to_date_of_service) {
-            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service,]);
-        }
+        $combinedData = $recordsService->filterSearchRecords($request);
         return $combinedData;
     }
 
@@ -1012,9 +921,9 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request ( the input which is use to filter data in search records)
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function downloadFilteredData(Request $request)
+    public function downloadFilteredData(Request $request,RecordsService $recordsService)
     {
-        $data = $this->exportFilteredSearchRecord($request);
+        $data = $recordsService->exportFilteredDataToExcel($request);
 
         if ($data->get()->isEmpty()) {
             return back()->with('message', 'no records to export to Excel');
@@ -1064,36 +973,9 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
 
-    public function searchSMSLogs(Request $request)
+    public function searchSMSLogs(Request $request,RecordsService $recordsService)
     {
-        // Retrieve pagination parameters from the request
-        $page = $request->input('page', 1);
-        $perPage = $request->input('per_page', 10);
-
-        $sms = SMSLogs::select();
-
-        // if (!empty($request->receiver_name)) {
-        if ($request->receiver_name) {
-            $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
-        }
-        // if (!empty($request->phone_number)) {
-        if ($request->phone_number) {
-            $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
-        }
-        // if (!empty($request->created_date)) {
-        if ($request->created_date) {
-            $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
-        }
-        // if (!empty($request->sent_date)) {
-        if ($request->sent_date) {
-            $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
-        }
-        // if (!empty($request->role_type)) {
-        if ($request->role_type) {
-            $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
-        }
-        $sms = $sms->paginate($perPage, ['*'], 'page', $page);
-
+        $sms = $recordsService->filterSMSLogs($request);
         session(
             [
                 'receiver_name' => $request->input('receiver_name'),
@@ -1120,22 +1002,9 @@ class AdminController extends Controller
      * list patient name,mobile,email,created date and notes
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function blockHistoryView()
+    public function blockHistoryView(RecordsService $recordsService)
     {
-        $blockData = BlockRequest::select(
-            'block_request.phone_number',
-            'block_request.email',
-            'block_request.id',
-            'block_request.is_active',
-            'block_request.request_id',
-            'block_request.reason',
-            'request_client.first_name as patient_name',
-            DB::raw('DATE(block_request.created_at) as created_date'),
-        )
-            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
-            ->orderByDesc('id')
-            ->paginate(10);
-
+        $blockData = $recordsService->blockHistory();
         return view('adminPage.records.blockHistory', compact('blockData'));
     }
 
@@ -1145,38 +1014,9 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request (input which is enter by admin to filter data)
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function blockHistroySearchData(Request $request)
+    public function blockHistroySearchData(Request $request,RecordsService $recordsService)
     {
-        $blockData = BlockRequest::select(
-            'request_client.first_name as patient_name',
-            'block_request.id',
-            'block_request.phone_number',
-            'block_request.email',
-            'block_request.is_active',
-            'block_request.reason',
-            'block_request.request_id',
-            DB::raw('DATE(block_request.created_at) as created_date'),
-        )
-            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
-
-        // if (!empty($request->patient_name)) {
-        if ($request->patient_name) {
-            $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
-        }
-        // if (!empty($request->email)) {
-        if ($request->email) {
-            $blockData->where('block_request.email', "like", "%" . $request->email . "%");
-        }
-        // if (!empty($request->phone_number)) {
-        if ($request->phone_number) {
-            $blockData->where('block_request.phone_number', "like", "%" . $request->phone_number . "%");
-        }
-        // if (!empty($request->date)) {
-        if ($request->date) {
-            $blockData->where('block_request.created_at', "like", "%" . $request->date . "%");
-        }
-        $blockData = $blockData->paginate(10);
-
+        $blockData = $recordsService->filterBlockHistoryData($request);
         session([
             'patient_name' => $request->patient_name,
             'date' => $request->date,
@@ -1217,14 +1057,9 @@ class AdminController extends Controller
      * listing of user access page
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function UserAccess()
-    {
-        $userAccessData = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
-            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->whereIn('user_roles.role_id', [1, 2])
-            ->paginate(10);
-
+    public function UserAccess(UserAccessService $userAccessService)
+    {  
+        $userAccessData = $userAccessService->userAccessList();
         return view('adminPage.access.userAccess', compact('userAccessData'));
     }
 
@@ -1260,20 +1095,9 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request (account type(all/admin/provider))
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function FilterUserAccessAccountTypeWise(Request $request)
+    public function FilterUserAccessAccountTypeWise(Request $request,UserAccessService $userAccessService)
     {
-        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
-
-        $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
-            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->whereIn('user_roles.role_id', [1, 2]);
-
-        if ($account) {
-            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
-        }
-        $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
-
+        $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
         $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
 
         return response()->json(['html' => $data]);
@@ -1284,21 +1108,9 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
+    public function FilterUserAccessAccountTypeWiseMobileView(Request $request,UserAccessService $userAccessService)
     {
-
-        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
-
-        $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
-            ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
-            ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->whereIn('user_roles.role_id', [1, 2]);
-
-        if ($account) {
-            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
-        }
-        $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
-
+        $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
         $data = view('adminPage.access.userAccessFilterMobileView')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
 
         return response()->json(['html' => $data]);
@@ -1374,61 +1186,9 @@ class AdminController extends Controller
      * @return mixed|\Illuminate\Http\RedirectResponse
      */
 
-    public function createAdminAccount(AdminProfileForm $request)
+    public function createAdminAccount(AdminProfileForm $request,UserAccessService $userAccessService)
     {
-        // Store Data in users table
-        $adminCredentialsData = new Users();
-        $adminCredentialsData->username = $request->user_name;
-        $adminCredentialsData->password = Hash::make($request->password);
-        $adminCredentialsData->email = $request->email;
-        $adminCredentialsData->phone_number = $request->phone_number;
-        $adminCredentialsData->save();
-
-        // Store Data in Admin Table
-
-        $storeAdminData = new Admin();
-        $storeAdminData->user_id = $adminCredentialsData->id;
-        $storeAdminData->first_name = $request->first_name;
-        $storeAdminData->last_name = $request->last_name;
-        $storeAdminData->email = $request->email;
-        $storeAdminData->mobile = $request->phone_number;
-        $storeAdminData->address1 = $request->address1;
-        $storeAdminData->address2 = $request->address2;
-        $storeAdminData->city = $request->city;
-        $storeAdminData->zip = $request->zip;
-        $storeAdminData->alt_phone = $request->alt_mobile;
-        $storeAdminData->status = 'pending';
-        $storeAdminData->role_id = $request->role;
-        $storeAdminData->region_id = $request->state;
-
-        $storeAdminData->save();
-
-        foreach ($request->region_id as $region) {
-            AdminRegion::create([
-                'admin_id' => $storeAdminData->id,
-                'region_id' => $region
-            ]);
-        }
-
-        // make entry in user_roles table to identify the user(whether it is admin or physician)
-        $user_roles = new UserRoles();
-        $user_roles->user_id = $adminCredentialsData->id;
-        $user_roles->role_id = 1;
-        $user_roles->save();
-
-        // store data in allusers table
-        $adminAllUserData = new AllUsers();
-        $adminAllUserData->user_id = $adminCredentialsData->id;
-        $adminAllUserData->first_name = $request->first_name;
-        $adminAllUserData->last_name = $request->last_name;
-        $adminAllUserData->email = $request->email;
-        $adminAllUserData->street = $request->address1;
-        $adminAllUserData->city = $request->city;
-        $adminAllUserData->zipcode = $request->zip;
-        $adminAllUserData->mobile = $request->phone_number;
-        $adminAllUserData->status = 'pending';
-        $adminAllUserData->save();
-
+        $userAccessService->createAdminAccount($request);
         return redirect()->route('admin.user.access');
     }
 

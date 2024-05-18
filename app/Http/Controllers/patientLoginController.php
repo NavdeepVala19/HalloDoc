@@ -53,7 +53,6 @@ class patientLoginController extends Controller
             }
         } else {
             $user = Users::where("email", $request->email)->first();
-
             if ($user == null) {
                 return back()->with('error', 'We could not find an account associated with that email address');
 

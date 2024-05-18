@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePatientRequest;
 use App\Models\Users;
 use App\Models\AllUsers;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
@@ -35,7 +35,6 @@ class patientProfileController extends Controller
         try {
             $id = Crypt::decrypt($id);
             $getPatientData = AllUsers::where('id', '=', $id)->first();
-            // if (!empty($getPatientData)) {
             if ($getPatientData) {
                 return view("patientSite/patientProfileEdit", compact('getPatientData'));
             }
@@ -50,21 +49,8 @@ class patientProfileController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function patientUpdate(Request $request)
+    public function patientUpdate(CreatePatientRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required|min:3|max:15',
-            'last_name' => 'required|min:3|max:15',
-            'date_of_birth' => 'required|before:today',
-            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required',
-            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
-            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z\s,.-]+$/',
-            'zipcode' => 'digits:6|gte:1',
-        ]);
-
-
         $userData = Auth::user();
 
         // Update data in users table

@@ -33,7 +33,8 @@ class CreatePatientRequest extends FormRequest
             'zipcode' => 'digits:6|gte:1',
             'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-            'room' => 'gte:1|nullable|max:1000'
+            'room' => 'gte:1|nullable|max:1000',
+            'relation' => 'nullable|regex:/^[a-zA-Z]+(?:-[a-zA-Z]+)*$/'
         ];
     }
 
@@ -91,6 +92,8 @@ class CreatePatientRequest extends FormRequest
             
             'room.max'=> $max_message . ' a number less than 1000',
             'room.gte'=> 'Please enter room number greater than 0',
+
+            'relation.regex'=> 'Please enter relation in valid format(example:alphabets-alphabets or only alphabets)',
         ];
     }
 }
