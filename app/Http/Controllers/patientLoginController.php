@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users;
 use App\Models\UserRoles;
-use Illuminate\Support\Str;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class patientLoginController extends Controller
 {
@@ -18,7 +18,7 @@ class patientLoginController extends Controller
      */
     public function loginScreen()
     {
-        return view("patientSite/patientLogin");
+        return view('patientSite/patientLogin');
     }
 
     /**
@@ -41,16 +41,16 @@ class patientLoginController extends Controller
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
             $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-            if ($userRolesData == null) {
+            if ($userRolesData === null) {
                 return redirect()->route('patient.login.view')->with('error', 'submit request with registered email');
-            } elseif ($userRolesData->role_id === 3) {
+            }
+            if ($userRolesData->role_id === 3) {
                 return redirect()->route('patient.dashboard');
             } else {
                 return back()->with('error', 'Invalid credentials');
             }
-        } else {
-            return back()->with('error', 'Invalid credentials');
         }
+        return back()->with('error', 'Invalid credentials');
     }
 
     /**
@@ -58,7 +58,7 @@ class patientLoginController extends Controller
      */
     public function resetpassword()
     {
-        return view("patientSite/patientResetPassword");
+        return view('patientSite/patientResetPassword');
     }
 
     /**
@@ -77,7 +77,7 @@ class patientLoginController extends Controller
             $userRolesData = UserRoles::where('user_id', $user->id)->first();
         }
 
-        if ($user == null || $userRolesData->role_id == 1 || $userRolesData->role_id == 2) {
+        if ($user === null || $userRolesData->role_id === 1 || $userRolesData->role_id === 2) {
             return back()->with('error', 'no such email is registered');
         }
 
@@ -111,9 +111,8 @@ class patientLoginController extends Controller
 
             if ($userData) {
                 return view('patientSite/patientPasswordReset', ['token' => $tokenValue]);
-            } else {
-                return view('patientSite/passwordUpdatedSuccess');
             }
+            return view('patientSite/passwordUpdatedSuccess');
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -141,7 +140,7 @@ class patientLoginController extends Controller
             'token' => $request->token
         ])->update(['password' => Hash::make($request->new_password)]);
 
-        Users::where(['token' => $request->token])->update(['token' => ""]);
+        Users::where(['token' => $request->token])->update(['token' => '']);
 
         return redirect()->route('patient.login.view')->with('success', 'Your password has been changed!');
     }

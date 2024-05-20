@@ -5,28 +5,27 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminProviderController;
+use App\Http\Controllers\BusinessRequestController;
 use App\Http\Controllers\CommonOperationController;
+use App\Http\Controllers\ConciergeRequestController;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Route;
 
-// All Exprt Data to Excel Functionality -> controllers
 use App\Http\Controllers\ExcelController;
 
-// All Patient Related functionality -> controllers
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientLoginController;
 use App\Http\Controllers\FamilyRequestController;
 use App\Http\Controllers\PatientAccountController;
 use App\Http\Controllers\PatientProfileController;
-use App\Http\Controllers\BusinessRequestController;
-use App\Http\Controllers\ConciergeRequestController;
 use App\Http\Controllers\PatientDashboardController;
 use App\Http\Controllers\PatientViewDocumentsController;
 use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderSchedulingController;
 use App\Http\Controllers\SchedulingController;
+
+use Illuminate\Support\Facades\Route;
 
 // ******************************* SHIVESH **********************************************
 
@@ -138,10 +137,10 @@ Route::middleware('CheckProviderLogin')->group(function () {
     Route::get('/provider', [ProviderController::class, 'providerDashboard'])->name('provider.dashboard');
 
     // For Filtering the request
-    Route::get('/provider/{status}/{category}', [ProviderController::class, 'filter'])->name("provider.listing");
+    Route::get('/provider/{status}/{category}', [ProviderController::class, 'filter'])->name('provider.listing');
 
     // Different status routing
-    Route::get('/provider/{status}', [ProviderController::class, 'status'])->name("provider.status");
+    Route::get('/provider/{status}', [ProviderController::class, 'status'])->name('provider.status');
 
     // For Searching Request
     Route::post('/provider/{status?}/{category?}', [ProviderController::class, 'search'])->name('provider.searching');
@@ -151,7 +150,7 @@ Route::middleware('CheckProviderLogin')->group(function () {
     Route::get('/create-request-provider', [ProviderController::class, 'viewCreateRequest'])->name('provider.create.request');
 
     // Data from Create request page for Provider
-    Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name("provider.request.data");
+    Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name('provider.request.data');
 
     // Send Email for creating request through provider
     Route::post('/provider-send-mail', [ProviderController::class, 'sendMail'])->name('provider.send.mail');
@@ -192,7 +191,7 @@ Route::middleware('CheckProviderLogin')->group(function () {
     Route::post('/provider-send-order', [ProviderActionController::class, 'sendOrder'])->name('provider.send.order');
 
     // when consult is selected from the encounter of active listing perform operation
-    Route::get('/provider-encounter', [ProviderActionController::class, 'encounter'])->name("provider.active.encounter");
+    Route::get('/provider-encounter', [ProviderActionController::class, 'encounter'])->name('provider.active.encounter');
 
     // When clicked on House Call From active page, change it's state to conlude
     Route::get('/provider-housecall-encounter/{requestId}', [ProviderActionController::class, 'encounterHouseCall'])->name('provider.houseCall.encounter');
@@ -240,10 +239,10 @@ Route::middleware('CheckAdminLogin')->group(function () {
     Route::get('/admin', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
 
     // For Filtering the request for admin dashboard
-    Route::get('/admin/{status}/{category}', [AdminController::class, 'adminFilter'])->name("admin.listing");
+    Route::get('/admin/{status}/{category}', [AdminController::class, 'adminFilter'])->name('admin.listing');
 
     // Different status routing
-    Route::get('/admin/{status}', [AdminController::class, 'status'])->name("admin.status");
+    Route::get('/admin/{status}', [AdminController::class, 'status'])->name('admin.status');
 
     // For Searching Request
     // Route::post('admin/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
@@ -266,7 +265,7 @@ Route::middleware('CheckAdminLogin')->group(function () {
     Route::post('/transfer-case-admin', [AdminActionController::class, 'transferCase'])->name('admin.transfer.case');
 
     // Fetch Cancel Case (CaseTag) options from database
-    Route::get('/cancel-case', [AdminActionController::class, "cancelCaseOptions"]);
+    Route::get('/cancel-case', [AdminActionController::class, 'cancelCaseOptions']);
     // Cancel Case by admin
     Route::post('cancel-case-data', [AdminActionController::class, 'cancelCase'])->name('admin.cancel.case');
 
@@ -421,12 +420,12 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-    route::post('/filter-new', [AdminController::class, 'filterPatientNew'])->name("filter.region_new");
-    route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name("filter.region_pending");
-    route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name("filter.region_active");
-    route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name("filter.region_conclude");
-    route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name("filter.region_toclose");
-    route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name("filter.region_unpaid");
+    route::post('/filter-new', [AdminController::class, 'filterPatientNew'])->name('filter.region_new');
+    route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name('filter.region_pending');
+    route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name('filter.region_active');
+    route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name('filter.region_conclude');
+    route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name('filter.region_toclose');
+    route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name('filter.region_unpaid');
 
     Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
     Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');

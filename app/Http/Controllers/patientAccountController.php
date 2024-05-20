@@ -14,7 +14,7 @@ class patientAccountController extends Controller
      */
     public function patientRegister()
     {
-        return view("patientSite/patientRegister");
+        return view('patientSite/patientRegister');
     }
 
     /**
@@ -25,24 +25,24 @@ class patientAccountController extends Controller
     public function createAccount(Request $request)
     {
         $request->validate([
-            "email" => "required|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/",
-            "password" => "required|min:2|max:30|regex:/^\S(.*\S)?$/",
-            "confirm_password" => "required|same:password",
+            'email' => "required|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/",
+            'password' => "required|min:2|max:30|regex:/^\S(.*\S)?$/",
+            'confirm_password' => 'required|same:password',
         ]);
 
         if (isset($request->email)) {
+            $user = Users::where('email', $request->email)->first();
 
-            $user = Users::where("email", $request->email)->first();
-
-            if ($user != null) {
-                if ($user->password != null && $user->email != null) {
+            if ($user !== null) {
+                if ($user->password !== null && $user->email !== null) {
                     return redirect()->route('patient.login.view')->with('message', 'account with this email already exist');
-                } elseif ($user->password == null && $user->email != null) {
+                }
+                if ($user->password === null && $user->email !== null) {
                     $user->password = Hash::make($request->password);
                     $user->save();
                     return redirect()->route('patient.login.view')->with('success', 'login with your registered credentials');
                 }
-            } elseif ($user == null) {
+            } elseif ($user === null) {
                 return redirect()->back()->with('message', 'no single request was created from this email To create account first submit request');
             }
         }

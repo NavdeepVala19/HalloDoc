@@ -15,7 +15,7 @@ class SendResetPasswordMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $mail_items;
+    private $mail_items;
 
     public function __construct(private $data)
     {
@@ -39,6 +39,9 @@ class SendResetPasswordMail extends Mailable
     {
         return new Content(
             view: 'email.forgetPassword',
+            with: [
+                'mail_items' => $this->mail_items,
+            ]
         );
     }
 

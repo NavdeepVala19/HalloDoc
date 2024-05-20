@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Orders;
 use App\Models\CaseTag;
 use App\Models\Regions;
 use App\Models\Provider;
@@ -16,9 +15,10 @@ use App\Models\RequestClosed;
 use App\Models\RequestStatus;
 use App\Models\PhysicianRegion;
 use App\Models\RequestWiseFile;
-use App\Models\HealthProfessional;
+use App\Services\CreateOrderService;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\HealthProfessionalType;
+use App\Services\MedicalFormDataService;
 use App\Http\Requests\EncounterFormRequest;
 
 class AdminActionController extends Controller
@@ -72,7 +72,7 @@ class AdminActionController extends Controller
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'assign_note' => 'required|min:5|max:200'
+            'assign_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
 
         ]);
         RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
@@ -85,7 +85,7 @@ class AdminActionController extends Controller
         ]);
 
         $physician = Provider::where('id', $request->physician)->first();
-        $physicianName = $physician->first_name . " " . $physician->last_name;
+        $physicianName = $physician->first_name . ' ' . $physician->last_name;
         return redirect()->back()->with('successMessage', "Case Assigned Successfully to physician - {$physicianName}");
     }
 
@@ -99,7 +99,7 @@ class AdminActionController extends Controller
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'notes' => 'required|min:5|max:200'
+            'notes' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
         ]);
 
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -107,7 +107,7 @@ class AdminActionController extends Controller
             'request_id' => $request->requestId,
             'physician_id' => $providerId,
             'TransToPhysicianId' => $request->physician,
-            'status' => "3",
+            'status' => '3',
             'admin_id' => '1',
             'notes' => $request->notes
         ]);
@@ -139,7 +139,7 @@ class AdminActionController extends Controller
     {
         $request->validate([
             'case_tag' => 'required|in:1,2,3,4',
-            'reason' => 'nullable|min:5|max:200'
+            'reason' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 2,
@@ -163,7 +163,7 @@ class AdminActionController extends Controller
     public function blockCase(Request $request)
     {
         $request->validate([
-            'block_reason' => 'required|min:5|max:200'
+            'block_reason' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
@@ -217,7 +217,6 @@ class AdminActionController extends Controller
             'dob' => 'required',
         ]);
 
-
         $firstName = $request->first_name;
         $lastName = $request->last_name;
         $dateOfBirth = $request->dob;
@@ -235,7 +234,7 @@ class AdminActionController extends Controller
             'notes' => $patientNotes
         ]);
 
-        return redirect()->back()->with('caseEdited', "Information updated successfully!");
+        return redirect()->back()->with('caseEdited', 'Information updated successfully!');
     }
 
     /**
@@ -270,7 +269,7 @@ class AdminActionController extends Controller
     public function storeNote(Request $request)
     {
         $request->validate([
-            'admin_note' => 'required||min:5|max:200'
+            'admin_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         // if (!empty($requestNote)) {
@@ -333,7 +332,7 @@ class AdminActionController extends Controller
             'admin_id' => 1,
         ]);
 
-        return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
+        return redirect()->back()->with('uploadSuccessful', 'File Uploaded Successfully');
     }
 
     /**
@@ -342,7 +341,7 @@ class AdminActionController extends Controller
      * @param  string|null  $id
      * @return \Illuminate\View\View
      */
-    public function encounterFormView($id = "null")
+    public function encounterFormView($id = 'null')
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -361,45 +360,11 @@ class AdminActionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function encounterForm(EncounterFormRequest $request)
+    public function encounterForm(EncounterFormRequest $request, MedicalFormDataService $medicalFormDataService)
     {
-        $report = MedicalReport::where("request_id", $request->request_id)->first();
+        $report = MedicalReport::where('request_id', $request->request_id)->first();
 
-        $array = [
-            'request_id' => $request->request_id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'location' => $request->location,
-            'service_date' => $request->service_date,
-            'date_of_birth' => $request->date_of_birth,
-            'mobile' => $request->mobile,
-            'present_illness_history' => $request->present_illness_history,
-            'medical_history' => $request->medical_history,
-            'medications' => $request->medications,
-            'allergies' => $request->allergies,
-            'temperature' => $request->temperature,
-            'heart_rate' => $request->heart_rate,
-            'repository_rate' => $request->repository_rate,
-            'sis_BP' => $request->sis_BP,
-            'dia_BP' => $request->dia_BP,
-            'oxygen' => $request->oxygen,
-            'pain' => $request->pain,
-            'heent' => $request->heent,
-            'cv' => $request->cv,
-            'chest' => $request->chest,
-            'abd' => $request->abd,
-            'extr' => $request->extr,
-            'skin' => $request->skin,
-            'neuro' => $request->neuro,
-            'other' => $request->other,
-            'diagnosis' => $request->diagnosis,
-            'treatment_plan' => $request->treatment_plan,
-            'medication_dispensed' => $request->medication_dispensed,
-            'procedure' => $request->procedure,
-            'followUp' => $request->followUp,
-            'is_finalize' => false
-        ];
+        $array = $medicalFormDataService->medicalFormData($request);
         $medicalReport = new MedicalReport();
         if ($report) {
             // Report Already exists, update report
@@ -409,7 +374,7 @@ class AdminActionController extends Controller
             $medicalReport->create($array);
         }
 
-        return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
+        return redirect()->back()->with('encounterChangesSaved', 'Your changes have been Successfully Saved');
     }
 
     /**
@@ -510,23 +475,14 @@ class AdminActionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendOrder(Request $request)
+    public function sendOrder(Request $request, CreateOrderService $createOrderService)
     {
         $request->validate([
             'profession' => 'required',
             'vendor_id' => 'required',
         ]);
 
-        $healthProfessional = HealthProfessional::where('id', $request->vendor_id)->first();
-        Orders::create([
-            'vendor_id' => $request->vendor_id,
-            'request_id' => $request->requestId,
-            'fax_number' => $healthProfessional->fax_number,
-            'business_contact' => $healthProfessional->business_contact,
-            'email' => $healthProfessional->email,
-            'prescription' => $request->prescription,
-            'no_of_refill' => $request->refills,
-        ]);
+        $createOrderService->createOrder($request);
 
         $status = RequestTable::where('id', $request->requestId)->first()->status;
 

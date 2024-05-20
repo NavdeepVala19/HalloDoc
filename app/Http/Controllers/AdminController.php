@@ -2,56 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
-use App\Models\Role;
-use App\Models\Admin;
-use App\Models\Roles;
-use App\Models\Users;
-use App\Mail\SendLink;
-use App\Models\Regions;
-
-// Different Models used in these Controller
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
-use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\Provider;
-use App\Models\RoleMenu;
-use App\Models\UserRoles;
-use App\Models\AdminRegion;
-use App\Models\ShiftDetail;
-use App\Models\BlockRequest;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\RequestClient;
-use App\Models\RequestStatus;
-use App\Models\RequestBusiness;
-use App\Models\RequestWiseFile;
-use App\Exports\NewStatusExport;
-use App\Models\RequestConcierge;
-use App\Models\HealthProfessional;
-use Illuminate\Support\Facades\DB;
 use App\Exports\ActiveStatusExport;
+use App\Exports\ConcludeStatusExport;
+use App\Exports\NewStatusExport;
+use App\Exports\PendingStatusExport;
 use App\Exports\SearchRecordExport;
+use App\Exports\ToCloseStatusExport;
 use App\Exports\UnPaidStatusExport;
 
-// For sending Mails
-use App\Mail\RequestSupportMessage;
-use App\Exports\PendingStatusExport;
-use App\Exports\ToCloseStatusExport;
-
-// Export Data with Excel
 use App\Http\Requests\AccessRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ConcludeStatusExport;
-use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\BusinessRequest;
 use App\Http\Requests\SendMailRequest;
+
+use App\Mail\RequestSupportMessage;
+use App\Mail\SendLink;
+
+use App\Models\Admin;
+use App\Models\AdminRegion;
+use App\Models\AllUsers;
+
+use App\Models\BlockRequest;
+use App\Models\EmailLog;
+
+use App\Models\HealthProfessional;
 use App\Models\HealthProfessionalType;
+use App\Models\Menu;
+use App\Models\Provider;
+
+use App\Models\Regions;
+use App\Models\RequestBusiness;
+use App\Models\RequestClient;
+use App\Models\RequestConcierge;
+use App\Models\RequestStatus;
+use App\Models\RequestTable;
+use App\Models\RequestWiseFile;
+use App\Models\Role;
+use App\Models\RoleMenu;
+use App\Models\Roles;
+
+use App\Models\ShiftDetail;
+use App\Models\SMSLogs;
+use App\Models\UserRoles;
+use App\Models\Users;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
+
+use Twilio\Rest\Client;
 
 class AdminController extends Controller
 {
@@ -194,7 +197,7 @@ class AdminController extends Controller
      * @param string $category different category names.
      * @return \illuminate\View\View
      */
-    public function cases(Request $request, $status = 'new', $category = "all")
+    public function cases(Request $request, $status = 'new', $category = 'all')
     {
         // $searchTerm = $request->search;
         // Use Session to filter by category and searchTerm
@@ -303,9 +306,9 @@ class AdminController extends Controller
 
         try {
             // send SMS
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+            $sid = getenv('TWILIO_SID');
+            $token = getenv('TWILIO_AUTH_TOKEN');
+            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
 
             $twilio = new Client($sid, $token);
 
@@ -313,8 +316,8 @@ class AdminController extends Controller
                 ->create(
                     "+91 99780 71802", // to
                     [
-                        "body" => "Hii {$firstname} {$lastname}, Click on the this link to create request:{$link}",
-                        "from" =>  $senderNumber
+                        'body' => "Hii {$firstname} {$lastname}, Click on the this link to create request:{$link}",
+                        'from' =>  $senderNumber
                     ]
                 );
         } catch (\Throwable $th) {
@@ -344,11 +347,11 @@ class AdminController extends Controller
                 'sent_tries' => 1,
                 'is_sms_sent' => 1,
                 'action' => 1,
-                'sms_template' => "Hii ,Click on the below link to create request"
+                'sms_template' => 'Hii ,Click on the below link to create request'
             ]
         );
 
-        return redirect()->back()->with('successMessage', "Link Sent Successfully!");
+        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
     }
     // -------------------- 2. Create Request -------------------------
     // -------------------- 3. Export ---------------------------------
@@ -393,7 +396,7 @@ class AdminController extends Controller
      */
     public function viewPartners($id = null)
     {
-        if ($id == null || $id == '0') {
+        if ($id === null || $id === 0) {
             $vendors = HealthProfessional::with('healthProfessionalType')->orderByDesc('id')->paginate(10);
         } elseif ($id) {
             $vendors = HealthProfessional::with('healthProfessionalType')->where('profession', $id)->orderByDesc('id')->paginate(10);
@@ -418,13 +421,14 @@ class AdminController extends Controller
         $id = $request->get('profession');
         $page = $request->query('page') ?? 1; // Default to page 1 if no page number provided
 
+
         $query = HealthProfessional::with('healthProfessionalType');
 
         if ($search) {
             $query->where('vendor_name', 'like', "%{$search}%");
         }
 
-        if ($id !== 0) {
+        if ($id !== '0') {
             $query->where('profession', $id);
             if ($search) {
                 $query->where('profession', $id)->where('vendor_name', 'like', "%{$search}%");
@@ -485,7 +489,7 @@ class AdminController extends Controller
             // HealthProfessional Id whose value need to be updated
             $vendor = HealthProfessional::where('id', $caseId)->first();
             $professions = HealthProfessionalType::get();
-            return view('adminPage.partners.updateBusiness', compact("vendor", 'professions'));
+            return view('adminPage.partners.updateBusiness', compact('vendor', 'professions'));
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -564,11 +568,11 @@ class AdminController extends Controller
             $menus = Menu::get();
             return response()->json($menus);
         }
-        if ($id == '1') {
+        if ($id === '1') {
             $menus = Menu::where('account_type', 'Admin')->get();
             return response()->json($menus);
         }
-        if ($id == '2') {
+        if ($id === '2') {
             $menus = Menu::where('account_type', 'Physician')->get();
             return response()->json($menus);
         }
@@ -930,11 +934,11 @@ class AdminController extends Controller
         }
         // if (!empty($request->email)) {
         if ($request->email) {
-            $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
+            $combinedData->where('request_client.email', 'like', '%' . $request->email . '%');
         }
         // if (!empty($request->phone_number)) {
         if ($request->phone_number) {
-            $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+            $combinedData->where('request_client.phone_number', 'like', '%' . $request->phone_number . '%');
         }
         // if (!empty($request->request_type)) {
         if ($request->request_type) {
@@ -942,7 +946,7 @@ class AdminController extends Controller
         }
         // if (!empty($request->provider_name)) {
         if ($request->provider_name) {
-            $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
+            $combinedData->where('provider.first_name', 'like', '%' . $request->provider_name . '%');
         }
         // if (!empty($request->request_status)) {
         if ($request->request_status) {
@@ -954,11 +958,11 @@ class AdminController extends Controller
         }
         // if (!empty($request->to_date_of_service)) {
         if ($request->to_date_of_service) {
-            $combinedData->where('request_client.created_at', "<", $request->to_date_of_service);
+            $combinedData->where('request_client.created_at', '<', $request->to_date_of_service);
         }
         // if (!empty($request->from_date_of_service) && !empty($request->to_date_of_service)) {
         if ($request->from_date_of_service && $request->to_date_of_service) {
-            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service,]);
+            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service]);
         }
         return $combinedData;
     }
@@ -975,10 +979,9 @@ class AdminController extends Controller
 
         if ($data->get()->isEmpty()) {
             return back()->with('message', 'no records to export to Excel');
-        } else {
-            $export = new SearchRecordExport($data);
-            return Excel::download($export, 'search_record_filtered_data.xls');
         }
+        $export = new SearchRecordExport($data);
+        return Excel::download($export, 'search_record_filtered_data.xls');
     }
 
     /**
@@ -1036,19 +1039,19 @@ class AdminController extends Controller
         }
         // if (!empty($request->phone_number)) {
         if ($request->phone_number) {
-            $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+            $sms->where('sms_log.mobile_number', 'like', '%' . $request->phone_number . '%');
         }
         // if (!empty($request->created_date)) {
         if ($request->created_date) {
-            $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
+            $sms->where('sms_log.created_date', 'like', '%' . $request->created_date . '%');
         }
         // if (!empty($request->sent_date)) {
         if ($request->sent_date) {
-            $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+            $sms->where('sms_log.sent_date', 'like', '%' . $request->sent_date . '%');
         }
         // if (!empty($request->role_type)) {
         if ($request->role_type) {
-            $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
+            $sms->where('sms_log.role_id', 'like', '%' . $request->role_type . '%');
         }
         $sms = $sms->paginate($perPage, ['*'], 'page', $page);
 
@@ -1123,15 +1126,15 @@ class AdminController extends Controller
         }
         // if (!empty($request->email)) {
         if ($request->email) {
-            $blockData->where('block_request.email', "like", "%" . $request->email . "%");
+            $blockData->where('block_request.email', 'like', '%' . $request->email . '%');
         }
         // if (!empty($request->phone_number)) {
         if ($request->phone_number) {
-            $blockData->where('block_request.phone_number', "like", "%" . $request->phone_number . "%");
+            $blockData->where('block_request.phone_number', 'like', '%' . $request->phone_number . '%');
         }
         // if (!empty($request->date)) {
         if ($request->date) {
-            $blockData->where('block_request.created_at', "like", "%" . $request->date . "%");
+            $blockData->where('block_request.created_at', 'like', '%' . $request->date . '%');
         }
         $blockData = $blockData->paginate(10);
 
@@ -1209,7 +1212,8 @@ class AdminController extends Controller
 
             if ($userAccessRoleName->first()->name === 'admin') {
                 return redirect()->route('edit.admin.profile', ['id' =>  Crypt::encrypt($id)]);
-            } elseif ($userAccessRoleName->first()->name === 'physician') {
+            }
+            if ($userAccessRoleName->first()->name === 'physician') {
                 $getProviderId = Provider::where('user_id', $id);
                 return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
             }
@@ -1226,7 +1230,7 @@ class AdminController extends Controller
      */
     public function FilterUserAccessAccountTypeWise(Request $request)
     {
-        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
+        $account = $request->selectedAccount === 'all' ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
@@ -1250,7 +1254,7 @@ class AdminController extends Controller
     public function FilterUserAccessAccountTypeWiseMobileView(Request $request)
     {
 
-        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
+        $account = $request->selectedAccount === 'all' ? '' : $request->selectedAccount;
 
         $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
@@ -1300,9 +1304,8 @@ class AdminController extends Controller
                     }
                 }
                 return redirect()->back()->with('message', 'message is sent');
-            } else {
-                return redirect()->back()->with('message', 'No unschedule physician available!');
             }
+            return redirect()->back()->with('message', 'No unschedule physician available!');
         } catch (\Throwable $th) {
             return view('errors.500');
         }
@@ -1323,7 +1326,7 @@ class AdminController extends Controller
     public function adminAccount()
     {
         $regions = Regions::get();
-        return view("adminPage.createAdminAccount", compact('regions'));
+        return view('adminPage.createAdminAccount', compact('regions'));
     }
 
     /**
@@ -1646,7 +1649,7 @@ class AdminController extends Controller
 
         $regionId = $request->session()->get('regionId');
 
-        if ($region === "All Regions") {
+        if ($region === 'All Regions') {
             $exportNewData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1655,10 +1658,9 @@ class AdminController extends Controller
 
         if ($exportNewData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
-        } else {
-            $exportNew = new NewStatusExport($exportNewData);
-            return Excel::download($exportNew, 'NewData.xls');
         }
+        $exportNew = new NewStatusExport($exportNewData);
+        return Excel::download($exportNew, 'NewData.xls');
     }
 
 
@@ -1676,7 +1678,7 @@ class AdminController extends Controller
 
         $regionId = $request->session()->get('regionId');
 
-        if ($region == "All Regions") {
+        if ($region === 'All Regions') {
             $exportPendingData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1685,10 +1687,9 @@ class AdminController extends Controller
 
         if ($exportPendingData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
-        } else {
-            $exportPending = new PendingStatusExport($exportPendingData);
-            return Excel::download($exportPending, 'PendingData.xls');
         }
+        $exportPending = new PendingStatusExport($exportPendingData);
+        return Excel::download($exportPending, 'PendingData.xls');
     }
 
     /**
@@ -1706,7 +1707,7 @@ class AdminController extends Controller
         $regionId = $request->session()->get('regionId');
 
 
-        if ($region == "All Regions") {
+        if ($region === 'All Regions') {
             $exportActiveData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1715,10 +1716,9 @@ class AdminController extends Controller
 
         if ($exportActiveData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
-        } else {
-            $exportActive = new ActiveStatusExport($exportActiveData);
-            return Excel::download($exportActive, 'ActiveData.xls');
         }
+        $exportActive = new ActiveStatusExport($exportActiveData);
+        return Excel::download($exportActive, 'ActiveData.xls');
     }
 
 
@@ -1736,7 +1736,7 @@ class AdminController extends Controller
 
         $regionId = $request->session()->get('regionId');
 
-        if ($region == "All Regions") {
+        if ($region === 'All Regions') {
             $exportConcludeData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1745,13 +1745,10 @@ class AdminController extends Controller
 
         if ($exportConcludeData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
-        } else {
-            $exportConclude = new ConcludeStatusExport($exportConcludeData);
-            return Excel::download($exportConclude, 'ConcludeData.xls');
         }
+        $exportConclude = new ConcludeStatusExport($exportConcludeData);
+        return Excel::download($exportConclude, 'ConcludeData.xls');
     }
-
-
 
     /**
      *@param $request which contains region_id,category,search_value
@@ -1766,7 +1763,7 @@ class AdminController extends Controller
         $region = $request->filter_region;
         $regionId = $request->session()->get('regionId');
 
-        if ($region == "All Regions") {
+        if ($region === 'All Regions') {
             $exportToCloseData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1775,12 +1772,10 @@ class AdminController extends Controller
 
         if ($exportToCloseData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
-        } else {
-            $exportToClose = new ToCloseStatusExport($exportToCloseData);
-            return Excel::download($exportToClose, 'ToCloseData.xls');
         }
+        $exportToClose = new ToCloseStatusExport($exportToCloseData);
+        return Excel::download($exportToClose, 'ToCloseData.xls');
     }
-
 
     /**
      *@param $request which contains region_id,category,search_value
@@ -1796,7 +1791,7 @@ class AdminController extends Controller
         $regionId = $request->session()->get('regionId');
 
 
-        if ($region == "All Regions") {
+        if ($region === 'All Regions') {
             $exportUnpaidData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
@@ -1805,10 +1800,9 @@ class AdminController extends Controller
 
         if ($exportUnpaidData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
-        } else {
-            $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
-            return Excel::download($exportUnpaid, 'UnPaidData.xls');
         }
+        $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
+        return Excel::download($exportUnpaid, 'UnPaidData.xls');
     }
 
     // REMOVED FROM SRS

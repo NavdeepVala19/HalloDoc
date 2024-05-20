@@ -34,31 +34,17 @@ class ConcludeStatusExport implements FromCollection, WithCustomCsvSettings, Wit
         $adminConcludeData = $this->data->get();
 
         return collect($adminConcludeData)->map(function ($adminConclude) {
-            $patientName = null;
-            $dateOfBirth = null;
-            $street = null;
-            $city = null;
-            $state = null;
-            $patientMobile = null;
-
             if (isset($adminConclude) && $adminConclude->requestClient) {
-                $patientName = $adminConclude->requestClient->first_name;
-                $dateOfBirth = $adminConclude->requestClient->date_of_birth;
-                $patientMobile = $adminConclude->requestClient->phone_number;
-                $street = $adminConclude->requestClient->street;
-                $city = $adminConclude->requestClient->city;
-                $state = $adminConclude->requestClient->state;
+                return [
+                    'PatientName' =>  $adminConclude->requestClient->first_name . ' ' .  $adminConclude->requestClient->last_name,
+                    'Date of Birth' => $adminConclude->requestClient->date_of_birth,
+                    'PhysicianName' => $adminConclude->provider->first_name . ' ' . $adminConclude->provider->last_name,
+                    'RequestedDate' => $adminConclude->created_at,
+                    'PatientMobile' => $adminConclude->requestClient->phone_number,
+                    'RequestorMobile' => $adminConclude->phone_number,
+                    'Address' => $adminConclude->requestClient->street . ',' . $adminConclude->requestClient->city . ',' .  $adminConclude->requestClient->state,
+                ];
             }
-
-            return [
-                'PatientName' => $patientName,
-                'Date of Birth' => $dateOfBirth,
-                'PhysicianName' => $adminConclude->provider->first_name . ' ' . $adminConclude->provider->last_name,
-                'RequestedDate' => $adminConclude->created_at,
-                'PatientMobile' => $patientMobile,
-                'RequestorMobile' => $adminConclude->phone_number,
-                'Address' => $street . ',' . $city . ',' . $state,
-            ];
         });
     }
 }

@@ -34,34 +34,18 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
     {
         $adminNewData = $this->data->get();
         return collect($adminNewData)->map(function ($adminNew) {
-            $patientName = null;
-            $patientLastName = null;
-            $dateOfBirth = null;
-            $street = null;
-            $city = null;
-            $state = null;
-            $patientMobile = null;
-
             if (isset($adminNew) && $adminNew->requestClient) {
-                $patientName = $adminNew->requestClient->first_name;
-                $patientLastName = $adminNew->requestClient->last_name;
-                $patientMobile = $adminNew->requestClient->phone_number;
-                $dateOfBirth = $adminNew->requestClient->date_of_birth;
-                $street = $adminNew->requestClient->street;
-                $city = $adminNew->requestClient->city;
-                $state = $adminNew->requestClient->state;
+                return [
+                    'PatientName' => $adminNew->requestClient->first_name . ' ' . $adminNew->requestClient->last_name,
+                    'Date of Birth' => $adminNew->requestClient->date_of_birth,
+                    'Requestor' => $adminNew->first_name . ' ' . $adminNew->last_name,
+                    'RequestedDate' => $adminNew->created_at,
+                    'PatientMobile' => $adminNew->requestClient->phone_number,
+                    'RequestorMobile' => $adminNew->phone_number,
+                    'Address' => $adminNew->requestClient->street . ',' . $adminNew->requestClient->city . ',' . $adminNew->requestClient->state,
+                    'Notes' => $adminNew->requestClient->notes,
+                ];
             }
-
-            return [
-                'PatientName' => $patientName . ' ' . $patientLastName,
-                'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminNew->first_name . ' ' . $adminNew->last_name,
-                'RequestedDate' => $adminNew->created_at,
-                'PatientMobile' => $patientMobile,
-                'RequestorMobile' => $adminNew->phone_number,
-                'Address' => $street . ',' . $city . ',' . $state,
-                'Notes' => $adminNew->requestClient->notes,
-            ];
         });
     }
 }

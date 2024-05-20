@@ -6,17 +6,19 @@ use App\Mail\SendEmailAddress;
 use App\Models\Admin;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\UserRoles;
-use App\Models\Users;
 use App\Models\RequestClient;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
+use App\Models\UserRoles;
+use App\Models\Users;
+
 use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
 
 class AdminDashboardController extends Controller
 {
@@ -57,10 +59,10 @@ class AdminDashboardController extends Controller
 
         $isEmailStored = Users::where('email', $request->email)->first();
 
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             // store email and phoneNumber in users table
             $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->username = $request->first_name . ' ' . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
@@ -185,9 +187,8 @@ class AdminDashboardController extends Controller
                     'action' => 5,
                 ]);
                 return redirect()->route('admin.status', 'new')->with('message', 'Email for create account is sent and Request is Submitted');
-            } else {
-                return redirect()->route('admin.status', 'new')->with('message', 'Request is Submitted');
             }
+            return redirect()->route('admin.status', 'new')->with('message', 'Request is Submitted');
         } catch (\Throwable $th) {
             return view('errors.500');
         }
@@ -229,7 +230,6 @@ class AdminDashboardController extends Controller
             return view('errors.404');
         }
     }
-
 
     /**
      * this page will show admin profile edit and admin can route to this page from any page

@@ -34,50 +34,16 @@ class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithH
         $adminUnpaidData = $this->data->get();
 
         return collect($adminUnpaidData)->map(function ($adminUnpaid) {
-
-            $patientName = null;
-            $patientLastName = null;
-            $PhysicianFirstName = null;
-            $PhysicianLastName = null;
-            $street = null;
-            $city = null;
-            $patientMobile = null;
-            $state = null;
-
-
             if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $patientName = $adminUnpaid->requestClient->first_name;
+                return [
+                    'PatientName' => $adminUnpaid->requestClient->first_name . ' ' . $adminUnpaid->requestClient->last_name,
+                    'Physician Name' => $adminUnpaid->provider->first_name . ' ' . $adminUnpaid->provider->last_name,
+                    'RequestedDate' => $adminUnpaid->created_at,
+                    'PatientMobile' => $adminUnpaid->requestClient->phone_number,
+                    'RequestorMobile' => $adminUnpaid->phone_number,
+                    'Address' => $adminUnpaid->requestClient->street . ',' . $adminUnpaid->requestClient->city . ',' . $adminUnpaid->requestClient->state,
+                ];
             }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $patientLastName = $adminUnpaid->requestClient->last_name;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $patientMobile = $adminUnpaid->requestClient->phone_number;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $street = $adminUnpaid->requestClient->street;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $city = $adminUnpaid->requestClient->city;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $state = $adminUnpaid->requestClient->state;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $PhysicianFirstName = $adminUnpaid->provider->first_name;
-            }
-            if (isset($adminUnpaid) && $adminUnpaid->requestClient) {
-                $PhysicianLastName = $adminUnpaid->provider->last_name;
-            }
-
-            return [
-                'PatientName' => $patientName . ' ' . $patientLastName,
-                'Physician Name' => $PhysicianFirstName . ' ' . $PhysicianLastName,
-                'RequestedDate' => $adminUnpaid->created_at,
-                'PatientMobile' => $patientMobile,
-                'RequestorMobile' => $adminUnpaid->phone_number,
-                'Address' => $street . ',' . $city . ',' . $state,
-            ];
         });
     }
 }

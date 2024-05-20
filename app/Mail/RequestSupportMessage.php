@@ -17,15 +17,16 @@ class RequestSupportMessage extends Mailable
      * Create a new message instance.
      */
 
-     public $requestSupportMessage;
+    private $requestSupportMessage;
 
     public function __construct($message)
     {
-       $this->requestSupportMessage = $message;
+        $this->requestSupportMessage = $message;
     }
 
 
-    public function build(){
+    public function build()
+    {
         return $this->view('email.requestSupport')->with(['requestSupportMessage' => $this->requestSupportMessage]);
     }
 
@@ -47,6 +48,9 @@ class RequestSupportMessage extends Mailable
     {
         return new Content(
             view: 'email.requestSupport',
+            with: [
+                'requestSupportMessage' => $this->requestSupportMessage,
+            ]
         );
     }
 

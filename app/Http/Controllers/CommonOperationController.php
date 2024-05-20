@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\DocsAttachmentMail;
+use App\Mail\SendAgreement;
+use App\Mail\SendMailPatient;
+
 use App\Models\Admin;
 use App\Models\EmailLog;
-use App\Models\SMSLogs;
-use App\Models\Provider;
-use App\Mail\SendAgreement;
-use App\Models\RequestTable;
-use App\Models\RequestClient;
-use App\Models\RequestWiseFile;
-use App\Mail\DocsAttachmentMail;
-use App\Mail\SendMailPatient;
 use App\Models\HealthProfessional;
+use App\Models\Provider;
+use App\Models\RequestClient;
+use App\Models\RequestTable;
+use App\Models\RequestWiseFile;
+use App\Models\SMSLogs;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Twilio\Rest\Client;
-use ZipArchive;
 
+use Twilio\Rest\Client;
+
+use ZipArchive;
 
 class CommonOperationController extends Controller
 {
@@ -99,7 +102,7 @@ class CommonOperationController extends Controller
             }
 
             $zip = new ZipArchive();
-            $zipFile = uniqid() . "-" . 'documents.zip';
+            $zipFile = uniqid() . '-documents.zip';
 
             if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
@@ -144,7 +147,7 @@ class CommonOperationController extends Controller
             EmailLog::create([
                 'role_id' => 1,
                 'request_id' => $request->requestId,
-                'recipient_name' => $patient->first_name . " " . $patient->last_name,
+                'recipient_name' => $patient->first_name . ' ' . $patient->last_name,
                 'confirmation_number' => $patient->confirmation_no,
                 'is_email_sent' => true,
                 'sent_tries' => 1,
@@ -180,8 +183,8 @@ class CommonOperationController extends Controller
             $user = Auth::user();
             $provider = Provider::where('user_id', $user->id)->first();
 
-            $providerId = DB::raw("NULL");
-            $adminId = DB::raw("NULL");
+            $providerId = DB::raw('NULL');
+            $adminId = DB::raw('NULL');
             $message = $request->message;
 
             if ($provider) {
@@ -201,7 +204,7 @@ class CommonOperationController extends Controller
                 'request_id' => $request->request_id,
                 'admin_id' => $adminId,
                 'provider_id' => $providerId,
-                'recipient_name' => $requestClient->first_name . " " . $requestClient->last_name,
+                'recipient_name' => $requestClient->first_name . ' ' . $requestClient->last_name,
                 'email_template' => 'sendMailPatient.blade.php',
                 'subject_name' => 'Send Mail to patient',
                 'email' => $requestClient->email,
@@ -236,8 +239,8 @@ class CommonOperationController extends Controller
         $user = Auth::user();
         $provider = Provider::where('user_id', $user->id)->first();
 
-        $providerId = DB::raw("NULL");
-        $adminId = DB::raw("NULL");
+        $providerId = DB::raw('NULL');
+        $adminId = DB::raw('NULL');
 
         if ($provider) {
             $roleId = 2;
@@ -253,7 +256,7 @@ class CommonOperationController extends Controller
             'request_id' => $request->request_id,
             'admin_id' => $adminId,
             'provider_id' => $providerId,
-            'recipient_name' => $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name,
+            'recipient_name' => $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name,
             'email_template' => 'sendAgreementLink.blade.php',
             'subject_name' => 'Agreement Link Sent to Patient',
             'email' => $request->email,
@@ -267,10 +270,10 @@ class CommonOperationController extends Controller
 
         SMSLogs::create(
             [
-                'sms_template' => "Hii, Click on the given link to create request",
+                'sms_template' => 'Hii, Click on the given link to create request',
                 'mobile_number' => $request->phone_number,
                 'confirmation_number' => $clientData->confirmation_no,
-                'recipient_name' => $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name,
+                'recipient_name' => $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name,
                 'role_id' => $roleId,
                 'admin_id' => $adminId,
                 'request_id' => $request->request_id,
@@ -291,18 +294,18 @@ class CommonOperationController extends Controller
 
         try {
             // send SMS
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+            $sid = getenv('TWILIO_SID');
+            $token = getenv('TWILIO_AUTH_TOKEN');
+            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
 
             $twilio = new Client($sid, $token);
 
             $twilio->messages
                 ->create(
-                    "+91 99780 71802", // to
+                    '+91 99780 71802', // to
                     [
-                        "body" => "Hii " .  $clientData->requestClient->first_name . " " . $clientData->requestClient->last_name . ", Click on the this link to open Agreement:" . url('/patient-agreement/' . $id),
-                        "from" =>  $senderNumber
+                        'body' => 'Hii ' .  $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $id),
+                        'from' =>  $senderNumber,
                     ]
                 );
         } catch (\Throwable $th) {

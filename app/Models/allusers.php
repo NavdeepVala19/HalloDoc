@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +11,6 @@ class AllUsers extends Model
     use HasFactory;
     use SoftDeletes;
     protected $table = 'allusers';
-
 
     protected $fillable = [
         'first_name',
@@ -47,7 +45,6 @@ class AllUsers extends Model
     {
         return $this->belongsTo(UserRoles::class);
     }
-
 
     public function provider()
     {

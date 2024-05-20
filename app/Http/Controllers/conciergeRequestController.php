@@ -53,10 +53,10 @@ class conciergeRequestController extends Controller
 
         $isEmailStored = Users::where('email', $request->email)->first();
 
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             // store email and phoneNumber in users table
             $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->username = $request->first_name . ' ' . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
@@ -180,7 +180,7 @@ class conciergeRequestController extends Controller
         }
 
         try {
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 // send email
                 $emailAddress = $request->email;
                 Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
@@ -200,9 +200,8 @@ class conciergeRequestController extends Controller
                     'action' => 5,
                 ]);
                 return redirect()->route('submit.request')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-            } else {
-                return redirect()->route('submit.request')->with('message', 'Request is Submitted');
             }
+            return redirect()->route('submit.request')->with('message', 'Request is Submitted');
         } catch (\Throwable $th) {
             return view('errors.500');
         }

@@ -29,10 +29,10 @@ class EncounterFormRequest extends FormRequest
             'service_date' => 'required',
             'mobile' => 'required',
             'allergies' => 'required|min:5|max:200',
-            'treatment_plan' => 'required|min:5|max:200',
-            'medication_dispensed' => 'required|min:5|max:200',
-            'procedure' => 'required|min:5|max:200',
-            'followUp' => 'required|min:5|max:200',
+            'treatment_plan' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
+            'medication_dispensed' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
+            'procedure' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
+            'followUp' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
         ];
     }

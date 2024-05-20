@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserRoles;
-use Carbon\Carbon;
-use App\Models\Users;
+use App\Mail\SendEmailAddress;
+
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\RequestTable;
 use App\Models\RequestClient;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
+use App\Models\UserRoles;
+use App\Models\Users;
 
-use App\Mail\SendEmailAddress;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -50,10 +51,10 @@ class patientController extends Controller
         ]);
 
         $isEmailStored = Users::where('email', $request->email)->first();
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             // store email and phoneNumber in users table
             $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->username = $request->first_name . ' ' . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
@@ -164,7 +165,7 @@ class patientController extends Controller
         }
 
         try {
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 // send email
                 $emailAddress = $request->email;
                 Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
@@ -184,9 +185,8 @@ class patientController extends Controller
                     'action' => 5,
                 ]);
                 return redirect()->route('submit.request')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-            } else {
-                return redirect()->route('submit.request')->with('message', 'Request is Submitted');
             }
+            return redirect()->route('submit.request')->with('message', 'Request is Submitted');
         } catch (\Throwable $th) {
             return view('errors.500');
         }

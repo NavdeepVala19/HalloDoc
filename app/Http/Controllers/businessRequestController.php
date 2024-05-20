@@ -6,15 +6,14 @@ use App\Mail\SendEmailAddress;
 use App\Models\AllUsers;
 use App\Models\Business;
 use App\Models\EmailLog;
-use App\Models\RequestTable;
-use App\Models\RequestClient;
 use App\Models\RequestBusiness;
-use App\Models\Users;
+use App\Models\RequestClient;
+use App\Models\RequestTable;
 use App\Models\UserRoles;
+use App\Models\Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
 
 // this controller is responsible for creating/storing the business request
 class businessRequestController extends Controller
@@ -23,7 +22,6 @@ class businessRequestController extends Controller
   {
     return view('patientSite/businessRequest');
   }
-
 
   /**
    *@param $request the input which is enter by user
@@ -56,10 +54,10 @@ class businessRequestController extends Controller
 
     $isEmailStored = Users::where('email', $request->email)->first();
 
-    if ($isEmailStored == null) {
+    if ($isEmailStored === null) {
       // store email and phoneNumber in users table
       $requestEmail = new Users();
-      $requestEmail->username = $request->first_name . " " . $request->last_name;
+      $requestEmail->username = $request->first_name . ' ' . $request->last_name;
       $requestEmail->email = $request->email;
       $requestEmail->phone_number = $request->phone_number;
       $requestEmail->save();
@@ -188,7 +186,7 @@ class businessRequestController extends Controller
     }
 
     try {
-      if ($isEmailStored == null) {
+      if ($isEmailStored === null) {
         // send email
         $emailAddress = $request->email;
         Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
@@ -209,9 +207,8 @@ class businessRequestController extends Controller
         ]);
 
         return redirect()->route('submit.request')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-      } else {
-        return redirect()->route('submit.request')->with('message', 'Request is Submitted');
       }
+      return redirect()->route('submit.request')->with('message', 'Request is Submitted');
     } catch (\Throwable $th) {
       return view('errors.500');
     }

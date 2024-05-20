@@ -4,11 +4,10 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
 class DocsAttachmentMail extends Mailable
 {
@@ -17,8 +16,8 @@ class DocsAttachmentMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $email;
-    public $file;
+    private $email;
+    private $file;
 
     public function __construct($email, $file)
     {
@@ -43,6 +42,10 @@ class DocsAttachmentMail extends Mailable
     {
         return new Content(
             view: 'email.docsAttachment',
+            with: [
+                'email' => $this->email,
+                'file' => $this->file,
+            ]
         );
     }
 

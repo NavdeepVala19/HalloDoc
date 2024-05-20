@@ -5,19 +5,20 @@ namespace App\Http\Controllers;
 use App\Mail\SendEmailAddress;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\RequestTable;
-use App\Models\RequestStatus;
 use App\Models\RequestClient;
+use App\Models\RequestStatus;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
-use App\Models\Users;
 use App\Models\UserRoles;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
+use App\Models\Users;
 
+use Carbon\Carbon;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class patientDashboardController extends Controller
 {
@@ -32,8 +33,8 @@ class patientDashboardController extends Controller
             if ($clientData->status >= 4) {
                 return view('patientSite.agreementDone')->with(['caseStatus' => $clientData->status]);
             }
-            if (!empty($clientData)) {
-                return view("patientSite/patientAgreement", compact('clientData'));
+            if ($clientData) {
+                return view('patientSite/patientAgreement', compact('clientData'));
             }
         } catch (\Throwable $th) {
             return view('errors.404');
@@ -44,7 +45,7 @@ class patientDashboardController extends Controller
     public function agreeAgreement(Request $request)
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
-        if ($caseStatus == 4 || $caseStatus == 11) {
+        if ($caseStatus === 4 || $caseStatus === 11) {
             return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -66,18 +67,18 @@ class patientDashboardController extends Controller
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
 
-        if ($caseStatus == 4 || $caseStatus == 11) {
+        if ($caseStatus === 4 || $caseStatus === 11) {
             return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,
-            'physician_id' => DB::raw("Null"),
-            'declined_by' => 'Patient'
+            'physician_id' => DB::raw('Null'),
+            'declined_by' => 'Patient',
         ]);
         RequestStatus::create([
             'request_id' => $request->requestId,
             'status' => 11,
-            'physician_id' => DB::raw("Null"),
+            'physician_id' => DB::raw('Null'),
             'notes' => $request->cancelReason,
         ]);
         return redirect()->back()->with('agreementCancelled', 'Agreement Cancelled Sucessfully');
@@ -88,20 +89,20 @@ class patientDashboardController extends Controller
     public function createNewRequest()
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
-        return view("patientSite/patientNewRequest", compact('email'));
+        return view('patientSite/patientNewRequest', compact('email'));
     }
 
     /**
      *@param $request the input which is enter by user
 
-     * it stores request in request_client and request table 
+     * it stores request in request_client and request table
      */
     public function createNewPatient(Request $request)
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
@@ -169,7 +170,7 @@ class patientDashboardController extends Controller
 
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
-        if (!empty($newPatient->id)) {
+        if ($newPatient->id) {
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
@@ -180,7 +181,7 @@ class patientDashboardController extends Controller
 
     public function createSomeoneRequest()
     {
-        return view("patientSite/patientSomeoneRequest");
+        return view('patientSite/patientSomeoneRequest');
     }
 
     /**
@@ -210,10 +211,10 @@ class patientDashboardController extends Controller
 
         $isEmailStored = Users::where('email', $request->email)->first();
 
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             // store email and phoneNumber in users table
             $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->username = $request->first_name . ' ' . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
@@ -324,12 +325,12 @@ class patientDashboardController extends Controller
 
         $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
 
-        if (!empty($newPatient->id)) {
+        if ($newPatient->id) {
             $newPatient->update(['confirmation_no' => $confirmationNumber]);
         }
 
         try {
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 // send email
                 $emailAddress = $request->email;
                 Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
@@ -349,9 +350,8 @@ class patientDashboardController extends Controller
                     'action' => 5,
                 ]);
                 return redirect()->route('patient.dashboard')->with('message', 'Email for Create Account is Sent and Request is Submitted');
-            } else {
-                return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
             }
+            return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
         } catch (\Throwable $th) {
             return view('errors.500');
         }
@@ -365,7 +365,7 @@ class patientDashboardController extends Controller
     public function read()
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
         $userId = Users::select('id')->where('email', $email);
         $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->orderBy('id', 'desc')->paginate(10);

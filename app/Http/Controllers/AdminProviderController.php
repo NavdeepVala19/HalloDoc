@@ -4,20 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContactProvider;
 use App\Models\AllUsers;
-use App\Models\Users;
-use App\Models\Role;
-use App\Models\Regions;
-use App\Models\SMSLogs;
 use App\Models\EmailLog;
-use App\Models\Provider;
-use App\Models\UserRoles;
-use App\Models\ShiftDetail;
-use App\Models\PhysicianRegion;
 use App\Models\PhysicianLocation;
+use App\Models\PhysicianRegion;
+use App\Models\Provider;
+use App\Models\Regions;
+use App\Models\Role;
+use App\Models\ShiftDetail;
+use App\Models\SMSLogs;
+use App\Models\UserRoles;
+use App\Models\Users;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
+
 use Twilio\Rest\Client;
 
 class AdminProviderController extends Controller
@@ -63,7 +65,7 @@ class AdminProviderController extends Controller
 
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
 
-        if ($request->selectedId == "all") {
+        if ($request->selectedId === 'all') {
             $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
@@ -86,7 +88,7 @@ class AdminProviderController extends Controller
         $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
 
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-        if ($request->selectedId == "all") {
+        if ($request->selectedId === 'all') {
             $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
@@ -96,8 +98,6 @@ class AdminProviderController extends Controller
         $data = view('/adminPage/provider/adminProviderFilterMobileData')->with(['providersData' => $providersData, 'onCallPhysicianIds' => $onCallPhysicianIds])->render();
         return response()->json(['html' => $data]);
     }
-
-
 
     // **This code is for Sending Mail and SMS
 
@@ -122,7 +122,7 @@ class AdminProviderController extends Controller
         $enteredText = $request->contact_msg;
 
         try {
-            if ($request->contact == "email") {
+            if ($request->contact === 'email') {
                 // send email
                 $providerData = Provider::get()->where('id', $request->provider_id);
                 Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -137,20 +137,20 @@ class AdminProviderController extends Controller
                     'email' => $receipientEmail,
                     'provider_id' => $receipientId,
                 ]);
-            } elseif ($request->contact == "sms") {
+            } elseif ($request->contact === 'sms') {
                 // send SMS
-                $sid = getenv("TWILIO_SID");
-                $token = getenv("TWILIO_AUTH_TOKEN");
-                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+                $sid = getenv('TWILIO_SID');
+                $token = getenv('TWILIO_AUTH_TOKEN');
+                $senderNumber = getenv('TWILIO_PHONE_NUMBER');
 
                 $twilio = new Client($sid, $token);
 
                 $twilio->messages
                     ->create(
-                        "+91 99780 71802", // to
+                        '+91 99780 71802', // to
                         [
-                            "body" => "{$enteredText}",
-                            "from" => $senderNumber,
+                            'body' => "{$enteredText}",
+                            'from' => $senderNumber,
                         ]
                     );
 
@@ -168,15 +168,15 @@ class AdminProviderController extends Controller
                         'sms_template' => $enteredText,
                     ]
                 );
-            } elseif ($request->contact == "both") {
+            } elseif ($request->contact === 'both') {
                 // send email
                 $providerData = Provider::get()->where('id', $request->provider_id);
                 Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
                 // send SMS
-                $sid = getenv("TWILIO_SID");
-                $token = getenv("TWILIO_AUTH_TOKEN");
-                $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+                $sid = getenv('TWILIO_SID');
+                $token = getenv('TWILIO_AUTH_TOKEN');
+                $senderNumber = getenv('TWILIO_PHONE_NUMBER');
 
                 $twilio = new Client(
                     $sid,
@@ -185,10 +185,10 @@ class AdminProviderController extends Controller
 
                 $twilio->messages
                     ->create(
-                        "+91 99780 71802", // to
+                        '+91 99780 71802', // to
                         [
-                            "body" => "{$enteredText}",
-                            "from" => $senderNumber,
+                            'body' => "{$enteredText}",
+                            'from' => $senderNumber,
                         ]
                     );
 
@@ -227,7 +227,7 @@ class AdminProviderController extends Controller
     /**
      *@param $request  $request have id of selected provider and value of check and uncheck of checkbox
 
-     * this function perform stop notification through ajax 
+     * this function perform stop notification through ajax
      */
     public function stopNotifications(Request $request)
     {
@@ -493,13 +493,13 @@ class AdminProviderController extends Controller
 
         if (!$updateProviderDataAllUsers) {
             return back()->with('message', 'Physician information is updated');
-        } else {
-            $updateProviderDataAllUsers->first_name = $request->first_name;
-            $updateProviderDataAllUsers->last_name = $request->last_name;
-            $updateProviderDataAllUsers->email = $request->email;
-            $updateProviderDataAllUsers->mobile = $request->phone_number;
-            $updateProviderDataAllUsers->save();
         }
+        $updateProviderDataAllUsers->first_name = $request->first_name;
+        $updateProviderDataAllUsers->last_name = $request->last_name;
+        $updateProviderDataAllUsers->email = $request->email;
+        $updateProviderDataAllUsers->mobile = $request->phone_number;
+        $updateProviderDataAllUsers->save();
+
         return back()->with('message', 'Physician information is updated');
     }
 
@@ -535,16 +535,15 @@ class AdminProviderController extends Controller
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->first()->user_id;
 
         $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
-        if (empty($updateProviderDataAllUsers)) {
-            return back()->with('message', 'Mailing and Billing information is updated');
-        } else {
-            $updateProviderDataAllUsers->street = $request->address1;
-            $updateProviderDataAllUsers->city = $request->city;
-            $updateProviderDataAllUsers->zipcode = $request->zip;
-            $updateProviderDataAllUsers->save();
-
+        if (!$updateProviderDataAllUsers) {
             return back()->with('message', 'Mailing and Billing information is updated');
         }
+        $updateProviderDataAllUsers->street = $request->address1;
+        $updateProviderDataAllUsers->city = $request->city;
+        $updateProviderDataAllUsers->zipcode = $request->zip;
+        $updateProviderDataAllUsers->save();
+
+        return back()->with('message', 'Mailing and Billing information is updated');
     }
 
 
@@ -666,7 +665,7 @@ class AdminProviderController extends Controller
     {
         $providers = Provider::get();
 
-        return view('adminPage/provider/providerLocation', compact("providers"));
+        return view('adminPage/provider/providerLocation', compact('providers'));
     }
 
     public function providerMapLocations()

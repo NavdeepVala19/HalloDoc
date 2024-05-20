@@ -18,7 +18,7 @@ class SendMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $data;
+    private $data;
     public function __construct($data)
     {
         $this->data = $data;
@@ -30,7 +30,7 @@ class SendMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('xyx@rst.com', "Provider"),
+            from: new Address('xyx@rst.com', 'Provider'),
             subject: 'Link for creating request',
         );
     }
@@ -43,6 +43,9 @@ class SendMail extends Mailable
         // defines the Blade template that will be used to generate the message content.
         return new Content(
             view: 'email.mail',
+            with: [
+                'data' => $this->data,
+            ]
         );
     }
 

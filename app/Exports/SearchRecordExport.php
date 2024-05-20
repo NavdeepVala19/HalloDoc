@@ -115,7 +115,6 @@ class SearchRecordExport implements FromCollection, WithCustomCsvSettings, WithH
                 'Physician Note' => $patient->physician_notes,
                 'Admin Note' => $patient->admin_notes,
                 'Patient Note' => $patient->patient_notes,
-
             ];
         });
     }
