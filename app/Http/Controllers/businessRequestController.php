@@ -25,7 +25,7 @@ class BusinessRequestController extends Controller
    * @param \Illuminate\Http\Request $request
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
    */
-  public function create(CreateBusinessRequest $request ,CreatePatientRequest $createPatientRequest, BusinessRequestSubmitService $businessRequestSubmitService)
+  public function create(CreateBusinessRequest $request, CreatePatientRequest $createPatientRequest, BusinessRequestSubmitService $businessRequestSubmitService)
   {
     $businessRequest = $businessRequestSubmitService->storeBusinessRequest($request);
     $redirectMsg = $businessRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';

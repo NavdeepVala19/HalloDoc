@@ -123,7 +123,7 @@ class PatientDashboardController extends Controller
         ]);
 
 
-        $meRequestStored = $patientDashboardService->storeMeRequest($request,$email);
+        $patientDashboardService->storeMeRequest($request,$email);
         return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
 
     }

@@ -46,7 +46,7 @@ class FamilyRequestSubmitService
     {
         $isEmailStored = Users::where('email', $request->email)->first();
         // Store user details if email is not already stored
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             $storePatientInUsers = new Users();
             $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
             $storePatientInUsers->email = $request->email;
@@ -120,7 +120,7 @@ class FamilyRequestSubmitService
 
         try {
             // Send email if email is not already stored
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 $emailAddress = $request->email;
                 Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 

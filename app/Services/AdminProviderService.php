@@ -31,12 +31,10 @@ class AdminProviderService
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
 
-        $returnData = [
+        return [
             'onCallPhysicianIds' => $onCallPhysicianIds,
             'providersData' => $providersData,
         ];
-
-        return $returnData;
     }
 
 
@@ -53,19 +51,17 @@ class AdminProviderService
         $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
 
-        if ($request->selectedId == "all") {
+        if ($request->selectedId === "all") {
             $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
             $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $returnData = [
+        return [
             'onCallPhysicianIds' => $onCallPhysicianIds,
             'providersData' => $providersData,
         ];
-
-        return $returnData;
     }
 
 
@@ -84,10 +80,10 @@ class AdminProviderService
         $receipientMobile = $receipientData->first()->mobile;
 
         $enteredText = $request->contact_msg;
-        if ($request->contact == "email") {
+        if ($request->contact === "email") {
             // send email
             $providerData = Provider::get()->where('id', $request->provider_id);
-            // Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
             EmailLog::create([
                 'role_id' => 1,
@@ -103,7 +99,7 @@ class AdminProviderService
                 'email' => $receipientEmail,
                 'action'=>2,
             ]);
-        } elseif ($request->contact == "sms") {
+        } elseif ($request->contact === "sms") {
             // send SMS
             $sid = config('api.twilio_sid');
             $token = config('api.twilio_auth_token');
@@ -132,7 +128,7 @@ class AdminProviderService
                     'sms_template' => $enteredText,
                 ]
             );
-        } elseif ($request->contact == "both") {
+        } elseif ($request->contact === "both") {
             // send email
             $providerData = Provider::get()->where('id', $request->provider_id);
             Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));

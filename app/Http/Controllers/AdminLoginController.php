@@ -69,7 +69,7 @@ class AdminLoginController extends Controller
             }
         } else {
             $user = Users::where("email", $request->email)->first();
-            if ($user == null) {
+            if ($user === null) {
                 return back()->with('error', 'We could not find an account associated with that email address');
             } else {
                 return back()->with('error', 'Incorrect Password , Please Enter Correct Password');

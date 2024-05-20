@@ -319,9 +319,9 @@ class AdminController extends Controller
 
         try {
             // send SMS
-            $sid = getenv('TWILIO_SID');
-            $token = getenv('TWILIO_AUTH_TOKEN');
-            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
+            $sid = config('api.twilio_sid');
+            $token = config('api.twilio_auth_token');
+            $senderNumber = config('api.sender_number');
 
             $twilio = new Client($sid, $token);
 
@@ -915,8 +915,7 @@ class AdminController extends Controller
      */
     public function exportFilteredSearchRecord($request,RecordsService $recordsService)
     {
-        $combinedData = $recordsService->filterSearchRecords($request);
-        return $combinedData;
+        return $recordsService->filterSearchRecords($request);
     }
 
     /**
@@ -977,7 +976,7 @@ class AdminController extends Controller
 
     public function searchSMSLogs(Request $request,RecordsService $recordsService)
     {
-        $sms = $recordsService->filterSMSLogs($request);
+        $smsLogs = $recordsService->filterSMSLogs($request);
         session(
             [
                 'receiver_name' => $request->input('receiver_name'),

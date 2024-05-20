@@ -40,7 +40,7 @@ class CreatePatientRequest extends FormRequest
 
     /**
      * display validation message
-     * @return string[] 
+     * @return string
      */
 
     public function messages(){

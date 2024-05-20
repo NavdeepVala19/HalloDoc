@@ -17,7 +17,7 @@ class RecordsService
     public function searchRecordsListing()
     {
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestClosed
-        $combinedData = RequestClient::distinct()->select([
+        return RequestClient::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
             'request_client.id',
@@ -43,8 +43,6 @@ class RecordsService
             ->leftJoin('request_closed', 'request_closed.request_id', 'request_client.request_id')
             ->latest('id')
             ->paginate(10);
-
-        return $combinedData;
     }
 
     /**
@@ -123,9 +121,7 @@ class RecordsService
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
 
-        $combinedData = $this->filterSearchRecords($request)->paginate($perPage, ['*'], 'page', $page);
-
-        return $combinedData;
+        return $this->filterSearchRecords($request)->paginate($perPage, ['*'], 'page', $page);
     }
 
     /**
@@ -135,8 +131,7 @@ class RecordsService
      */
     public function exportFilteredDataToExcel($request)
     {
-        $data = $this->filterSearchRecords($request);
-        return $data;
+        return $this->filterSearchRecords($request);
     }
 
 
@@ -178,7 +173,7 @@ class RecordsService
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function blockHistory(){
-        $blockData = BlockRequest::select(
+        return BlockRequest::select(
             'block_request.phone_number',
             'block_request.email',
             'block_request.id',
@@ -191,8 +186,6 @@ class RecordsService
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
             ->latest('id')
             ->paginate(10);
-
-            return $blockData;
     }
 
 

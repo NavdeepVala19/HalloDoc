@@ -294,9 +294,9 @@ class CommonOperationController extends Controller
 
         try {
             // send SMS
-            $sid = getenv('TWILIO_SID');
-            $token = getenv('TWILIO_AUTH_TOKEN');
-            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
+            $sid = config('api.twilio_sid');
+            $token = config('api.twilio_auth_token');
+            $senderNumber = config('api.sender_number');
 
             $twilio = new Client($sid, $token);
 

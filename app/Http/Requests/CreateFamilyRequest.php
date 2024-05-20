@@ -32,7 +32,7 @@ class CreateFamilyRequest extends FormRequest
 
     /**
      * validation message display
-     * @return string[]
+     * @return string
      */
     public function messages(){
         $enter = 'Please enter';
@@ -59,6 +59,6 @@ class CreateFamilyRequest extends FormRequest
             
             'family_relation'=> $enter.' a relation with patient',
             'family_relation.alpha'=>' Please enter valid relation (Format : alphabets-alphabets).',
-        ]; 
+        ];
     }
 }

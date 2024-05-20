@@ -52,7 +52,7 @@ class PatientLoginController extends Controller
             }
         } else {
             $user = Users::where("email", $request->email)->first();
-            if ($user == null) {
+            if ($user === null) {
                 return back()->with('error', 'We could not find an account associated with that email address');
             } else {
                 return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
@@ -192,7 +192,7 @@ class PatientLoginController extends Controller
 
     //         $user = Users::where("email", $request->email)->first();
 
-    //         if ($userRolesData->role_id == 1 || $userRolesData->role_id == 2 || $user == null) {
+    //         if ($userRolesData->role_id == 1 || $userRolesData->role_id == 2 || $user === null) {
 
     //             $errors = new MessageBag(['email' => ['Invalid email. Please login with correct email']]);
 
@@ -207,7 +207,7 @@ class PatientLoginController extends Controller
     //     } else {
     //         $user = Users::where("email", $request->email)->first();
 
-    //         if ($user == null) {
+    //         if ($user === null) {
     //             $errors = new MessageBag(['email' => ['We could not find an account associated with that email address , Please enter correct email ']]);
 
     //             return redirect()->back()
