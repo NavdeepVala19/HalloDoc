@@ -34,7 +34,6 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
         $adminToCloseData = $this->data->get();
 
         return collect($adminToCloseData)->map(function ($adminToClose) {
-
             $patientName = null;
             $patientLastName = null;
             $dateOfBirth = null;
@@ -46,32 +45,19 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
 
             if (isset($adminToClose) && $adminToClose->requestClient) {
                 $patientName = $adminToClose->requestClient->first_name;
-            }
-            if (isset($adminToClose) && $adminToClose->requestClient) {
                 $patientLastName = $adminToClose->requestClient->last_name;
-            }
-            if (isset($adminToClose) && $adminToClose->requestClient) {
                 $dateOfBirth = $adminToClose->requestClient->date_of_birth;
-            }
-            if (isset($adminToClose) && $adminToClose->requestClient) {
                 $street = $adminToClose->requestClient->street;
-            }
-            if (isset($adminToClose) && $adminToClose->requestClient) {
                 $city = $adminToClose->requestClient->city;
-            }
-            if (isset($adminToClose) && $adminToClose->requestClient) {
                 $state = $adminToClose->requestClient->state;
             }
             if (isset($adminToClose) && $adminToClose->provider) {
                 $providerFirstName = $adminToClose->provider->first_name;
-            }
-            if (isset($adminToClose) && $adminToClose->provider) {
                 $providerLastName = $adminToClose->requestClient->last_name;
             }
 
-
             return [
-                'PatientName' => $patientName . " " . $patientLastName,
+                'PatientName' => $patientName . ' ' . $patientLastName,
                 'Date of Birth' => $dateOfBirth,
                 'PhysicianName' => $providerFirstName . ' ' . $providerLastName,
                 'Address' => $street . ',' . $city . ',' . $state,

@@ -5,13 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Users;
 use App\Models\Regions;
+use App\Models\SMSLogs;
+use Twilio\Rest\Client;
 use App\Models\AllUsers;
+use App\Models\EmailLog;
 use App\Models\Provider;
+use App\Models\UserRoles;
+use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
+use App\Mail\ContactProvider;
+
 use App\Models\PhysicianRegion;
 use App\Models\PhysicianLocation;
 use App\Http\Requests\ProviderForm;
 use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use App\Services\AdminProviderService;
 

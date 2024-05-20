@@ -2,10 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Admin;
 use App\Models\Users;
+use App\Models\AllUsers;
+use App\Models\EmailLog;
+use App\Models\UserRoles;
+use App\Models\RequestNotes;
+use App\Models\RequestTable;
 use Illuminate\Http\Request;
+
+use App\Models\RequestClient;
+
+use App\Mail\SendEmailAddress;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\AdminCreateRequest;
 use App\Services\AdminCreateRequestService;
@@ -54,7 +66,6 @@ class AdminDashboardController extends Controller
             return view('errors.404');
         }
     }
-
 
     /**
      * this page will show admin profile edit and admin can route to this page from any page

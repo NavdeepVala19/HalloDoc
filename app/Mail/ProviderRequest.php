@@ -16,9 +16,9 @@ class ProviderRequest extends Mailable
     /**
      * Create a new message instance.
      */
-    public $admin;
-    public $provider;
-    public $data;
+    private $admin;
+    private $provider;
+    private $data;
 
     public function __construct($admin, $provider, $data)
     {
@@ -44,6 +44,11 @@ class ProviderRequest extends Mailable
     {
         return new Content(
             view: 'email.providerRequest',
+            with: [
+                'admin' => $this->admin,
+                'provider' => $this->provider,
+                'data' => $this->data,
+            ]
         );
     }
 

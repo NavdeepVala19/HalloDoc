@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users;
 use App\Models\AllUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -18,7 +17,7 @@ class PatientProfileController extends Controller
     public function patientEdit()
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
         $getEmailData = AllUsers::where('email', $email)->first();
         return view("patientSite/patientProfile", compact('getEmailData'));
@@ -37,7 +36,7 @@ class PatientProfileController extends Controller
             $id = Crypt::decrypt($id);
             $getPatientData = AllUsers::where('id', $id)->first();
             if ($getPatientData) {
-                return view("patientSite/patientProfileEdit", compact('getPatientData'));
+                return view('patientSite/patientProfileEdit', compact('getPatientData'));
             }
         } catch (\Throwable $th) {
             return view('errors.404');
@@ -67,7 +66,7 @@ class PatientProfileController extends Controller
     public function patientMapLocation()
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
         $getEmailData = AllUsers::where('email', '=', $email)->first();
         $address = $getEmailData->street . $getEmailData->city . $getEmailData->state;
 

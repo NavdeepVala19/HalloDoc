@@ -11,7 +11,7 @@ class RequestWiseFile extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "request_wise_file";
+    protected $table = 'request_wise_file';
 
     protected $fillable = [
         'request_id',

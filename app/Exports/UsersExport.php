@@ -2,14 +2,13 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
 class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
     private $data;
 
     public function __construct($data)
@@ -23,7 +22,7 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 
     public function headings(): array
     {
-        return ['PatientName', 'Date_of_Birth', 'RequestorName', 'RequestedDate', 'Mobile', 'Address','Notes'];
+        return ['PatientName', 'Date_of_Birth', 'RequestorName', 'RequestedDate', 'Mobile', 'Address', 'Notes'];
     }
     /**
      * @return \Illuminate\Support\Collection
@@ -31,57 +30,18 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
     public function collection()
     {
         $adminAllData = $this->data;
-        // dd($adminAllData);
         return collect($adminAllData)->map(function ($adminAll) {
-            $patientName = null;
-            $patientLastName = null;
-            $dateOfBirth = null;
-            $address = null;
-            $patientMobile = null;
-            $patientMobile = null;
-            $notes = null;
-            $requestedDate = null;
-            $requestorFirstName = null;
-            $requestorLastName = null;
-
             if (isset($adminAll)) {
-                $patientName = $adminAll->first_name;
+                return [
+                    'PatientName' => $adminAll->first_name . ' ' . $adminAll->last_name,
+                    'Date_of_Birth' => $adminAll->date_of_birth,
+                    'Requestor' => $adminAll->request_first_name . ' ' . $adminAll->request_last_name,
+                    'RequestedDate' => $adminAll->created_at,
+                    'Mobile' => $adminAll->phone_number,
+                    'Address' => $adminAll->address,
+                    'Notes' => $adminAll->notes,
+                ];
             }
-            if (isset($adminAll)) {
-                $patientLastName = $adminAll->last_name;
-            }
-            if (isset($adminAll)) {
-                $patientMobile = $adminAll->phone_number;
-            }
-            if (isset($adminAll)) {
-                $dateOfBirth = $adminAll->date_of_birth;
-            }
-            if (isset($adminAll)) {
-                $address = $adminAll->address;
-            }
-            if (isset($adminAll)) {
-                $requestorFirstName = $adminAll->request_first_name;
-            }
-            if (isset($adminAll)) {
-                $requestorLastName = $adminAll->request_last_name;
-            }
-            if (isset($adminAll)) {
-                $notes = $adminAll->notes;
-            }
-            if (isset($adminAll)) {
-                $requestedDate = $adminAll->created_at;
-            }
-
-
-            return [
-                'PatientName' => $patientName . ' ' . $patientLastName,
-                'Date_of_Birth' => $dateOfBirth,
-                'Requestor' => $requestorFirstName.' '. $requestorLastName,
-                'RequestedDate' => $requestedDate,
-                'Mobile' => $patientMobile,
-                'Address' => $address,
-                'Notes' => $notes,
-            ];
         });
     }
 }

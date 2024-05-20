@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-// DomPDF package used for the creation of pdf from the form
-use App\Models\Orders;
-
 use App\Models\Provider;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
 use App\Models\MedicalReport;
-
-// Models used in these controller
 use App\Models\RequestStatus;
 use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\HealthProfessional;
+
 use Illuminate\Support\Facades\DB;
+
+use App\Services\CreateOrderService;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\HealthProfessionalType;
+use App\Services\MedicalFormDataService;
 use App\Http\Requests\EncounterFormRequest;
 
 class ProviderActionController extends Controller
@@ -44,7 +43,7 @@ class ProviderActionController extends Controller
             'admin_id' => DB::raw('NULL'),
             'TransToPhysicianId' => DB::raw('NULL')
         ]);
-        return redirect()->route('provider.status', 'pending')->with('successMessage', "You have Successfully Accepted Case");
+        return redirect()->route('provider.status', 'pending')->with('successMessage', 'You have Successfully Accepted Case');
     }
 
     /**
@@ -70,7 +69,7 @@ class ProviderActionController extends Controller
         ]);
         // Update RequestTable to reflect the transfer
         RequestTable::where('id', $request->requestId)->update([
-            'physician_id' => DB::raw("NULL"),
+            'physician_id' => DB::raw('NULL'),
             'status' => 1
         ]);
         return redirect()->back()->with('successMessage', 'Case Transferred to Admin');
@@ -179,7 +178,7 @@ class ProviderActionController extends Controller
             'physician_id' => $providerId,
         ]);
 
-        return redirect()->back()->with('uploadSuccessful', "File Uploaded Successfully");
+        return redirect()->back()->with('uploadSuccessful', 'File Uploaded Successfully');
     }
 
     /**
@@ -225,22 +224,14 @@ class ProviderActionController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendOrder(Request $request)
+    public function sendOrder(Request $request, CreateOrderService $createOrderService)
     {
         $request->validate([
             'profession' => 'required',
             'vendor_id' => 'required',
         ]);
-        $healthProfessional = HealthProfessional::where('id', $request->vendor_id)->first();
-        Orders::create([
-            'vendor_id' => $request->vendor_id,
-            'request_id' => $request->requestId,
-            'fax_number' => $healthProfessional->fax_number,
-            'business_contact' => $healthProfessional->business_contact,
-            'email' => $healthProfessional->email,
-            'prescription' => $request->prescription,
-            'no_of_refill' => $request->refills,
-        ]);
+
+        $createOrderService->createOrder($request);
 
         return redirect()->route('provider.status', 'active')->with('successMessage', 'Order Created Successfully!');
     }
@@ -255,7 +246,7 @@ class ProviderActionController extends Controller
     {
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
 
-        if ($request->house_call == 1) {
+        if ($request->house_call === '1') {
             RequestTable::where('id', $request->requestId)->update(['status' => 5, 'call_type' => 1]);
             RequestStatus::create([
                 'request_id' => $request->requestId,
@@ -264,7 +255,7 @@ class ProviderActionController extends Controller
             ]);
             return redirect()->route('provider.status', ['status' => 'active']);
         }
-        if ($request->consult == 1) {
+        if ($request->consult === '1') {
             RequestTable::where('id', $request->requestId)->update(['status' => 6, 'call_type' => 2]);
             RequestStatus::create([
                 'request_id' => $request->requestId,
@@ -299,7 +290,7 @@ class ProviderActionController extends Controller
      * @param string $id
      * @return \Illuminate\View\View
      */
-    public function encounterFormView($id = "null")
+    public function encounterFormView($id = 'null')
     {
         try {
             $requestId = Crypt::decrypt($id);
@@ -318,45 +309,12 @@ class ProviderActionController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function encounterForm(EncounterFormRequest $request)
+    public function encounterForm(EncounterFormRequest $request, MedicalFormDataService $medicalFormDataService)
     {
-        $report = MedicalReport::where("request_id", $request->request_id)->first();
+        $report = MedicalReport::where('request_id', $request->request_id)->first();
 
-        $array = [
-            'request_id' => $request->request_id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'location' => $request->location,
-            'service_date' => $request->service_date,
-            'date_of_birth' => $request->date_of_birth,
-            'mobile' => $request->mobile,
-            'present_illness_history' => $request->present_illness_history,
-            'medical_history' => $request->medical_history,
-            'medications' => $request->medications,
-            'allergies' => $request->allergies,
-            'temperature' => $request->temperature,
-            'heart_rate' => $request->heart_rate,
-            'repository_rate' => $request->repository_rate,
-            'sis_BP' => $request->sis_BP,
-            'dia_BP' => $request->dia_BP,
-            'oxygen' => $request->oxygen,
-            'pain' => $request->pain,
-            'heent' => $request->heent,
-            'cv' => $request->cv,
-            'chest' => $request->chest,
-            'abd' => $request->abd,
-            'extr' => $request->extr,
-            'skin' => $request->skin,
-            'neuro' => $request->neuro,
-            'other' => $request->other,
-            'diagnosis' => $request->diagnosis,
-            'treatment_plan' => $request->treatment_plan,
-            'medication_dispensed' => $request->medication_dispensed,
-            'procedure' => $request->procedure,
-            'followUp' => $request->followUp,
-            'is_finalize' => false
-        ];
+        $array = $medicalFormDataService->medicalFormData($request);
+
         $medicalReport = new MedicalReport();
         if ($report) {
             // Report Already exists, update report
@@ -366,7 +324,7 @@ class ProviderActionController extends Controller
             $medicalReport->create($array);
         }
 
-        return redirect()->back()->with('encounterChangesSaved', "Your changes have been Successfully Saved");
+        return redirect()->back()->with('encounterChangesSaved', 'Your changes have been Successfully Saved');
     }
 
     /**
@@ -395,15 +353,15 @@ class ProviderActionController extends Controller
             }
 
             $providerId = RequestTable::where('id', $id)->first()->physician_id;
-            $pdf->save(storage_path('app/encounterForm/' . $id . $data->first_name . "-medical.pdf"));
+            $pdf->save(storage_path('app/encounterForm/' . $id . $data->first_name . '-medical.pdf'));
             RequestWiseFile::create([
                 'request_id' => $id,
-                'file_name' => $id .  $data->first_name . "-medical.pdf",
+                'file_name' => $id .  $data->first_name . '-medical.pdf',
                 'physician_id' => $providerId,
                 'is_finalize' => true,
             ]);
 
-            return redirect()->route('provider.status', $status == 6 ? 'conclude' : 'active')->with('successMessage', "Form Finalized Successfully");
+            return redirect()->route('provider.status', $status === 6 ? 'conclude' : 'active')->with('successMessage', 'Form Finalized Successfully');
         } catch (\Throwable $th) {
             return view('errors.500');
         }

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use DatePeriod;
+use App\Models\PhysicianRegion;
+use App\Models\Provider;
+use App\Models\Shift;
+use App\Models\ShiftDetail;
+use App\Models\ShiftDetailRegion;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use DatePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Shift;
-use App\Models\Provider;
-use App\Models\ShiftDetail;
-use App\Models\PhysicianRegion;
-use App\Models\ShiftDetailRegion;
 
 class ProviderSchedulingController extends Controller
 {
@@ -53,13 +53,13 @@ class ProviderSchedulingController extends Controller
 
         // Check whether the shift created for provider is already having shift for that time period
         $shifts = Shift::with('shiftDetail')->get();
-        $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
+        $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
         $userId = Auth::user()->id;
         $providerId = Provider::where('user_id', $userId)->first()->id;
 
         // check for each shifts, whether it have the same time period or in-between time period
         foreach ($currentShifts as $currentShift) {
-            if ($currentShift->physician_id == $providerId) {
+            if ($currentShift->physician_id === $providerId) {
                 // for the currentShift if the physician_id matches requested physician check for the time period
                 $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
                 $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;
@@ -68,7 +68,7 @@ class ProviderSchedulingController extends Controller
                     $shiftStartTimeCurrent <= $request->shiftStartTime && $shiftEndTimeCurrent > $request->shiftStartTime ||
                     $shiftStartTimeCurrent <= $request->shiftEndTime && $shiftEndTimeCurrent > $request->shiftEndTime
                 ) {
-                    return redirect()->back()->with('shiftOverlap', "You have an shift during the time period you provided");
+                    return redirect()->back()->with('shiftOverlap', 'You have an shift during the time period you provided');
                 }
             }
         }
@@ -79,7 +79,7 @@ class ProviderSchedulingController extends Controller
             $weekDays = null;
         }
         $request->validate(['region' => 'required|in:1,2,3,4,5']);
-        if ($request['is_repeat'] == true) {
+        if ($request['is_repeat'] === true) {
             $is_repeat = 1;
         } else {
             $is_repeat = 0;
@@ -108,7 +108,7 @@ class ProviderSchedulingController extends Controller
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
 
-        if ($is_repeat == 1) {
+        if ($is_repeat === 1) {
             $startDate = Carbon::parse($request['shiftDate']);
             $endDate = Carbon::parse($request['shiftDate']);
 
@@ -154,7 +154,7 @@ class ProviderSchedulingController extends Controller
             }
         }
 
-        return redirect()->back()->with('shiftAdded', "Shift Added Successfully");
+        return redirect()->back()->with('shiftAdded', 'Shift Added Successfully');
     }
 
     /**
@@ -174,7 +174,7 @@ class ProviderSchedulingController extends Controller
             return [
                 'shiftId' => $event->getShiftData->id,
                 'shiftDetailId' => $event->id,
-                'title' => $event->getShiftData->provider->first_name . " " . $event->getShiftData->provider->last_name,
+                'title' => $event->getShiftData->provider->first_name . ' ' . $event->getShiftData->provider->last_name,
                 'shiftDate' => $event->shift_date,
                 'startTime' => $event->start_time,
                 'endTime' => $event->end_time,
@@ -200,17 +200,17 @@ class ProviderSchedulingController extends Controller
      */
     public function providerEditShift(Request $request)
     {
-        if ($request['action'] == 'save') {
+        if ($request['action'] === 'save') {
             // Check whether the shift created for provider is already having shift for that time period
             $shifts = Shift::with('shiftDetail')->get();
-            $currentShifts = $shifts->whereIn("start_date", $request->shiftDate);
+            $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
 
             $userId = Auth::user()->id;
             $providerId = Provider::where('user_id', $userId)->first()->id;
 
             // check for each shifts, whether it have the same time period or in-between time period
             foreach ($currentShifts as $currentShift) {
-                if ($currentShift->physician_id == $providerId) {
+                if ($currentShift->physician_id === $providerId) {
                     // for the currentShift if the physician_id matches requested physician check for the time period
                     $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
                     $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;
@@ -219,7 +219,7 @@ class ProviderSchedulingController extends Controller
                         $shiftStartTimeCurrent <= $request->shiftStartTime && $shiftEndTimeCurrent > $request->shiftStartTime ||
                         $shiftStartTimeCurrent <= $request->shiftEndTime && $shiftEndTimeCurrent > $request->shiftEndTime
                     ) {
-                        return redirect()->back()->with('shiftOverlap', "You have an shift during the time period you provided");
+                        return redirect()->back()->with('shiftOverlap', 'You have an shift during the time period you provided');
                     }
                 }
             }
@@ -228,11 +228,12 @@ class ProviderSchedulingController extends Controller
                 'shift_date' => $request->shiftDate,
                 'start_time' => $request->shiftTimeStart,
                 'end_time' => $request->shiftTimeEnd,
-                'modified_by' => "Provider"
+                'modified_by' => 'Provider',
             ]);
 
             return redirect()->back()->with('shiftEdited', 'Shift Edited Successfully!');
-        } else if ($request['action'] == 'delete') {
+        }
+        if ($request['action'] === 'delete') {
             ShiftDetail::where('id', $request->shiftDetailId)->delete();
             ShiftDetailRegion::where('shift_detail_id', $request->shiftDetailId)->delete();
 
@@ -241,7 +242,7 @@ class ProviderSchedulingController extends Controller
             if ($data->isEmpty()) {
                 Shift::where('id', $request->shiftId)->delete();
             }
-            return redirect()->back()->with("shiftDeleted", "Shift Deleted Successfully!");
+            return redirect()->back()->with('shiftDeleted', 'Shift Deleted Successfully!');
         }
     }
 }

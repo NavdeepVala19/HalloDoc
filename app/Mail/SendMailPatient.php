@@ -34,9 +34,9 @@ class SendMailPatient extends Mailable
     {
         if ($this->sender->users) {
             if ($this->sender->users->userRoles->role_id === 1) {
-                $subject = "Message from Admin";
+                $subject = 'Message from Admin';
             } else {
-                $subject = "Message from Provider";
+                $subject = 'Message from Provider';
             }
         }
 

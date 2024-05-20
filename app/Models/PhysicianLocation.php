@@ -12,7 +12,6 @@ class PhysicianLocation extends Model
     use SoftDeletes;
 
     protected $table = 'physician_location';
-
     
     protected $fillable = [
         'id',

@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Users;
+use App\Models\AllUsers;
+use App\Models\EmailLog;
+use App\Models\UserRoles;
 use App\Models\RequestTable;
 use Illuminate\Http\Request;
+use App\Models\RequestClient;
 use App\Models\RequestStatus;
+
+use App\Mail\SendEmailAddress;
+
+use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use App\Services\PatientDashboardService;
 use App\Http\Requests\CreatePatientRequest;
-
 
 class PatientDashboardController extends Controller
 {
@@ -26,8 +35,8 @@ class PatientDashboardController extends Controller
             if ($clientData->status >= 4) {
                 return view('patientSite.agreementDone')->with(['caseStatus' => $clientData->status]);
             }
-            if (!empty($clientData)) {
-                return view("patientSite/patientAgreement", compact('clientData'));
+            if ($clientData) {
+                return view('patientSite/patientAgreement', compact('clientData'));
             }
         } catch (\Throwable $th) {
             return view('errors.404');
@@ -38,7 +47,7 @@ class PatientDashboardController extends Controller
     public function agreeAgreement(Request $request)
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
-        if ($caseStatus == 4 || $caseStatus == 11) {
+        if ($caseStatus === 4 || $caseStatus === 11) {
             return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -60,18 +69,18 @@ class PatientDashboardController extends Controller
     {
         $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
 
-        if ($caseStatus == 4 || $caseStatus == 11) {
+        if ($caseStatus === 4 || $caseStatus === 11) {
             return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
         RequestTable::where('id', $request->requestId)->update([
             'status' => 11,
-            'physician_id' => DB::raw("Null"),
-            'declined_by' => 'Patient'
+            'physician_id' => DB::raw('Null'),
+            'declined_by' => 'Patient',
         ]);
         RequestStatus::create([
             'request_id' => $request->requestId,
             'status' => 11,
-            'physician_id' => DB::raw("Null"),
+            'physician_id' => DB::raw('Null'),
             'notes' => $request->cancelReason,
         ]);
         return redirect()->back()->with('agreementCancelled', 'Agreement Cancelled Sucessfully');
@@ -84,9 +93,9 @@ class PatientDashboardController extends Controller
     public function createNewRequest()
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
-        return view("patientSite/patientNewRequest", compact('email'));
+        return view('patientSite/patientNewRequest', compact('email'));
     }
 
     /**
@@ -97,7 +106,7 @@ class PatientDashboardController extends Controller
     public function createNewPatient(Request $request,PatientDashboardService $patientDashboardService)
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
@@ -126,7 +135,7 @@ class PatientDashboardController extends Controller
      */
     public function createSomeoneRequest()
     {
-        return view("patientSite/patientSomeoneRequest");
+        return view('patientSite/patientSomeoneRequest');
     }
 
 
@@ -154,7 +163,7 @@ class PatientDashboardController extends Controller
     public function patientDashboard()
     {
         $userData = Auth::user();
-        $email = $userData["email"];
+        $email = $userData['email'];
 
         $userId = Users::select('id')->where('email', $email);
         $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->latest('id')->paginate(10);

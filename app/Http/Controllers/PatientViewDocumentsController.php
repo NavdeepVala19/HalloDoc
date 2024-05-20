@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
-use Illuminate\Http\Request;
 use App\Models\RequestWiseFile;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use ZipArchive;
 
 class PatientViewDocumentsController extends Controller
 {
@@ -52,7 +52,7 @@ class PatientViewDocumentsController extends Controller
 
         $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->first();
 
-        if (!empty($request->document)) {
+        if ($request->document) {
             // store documents in request_wise_file table
             $requestFile = new RequestWiseFile();
             $requestFile->request_id = $requestWiseData->request_id;
@@ -93,7 +93,7 @@ class PatientViewDocumentsController extends Controller
     public function downloadSelectedFiles(Request $request)
     {
         try {
-            if (empty($request->input('selected_files'))) {
+            if (!$request->input('selected_files')) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to download!');

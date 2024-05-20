@@ -8,7 +8,6 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
     private $data;
 
     public function __construct($data)
@@ -32,35 +31,19 @@ class ActiveStatusExport implements FromCollection, WithCustomCsvSettings, WithH
         $adminActiveData = $this->data->get();
 
         return collect($adminActiveData)->map(function ($adminActive) {
-            $patientName = null;
-            $patientLastName = null;
-            $dateOfBirth = null;
-            $street = null;
-            $city = null;
-            $patientMobile = null;
-            $state = null;
-
             if (isset($adminActive) && $adminActive->requestClient) {
-                $patientName = $adminActive->requestClient->first_name;
-                $patientLastName = $adminActive->requestClient->last_name;
-                $dateOfBirth = $adminActive->requestClient->date_of_birth;
-                $patientMobile = $adminActive->requestClient->phone_number;
-                $street = $adminActive->requestClient->street;
-                $city = $adminActive->requestClient->city;
-                $state = $adminActive->requestClient->state;
+                return [
+                    'PatientName' => $adminActive->requestClient->first_name . ' ' .  $adminActive->requestClient->last_name,
+                    'Date of Birth' => $adminActive->requestClient->date_of_birth,
+                    'Requestor' => $adminActive->first_name . ' ' . $adminActive->last_name,
+                    'PhysicianName' => $adminActive->provider->first_name . ' ' . $adminActive->provider->last_name,
+                    'RequestedDate' => $adminActive->created_at,
+                    'PatientMobile' => $adminActive->requestClient->phone_number,
+                    'RequestorMobile' => $adminActive->phone_number,
+                    'Address' => $adminActive->requestClient->street . ',' . $adminActive->requestClient->city . ',' . $adminActive->requestClient->state,
+                    'Notes' => $adminActive->requestClient->notes,
+                ];
             }
-
-            return [
-                'PatientName' => $patientName . ' ' . $patientLastName,
-                'Date of Birth' => $dateOfBirth,
-                'Requestor' => $adminActive->first_name . ' ' . $adminActive->last_name,
-                'PhysicianName' => $adminActive->provider->first_name . ' ' . $adminActive->provider->last_name,
-                'RequestedDate' => $adminActive->created_at,
-                'PatientMobile' => $patientMobile,
-                'RequestorMobile' => $adminActive->phone_number,
-                'Address' => $street . ',' . $city . ',' . $state,
-                'Notes' => $adminActive->requestClient->notes,
-            ];
         });
     }
 }

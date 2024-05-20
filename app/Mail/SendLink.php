@@ -17,7 +17,7 @@ class SendLink extends Mailable
     /**
      * Create a new message instance.
      */
-    public $data;
+    private $data;
     public function __construct($data)
     {
         $this->data = $data;
@@ -41,6 +41,9 @@ class SendLink extends Mailable
     {
         return new Content(
             view: 'email.createNewRequest',
+            with: [
+                'data' => $this->data,
+            ]
         );
     }
 

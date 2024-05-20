@@ -17,7 +17,7 @@ class SendEmailAddress extends Mailable
      * Create a new message instance.
      */
 
-    public $emailAddress;
+    private $emailAddress;
 
     public function __construct($email)
     {
@@ -25,7 +25,8 @@ class SendEmailAddress extends Mailable
     }
 
 
-    public function build(){
+    public function build()
+    {
         return view('email.sendEmailAddress')->with(['emailAddress']);
     }
 
@@ -46,6 +47,9 @@ class SendEmailAddress extends Mailable
     {
         return new Content(
             view: 'email.sendEmailAddress',
+            with: [
+                'emailAddress' => $this->emailAddress,
+            ]
         );
     }
 

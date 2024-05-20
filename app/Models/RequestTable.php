@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\RequestClient;
-use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

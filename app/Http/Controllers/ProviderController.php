@@ -2,41 +2,36 @@
 
 namespace App\Http\Controllers;
 
-// Different Models used in these Controller
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Admin;
-use App\Models\Users;
+use App\Http\Requests\ProviderCreateRequest;
+use App\Http\Requests\SendMailRequest;
+
+use App\Mail\ProviderRequest;
+use App\Mail\SendEmailAddress;
 use App\Mail\SendMail;
-use App\Models\Regions;
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
+
+use App\Models\Admin;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
+use App\Models\PhysicianRegion;
 use App\Models\Provider;
-use App\Models\UserRoles;
-
-// For sending Mails
+use App\Models\Regions;
+use App\Models\RequestClient;
 use App\Models\RequestNotes;
 use App\Models\requestTable;
+use App\Models\SMSLogs;
+use App\Models\User;
+use App\Models\UserRoles;
+use App\Models\Users;
+
+use Carbon\Carbon;
+
 use Illuminate\Http\Request;
-
-// For Sending SMS
-use App\Mail\ProviderRequest;
-use App\Models\RequestClient;
-
-use App\Mail\SendEmailAddress;
-// Common facades used for different functionalities
-use App\Models\PhysicianRegion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-// For Date Formatting
 use Illuminate\Support\Facades\Mail;
-
-use App\Http\Requests\SendMailRequest;
 use Illuminate\Support\Facades\Session;
-use App\Http\Requests\ProviderCreateRequest;
+
+use Twilio\Rest\Client;
 
 class ProviderController extends Controller
 {
@@ -164,7 +159,7 @@ class ProviderController extends Controller
      * @param string $category different category names.
      * @return \illuminate\View\View
      */
-    public function cases(Request $request, $status = 'new', $category = "all")
+    public function cases(Request $request, $status = 'new', $category = 'all')
     {
         // Use Session to filter by category and searchTerm
         $searchTerm = $request->session()->get('searchTerm', null);
@@ -265,7 +260,7 @@ class ProviderController extends Controller
         if ($isEmailStored === null) {
             // store email and phoneNumber in users table
             $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
+            $requestEmail->username = $request->first_name . ' ' . $request->last_name;
             $requestEmail->email = $request->email;
             $requestEmail->phone_number = $request->phone_number;
             $requestEmail->save();
@@ -368,7 +363,7 @@ class ProviderController extends Controller
             EmailLog::create([
                 'role_id' => 3,
                 'request_id' =>  $requestTable->id,
-                'recipient_name' => $request->first_name . " " . $request->last_name,
+                'recipient_name' => $request->first_name . ' ' . $request->last_name,
                 'confirmation_number' => $confirmationNumber,
                 'provider_id' => $providerId,
                 'is_email_sent' => 1,
@@ -383,7 +378,7 @@ class ProviderController extends Controller
             return redirect()->route('provider.status', 'pending')->with('successMessage', 'Email for create account is sent & request created successfully!');
         }
         // Redirect to provider status page with success message
-        return redirect()->route("provider.status", 'pending')->with('successMessage', "Request Created Successfully!");
+        return redirect()->route("provider.status", 'pending')->with('successMessage', 'Request Created Successfully!');
     }
 
     /**
@@ -440,7 +435,7 @@ class ProviderController extends Controller
             'sent_date' => now(),
             'is_email_sent' => 1,
             'action' => 3,
-            'recipient_name' => $admin->first_name . " " . $admin->last_name,
+            'recipient_name' => $admin->first_name . ' ' . $admin->last_name,
             'email_template' => 'email.providerRequest',
             'email' => $admin->email,
             'sent_tries' => 1,
@@ -468,18 +463,18 @@ class ProviderController extends Controller
 
         try {
             // send SMS Logic
-            $sid = getenv("TWILIO_SID");
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $senderNumber = getenv("TWILIO_PHONE_NUMBER");
+            $sid = getenv('TWILIO_SID');
+            $token = getenv('TWILIO_AUTH_TOKEN');
+            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
 
             $twilio = new Client($sid, $token);
 
             $twilio->messages
                 ->create(
-                    "+91 99780 71802", // to
+                    '+91 99780 71802', // to
                     [
-                        "body" => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
-                        "from" =>  $senderNumber
+                        'body' => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
+                        'from' =>  $senderNumber
                     ]
                 );
         } catch (\Throwable $th) {
@@ -489,11 +484,11 @@ class ProviderController extends Controller
         $user = Auth::user();
         $providerId = Provider::where('user_id', $user->id)->first()->id;
 
-        $name = $request->first_name . " " . $request->last_name;
+        $name = $request->first_name . ' ' . $request->last_name;
 
         SMSLogs::create(
             [
-                'sms_template' => "Hii ,Click on the below link to create request",
+                'sms_template' => 'Hii ,Click on the below link to create request',
                 'mobile_number' => $request->phone_number,
                 'recipient_name' => $name,
                 'provider_id' => $providerId,
@@ -526,6 +521,6 @@ class ProviderController extends Controller
             'action' => 1,
         ]);
 
-        return redirect()->back()->with('successMessage', "Link Sent Successfully!");
+        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
     }
 }
