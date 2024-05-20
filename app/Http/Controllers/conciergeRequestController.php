@@ -7,7 +7,7 @@ use App\Http\Requests\CreateConciergeRequest;
 use App\Services\ConciergeRequestSubmitService;
 
 // this controller is responsible for creating/storing the concierge request
-class conciergeRequestController extends Controller
+class ConciergeRequestController extends Controller
 {
     /**
      * display concierge request page

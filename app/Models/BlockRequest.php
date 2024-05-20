@@ -20,6 +20,10 @@ class BlockRequest extends Model
         'is_active'
     ];
 
+    protected $guarded = [
+        'request_id ',
+    ];
+
     public function request_status()
     {
         return $this->belongsTo(RequestStatus::class, 'request_id', 'request_id');

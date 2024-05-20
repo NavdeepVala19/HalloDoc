@@ -316,7 +316,7 @@ $(document).ready(function () {
         var is_notifications = checkbox.prop("checked") ? 1 : 0; // Ternary operator to set is_notify
 
         $.ajax({
-            url: "/admin-providers/stopNotification/mobile",
+            url: "/admin-providers/stopNotification",
             type: "POST",
             data: {
                 stopNotificationsCheckId: stopNotificationsCheckId,

@@ -35,10 +35,15 @@ class PatientDashboardService
         return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
     }
 
+    /**
+     * it stores request in request_client and request table
+     * @param mixed $request (input enter by user)
+     * @param mixed $email (email of loged in patient)
+     * @return object|Users|\Illuminate\Database\Eloquent\Model|null
+     */
     public function storeMeRequest($request,$email)
     {
         $isEmailStored = Users::where('email', $email)->first();
-
         $RequestTable= RequestTable::create([
             'request_type_id'=>1,
             'status'=>1,
@@ -84,20 +89,27 @@ class PatientDashboardService
         return $isEmailStored;
     }
 
+
+    /**
+     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     * @param mixed $request (input enter by user)
+     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
+     */
     public function storeSomeOneRequest($request)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
         // Store user details if email is not already stored
         if ($isEmailStored == null) {
-            $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
-            $requestEmail->email = $request->email;
-            $requestEmail->phone_number = $request->phone_number;
-            $requestEmail->save();
+            $storePatientInUsers = new Users();
+            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUsers->email = $request->email;
+            $storePatientInUsers->phone_number = $request->phone_number;
+            $storePatientInUsers->save();
 
-            $requestUsers = new AllUsers();
-            $requestUsers->user_id = $requestEmail->id;
-            $requestUsers->fill($request->only([
+            $requestInAllUsers = new AllUsers();
+            $requestInAllUsers->user_id = $storePatientInUsers->id;
+            $requestInAllUsers->fill($request->only([
                 'first_name',
                 'last_name',
                 'email',
@@ -107,16 +119,16 @@ class PatientDashboardService
                 'state',
                 'zipcode'
             ]));
-            $requestUsers->save();
+            $requestInAllUsers->save();
 
-            $userRolesEntry = new UserRoles();
-            $userRolesEntry->role_id = 3;
-            $userRolesEntry->user_id = $requestEmail->id;
-            $userRolesEntry->save();    
+            $userRole = new UserRoles();
+            $userRole->role_id = 3;
+            $userRole->user_id = $storePatientInUsers->id;
+            $userRole->save();    
         }
         
         $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $requestEmail->id;
+        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id;
         $requestData->request_type_id = 1;
         $requestData->status = 1;
         $requestData->fill($request->only([
@@ -165,7 +177,7 @@ class PatientDashboardService
             // Send email if email is not already stored
             if ($isEmailStored == null) {
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
+                Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,
@@ -186,5 +198,38 @@ class PatientDashboardService
         } catch (\Throwable $th) {
             return view('errors.500');
         }
+    }
+
+
+    /**
+     * it update patient profile data in allusers and users table
+     * @param mixed $request (input enter by user)
+     * @param mixed $userData (loged in patient data)
+     * @return bool
+     */
+    public function patientProfileUpdate($request, $userData){
+
+        $updateInUserTable = [
+            'email' => $request->input('email'),
+            'phone_number' => $request->input('phone_number'),
+            'username' => $request->input('first_name') . $request->input('last_name'),
+        ];
+
+        $updateInAllUserTable = [
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'mobile' => $request->input('phone_number'),
+            'date_of_birth' => $request->input('date_of_birth'),
+            'city' => $request->input('city'),
+            'state' => $request->input('state'),
+            'street' => $request->input('street'),
+            'zipcode' => $request->input('zipcode')
+        ];
+
+        Users::where('email', $userData['email'])->update($updateInUserTable);
+        AllUsers::where('email', $userData['email'])->update($updateInAllUserTable);
+
+        return true;
     }
 }

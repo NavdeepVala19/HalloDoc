@@ -861,11 +861,11 @@ class AdminController extends Controller
      */
     public function searchRecordsView(RecordsService $recordsService)
     {
-        $combinedData=$recordsService->searchRecordsListing();
+        $records=$recordsService->searchRecordsListing();
         Session::forget('request_status');
         Session::forget('request_type');
 
-        return view('adminPage.records.searchRecords', compact('combinedData'));
+        return view('adminPage.records.searchRecords', compact('records'));
     }
 
 
@@ -876,7 +876,7 @@ class AdminController extends Controller
      */
     public function searchRecordSearching(Request $request,RecordsService $recordsService)
     {
-        $combinedData = $recordsService->searchRecords($request);
+        $records = $recordsService->searchRecords($request);
         session([
             'patient_name' => $request->patient_name,
             'from_date_of_service' => $request->from_date_of_service,
@@ -886,21 +886,19 @@ class AdminController extends Controller
             'provider_name' => $request->provider_name,
         ]);
 
-        // if (!empty($request->request_status)) {
         if ($request->has('request_status')) {
             Session::put('request_status', $request->request_status);
         } else {
             Session::forget('request_status');
         }
 
-        // if (!empty($request->request_type)) {
         if ($request->has('request_type')) {
             Session::put('request_type', $request->request_type);
         } else {
             Session::forget('request_type');
         }
 
-        return view('adminPage.records.searchRecords', compact('combinedData'));
+        return view('adminPage.records.searchRecords', compact('records'));
     }
 
 
@@ -961,9 +959,9 @@ class AdminController extends Controller
      */
     public function smsRecordsView()
     {
-        $sms = SMSLogs::orderByDesc('id')->paginate(10);
+        $smsLogs = SMSLogs::latest('id')->paginate(10);
         Session::forget('role_type');
-        return view('adminPage.records.smsLogs', compact('sms'));
+        return view('adminPage.records.smsLogs', compact('smsLogs'));
     }
 
 
@@ -992,10 +990,8 @@ class AdminController extends Controller
             Session::forget('role_type');
         }
 
-        return view('adminPage.records.smsLogs', compact('sms'));
+        return view('adminPage.records.smsLogs', compact('smsLogs'));
     }
-
-
 
     /**
      * List of block request
@@ -1028,7 +1024,7 @@ class AdminController extends Controller
     }
 
     /**
-     * it check and unccheck checkbox in is_Active columns of listing through ajax
+     * it check and uncheck checkbox in is_Active columns of listing through ajax
      * @param \Illuminate\Http\Request $request (input which is check or uncheck by admin)
      * @return void
      */
@@ -1048,7 +1044,6 @@ class AdminController extends Controller
     {
         RequestTable::where('id', $id)->update(['status' => 1]);
         RequestStatus::where('request_id', $id)->update(['status' => 1]);
-
         BlockRequest::where('request_id', $id)->delete();
         return redirect()->back()->with('message', 'patient is unblock');
     }
@@ -1078,11 +1073,11 @@ class AdminController extends Controller
                 ->where('user_roles.user_id', $id)
                 ->get();
 
-            if ($userAccessRoleName->first()->name === 'admin') {
+            if ($userAccessRoleName->value('name') === 'admin') {
                 return redirect()->route('edit.admin.profile', ['id' =>  Crypt::encrypt($id)]);
-            } elseif ($userAccessRoleName->first()->name === 'physician') {
-                $getProviderId = Provider::where('user_id', $id);
-                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId->first()->id)]);
+            } elseif ($userAccessRoleName->value('name')  === 'physician') {
+                $getProviderId = Provider::where('user_id', $id)->first()->id;
+                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId)]);
             }
         } catch (\Throwable $th) {
             return view('errors.404');
@@ -1224,7 +1219,7 @@ class AdminController extends Controller
      * @return \Illuminate\Database\Eloquent\Builder
      */
 
-    public function fetchQuery($status, $category, $searchTerm, $region)
+    public function filterAdminListing($status, $category, $searchTerm, $region)
     {
         if (is_array($this->getStatusId($status))) {
             $query = RequestTable::with('requestClient')->whereIn('status', $this->getStatusId($status));
@@ -1275,7 +1270,7 @@ class AdminController extends Controller
             $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->fetchQuery($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
+            $cases = $this->filterAdminListing($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
         }
 
         $bladeFileName = 'filter-' . $request->status;
@@ -1298,14 +1293,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-
-        $regionId = $request->session()->get('regionId');
+        $regionId = session('regionId');
 
         if ($region === "All Regions") {
             $exportNewData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportNewData = $this->fetchQuery($status, $category, $search, $regionName);
+            $exportNewData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
         if ($exportNewData->get()->isEmpty()) {
@@ -1327,15 +1321,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-
-        $regionId = $request->session()->get('regionId');
-
+        $regionId = session('regionId');
 
         if ($region == "All Regions") {
             $exportPendingData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportPendingData = $this->fetchQuery($status, $category, $search, $regionName);
+            $exportPendingData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
         if ($exportPendingData->get()->isEmpty()) {
@@ -1358,15 +1350,14 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-
-        $regionId = $request->session()->get('regionId');
+        $regionId = session('regionId');
 
 
         if ($region == "All Regions") {
             $exportActiveData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportActiveData = $this->fetchQuery($status, $category, $search, $regionName);
+            $exportActiveData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
         if ($exportActiveData->get()->isEmpty()) {
@@ -1389,14 +1380,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-
-        $regionId = $request->session()->get('regionId');
+        $regionId = session('regionId');
 
         if ($region == "All Regions") {
             $exportConcludeData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportConcludeData = $this->fetchQuery($status, $category, $search, $regionName);
+            $exportConcludeData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
         if ($exportConcludeData->get()->isEmpty()) {
@@ -1419,13 +1409,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $regionId = $request->session()->get('regionId');
+        $regionId = session('regionId');
 
         if ($region == "All Regions") {
             $exportToCloseData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportToCloseData = $this->fetchQuery($status, $category, $search, $regionName);
+            $exportToCloseData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
         if ($exportToCloseData->get()->isEmpty()) {
@@ -1447,14 +1437,13 @@ class AdminController extends Controller
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
-        $regionId = $request->session()->get('regionId');
-
+        $regionId = session('regionId');
 
         if ($region == "All Regions") {
             $exportUnpaidData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportUnpaidData = $this->fetchQuery($status, $category, $search, $regionName);
+            $exportUnpaidData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
         if ($exportUnpaidData->get()->isEmpty()) {

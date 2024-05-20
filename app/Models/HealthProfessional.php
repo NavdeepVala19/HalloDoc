@@ -13,7 +13,19 @@ class HealthProfessional extends Model
     use SoftDeletes;
 
     protected $table = 'health_professional';
-    protected $guarded = [];
+
+    protected $fillable = [
+        'vendor_name',
+        'fax_number',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'phone_number',
+        'email',
+        'business_contact',
+    ];
+
 
     public function healthProfessionalType()
     {

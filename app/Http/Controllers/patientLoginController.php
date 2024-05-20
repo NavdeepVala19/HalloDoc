@@ -11,25 +11,23 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 
-class patientLoginController extends Controller
+class PatientLoginController extends Controller
 {
-
     /**
      *display patient login screen
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function loginScreen()
+    public function patientLoginScreen()
     {
         return view("patientSite/patientLogin");
     }
-
 
     /**
      * it verfies user(patient) credentials are valid or not
      * @param \Illuminate\Http\Request $request
      * @return mixed|\Illuminate\Http\RedirectResponse
      */
-    public function userLogin(Request $request)
+    public function patientLogin(Request $request)
     {
         $request->validate([
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
@@ -43,10 +41,10 @@ class patientLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $patientCredentials = Auth::user();
-            $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-            if ($userRolesData == null) {
+            $patientRole = UserRoles::where('user_id', $patientCredentials->id)->first();
+            if ($patientRole == null) {
                 return redirect()->route('patient.login.view')->with('error', 'submit request with registered email');
-            } elseif ($userRolesData->role_id === 3) {
+            } elseif ($patientRole->role_id === 3) {
                 return redirect()->route('patient.dashboard');
             } else {
                 return back()->with('error', 'Invalid credentials');
@@ -55,7 +53,6 @@ class patientLoginController extends Controller
             $user = Users::where("email", $request->email)->first();
             if ($user == null) {
                 return back()->with('error', 'We could not find an account associated with that email address');
-
             } else {
                 return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
             }
@@ -72,7 +69,6 @@ class patientLoginController extends Controller
         return view("patientSite/patientResetPassword");
     }
 
-
     /**
      * it checks email in users table and send reset password form to that email
      * @param \Illuminate\Http\Request $request
@@ -85,11 +81,12 @@ class patientLoginController extends Controller
         ]);
 
         $user = Users::where('email', $request->email)->first();
+        
+        // check user and userRoles is exist or not
         if ($user) {
-            $userRolesData = UserRoles::where('user_id', $user->id)->first();
+            $patientRole = UserRoles::where('user_id', $user->id)->first();
         }
-
-        if ($user == null || $userRolesData->role_id == 1 || $userRolesData->role_id == 2) {
+        if ($user == null || $patientRole->role_id == 1 || $patientRole->role_id == 2) {
             return back()->with('error', 'no such email is registered');
         }
 
@@ -97,7 +94,7 @@ class patientLoginController extends Controller
         $user->token = $token;
         $user->save();
 
-        $userToken = Users::where('email', $request->email)->first()->token;
+        $userToken = Users::where('email', $request->email)->value('token');
 
         Mail::send('email.forgetPassword', ['token' => $userToken], function ($message) use ($request) {
             $message->to($request->email);

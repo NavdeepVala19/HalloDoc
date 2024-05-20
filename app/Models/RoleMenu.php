@@ -10,7 +10,6 @@ class RoleMenu extends Model
     use HasFactory;
 
     protected $table = 'role_menu';
-    protected $guarded = [];
 
 
     public function Menu()

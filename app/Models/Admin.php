@@ -21,9 +21,9 @@ class Admin extends Model
         'zip',
         'alt_phone',
         'status',
+        'alt_phone',
     ];
 
-    protected $guarded = [];
 
     public function users()
     {

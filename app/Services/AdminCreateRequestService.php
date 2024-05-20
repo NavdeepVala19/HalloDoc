@@ -25,7 +25,7 @@ class AdminCreateRequestService
      */
     private function generateConfirmationNumber($request)
     {
-        $currentTime = Carbon::now();
+        $currentTime = now();
         $currentDate = $currentTime->format('Y');
         $todayDate = $currentTime->format('Y-m-d');
         $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
@@ -37,7 +37,6 @@ class AdminCreateRequestService
         return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
     }
 
-
     /**
      * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
@@ -48,15 +47,15 @@ class AdminCreateRequestService
 
         // Store user details if email is not already stored
         if ($isEmailStored == null) {
-            $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
-            $requestEmail->email = $request->email;
-            $requestEmail->phone_number = $request->phone_number;
-            $requestEmail->save();
+            $storePatientInUser = new Users();
+            $storePatientInUser->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUser->email = $request->email;
+            $storePatientInUser->phone_number = $request->phone_number;
+            $storePatientInUser->save();
 
-            $requestUsers = new AllUsers();
-            $requestUsers->user_id = $requestEmail->id;
-            $requestUsers->fill($request->only([
+            $storePatientInAllUser = new AllUsers();
+            $storePatientInAllUser->user_id = $storePatientInUser->id;
+            $storePatientInAllUser->fill($request->only([
                 'first_name',
                 'last_name',
                 'email',
@@ -66,16 +65,16 @@ class AdminCreateRequestService
                 'state',
                 'zipcode'
             ]));
-            $requestUsers->save();
+            $storePatientInAllUser->save();
 
-            $userRolesEntry = new UserRoles();
-            $userRolesEntry->role_id = 3;
-            $userRolesEntry->user_id = $requestEmail->id;
-            $userRolesEntry->save();
+            $userRole = new UserRoles();
+            $userRole->role_id = 3;
+            $userRole->user_id = $storePatientInUser->id;
+            $userRole->save();
         }
 
         $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $requestEmail->id;
+        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUser->id;
         $requestData->request_type_id = 1;
         $requestData->status = 1;
         $requestData->fill($request->only([
@@ -103,7 +102,6 @@ class AdminCreateRequestService
         ]));
         $patientRequest->save();
 
-
         RequestNotes::create([
             'admin_notes' => $request->adminNote,
             'request_id' => $requestData->id,
@@ -120,7 +118,7 @@ class AdminCreateRequestService
             // Send email if email is not already stored
             if ($isEmailStored == null) {
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
+                Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,
@@ -143,6 +141,12 @@ class AdminCreateRequestService
         }
     }
 
+
+    /**
+     * it returns data of admin when admin route from user access to their profile edit page
+     * @param mixed $id (id of user table)
+     * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
+     */
     public function adminProfileEditThroughUserAccessPage($id)
     {
         $adminData = Admin::select(
@@ -170,6 +174,12 @@ class AdminCreateRequestService
         return $adminData;
     }
 
+
+    /**
+     * it will return data of admin when route from one page to their profile edit page
+     * @param mixed $id (id of user table)
+     * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
+     */
     public function adminProfile($id)
     {
         $adminProfileData = Admin::select(
@@ -197,10 +207,16 @@ class AdminCreateRequestService
         return $adminProfileData;
     }
 
+    /**
+     * it update admin profile administration information data in admin,allusers and users table
+     * @param mixed $request (input enter by user(admin))
+     * @param mixed $id (id of user table)
+     * @return bool
+     */
     public function updateAdminInformation($request, $id)
     {
         // Update in admin table
-        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
+        $updateAdminInformation = Admin::where('user_id', $id)->first();
         $updateAdminInformation->first_name = $request->first_name;
         $updateAdminInformation->last_name = $request->last_name;
         $updateAdminInformation->email = $request->email;
@@ -216,7 +232,6 @@ class AdminCreateRequestService
         $updateAdminInfoAllUsers->save();
 
         // update email and phone number in users table
-
         $updateUserInfo = Users::where('id', $id)->first();
         $updateUserInfo->email = $request->email;
         $updateUserInfo->phone_number = $request->phone_number;
@@ -225,11 +240,17 @@ class AdminCreateRequestService
         return true;
     }
 
+
+    /**
+     * it update admin profile Mailing & Billing Information data in admin and allusers table
+     * @param mixed $request (input enter by user(admin))
+     * @param mixed $id (id of user table)
+     * @return bool
+     */
     public function updateAdminMailInformation($request, $id)
     {
         // Update in admin table
-        $updateAdminInformation = Admin::with('users')->where('user_id', $id)->first();
-
+        $updateAdminInformation = Admin::where('user_id', $id)->first();
         $updateAdminInformation->city = $request->city;
         $updateAdminInformation->address1 = $request->address1;
         $updateAdminInformation->address2 = $request->address2;

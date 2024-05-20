@@ -17,5 +17,10 @@ class Concierge extends Model
         'city',
         'state',
         'zipcode',
+        'role_id',
+    ];
+    protected $guarded = [
+        'region_id',
+        'role_id',
     ];
 }

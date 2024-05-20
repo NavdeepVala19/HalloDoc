@@ -26,4 +26,5 @@ class PhysicianLocation extends Model
         'deleted_at'
     ];
 
+
 }

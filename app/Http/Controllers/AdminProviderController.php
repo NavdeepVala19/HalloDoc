@@ -5,26 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Users;
 use App\Models\Regions;
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
 use App\Models\AllUsers;
-use App\Models\EmailLog;
 use App\Models\Provider;
-use App\Models\UserRoles;
-use App\Models\ShiftDetail;
 use Illuminate\Http\Request;
-use App\Mail\ContactProvider;
 use App\Models\PhysicianRegion;
 use App\Models\PhysicianLocation;
 use App\Http\Requests\ProviderForm;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use App\Services\AdminProviderService;
 
 class AdminProviderController extends Controller
 {
-
     /**
      * listing of providersname,status,role,call status
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -97,26 +89,13 @@ class AdminProviderController extends Controller
     /**
      *  this function perform stop notification through ajax 
      * @param \Illuminate\Http\Request $request
-     * @return void
+     * @return void 
      */
     public function stopNotifications(Request $request)
     {
         $stopNotification = Provider::find($request->stopNotificationsCheckId);
         $stopNotification->update(['is_notifications' => $request->is_notifications]);
     }
-
-
-    /**
-     * This function perform same as above in mobile view
-     * @param \Illuminate\Http\Request $request
-     * @return void
-     */
-    public function stopNotificationsMobileView(Request $request)
-    {
-        $stopNotification = Provider::find($request->stopNotificationsCheckId);
-        $stopNotification->update(['is_notifications' => $request->is_notifications]);
-    }
-
 
     /**
      * display create new provider account page
@@ -169,10 +148,9 @@ class AdminProviderController extends Controller
     public function updateProviderAccountInfo(Request $request, $id)
     {
         // update data of providers in users table
-        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id);
-        $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider->first()->user_id)->first();
+        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->value('user_id');
+        $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider)->first();
 
-        // if (!empty($request->password)) {
         if ($request->password) {
             $request->validate([
                 'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
@@ -192,7 +170,7 @@ class AdminProviderController extends Controller
             $getProviderData->role_id = $request->role;
             $getProviderData->save();
 
-            $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider->first()->user_id)->first();
+            $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
             if ($updateProviderDataAllUsers) {
                 $updateProviderDataAllUsers->status = $request->status_type;
                 $updateProviderDataAllUsers->save();
@@ -300,12 +278,10 @@ class AdminProviderController extends Controller
         // soft delete 
         $providerInfo = Provider::where('id', $id)->first();
 
-        //Soft delete in allusers table
         AllUsers::where('user_id', $providerInfo->user_id)->delete();
-        PhysicianRegion::where('provider_id', $id)->delete();
         Users::where('id', $providerInfo->user_id)->delete();
+        PhysicianRegion::where('provider_id', $id)->delete();
         Provider::where('id', $id)->delete();
-
 
         return redirect()->route('admin.providers.list')->with('message', 'account is deleted');
     }

@@ -8,7 +8,7 @@ use App\Services\FamilyRequestSubmitService;
 
 // this controller is responsible for creating/storing the family request
 
-class familyRequestController extends Controller
+class FamilyRequestController extends Controller
 {
  /**
   * display family/friend request page

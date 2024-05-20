@@ -64,10 +64,10 @@
         <form action="{{route('admin.search.records')}}" method="post" id="exportSearchForm">
             @csrf
             {{-- The currentPage() method retrieves the current page number of the paginator. --}}
-            <input type="hidden" name="page" value="{{ $combinedData->currentPage() }}">
+            <input type="hidden" name="page" value="{{ $records->currentPage() }}">
 
             {{-- The perPage() method retrieves the number of items per page in the paginator. --}}
-            <input type="hidden" name="per_page" value="{{ $combinedData->perPage() }}">
+            <input type="hidden" name="per_page" value="{{ $records->perPage() }}">
 
             <div class="grid-4">
                 <div class="form-floating request-status-select">
@@ -157,12 +157,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if ($combinedData->isEmpty())
+                    @if ($records->isEmpty())
                     <tr>
                         <td colspan="100" class="no-record">No Records Found</td>
                     </tr>
                     @endif
-                    @foreach ($combinedData as $data )
+                    @foreach ($records as $data )
                     <tr>
                         <td>{{$data->first_name}}</td>
                         <td>
@@ -219,18 +219,18 @@
                 </tbody>
             </table>
             {{-- This ensures that the search criteria are preserved in the pagination links. --}}
-            {{ $combinedData->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+            {{ $records->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
         </div>
 
 
         <div class="mobile-listing mt-3">
             <div class="mobile-list">
-                @if ($combinedData->isEmpty())
+                @if ($records->isEmpty())
                 <div class="d-flex justify-content-center align-items-center">
                     <div class="no-record">No Records Found</div>
                 </div>
                 @endif
-                @foreach ( $combinedData as $data )
+                @foreach ( $records as $data )
                 <div class="main-section">
                     <h5 class="heading"> <input class="form-check-input" type="checkbox" value="" id="checkbox"> {{$data->first_name}} </h5>
                     <div class="detail-box">
@@ -312,7 +312,7 @@
                 @endforeach
             </div>
             {{-- {{ $combinedData->links('pagination::bootstrap-5') }} --}}
-            {{ $combinedData->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+            {{ $records->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
 
         </div>
     </div>

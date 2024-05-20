@@ -60,10 +60,10 @@
             @csrf
 
             {{-- The currentPage() method retrieves the current page number of the paginator. --}}
-            <input type="hidden" name="page" value="{{ $sms->currentPage() }}">
+            <input type="hidden" name="page" value="{{ $smsLogs->currentPage() }}">
 
             {{-- The perPage() method retrieves the number of items per page in the paginator. --}}
-            <input type="hidden" name="per_page" value="{{ $sms->perPage() }}">
+            <input type="hidden" name="per_page" value="{{ $smsLogs->perPage() }}">
 
 
             <div class="grid-6 email-search-box">
@@ -116,12 +116,12 @@
                     <td>Confirmation Number</td>
                 </thead>
                 <tbody>
-                    @if ($sms->isEmpty())
+                    @if ($smsLogs->isEmpty())
                     <tr>
                         <td colspan="100" class="no-record">No SMS Logs Found</td>
                     </tr>
                     @endif
-                    @foreach ($sms as $data)
+                    @foreach ($smsLogs as $data)
                     <tr>
                         <td>{{ $data->recipient_name }}</td>
                         <td>{{$data->action}}</td>
@@ -149,17 +149,17 @@
                 </tbody>
             </table>
             {{-- This ensures that the search criteria are preserved in the pagination links. --}}
-            {{ $sms->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+            {{ $smsLogs->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
 
         </div>
 
         <div class="mobile-listing">
-            @if ($sms->isEmpty())
+            @if ($smsLogs->isEmpty())
             <div class="d-flex justify-content-center align-items-center">
                 <div class="no-record">No SMS Logs Found</div>
             </div>
             @endif
-            @foreach ($sms as $data)
+            @foreach ($smsLogs as $data)
             <div class="mobile-list">
                 <div class="main-section">
                     <h5 class="heading">{{ $data->recipient_name }}</h5>
@@ -204,7 +204,7 @@
                 </div>
             </div>
             @endforeach
-            {{  $sms->appends(request()->except('page'))->links('pagination::bootstrap-5')  }}
+            {{  $smsLogs->appends(request()->except('page'))->links('pagination::bootstrap-5')  }}
         </div>
 
     </div>

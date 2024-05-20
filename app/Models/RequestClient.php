@@ -21,28 +21,16 @@ class RequestClient extends Model
         'first_name',
         'last_name',
         'phone_number',
-        'location',
         'address',
-        'noti_mobile',
-        'noti_email',
         'email',
-        'str_month',
-        'int_year',
-        'int_date',
-        'is_mobile',
         'street',
         'city',
         'state',
         'zipcode',
-        'CommunicationType',
-        'RemindReservationCount',
-        'RemindHouseCallCount',
-        'IsSetFollowupSent',
-        'IsReservationReminderSent',
-        'Latitude',
-        'Longitude',
-        'date_of_birth'
+        'date_of_birth',
+        'room',
     ];
+
 
     public function request()
     {

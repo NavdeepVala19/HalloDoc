@@ -59,8 +59,8 @@ route::post('/patient-registered', [PatientAccountController::class, 'createAcco
 
 
 //* Patient login page
-route::get('/patient/login', [PatientLoginController::class, 'loginScreen'])->name('patient.login.view');
-route::post('/patient/logged-in', [PatientLoginController::class, 'userLogin'])->name('patient.login');
+route::get('/patient/login', [PatientLoginController::class, 'patientLoginScreen'])->name('patient.login.view');
+route::post('/patient/logged-in', [PatientLoginController::class, 'patientLogin'])->name('patient.login');
 
 //* Reset password of patient
 route::get('/patient/forgot-password', [PatientLoginController::class, 'resetpassword'])->name('patient.forgot.password');
@@ -403,7 +403,6 @@ Route::middleware('CheckAdminLogin')->group(function () {
     route::get('/providers-map-Locations', [AdminProviderController::class, 'providerMapLocations'])->name('providerMapLocation');
 
     Route::post('/admin-providers/stopNotification', [AdminProviderController::class, 'stopNotifications'])->name('admin.provider.stop.notification');
-    Route::post('/admin-providers/stopNotification/mobile', [AdminProviderController::class, 'stopNotificationsMobileView'])->name('admin.provider.stop.notification.mobile');
 
     route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('send.request_support');
 

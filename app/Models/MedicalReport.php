@@ -45,4 +45,5 @@ class MedicalReport extends Model
         'followUp',
         'is_finalize'
     ];
+
 }

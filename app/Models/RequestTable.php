@@ -28,21 +28,15 @@ class RequestTable extends Model
         'status',
         'physician_id',
         'confirmation_no',
-        'declined_by',
-        'is_urgent_email_sent',
-        'last_wellness_date',
-        'is_mobile',
         'call_type',
         'completed_by_physician',
         'last_reservation_date',
-        'accepted_date',
         'relation_name',
         'case_number',
         'case_tag_physician',
-        'patient_account_id',
         'created_user_id',
-        'created_at',
     ];
+
 
     public function allusers()
     {

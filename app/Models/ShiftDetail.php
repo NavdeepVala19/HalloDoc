@@ -13,7 +13,7 @@ class ShiftDetail extends Model
     
     protected $table = 'shift_detail';
 
-    protected $guarded = [];
+
 
     public function shiftDetailRegion()
     {

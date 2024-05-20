@@ -10,5 +10,14 @@ class RequestNotes extends Model
     use HasFactory;
 
     protected $table = 'request_notes';
-    protected $guarded = [];
+
+    protected $fillable = [
+        'request_id',
+        'patient_notes',
+        'physician_notes',
+        'admin_notes',
+        'AdministrativeNotes',
+    ];
+
+
 }

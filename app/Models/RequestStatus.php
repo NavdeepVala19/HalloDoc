@@ -10,8 +10,18 @@ class RequestStatus extends Model
     use HasFactory;
 
     protected $table = 'request_status';
-    protected $guarded = [];
 
+    protected $fillable = [
+        'request_id',
+        'status',
+        'physician_id',
+        'admin_id',
+        'TransToPhysicianId',
+        'TransToAdmin',
+        'notes',
+    ];
+
+    
     public function request()
     {
         return $this->hasOne(RequestTable::class, 'id', 'request_id');

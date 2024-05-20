@@ -14,4 +14,8 @@ class HealthProfessionalType extends Model
     {
         // return $this->belongsTo(HealthProfessional::class, 'profession');
     }
+
+    protected $guarded = [
+        'profession_name',
+    ];
 }

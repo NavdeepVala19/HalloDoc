@@ -12,7 +12,7 @@ class Shift extends Model
     use SoftDeletes;
     protected $table = 'shift';
 
-    protected $guarded = [];
+  
 
     public function shiftDetail()
     {

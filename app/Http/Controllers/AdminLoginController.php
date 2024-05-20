@@ -45,9 +45,9 @@ class AdminLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $userData = Auth::user();
-            $userRolesData = UserRoles::where('user_id', $userData->id)->first();
+            $userRole= UserRoles::where('user_id', $userData->id)->first();
 
-            if ($userRolesData->role_id == 2) {
+            if ($userRole->role_id == 2) {
                 $providersData = Provider::where('email', $userData->email)->first();
                 PhysicianLocation::create([
                     'provider_id' => $providersData->id,
@@ -56,18 +56,17 @@ class AdminLoginController extends Controller
                     'longitude' => $request->longitude,
                 ]);
             }
-            if ($userRolesData->role_id == 1) {
+            if ($userRole->role_id == 1) {
                 return redirect()->route('admin.dashboard');
             }
-            if ($userRolesData->role_id == 2) {
+            if ($userRole->role_id == 2) {
                 return redirect()->route('provider.dashboard');
             }
-            if ($userRolesData->role_id == 3) {
+            if ($userRole->role_id == 3) {
                 return back()->with('error', 'invalid credentials');
             }
         } else {
             $user = Users::where("email", $request->email)->first();
-
             if ($user == null) {
                 return back()->with('error', 'We could not find an account associated with that email address');
             } else {
@@ -99,16 +98,15 @@ class AdminLoginController extends Controller
 
         $user = Users::where('email', $request->email)->first();
 
+        // check user and userRoles is exist or not
         if ($user) {
             $userRolesData = UserRoles::where('user_id', $user->id)->first();
         }
-
         if ($user == null || $userRolesData->role_id == 3) {
             return back()->with('error', 'no such email is registered');
         }
 
         $token = Str::random(64);
-
         $user->token = $token;
         $user->save();
 
@@ -155,7 +153,6 @@ class AdminLoginController extends Controller
         ]);
 
         $updatePassword = Users::where('token', $request->token)->first();
-
         if (!$updatePassword) {
             return back()->with('error', 'Invalid token!');
         }
@@ -165,7 +162,6 @@ class AdminLoginController extends Controller
         ])->update(['password' => Hash::make($request->new_password)]);
 
         Users::where(['token' => $request->token])->update(['token' => ""]);
-
         return redirect()->route('login')->with('message', 'Your password has been changed!');
     }
 

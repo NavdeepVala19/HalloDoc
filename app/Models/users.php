@@ -28,19 +28,10 @@ class Users extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'password_hash',
-        'remember_token',
+        'password',
+        'token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password_hash' => 'hashed',
-    ];
 
     public function allusers()
     {

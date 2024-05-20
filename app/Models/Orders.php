@@ -10,5 +10,14 @@ class Orders extends Model
     use HasFactory;
 
     protected $table = 'orders';
-    protected $guarded = [];
+
+    protected $fillable = [
+        'fax_number',
+        'email',
+        'business_contact',
+        'prescription',
+        'no_of_refill',
+    ];
+
+
 }

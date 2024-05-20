@@ -35,21 +35,28 @@ class PatientRequestSubmitService
         return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
     }
 
+
+    /**
+     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     * @param mixed $request (input enter by user)
+     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
+     */
     public function storeRequest($request)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
     
         // Store user details if email is not already stored
         if ($isEmailStored == null) {
-            $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . " " . $request->last_name;
-            $requestEmail->email = $request->email;
-            $requestEmail->phone_number = $request->phone_number;
-            $requestEmail->save();
+            $storePatientInUsers = new Users();
+            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUsers->email = $request->email;
+            $storePatientInUsers->phone_number = $request->phone_number;
+            $storePatientInUsers->save();
 
-            $requestUsers = new AllUsers();
-            $requestUsers->user_id = $requestEmail->id;
-            $requestUsers->fill($request->only([
+            $storePatientInAllUsers = new AllUsers();
+            $storePatientInAllUsers->user_id = $storePatientInUsers->id;
+            $storePatientInAllUsers->fill($request->only([
                 'first_name',
                 'last_name',
                 'email',
@@ -59,16 +66,16 @@ class PatientRequestSubmitService
                 'state',
                 'zipcode'
             ]));
-            $requestUsers->save();
+            $storePatientInAllUsers->save();
 
-            $userRolesEntry = new UserRoles();
-            $userRolesEntry->role_id = 3;
-            $userRolesEntry->user_id = $requestEmail->id;
-            $userRolesEntry->save();    
+            $userRole = new UserRoles();
+            $userRole->role_id = 3;
+            $userRole->user_id = $storePatientInUsers->id;
+            $userRole->save();    
         }
         
         $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $requestEmail->id;
+        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id;
         $requestData->request_type_id = 1;
         $requestData->status = 1;
         $requestData->fill($request->only([
@@ -98,12 +105,11 @@ class PatientRequestSubmitService
 
         // Store documents in request_wise_file table
         if ($request->hasFile('docs')) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $requestData->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
-
+            $requestFile = new RequestWiseFile();
+            $requestFile->request_id = $requestData->id;
+            $requestFile->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+            $request->file('docs')->storeAs('public', $requestFile->file_name);
+            $requestFile->save();
         }
 
         // Generate confirmation number
@@ -117,7 +123,7 @@ class PatientRequestSubmitService
             // Send email if email is not already stored
             if ($isEmailStored == null) {
                 $emailAddress = $request->email;
-                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
+                Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
                     'role_id' => 3,

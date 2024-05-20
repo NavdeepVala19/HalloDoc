@@ -16,6 +16,9 @@ class Business extends Model
         'address2',
         'zipcode',
         'business_name',
+        'city',
+        'fax_number',
+        'is_registered',
     ];
 
 }

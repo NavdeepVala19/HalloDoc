@@ -18,18 +18,15 @@ class AllUsers extends Model
         'first_name',
         'last_name',
         'email',
-        'phone',
+        'mobile',
         'zipcode',
         'street',
         'city',
         'state',
         'status',
-        'is_request_with_email',
-        'str_month',
-        'int_year',
-        'int_date',
         'region_id',
         'user_id',
+        'date_of_birth',
     ];
 
 

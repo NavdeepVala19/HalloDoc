@@ -12,7 +12,6 @@ use App\Services\AdminCreateRequestService;
 
 class AdminDashboardController extends Controller
 {
-
     /**
      * shows admin request page(form)
      *  from this page admin can create request on behalf of patient

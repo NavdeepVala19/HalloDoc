@@ -12,4 +12,9 @@ class CaseTag extends Model
     use HasFactory;
 
     protected $table = 'case_tag';
+
+    protected $guarded = [
+        'case_name',
+    ];
+
 }

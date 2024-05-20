@@ -13,7 +13,7 @@ use App\Services\PatientDashboardService;
 use App\Http\Requests\CreatePatientRequest;
 
 
-class patientDashboardController extends Controller
+class PatientDashboardController extends Controller
 {
     // Display agreement page when clicked through email
     public function viewAgreement($data)
@@ -139,12 +139,10 @@ class patientDashboardController extends Controller
 
     public function createSomeOneElseRequest(CreatePatientRequest $request , PatientDashboardService $patientDashboardService)
     {
-
         $patientRequest = $patientDashboardService->storeSomeOneRequest($request);
         $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
         return redirect()->route('patient.dashboard')->with('message', $redirectMsg);
-     
     }
 
 
@@ -159,7 +157,7 @@ class patientDashboardController extends Controller
         $email = $userData["email"];
 
         $userId = Users::select('id')->where('email', $email);
-        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->orderBy('id', 'desc')->paginate(10);
+        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->latest('id')->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data', 'userData'));
     }

@@ -10,8 +10,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserAccessService{
 
-    public function userAccessList(){
-
+    /**
+     * list of user access
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function userAccessList()
+    {
         $userAccessData = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
         ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
         ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
@@ -21,25 +25,35 @@ class UserAccessService{
         return $userAccessData;
     }
 
-    public function filterAccountWise($request){
-
-        $account = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
-
+    /**
+     * filter user according to account type (admin/provider)
+     * @param mixed $request
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function filterAccountWise($request)
+    {
+        $accountType = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
         $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
             ->whereIn('user_roles.role_id', [1, 2]);
 
-        if ($account) {
-            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $account);
+        if ($accountType) {
+            $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $accountType);
         }
         $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
 
         return  $userAccessDataFiltering;
     }
 
-    public function createAdminAccount($request){
 
+    /**
+     * create new admin and store data of admin in users,admin,user_roles,all_users
+     * @param mixed $request
+     * @return bool
+     */
+    public function createAdminAccount($request)
+    {
          // Store Data in users table
          $adminCredentialsData = new Users();
          $adminCredentialsData->username = $request->user_name;

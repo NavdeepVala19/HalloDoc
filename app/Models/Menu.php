@@ -10,4 +10,9 @@ class Menu extends Model
     use HasFactory;
 
     protected $table = 'menu';
+
+    protected $guarded = [
+        'name',
+        'account_type'
+    ];
 }

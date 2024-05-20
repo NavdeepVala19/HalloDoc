@@ -21,7 +21,6 @@ class PatientViewDocumentsController extends Controller
     {
         try {
             $id = Crypt::decrypt($id);
-
             $documents = RequestWiseFile::select(
                 'request.first_name',
                 'request.confirmation_no',
@@ -51,15 +50,15 @@ class PatientViewDocumentsController extends Controller
             'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
         ]);
 
-        $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->get();
+        $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->first();
 
         if (!empty($request->document)) {
             // store documents in request_wise_file table
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $requestWiseData->first()->request_id;
-            $request_file->file_name = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-            $request->file('document')->storeAs('public', $request_file->file_name);
-            $request_file->save();
+            $requestFile = new RequestWiseFile();
+            $requestFile->request_id = $requestWiseData->request_id;
+            $requestFile->file_name = uniqid() . '_' . $request->file('document')->getClientOriginalName();
+            $request->file('document')->storeAs('public', $requestFile->file_name);
+            $requestFile->save();
             return back();
         } else {
             $request->validate([
@@ -94,7 +93,6 @@ class PatientViewDocumentsController extends Controller
     public function downloadSelectedFiles(Request $request)
     {
         try {
-
             if (empty($request->input('selected_files'))) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
@@ -104,7 +102,6 @@ class PatientViewDocumentsController extends Controller
             } else {
                 $ids = $request->input('selected_files');
             }
-
             $zip = new ZipArchive();
             $zipFile = 'documents.zip';
 
