@@ -98,7 +98,7 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="fax_number" value="{{ $vendor->fax_number }}"
+                        <input type="number" name="fax_number" value="{{ $vendor->fax_number }}"
                             class="form-control @error('fax_number') is-invalid @enderror" id="floatingInput2"
                             placeholder="Fax Number">
                         <label for="floatingInput2">Fax Number</label>

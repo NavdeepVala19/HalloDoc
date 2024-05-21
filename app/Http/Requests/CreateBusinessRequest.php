@@ -53,7 +53,6 @@ class CreateBusinessRequest extends FormRequest
             'business_email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
 
             'business_mobile.required' => $enter . ' Phone Number',
-            
             'business_property_name.required' => $enter . ' a business/property name',
             'business_property_name.min' => $min_message . ' 2 character',
             'business_property_name.max' => $max_message . ' 30 character',

@@ -41,6 +41,7 @@ class ProviderSchedulingController extends Controller
      * Add a new shift to the calendar.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function providerShiftData(Request $request)
@@ -141,12 +142,12 @@ class ProviderSchedulingController extends Controller
                         'shift_date' => $date->format('Y-m-d'),
                         'start_time' => $request['shiftStartTime'],
                         'end_time' => $request['shiftEndTime'],
-                        'status' => 1
+                        'status' => 1,
                     ]);
 
                     $shiftDetailRegion = ShiftDetailRegion::create([
                         'shift_detail_id' => $shiftDetail->id,
-                        'region_id' => $request['region']
+                        'region_id' => $request['region'],
                     ]);
 
                     ShiftDetail::where('id', $shiftDetail->id)->update(['region_id' => $shiftDetailRegion->id]);
@@ -185,7 +186,7 @@ class ProviderSchedulingController extends Controller
                 'is_repeat' => $event->getShiftData->is_repeat,
                 'week_days' => explode(',', $event->getShiftData->week_days),
                 'repeat_upto' => $event->getShiftData->repeat_upto,
-                'status' => $event->status
+                'status' => $event->status,
             ];
         });
 
@@ -196,6 +197,7 @@ class ProviderSchedulingController extends Controller
      * Edit already existing shifts.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function providerEditShift(Request $request)
@@ -206,7 +208,7 @@ class ProviderSchedulingController extends Controller
             $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
 
             $userId = Auth::user()->id;
-            $providerId = Provider::where('user_id', $userId)->first()->id;
+            $providerId = Provider::where('user_id', $userId)->value('id');
 
             // check for each shifts, whether it have the same time period or in-between time period
             foreach ($currentShifts as $currentShift) {

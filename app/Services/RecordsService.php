@@ -12,12 +12,13 @@ class RecordsService
 
     /**
      * it list the records of patient and it fetch data from request_client,request,request_notes,provider,request_closed table
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function searchRecordsListing()
     {
         // This combinedData is the combination of data from RequestClient,Request,RequestNotes,Provider,RequestClosed
-        $combinedData = RequestClient::distinct()->select([
+        return RequestClient::distinct()->select([
             'request.request_type_id',
             'request_client.first_name',
             'request_client.id',
@@ -43,14 +44,12 @@ class RecordsService
             ->leftJoin('request_closed', 'request_closed.request_id', 'request_client.request_id')
             ->latest('id')
             ->paginate(10);
-
-        return $combinedData;
     }
 
     /**
-     * this is common function for filtering and export to excel 
+     * this is common function for filtering and export to excel
+     *
      * @param mixed $request
-     * @return RequestClient
      */
     public function filterSearchRecords($request)
     {
@@ -73,12 +72,12 @@ class RecordsService
             DB::raw('DATE(request_client.created_at) as created_date'),
             DB::raw('DATE(request_closed.created_at) as closed_date'),
         ])
-            ->join('request', 'request.id',  'request_client.request_id')
-            ->leftJoin('request_notes', 'request_notes.request_id',  'request_client.request_id')
+            ->join('request', 'request.id', 'request_client.request_id')
+            ->leftJoin('request_notes', 'request_notes.request_id', 'request_client.request_id')
             ->leftJoin('provider', function ($join) {
-                $join->on('request.physician_id',  'provider.id');
+                $join->on('request.physician_id', 'provider.id');
             })
-            ->leftJoin('request_closed', 'request_closed.request_id','request_client.request_id')
+            ->leftJoin('request_closed', 'request_closed.request_id', 'request_client.request_id')
             ->latest('id');
 
         // if (!empty($request->patient_name)) {
@@ -114,7 +113,9 @@ class RecordsService
 
     /**
      * filters data according to user input for filtering
+     *
      * @param mixed $request
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function searchRecords($request)
@@ -123,26 +124,27 @@ class RecordsService
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
 
-        $combinedData = $this->filterSearchRecords($request)->paginate($perPage, ['*'], 'page', $page);
-
-        return $combinedData;
+        return $this->filterSearchRecords($request)->paginate($perPage, ['*'], 'page', $page);
     }
 
     /**
      * returns data as per filtering to export data for excel
+     *
      * @param mixed $request
+     *
      * @return RequestClient
      */
     public function exportFilteredDataToExcel($request)
     {
-        $data = $this->filterSearchRecords($request);
-        return $data;
+        return $this->filterSearchRecords($request);
     }
 
 
     /**
      * filter SMS logs as per input
+     *
      * @param mixed $request
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function filterSMSLogs($request)
@@ -167,18 +169,16 @@ class RecordsService
         if ($request->role_type) {
             $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
         }
-        $sms = $sms->paginate($perPage, ['*'], 'page', $page);
-
-        return $sms;
+        return $sms->paginate($perPage, ['*'], 'page', $page);
     }
-
 
     /**
      * listing of block patient
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function blockHistory(){
-        $blockData = BlockRequest::select(
+        return BlockRequest::select(
             'block_request.phone_number',
             'block_request.email',
             'block_request.id',
@@ -191,14 +191,13 @@ class RecordsService
             ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
             ->latest('id')
             ->paginate(10);
-
-            return $blockData;
     }
-
 
     /**
      * filter block patient according to user input
+     *
      * @param mixed $request
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function filterBlockHistoryData($request){
@@ -226,8 +225,6 @@ class RecordsService
         if ($request->date) {
             $blockData->where('block_request.created_at', "like", "%" . $request->date . "%");
         }
-        $blockData = $blockData->paginate(10);
-
-        return $blockData;
+        return $blockData->paginate(10);
     }
 }

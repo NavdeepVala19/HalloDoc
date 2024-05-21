@@ -6,10 +6,11 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-
-class PendingStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
+class PendingStatusExport implements
+    FromCollection,
+    WithCustomCsvSettings,
+    WithHeadings
 {
-
     private $data;
 
     public function __construct($data)
@@ -24,7 +25,16 @@ class PendingStatusExport implements FromCollection, WithCustomCsvSettings, With
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'PhysicianName', 'RequestedDate', 'Mobile', 'Address', 'Notes'];
+        return [
+            'PatientName',
+            'Date Of Birth',
+            'Requestor',
+            'PhysicianName',
+            'RequestedDate',
+            'Mobile',
+            'Address',
+            'Notes',
+        ];
     }
 
     /**

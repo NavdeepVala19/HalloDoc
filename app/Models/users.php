@@ -11,7 +11,6 @@ use Laravel\Sanctum\HasApiTokens;
 class Users extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
-    use SoftDeletes;
 
     protected $table = 'users';
 

@@ -10,11 +10,11 @@ use ZipArchive;
 
 class PatientViewDocumentsController extends Controller
 {
-
     /**
      * show user(patient) firstname , confirmation number, filename, created_at
-
+     *
      * @param mixed $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientViewDocument($id)
@@ -41,7 +41,9 @@ class PatientViewDocumentsController extends Controller
 
     /**
      * upload document in request_wise_file at $request->request_wise_file_id
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function uploadDocs(Request $request)
@@ -49,9 +51,7 @@ class PatientViewDocumentsController extends Controller
         $request->validate([
             'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
         ]);
-
         $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->first();
-
         if ($request->document) {
             // store documents in request_wise_file table
             $requestFile = new RequestWiseFile();
@@ -60,16 +60,14 @@ class PatientViewDocumentsController extends Controller
             $request->file('document')->storeAs('public', $requestFile->file_name);
             $requestFile->save();
             return back();
-        } else {
-            $request->validate([
-                'document' => 'required|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            ]);
         }
     }
 
     /**
      * download individual documents
+     *
      * @param mixed $id
+     *
      * @return mixed|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function downloadOne($id)
@@ -87,13 +85,15 @@ class PatientViewDocumentsController extends Controller
 
     /**
      *  download multiple documents
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function downloadSelectedFiles(Request $request)
     {
         try {
-            if (!$request->input('selected_files')) {
+            if (! $request->input('selected_files')) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to download!');

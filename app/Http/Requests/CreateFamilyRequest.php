@@ -32,7 +32,6 @@ class CreateFamilyRequest extends FormRequest
 
     /**
      * validation message display
-     * @return string[]
      */
     public function messages(){
         $enter = 'Please enter';
@@ -56,9 +55,8 @@ class CreateFamilyRequest extends FormRequest
             'family_email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
 
             'family_phone_number.required' => $enter. ' Phone Number',
-            
             'family_relation'=> $enter.' a relation with patient',
             'family_relation.alpha'=>' Please enter valid relation (Format : alphabets-alphabets).',
-        ]; 
+        ];
     }
 }

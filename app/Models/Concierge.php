@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Concierge extends Model
 {
+    use HasFactory;
     protected $table = "concierge";
-
 
     protected $fillable = [
         'name',

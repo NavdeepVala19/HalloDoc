@@ -9,10 +9,7 @@ use App\Http\Controllers\BusinessRequestController;
 use App\Http\Controllers\CommonOperationController;
 use App\Http\Controllers\ConciergeRequestController;
 use App\Http\Controllers\Controller;
-
-
 use App\Http\Controllers\ExcelController;
-
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientLoginController;
 use App\Http\Controllers\FamilyRequestController;
@@ -24,7 +21,6 @@ use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderSchedulingController;
 use App\Http\Controllers\SchedulingController;
-
 use Illuminate\Support\Facades\Route;
 
 // ******************************* SHIVESH **********************************************
@@ -73,13 +69,12 @@ route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
 
     //* Patient logout
     route::get('/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
-
-    //* Patient Dashboard 
+    //* Patient Dashboard
     route::get('/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient.dashboard');
 
     //* Edit profile of patient
     route::get('/patient/profile', [PatientProfileController::class, 'patientEdit'])->name('patient.profile.view');
-    route::get('/profile-edit/{id}', [PatientProfileController::class, 'patientprofileEdit'])->name('patient.profile.edit.view');
+    route::get('/profile-edit/{id}', [PatientProfileController::class, 'patientProfileEdit'])->name('patient.profile.edit.view');
     route::post('/profile-updated', [PatientProfileController::class, 'patientUpdate'])->name('patient.profile.edited');
     route::get('/map-location', [PatientProfileController::class, 'patientMapLocation'])->name('patient.location.on.map');
 
@@ -418,17 +413,12 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-    route::post('/filter-new', [AdminController::class, 'filterPatientNew'])->name('filter.region_new');
-    route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name('filter.region_pending');
-    route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name('filter.region_active');
-    route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name('filter.region_conclude');
-    route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name('filter.region_toclose');
-    route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name('filter.region_unpaid');
+    route::post('/filter-requests', [AdminController::class, 'filterPatient'])->name('filter.region_new');
 
-    Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
-    Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
-    route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
-    route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
+    Route::get('/user-access', [AdminController::class, 'userAccess'])->name('admin.user.access');
+    Route::get('/user-access-edit/{id?}', [AdminController::class, 'userAccessEdit'])->name('admin.user.accessEdit');
+    route::post('/user-access/filter', [AdminController::class, 'filterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
+    route::post('/user-access-mobile-filter', [AdminController::class, 'filterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
 
     route::get('/admin-profile-edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
     route::get('/admin-profile-update/{id}', [AdminDashboardController::class, 'adminProfile'])->name('edit.admin.profile');

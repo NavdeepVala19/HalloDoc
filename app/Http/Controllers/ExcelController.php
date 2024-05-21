@@ -7,10 +7,9 @@ use App\Models\RequestClient;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
-
 class ExcelController extends Controller
 {
-    // * export All in admin listing pages
+    // export All in admin listing pages
     public function exportAll()
     {
         $data = RequestClient::select(

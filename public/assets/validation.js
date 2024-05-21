@@ -186,9 +186,9 @@ $(document).ready(function () {
     }
     function noteMessages(fieldName) {
         return {
-            required: `${fieldName} field is required`,
-            minlength: `${fieldName} field should have atleast 5 characters`,
-            maxlength: `${fieldName} field should not have more than 200 characters`,
+            required: `Please enter ${fieldName}`,
+            minlength: `Please enter atleast 5 characters in ${fieldName}`,
+            maxlength: `Please do not enter more than 200 characters in ${fieldName}`,
         };
     }
 

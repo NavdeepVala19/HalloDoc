@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\Users;
 use App\Models\AllUsers;
@@ -12,18 +11,18 @@ use App\Models\RequestNotes;
 use App\Models\RequestTable;
 use App\Models\RequestClient;
 use App\Mail\SendEmailAddress;
-use App\Models\RequestWiseFile;
 use Illuminate\Support\Facades\Mail;
-
 
 class AdminCreateRequestService
 {
     /**
-     * it generates confirmation number
+     * generates confirmation number
+     *
      * @param mixed $request
+     *
      * @return string
      */
-    private function generateConfirmationNumber($request)
+    public function generateConfirmationNumber($request)
     {
         $currentTime = now();
         $currentDate = $currentTime->format('Y');
@@ -46,7 +45,7 @@ class AdminCreateRequestService
         $isEmailStored = Users::where('email', $request->email)->first();
 
         // Store user details if email is not already stored
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             $storePatientInUser = new Users();
             $storePatientInUser->username = $request->first_name . " " . $request->last_name;
             $storePatientInUser->email = $request->email;
@@ -63,7 +62,7 @@ class AdminCreateRequestService
                 'street',
                 'city',
                 'state',
-                'zipcode'
+                'zipcode',
             ]));
             $storePatientInAllUser->save();
 
@@ -81,7 +80,7 @@ class AdminCreateRequestService
             'first_name',
             'last_name',
             'email',
-            'phone_number'
+            'phone_number',
         ]));
         $requestData->save();
 
@@ -98,7 +97,7 @@ class AdminCreateRequestService
             'state',
             'zipcode',
             'room',
-            'symptoms'
+            'symptoms',
         ]));
         $patientRequest->save();
 
@@ -116,7 +115,7 @@ class AdminCreateRequestService
         }
         try {
             // Send email if email is not already stored
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 $emailAddress = $request->email;
                 Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 
@@ -144,12 +143,14 @@ class AdminCreateRequestService
 
     /**
      * it returns data of admin when admin route from user access to their profile edit page
+     *
      * @param mixed $id (id of user table)
+     *
      * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
      */
     public function adminProfileEditThroughUserAccessPage($id)
     {
-        $adminData = Admin::select(
+        return Admin::select(
             'admin.first_name',
             'admin.last_name',
             'admin.email',
@@ -170,19 +171,19 @@ class AdminCreateRequestService
             ->leftJoin('regions', 'regions.id', 'admin.region_id')
             ->where('user_id', $id)
             ->first();
-
-        return $adminData;
     }
 
 
     /**
      * it will return data of admin when route from one page to their profile edit page
+     *
      * @param mixed $id (id of user table)
+     *
      * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
      */
     public function adminProfile($id)
     {
-        $adminProfileData = Admin::select(
+        return Admin::select(
             'admin.first_name',
             'admin.last_name',
             'admin.email',
@@ -203,14 +204,14 @@ class AdminCreateRequestService
             ->leftJoin('regions', 'regions.id', 'admin.region_id')
             ->where('user_id', $id)
             ->first();
-
-        return $adminProfileData;
     }
 
     /**
      * it update admin profile administration information data in admin,allusers and users table
+     *
      * @param mixed $request (input enter by user(admin))
      * @param mixed $id (id of user table)
+     *
      * @return bool
      */
     public function updateAdminInformation($request, $id)
@@ -243,8 +244,10 @@ class AdminCreateRequestService
 
     /**
      * it update admin profile Mailing & Billing Information data in admin and allusers table
+     *
      * @param mixed $request (input enter by user(admin))
      * @param mixed $id (id of user table)
+     *
      * @return bool
      */
     public function updateAdminMailInformation($request, $id)

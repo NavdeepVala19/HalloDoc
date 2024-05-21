@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProviderCreateRequest;
 use App\Http\Requests\SendMailRequest;
-
 use App\Mail\ProviderRequest;
 use App\Mail\SendEmailAddress;
 use App\Mail\SendMail;
-
 use App\Models\Admin;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
@@ -22,15 +20,12 @@ use App\Models\SMSLogs;
 use App\Models\User;
 use App\Models\UserRoles;
 use App\Models\Users;
-
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-
 use Twilio\Rest\Client;
 
 class ProviderController extends Controller
@@ -60,6 +55,7 @@ class ProviderController extends Controller
      * Get category id from the name of category
      *
      * @param string $category different category names.
+     *
      * @return int different types of request_type_id.
      */
     private function getCategoryId($category)
@@ -77,6 +73,7 @@ class ProviderController extends Controller
      * Get status id from the name of status
      *
      * @param string $status different status names.
+     *
      * @return int status in Id.
      */
     private function getStatusId($status)
@@ -100,6 +97,7 @@ class ProviderController extends Controller
      *  Counts Total Number of cases for particular Physician and having particular state
      *
      * @param int $providerId Id of the LoggedIn provider.
+     *
      * @return int total number of cases, as per the status.
      */
     public function totalCasesCount($providerId)
@@ -124,6 +122,7 @@ class ProviderController extends Controller
      * @param string $category category of the cases [all, patient, family, business, concierge].
      * @param string $searchTerm search term to filter the cases.
      * @param string $providerId id of the LoggedIn provider.
+     *
      * @return object $query formed as per the status, category selected, any search term entered and the logged in provider
      */
     public function buildQuery($status, $category, $searchTerm, $providerId)
@@ -157,6 +156,7 @@ class ProviderController extends Controller
      * @param \illuminate\HTTP\Request $request
      * @param string $status different status names.
      * @param string $category different category names.
+     *
      * @return \illuminate\View\View
      */
     public function cases(Request $request, $status = 'new', $category = 'all')
@@ -166,7 +166,7 @@ class ProviderController extends Controller
         $category = $request->session()->get('category', 'all');
 
         $userData = Auth::user();
-        $providerId = Provider::where('user_id', $userData->id)->first()->id;
+        $providerId = Provider::where('user_id', $userData->id)->value('id');
         $count = $this->totalCasesCount($providerId);
         $query = $this->buildQuery($status, $category, $searchTerm, $providerId);
 
@@ -181,6 +181,7 @@ class ProviderController extends Controller
      *
      * @param \illuminate\HTTP\Request $request
      * @param string $status different status names.
+     *
      * @return \illuminate\View\View
      */
     public function status(Request $request, $status = 'new')
@@ -200,6 +201,7 @@ class ProviderController extends Controller
      * @param \illuminate\HTTP\Request $request
      * @param string $status different status names.
      * @param string $category different category names.
+     *
      * @return \illuminate\View\View
      */
     public function filter(Request $request, $status = 'new', $category = 'all')
@@ -219,6 +221,7 @@ class ProviderController extends Controller
      * @param \illuminate\Http\Request $request
      * @param string $status different status names.
      * @param string $category different category names.
+     *
      * @return \illuminate\View\View
      */
     public function search(Request $request, $status = 'new', $category = 'all')
@@ -246,6 +249,7 @@ class ProviderController extends Controller
      * Store request data, made by Provider.
      *
      * @param Request $request HTTP Request object
+     *
      * @return \Illuminate\Http\RedirectResponse provider status page
      */
     public function createRequest(ProviderCreateRequest $request)
@@ -254,7 +258,7 @@ class ProviderController extends Controller
         $isEmailStored = Users::where('email', $request->email)->first();
 
         $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->first()->id;
+        $providerId = Provider::where('user_id', $user->id)->value('id');
 
         // If email doesn't exist, store email, username, phone_number in users table
         if ($isEmailStored === null) {
@@ -363,7 +367,7 @@ class ProviderController extends Controller
             EmailLog::create([
                 'role_id' => 3,
                 'request_id' =>  $requestTable->id,
-                'recipient_name' => $request->first_name . ' ' . $request->last_name,
+                'recipient_name' => $request->first_name.' '.$request->last_name,
                 'confirmation_number' => $confirmationNumber,
                 'provider_id' => $providerId,
                 'is_email_sent' => 1,
@@ -399,15 +403,16 @@ class ProviderController extends Controller
      * Reset password of provider
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:5'
+            'password' => 'required|min:5',
         ]);
 
-        $userId = Provider::where('id', $request->providerId)->first()->user_id;
+        $userId = Provider::where('id', $request->providerId)->value('user_id');
 
         User::where('id', $userId)->update([
             'password' => Hash::make($request->password),
@@ -420,6 +425,7 @@ class ProviderController extends Controller
      * Provider send an email to Admin with the request of changes needed in the profile
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function editProfileMessage(Request $request)
@@ -435,7 +441,7 @@ class ProviderController extends Controller
             'sent_date' => now(),
             'is_email_sent' => 1,
             'action' => 3,
-            'recipient_name' => $admin->first_name . ' ' . $admin->last_name,
+            'recipient_name' => $admin->first_name.' ' .$admin->last_name,
             'email_template' => 'email.providerRequest',
             'email' => $admin->email,
             'sent_tries' => 1,
@@ -454,6 +460,7 @@ class ProviderController extends Controller
      * Send Mail to patient with link to create request page
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendMail(SendMailRequest $request)
@@ -474,7 +481,7 @@ class ProviderController extends Controller
                     '+91 99780 71802', // to
                     [
                         'body' => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
-                        'from' =>  $senderNumber
+                        'from' =>  $senderNumber,
                     ]
                 );
         } catch (\Throwable $th) {
@@ -482,7 +489,7 @@ class ProviderController extends Controller
         }
 
         $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->first()->id;
+        $providerId = Provider::where('user_id', $user->id)->first('id');
 
         $name = $request->first_name . ' ' . $request->last_name;
 

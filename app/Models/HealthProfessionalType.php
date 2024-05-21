@@ -12,10 +12,8 @@ class HealthProfessionalType extends Model
 
     public function healthProfessional()
     {
-        // return $this->belongsTo(HealthProfessional::class, 'profession');
+        return $this->belongsTo(HealthProfessional::class, 'profession');
     }
 
-    protected $guarded = [
-        'profession_name',
-    ];
+
 }

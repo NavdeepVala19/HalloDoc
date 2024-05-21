@@ -38,7 +38,7 @@ class SchedulingController extends Controller
         foreach ($providers as $provider) {
             $formattedData[] = [
                 'id' => $provider->id,
-                'physician' => $provider->first_name .  ' ' . $provider->last_name,
+                'physician' => $provider->first_name.' '.$provider->last_name,
                 'photo' => $provider->photo,
             ];
         }
@@ -49,6 +49,7 @@ class SchedulingController extends Controller
      * Filter shifts based on the region selected.
      *
      * @param int $id The ID of the region to filter shifts by.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function shiftFilter($id)
@@ -61,7 +62,7 @@ class SchedulingController extends Controller
                 return [
                     'shiftId' => $event->getShiftData->id,
                     'shiftDetailId' => $event->id,
-                    'title' => $event->getShiftData->provider->first_name . ' ' . $event->getShiftData->provider->last_name,
+                    'title' => $event->getShiftData->provider->first_name.' '.$event->getShiftData->provider->last_name,
                     'shiftDate' => $event->shift_date,
                     'startTime' => $event->start_time,
                     'endTime' => $event->end_time,
@@ -72,7 +73,7 @@ class SchedulingController extends Controller
                     'is_repeat' => $event->getShiftData->is_repeat,
                     'week_days' => explode(',', $event->getShiftData->week_days),
                     'repeat_upto' => $event->getShiftData->repeat_upto,
-                    'status' => $event->status
+                    'status' => $event->status,
                 ];
             });
 
@@ -86,7 +87,7 @@ class SchedulingController extends Controller
             return [
                 'shiftId' => $event->getShiftData->id,
                 'shiftDetailId' => $event->id,
-                'title' => $event->getShiftData->provider->first_name . ' ' . $event->getShiftData->provider->last_name,
+                'title' => $event->getShiftData->provider->first_name.' '.$event->getShiftData->provider->last_name,
                 'shiftDate' => $event->shift_date,
                 'startTime' => $event->start_time,
                 'endTime' => $event->end_time,
@@ -97,7 +98,7 @@ class SchedulingController extends Controller
                 'is_repeat' => $event->getShiftData->is_repeat,
                 'week_days' => explode(',', $event->getShiftData->week_days),
                 'repeat_upto' => $event->getShiftData->repeat_upto,
-                'status' => $event->status
+                'status' => $event->status,
             ];
         });
 
@@ -130,6 +131,7 @@ class SchedulingController extends Controller
      * Filter providers based on region selected for Providers on Call page (AJAX Call).
      *
      * @param int $id The ID of the selected region.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function filterProviderByRegion($id)
@@ -180,6 +182,7 @@ class SchedulingController extends Controller
      * Create a new shift.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function createShiftData(Request $request)
@@ -189,7 +192,7 @@ class SchedulingController extends Controller
             'physician' => 'required',
             'shiftDate' => 'required',
             'shiftStartTime' => 'required',
-            'shiftEndTime' => 'required|after:shiftStartTime'
+            'shiftEndTime' => 'required|after:shiftStartTime',
         ]);
         // Check whether the shift created for provider is already having shift for that time period
         $shifts = Shift::with('shiftDetail')->get();
@@ -228,19 +231,19 @@ class SchedulingController extends Controller
             'is_repeat' => $is_repeat,
             'week_days' => $weekDays,
             'repeat_upto' => $request['repeatEnd'],
-            'created_by' => 1
+            'created_by' => 1,
         ]);
         $shiftDetail = ShiftDetail::create([
             'shift_id' => $shift->id,
             'shift_date' => $request['shiftDate'],
             'start_time' => $request['shiftStartTime'],
             'end_time' => $request['shiftEndTime'],
-            'status' => 2
+            'status' => 2,
         ]);
 
         $shiftDetailRegion = ShiftDetailRegion::create([
             'shift_detail_id' => $shiftDetail->id,
-            'region_id' => $request['region']
+            'region_id' => $request['region'],
         ]);
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
@@ -278,12 +281,12 @@ class SchedulingController extends Controller
                         'shift_date' => $date->format('Y-m-d'),
                         'start_time' => $request['shiftStartTime'],
                         'end_time' => $request['shiftEndTime'],
-                        'status' => 2
+                        'status' => 2,
                     ]);
 
                     $shiftDetailRegion = ShiftDetailRegion::create([
                         'shift_detail_id' => $shiftDetail->id,
-                        'region_id' => $request['region']
+                        'region_id' => $request['region'],
                     ]);
 
                     ShiftDetail::where('id', $shiftDetail->id)->update(['region_id' => $shiftDetailRegion->id]);
@@ -308,7 +311,7 @@ class SchedulingController extends Controller
             return [
                 'shiftId' => $event->getShiftData->id,
                 'shiftDetailId' => $event->id,
-                'title' => $event->getShiftData->provider->first_name . ' ' . $event->getShiftData->provider->last_name,
+                'title' => $event->getShiftData->provider->first_name.' '.$event->getShiftData->provider->last_name,
                 'shiftDate' => $event->shift_date,
                 'startTime' => $event->start_time,
                 'endTime' => $event->end_time,
@@ -319,7 +322,7 @@ class SchedulingController extends Controller
                 'is_repeat' => $event->getShiftData->is_repeat,
                 'week_days' => explode(',', $event->getShiftData->week_days),
                 'repeat_upto' => $event->getShiftData->repeat_upto,
-                'status' => $event->status
+                'status' => $event->status,
             ];
         });
 
@@ -330,6 +333,7 @@ class SchedulingController extends Controller
      * Edit an existing shift.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function editShift(Request $request)
@@ -391,12 +395,13 @@ class SchedulingController extends Controller
      * Change the status of shifts (Approved or Pending).
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function shiftAction(Request $request)
     {
         // if (empty($request->selected)) {
-        if (!$request->selected) {
+        if (! $request->selected) {
             return redirect()->back()->with('selectOption', 'Select Atleast one shift for performing operation!');
         }
         if ($request->action === 'approve') {
@@ -426,6 +431,7 @@ class SchedulingController extends Controller
      * Filter shifts in shiftsForReview page based on region selected.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function filterRegions(Request $request)

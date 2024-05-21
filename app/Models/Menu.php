@@ -13,6 +13,6 @@ class Menu extends Model
 
     protected $guarded = [
         'name',
-        'account_type'
+        'account_type',
     ];
 }

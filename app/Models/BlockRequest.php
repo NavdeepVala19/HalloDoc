@@ -4,12 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlockRequest extends Model
 {
     use HasFactory;
-
     protected $table = 'block_request';
 
     protected $fillable = [
@@ -17,7 +15,7 @@ class BlockRequest extends Model
         'reason',
         'email',
         'phone_number',
-        'is_active'
+        'is_active',
     ];
 
     protected $guarded = [
@@ -27,5 +25,9 @@ class BlockRequest extends Model
     public function request_status()
     {
         return $this->belongsTo(RequestStatus::class, 'request_id', 'request_id');
+    }
+
+    public function requestClient(){
+        return $this->belongsTo(RequestClient::class, 'request_id', 'request_id');
     }
 }

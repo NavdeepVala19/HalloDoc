@@ -10,13 +10,13 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    // *display home page of patientSite
+    // display home page of patientSite
     public function patientSite()
     {
         return view('patientSite/patientSite');
     }
 
-    // * display submit screen of patient site
+    // display submit screen of patient site
     public function submitScreen()
     {
         return view('patientSite.submitScreen');

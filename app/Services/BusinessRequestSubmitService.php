@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
 use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\Business;
@@ -18,7 +17,9 @@ class BusinessRequestSubmitService
 {
     /**
      * it generates confirmation number
+     *
      * @param mixed $request
+     *
      * @return string
      */
     private function generateConfirmationNumber($request)
@@ -38,20 +39,22 @@ class BusinessRequestSubmitService
     /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     *
      * @param mixed $request (input enter by user)
+     *
      * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
      */
 
-    public function storeBusinessRequest($request)
+    public function storeBusinessRequest($request, $createPatientRequest)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
 
         // Store user details if email is not already stored
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             $storePatientInUsers = new Users();
-            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
-            $storePatientInUsers->email = $request->email;
-            $storePatientInUsers->phone_number = $request->phone_number;
+            $storePatientInUsers->username = $createPatientRequest->first_name . " " . $createPatientRequest->last_name;
+            $storePatientInUsers->email = $createPatientRequest->email;
+            $storePatientInUsers->phone_number = $createPatientRequest->phone_number;
             $storePatientInUsers->save();
 
             $storePatientInAllUsers = new AllUsers();
@@ -64,7 +67,7 @@ class BusinessRequestSubmitService
                 'street',
                 'city',
                 'state',
-                'zipcode'
+                'zipcode',
             ]));
             $storePatientInAllUsers->save();
 
@@ -77,7 +80,7 @@ class BusinessRequestSubmitService
         $requestTableData = RequestTable::create([
             'user_id' => $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id,
             'request_type_id' => 4,
-            'status' => 1, 
+            'status' => 1,
             'first_name' => $request->business_first_name,
             'last_name' => $request->business_last_name,
             'email' => $request->business_email,
@@ -92,11 +95,11 @@ class BusinessRequestSubmitService
             'date_of_birth' => $request->date_of_birth,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
-            'street' => $request->concierge_street,
-            'city' => $request->concierge_city,
-            'state' => $request->concierge_state,
-            'zipcode' => $request->concierge_zip_code,
-            'symptoms' => $request->symptoms
+            'street' => $request->street,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zipcode' => $request->zipcode,
+            'symptoms' => $request->symptoms,
         ]);
 
         $business = Business::create([
@@ -122,7 +125,7 @@ class BusinessRequestSubmitService
 
         try {
             // Send email if email is not already stored
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 $emailAddress = $request->email;
                 Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 

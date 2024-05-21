@@ -6,12 +6,12 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-
-class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
+class NewStatusExport implements
+    FromCollection,
+    WithCustomCsvSettings,
+    WithHeadings
 {
-
     private $data;
-
     public function __construct($data)
     {
         $this->data = $data;
@@ -24,7 +24,16 @@ class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHead
 
     public function headings(): array
     {
-        return ['PatientName', 'Date Of Birth', 'Requestor', 'RequestedDate', 'PatientMobile', 'RequestorMobile', 'Address', 'Notes'];
+        return [
+            'PatientName',
+            'Date Of Birth',
+            'Requestor',
+            'RequestedDate',
+            'PatientMobile',
+            'RequestorMobile',
+            'Address',
+            'Notes',
+        ];
     }
 
     /**

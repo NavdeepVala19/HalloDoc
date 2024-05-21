@@ -38,6 +38,7 @@ class AdminActionController extends Controller
      * AJAX call for Physician listing in dropdown selection
      *
      * @param  int|null  $id
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getPhysicians($id = null)
@@ -52,6 +53,7 @@ class AdminActionController extends Controller
      *
      * @param  int  $requestId
      * @param  int  $regionId
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNewPhysicians($requestId, $regionId)
@@ -66,14 +68,14 @@ class AdminActionController extends Controller
      * Assign a case to a provider (physician).
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function assignCase(Request $request)
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'assign_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
-
+            'assign_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
         RequestTable::where('id', $request->requestId)->update(['physician_id' => $request->physician]);
         RequestStatus::create([
@@ -81,7 +83,7 @@ class AdminActionController extends Controller
             'TransToPhysicianId' => $request->physician,
             'status' => 1,
             'admin_id' => 1,
-            'notes' => $request->assign_note
+            'notes' => $request->assign_note,
         ]);
 
         $physician = Provider::where('id', $request->physician)->first();
@@ -93,13 +95,14 @@ class AdminActionController extends Controller
      * Admin transfer a case to another physician.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function transferCase(Request $request)
     {
         $request->validate([
             'physician' => 'required|numeric',
-            'notes' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
+            'notes' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
 
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -109,11 +112,11 @@ class AdminActionController extends Controller
             'TransToPhysicianId' => $request->physician,
             'status' => '3',
             'admin_id' => '1',
-            'notes' => $request->notes
+            'notes' => $request->notes,
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 3,
-            'physician_id' => $request->physician
+            'physician_id' => $request->physician,
         ]);
         return redirect()->back()->with('successMessage', 'Case Transferred to Another Physician');
     }
@@ -133,22 +136,23 @@ class AdminActionController extends Controller
      * Store cancel case request_id, status(cancelled), adminId, & Notes(reason) in requestStatusLog.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function cancelCase(Request $request)
     {
         $request->validate([
             'case_tag' => 'required|in:1,2,3,4',
-            'reason' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
+            'reason' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 2,
-            'case_tag' => $request->case_tag
+            'case_tag' => $request->case_tag,
         ]);
         RequestStatus::create([
             'request_id' => $request->requestId,
             'status' => '2',
-            'notes' => $request->reason
+            'notes' => $request->reason,
         ]);
 
         return redirect()->back()->with('successMessage', 'Case Cancelled (Moved to ToClose State)');
@@ -158,12 +162,13 @@ class AdminActionController extends Controller
      * Admin Blocks patient.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function blockCase(Request $request)
     {
         $request->validate([
-            'block_reason' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
+            'block_reason' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
 
         // Block patient phone number, email, requestId and reason given by admin stored in block_request table
@@ -172,7 +177,7 @@ class AdminActionController extends Controller
             'request_id' => $request->requestId,
             'reason' => $request->block_reason,
             'phone_number' => $client->phone_number,
-            'email' => $client->email
+            'email' => $client->email,
         ]);
         RequestTable::where('id', $request->requestId)->update([
             'status' => 10,
@@ -189,6 +194,7 @@ class AdminActionController extends Controller
      * View a case.
      *
      * @param  string  $id
+     *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function viewCase($id)
@@ -207,6 +213,7 @@ class AdminActionController extends Controller
      * Edit case information.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function editCase(Request $request)
@@ -215,6 +222,7 @@ class AdminActionController extends Controller
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'dob' => 'required',
+            'patient_notes' => 'nullable|min:5|max:200|regex: /^[a-zA-Z0-9 ,_-]+?$/',
         ]);
 
         $firstName = $request->first_name;
@@ -231,7 +239,7 @@ class AdminActionController extends Controller
             'first_name' => $firstName,
             'last_name' => $lastName,
             'date_of_birth' => $dateOfBirth,
-            'notes' => $patientNotes
+            'notes' => $patientNotes,
         ]);
 
         return redirect()->back()->with('caseEdited', 'Information updated successfully!');
@@ -241,6 +249,7 @@ class AdminActionController extends Controller
      * View notes for a case.
      *
      * @param  string $id
+     *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function viewNote($id)
@@ -264,12 +273,13 @@ class AdminActionController extends Controller
      * Store an admin note to display in the ViewNotes page.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function storeNote(Request $request)
     {
         $request->validate([
-            'admin_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
+            'admin_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
         // if (!empty($requestNote)) {
@@ -294,6 +304,7 @@ class AdminActionController extends Controller
      * Display the view upload page with the data.
      *
      * @param  string  $id
+     *
      * @return \Illuminate\View\View
      */
     public function viewUpload($id)
@@ -313,14 +324,15 @@ class AdminActionController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function uploadDocument(Request $request, $id = null)
     {
         $request->validate([
-            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf|max:5242880'
+            'document' => 'required|mimes:png,jpg,jpeg,doc,docx,pdf|max:5242880',
         ], [
-            'document.required' => 'Select an File to upload!'
+            'document.required' => 'Select an File to upload!',
         ]);
         $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
 
@@ -339,6 +351,7 @@ class AdminActionController extends Controller
      * Show a new medical form or an existing one when the encounter button is clicked in the conclude listing.
      *
      * @param  string|null  $id
+     *
      * @return \Illuminate\View\View
      */
     public function encounterFormView($id = 'null')
@@ -358,6 +371,7 @@ class AdminActionController extends Controller
      * Store Encounter Form (Medical Form) data, changes made by admin.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function encounterForm(EncounterFormRequest $request, MedicalFormDataService $medicalFormDataService)
@@ -381,6 +395,7 @@ class AdminActionController extends Controller
      * Clear Case - Change status for a particular case to "Clear".
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function clearCase(Request $request)
@@ -399,6 +414,7 @@ class AdminActionController extends Controller
      * Show Close Case Page with Details.
      *
      * @param  string|null  $id
+     *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
     public function closeCase($id = null)
@@ -419,6 +435,7 @@ class AdminActionController extends Controller
      * Close Case -> particular case will move from toClose state to unpaid state.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function closeCaseData(Request $request)
@@ -426,11 +443,11 @@ class AdminActionController extends Controller
         if ($request->input('closeCaseBtn') === 'Save') {
             $request->validate([
                 'phone_number' => 'required',
-                'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
+                'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             ]);
             RequestClient::where('request_id', $request->requestId)->update([
                 'phone_number' => $request->phone_number,
-                'email' => $request->email
+                'email' => $request->email,
             ]);
         } elseif ($request->input('closeCaseBtn') === 'Close Case') {
             $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
@@ -440,10 +457,10 @@ class AdminActionController extends Controller
                 'status' => 9,
                 'physician_id' => $physicianId,
             ]);
-            $statusId = RequestStatus::where('request_id', $request->requestId)->orderByDesc('id')->first()->id;
+            $statusId = RequestStatus::where('request_id', $request->requestId)->orderByDesc('id')->value('id');
             RequestClosed::create([
                 'request_id' => $request->requestId,
-                'request_status_id' => $statusId
+                'request_status_id' => $statusId,
             ]);
             return redirect()->route('admin.status', 'unpaid')->with('successMessage', 'Case Closed Successfully!');
         }
@@ -454,6 +471,7 @@ class AdminActionController extends Controller
      * Display ViewOrder Page with the details.
      *
      * @param  string|null  $id
+     *
      * @return \Illuminate\Contracts\View\View
      */
     public function viewOrder($id = null)
@@ -473,6 +491,7 @@ class AdminActionController extends Controller
      * Send orders from action menu.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function sendOrder(Request $request, CreateOrderService $createOrderService)
@@ -484,7 +503,7 @@ class AdminActionController extends Controller
 
         $createOrderService->createOrder($request);
 
-        $status = RequestTable::where('id', $request->requestId)->first()->status;
+        $status = RequestTable::where('id', $request->requestId)->value('status');
 
         return redirect()->route('admin.status', $status === 4 || $status === 5 ? 'active' : ($status === 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
     }
@@ -493,11 +512,12 @@ class AdminActionController extends Controller
      * Download the encounter form.
      *
      * @param  int  $requestId
+     *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function downloadEncounterForm($requestId)
     {
-        $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first()->file_name;
+        $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->value('file_name');
 
         $path = storage_path() . '/app/encounterForm/' . $encounterFile;
         return response()->download($path);

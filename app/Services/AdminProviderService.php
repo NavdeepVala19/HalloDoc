@@ -20,9 +20,10 @@ class AdminProviderService
 
     /**
      * it returns data for providers listing
+     *
      * @return array
      */
-    public function ProvidersList()
+    public function providersList()
     {
         $currentDate = now()->toDateString();
         $currentTime = now()->format('H:i');
@@ -31,18 +32,18 @@ class AdminProviderService
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
         $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
 
-        $returnData = [
+        return [
             'onCallPhysicianIds' => $onCallPhysicianIds,
             'providersData' => $providersData,
         ];
-
-        return $returnData;
     }
 
 
     /**
      * it returns data of provider listing according to region selected for filtering
+     *
      * @param mixed $request
+     *
      * @return array
      */
     public function filterProviderList($request)
@@ -53,26 +54,25 @@ class AdminProviderService
         $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
 
-        if ($request->selectedId == "all") {
+        if ($request->selectedId === "all") {
             $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
             $providersData = Provider::with('role')->whereIn('id', $physicianRegions)->orderBy('created_at', 'asc')->paginate(10);
         }
 
-        $returnData = [
+        return [
             'onCallPhysicianIds' => $onCallPhysicianIds,
             'providersData' => $providersData,
         ];
-
-        return $returnData;
     }
 
-
     /**
-     * it facilitates contact to provider by SMS and Email 
+     * it facilitates contact to provider by SMS and Email
+     *
      * @param mixed $request
      * @param mixed $id
+     *
      * @return bool
      */
     public function contactToProvider($request, $id)
@@ -84,10 +84,10 @@ class AdminProviderService
         $receipientMobile = $receipientData->first()->mobile;
 
         $enteredText = $request->contact_msg;
-        if ($request->contact == "email") {
+        if ($request->contact === "email") {
             // send email
             $providerData = Provider::get()->where('id', $request->provider_id);
-            // Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
+            Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
 
             EmailLog::create([
                 'role_id' => 1,
@@ -103,7 +103,7 @@ class AdminProviderService
                 'email' => $receipientEmail,
                 'action'=>2,
             ]);
-        } elseif ($request->contact == "sms") {
+        } elseif ($request->contact === "sms") {
             // send SMS
             $sid = config('api.twilio_sid');
             $token = config('api.twilio_auth_token');
@@ -132,7 +132,7 @@ class AdminProviderService
                     'sms_template' => $enteredText,
                 ]
             );
-        } elseif ($request->contact == "both") {
+        } elseif ($request->contact === "both") {
             // send email
             $providerData = Provider::get()->where('id', $request->provider_id);
             Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -192,7 +192,9 @@ class AdminProviderService
 
     /**
      * it stores data in users,allusers,physicianRegion,provider and userRoles
+     *
      * @param mixed $request (input enter by admin)
+     *
      * @return bool
      */
     public function createNewProvider($request)
@@ -255,9 +257,12 @@ class AdminProviderService
         $providerAllUsers->save();
 
         // store documents in local storage
+
+        $storeFilePath = 'public/provider';
+
         if (isset($request->provider_photo)) {
             $providerData->photo = $request->file('provider_photo')->getClientOriginalName();
-            $request->file('provider_photo')->storeAs('public/provider', $request->file('provider_photo')->getClientOriginalName());
+            $request->file('provider_photo')->storeAs($storeFilePath, $request->file('provider_photo')->getClientOriginalName());
             $providerData->save();
         }
 
@@ -266,7 +271,7 @@ class AdminProviderService
 
             $file = $request->file('independent_contractor');
             $filename = $providerData->id . '_ICA.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $providerData->save();
         }
 
@@ -275,7 +280,7 @@ class AdminProviderService
 
             $file = $request->file('background_doc');
             $filename = $providerData->id . '_BC.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $providerData->save();
         }
 
@@ -284,7 +289,7 @@ class AdminProviderService
 
             $file = $request->file('hipaa_docs');
             $filename = $providerData->id . '_HCA.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $providerData->save();
         }
 
@@ -293,7 +298,7 @@ class AdminProviderService
 
             $file = $request->file('non_disclosure_doc');
             $filename = $providerData->id . '_NDD.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs( $storeFilePath, $filename);
             $providerData->save();
         }
 
@@ -303,8 +308,10 @@ class AdminProviderService
 
  /**
   * it updates physician information in edit physician account
+  *
   * @param mixed $request (input enter by admin)
   * @param mixed $id (id of provider)
+  *
   * @return bool
   */
 
@@ -339,8 +346,10 @@ class AdminProviderService
 
     /**
      * it updates Mailing & Billing Information in edit physician account
+     *
      * @param mixed $request (input enter by admin)
      * @param mixed $id (id of provider)
+     *
      * @return bool
      */
     public function updatePhysicianMailInformation($request, $id)
@@ -367,8 +376,10 @@ class AdminProviderService
 
     /**
      * it updates Provider Profile in edit physician account
+     *
      * @param mixed $request (input enter by admin)
      * @param mixed $id (id of provider)
+     *
      * @return bool
      */
     public function updateProviderProfile($request, $id)
@@ -390,20 +401,22 @@ class AdminProviderService
 
     /**
      * it updates Provider Onboarding Documents in edit physician account
+     *
      * @param mixed $request (input enter by admin)
      * @param mixed $id (id of provider)
+     *
      * @return bool
      */
     public function updateProviderDocumentsUpdate($request, $id)
     {
-
+        $storeFilePath = 'public/provider';
         $getProviderInformation = Provider::where('id', $id)->first();
 
         if (isset($request->independent_contractor)) {
             $getProviderInformation->IsAgreementDoc = 1;
             $file = $request->file('independent_contractor');
             $filename = $getProviderInformation->id . '_ICA.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $getProviderInformation->save();
         }
 
@@ -411,7 +424,7 @@ class AdminProviderService
             $getProviderInformation->IsBackgroundDoc = 1;
             $file = $request->file('background_doc');
             $filename = $getProviderInformation->id . '_BC.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $getProviderInformation->save();
         }
 
@@ -419,7 +432,7 @@ class AdminProviderService
             $getProviderInformation->IsTrainingDoc = 1;
             $file = $request->file('hipaa_docs');
             $filename = $getProviderInformation->id . '_HCA.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $getProviderInformation->save();
         }
 
@@ -427,7 +440,7 @@ class AdminProviderService
             $getProviderInformation->IsNonDisclosureDoc = 1;
             $file = $request->file('non_disclosure_doc');
             $filename = $getProviderInformation->id . '_NDD.pdf';
-            $file->storeAs('public/provider', $filename);
+            $file->storeAs($storeFilePath, $filename);
             $getProviderInformation->save();
         }
 

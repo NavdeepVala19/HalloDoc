@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PhysicianLocation;
-use App\Models\Provider;
 use App\Models\UserRoles;
 use App\Models\Users;
-
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +16,7 @@ class AdminLoginController extends Controller
 
     /**
      * show Login page for admin and provider
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function adminLogin()
@@ -27,10 +24,11 @@ class AdminLoginController extends Controller
         return view('admin/adminLogin');
     }
 
-
     /**
      * verify that user is admin or provider and if user entered credentials are valid it redirects to dashboard according to role
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|\Illuminate\Http\RedirectResponse
      */
     public function userLogin(Request $request)
@@ -47,17 +45,8 @@ class AdminLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $userData = Auth::user();
-            $userRole= UserRoles::where('user_id', $userData->id)->first();
+            $userRole = UserRoles::where('user_id', $userData->id)->first();
 
-            if ($userRole->role_id === 2) {
-                $providersData = Provider::where('email', $userData->email)->first();
-                PhysicianLocation::create([
-                    'provider_id' => $providersData->id,
-                    'physician_name' => $providersData->first_name,
-                    'latitude' => $request->latitude,
-                    'longitude' => $request->longitude,
-                ]);
-            }
             if ($userRole->role_id === 1) {
                 return redirect()->route('admin.dashboard');
             }
@@ -67,9 +56,19 @@ class AdminLoginController extends Controller
             if ($userRole->role_id === 3) {
                 return back()->with('error', 'invalid credentials');
             }
+
+            // if ($userRole->role_id === 2) {
+            //     $providersData = Provider::where('email', $userData->email)->first();
+            //     PhysicianLocation::create([
+            //         'provider_id' => $providersData->id,
+            //         'physician_name' => $providersData->first_name,
+            //         'latitude' => $request->latitude,
+            //         'longitude' => $request->longitude,
+            //     ]);
+            // }
         } else {
-            $user = Users::where("email", $request->email)->first();
-            if ($user == null) {
+            $isuserExist = Users::where("email", $request->email)->first();
+            if ($isuserExist === null) {
                 return back()->with('error', 'We could not find an account associated with that email address');
             } else {
                 return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
@@ -79,6 +78,7 @@ class AdminLoginController extends Controller
 
     /**
      * show password reset form
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function adminResetPassword()
@@ -88,7 +88,9 @@ class AdminLoginController extends Controller
 
     /**
      *  send email to entered email if email not exist it shows error message
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function submitForgetPasswordForm(Request $request)
@@ -123,7 +125,9 @@ class AdminLoginController extends Controller
 
     /**
      * shows password update form and if password is already updated it shows password update success form
+     *
      * @param mixed $token
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function showUpdatePasswordForm($token)
@@ -142,7 +146,9 @@ class AdminLoginController extends Controller
 
     /**
      * password updated of users(admin/provider) and after successfully update password token gets deleted
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function submitUpdatePasswordForm(Request $request)
@@ -153,7 +159,7 @@ class AdminLoginController extends Controller
         ]);
 
         $updatePassword = Users::where('token', $request->token)->first();
-        if (!$updatePassword) {
+        if (! $updatePassword) {
             return back()->with('error', 'Invalid token!');
         }
 
@@ -169,9 +175,10 @@ class AdminLoginController extends Controller
 
     /**
      * logout user(admin/provider)
+     *
      * @return mixed|\Illuminate\Http\RedirectResponse
      */
- public function logout()
+    public function logout()
     {
         Auth::logout();
         return redirect()->route('login');
@@ -183,7 +190,5 @@ class AdminLoginController extends Controller
         //     $providersData = Provider::where('email', $userData->email)->first();
         //     PhysicianLocation::where('provider_id', $providersData->id)->forceDelete();
         // }
-
-       
     }
 }

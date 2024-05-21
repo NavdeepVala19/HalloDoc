@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RequestStatus extends Model
 {
     use HasFactory;
-
     protected $table = 'request_status';
-
     protected $fillable = [
         'request_id',
         'status',
@@ -21,7 +19,6 @@ class RequestStatus extends Model
         'notes',
     ];
 
-    
     public function request()
     {
         return $this->hasOne(RequestTable::class, 'id', 'request_id');

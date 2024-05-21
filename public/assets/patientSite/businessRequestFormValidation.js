@@ -105,7 +105,7 @@ $(document).ready(function () {
             // If a value is entered, check if it's a non-negative number
             return !isNaN(value) && value >= 0;
         },
-        "Please enter a positive value in  room number."
+        "Please enter a positive value in room number."
     );
 
     $.validator.addMethod(

@@ -6,8 +6,10 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-
-class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
+class UsersExport implements
+    FromCollection,
+    WithCustomCsvSettings,
+    WithHeadings
 {
     private $data;
 
@@ -22,7 +24,15 @@ class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 
     public function headings(): array
     {
-        return ['PatientName', 'Date_of_Birth', 'RequestorName', 'RequestedDate', 'Mobile', 'Address', 'Notes'];
+        return [
+            'PatientName',
+            'Date_of_Birth',
+            'RequestorName',
+            'RequestedDate',
+            'Mobile',
+            'Address',
+            'Notes',
+        ];
     }
     /**
      * @return \Illuminate\Support\Collection

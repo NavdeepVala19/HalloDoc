@@ -12,7 +12,6 @@ class PhysicianLocation extends Model
     use SoftDeletes;
 
     protected $table = 'physician_location';
-    
     protected $fillable = [
         'id',
         'provider_id',
@@ -22,8 +21,6 @@ class PhysicianLocation extends Model
         'address',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
-
-
 }

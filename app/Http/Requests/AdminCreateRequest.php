@@ -80,7 +80,6 @@ class AdminCreateRequest extends FormRequest
             'adminNote.min' => $min_message . ' 5 character',
             'adminNote.max' => $max_message . ' 200 character',
             'adminNote.regex' => 'Please enter valid notes. notes should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.',
-            
             'room.max_digits' => 'Maximum 4 digits are allowed in room number',
             'room.gte' => 'Please enter room number greater than 0',
         ];

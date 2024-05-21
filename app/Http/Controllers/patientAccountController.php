@@ -6,11 +6,11 @@ use App\Models\Users; // Make sure your model name follows the PSR standards (Us
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash; // Import the Hash facade
 
-
 class PatientAccountController extends Controller
 {
     /**
      * display patient register page
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientRegister()
@@ -20,7 +20,9 @@ class PatientAccountController extends Controller
 
     /**
      *stores email and password in users table
+
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function createAccount(Request $request)

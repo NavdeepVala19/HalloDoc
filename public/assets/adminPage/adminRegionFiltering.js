@@ -9,7 +9,7 @@ function fetchPaginatedResults(
     var token = $('meta[name="csrf-token"]').attr("content");
 
     $.ajax({
-        url: "/filter-new?page=" + page,
+        url: "/filter-requests?page=" + page,
         type: "POST",
         dataType: "json",
         data: {

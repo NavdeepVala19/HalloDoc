@@ -36,7 +36,7 @@ class AdminProfileForm extends FormRequest
             'alt_mobile' => 'required|max_digits:10|min_digits:10',
             'role' => 'required',
             'state' => 'required',
-            'region_id'=>'required'
+            'region_id'=>'required',
         ];
     }
 

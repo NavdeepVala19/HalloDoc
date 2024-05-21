@@ -12,6 +12,7 @@ class PatientProfileController extends Controller
 {
     /**
      * display patient profile edit page
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientEdit()
@@ -27,10 +28,12 @@ class PatientProfileController extends Controller
 
     /**
      * the page through which patient can edit their profile
+     *
      * @param mixed $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function patientprofileEdit($id)
+    public function patientProfileEdit($id)
     {
         try {
             $id = Crypt::decrypt($id);
@@ -46,7 +49,9 @@ class PatientProfileController extends Controller
 
     /**
      * patient update their data in users, allusers table
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function patientUpdate(CreatePatientRequest $request, PatientDashboardService $patientDashboardService)
@@ -54,13 +59,14 @@ class PatientProfileController extends Controller
         $userData = Auth::user();
         // Update data in users table
 
-        $patientDashboardService->patientProfileUpdate($request,$userData);
+        $patientDashboardService->patientProfileUpdate($request, $userData);
         return redirect()->route('patient.dashboard')->with('message', 'profile is updated successfully');
     }
 
 
     /**
      * patient can see their location on google map
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientMapLocation()

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\DocsAttachmentMail;
 use App\Mail\SendAgreement;
 use App\Mail\SendMailPatient;
-
 use App\Models\Admin;
 use App\Models\EmailLog;
 use App\Models\HealthProfessional;
@@ -14,14 +13,11 @@ use App\Models\RequestClient;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\SMSLogs;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-
 use Twilio\Rest\Client;
-
 use ZipArchive;
 
 class CommonOperationController extends Controller
@@ -30,6 +26,7 @@ class CommonOperationController extends Controller
      * Download any sinlge file function
      *
      * @param int $id id of document/image to be downloaded
+     *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($id = null)
@@ -53,12 +50,11 @@ class CommonOperationController extends Controller
     /**
      * Delete a single document from viewUploads page
      *
-     * @param int $id id of document/image to be deleted 
+     * @param int $id id of document/image to be deleted
      */
     public function deleteDoc($id = null)
     {
         RequestWiseFile::where('id', $id)->delete();
-
         return redirect()->back();
     }
 
@@ -67,15 +63,16 @@ class CommonOperationController extends Controller
      * Perform different operations as per the operation selected (Delete All, Download All, Send Mail)
      *
      * @param Request $request It will have different operations
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function operations(Request $request)
     {
-        $email = RequestClient::where('request_id', $request->requestId)->first()->email;
+        $email = RequestClient::where('request_id', $request->requestId)->value('email');
         // Delete All Documents or Delete the selected documents
         if ($request->input('operation') === 'delete_all') {
             // if (empty($request->input('selected'))) {
-            if (!$request->selected) {
+            if (! $request->selected) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
@@ -91,7 +88,7 @@ class CommonOperationController extends Controller
         if ($request->input('operation') === 'download_all') {
             // Download All Documents or Download the selected documents
             // if (empty($request->input('selected'))) {
-            if (!$request->selected) {
+            if (! $request->selected) {
                 $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to download!');
@@ -123,9 +120,9 @@ class CommonOperationController extends Controller
             }
 
             $request->validate([
-                'selected' => 'required'
+                'selected' => 'required',
             ], [
-                'selected.required' => 'Please select at least one record.'
+                'selected.required' => 'Please select at least one record.',
             ]);
 
             $ids = $request->input('selected');
@@ -156,7 +153,7 @@ class CommonOperationController extends Controller
                 'email_template' => 'mail.blade.php',
                 'subject_name' => 'Documets Link Sent',
                 'email' => $email,
-                'action' => 6
+                'action' => 6,
             ]);
 
             try {
@@ -173,13 +170,13 @@ class CommonOperationController extends Controller
      * Send email to patient.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function sendMailPatient(Request $request)
     {
         $requestClient = RequestClient::where('request_id', $request->requestId)->first();
         try {
-
             $user = Auth::user();
             $provider = Provider::where('user_id', $user->id)->first();
 
@@ -189,12 +186,12 @@ class CommonOperationController extends Controller
 
             if ($provider) {
                 $roleId = 2;
-                $providerId = Provider::where('user_id', $user->id)->first()->id;
+                $providerId = Provider::where('user_id', $user->id)->value('id');
                 $provider = Provider::where('user_id', $user->id)->first();
                 Mail::to($requestClient->email)->send(new SendMailPatient($requestClient, $provider, $message));
             } else {
                 $roleId = 1;
-                $adminId = Admin::where('user_id', $user->id)->first()->id;
+                $adminId = Admin::where('user_id', $user->id)->value('id');
                 $admin = Admin::where('user_id', $user->id)->first();
                 Mail::to($requestClient->email)->send(new SendMailPatient($requestClient, $admin, $message));
             }
@@ -204,7 +201,7 @@ class CommonOperationController extends Controller
                 'request_id' => $request->request_id,
                 'admin_id' => $adminId,
                 'provider_id' => $providerId,
-                'recipient_name' => $requestClient->first_name . ' ' . $requestClient->last_name,
+                'recipient_name' => $requestClient->first_name.' '.$requestClient->last_name,
                 'email_template' => 'sendMailPatient.blade.php',
                 'subject_name' => 'Send Mail to patient',
                 'email' => $requestClient->email,
@@ -226,13 +223,14 @@ class CommonOperationController extends Controller
      * Provider/Admin Send Agreement Link to Patient from Pending State
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendAgreementLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required'
+            'phone_number' => 'required',
         ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
 
@@ -244,10 +242,10 @@ class CommonOperationController extends Controller
 
         if ($provider) {
             $roleId = 2;
-            $providerId = Provider::where('user_id', $user->id)->first()->id;
+            $providerId = Provider::where('user_id', $user->id)->value('id');
         } else {
             $roleId = 1;
-            $adminId = Admin::where('user_id', $user->id)->first()->id;
+            $adminId = Admin::where('user_id', $user->id)->value('id');
         }
 
         $id = $request->request_id;
@@ -256,7 +254,7 @@ class CommonOperationController extends Controller
             'request_id' => $request->request_id,
             'admin_id' => $adminId,
             'provider_id' => $providerId,
-            'recipient_name' => $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name,
+            'recipient_name' => $clientData->requestClient->first_name.' '.$clientData->requestClient->last_name,
             'email_template' => 'sendAgreementLink.blade.php',
             'subject_name' => 'Agreement Link Sent to Patient',
             'email' => $request->email,
@@ -273,7 +271,7 @@ class CommonOperationController extends Controller
                 'sms_template' => 'Hii, Click on the given link to create request',
                 'mobile_number' => $request->phone_number,
                 'confirmation_number' => $clientData->confirmation_no,
-                'recipient_name' => $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name,
+                'recipient_name' => $clientData->requestClient->first_name.' '.$clientData->requestClient->last_name,
                 'role_id' => $roleId,
                 'admin_id' => $adminId,
                 'request_id' => $request->request_id,
@@ -304,7 +302,7 @@ class CommonOperationController extends Controller
                 ->create(
                     '+91 99780 71802', // to
                     [
-                        'body' => 'Hii ' .  $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $id),
+                        'body' => 'Hii '. $clientData->requestClient->first_name.' '.$clientData->requestClient->last_name .', Click on the this link to open Agreement:'.url('/patient-agreement/' . $id),
                         'from' =>  $senderNumber,
                     ]
                 );
@@ -320,6 +318,7 @@ class CommonOperationController extends Controller
      * Fetch business values (health_professional values) based on the profession selected.
      *
      * @param int $id The ID of the selected profession.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function fetchBusiness($id)
@@ -332,6 +331,7 @@ class CommonOperationController extends Controller
      * Fetches business data based on the provided ID and returns it as a JSON response.
      *
      * @param int $id The ID of the business data to fetch.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function fetchBusinessData($id)

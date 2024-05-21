@@ -38,10 +38,6 @@
         justify-content: center;
     }
 
-    .submitType {
-        font-size: 1.5rem;
-        text-decoration: none;
-    }
 
     .main-container {
         margin-top: 20px;
@@ -58,21 +54,11 @@
         justify-content: center;
     }
 
-    .patient {
-        background-color: rgb(222, 225, 253);
-        border-color: rgb(76, 76, 255);
+    .agreement-link-btn{
+        text-decoration: none;
     }
-
-    #patient {
-        color: rgb(76, 76, 255);
-    }
-
 
     @media (max-width: 550px) {
-        .menu-icon {
-            display: none;
-        }
-
         .container {
             margin-top: 30px;
         }
@@ -106,9 +92,10 @@
     <!-- this div is for main content -->
     <div class=" main-container">
         <h3> {{ $data->requestClient->first_name }} {{ $data->requestClient->last_name }}, Click on the below link to
-            read the agreement.</h3>
+            read the agreement.
+        </h3>
         <div class="case">
-            <a href="{{ route('patient.agreement', Crypt::encrypt($data->id)) }}">Agreement Link</a>
+            <a href="{{ route('patient.agreement', Crypt::encrypt($data->id)) }}" class="agreement-link-btn">Agreement Link</a>
         </div>
     </div>
 </div>

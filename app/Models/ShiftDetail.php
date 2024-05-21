@@ -10,10 +10,7 @@ class ShiftDetail extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
     protected $table = 'shift_detail';
-
-
 
     public function shiftDetailRegion()
     {

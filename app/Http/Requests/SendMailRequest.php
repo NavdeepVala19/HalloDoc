@@ -25,7 +25,7 @@ class SendMailRequest extends FormRequest
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'phone_number' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/'
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
         ];
     }
 }

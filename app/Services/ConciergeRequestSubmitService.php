@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
 use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
@@ -16,10 +15,11 @@ use Illuminate\Support\Facades\Mail;
 
 class ConciergeRequestSubmitService
 {
-
     /**
      * it generates confirmation number
+     *
      * @param mixed $request
+     *
      * @return string
      */
     private function generateConfirmationNumber($request)
@@ -39,7 +39,9 @@ class ConciergeRequestSubmitService
     /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     *
      * @param mixed $request (input enter by user)
+     *
      * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
      */
     public function storeConciergeRequest($request)
@@ -47,7 +49,7 @@ class ConciergeRequestSubmitService
         $isEmailStored = Users::where('email', $request->email)->first();
 
         // Store user details if email is not already stored
-        if ($isEmailStored == null) {
+        if ($isEmailStored === null) {
             $storePatientInUsers = new Users();
             $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
             $storePatientInUsers->email = $request->email;
@@ -64,7 +66,7 @@ class ConciergeRequestSubmitService
                 'street',
                 'city',
                 'state',
-                'zipcode'
+                'zipcode',
             ]));
             $storePatientInAllUsers->save();
 
@@ -95,7 +97,7 @@ class ConciergeRequestSubmitService
             'city' => $request->concierge_city,
             'state' => $request->concierge_state,
             'zipcode' => $request->concierge_zip_code,
-            'symptoms' => $request->symptoms
+            'symptoms' => $request->symptoms,
         ]);
 
         $concierge = Concierge::create([
@@ -123,7 +125,7 @@ class ConciergeRequestSubmitService
 
         try {
             // Send email if email is not already stored
-            if ($isEmailStored == null) {
+            if ($isEmailStored === null) {
                 $emailAddress = $request->email;
                 Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 

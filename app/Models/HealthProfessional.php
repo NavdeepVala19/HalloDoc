@@ -23,6 +23,7 @@ class HealthProfessional extends Model
         'phone_number',
         'email',
         'business_contact',
+        'profession',
     ];
 
 
