@@ -18,6 +18,4 @@ class RequestNotes extends Model
         'admin_notes',
         'AdministrativeNotes',
     ];
-
-
 }

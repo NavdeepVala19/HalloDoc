@@ -2,41 +2,20 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
+use App\Helpers\ConfirmationNumber;
+use App\Mail\SendEmailAddress;
 use App\Models\Admin;
-use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\UserRoles;
+use App\Models\RequestClient;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use App\Models\RequestClient;
-use App\Mail\SendEmailAddress;
-use App\Models\RequestWiseFile;
+use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Mail;
-
 
 class AdminCreateRequestService
 {
-    /**
-     * it generates confirmation number
-     * @param mixed $request
-     * @return string
-     */
-    private function generateConfirmationNumber($request)
-    {
-        $currentTime = now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-        return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
-    }
-
     /**
      * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
@@ -48,7 +27,7 @@ class AdminCreateRequestService
         // Store user details if email is not already stored
         if ($isEmailStored === null) {
             $storePatientInUser = new Users();
-            $storePatientInUser->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUser->username = $request->first_name . ' ' . $request->last_name;
             $storePatientInUser->email = $request->email;
             $storePatientInUser->phone_number = $request->phone_number;
             $storePatientInUser->save();
@@ -63,7 +42,7 @@ class AdminCreateRequestService
                 'street',
                 'city',
                 'state',
-                'zipcode'
+                'zipcode',
             ]));
             $storePatientInAllUser->save();
 
@@ -81,7 +60,7 @@ class AdminCreateRequestService
             'first_name',
             'last_name',
             'email',
-            'phone_number'
+            'phone_number',
         ]));
         $requestData->save();
 
@@ -98,7 +77,7 @@ class AdminCreateRequestService
             'state',
             'zipcode',
             'room',
-            'symptoms'
+            'symptoms',
         ]));
         $patientRequest->save();
 
@@ -108,7 +87,8 @@ class AdminCreateRequestService
         ]);
 
         // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
+        // $confirmationNumber = $this->generateConfirmationNumber($request);
+        $confirmationNumber = ConfirmationNumber::generate($request);
 
         // Update confirmation number if request is created successfully
         if ($requestData->id) {
@@ -141,10 +121,11 @@ class AdminCreateRequestService
         }
     }
 
-
     /**
      * it returns data of admin when admin route from user access to their profile edit page
+     *
      * @param mixed $id (id of user table)
+     *
      * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
      */
     public function adminProfileEditThroughUserAccessPage($id)
@@ -172,10 +153,11 @@ class AdminCreateRequestService
             ->first();
     }
 
-
     /**
      * it will return data of admin when route from one page to their profile edit page
+     *
      * @param mixed $id (id of user table)
+     *
      * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
      */
     public function adminProfile($id)
@@ -201,13 +183,14 @@ class AdminCreateRequestService
             ->leftJoin('regions', 'regions.id', 'admin.region_id')
             ->where('user_id', $id)
             ->first();
-
     }
 
     /**
      * it update admin profile administration information data in admin,allusers and users table
+     *
      * @param mixed $request (input enter by user(admin))
      * @param mixed $id (id of user table)
+     *
      * @return bool
      */
     public function updateAdminInformation($request, $id)
@@ -237,11 +220,12 @@ class AdminCreateRequestService
         return true;
     }
 
-
     /**
      * it update admin profile Mailing & Billing Information data in admin and allusers table
+     *
      * @param mixed $request (input enter by user(admin))
      * @param mixed $id (id of user table)
+     *
      * @return bool
      */
     public function updateAdminMailInformation($request, $id)

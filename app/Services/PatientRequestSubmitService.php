@@ -2,54 +2,35 @@
 
 namespace App\Services;
 
-use App\Models\UserRoles;
-use Carbon\Carbon;
-use App\Models\Users;
+use App\Helpers\ConfirmationNumber;
+use App\Mail\SendEmailAddress;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\RequestTable;
 use App\Models\RequestClient;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
-use App\Mail\SendEmailAddress;
+use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Mail;
-
 
 class PatientRequestSubmitService
 {
     /**
-     * it generates confirmation number
-     * @param mixed $request
-     * @return string
-     */
-    private function generateConfirmationNumber($request)
-    {
-        $currentTime = Carbon::now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-        return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
-    }
-
-
-    /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     *
      * @param mixed $request (input enter by user)
+     *
      * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
      */
     public function storeRequest($request)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
-    
+
         // Store user details if email is not already stored
         if ($isEmailStored === null) {
             $storePatientInUsers = new Users();
-            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUsers->username = $request->first_name . ' ' . $request->last_name;
             $storePatientInUsers->email = $request->email;
             $storePatientInUsers->phone_number = $request->phone_number;
             $storePatientInUsers->save();
@@ -64,16 +45,16 @@ class PatientRequestSubmitService
                 'street',
                 'city',
                 'state',
-                'zipcode'
+                'zipcode',
             ]));
             $storePatientInAllUsers->save();
 
             $userRole = new UserRoles();
             $userRole->role_id = 3;
             $userRole->user_id = $storePatientInUsers->id;
-            $userRole->save();    
+            $userRole->save();
         }
-        
+
         $requestData = new RequestTable();
         $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id;
         $requestData->request_type_id = 1;
@@ -82,7 +63,7 @@ class PatientRequestSubmitService
             'first_name',
             'last_name',
             'email',
-            'phone_number'
+            'phone_number',
         ]));
         $requestData->save();
 
@@ -99,7 +80,7 @@ class PatientRequestSubmitService
             'state',
             'zipcode',
             'room',
-            'symptoms'
+            'symptoms',
         ]));
         $patientRequest->save();
 
@@ -113,7 +94,8 @@ class PatientRequestSubmitService
         }
 
         // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
+        // $confirmationNumber = $this->generateConfirmationNumber($request);
+        $confirmationNumber = ConfirmationNumber::generate($request);
 
         // Update confirmation number if request is created successfully
         if ($requestData->id) {
@@ -145,6 +127,4 @@ class PatientRequestSubmitService
             return view('errors.500');
         }
     }
-
 }
-

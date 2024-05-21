@@ -6,10 +6,8 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-
 class NewStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
     private $data;
 
     public function __construct($data)

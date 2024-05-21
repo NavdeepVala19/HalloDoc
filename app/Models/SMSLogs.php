@@ -11,7 +11,6 @@ class SMSLogs extends Model
 
     protected $table = 'sms_log';
 
-
     protected $fillable = [
         'recipient_name',
         'sms_template',
@@ -24,7 +23,7 @@ class SMSLogs extends Model
         'action',
         'role_id',
     ];
- 
+
     public function provider()
     {
         return $this->belongsTo(Provider::class);

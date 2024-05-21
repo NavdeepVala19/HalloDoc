@@ -2,32 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProviderForm;
+use App\Models\AllUsers;
+use App\Models\PhysicianLocation;
+use App\Models\PhysicianRegion;
+use App\Models\Provider;
+use App\Models\Regions;
 use App\Models\Role;
 use App\Models\Users;
-use App\Models\Regions;
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
-use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\Provider;
-use App\Models\UserRoles;
-use App\Models\ShiftDetail;
-use Illuminate\Http\Request;
-use App\Mail\ContactProvider;
-
-use App\Models\PhysicianRegion;
-use App\Models\PhysicianLocation;
-use App\Http\Requests\ProviderForm;
-use Illuminate\Support\Facades\Hash;
-
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
 use App\Services\AdminProviderService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class AdminProviderController extends Controller
 {
     /**
      * listing of providersname,status,role,call status
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function readProvidersInfo(AdminProviderService $adminProviderService)
@@ -42,14 +34,15 @@ class AdminProviderController extends Controller
         }
     }
 
-
     /**
      * filtering of physician by region through ajax and it lists providersname,status,role,call status
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
 
-    public function filterPhysicianThroughRegions(Request $request,AdminProviderService $adminProviderService)
+    public function filterPhysicianThroughRegions(Request $request, AdminProviderService $adminProviderService)
     {
         $providers = $adminProviderService->filterProviderList($request);
         $onCallPhysicianIds = $providers['onCallPhysicianIds'];
@@ -59,13 +52,14 @@ class AdminProviderController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
     /**
      * perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function filterPhysicianThroughRegionsMobileView(Request $request,AdminProviderService $adminProviderService)
+    public function filterPhysicianThroughRegionsMobileView(Request $request, AdminProviderService $adminProviderService)
     {
         $providers = $adminProviderService->filterProviderList($request);
         $onCallPhysicianIds = $providers['onCallPhysicianIds'];
@@ -75,20 +69,21 @@ class AdminProviderController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
     /**
      * this function perform send email and sms to provider
+     *
      * @param \Illuminate\Http\Request $request
      * @param mixed $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function sendMailToContactProvider(Request $request, $id,AdminProviderService $adminProviderService)
+    public function sendMailToContactProvider(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'contact_msg' => 'required|min:2|max:100',
         ]);
         try {
-            $adminProviderService->contactToProvider($request,$id);
+            $adminProviderService->contactToProvider($request, $id);
             return redirect()->route('admin.providers.list')->with('message', 'Your message has been sent successfully.');
         } catch (\Throwable $th) {
             return view('errors.500');
@@ -96,9 +91,11 @@ class AdminProviderController extends Controller
     }
 
     /**
-     *  this function perform stop notification through ajax 
+     * this function perform stop notification through ajax
+     *
      * @param \Illuminate\Http\Request $request
-     * @return void 
+     *
+     * @return void
      */
     public function stopNotifications(Request $request)
     {
@@ -108,6 +105,7 @@ class AdminProviderController extends Controller
 
     /**
      * display create new provider account page
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function newProvider()
@@ -116,22 +114,24 @@ class AdminProviderController extends Controller
         return view('/adminPage/provider/adminNewProvider', compact('regions'));
     }
 
-
     /**
      * it stores data in provider,user,allusers and physician_region table
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function adminCreateNewProvider(ProviderForm $request,AdminProviderService $adminProviderService)
+    public function adminCreateNewProvider(ProviderForm $request, AdminProviderService $adminProviderService)
     {
         $adminProviderService->createNewProvider($request);
         return redirect()->route('admin.providers.list')->with('message', 'account is created');
     }
 
-
     /**
      * display edit provider page
+     *
      * @param mixed $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function editProvider($id)
@@ -149,9 +149,10 @@ class AdminProviderController extends Controller
      * it update password and username in users table
      * it update role and status in provider table
      * and also update status in allusers table
-     
+     *
      * @param \Illuminate\Http\Request $request
      * @param mixed $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function updateProviderAccountInfo(Request $request, $id)
@@ -189,17 +190,17 @@ class AdminProviderController extends Controller
         return back()->with('message', 'account information is updated');
     }
 
-
     /**
      * update firstname,lastname,email,mobile,medical license and npi number in provider table
      * update firstname,lastname,email,mobile in allusers table
      * update email and mobile in users table
- 
+     *
      * @param \Illuminate\Http\Request $request
      * @param mixed $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function providerInfoUpdate(Request $request, $id,AdminProviderService $adminProviderService)
+    public function providerInfoUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
@@ -210,20 +211,21 @@ class AdminProviderController extends Controller
             'npi_number' => 'required|numeric|min_digits:10|max_digits:10',
         ]);
 
-        $adminProviderService->updatePhysicianInformation($request,$id);
+        $adminProviderService->updatePhysicianInformation($request, $id);
         return back()->with('message', 'Physician information is updated');
     }
-
 
     /**
      * update address1,address2,city,zipcode,state,alternate phone number in provider table
      * update address1,city,zipcode in allusers table
+     *
      * @param \Illuminate\Http\Request $request
      * @param mixed $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function providerMailInfoUpdate(Request $request, $id,AdminProviderService $adminProviderService)
+    public function providerMailInfoUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'address1' => 'required|min:2|max:50',
@@ -233,17 +235,19 @@ class AdminProviderController extends Controller
             'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);
 
-        $adminProviderService->updatePhysicianMailInformation($request,$id);
+        $adminProviderService->updatePhysicianMailInformation($request, $id);
         return back()->with('message', 'Mailing and Billing information is updated');
     }
 
     /**
      *  update businessname,website,adminnotes,provider_photo in provider table
+     *
      * @param \Illuminate\Http\Request $request
      * @param mixed $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function providerProfileUpdate(Request $request, $id,AdminProviderService $adminProviderService)
+    public function providerProfileUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -252,15 +256,16 @@ class AdminProviderController extends Controller
             'admin_notes' => 'nullable|min:5|max:200|',
         ]);
 
-        $adminProviderService->updateProviderProfile($request,$id);
+        $adminProviderService->updateProviderProfile($request, $id);
         return back()->with('message', 'Provider Profile information is updated');
     }
 
-
     /**
      * update onboarding document in local storage
+     *
      * @param \Illuminate\Http\Request $request
      * @param mixed $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
 
@@ -273,18 +278,20 @@ class AdminProviderController extends Controller
             'non_disclosure_doc' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
         ]);
 
-        $adminProviderService->updateProviderDocumentsUpdate($request,$id);
+        $adminProviderService->updateProviderDocumentsUpdate($request, $id);
         return back()->with('message', 'Document is uploaded');
     }
 
     /**
-     *delete(softDelete) provider account from allusers,physicianRegion,users and provider table
+     * delete(softDelete) provider account from allusers,physicianRegion,users and provider table
+     *
      * @param mixed $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteProviderAccount($id)
     {
-        // soft delete 
+        // soft delete
         $providerInfo = Provider::where('id', $id)->first();
 
         AllUsers::where('user_id', $providerInfo->user_id)->delete();
@@ -295,9 +302,9 @@ class AdminProviderController extends Controller
         return redirect()->route('admin.providers.list')->with('message', 'account is deleted');
     }
 
-
     /**
      * fetch role name from role table and display through ajax
+     *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function fetchRolesName()
@@ -306,9 +313,9 @@ class AdminProviderController extends Controller
         return response()->json($fetchRoleName);
     }
 
-
     /**
      * Show Provider Location
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function providerLocations()

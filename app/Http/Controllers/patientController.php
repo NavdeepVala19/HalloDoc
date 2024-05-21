@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePatientRequest;
 use App\Services\PatientRequestSubmitService;
 
@@ -13,6 +12,7 @@ class PatientController extends Controller
 {
     /**
      * display patient request form
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientRequests()
@@ -23,11 +23,13 @@ class PatientController extends Controller
     /**
      * stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    
-    public function create(CreatePatientRequest $request , PatientRequestSubmitService $requestSubmitService)
+
+    public function create(CreatePatientRequest $request, PatientRequestSubmitService $requestSubmitService)
     {
         $patientRequest = $requestSubmitService->storeRequest($request);
         $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';

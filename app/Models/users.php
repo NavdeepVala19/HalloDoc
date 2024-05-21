@@ -32,7 +32,6 @@ class Users extends Model
         'token',
     ];
 
-
     public function allusers()
     {
         return $this->hasMany(AllUsers::class);

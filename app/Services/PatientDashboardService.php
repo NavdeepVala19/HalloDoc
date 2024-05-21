@@ -2,98 +2,82 @@
 
 namespace App\Services;
 
-use App\Models\UserRoles;
-use Carbon\Carbon;
-use App\Models\Users;
+use App\Helpers\ConfirmationNumber;
+use App\Mail\SendEmailAddress;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\RequestTable;
 use App\Models\RequestClient;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
-use App\Mail\SendEmailAddress;
+use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Mail;
-
 
 class PatientDashboardService
 {
     /**
-     * it generates confirmation number
-     * @param mixed $request
-     * @return string
-     */
-    private function generateConfirmationNumber($request)
-    {
-        $currentTime = Carbon::now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-        return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
-    }
-
-    /**
      * it stores request in request_client and request table
+     *
      * @param mixed $request (input enter by user)
      * @param mixed $email (email of loged in patient)
+     *
      * @return object|Users|\Illuminate\Database\Eloquent\Model|null
      */
-    public function storeMeRequest($request,$email)
+    public function storeMeRequest($request, $email)
     {
         $isEmailStored = Users::where('email', $email)->first();
-        $RequestTable= RequestTable::create([
-            'request_type_id'=>1,
-            'status'=>1,
-            'user_id'=>$isEmailStored->id,
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'email'=>$email,
-            'phone_number'=>$request->phone_number,
+        $requestTable = RequestTable::create([
+            'request_type_id' => 1,
+            'status' => 1,
+            'user_id' => $isEmailStored->id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $email,
+            'phone_number' => $request->phone_number,
         ]);
 
         RequestClient::create([
-            'request_id'=>$RequestTable->id,
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'date_of_birth'=>$request->date_of_birth,
-            'email'=>$email,
-            'phone_number'=>$request->phone_number,
-            'street'=>$request->street,
-            'city'=> $request->city,
-            'state'=>$request->state,
-            'zipcode'=>$request->zipcode,
-            'notes'=>$request->symptoms,
-            'room'=>$request->room,
+            'request_id' => $requestTable->id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'date_of_birth' => $request->date_of_birth,
+            'email' => $email,
+            'phone_number' => $request->phone_number,
+            'street' => $request->street,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zipcode' => $request->zipcode,
+            'notes' => $request->symptoms,
+            'room' => $request->room,
         ]);
 
         // store documents in request_wise_file table
         if (isset($request->docs)) {
             $request_file = new RequestWiseFile();
-            $request_file->request_id = $RequestTable->id;
+            $request_file->request_id = $requestTable->id;
             $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
         }
 
         // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
+        // $confirmationNumber = $this->generateConfirmationNumber($request);
+        $confirmationNumber = ConfirmationNumber::generate($request);
 
         // Update confirmation number if request is created successfully
-        if ($RequestTable->id) {
-            $RequestTable->update(['confirmation_no' => $confirmationNumber]);
+        if ($requestTable->id) {
+            $requestTable->update(['confirmation_no' => $confirmationNumber]);
         }
 
         return $isEmailStored;
     }
 
-
     /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     *
      * @param mixed $request (input enter by user)
+     *
      * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
      */
     public function storeSomeOneRequest($request)
@@ -102,7 +86,7 @@ class PatientDashboardService
         // Store user details if email is not already stored
         if ($isEmailStored === null) {
             $storePatientInUsers = new Users();
-            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUsers->username = $request->first_name . ' ' . $request->last_name;
             $storePatientInUsers->email = $request->email;
             $storePatientInUsers->phone_number = $request->phone_number;
             $storePatientInUsers->save();
@@ -117,16 +101,16 @@ class PatientDashboardService
                 'street',
                 'city',
                 'state',
-                'zipcode'
+                'zipcode',
             ]));
             $requestInAllUsers->save();
 
             $userRole = new UserRoles();
             $userRole->role_id = 3;
             $userRole->user_id = $storePatientInUsers->id;
-            $userRole->save();    
+            $userRole->save();
         }
-        
+
         $requestData = new RequestTable();
         $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id;
         $requestData->request_type_id = 1;
@@ -135,7 +119,7 @@ class PatientDashboardService
             'first_name',
             'last_name',
             'email',
-            'phone_number'
+            'phone_number',
         ]));
         $requestData->save();
 
@@ -152,7 +136,7 @@ class PatientDashboardService
             'state',
             'zipcode',
             'room',
-            'symptoms'
+            'symptoms',
         ]));
         $patientRequest->save();
 
@@ -163,11 +147,11 @@ class PatientDashboardService
             $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $request->file('docs')->storeAs('public', $request_file->file_name);
             $request_file->save();
-
         }
 
         // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
+        // $confirmationNumber = $this->generateConfirmationNumber($request);
+        $confirmationNumber = ConfirmationNumber::generate($request);
 
         // Update confirmation number if request is created successfully
         if ($requestData->id) {
@@ -200,15 +184,16 @@ class PatientDashboardService
         }
     }
 
-
     /**
      * it update patient profile data in allusers and users table
+     *
      * @param mixed $request (input enter by user)
      * @param mixed $userData (loged in patient data)
+     *
      * @return bool
      */
-    public function patientProfileUpdate($request, $userData){
-
+    public function patientProfileUpdate($request, $userData)
+    {
         $updateInUserTable = [
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),
@@ -224,7 +209,7 @@ class PatientDashboardService
             'city' => $request->input('city'),
             'state' => $request->input('state'),
             'street' => $request->input('street'),
-            'zipcode' => $request->input('zipcode')
+            'zipcode' => $request->input('zipcode'),
         ];
 
         Users::where('email', $userData['email'])->update($updateInUserTable);

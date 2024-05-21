@@ -17,6 +17,4 @@ class RequestClosed extends Model
         'request_id',
         'request_status_id',
     ];
-
-
 }

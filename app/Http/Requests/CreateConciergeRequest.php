@@ -43,7 +43,7 @@ class CreateConciergeRequest extends FormRequest
 
         return [
             'concierge_first_name.required' => $enter . ' First Name',
-            'concierge_first_name.min' =>  $min_message . ' 3 Alphabets',
+            'concierge_first_name.min' => $min_message . ' 3 Alphabets',
             'concierge_first_name.max' => $max_message . ' 15 Alphabets',
             'concierge_first_name.alpha' => $only_alphabets . ' in First name',
 
@@ -52,14 +52,14 @@ class CreateConciergeRequest extends FormRequest
             'concierge_last_name.max' => $max_message . ' 15 Alphabets',
             'concierge_last_name.alpha' => $only_alphabets . ' in Last name',
 
-            'concierge_email.required' =>  $enter . ' Email',
-            'concierge_email.max' =>  $max_message . ' 40 characters Email',
-            'concierge_email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
+            'concierge_email.required' => $enter . ' Email',
+            'concierge_email.max' => $max_message . ' 40 characters Email',
+            'concierge_email.regex' => $enter . ' a valid email (format: alphanum@alpha.domain).',
 
             'concierge_mobile.required' => $enter . ' Phone Number',
 
             'concierge_street.required' => $enter . ' a street',
-            'concierge_street.max' => $max_message . " 50 alphabets in street",
+            'concierge_street.max' => $max_message . ' 50 alphabets in street',
             'concierge_street.regex' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in street name.',
 
             'concierge_city.required' => $enter . ' a city',
@@ -72,7 +72,7 @@ class CreateConciergeRequest extends FormRequest
 
             'concierge_zip_code.digits' => 'Please enter 6 digits zipcode',
             'concierge_zip_code.gte' => 'Please enter a 6 digit positive number in zipcode.',
-            
+
             'concierge_hotel_name.required' => $enter . ' a hotel name',
             'concierge_hotel_name.min' => $min_message . ' 2 character',
             'concierge_hotel_name.max' => $max_message . ' 50 character',

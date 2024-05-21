@@ -30,13 +30,12 @@ class RequestClient extends Model
         'room',
     ];
 
-
     public function request()
     {
         return $this->belongsTo(RequestTable::class);
     }
 
-    public function request_status()
+    public function requestStatus()
     {
         return $this->belongs(RequestStatus::class, 'request_id', 'request_id');
     }

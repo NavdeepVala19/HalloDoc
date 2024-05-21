@@ -10,12 +10,12 @@ class HealthProfessionalType extends Model
     use HasFactory;
     protected $table = 'health_professional_type';
 
+    protected $guarded = [
+        'profession_name',
+    ];
+
     public function healthProfessional()
     {
         // return $this->belongsTo(HealthProfessional::class, 'profession');
     }
-
-    protected $guarded = [
-        'profession_name',
-    ];
 }

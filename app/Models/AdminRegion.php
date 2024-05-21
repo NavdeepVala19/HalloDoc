@@ -12,7 +12,7 @@ class AdminRegion extends Model
 
     protected $fillable = [
         'admin_id',
-        'region_id'
+        'region_id',
     ];
 
     protected $guarded = [

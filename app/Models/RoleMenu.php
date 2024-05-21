@@ -11,6 +11,7 @@ class RoleMenu extends Model
 
     protected $table = 'role_menu';
 
+    protected $guarded = [];
 
     public function Menu()
     {

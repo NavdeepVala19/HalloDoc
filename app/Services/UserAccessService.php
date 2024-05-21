@@ -3,17 +3,17 @@
 namespace App\Services;
 
 use App\Models\Admin;
-use App\Models\AllUsers;
-use App\Models\Users;
-use App\Models\UserRoles;
 use App\Models\AdminRegion;
+use App\Models\AllUsers;
+use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
 
 class UserAccessService
 {
-
     /**
      * list of user access
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function userAccessList()
@@ -27,12 +27,14 @@ class UserAccessService
 
     /**
      * filter user according to account type (admin/provider)
+     *
      * @param mixed $request
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function filterAccountWise($request)
     {
-        $accountType = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
+        $accountType = $request->selectedAccount === 'all' ? '' : $request->selectedAccount;
         $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
@@ -41,14 +43,14 @@ class UserAccessService
         if ($accountType) {
             $userAccessDataFiltering = $userAccessDataFiltering->where('roles.name', '=', $accountType);
         }
-        $userAccessDataFiltering = $userAccessDataFiltering->paginate(10);
-
-        return $userAccessDataFiltering;
+        return $userAccessDataFiltering->paginate(10);
     }
 
     /**
      * create new admin and store data of admin in users,admin,user_roles,all_users
+     *
      * @param mixed $request
+     *
      * @return bool
      */
     public function createAdminAccount($request)
@@ -61,7 +63,7 @@ class UserAccessService
         $adminCredentialsData->phone_number = $request->phone_number;
         $adminCredentialsData->save();
 
-        // Store Data in Admin Table 
+        // Store Data in Admin Table
         $storeAdminData = new Admin();
         $storeAdminData->user_id = $adminCredentialsData->id;
         $storeAdminData->first_name = $request->first_name;
@@ -81,7 +83,7 @@ class UserAccessService
         foreach ($request->region_id as $region) {
             AdminRegion::create([
                 'admin_id' => $storeAdminData->id,
-                'region_id' => $region
+                'region_id' => $region,
             ]);
         }
 

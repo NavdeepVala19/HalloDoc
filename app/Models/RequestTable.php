@@ -35,7 +35,6 @@ class RequestTable extends Model
         'created_user_id',
     ];
 
-
     public function allusers()
     {
         return $this->belongsTo(AllUsers::class);

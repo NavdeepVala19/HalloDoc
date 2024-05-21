@@ -184,7 +184,7 @@
                         <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
                             disabled>
                             {{-- <option selected>Dwarka</option> --}}
-                            <option value="">{{ $provider->Regions->region_name }}</option>
+                            <option value="">{{ $provider->regions->region_name }}</option>
                         </select>
                         <label for="floatingSelect">State</label>
                     </div>

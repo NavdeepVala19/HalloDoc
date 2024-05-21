@@ -6,7 +6,6 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-
 class UsersExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
     private $data;

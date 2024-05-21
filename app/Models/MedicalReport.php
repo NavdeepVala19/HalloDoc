@@ -43,7 +43,6 @@ class MedicalReport extends Model
         'medication_dispensed',
         'procedure',
         'followUp',
-        'is_finalize'
+        'is_finalize',
     ];
-
 }

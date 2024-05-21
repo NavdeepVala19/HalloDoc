@@ -36,7 +36,7 @@ class AdminProfileForm extends FormRequest
             'alt_mobile' => 'required|max_digits:10|min_digits:10',
             'role' => 'required',
             'state' => 'required',
-            'region_id'=>'required'
+            'region_id' => 'required',
         ];
     }
 
@@ -85,8 +85,8 @@ class AdminProfileForm extends FormRequest
             'region_id.required' => 'Please select atleast one Region',
 
             'address1.required' => $enter . ' a address1',
-            'address1.min' => $min_message . " 2 characters in address1",
-            'address1.max' => $max_message . " 50 characters in address1",
+            'address1.min' => $min_message . ' 2 characters in address1',
+            'address1.max' => $max_message . ' 50 characters in address1',
             'address1.regex' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in address1.',
 
             'city.required' => $enter . ' a city',

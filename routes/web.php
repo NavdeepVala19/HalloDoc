@@ -9,29 +9,24 @@ use App\Http\Controllers\BusinessRequestController;
 use App\Http\Controllers\CommonOperationController;
 use App\Http\Controllers\ConciergeRequestController;
 use App\Http\Controllers\Controller;
-
-
 use App\Http\Controllers\ExcelController;
-
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\PatientLoginController;
 use App\Http\Controllers\FamilyRequestController;
 use App\Http\Controllers\PatientAccountController;
-use App\Http\Controllers\PatientProfileController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientDashboardController;
+use App\Http\Controllers\PatientLoginController;
+use App\Http\Controllers\PatientProfileController;
 use App\Http\Controllers\PatientViewDocumentsController;
 use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderSchedulingController;
 use App\Http\Controllers\SchedulingController;
-
 use Illuminate\Support\Facades\Route;
 
 // ******************************* SHIVESH **********************************************
 
 //* First page of patient site
 route::get('/', [Controller::class, 'patientSite'])->name('patient.home_page');
-
 
 //* Types of request
 route::get('/submit-requests', [Controller::class, 'submitScreen'])->name('submit.request');
@@ -56,7 +51,6 @@ Route::post('/business-created', [BusinessRequestController::class, 'create'])->
 route::get('/patient-register', [PatientAccountController::class, 'patientRegister'])->name('patient.register.view');
 route::post('/patient-registered', [PatientAccountController::class, 'createAccount'])->name('patient.registered');
 
-
 //* Patient login page
 route::get('/patient/login', [PatientLoginController::class, 'patientLoginScreen'])->name('patient.login.view');
 route::post('/patient/logged-in', [PatientLoginController::class, 'patientLogin'])->name('patient.login');
@@ -68,13 +62,11 @@ route::post('/patient/forgot-password-link', [PatientLoginController::class, 'su
 Route::get('patient/reset-password/{token}', [PatientLoginController::class, 'showResetPasswordForm'])->name('patient.reset.password.view');
 Route::post('patient/update-password', [PatientLoginController::class, 'submitResetPasswordForm'])->name('patient.update.password');
 
-
 route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
-
     //* Patient logout
     route::get('/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
 
-    //* Patient Dashboard 
+    //* Patient Dashboard
     route::get('/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient.dashboard');
 
     //* Edit profile of patient
@@ -97,8 +89,6 @@ route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
     route::post('/multiple-downloads', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('patient.download.multiple.files');
 });
 //  *******************************************************************************************************
-
-
 
 //  ***************************************************************************************************************************************
 // it will show agreement page
@@ -425,10 +415,10 @@ Route::middleware('CheckAdminLogin')->group(function () {
     route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name('filter.region_toclose');
     route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name('filter.region_unpaid');
 
-    Route::get('/user-access', [AdminController::class, 'UserAccess'])->name('admin.user.access');
-    Route::get('/user-access-edit/{id?}', [AdminController::class, 'UserAccessEdit'])->name('admin.user.accessEdit');
-    route::post('/user-access/filter', [AdminController::class, 'FilterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
-    route::post('/user-access-mobile-filter', [AdminController::class, 'FilterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
+    Route::get('/user-access', [AdminController::class, 'userAccess'])->name('admin.user.access');
+    Route::get('/user-access-edit/{id?}', [AdminController::class, 'userAccessEdit'])->name('admin.user.accessEdit');
+    route::post('/user-access/filter', [AdminController::class, 'filterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
+    route::post('/user-access-mobile-filter', [AdminController::class, 'filterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
 
     route::get('/admin-profile-edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
     route::get('/admin-profile-update/{id}', [AdminDashboardController::class, 'adminProfile'])->name('edit.admin.profile');
@@ -483,7 +473,6 @@ Route::middleware('CheckAdminOrProvider')->group(function () {
     // Dynamically fetch data of business based on selection in dropdown
     Route::get('/fetch-business-data/{id}', [CommonOperationController::class, 'fetchBusinessData'])->name('fetch.business.data');
 });
-
 
 // ---------------- REMOVED FROM SRS -----------------
 // Cancel History Page

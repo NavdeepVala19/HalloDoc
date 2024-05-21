@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\DocsAttachmentMail;
 use App\Mail\SendAgreement;
 use App\Mail\SendMailPatient;
-
 use App\Models\Admin;
 use App\Models\EmailLog;
 use App\Models\HealthProfessional;
@@ -14,14 +13,11 @@ use App\Models\RequestClient;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\SMSLogs;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-
 use Twilio\Rest\Client;
-
 use ZipArchive;
 
 class CommonOperationController extends Controller
@@ -30,6 +26,7 @@ class CommonOperationController extends Controller
      * Download any sinlge file function
      *
      * @param int $id id of document/image to be downloaded
+     *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($id = null)
@@ -53,7 +50,7 @@ class CommonOperationController extends Controller
     /**
      * Delete a single document from viewUploads page
      *
-     * @param int $id id of document/image to be deleted 
+     * @param int $id id of document/image to be deleted
      */
     public function deleteDoc($id = null)
     {
@@ -62,11 +59,11 @@ class CommonOperationController extends Controller
         return redirect()->back();
     }
 
-
     /**
      * Perform different operations as per the operation selected (Delete All, Download All, Send Mail)
      *
      * @param Request $request It will have different operations
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function operations(Request $request)
@@ -123,15 +120,15 @@ class CommonOperationController extends Controller
             }
 
             $request->validate([
-                'selected' => 'required'
+                'selected' => 'required',
             ], [
-                'selected.required' => 'Please select at least one record.'
+                'selected.required' => 'Please select at least one record.',
             ]);
 
             $ids = $request->input('selected');
 
             $zip = new ZipArchive();
-            $zipFile =  uniqid() . $email . '.zip';
+            $zipFile = uniqid() . $email . '.zip';
 
             if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
@@ -143,6 +140,12 @@ class CommonOperationController extends Controller
                 $zip->close();
             }
             $patient = RequestTable::where('id', $request->requestId)->first();
+
+            try {
+                Mail::to($email)->send(new DocsAttachmentMail($email, $zipFile));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
 
             EmailLog::create([
                 'role_id' => 1,
@@ -156,14 +159,8 @@ class CommonOperationController extends Controller
                 'email_template' => 'mail.blade.php',
                 'subject_name' => 'Documets Link Sent',
                 'email' => $email,
-                'action' => 6
+                'action' => 6,
             ]);
-
-            try {
-                Mail::to($email)->send(new DocsAttachmentMail($email, $zipFile));
-            } catch (\Throwable $th) {
-                return view('errors.500');
-            }
 
             return redirect()->back()->with('mailDocsSent', 'Mail of all the selected documents is sent!');
         }
@@ -173,13 +170,13 @@ class CommonOperationController extends Controller
      * Send email to patient.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function sendMailPatient(Request $request)
     {
         $requestClient = RequestClient::where('request_id', $request->requestId)->first();
         try {
-
             $user = Auth::user();
             $provider = Provider::where('user_id', $user->id)->first();
 
@@ -226,13 +223,14 @@ class CommonOperationController extends Controller
      * Provider/Admin Send Agreement Link to Patient from Pending State
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendAgreementLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required'
+            'phone_number' => 'required',
         ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
 
@@ -305,7 +303,7 @@ class CommonOperationController extends Controller
                     '+91 99780 71802', // to
                     [
                         'body' => 'Hii ' .  $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $id),
-                        'from' =>  $senderNumber,
+                        'from' => $senderNumber,
                     ]
                 );
         } catch (\Throwable $th) {
@@ -320,6 +318,7 @@ class CommonOperationController extends Controller
      * Fetch business values (health_professional values) based on the profession selected.
      *
      * @param int $id The ID of the selected profession.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function fetchBusiness($id)
@@ -332,6 +331,7 @@ class CommonOperationController extends Controller
      * Fetches business data based on the provided ID and returns it as a JSON response.
      *
      * @param int $id The ID of the business data to fetch.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function fetchBusinessData($id)

@@ -14,6 +14,4 @@ class RequestBusiness extends Model
         'request_id',
         'business_id',
     ];
-
-
 }

@@ -16,5 +16,4 @@ class CaseTag extends Model
     protected $guarded = [
         'case_name',
     ];
-
 }

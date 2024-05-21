@@ -20,5 +20,4 @@ class Business extends Model
         'fax_number',
         'is_registered',
     ];
-
 }

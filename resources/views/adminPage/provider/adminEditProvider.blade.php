@@ -201,8 +201,8 @@
                         <div class="form-floating provider-edit-form">
                             <select class="form-select listing-state @error('regions') is-invalid @enderror " id="floatingSelect" aria-label="Floating label select example" disabled name="regions">
                                 <option value="">Select State</option>
-                                <option name="regions" selected value="{{ $getProviderData->Regions->id ?? " " }}">
-                                    {{ $getProviderData->Regions->region_name ?? " " }}
+                                <option name="regions" selected value="{{ $getProviderData->regions->id ?? " " }}">
+                                    {{ $getProviderData->regions->region_name ?? " " }}
                                 </option>
                             </select>
                             @error('regions')

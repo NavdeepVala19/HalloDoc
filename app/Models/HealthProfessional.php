@@ -25,7 +25,6 @@ class HealthProfessional extends Model
         'business_contact',
     ];
 
-
     public function healthProfessionalType()
     {
         return $this->hasOne(HealthProfessionalType::class, 'id', 'profession');

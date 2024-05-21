@@ -12,7 +12,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -33,11 +32,7 @@ class User extends Authenticatable
         'zip_code',
         'room',
         'docs',
-
     ];
-
-
-
 
     /**
      * The attributes that should be hidden for serialization.

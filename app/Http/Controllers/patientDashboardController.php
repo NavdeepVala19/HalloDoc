@@ -2,25 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Users;
-use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\UserRoles;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\RequestClient;
-use App\Models\RequestStatus;
-
-use App\Mail\SendEmailAddress;
-
-use App\Models\RequestWiseFile;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
-use App\Services\PatientDashboardService;
 use App\Http\Requests\CreatePatientRequest;
+use App\Models\RequestStatus;
+use App\Models\RequestTable;
+use App\Models\Users;
+use App\Services\PatientDashboardService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class PatientDashboardController extends Controller
 {
@@ -88,6 +78,7 @@ class PatientDashboardController extends Controller
 
     /**
      * create me request in patient Dashboard
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function createNewRequest()
@@ -99,11 +90,13 @@ class PatientDashboardController extends Controller
     }
 
     /**
-     *  it stores request in request_client and request table 
+     *  it stores request in request_client and request table
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createNewPatient(Request $request,PatientDashboardService $patientDashboardService)
+    public function createNewPatient(Request $request, PatientDashboardService $patientDashboardService)
     {
         $userData = Auth::user();
         $email = $userData['email'];
@@ -119,18 +112,16 @@ class PatientDashboardController extends Controller
             'zipcode' => 'digits:6|gte:1',
             'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
-            'room' => 'gte:1|nullable|max:1000'
+            'room' => 'gte:1|nullable|max:1000',
         ]);
 
-
-        $patientDashboardService->storeMeRequest($request,$email);
+        $patientDashboardService->storeMeRequest($request, $email);
         return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
-
     }
-
 
     /**
      * create someone else request from patient dashboard
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function createSomeoneRequest()
@@ -138,15 +129,16 @@ class PatientDashboardController extends Controller
         return view('patientSite/patientSomeoneRequest');
     }
 
-
     /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
+     *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function createSomeOneElseRequest(CreatePatientRequest $request , PatientDashboardService $patientDashboardService)
+    public function createSomeOneElseRequest(CreatePatientRequest $request, PatientDashboardService $patientDashboardService)
     {
         $patientRequest = $patientDashboardService->storeSomeOneRequest($request);
         $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
@@ -154,10 +146,10 @@ class PatientDashboardController extends Controller
         return redirect()->route('patient.dashboard')->with('message', $redirectMsg);
     }
 
-
     /**
      * when patient login after creating account he/she will land to dashboard page,
      * which shows request created date ,request status and show if document is uploaded or not
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function patientDashboard()

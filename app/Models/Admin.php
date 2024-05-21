@@ -24,21 +24,23 @@ class Admin extends Model
         'alt_phone',
     ];
 
-
     public function users()
     {
         return $this->belongsTo(Users::class, 'user_id', 'id');
     }
 
-    public function RoleMenu(){
+    public function roleMenu()
+    {
         return $this->belongs(RoleMenu::class, 'role_id', 'role_id');
     }
 
-    public function role(){
+    public function role()
+    {
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
 
-    public function Regions(){
+    public function regions()
+    {
         return $this->belongsTo(Regions::class, 'regions_id', 'id');
     }
 }

@@ -8,7 +8,6 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class UnPaidStatusExport implements FromCollection, WithCustomCsvSettings, WithHeadings
 {
-
     private $data;
 
     public function __construct($data)

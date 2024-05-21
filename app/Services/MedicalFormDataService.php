@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 class MedicalFormDataService
 {
     public function medicalFormData($request)
@@ -40,7 +39,7 @@ class MedicalFormDataService
             'medication_dispensed' => $request->medication_dispensed,
             'procedure' => $request->procedure,
             'followUp' => $request->followUp,
-            'is_finalize' => false
+            'is_finalize' => false,
         ];
     }
 }

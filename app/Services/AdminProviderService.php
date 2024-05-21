@@ -2,24 +2,24 @@
 
 namespace App\Services;
 
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
-use App\Models\EmailLog;
-use App\Models\Provider;
-use App\Models\UserRoles;
-use App\Models\ShiftDetail;
-use App\Models\Users;
-use App\Models\AllUsers;
 use App\Mail\ContactProvider;
+use App\Models\AllUsers;
+use App\Models\EmailLog;
 use App\Models\PhysicianRegion;
+use App\Models\Provider;
+use App\Models\ShiftDetail;
+use App\Models\SMSLogs;
+use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Twilio\Rest\Client;
 
 class AdminProviderService
 {
-
     /**
      * it returns data for providers listing
+     *
      * @return array
      */
     public function ProvidersList()
@@ -37,10 +37,11 @@ class AdminProviderService
         ];
     }
 
-
     /**
      * it returns data of provider listing according to region selected for filtering
+     *
      * @param mixed $request
+     *
      * @return array
      */
     public function filterProviderList($request)
@@ -51,7 +52,7 @@ class AdminProviderService
         $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
 
-        if ($request->selectedId === "all") {
+        if ($request->selectedId === 'all') {
             $providersData = Provider::with('role')->orderBy('created_at', 'asc')->paginate(10);
         } else {
             $physicianRegions = PhysicianRegion::where('region_id', $request->selectedId)->pluck('provider_id');
@@ -64,11 +65,12 @@ class AdminProviderService
         ];
     }
 
-
     /**
-     * it facilitates contact to provider by SMS and Email 
+     * it facilitates contact to provider by SMS and Email
+     *
      * @param mixed $request
      * @param mixed $id
+     *
      * @return bool
      */
     public function contactToProvider($request, $id)
@@ -80,7 +82,7 @@ class AdminProviderService
         $receipientMobile = $receipientData->first()->mobile;
 
         $enteredText = $request->contact_msg;
-        if ($request->contact === "email") {
+        if ($request->contact === 'email') {
             // send email
             $providerData = Provider::get()->where('id', $request->provider_id);
             Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -97,9 +99,9 @@ class AdminProviderService
                 'email_template' => $enteredText,
                 'subject_name' => 'notification to provider',
                 'email' => $receipientEmail,
-                'action'=>2,
+                'action' => 2,
             ]);
-        } elseif ($request->contact === "sms") {
+        } elseif ($request->contact === 'sms') {
             // send SMS
             $sid = config('api.twilio_sid');
             $token = config('api.twilio_auth_token');
@@ -108,10 +110,10 @@ class AdminProviderService
             $twilio = new Client($sid, $token);
             $twilio->messages
                 ->create(
-                    "+91 99780 71802", // to
+                    '+91 99780 71802', // to
                     [
-                        "body" => "{$enteredText}",
-                        "from" => $senderNumber,
+                        'body' => "{$enteredText}",
+                        'from' => $senderNumber,
                     ]
                 );
             SMSLogs::create(
@@ -128,7 +130,7 @@ class AdminProviderService
                     'sms_template' => $enteredText,
                 ]
             );
-        } elseif ($request->contact === "both") {
+        } elseif ($request->contact === 'both') {
             // send email
             $providerData = Provider::get()->where('id', $request->provider_id);
             Mail::to($providerData->first()->email)->send(new ContactProvider($enteredText));
@@ -145,10 +147,10 @@ class AdminProviderService
 
             $twilio->messages
                 ->create(
-                    "+91 99780 71802",
+                    '+91 99780 71802',
                     [
-                        "body" => "{$enteredText}",
-                        "from" => $senderNumber,
+                        'body' => "{$enteredText}",
+                        'from' => $senderNumber,
                     ]
                 );
 
@@ -185,10 +187,11 @@ class AdminProviderService
         return true;
     }
 
-
     /**
      * it stores data in users,allusers,physicianRegion,provider and userRoles
+     *
      * @param mixed $request (input enter by admin)
+     *
      * @return bool
      */
     public function createNewProvider($request)
@@ -296,13 +299,14 @@ class AdminProviderService
         return true;
     }
 
-
- /**
-  * it updates physician information in edit physician account
-  * @param mixed $request (input enter by admin)
-  * @param mixed $id (id of provider)
-  * @return bool
-  */
+    /**
+     * it updates physician information in edit physician account
+     *
+     * @param mixed $request (input enter by admin)
+     * @param mixed $id (id of provider)
+     *
+     * @return bool
+     */
 
     public function updatePhysicianInformation($request, $id)
     {
@@ -332,11 +336,12 @@ class AdminProviderService
         return true;
     }
 
-
     /**
      * it updates Mailing & Billing Information in edit physician account
+     *
      * @param mixed $request (input enter by admin)
      * @param mixed $id (id of provider)
+     *
      * @return bool
      */
     public function updatePhysicianMailInformation($request, $id)
@@ -363,8 +368,10 @@ class AdminProviderService
 
     /**
      * it updates Provider Profile in edit physician account
+     *
      * @param mixed $request (input enter by admin)
      * @param mixed $id (id of provider)
+     *
      * @return bool
      */
     public function updateProviderProfile($request, $id)
@@ -386,13 +393,14 @@ class AdminProviderService
 
     /**
      * it updates Provider Onboarding Documents in edit physician account
+     *
      * @param mixed $request (input enter by admin)
      * @param mixed $id (id of provider)
+     *
      * @return bool
      */
     public function updateProviderDocumentsUpdate($request, $id)
     {
-
         $getProviderInformation = Provider::where('id', $id)->first();
 
         if (isset($request->independent_contractor)) {

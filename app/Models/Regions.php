@@ -12,6 +12,6 @@ class Regions extends Model
     protected $table = 'regions';
 
     protected $guarded = [
-        'region_name'
+        'region_name',
     ];
 }

@@ -32,33 +32,35 @@ class CreateFamilyRequest extends FormRequest
 
     /**
      * validation message display
+     *
      * @return string
      */
-    public function messages(){
+    public function messages()
+    {
         $enter = 'Please enter';
         $min_message = 'Please enter more than';
         $max_message = 'Please enter less than';
         $only_alphabets = 'Please enter only Alphabets';
 
         return [
-            'family_first_name.required' => $enter.' First Name',
-            'family_first_name.min' =>  $min_message.' 3 Alphabets',
-            'family_first_name.max' => $max_message.' 15 Alphabets',
+            'family_first_name.required' => $enter . ' First Name',
+            'family_first_name.min' => $min_message . ' 3 Alphabets',
+            'family_first_name.max' => $max_message . ' 15 Alphabets',
             'family_first_name.alpha' => $only_alphabets . ' in First name',
 
             'family_last_name.required' => $enter . ' Last Name',
-            'family_last_name.min' =>$min_message . ' 3 Alphabets',
-            'family_last_name.max' =>$max_message . ' 15 Alphabets',
-            'family_last_name.alpha' => $only_alphabets .' in Last name',
+            'family_last_name.min' => $min_message . ' 3 Alphabets',
+            'family_last_name.max' => $max_message . ' 15 Alphabets',
+            'family_last_name.alpha' => $only_alphabets . ' in Last name',
 
-            'family_email.required' =>  $enter . ' Email',
-            'family_email.max' =>  $max_message.' 40 characters in Email',
-            'family_email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
+            'family_email.required' => $enter . ' Email',
+            'family_email.max' => $max_message . ' 40 characters in Email',
+            'family_email.regex' => $enter . ' a valid email (format: alphanum@alpha.domain).',
 
-            'family_phone_number.required' => $enter. ' Phone Number',
-            
-            'family_relation'=> $enter.' a relation with patient',
-            'family_relation.alpha'=>' Please enter valid relation (Format : alphabets-alphabets).',
+            'family_phone_number.required' => $enter . ' Phone Number',
+
+            'family_relation' => $enter . ' a relation with patient',
+            'family_relation.alpha' => ' Please enter valid relation (Format : alphabets-alphabets).',
         ];
     }
 }

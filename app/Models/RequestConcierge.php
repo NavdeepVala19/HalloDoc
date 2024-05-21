@@ -15,7 +15,4 @@ class RequestConcierge extends Model
         'request_id',
         'concierge_id',
     ];
-
-
-
 }

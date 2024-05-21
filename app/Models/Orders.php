@@ -18,6 +18,4 @@ class Orders extends Model
         'prescription',
         'no_of_refill',
     ];
-
-
 }

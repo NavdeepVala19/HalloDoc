@@ -21,7 +21,6 @@ class RequestStatus extends Model
         'notes',
     ];
 
-    
     public function request()
     {
         return $this->hasOne(RequestTable::class, 'id', 'request_id');
@@ -34,7 +33,8 @@ class RequestStatus extends Model
     {
         return $this->hasOne(Provider::class, 'id', 'physician_id');
     }
-    public function transferedPhysician(){
+    public function transferedPhysician()
+    {
         return $this->hasOne(Provider::class, 'id', 'TransToPhysicianId');
     }
     public function requestClient()

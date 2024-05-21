@@ -24,7 +24,7 @@ class AccessRequest extends FormRequest
         return [
             'role_name' => 'required',
             'role' => 'required',
-            'menu_checkbox' => 'required'
+            'menu_checkbox' => 'required',
         ];
     }
 }

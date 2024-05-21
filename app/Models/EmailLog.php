@@ -28,7 +28,6 @@ class EmailLog extends Model
         'action',
     ];
 
-
     public function roles()
     {
         return $this->hasOne(Roles::class, 'id', 'role_id');

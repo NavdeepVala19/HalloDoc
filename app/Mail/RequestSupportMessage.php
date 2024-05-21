@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,7 +15,6 @@ class RequestSupportMessage extends Mailable
     /**
      * Create a new message instance.
      */
-
     private $requestSupportMessage;
 
     public function __construct($message)
@@ -24,12 +22,10 @@ class RequestSupportMessage extends Mailable
         $this->requestSupportMessage = $message;
     }
 
-
     public function build()
     {
         return $this->view('email.requestSupport')->with(['requestSupportMessage' => $this->requestSupportMessage]);
     }
-
 
     /**
      * Get the message envelope.

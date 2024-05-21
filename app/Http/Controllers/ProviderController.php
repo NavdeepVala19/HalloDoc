@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConfirmationNumber;
+use App\Helpers\Helper;
 use App\Http\Requests\ProviderCreateRequest;
 use App\Http\Requests\SendMailRequest;
-
 use App\Mail\ProviderRequest;
 use App\Mail\SendEmailAddress;
 use App\Mail\SendMail;
-
 use App\Models\Admin;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
@@ -22,15 +22,11 @@ use App\Models\SMSLogs;
 use App\Models\User;
 use App\Models\UserRoles;
 use App\Models\Users;
-
-use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-
 use Twilio\Rest\Client;
 
 class ProviderController extends Controller
@@ -46,49 +42,6 @@ class ProviderController extends Controller
     |   3. Different category selection
     |   4. Search Term request
     */
-    public const CATEGORY_PATIENT = 1;
-    public const CATEGORY_FAMILY = 2;
-    public const CATEGORY_CONCIERGE = 3;
-    public const CATEGORY_BUSINESS = 4;
-
-    public const STATUS_NEW = 1;
-    public const STATUS_PENDING = 3;
-    public const STATUS_ACTIVE = [4, 5];
-    public const STATUS_CONCLUDE = 6;
-
-    /**
-     * Get category id from the name of category
-     *
-     * @param string $category different category names.
-     * @return int different types of request_type_id.
-     */
-    private function getCategoryId($category)
-    {
-        // mapping of category names to request_type_id
-        $categoryMapping = [
-            'patient' => self::CATEGORY_PATIENT,
-            'family' => self::CATEGORY_FAMILY,
-            'concierge' => self::CATEGORY_CONCIERGE,
-            'business' => self::CATEGORY_BUSINESS,
-        ];
-        return $categoryMapping[$category] ?? null;
-    }
-    /**
-     * Get status id from the name of status
-     *
-     * @param string $status different status names.
-     * @return int status in Id.
-     */
-    private function getStatusId($status)
-    {
-        $statusMapping = [
-            'new' => self::STATUS_NEW,
-            'pending' => self::STATUS_PENDING,
-            'active' => self::STATUS_ACTIVE,
-            'conclude' => self::STATUS_CONCLUDE,
-        ];
-        return $statusMapping[$status];
-    }
 
     // For Provider redirect to new State(By Default)
     public function providerDashboard()
@@ -100,6 +53,7 @@ class ProviderController extends Controller
      *  Counts Total Number of cases for particular Physician and having particular state
      *
      * @param int $providerId Id of the LoggedIn provider.
+     *
      * @return int total number of cases, as per the status.
      */
     public function totalCasesCount($providerId)
@@ -107,13 +61,13 @@ class ProviderController extends Controller
         // Total count of cases as per the status (displayed in all listing pages)
         return [
             // unassigned case(Status = 1) -> assigned to provider but not accepted
-            'newCase' => RequestTable::where('status', self::STATUS_NEW)->where('physician_id', $providerId)->count(),
+            'newCase' => RequestTable::where('status', Helper::STATUS_NEW)->where('physician_id', $providerId)->count(),
             // pending state(Status = 3) -> Accepted by provider
-            'pendingCase' => RequestTable::where('status', self::STATUS_PENDING)->where('physician_id', $providerId)->count(),
+            'pendingCase' => RequestTable::where('status', Helper::STATUS_PENDING)->where('physician_id', $providerId)->count(),
             // Active State(Status = 4,5) -> MDEnRoute(agreement sent and accepted by patient), MDOnSite(call type selected by provider[HouseCall])
-            'activeCase' => RequestTable::whereIn('status', self::STATUS_ACTIVE)->where('physician_id', $providerId)->count(),
+            'activeCase' => RequestTable::whereIn('status', Helper::STATUS_ACTIVE)->where('physician_id', $providerId)->count(),
             // Conclude State(Status = 6) -> when consult selected during Encounter pop-up or HouseCall Completed
-            'concludeCase' => RequestTable::where('status', self::STATUS_CONCLUDE)->where('physician_id', $providerId)->count(),
+            'concludeCase' => RequestTable::where('status', Helper::STATUS_CONCLUDE)->where('physician_id', $providerId)->count(),
         ];
     }
 
@@ -124,20 +78,21 @@ class ProviderController extends Controller
      * @param string $category category of the cases [all, patient, family, business, concierge].
      * @param string $searchTerm search term to filter the cases.
      * @param string $providerId id of the LoggedIn provider.
+     *
      * @return object $query formed as per the status, category selected, any search term entered and the logged in provider
      */
     public function buildQuery($status, $category, $searchTerm, $providerId)
     {
         // Check for Status(whether it's single status or multiple)
-        if (is_array($this->getStatusId($status))) {
-            $query = RequestTable::with('requestClient')->whereIn('status', $this->getStatusId($status))->where('physician_id', $providerId);
+        if (is_array(Helper::getStatusId($status))) {
+            $query = RequestTable::with('requestClient')->whereIn('status', Helper::getStatusId($status))->where('physician_id', $providerId);
         } else {
-            $query = RequestTable::with('requestClient')->where('status', $this->getStatusId($status))->where('physician_id', $providerId);
+            $query = RequestTable::with('requestClient')->where('status', Helper::getStatusId($status))->where('physician_id', $providerId);
         }
 
         // Filter by Category if not 'all' (These will enter condition only if there is any filter selected)
         if ($category !== 'all') {
-            $query->where('request_type_id', $this->getCategoryId($category));
+            $query->where('request_type_id', Helper::getCategoryId($category));
         }
 
         // Apply search condition(Enter condition only when any search query is requested)
@@ -157,6 +112,7 @@ class ProviderController extends Controller
      * @param \illuminate\HTTP\Request $request
      * @param string $status different status names.
      * @param string $category different category names.
+     *
      * @return \illuminate\View\View
      */
     public function cases(Request $request, $status = 'new', $category = 'all')
@@ -181,6 +137,7 @@ class ProviderController extends Controller
      *
      * @param \illuminate\HTTP\Request $request
      * @param string $status different status names.
+     *
      * @return \illuminate\View\View
      */
     public function status(Request $request, $status = 'new')
@@ -200,6 +157,7 @@ class ProviderController extends Controller
      * @param \illuminate\HTTP\Request $request
      * @param string $status different status names.
      * @param string $category different category names.
+     *
      * @return \illuminate\View\View
      */
     public function filter(Request $request, $status = 'new', $category = 'all')
@@ -219,6 +177,7 @@ class ProviderController extends Controller
      * @param \illuminate\Http\Request $request
      * @param string $status different status names.
      * @param string $category different category names.
+     *
      * @return \illuminate\View\View
      */
     public function search(Request $request, $status = 'new', $category = 'all')
@@ -246,6 +205,7 @@ class ProviderController extends Controller
      * Store request data, made by Provider.
      *
      * @param Request $request HTTP Request object
+     *
      * @return \Illuminate\Http\RedirectResponse provider status page
      */
     public function createRequest(ProviderCreateRequest $request)
@@ -331,14 +291,7 @@ class ProviderController extends Controller
         $requestNotes->save();
 
         // Generate confirmation number
-        $currentTime = Carbon::now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
+        $confirmationNumber = ConfirmationNumber::generate($request);
 
         // Update RequestTable with confirmation number
         // if (!empty($requestTable->id)) {
@@ -362,7 +315,7 @@ class ProviderController extends Controller
 
             EmailLog::create([
                 'role_id' => 3,
-                'request_id' =>  $requestTable->id,
+                'request_id' => $requestTable->id,
                 'recipient_name' => $request->first_name . ' ' . $request->last_name,
                 'confirmation_number' => $confirmationNumber,
                 'provider_id' => $providerId,
@@ -378,7 +331,7 @@ class ProviderController extends Controller
             return redirect()->route('provider.status', 'pending')->with('successMessage', 'Email for create account is sent & request created successfully!');
         }
         // Redirect to provider status page with success message
-        return redirect()->route("provider.status", 'pending')->with('successMessage', 'Request Created Successfully!');
+        return redirect()->route('provider.status', 'pending')->with('successMessage', 'Request Created Successfully!');
     }
 
     /**
@@ -399,12 +352,13 @@ class ProviderController extends Controller
      * Reset password of provider
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:5'
+            'password' => 'required|min:5',
         ]);
 
         $userId = Provider::where('id', $request->providerId)->first()->user_id;
@@ -420,6 +374,7 @@ class ProviderController extends Controller
      * Provider send an email to Admin with the request of changes needed in the profile
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function editProfileMessage(Request $request)
@@ -454,6 +409,7 @@ class ProviderController extends Controller
      * Send Mail to patient with link to create request page
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
     public function sendMail(SendMailRequest $request)
@@ -474,7 +430,7 @@ class ProviderController extends Controller
                     '+91 99780 71802', // to
                     [
                         'body' => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
-                        'from' =>  $senderNumber
+                        'from' => $senderNumber,
                     ]
                 );
         } catch (\Throwable $th) {
