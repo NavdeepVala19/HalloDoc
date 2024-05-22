@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
+use App\Mail\SendEmailAddress;
 use App\Models\Admin;
-use App\Models\Users;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\UserRoles;
 use App\Models\RequestNotes;
-use App\Models\RequestTable;
 use App\Models\RequestClient;
-use App\Mail\SendEmailAddress;
+use App\Models\RequestTable;
+use App\Models\Users;
+use App\Models\UserRoles;
 use Illuminate\Support\Facades\Mail;
 
 class AdminCreateRequestService
@@ -120,17 +120,17 @@ class AdminCreateRequestService
                 Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
-                    'role_id' => 3,
                     'request_id' => $requestData->id,
                     'confirmation_number' => $confirmationNumber,
-                    'is_email_sent' => 1,
-                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
-                    'sent_tries' => 1,
+                    'recipient_name' => $request->first_name.' '.$request->last_name,
+                    'email' => $request->email,
+                    'email_template' => $request->email,
                     'create_date' => now(),
                     'sent_date' => now(),
-                    'email_template' => $request->email,
                     'subject_name' => 'Create account by clicking on below link with below email address',
-                    'email' => $request->email,
+                    'role_id' => 1,
+                    'is_email_sent' => 1,
+                    'sent_tries' => 1,
                     'action' => 5,
                 ]);
             }

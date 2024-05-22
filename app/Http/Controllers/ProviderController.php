@@ -3,30 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProviderCreateRequest;
-use App\Http\Requests\SendMailRequest;
-use App\Mail\ProviderRequest;
-use App\Mail\SendEmailAddress;
-use App\Mail\SendMail;
 use App\Models\Admin;
-use App\Models\AllUsers;
 use App\Models\EmailLog;
+use App\Models\Regions;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
-use App\Models\Regions;
-use App\Models\RequestClient;
-use App\Models\RequestNotes;
-use App\Models\requestTable;
-use App\Models\SMSLogs;
+use App\Mail\ProviderRequest;
+use App\Models\RequestTable;
 use App\Models\User;
-use App\Models\UserRoles;
-use App\Models\Users;
-use Carbon\Carbon;
+use App\Services\ProviderCreateRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Twilio\Rest\Client;
 
 class ProviderController extends Controller
 {
@@ -246,143 +236,22 @@ class ProviderController extends Controller
     }
 
     /**
-     * Store request data, made by Provider.
+     * Summary of createRequest
      *
-     * @param Request $request HTTP Request object
+     * @param \App\Http\Requests\ProviderCreateRequest $request HTTP Request object
+     * @param \App\Services\ProviderCreateRequestService $providerCreateRequestService
      *
      * @return \Illuminate\Http\RedirectResponse provider status page
      */
-    public function createRequest(ProviderCreateRequest $request)
+    public function createRequest(ProviderCreateRequest $request, ProviderCreateRequestService $providerCreateRequestService)
     {
-        // check if email already exists in users table
-        $isEmailStored = Users::where('email', $request->email)->first();
-
         $user = Auth::user();
         $providerId = Provider::where('user_id', $user->id)->value('id');
 
-        // If email doesn't exist, store email, username, phone_number in users table
-        if ($isEmailStored === null) {
-            // store email and phoneNumber in users table
-            $requestEmail = new Users();
-            $requestEmail->username = $request->first_name . ' ' . $request->last_name;
-            $requestEmail->email = $request->email;
-            $requestEmail->phone_number = $request->phone_number;
-            $requestEmail->save();
+        $patientRequest = $providerCreateRequestService->storeRequest($request, $providerId);
+        $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
-            // store all details of patient in allUsers table
-            $requestUsers = new AllUsers();
-            $requestUsers->user_id = $requestEmail->id;
-            $requestUsers->first_name = $request->first_name;
-            $requestUsers->last_name = $request->last_name;
-            $requestUsers->email = $request->email;
-            $requestUsers->mobile = $request->phone_number;
-            $requestUsers->street = $request->street;
-            $requestUsers->city = $request->city;
-            $requestUsers->state = $request->state;
-            $requestUsers->zipcode = $request->zipcode;
-            $requestUsers->save();
-
-            $userRolesEntry = new UserRoles();
-            $userRolesEntry->role_id = 3;
-            $userRolesEntry->user_id = $requestEmail->id;
-            $userRolesEntry->save();
-
-            // Store request details in requestTable table
-            $requestTable = new requestTable();
-            $requestTable->status = 3;
-            $requestTable->physician_id = $providerId;
-            $requestTable->user_id = $requestEmail->id;
-            $requestTable->request_type_id = $request->request_type_id;
-            $requestTable->first_name = $request->first_name;
-            $requestTable->last_name = $request->last_name;
-            $requestTable->email = $request->email;
-            $requestTable->phone_number = $request->phone_number;
-            $requestTable->save();
-        } else {
-            // Store request details in requestTable table
-            $requestTable = new requestTable();
-            $requestTable->status = 3;
-            $requestTable->physician_id = $providerId;
-            $requestTable->user_id = $isEmailStored->id;
-            $requestTable->request_type_id = $request->request_type_id;
-            $requestTable->first_name = $request->first_name;
-            $requestTable->last_name = $request->last_name;
-            $requestTable->email = $request->email;
-            $requestTable->phone_number = $request->phone_number;
-            $requestTable->save();
-        }
-
-        // Store client details in RequestClient table
-        $requestClient = new RequestClient();
-        $requestClient->request_id = $requestTable->id;
-        $requestClient->first_name = $request->first_name;
-        $requestClient->last_name = $request->last_name;
-        $requestClient->email = $request->email;
-        $requestClient->phone_number = $request->phone_number;
-        $requestClient->date_of_birth = $request->dob;
-        $requestClient->street = $request->street;
-        $requestClient->city = $request->city;
-        $requestClient->state = $request->state;
-        $requestClient->zipcode = $request->zip;
-        $requestClient->room = $request->room;
-        $requestClient->save();
-
-        // Store notes in RequestNotes table
-        $requestNotes = new RequestNotes();
-        $requestNotes->request_id = $requestTable->id;
-        $requestNotes->physician_notes = $request->note;
-        $requestNotes->created_by = 'physician';
-        $requestNotes->save();
-
-        // Generate confirmation number
-        $currentTime = Carbon::now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-        $confirmationNumber = $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
-
-        // Update RequestTable with confirmation number
-        // if (!empty($requestTable->id)) {
-        if ($requestTable->id) {
-            $requestTable->update(['confirmation_no' => $confirmationNumber]);
-        }
-
-        if ($isEmailStored === null) {
-            // Send email to user
-            $emailAddress = $request->email;
-
-            try {
-                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
-            } catch (\Throwable $th) {
-                return view('errors.500');
-            }
-
-            // Log email in EmailLog table
-            $user = Auth::user();
-            $providerId = Provider::where('user_id', $user->id)->first()->id;
-
-            EmailLog::create([
-                'role_id' => 3,
-                'request_id' =>  $requestTable->id,
-                'recipient_name' => $request->first_name.' '.$request->last_name,
-                'confirmation_number' => $confirmationNumber,
-                'provider_id' => $providerId,
-                'is_email_sent' => 1,
-                'sent_tries' => 1,
-                'action' => 5,
-                'create_date' => now(),
-                'sent_date' => now(),
-                'email_template' => 'Create Account With Provided Email',
-                'subject_name' => 'Create account by clicking on below link with below email address',
-                'email' => $request->email,
-            ]);
-            return redirect()->route('provider.status', 'pending')->with('successMessage', 'Email for create account is sent & request created successfully!');
-        }
-        // Redirect to provider status page with success message
-        return redirect()->route("provider.status", 'pending')->with('successMessage', 'Request Created Successfully!');
+        return redirect()->route("provider.status", 'pending')->with('successMessage', $redirectMsg);
     }
 
     /**
@@ -456,78 +325,4 @@ class ProviderController extends Controller
         return redirect()->back()->with('mailSentToAdmin', 'Email Sent to Admin - to make requested changes!');
     }
 
-    /**
-     * Send Mail to patient with link to create request page
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\RedirectResponse redirect back with success message
-     */
-    public function sendMail(SendMailRequest $request)
-    {
-        // Generate the link using route() helper (assuming route parameter is optional)
-        $link = route('submit.request');
-
-        try {
-            // send SMS Logic
-            $sid = getenv('TWILIO_SID');
-            $token = getenv('TWILIO_AUTH_TOKEN');
-            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
-
-            $twilio = new Client($sid, $token);
-
-            $twilio->messages
-                ->create(
-                    '+91 99780 71802', // to
-                    [
-                        'body' => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
-                        'from' =>  $senderNumber,
-                    ]
-                );
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-
-        $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->first('id');
-
-        $name = $request->first_name . ' ' . $request->last_name;
-
-        SMSLogs::create(
-            [
-                'sms_template' => 'Hii ,Click on the below link to create request',
-                'mobile_number' => $request->phone_number,
-                'recipient_name' => $name,
-                'provider_id' => $providerId,
-                'created_date' => now(),
-                'sent_date' => now(),
-                'role_id' => 2,
-                'is_sms_sent' => 1,
-                'sent_tries' => 1,
-                'action' => 1,
-            ]
-        );
-
-        // Send Email Logic
-        try {
-            Mail::to($request->email)->send(new SendMail($request->all()));
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-        EmailLog::create([
-            'role_id' => 2,
-            'provider_id' => $providerId,
-            'recipient_name' => $name,
-            'email_template' => 'mail.blade.php',
-            'subject_name' => 'Create Request Link',
-            'email' => $request->email,
-            'create_date' => now(),
-            'sent_date' => now(),
-            'is_email_sent' => true,
-            'sent_tries' => 1,
-            'action' => 1,
-        ]);
-
-        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
-    }
 }

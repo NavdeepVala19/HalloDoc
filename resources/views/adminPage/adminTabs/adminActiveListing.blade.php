@@ -112,14 +112,15 @@ giving service to the patient. --}}
                         Create Requests
                     </span>
                 </a>
-                <a href="{{ route('export.active_data') }}" class="primary-fill" id="filterExportBtnActive">
+                <a href="{{ route('export.data') }}" class="primary-fill" id="filterExportBtnActive">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <form action="{{ route('export.active_data') }}" method="POST" id="filterExport">
+                <form action="{{ route('export.data') }}" method="POST" id="filterExport">
                     @csrf
+                    <input name="status" value="" hidden>
                     <input name="filter_search" value="" hidden>
                     <input name="filter_region" value="" hidden>
                     <input name="filter_category" value="" hidden>

@@ -6,8 +6,8 @@ use App\Mail\DocsAttachmentMail;
 use App\Mail\SendAgreement;
 use App\Mail\SendMailPatient;
 use App\Models\Admin;
-use App\Models\EmailLog;
 use App\Models\HealthProfessional;
+use App\Models\EmailLog;
 use App\Models\Provider;
 use App\Models\RequestClient;
 use App\Models\RequestTable;
@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Services\SendLinkToPatientService;
 use Twilio\Rest\Client;
 use ZipArchive;
 
@@ -88,29 +89,33 @@ class CommonOperationController extends Controller
         if ($request->input('operation') === 'download_all') {
             // Download All Documents or Download the selected documents
             // if (empty($request->input('selected'))) {
-            if (! $request->selected) {
-                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
-                if ($data->isEmpty()) {
-                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+            try {
+                if (! $request->selected) {
+                    $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+                    if ($data->isEmpty()) {
+                        return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+                    }
+                    $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+                } else {
+                    $ids = $request->input('selected');
                 }
-                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
-            } else {
-                $ids = $request->input('selected');
-            }
 
-            $zip = new ZipArchive();
-            $zipFile = uniqid() . '-documents.zip';
+                $zip = new ZipArchive();
+                $zipFile = uniqid() . '-documents.zip';
 
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
-                foreach ($ids as $id) {
-                    $file = RequestWiseFile::where('id', $id)->first();
-                    $path = public_path() . '/storage/' . $file->file_name;
+                if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
+                    foreach ($ids as $id) {
+                        $file = RequestWiseFile::where('id', $id)->first();
+                        $path = public_path() . '/storage/' . $file->file_name;
 
-                    $zip->addFile($path, $file->file_name);
+                        $zip->addFile($path, $file->file_name);
+                    }
+                    $zip->close();
                 }
-                $zip->close();
+                return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+            } catch (\Throwable $th) {
+                return view('errors.500');
             }
-            return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
         }
         if ($request->input('operation') === 'send_mail') {
             // Send Mail of Selected Documents as attachment
@@ -201,7 +206,7 @@ class CommonOperationController extends Controller
                 'request_id' => $request->request_id,
                 'admin_id' => $adminId,
                 'provider_id' => $providerId,
-                'recipient_name' => $requestClient->first_name.' '.$requestClient->last_name,
+                'recipient_name' => $requestClient->first_name . ' ' . $requestClient->last_name,
                 'email_template' => 'sendMailPatient.blade.php',
                 'subject_name' => 'Send Mail to patient',
                 'email' => $requestClient->email,
@@ -254,7 +259,7 @@ class CommonOperationController extends Controller
             'request_id' => $request->request_id,
             'admin_id' => $adminId,
             'provider_id' => $providerId,
-            'recipient_name' => $clientData->requestClient->first_name.' '.$clientData->requestClient->last_name,
+            'recipient_name' => $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name,
             'email_template' => 'sendAgreementLink.blade.php',
             'subject_name' => 'Agreement Link Sent to Patient',
             'email' => $request->email,
@@ -271,7 +276,7 @@ class CommonOperationController extends Controller
                 'sms_template' => 'Hii, Click on the given link to create request',
                 'mobile_number' => $request->phone_number,
                 'confirmation_number' => $clientData->confirmation_no,
-                'recipient_name' => $clientData->requestClient->first_name.' '.$clientData->requestClient->last_name,
+                'recipient_name' => $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name,
                 'role_id' => $roleId,
                 'admin_id' => $adminId,
                 'request_id' => $request->request_id,
@@ -302,7 +307,7 @@ class CommonOperationController extends Controller
                 ->create(
                     '+91 99780 71802', // to
                     [
-                        'body' => 'Hii '. $clientData->requestClient->first_name.' '.$clientData->requestClient->last_name .', Click on the this link to open Agreement:'.url('/patient-agreement/' . $id),
+                        'body' => 'Hii ' . $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $id),
                         'from' =>  $senderNumber,
                     ]
                 );
@@ -338,5 +343,24 @@ class CommonOperationController extends Controller
     {
         $businessData = HealthProfessional::where('id', $id)->first();
         return response()->json($businessData);
+    }
+
+    /**
+     * Send Mail to patient with link to create request page
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse redirect back with success message
+     */
+    public function sendLinkForSubmitRequest(Request $request, SendLinkToPatientService $sendLinkToPatientService){
+
+        $request->validate([
+            'first_name' => 'required|alpha|min:5|max:30',
+            'last_name' => 'required|alpha|min:5|max:30',
+            'phone_number' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+        ]);
+        $sendLinkToPatientService->sendLink($request);
+        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
     }
 }

@@ -40,9 +40,8 @@ class ActiveStatusExport implements
     public function collection()
     {
         $adminActiveData = $this->data->get();
-
         return collect($adminActiveData)->map(function ($adminActive) {
-            if (isset ($adminActive) && $adminActive->requestClient) {
+            if (isset($adminActive) && $adminActive->requestClient) {
                 return [
                     'PatientName' => $adminActive->requestClient->first_name.' ' .$adminActive->requestClient->last_name,
                     'Date Of Birth' => $adminActive->requestClient->date_of_birth,

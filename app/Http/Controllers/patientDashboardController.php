@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreatePatientRequest;
 use App\Models\RequestStatus;
-use Illuminate\Support\Facades\DB;
+use App\Models\RequestTable;
+use App\Models\Users;
+use App\Services\PatientDashboardService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use App\Services\PatientDashboardService;
-use App\Http\Requests\CreatePatientRequest;
+use Illuminate\Support\Facades\DB;
 
 class PatientDashboardController extends Controller
 {

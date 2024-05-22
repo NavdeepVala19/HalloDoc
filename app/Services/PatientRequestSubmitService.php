@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\UserRoles;
-use App\Models\Users;
+use App\Mail\SendEmailAddress;
 use App\Models\AllUsers;
 use App\Models\EmailLog;
-use App\Models\RequestTable;
 use App\Models\RequestClient;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
-use App\Mail\SendEmailAddress;
+use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Mail;
 
 class PatientRequestSubmitService

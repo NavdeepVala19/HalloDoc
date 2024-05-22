@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\SMSLogs;
 use App\Models\BlockRequest;
 use App\Models\RequestClient;
+use App\Models\SMSLogs;
 use Illuminate\Support\Facades\DB;
 
 class RecordsService
@@ -178,19 +178,8 @@ class RecordsService
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function blockHistory(){
-        return BlockRequest::select(
-            'block_request.phone_number',
-            'block_request.email',
-            'block_request.id',
-            'block_request.is_active',
-            'block_request.request_id',
-            'block_request.reason',
-            'request_client.first_name as patient_name',
-            DB::raw('DATE(block_request.created_at) as created_date'),
-        )
-            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id')
-            ->latest('id')
-            ->paginate(10);
+
+        return BlockRequest::with('requestClient')->latest()->paginate(10);
     }
 
     /**
@@ -201,6 +190,7 @@ class RecordsService
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function filterBlockHistoryData($request){
+
         $blockData = BlockRequest::select(
             'request_client.first_name as patient_name',
             'block_request.id',
@@ -211,8 +201,7 @@ class RecordsService
             'block_request.request_id',
             DB::raw('DATE(block_request.created_at) as created_date'),
         )
-            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
-
+        ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
         if ($request->patient_name) {
             $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }

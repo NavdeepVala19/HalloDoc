@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Provider;
-use App\Models\RequestNotes;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\MedicalReport;
-use App\Models\RequestStatus;
-use App\Models\RequestWiseFile;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\DB;
-use App\Services\CreateOrderService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Crypt;
+use App\Http\Requests\EncounterFormRequest;
 use App\Models\HealthProfessionalType;
 use App\Services\MedicalFormDataService;
-use App\Http\Requests\EncounterFormRequest;
+use App\Models\MedicalReport;
+use App\Models\Provider;
+use App\Models\RequestNotes;
+use App\Models\RequestStatus;
+use App\Models\RequestTable;
+use App\Models\RequestWiseFile;
+use App\Services\CreateOrderService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class ProviderActionController extends Controller
 {

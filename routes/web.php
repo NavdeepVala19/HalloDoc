@@ -146,9 +146,6 @@ Route::middleware('CheckProviderLogin')->group(function () {
     // Data from Create request page for Provider
     Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name('provider.request.data');
 
-    // Send Email for creating request through provider
-    Route::post('/provider-send-mail', [ProviderController::class, 'sendMail'])->name('provider.send.mail');
-
     // Provider Profile page (MyProfile)
     Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
     // Provider Reset Password (MyProfile)
@@ -241,9 +238,6 @@ Route::middleware('CheckAdminLogin')->group(function () {
     // For Searching Request
     // Route::post('admin/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
     Route::post('admin/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
-
-    // Send Link
-    Route::post('/admin/send/mail/patient', [AdminController::class, 'sendMail'])->name('admin.send.mail');
 
     // Assign Case pop-up, populate select menu with all physician regions (AJAX)
     Route::get('/physician-regions', [AdminActionController::class, 'physicianRegions'])->name('physician.regions');
@@ -400,12 +394,7 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('send.request_support');
 
-    route::post('/admin-new-exportNew', [AdminController::class, 'exportNew'])->name('export.new_data');
-    route::post('/admin-pending-exportPending', [AdminController::class, 'exportPending'])->name('export.pending_data');
-    route::post('/admin-active-exportActive', [AdminController::class, 'exportActive'])->name('export.active_data');
-    route::post('/admin-conclude-exportConclude', [AdminController::class, 'exportConclude'])->name('export.conclude_data');
-    route::post('/admin-toclose-exportToClose', [AdminController::class, 'exportToClose'])->name('export.toclose_data');
-    route::post('/admin-unpaid-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('export.unpaid_data');
+    route::post('/admin-export', [AdminController::class, 'exportDataToExcel'])->name('export.data');
     route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('export.all_data');
 
     route::get('/admin-submit-requests', [AdminDashboardController::class, 'createNewRequest'])->name('submit.patient.request.view');
@@ -472,6 +461,8 @@ Route::middleware('CheckAdminOrProvider')->group(function () {
 
     // Dynamically fetch data of business based on selection in dropdown
     Route::get('/fetch-business-data/{id}', [CommonOperationController::class, 'fetchBusinessData'])->name('fetch.business.data');
+
+    Route::post('/send-link', [CommonOperationController::class, 'sendLinkForSubmitRequest'])->name('send.link');
 });
 
 

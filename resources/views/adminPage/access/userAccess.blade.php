@@ -51,6 +51,7 @@
 @endsection
 
 @section('content')
+  @include('alertMessages.successMessage')
     <div class="m-5 spacing">
         <h3 class="main-heading">User Access</h3>
         <div class="section">

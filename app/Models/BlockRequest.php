@@ -22,12 +22,10 @@ class BlockRequest extends Model
         'request_id ',
     ];
 
-    public function request_status()
-    {
-        return $this->belongsTo(RequestStatus::class, 'request_id', 'request_id');
-    }
 
     public function requestClient(){
-        return $this->belongsTo(RequestClient::class, 'request_id', 'request_id');
+        return $this->hasOne(RequestClient::class, 'request_id', 'request_id');
     }
+
+
 }

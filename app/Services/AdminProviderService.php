@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
+use App\Mail\ContactProvider;
+use App\Models\AllUsers;
 use App\Models\EmailLog;
+use App\Models\PhysicianRegion;
 use App\Models\Provider;
-use App\Models\UserRoles;
+use App\Models\SMSLogs;
 use App\Models\ShiftDetail;
 use App\Models\Users;
-use App\Models\AllUsers;
-use App\Mail\ContactProvider;
-use App\Models\PhysicianRegion;
+use App\Models\UserRoles;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Twilio\Rest\Client;
 
 class AdminProviderService
 {

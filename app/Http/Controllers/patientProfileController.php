@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePatientRequest;
 use App\Models\AllUsers;
+use App\Services\PatientDashboardService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use App\Services\PatientDashboardService;
-use App\Http\Requests\CreatePatientRequest;
 
 class PatientProfileController extends Controller
 {
@@ -73,7 +73,7 @@ class PatientProfileController extends Controller
     {
         $userData = Auth::user();
         $email = $userData['email'];
-        $getEmailData = AllUsers::where('email', '=', $email)->first();
+        $getEmailData = AllUsers::where('email', $email)->first();
         $address = $getEmailData->street . $getEmailData->city . $getEmailData->state;
 
         return view('patientSite.patientMapLocation', compact('address'));

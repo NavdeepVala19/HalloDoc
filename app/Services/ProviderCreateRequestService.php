@@ -2,18 +2,17 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmailAddress;
 use App\Models\AllUsers;
-use App\Models\Business;
 use App\Models\EmailLog;
-use App\Models\RequestBusiness;
 use App\Models\RequestClient;
+use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use App\Models\Users;
 use App\Models\UserRoles;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Users;
 
-class BusinessRequestSubmitService
+class ProviderCreateRequestService
 {
     /**
      * it generates confirmation number
@@ -36,25 +35,17 @@ class BusinessRequestSubmitService
         return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
     }
 
-    /**
-     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
-     * and send email to create account using same email
-     *
-     * @param mixed $request (input enter by user)
-     *
-     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
-     */
+    public function storeRequest($request, $providerId){
 
-    public function storeBusinessRequest($request, $createPatientRequest)
-    {
+        // check if email already exists in users table
         $isEmailStored = Users::where('email', $request->email)->first();
 
         // Store user details if email is not already stored
         if ($isEmailStored === null) {
             $storePatientInUsers = new Users();
-            $storePatientInUsers->username = $createPatientRequest->first_name . " " . $createPatientRequest->last_name;
-            $storePatientInUsers->email = $createPatientRequest->email;
-            $storePatientInUsers->phone_number = $createPatientRequest->phone_number;
+            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
+            $storePatientInUsers->email = $request->email;
+            $storePatientInUsers->phone_number = $request->phone_number;
             $storePatientInUsers->save();
 
             $storePatientInAllUsers = new AllUsers();
@@ -77,52 +68,49 @@ class BusinessRequestSubmitService
             $userRole->save();
         }
 
-        $requestTableData = RequestTable::create([
-            'user_id' => $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id,
-            'request_type_id' => 4,
-            'status' => 1,
-            'first_name' => $request->business_first_name,
-            'last_name' => $request->business_last_name,
-            'email' => $request->business_email,
-            'phone_number' => $request->business_mobile,
-            'case_number' => $request->case_number,
-        ]);
+        $requestData = new RequestTable();
+        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id;
+        $requestData->request_type_id = $request->request_type_id;
+        $requestData->status = 3;
+        $requestData->physician_id = $providerId;
+        $requestData->fill($request->only([
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+        ]));
+        $requestData->save();
 
-        RequestClient::create([
-            'request_id' => $requestTableData->id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'date_of_birth' => $request->date_of_birth,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'street' => $request->street,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zipcode' => $request->zipcode,
-            'symptoms' => $request->symptoms,
-        ]);
+        $patientRequest = new RequestClient();
+        $patientRequest->request_id = $requestData->id;
+        $patientRequest->fill($request->only([
+            'first_name',
+            'last_name',
+            'date_of_birth',
+            'email',
+            'phone_number',
+            'street',
+            'city',
+            'state',
+            'zipcode',
+            'room',
+        ]));
+        $patientRequest->save();
 
-        $business = Business::create([
-            'phone_number' => $request->business_mobile,
-            'address1' => $request->street,
-            'address2' => $request->city,
-            'zipcode' => $request->zipcode,
-            'business_name' => $request->business_property_name,
-        ]);
-
-        RequestBusiness::create([
-            'request_id' => $requestTableData->id,
-            'business_id' => $business->id,
-        ]);
+        // Store notes in RequestNotes table
+        $requestNotes = new RequestNotes();
+        $requestNotes->request_id = $requestData->id;
+        $requestNotes->physician_notes = $request->note;
+        $requestNotes->created_by = 'physician';
+        $requestNotes->save();
 
         // Generate confirmation number
         $confirmationNumber = $this->generateConfirmationNumber($request);
 
         // Update confirmation number if request is created successfully
-        if ($requestTableData->id) {
-            $requestTableData->update(['confirmation_no' => $confirmationNumber]);
+        if ($requestData->id) {
+            $requestData->update(['confirmation_no' => $confirmationNumber]);
         }
-
         try {
             // Send email if email is not already stored
             if ($isEmailStored === null) {
@@ -130,11 +118,12 @@ class BusinessRequestSubmitService
                 Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
 
                 EmailLog::create([
-                    'role_id' => 3,
-                    'request_id' => $requestTableData->id,
+                    'role_id' => 2,
+                    'request_id' => $requestData->id,
                     'confirmation_number' => $confirmationNumber,
                     'is_email_sent' => 1,
-                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
+                    'recipient_name' => $request->first_name.' '.$request->last_name,
+                    'provider_id' => $providerId,
                     'sent_tries' => 1,
                     'create_date' => now(),
                     'sent_date' => now(),
@@ -144,10 +133,10 @@ class BusinessRequestSubmitService
                     'action' => 5,
                 ]);
             }
-
             return $isEmailStored;
         } catch (\Throwable $th) {
             return view('errors.500');
         }
     }
+
 }

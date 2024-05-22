@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Models\Admin;
+use App\Models\AdminRegion;
 use App\Models\AllUsers;
 use App\Models\Users;
 use App\Models\UserRoles;
-use App\Models\AdminRegion;
 use Illuminate\Support\Facades\Hash;
 
 class UserAccessService

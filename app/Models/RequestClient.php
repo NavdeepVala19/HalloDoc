@@ -36,12 +36,12 @@ class RequestClient extends Model
         return $this->belongsTo(RequestTable::class);
     }
 
-    public function request_status()
+    public function requestStatus()
     {
         return $this->belongs(RequestStatus::class, 'request_id', 'request_id');
     }
 
-    public function request_wise_file()
+    public function requestWiseFile()
     {
         return $this->belongsTo(RequestWiseFile::class, 'request_id', 'request_id');
     }

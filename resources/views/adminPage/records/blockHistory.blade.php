@@ -100,10 +100,10 @@
                     @endif
                     @foreach ($blockData as $data)
                     <tr>
-                        <td>{{$data->patient_name}}</td>
+                        <td>{{$data->requestClient->first_name}}</td>
                         <td>{{$data->phone_number}}</td>
                         <td>{{$data->email}}</td>
-                        <td>{{$data->created_date}}</td>
+                        <td> {{date_format(date_create( $data->created_at), 'd-m-Y')}}</td>
                         <td>{{$data->reason}}</td>
                         <td><input class="form-check-input me-3" type="checkbox" value="1" @checked($data->is_active === 1) id="checkbox_{{$data->id}}"></td>
                         <td>
@@ -129,7 +129,7 @@
                 <div class="main-section">
                     <div class="detail-box">
                         <h5>
-                            {{$data->patient_name}}
+                            {{$data->requestClient->first_name}}
                         </h5>
                         <br>
                         <span>
@@ -140,7 +140,7 @@
                 <div class="details">
                     <span><i class="bi bi-telephone"></i> Phone Number : {{$data->phone_number}}</span>
                     <br>
-                    <span><i class="bi bi-calendar3"></i>Create Date : {{$data->created_date}}</span>
+                    <span><i class="bi bi-calendar3"></i>Create Date : {{date_format(date_create( $data->created_at), 'd-m-Y')}}</span>
                     <br>
                     <span><i class="bi bi-journal"></i></i>Notes : {{$data->reason}}</span>
                     <br>

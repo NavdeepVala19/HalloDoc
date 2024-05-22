@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserRoles;
 use App\Models\Users;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -43,23 +43,17 @@ class PatientLoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $patientCredentials = Auth::user();
-            $userRole = UserRoles::where('user_id', $patientCredentials->id)->first();
-            if ($userRole === null) {
-                return back()->with('error', 'submit request with registered email');
-            }elseif ($userRole->role_id === 3) {
+            $userRole = UserRoles::where('user_id', Auth::user()->id)->first();
+            if ($userRole->role_id === 3) {
                 return redirect()->route('patient.dashboard');
-            }else{
-                return back()->with('error', 'Invalid credentials');
             }
-        }else{
-            $isuserExist = Users::where("email", $request->email)->first();
-            if ($isuserExist === null) {
-                return back()->with('error', 'We could not find an account associated with that email address');
-            }else{
-                return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
-            }
+            return back()->with('error', 'Invalid credentials');
         }
+        $isUserExist = Users::where('email', $request->email)->first();
+        if ($isUserExist === null) {
+            return back()->with('error', 'We could not find an account associated with that email address');
+        }
+        return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
     }
 
     /**
@@ -108,7 +102,6 @@ class PatientLoginController extends Controller
         return redirect()->route('patient.login.view')->with('success', 'E-mail is sent for password reset.');
     }
 
-
     /**
      * it shows password update form
      * if password is already update then it shows password update success page
@@ -131,7 +124,6 @@ class PatientLoginController extends Controller
             return view('errors.404');
         }
     }
-
 
     /**
      * update password of patient and delete token
@@ -172,59 +164,4 @@ class PatientLoginController extends Controller
         Auth::logout();
         return redirect()->route('patient.login.view');
     }
-
-
-    // Learning Purpose
-
-    // public function patientLogin(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-    //         'password' => "required|min:8|max:30|regex:/^\S(.*\S)?$/",
-    //     ]);
-
-    //     $credentials = [
-    //         'email' => $request->email,
-    //         'password' => $request->password,
-    //     ];
-    //     $errors = new MessageBag; // initiate MessageBag
-
-    //     if (Auth::attempt($credentials)) {
-
-    //         $patientCredentials = Auth::user();
-
-    //         $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-
-    //         $user = Users::where("email", $request->email)->first();
-
-    //         if ($userRolesData->role_id == 1 || $userRolesData->role_id == 2 || $user == null) {
-
-    //             $errors = new MessageBag(['email' => ['Invalid email. Please login with correct email']]);
-
-    //             return redirect()->back()
-    //             ->withErrors($errors)
-    //             ->withInput($request->except('email'));
-    //         } else if ($userRolesData->role_id == 3) {
-    //             return redirect()->route('patient.dashboard');
-    //         } else {
-    //             return back()->with('error', 'Invalid credentials');
-    //         }
-    //     } else {
-    //         $user = Users::where("email", $request->email)->first();
-
-    //         if ($user == null) {
-    //             $errors = new MessageBag(['email' => ['We could not find an account associated with that email address , Please enter correct email ']]);
-
-    //             return redirect()->back()
-    //             ->withErrors($errors)
-    //             ->withInput($request->except('email'));
-    //         } else {
-    //             $errors = new MessageBag(['password' => ['Incorrect Password , Please Enter Correct Password']]);
-
-    //             return redirect()->back()
-    //             ->withErrors($errors)
-    //             ->withInput($request->except('password'));
-    //         }
-    //     }
-    // }
 }

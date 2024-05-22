@@ -2,43 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ActiveStatusExport;
+use App\Exports\ConcludeStatusExport;
+use App\Exports\NewStatusExport;
+use App\Exports\PendingStatusExport;
+use App\Exports\SearchRecordExport;
+use App\Exports\ToCloseStatusExport;
+use App\Exports\UnPaidStatusExport;
+use App\Http\Requests\AdminProfileForm;
+use App\Http\Requests\CreatePartners;
+use App\Mail\RequestSupportMessage;
+use App\Models\BlockRequest;
+use App\Models\EmailLog;
+use App\Models\HealthProfessional;
+use App\Models\HealthProfessionalType;
 use App\Models\Menu;
+use App\Models\Provider;
+use App\Models\Regions;
+use App\Models\RequestBusiness;
+use App\Models\RequestClient;
+use App\Models\RequestConcierge;
+use App\Models\RequestStatus;
+use App\Models\RequestWiseFile;
+use App\Models\RequestTable;
 use App\Models\Role;
 use App\Models\Roles;
-use App\Mail\SendLink;
-use App\Models\Regions;
-use App\Models\SMSLogs;
-use Twilio\Rest\Client;
-use App\Models\EmailLog;
-use App\Models\Provider;
 use App\Models\RoleMenu;
 use App\Models\ShiftDetail;
-use App\Models\BlockRequest;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\RequestClient;
-use App\Models\RequestStatus;
-use App\Models\RequestBusiness;
-use App\Models\RequestWiseFile;
-use App\Exports\NewStatusExport;
-use App\Models\HealthProfessionalType;
-use App\Models\RequestConcierge;
+use App\Models\SMSLogs;
 use App\Services\RecordsService;
-use App\Models\HealthProfessional;
-use App\Exports\ActiveStatusExport;
-use App\Exports\SearchRecordExport;
-use App\Exports\UnPaidStatusExport;
-use App\Mail\RequestSupportMessage;
+use App\Services\PartnersService;
 use App\Services\UserAccessService;
-use App\Exports\PendingStatusExport;
-use App\Exports\ToCloseStatusExport;
-use App\Exports\ConcludeStatusExport;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Crypt;
-use App\Http\Requests\AdminProfileForm;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -64,44 +64,6 @@ class AdminController extends Controller
     public const STATUS_CONCLUDE = 6;
     public const STATUS_TOCLOSE = [2, 7, 11];
     public const STATUS_UNPAID = 9;
-
-    /**
-     * Get category id from the name of category
-     *
-     * @param string $category different category names.
-     *
-     * @return int different types of request_type_id.
-     */
-    private function getCategoryId($category)
-    {
-        // mapping of category names to request_type_id
-        $categoryMapping = [
-            'patient' => self::CATEGORY_PATIENT,
-            'family' => self::CATEGORY_FAMILY,
-            'concierge' => self::CATEGORY_CONCIERGE,
-            'business' => self::CATEGORY_BUSINESS,
-        ];
-        return $categoryMapping[$category] ?? null;
-    }
-    /**
-     * Get status id from the name of status
-     *
-     * @param string $status different status names.
-     *
-     * @return int status in Id.
-     */
-    private function getStatusId($status)
-    {
-        $statusMapping = [
-            'new' => self::STATUS_NEW,
-            'pending' => self::STATUS_PENDING,
-            'active' => self::STATUS_ACTIVE,
-            'conclude' => self::STATUS_CONCLUDE,
-            'toclose' => self::STATUS_TOCLOSE,
-            'unpaid' => self::STATUS_UNPAID,
-        ];
-        return $statusMapping[$status];
-    }
 
     // For Admin redirect to new State(By Default)
     public function adminDashboard()
@@ -276,91 +238,10 @@ class AdminController extends Controller
     |   5. Request DTY Support
     */
 
-    // -------------------- 1. Send Link (sendMail) -------------------
-    /**
-     * Send Mail to patient with link to create request page
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\RedirectResponse redirect back with success message
-     */
-    public function sendMail(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|alpha|min:5|max:30',
-            'last_name' => 'required|alpha|min:5|max:30',
-            'phone_number' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-        ]);
-
-        $firstname = $request->first_name;
-        $lastname = $request->last_name;
-
-        // Route name
-        $routeName = 'submit.request';
-
-        // Generate the link using route() helper (assuming route parameter is optional)
-        $link = route($routeName);
-
-        try {
-            Mail::to($request->email)->send(new SendLink($request->all()));
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-
-        try {
-            // send SMS
-            $sid = getenv('TWILIO_SID');
-            $token = getenv('TWILIO_AUTH_TOKEN');
-            $senderNumber = getenv('TWILIO_PHONE_NUMBER');
-
-            $twilio = new Client($sid, $token);
-
-            $twilio->messages
-                ->create(
-                    "+91 99780 71802", // to
-                    [
-                        'body' => "Hii {$firstname} {$lastname}, Click on the this link to create request:{$link}",
-                        'from' =>  $senderNumber,
-                    ]
-                );
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-
-        EmailLog::create([
-            'role_id' => 1,
-            'is_email_sent' => true,
-            'sent_tries' => 1,
-            'create_date' => now(),
-            'sent_date' => now(),
-            'email_template' => 'mail.blade.php',
-            'subject_name' => 'Create Request Link',
-            'email' => $request->email,
-            'recipient_name' => $request->first_name.' '.$request->last_name,
-            'action' => 1,
-        ]);
-
-        SMSLogs::create(
-            [
-                'role_id' => 1,
-                'mobile_number' => $request->phone_number,
-                'created_date' => now(),
-                'sent_date' => now(),
-                'recipient_name' => $request->first_name .' '.$request->last_name,
-                'sent_tries' => 1,
-                'is_sms_sent' => 1,
-                'action' => 1,
-                'sms_template' => 'Hii ,Click on the below link to create request',
-            ]
-        );
-
-        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
-    }
-    // -------------------- 2. Create Request -------------------------
-    // -------------------- 3. Export ---------------------------------
-    // -------------------- 4. Export All -----------------------------
-    // -------------------- 5. Request DTY Support --------------------
+     // -------------------- 1. Create Request -------------------------
+    // -------------------- 2. Export ---------------------------------
+    // -------------------- 3. Export All -----------------------------
+    // -------------------- 4. Request DTY Support --------------------
 
     /*
     |--------------------------------------------------------------------------
@@ -462,32 +343,9 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
-    public function addBusiness(Request $request)
+    public function addBusiness(CreatePartners $request, PartnersService $partnersService)
     {
-        $request->validate([
-            'business_name' => 'required',
-            'profession' => 'required|numeric',
-            'fax_number' => 'required|numeric',
-            'mobile' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'business_contact' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'zip' => 'required',
-        ]);
-        HealthProfessional::create([
-            'vendor_name' => $request->business_name,
-            'profession' => $request->profession,
-            'fax_number' => $request->fax_number,
-            'phone_number' => $request->mobile,
-            'email' => $request->email,
-            'business_contact' => $request->business_contact,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zip' => $request->zip,
-            'address' => $request->street,
-        ]);
-
+        $partnersService->createBusiness($request);
         return redirect()->route('admin.partners')->with('businessAdded', 'Business Added Successfully!');
     }
 
@@ -518,33 +376,10 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateBusiness(Request $request)
+    public function updateBusiness(CreatePartners $request, PartnersService $partnersService)
     {
-        $request->validate([
-            'business_name' => 'required',
-            'profession' => 'required|numeric',
-            'fax_number' => 'required|numeric',
-            'mobile' => 'required',
-            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'business_contact' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'zip' => 'required',
-        ]);
-
-        HealthProfessional::where('id', $request->vendor_id)->update([
-            'vendor_name' => $request->business_name,
-            'profession' => $request->profession,
-            'fax_number' => $request->fax_number,
-            'phone_number' => $request->mobile,
-            'email' => $request->email,
-            'business_contact' => $request->business_contact,
-            'address' => $request->street,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zip' => $request->zip,
-        ]);
-        return redirect()->back()->with('changesSaved', 'Changes Saved Successfully!');
+        $partnersService->updateBusiness($request);
+        return redirect()->route('admin.partners')->with('changesSaved', 'Changes Saved Successfully!');
     }
 
     /**
@@ -711,7 +546,7 @@ class AdminController extends Controller
      */
     public function emailRecordsView()
     {
-        $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
+        $emails = EmailLog::with(['roles'])->latest()->paginate(10);
 
         return view('adminPage.records.emailLogs', compact('emails'));
     }
@@ -719,17 +554,17 @@ class AdminController extends Controller
     /**
      * Search/filter EmailLogs.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Contracts\View\View
      */
     public function searchEmail(Request $request)
     {
-        $roleId = $request->get('role_id');
-        $receiverName = $request->get('receiver_name');
-        $email = $request->get('email');
-        $createdDate = $request->get('created_date');
-        $sentDate = $request->get('sent_date');
+        $roleId = $request->role_id;
+        $receiverName = $request->receiver_name;
+        $email = $request->email;
+        $createdDate = $request->created_date;
+        $sentDate = $request->sent_date;
 
         // Retrieve pagination parameters from the request
         $page = $request->input('page', 1);
@@ -852,8 +687,6 @@ class AdminController extends Controller
 
     // --------- 6.5 : Blocked History ----
 
-
-
     /**
      * list of  search records
      * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
@@ -875,7 +708,6 @@ class AdminController extends Controller
 
         return view('adminPage.records.searchRecords', compact('records'));
     }
-
 
     /**
      * filter records as per input
@@ -911,7 +743,6 @@ class AdminController extends Controller
         return view('adminPage.records.searchRecords', compact('records'));
     }
 
-
     /**
      * common function for filtering and exporting to excel
      * it filter as per request
@@ -943,7 +774,6 @@ class AdminController extends Controller
         return Excel::download($export, 'search_record_filtered_data.xls');
     }
 
-
     /**
      * delete record permanently from request client ,request,block_request,request_concierge,request_business,request_status,request_wise_file
      *
@@ -965,7 +795,6 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'record is permanently delete');
     }
 
-
     /**
      * list receipient name ,action,role_name,mobile,create_date,sent_date,confirmation_number,is_sent_sent_tries
      *
@@ -977,7 +806,6 @@ class AdminController extends Controller
         Session::forget('role_type');
         return view('adminPage.records.smsLogs', compact('smsLogs'));
     }
-
 
     /**
      * filter sms logs
@@ -1096,11 +924,10 @@ class AdminController extends Controller
                 ->where('user_roles.user_id', $id)
                 ->get();
             if ($userAccessRoleName->value('name') === 'admin') {
-                return redirect()->route('edit.admin.profile', ['id' =>  Crypt::encrypt($id)]);
-            } else {
-                $getProviderId = Provider::where('user_id', $id)->value('id');
-                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId)]);
+                return redirect()->route('edit.admin.profile', ['id' => Crypt::encrypt($id)]);
             }
+            $getProviderId = Provider::where('user_id', $id)->value('id');
+            return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId)]);
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -1174,7 +1001,6 @@ class AdminController extends Controller
         }
     }
 
-
     /**
      *fetch region from region table and show in all region drop down button
      *
@@ -1197,8 +1023,6 @@ class AdminController extends Controller
         return view('adminPage.createAdminAccount', compact('regions'));
     }
 
-
-
     /**
      * it stores data in admin ,users,allusers and make role_id '1' in user_roles
      *
@@ -1210,9 +1034,8 @@ class AdminController extends Controller
     public function createAdminAccount(AdminProfileForm $request, UserAccessService $userAccessService)
     {
         $userAccessService->createAdminAccount($request);
-        return redirect()->route('admin.user.access');
+        return redirect()->route('admin.user.access')->with('successMessage', 'new admin account is created successfully');
     }
-
 
     /**
      * fetch state for admin account create through ajax
@@ -1317,174 +1140,44 @@ class AdminController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
 
-    public function exportNew(Request $request)
+    public function exportDataToExcel(Request $request)
     {
-        $status = 'new';
+        $status = $request->status;
         $category = $request->filter_category;
         $search = $request->filter_search;
         $region = $request->filter_region;
         $regionId = session('regionId');
 
         if ($region === 'All Regions') {
-            $exportNewData = $this->buildQuery($status, $category, $search, $regionId);
+            $exportData = $this->buildQuery($status, $category, $search, $regionId);
         } else {
             $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportNewData = $this->filterAdminListing($status, $category, $search, $regionName);
+            $exportData = $this->filterAdminListing($status, $category, $search, $regionName);
         }
 
-        if ($exportNewData->get()->isEmpty()) {
+        if ($exportData->get()->isEmpty()) {
             return back()->with('successMessage', 'no cases found to export in Excel');
         }
-        $exportNew = new NewStatusExport($exportNewData);
-        return Excel::download($exportNew, 'NewData.xls');
+
+        $file = $status . '-data.xls';
+        if ($status === 'new') {
+            $data = new NewStatusExport($exportData);
+        } elseif ($status === 'pending') {
+            $data = new PendingStatusExport($exportData);
+        } elseif ($status === 'active') {
+            $data = new ActiveStatusExport($exportData);
+        } elseif ($status === 'conclude') {
+            $data = new ConcludeStatusExport($exportData);
+        } elseif ($status === 'toclose') {
+            $data = new ToCloseStatusExport($exportData);
+        } elseif ($status === 'unpaid') {
+            $data = new UnPaidStatusExport($exportData);
+        }
+
+        return Excel::download($data, $file);
     }
 
-    /**
-     * it export data to excel in admin pending listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportPending(Request $request)
-    {
-        $status = 'pending';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportPendingData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportPendingData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportPendingData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportPending = new PendingStatusExport($exportPendingData);
-        return Excel::download($exportPending, 'PendingData.xls');
-    }
-
-
-    /**
-     *  it export data to excel in admin active listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportActive(Request $request)
-    {
-        $status = 'active';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportActiveData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportActiveData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportActiveData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportActive = new ActiveStatusExport($exportActiveData);
-        return Excel::download($exportActive, 'ActiveData.xls');
-    }
-
-
-    /**
-     * it export data to excel in admin conclude listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportConclude(Request $request)
-    {
-        $status = 'conclude';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-        if ($region === 'All Regions') {
-            $exportConcludeData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportConcludeData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-        if ($exportConcludeData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportConclude = new ConcludeStatusExport($exportConcludeData);
-        return Excel::download($exportConclude, 'ConcludeData.xls');
-    }
-
-    /**
-     * it export data to excel in admin toclose listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportToClose(Request $request)
-    {
-        $status = 'toclose';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportToCloseData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportToCloseData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportToCloseData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportToClose = new ToCloseStatusExport($exportToCloseData);
-        return Excel::download($exportToClose, 'ToCloseData.xls');
-    }
-
-    /**
-     *  it export data to excel in admin unpaid listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportUnpaid(Request $request)
-    {
-        $status = 'unpaid';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportUnpaidData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportUnpaidData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportUnpaidData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
-        return Excel::download($exportUnpaid, 'UnPaidData.xls');
-    }
-
-    // REMOVED FROM SRS
+      // REMOVED FROM SRS
     // Cancel History Page
     public function viewCancelHistory()
     {
@@ -1513,5 +1206,43 @@ class AdminController extends Controller
         $cancelCases = $query->get();
 
         return view('adminPage.records.cancelHistory', compact('cancelCases'));
+    }
+
+    /**
+     * Get category id from the name of category
+     *
+     * @param string $category different category names.
+     *
+     * @return int different types of request_type_id.
+     */
+    private function getCategoryId($category)
+    {
+        // mapping of category names to request_type_id
+        $categoryMapping = [
+            'patient' => self::CATEGORY_PATIENT,
+            'family' => self::CATEGORY_FAMILY,
+            'concierge' => self::CATEGORY_CONCIERGE,
+            'business' => self::CATEGORY_BUSINESS,
+        ];
+        return $categoryMapping[$category] ?? null;
+    }
+    /**
+     * Get status id from the name of status
+     *
+     * @param string $status different status names.
+     *
+     * @return int status in Id.
+     */
+    private function getStatusId($status)
+    {
+        $statusMapping = [
+            'new' => self::STATUS_NEW,
+            'pending' => self::STATUS_PENDING,
+            'active' => self::STATUS_ACTIVE,
+            'conclude' => self::STATUS_CONCLUDE,
+            'toclose' => self::STATUS_TOCLOSE,
+            'unpaid' => self::STATUS_UNPAID,
+        ];
+        return $statusMapping[$status];
     }
 }

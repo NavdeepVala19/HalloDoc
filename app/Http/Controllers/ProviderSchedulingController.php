@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
+use DatePeriod;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
 use App\Models\Shift;
 use App\Models\ShiftDetail;
 use App\Models\ShiftDetailRegion;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use DatePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

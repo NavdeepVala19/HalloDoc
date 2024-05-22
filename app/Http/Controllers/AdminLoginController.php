@@ -13,7 +13,6 @@ use Illuminate\Support\Str;
 
 class AdminLoginController extends Controller
 {
-
     /**
      * show Login page for admin and provider
      *
@@ -34,8 +33,8 @@ class AdminLoginController extends Controller
     public function userLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|min:2|max:40|',
-            'password' => 'required',
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'password' => 'required|min:8|max:30',
         ]);
 
         $credentials = [
@@ -44,36 +43,20 @@ class AdminLoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $userData = Auth::user();
-            $userRole = UserRoles::where('user_id', $userData->id)->first();
-
+            $userRole = UserRoles::where('user_id', Auth::user()->id)->first();
             if ($userRole->role_id === 1) {
                 return redirect()->route('admin.dashboard');
             }
             if ($userRole->role_id === 2) {
                 return redirect()->route('provider.dashboard');
             }
-            if ($userRole->role_id === 3) {
-                return back()->with('error', 'invalid credentials');
-            }
-
-            // if ($userRole->role_id === 2) {
-            //     $providersData = Provider::where('email', $userData->email)->first();
-            //     PhysicianLocation::create([
-            //         'provider_id' => $providersData->id,
-            //         'physician_name' => $providersData->first_name,
-            //         'latitude' => $request->latitude,
-            //         'longitude' => $request->longitude,
-            //     ]);
-            // }
-        } else {
-            $isuserExist = Users::where("email", $request->email)->first();
-            if ($isuserExist === null) {
-                return back()->with('error', 'We could not find an account associated with that email address');
-            } else {
-                return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
-            }
+            return back()->with('error', 'Invalid Credentials');
         }
+        $isUserExist = Users::where('email', $request->email)->first();
+        if ($isUserExist === null) {
+            return back()->with('error', 'We could not find an account associated with that email address. ');
+        }
+        return back()->with('error', 'Incorrect Password , Please Enter Correct Password. ');
     }
 
     /**
@@ -122,7 +105,6 @@ class AdminLoginController extends Controller
         return redirect()->route('login')->with('message', 'E-mail is sent for password reset');
     }
 
-
     /**
      * shows password update form and if password is already updated it shows password update success form
      *
@@ -145,7 +127,7 @@ class AdminLoginController extends Controller
     }
 
     /**
-     * password updated of users(admin/provider) and after successfully update password token gets deleted
+     * update password of user(admin/provider) and after successfully update password token gets deleted
      *
      * @param \Illuminate\Http\Request $request
      *
@@ -172,7 +154,6 @@ class AdminLoginController extends Controller
         return redirect()->route('login')->with('message', 'Your password has been changed!');
     }
 
-
     /**
      * logout user(admin/provider)
      *
@@ -182,13 +163,5 @@ class AdminLoginController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
-
-        // $userData = Auth::user();
-        // $userRolesData = UserRoles::where('user_id', $userData->id)->first();
-
-        // if ($userRolesData->role_id == 2) {
-        //     $providersData = Provider::where('email', $userData->email)->first();
-        //     PhysicianLocation::where('provider_id', $providersData->id)->forceDelete();
-        // }
     }
 }

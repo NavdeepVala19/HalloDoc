@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\CarbonInterval;
+use Carbon\Carbon;
+use DatePeriod;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
 use App\Models\Regions;
 use App\Models\Shift;
 use App\Models\ShiftDetail;
 use App\Models\ShiftDetailRegion;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use DatePeriod;
 use Illuminate\Http\Request;
 
 class SchedulingController extends Controller

@@ -30,7 +30,7 @@ class Admin extends Model
         return $this->belongsTo(Users::class, 'user_id', 'id');
     }
 
-    public function RoleMenu(){
+    public function roleMenu(){
         return $this->belongs(RoleMenu::class, 'role_id', 'role_id');
     }
 
@@ -38,7 +38,7 @@ class Admin extends Model
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
 
-    public function Regions(){
+    public function region(){
         return $this->belongsTo(Regions::class, 'regions_id', 'id');
     }
 }

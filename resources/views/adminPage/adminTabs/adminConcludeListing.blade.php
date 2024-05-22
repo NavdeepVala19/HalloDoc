@@ -113,14 +113,15 @@ transferred into conclude state providers can finally conclude care for the pati
                         Create Requests
                     </span>
                 </a>
-                <a href="{{ route('export.conclude_data') }}" class="primary-fill" id="filterExportBtnConclude">
+                <a href="{{ route('export.data') }}" class="primary-fill" id="filterExportBtnConclude">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
                 </a>
-                <form action="{{ route('export.conclude_data') }}" method="POST" id="filterExport">
+                <form action="{{ route('export.data') }}" method="POST" id="filterExport">
                     @csrf
+                    <input name="status" value="" hidden>
                     <input name="filter_search" value="" hidden>
                     <input name="filter_region" value="" hidden>
                     <input name="filter_category" value="" hidden>

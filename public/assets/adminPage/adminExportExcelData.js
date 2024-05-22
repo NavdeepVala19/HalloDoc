@@ -10,11 +10,12 @@ $(document).ready(function () {
         var category_value = $(".filter-btn.active-filter").attr('data-category');
         
 
+        $("input[name='status']").attr("value", 'new');
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin-new-exportNew");
+        $("#filterExport").attr("action", "/admin-export");
         $('#filterExport').submit();
 
     })
@@ -28,11 +29,12 @@ $(document).ready(function () {
         var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
         var category_value = $(".filter-btn.active-filter").attr('data-category');
 
+        $("input[name='status']").attr("value", "pending");
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin-pending-exportPending");
+        $("#filterExport").attr("action", "/admin-export");
         $('#filterExport').submit();
 
     })
@@ -46,11 +48,12 @@ $(document).ready(function () {
         var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
         var category_value = $(".filter-btn.active-filter").attr('data-category');
 
+        $("input[name='status']").attr("value", "active");
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin-active-exportActive");
+         $("#filterExport").attr("action", "/admin-export");
         $('#filterExport').submit();
 
     })
@@ -63,11 +66,12 @@ $(document).ready(function () {
         var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
         var category_value = $(".filter-btn.active-filter").attr('data-category');
 
+        $("input[name='status']").attr("value", "conclude");
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin-conclude-exportConclude");
+         $("#filterExport").attr("action", "/admin-export");
         $('#filterExport').submit();
 
     })
@@ -81,11 +85,12 @@ $(document).ready(function () {
         var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
         var category_value = $(".filter-btn.active-filter").attr('data-category');
 
+        $("input[name='status']").attr("value", "toclose");
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $('#filterExport').attr('action', "/admin-toclose-exportToClose");
+         $("#filterExport").attr("action", "/admin-export");
         $('#filterExport').submit();
 
     })
@@ -99,11 +104,12 @@ $(document).ready(function () {
         var region_value = $(".listing-region").val() === "All Regions" ? "" : $(".listing-region").val();
         var category_value = $(".filter-btn.active-filter").attr('data-category');
 
+        $("input[name='status']").attr("value", "unpaid");
         $("input[name='filter_search']").attr("value", search_value);
         $("input[name='filter_region']").attr("value", region_value);
         $("input[name='filter_category']").attr("value", category_value);
 
-        $("#filterExport").attr("action", "/admin-unpaid-exportUnPaid");
+         $("#filterExport").attr("action", "/admin-export");
         $('#filterExport').submit();
 
     })

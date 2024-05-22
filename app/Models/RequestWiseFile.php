@@ -27,12 +27,12 @@ class RequestWiseFile extends Model
 
 
 
-    public function RequestClient()
+    public function requestClient()
     {
         return $this->belongsTo(RequestClient::class, 'request_id', 'request_id');
     }
 
-    public function Request()
+    public function request()
     {
         return $this->belongsTo(RequestTable::class, 'id', 'request_id');
     }

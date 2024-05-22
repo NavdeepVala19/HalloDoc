@@ -58,6 +58,16 @@
             <i class="bi bi-check-circle-fill"></i>
         </div>
     @endif
+
+    {{-- Changes in The Details of business are saved successfully --}}
+    @if (session('changesSaved'))
+        <div class="alert alert-success popup-message ">
+            <span>
+                {{ session('changesSaved') }}
+            </span>
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+    @endif
     <div class="m-5 spacing">
         <h3>Vendor(s)</h3>
         <div class="section">

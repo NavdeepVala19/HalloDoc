@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CaseTag;
-use App\Models\Regions;
-use App\Models\Provider;
+use App\Http\Requests\EncounterFormRequest;
 use App\Models\BlockRequest;
-use App\Models\RequestNotes;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
+use App\Models\CaseTag;
+use App\Models\HealthProfessionalType;
 use App\Models\MedicalReport;
+use App\Models\PhysicianRegion;
+use App\Models\Provider;
+use App\Models\Regions;
 use App\Models\RequestClient;
 use App\Models\RequestClosed;
+use App\Models\RequestNotes;
 use App\Models\RequestStatus;
-use App\Models\PhysicianRegion;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Services\CreateOrderService;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\HealthProfessionalType;
 use App\Services\MedicalFormDataService;
-use App\Http\Requests\EncounterFormRequest;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Http\Request;
 
 class AdminActionController extends Controller
 {

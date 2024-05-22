@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\Users;
-use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\Concierge;
-use App\Models\UserRoles;
-use App\Models\RequestTable;
-use App\Models\RequestClient;
 use App\Mail\SendEmailAddress;
+use App\Models\AllUsers;
+use App\Models\Concierge;
+use App\Models\EmailLog;
+use App\Models\RequestClient;
 use App\Models\RequestConcierge;
+use App\Models\RequestTable;
+use App\Models\Users;
+use App\Models\UserRoles;
 use Illuminate\Support\Facades\Mail;
 
 class ConciergeRequestSubmitService

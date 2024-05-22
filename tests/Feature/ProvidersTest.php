@@ -16,7 +16,7 @@ class ProvidersTest extends TestCase
      */
     public function test_send_link_form_with_valid_data()
     {
-            $response = $this->postJson('/provider-send-mail', [
+            $response = $this->postJson('/send-link', [
             'first_name' => 'shivesh',
             'last_name' =>'surani' ,
             'email' => 'shivesh@mail.com',
@@ -34,7 +34,7 @@ class ProvidersTest extends TestCase
 
     public function test_send_link_form_with_empty_fields()
     {
-        $response = $this->postJson('/provider-send-mail', [
+        $response = $this->postJson('/send-link', [
             'first_name' => '',
             'last_name' => 'surani',
             'email' => 'shivesh@mail.com',
@@ -52,7 +52,7 @@ class ProvidersTest extends TestCase
      */
     public function test_send_link_form_with_invalid_characters()
     {
-        $response = $this->postJson('/provider-send-mail', [
+        $response = $this->postJson('/send-link', [
             'first_name' => '123!@#',
             'last_name' => 'surani',
             'email' => 'invalid_email',

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminCreateRequest;
 use App\Models\Users;
+use App\Services\AdminCreateRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
-use App\Http\Requests\AdminCreateRequest;
-use App\Services\AdminCreateRequestService;
+use Illuminate\Support\Facades\Hash;
 
 class AdminDashboardController extends Controller
 {
