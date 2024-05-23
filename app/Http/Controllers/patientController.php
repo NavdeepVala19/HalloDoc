@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePatientRequest;
-use App\Services\PatientRequestSubmitService;
+use App\Mail\SendEmailAddress;
+use App\Models\Users;
+use App\Services\CreateEmailLogService;
+use App\Services\CreateNewUserService;
+use App\Services\StorePatientRequestService;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * controller is responsible for display patient request page and creating the patient request
@@ -29,10 +34,22 @@ class PatientController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function create(CreatePatientRequest $request, PatientRequestSubmitService $requestSubmitService)
+    public function create(CreatePatientRequest $request, CreateNewUserService $createNewUserService , StorePatientRequestService $storePatientRequestService , CreateEmailLogService $createEmailLogService)
     {
-        $patientRequest = $requestSubmitService->storeRequest($request);
-        $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        $isEmailStored = Users::where('email', $request->email)->first();
+        if($isEmailStored === null){
+            $createNewUserService->storeNewUsers($request);
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($request->email));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }     
+        }
+        $requestId = $storePatientRequestService->storeRequest($request);
+        if($isEmailStored === null){
+            $createEmailLogService->storeEmailLogs($request, $requestId);
+        }
+        $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
         return redirect()->route('submit.request')->with('message', $redirectMsg);
     }

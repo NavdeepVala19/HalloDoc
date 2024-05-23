@@ -2,37 +2,63 @@
 
 namespace App\Services;
 
-use App\Mail\SendEmailAddress;
+use App\Helpers\ConfirmationNumber;
 use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\RequestTable;
 use App\Models\RequestClient;
+use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
-use App\Models\UserRoles;
 use App\Models\Users;
-use Illuminate\Support\Facades\Mail;
 
 class PatientDashboardService
 {
-    /**
-     * it generates confirmation number
-     *
-     * @param mixed $request
-     *
-     * @return string
-     */
-    private function generateConfirmationNumber($request)
+    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber)
     {
-        $currentTime = now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
+        $requestData = new RequestTable();
+        $requestData->user_id =  $isEmailStored->id;
+        $requestData->request_type_id = 1;
+        $requestData->status = 1;
+        $requestData->confirmation_no = $confirmationNumber;
+        $requestData->relation_name = $request->relation;
+        $requestData->fill($request->only([
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+        ]));
+        $requestData->save();
 
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
+        return $requestData->id;
+    }
 
-        return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
+    private function storeInRequestClientTable($request, $requestId,$email)
+    {
+        $patientRequest = new RequestClient();
+        $patientRequest->request_id = $requestId;
+        $patientRequest->notes = $request->symptoms;
+        $patientRequest->email = $email;
+        $patientRequest->fill($request->only([
+            'first_name',
+            'last_name',
+            'date_of_birth',
+            'phone_number',
+            'street',
+            'city',
+            'state',
+            'zipcode',
+            'room',
+        ]));
+        $patientRequest->save();
+    }
+
+    private function storeImageInRequestWiseFile($request, $requestId)
+    {
+        if ($request->hasFile('docs')) {
+            $requestFile = new RequestWiseFile();
+            $requestFile->request_id = $requestId;
+            $requestFile->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
+            $request->file('docs')->storeAs('public', $requestFile->file_name);
+            $requestFile->save();
+        }
     }
 
     /**
@@ -45,50 +71,14 @@ class PatientDashboardService
      */
     public function storeMeRequest($request,$email)
     {
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
         $isEmailStored = Users::where('email', $email)->first();
-        $RequestTable= RequestTable::create([
-            'request_type_id'=>1,
-            'status'=>1,
-            'user_id'=>$isEmailStored->id,
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'email'=>$email,
-            'phone_number'=>$request->phone_number,
-        ]);
 
-        RequestClient::create([
-            'request_id'=>$RequestTable->id,
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'date_of_birth'=>$request->date_of_birth,
-            'email'=>$email,
-            'phone_number'=>$request->phone_number,
-            'street'=>$request->street,
-            'city'=> $request->city,
-            'state'=>$request->state,
-            'zipcode'=>$request->zipcode,
-            'notes'=>$request->symptoms,
-            'room'=>$request->room,
-        ]);
+        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
+        $this->storeInRequestClientTable($request, $requestId, $email);
+        $this->storeImageInRequestWiseFile($request, $requestId);
 
-        // store documents in request_wise_file table
-        if (isset($request->docs)) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $RequestTable->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
-        }
-
-        // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
-
-        // Update confirmation number if request is created successfully
-        if ($RequestTable->id) {
-            $RequestTable->update(['confirmation_no' => $confirmationNumber]);
-        }
-
-        return $isEmailStored;
+        return $requestId;
     }
 
 
@@ -102,107 +92,15 @@ class PatientDashboardService
      */
     public function storeSomeOneRequest($request)
     {
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
         $isEmailStored = Users::where('email', $request->email)->first();
-        // Store user details if email is not already stored
-        if ($isEmailStored === null) {
-            $storePatientInUsers = new Users();
-            $storePatientInUsers->username = $request->first_name . " " . $request->last_name;
-            $storePatientInUsers->email = $request->email;
-            $storePatientInUsers->phone_number = $request->phone_number;
-            $storePatientInUsers->save();
 
-            $requestInAllUsers = new AllUsers();
-            $requestInAllUsers->user_id = $storePatientInUsers->id;
-            $requestInAllUsers->fill($request->only([
-                'first_name',
-                'last_name',
-                'email',
-                'phone_number',
-                'street',
-                'city',
-                'state',
-                'zipcode',
-            ]));
-            $requestInAllUsers->save();
+        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
+        $this->storeInRequestClientTable($request, $requestId, $request->email);
+        $this->storeImageInRequestWiseFile($request, $requestId);
 
-            $userRole = new UserRoles();
-            $userRole->role_id = 3;
-            $userRole->user_id = $storePatientInUsers->id;
-            $userRole->save();
-        }
-        $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id;
-        $requestData->request_type_id = 1;
-        $requestData->status = 1;
-        $requestData->fill($request->only([
-            'first_name',
-            'last_name',
-            'email',
-            'phone_number',
-        ]));
-        $requestData->save();
-
-        $patientRequest = new RequestClient();
-        $patientRequest->request_id = $requestData->id;
-        $patientRequest->fill($request->only([
-            'first_name',
-            'last_name',
-            'date_of_birth',
-            'email',
-            'phone_number',
-            'street',
-            'city',
-            'state',
-            'zipcode',
-            'room',
-            'symptoms',
-        ]));
-        $patientRequest->save();
-
-        // Store documents in request_wise_file table
-        if ($request->hasFile('docs')) {
-            $request_file = new RequestWiseFile();
-            $request_file->request_id = $requestData->id;
-            $request_file->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
-            $request->file('docs')->storeAs('public', $request_file->file_name);
-            $request_file->save();
-
-        }
-
-        // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
-
-        // Update confirmation number if request is created successfully
-        if ($requestData->id) {
-            $requestData->update(['confirmation_no' => $confirmationNumber]);
-        }
-        try {
-            // Send email if email is not already stored
-            if ($isEmailStored === null) {
-                $emailAddress = $request->email;
-                Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
-
-                EmailLog::create([
-                    'role_id' => 3,
-                    'request_id' => $requestData->id,
-                    'confirmation_number' => $confirmationNumber,
-                    'is_email_sent' => 1,
-                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
-                    'sent_tries' => 1,
-                    'create_date' => now(),
-                    'sent_date' => now(),
-                    'email_template' => $request->email,
-                    'subject_name' => 'Create account by clicking on below link with below email address',
-                    'email' => $request->email,
-                    'action' => 5,
-                ]);
-            }
-            return $isEmailStored;
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
+        return $requestId;
     }
-
 
     /**
      * it update patient profile data in allusers and users table

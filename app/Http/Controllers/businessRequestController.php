@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateBusinessRequest;
+use App\Models\Users;
+use App\Mail\SendEmailAddress;
+use App\Services\CreateNewUserService;
+use App\Services\CreateEmailLogService;
 use App\Http\Requests\CreatePatientRequest;
+use App\Http\Requests\CreateBusinessRequest;
 use App\Services\BusinessRequestSubmitService;
+use Illuminate\Support\Facades\Mail;
 
 // this controller is responsible for creating/storing the business request
 class BusinessRequestController extends Controller
@@ -27,10 +32,22 @@ class BusinessRequestController extends Controller
    *
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
    */
-  public function create(CreateBusinessRequest $request, CreatePatientRequest $createPatientRequest, BusinessRequestSubmitService $businessRequestSubmitService)
+  public function create(CreateBusinessRequest $request, CreatePatientRequest $createPatientRequest, BusinessRequestSubmitService $businessRequestSubmitService, CreateEmailLogService $createEmailLogService, CreateNewUserService $createNewUserService)
   {
-    $businessRequest = $businessRequestSubmitService->storeBusinessRequest($request, $createPatientRequest);
-    $redirectMsg = $businessRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+    $isEmailStored = Users::where('email', $request->email)->first();
+    if ($isEmailStored === null) {
+      $createNewUserService->storeNewUsers($request);
+      try {
+        Mail::to($request->email)->send(new SendEmailAddress($request->email));
+      } catch (\Throwable $th) {
+        return view('errors.500');
+      }
+    }
+    $requestId = $businessRequestSubmitService->storeBusinessRequest($createPatientRequest);
+    if ($isEmailStored === null) {
+      $createEmailLogService->storeEmailLogs($request, $requestId);
+    }
+    $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
     return redirect()->route('submit.request')->with('message', $redirectMsg);
   }

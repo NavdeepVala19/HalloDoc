@@ -10,12 +10,12 @@ use App\Http\Controllers\CommonOperationController;
 use App\Http\Controllers\ConciergeRequestController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ExcelController;
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\PatientLoginController;
 use App\Http\Controllers\FamilyRequestController;
 use App\Http\Controllers\PatientAccountController;
-use App\Http\Controllers\PatientProfileController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientDashboardController;
+use App\Http\Controllers\PatientLoginController;
+use App\Http\Controllers\PatientProfileController;
 use App\Http\Controllers\PatientViewDocumentsController;
 use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
@@ -27,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 
 //* First page of patient site
 route::get('/', [Controller::class, 'patientSite'])->name('patient.home_page');
-
 
 //* Types of request
 route::get('/submit-requests', [Controller::class, 'submitScreen'])->name('submit.request');
@@ -52,7 +51,6 @@ Route::post('/business-created', [BusinessRequestController::class, 'create'])->
 route::get('/patient-register', [PatientAccountController::class, 'patientRegister'])->name('patient.register.view');
 route::post('/patient-registered', [PatientAccountController::class, 'createAccount'])->name('patient.registered');
 
-
 //* Patient login page
 route::get('/patient/login', [PatientLoginController::class, 'patientLoginScreen'])->name('patient.login.view');
 route::post('/patient/logged-in', [PatientLoginController::class, 'patientLogin'])->name('patient.login');
@@ -64,9 +62,7 @@ route::post('/patient/forgot-password-link', [PatientLoginController::class, 'su
 Route::get('patient/reset-password/{token}', [PatientLoginController::class, 'showResetPasswordForm'])->name('patient.reset.password.view');
 Route::post('patient/update-password', [PatientLoginController::class, 'submitResetPasswordForm'])->name('patient.update.password');
 
-
 route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
-
     //* Patient logout
     route::get('/logout', [PatientLoginController::class, 'logout'])->name('patient.logout');
     //* Patient Dashboard
@@ -92,8 +88,6 @@ route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
     route::post('/multiple-downloads', [PatientViewDocumentsController::class, 'downloadSelectedFiles'])->name('patient.download.multiple.files');
 });
 //  *******************************************************************************************************
-
-
 
 //  ***************************************************************************************************************************************
 // it will show agreement page
@@ -464,7 +458,6 @@ Route::middleware('CheckAdminOrProvider')->group(function () {
 
     Route::post('/send-link', [CommonOperationController::class, 'sendLinkForSubmitRequest'])->name('send.link');
 });
-
 
 // ---------------- REMOVED FROM SRS -----------------
 // Cancel History Page

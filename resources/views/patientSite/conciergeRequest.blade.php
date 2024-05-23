@@ -16,6 +16,7 @@
             <!-- Concierge Information -->
             <form action="{{ route('concierge.request.submit') }}" method="post" id="patientRequestForm">
                 @csrf
+                <input type="hidden" name="request_type_id" value="3">
                 <div class="Concierge-inputs">
                     <div class="Concierge-inputs">
                         <div class="Concierge-text">

@@ -6,6 +6,7 @@
     </div>
     <form action="{{ route('send.link') }}" method="POST" id="providerSendLinkForm">
         @csrf
+        <input type="hidden" name="role_id" value="2">
         <div class="p-4 d-flex flex-column align-items-center justify-content-center gap-2">
             <div class="form-floating ">
                 <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
@@ -23,7 +24,6 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
-
             <div class="form-floating">
 
                 <input type="tel" name="phone_number"

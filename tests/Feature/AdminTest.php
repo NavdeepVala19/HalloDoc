@@ -29,7 +29,7 @@ class AdminTest extends TestCase
     public function test_assign_case_with_invalid_data()
     {
         $response = $this->postJson('/assign-case', [
-            'assign_note' => '$#%$^',
+            'assign_note' => '$#%',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
@@ -42,7 +42,7 @@ class AdminTest extends TestCase
     public function test_assign_case_with_empty_data()
     {
         $response = $this->postJson('/assign-case', [
-            'assign_note' => '',
+            'assign_note' => ' ',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);

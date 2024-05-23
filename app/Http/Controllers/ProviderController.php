@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProviderCreateRequest;
-use App\Models\Admin;
-use App\Models\EmailLog;
-use App\Models\Regions;
-use App\Models\PhysicianRegion;
-use App\Models\Provider;
-use App\Mail\ProviderRequest;
-use App\Models\RequestTable;
+use App\Mail\SendEmailAddress;
 use App\Models\User;
-use App\Services\ProviderCreateRequestService;
+use App\Models\Admin;
+use App\Models\Users;
+use App\Models\Regions;
+use App\Models\EmailLog;
+use App\Models\Provider;
+use App\Models\RequestTable;
 use Illuminate\Http\Request;
+use App\Mail\ProviderRequest;
+use App\Models\PhysicianRegion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Services\CreateNewUserService;
+use App\Services\CreateEmailLogService;
 use Illuminate\Support\Facades\Session;
+use App\Http\Requests\ProviderCreateRequest;
+use App\Services\ProviderCreateRequestService;
 
 class ProviderController extends Controller
 {
@@ -123,12 +127,10 @@ class ProviderController extends Controller
         } else {
             $query = RequestTable::with('requestClient')->where('status', $this->getStatusId($status))->where('physician_id', $providerId);
         }
-
         // Filter by Category if not 'all' (These will enter condition only if there is any filter selected)
         if ($category !== 'all') {
             $query->where('request_type_id', $this->getCategoryId($category));
         }
-
         // Apply search condition(Enter condition only when any search query is requested)
         // if (isset($searchTerm) && !empty($searchTerm)) {
         if (isset($searchTerm) && $searchTerm) {
@@ -136,7 +138,6 @@ class ProviderController extends Controller
                 $q->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%");
             });
         }
-
         return $query;
     }
 
@@ -243,14 +244,25 @@ class ProviderController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse provider status page
      */
-    public function createRequest(ProviderCreateRequest $request, ProviderCreateRequestService $providerCreateRequestService)
+    public function createRequest(ProviderCreateRequest $request, ProviderCreateRequestService $providerCreateRequestService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
     {
-        $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->value('id');
+        $providerId = Provider::where('user_id', Auth::user()->id)->value('id');
 
-        $patientRequest = $providerCreateRequestService->storeRequest($request, $providerId);
-        $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        $isEmailStored = Users::where('email', $request->email)->first();
+        if ($isEmailStored === null) {
+            $createNewUserService->storeNewUsers($request);
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($request->email));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+        }
+        $requestId = $providerCreateRequestService->storeRequest($request, $providerId);
+        if ($isEmailStored === null) {
+            $createEmailLogService->storeEmailLogs($request, $requestId, $providerId);
+        }
 
+        $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
         return redirect()->route("provider.status", 'pending')->with('successMessage', $redirectMsg);
     }
 

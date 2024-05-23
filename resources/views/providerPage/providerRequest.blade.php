@@ -7,7 +7,6 @@
     {{ !empty(Auth::user()) ? Auth::user()->username : '' }}
 @endsection
 
-
 @section('nav-links')
     <a href="{{ route('provider.dashboard') }}" class="active-link">Dashboard</a>
     <a href="">Invoicing</a>

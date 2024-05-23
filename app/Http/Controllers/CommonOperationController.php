@@ -352,8 +352,8 @@ class CommonOperationController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse redirect back with success message
      */
-    public function sendLinkForSubmitRequest(Request $request, SendLinkToPatientService $sendLinkToPatientService){
-
+    public function sendLinkForSubmitRequest(Request $request, SendLinkToPatientService $sendLinkToPatientService)
+    {
         $request->validate([
             'first_name' => 'required|alpha|min:5|max:30',
             'last_name' => 'required|alpha|min:5|max:30',

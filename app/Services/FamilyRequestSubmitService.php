@@ -2,92 +2,35 @@
 
 namespace App\Services;
 
-use App\Mail\SendEmailAddress;
-use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\RequestClient;
-use App\Models\RequestTable;
-use App\Models\RequestWiseFile;
 use App\Models\Users;
-use App\Models\UserRoles;
-use Illuminate\Support\Facades\Mail;
+use App\Models\RequestTable;
+use App\Models\RequestClient;
+use App\Models\RequestWiseFile;
+use App\Helpers\ConfirmationNumber;
 
 class FamilyRequestSubmitService
 {
-    /**
-     * it generates confirmation number
-     *
-     * @param mixed $request
-     *
-     * @return string
-     */
-    private function generateConfirmationNumber($request)
-    {
-        $currentTime = now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-        return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
-    }
-
-    /**
-     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
-     * and send email to create account using same email
-     *
-     * @param mixed $request (input enter by user)
-     *
-     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
-     */
-
-    public function storeRequest($request, $createFamilyRequest)
-    {
-        $isEmailStored = Users::where('email', $request->email)->first();
-        // Store user details if email is not already stored
-        if ($isEmailStored === null) {
-            $storePatientInUsers = new Users();
-            $storePatientInUsers->username = $createFamilyRequest->first_name . " " . $createFamilyRequest->last_name;
-            $storePatientInUsers->email = $createFamilyRequest->email;
-            $storePatientInUsers->phone_number = $createFamilyRequest->phone_number;
-            $storePatientInUsers->save();
-
-            $requestInAllUsers = new AllUsers();
-            $requestInAllUsers->user_id = $storePatientInUsers->id;
-            $requestInAllUsers->fill($request->only([
-                'first_name',
-                'last_name',
-                'email',
-                'phone_number',
-                'street',
-                'city',
-                'state',
-                'zipcode',
-            ]));
-            $requestInAllUsers->save();
-
-            $userRole = new UserRoles();
-            $userRole->role_id = 3;
-            $userRole->user_id = $storePatientInUsers->id;
-            $userRole->save();
-        }
-
-        $requestTableData = RequestTable::create([
-            'user_id' => $isEmailStored ? $isEmailStored->id : $storePatientInUsers->id,
+    private function storeInRequestTable($request,$userId,$confirmationNumber){
+        $requestTable = RequestTable::create([
+            'user_id' => $userId,
             'request_type_id' => 2,
+            'status' => 1,
             'first_name' => $request->family_first_name,
             'last_name' => $request->family_first_name,
             'email' => $request->family_first_name,
             'phone_number' => $request->family_first_name,
             'relation_name' => $request->family_first_name,
-            'status' => 1,
+            'confirmation_no' => $confirmationNumber,
         ]);
 
+        return $requestTable->id;
+    }
+
+
+    private function storeInRequestClient($request,$requestId){
         $patientRequest = new RequestClient();
-        $patientRequest->request_id = $requestTableData->id;
+        $patientRequest->request_id = $requestId;
+        $patientRequest->notes = $request->symptoms;
         $patientRequest->fill($request->only([
             'first_name',
             'last_name',
@@ -99,51 +42,39 @@ class FamilyRequestSubmitService
             'state',
             'zipcode',
             'room',
-            'symptoms',
         ]));
         $patientRequest->save();
+    }
 
+    private function storeInRequestWiseFile($request,$requestId){
         // Store documents in request_wise_file table
         if ($request->hasFile('docs')) {
             $requestFile = new RequestWiseFile();
-            $requestFile->request_id = $requestTableData->id;
+            $requestFile->request_id = $requestId;
             $requestFile->file_name = uniqid() . '_' . $request->file('docs')->getClientOriginalName();
             $request->file('docs')->storeAs('public', $requestFile->file_name);
             $requestFile->save();
         }
+    }
 
-        // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
+    /**
+     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     *
+     * @param mixed $request (input enter by user)
+     *
+     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
+     */
 
-        // Update confirmation number if request is created successfully
-        if ($requestTableData->id) {
-            $requestTableData->update(['confirmation_no' => $confirmationNumber]);
-        }
+    public function storeRequest($request)
+    {
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
+        $userId = Users::where('email', $request->email)->value('id');
 
-        try {
-            // Send email if email is not already stored
-            if ($isEmailStored === null) {
-                $emailAddress = $request->email;
-                Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
+        $requestId = $this->storeInRequestTable($request, $userId, $confirmationNumber);
+        $this->storeInRequestClient($request, $requestId);
+        $this->storeInRequestWiseFile($request, $requestId);
 
-                EmailLog::create([
-                    'role_id' => 3,
-                    'request_id' => $requestTableData->id,
-                    'confirmation_number' => $confirmationNumber,
-                    'is_email_sent' => 1,
-                    'recipient_name' => $request->first_name . ' ' . $request->last_name,
-                    'sent_tries' => 1,
-                    'create_date' => now(),
-                    'sent_date' => now(),
-                    'email_template' => $request->email,
-                    'subject_name' => 'Create account by clicking on below link with below email address',
-                    'email' => $request->email,
-                    'action' => 5,
-                ]);
-            }
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-        return $isEmailStored;
+        return $requestId;
     }
 }

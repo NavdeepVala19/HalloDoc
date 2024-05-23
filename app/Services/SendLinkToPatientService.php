@@ -46,8 +46,10 @@ class SendLinkToPatientService
             return view('errors.500');
         }
 
+        $request->role_id === '1' ? $role = 1 : $role = 2;
+
         EmailLog::create([
-            'role_id' => 1,
+            'role_id' => $role,
             'is_email_sent' => true,
             'sent_tries' => 1,
             'create_date' => now(),
@@ -61,7 +63,7 @@ class SendLinkToPatientService
 
         SMSLogs::create(
             [
-                'role_id' => 1,
+                'role_id' => $role,
                 'mobile_number' => $request->phone_number,
                 'created_date' => now(),
                 'sent_date' => now(),

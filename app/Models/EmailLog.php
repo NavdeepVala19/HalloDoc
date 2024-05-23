@@ -15,7 +15,7 @@ class EmailLog extends Model
         'recipient_name',
         'role_id',
         'request_id',
-        'admin_id ',
+        'admin_id',
         'provider_id',
         'email_template',
         'subject_name',

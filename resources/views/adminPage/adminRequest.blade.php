@@ -57,7 +57,6 @@
                 @csrf
                 <h3>Patient</h3>
                 <div class="mb-4 form-grid">
-                    <input type="text" name="request_type" value="1" hidden>
                     <div class="form-floating">
                         <input type="text" name="first_name"
                             class="form-control @error('first_name') is-invalid @enderror" id="floatingInput1" autocomplete="off"

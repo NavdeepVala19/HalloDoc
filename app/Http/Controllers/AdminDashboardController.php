@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AdminCreateRequest;
+use App\Models\Admin;
 use App\Models\Users;
-use App\Services\AdminCreateRequestService;
 use Illuminate\Http\Request;
+use App\Mail\SendEmailAddress;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
+use App\Services\CreateNewUserService;
+use App\Services\CreateEmailLogService;
+use App\Http\Requests\AdminCreateRequest;
+use App\Services\AdminCreateRequestService;
 
 class AdminDashboardController extends Controller
 {
@@ -32,14 +37,26 @@ class AdminDashboardController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function createAdminPatientRequest(AdminCreateRequest $request,AdminCreateRequestService $adminCreateRequestService)
+    public function createAdminPatientRequest(AdminCreateRequest $request, AdminCreateRequestService $adminCreateRequestService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
     {
-        $adminCreatedRequest = $adminCreateRequestService->storeRequest($request);
-        $redirectMsg = $adminCreatedRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        $adminId = Admin::where('user_id', Auth::user()->id)->value('id');
+        $isEmailStored = Users::where('email', $request->email)->first();
+        if ($isEmailStored === null) {
+            $createNewUserService->storeNewUsers($request);
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($request->email));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+        }
+        $requestId = $adminCreateRequestService->storeRequest($request);
+        if ($isEmailStored === null) {
+            $createEmailLogService->storeEmailLogs($request, $requestId, null, $adminId);
+        }
+        $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
         return redirect()->route('admin.status', 'new')->with('successMessage', $redirectMsg);
     }
-
 
     /**
      * this page will show when admin edit their profile through user access page
@@ -48,12 +65,12 @@ class AdminDashboardController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function adminProfile($id,AdminCreateRequestService $adminCreateRequestService)
+    public function adminProfile($id, AdminCreateRequestService $adminCreateRequestService)
     {
         try {
             $id = Crypt::decrypt($id);
-            $adminProfileData = $adminCreateRequestService->adminProfileEditThroughUserAccessPage($id);
-           return view('adminPage/adminProfile', compact('adminProfileData'));
+            $adminProfileData = $adminCreateRequestService->adminProfile($id);
+            return view('adminPage/adminProfile', compact('adminProfileData'));
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -126,7 +143,7 @@ class AdminDashboardController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function adminMailInfoUpdate(Request $request, $id,AdminCreateRequestService $adminCreateRequestService)
+    public function adminMailInfoUpdate(Request $request, $id, AdminCreateRequestService $adminCreateRequestService)
     {
         $request->validate([
             'address1' => 'required|min:2|max:50',

@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateFamilyRequest;
 use App\Http\Requests\CreatePatientRequest;
+use App\Mail\SendEmailAddress;
+use App\Models\Users;
+use App\Services\CreateEmailLogService;
+use App\Services\CreateNewUserService;
 use App\Services\FamilyRequestSubmitService;
+use Illuminate\Support\Facades\Mail;
 
 // this controller is responsible for creating/storing the family request
 
@@ -28,11 +33,22 @@ class FamilyRequestController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create(CreatePatientRequest $request , CreateFamilyRequest $createFamilyRequest, FamilyRequestSubmitService $familyRequestSubmitService)
+    public function create(CreatePatientRequest $request , CreateFamilyRequest $createFamilyRequest, CreateNewUserService $createNewUserService, FamilyRequestSubmitService $familyRequestSubmitService, CreateEmailLogService $createEmailLogService)
     {
-        $familyRequest = $familyRequestSubmitService->storeRequest($request, $createFamilyRequest);
-        $redirectMsg = $familyRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
-
+        $isEmailStored = Users::where('email', $request->email)->first();
+        if ($isEmailStored === null) {
+            $createNewUserService->storeNewUsers($request);
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($request->email));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+        }
+        $requestId = $familyRequestSubmitService->storeRequest($createFamilyRequest);
+        if ($isEmailStored === null) {
+            $createEmailLogService->storeEmailLogs($request, $requestId);
+        }
+        $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
         return redirect()->route('submit.request')->with('message', $redirectMsg);
     }
 }

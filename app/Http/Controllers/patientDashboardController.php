@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreatePatientRequest;
-use App\Models\RequestStatus;
-use App\Models\RequestTable;
+use App\Mail\SendEmailAddress;
 use App\Models\Users;
-use App\Services\PatientDashboardService;
+use App\Models\RequestTable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
+use App\Models\RequestStatus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
+use App\Services\CreateNewUserService;
+use App\Services\CreateEmailLogService;
+use App\Services\PatientDashboardService;
+use App\Http\Requests\CreatePatientRequest;
 
 class PatientDashboardController extends Controller
 {
@@ -139,10 +143,22 @@ class PatientDashboardController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function createSomeOneElseRequest(CreatePatientRequest $request , PatientDashboardService $patientDashboardService)
+    public function createSomeOneElseRequest(CreatePatientRequest $request , PatientDashboardService $patientDashboardService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
     {
-        $patientRequest = $patientDashboardService->storeSomeOneRequest($request);
-        $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        $isEmailStored = Users::where('email', $request->email)->first();
+        if ($isEmailStored === null) {
+            $createNewUserService->storeNewUsers($request);
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($request->email));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+        }
+        $requestId = $patientDashboardService->storeSomeOneRequest($request);
+        if ($isEmailStored === null) {
+            $createEmailLogService->storeEmailLogs($request, $requestId);
+        }
+        $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
         return redirect()->route('patient.dashboard')->with('message', $redirectMsg);
     }
@@ -159,7 +175,7 @@ class PatientDashboardController extends Controller
         $userData = Auth::user();
         $email = $userData['email'];
 
-        $userId = Users::select('id')->where('email', $email);
+        $userId = Users::select('id')->where('email', $email)->value('id');
         $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->latest('id')->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data', 'userData'));

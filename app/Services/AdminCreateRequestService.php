@@ -2,80 +2,24 @@
 
 namespace App\Services;
 
-use App\Mail\SendEmailAddress;
 use App\Models\Admin;
-use App\Models\AllUsers;
-use App\Models\EmailLog;
-use App\Models\RequestNotes;
-use App\Models\RequestClient;
-use App\Models\RequestTable;
 use App\Models\Users;
-use App\Models\UserRoles;
-use Illuminate\Support\Facades\Mail;
+use App\Models\AllUsers;
+use App\Models\RequestNotes;
+use App\Models\RequestTable;
+use App\Models\RequestClient;
+use App\Helpers\ConfirmationNumber;
 
 class AdminCreateRequestService
 {
-    /**
-     * generates confirmation number
-     *
-     * @param mixed $request
-     *
-     * @return string
-     */
-    public function generateConfirmationNumber($request)
+
+    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber)
     {
-        $currentTime = now();
-        $currentDate = $currentTime->format('Y');
-        $todayDate = $currentTime->format('Y-m-d');
-        $entriesCount = RequestTable::whereDate('created_at', $todayDate)->count();
-
-        $uppercaseStateAbbr = strtoupper(substr($request->state, 0, 2));
-        $uppercaseLastName = strtoupper(substr($request->last_name, 0, 2));
-        $uppercaseFirstName = strtoupper(substr($request->first_name, 0, 2));
-
-        return $uppercaseStateAbbr . $currentDate . $uppercaseLastName . $uppercaseFirstName  . '00' . $entriesCount;
-    }
-
-    /**
-     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
-     * and send email to create account using same email
-     */
-    public function storeRequest($request)
-    {
-        $isEmailStored = Users::where('email', $request->email)->first();
-
-        // Store user details if email is not already stored
-        if ($isEmailStored === null) {
-            $storePatientInUser = new Users();
-            $storePatientInUser->username = $request->first_name . " " . $request->last_name;
-            $storePatientInUser->email = $request->email;
-            $storePatientInUser->phone_number = $request->phone_number;
-            $storePatientInUser->save();
-
-            $storePatientInAllUser = new AllUsers();
-            $storePatientInAllUser->user_id = $storePatientInUser->id;
-            $storePatientInAllUser->fill($request->only([
-                'first_name',
-                'last_name',
-                'email',
-                'phone_number',
-                'street',
-                'city',
-                'state',
-                'zipcode',
-            ]));
-            $storePatientInAllUser->save();
-
-            $userRole = new UserRoles();
-            $userRole->role_id = 3;
-            $userRole->user_id = $storePatientInUser->id;
-            $userRole->save();
-        }
-
         $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored ? $isEmailStored->id : $storePatientInUser->id;
+        $requestData->user_id =  $isEmailStored->id;
         $requestData->request_type_id = 1;
         $requestData->status = 1;
+        $requestData->confirmation_no = $confirmationNumber;
         $requestData->fill($request->only([
             'first_name',
             'last_name',
@@ -84,8 +28,14 @@ class AdminCreateRequestService
         ]));
         $requestData->save();
 
+        return $requestData->id;
+    }
+
+    private function storeInRequestClientTable($request, $requestId)
+    {
         $patientRequest = new RequestClient();
-        $patientRequest->request_id = $requestData->id;
+        $patientRequest->request_id = $requestId;
+        $patientRequest->notes = $request->adminNote;
         $patientRequest->fill($request->only([
             'first_name',
             'last_name',
@@ -97,80 +47,30 @@ class AdminCreateRequestService
             'state',
             'zipcode',
             'room',
-            'symptoms',
         ]));
         $patientRequest->save();
-
-        RequestNotes::create([
-            'admin_notes' => $request->adminNote,
-            'request_id' => $requestData->id,
-        ]);
-
-        // Generate confirmation number
-        $confirmationNumber = $this->generateConfirmationNumber($request);
-
-        // Update confirmation number if request is created successfully
-        if ($requestData->id) {
-            $requestData->update(['confirmation_no' => $confirmationNumber]);
-        }
-        try {
-            // Send email if email is not already stored
-            if ($isEmailStored === null) {
-                $emailAddress = $request->email;
-                Mail::to($emailAddress)->send(new SendEmailAddress($emailAddress));
-
-                EmailLog::create([
-                    'request_id' => $requestData->id,
-                    'confirmation_number' => $confirmationNumber,
-                    'recipient_name' => $request->first_name.' '.$request->last_name,
-                    'email' => $request->email,
-                    'email_template' => $request->email,
-                    'create_date' => now(),
-                    'sent_date' => now(),
-                    'subject_name' => 'Create account by clicking on below link with below email address',
-                    'role_id' => 1,
-                    'is_email_sent' => 1,
-                    'sent_tries' => 1,
-                    'action' => 5,
-                ]);
-            }
-            return $isEmailStored;
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
     }
 
-
+    private function storeAdminNotesInRequestNotesTable($request, $requestId){
+        RequestNotes::create([
+            'admin_notes' => $request->adminNote,
+            'request_id' => $requestId,
+        ]);
+    }
     /**
-     * it returns data of admin when admin route from user access to their profile edit page
-     *
-     * @param mixed $id (id of user table)
-     *
-     * @return Admin|object|\Illuminate\Database\Eloquent\Model|null
+     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
      */
-    public function adminProfileEditThroughUserAccessPage($id)
+    public function storeRequest($request)
     {
-        return Admin::select(
-            'admin.first_name',
-            'admin.last_name',
-            'admin.email',
-            'admin.mobile',
-            'admin.address1',
-            'admin.address2',
-            'admin.city',
-            'admin.zip',
-            'admin.status',
-            'admin.user_id',
-            'alt_phone',
-            'role.name',
-            'regions.region_name',
-            'regions.id'
-        )
-            ->leftJoin('role', 'role.id', 'admin.role_id')
-            ->leftJoin('users', 'users.id', 'admin.user_id')
-            ->leftJoin('regions', 'regions.id', 'admin.region_id')
-            ->where('user_id', $id)
-            ->first();
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
+        $isEmailStored = Users::where('email', $request->email)->first();
+
+        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
+        $this->storeInRequestClientTable($request, $requestId);
+        $this->storeAdminNotesInRequestNotesTable($request, $requestId);
+
+        return $requestId;
     }
 
 

@@ -18,6 +18,7 @@
             <form action="{{ route('patient.request.submit') }}" method="post" enctype="multipart/form-data"
                 id="patientRequestForm">
                 @csrf
+                <input type="hidden" name="request_type_id" value="1">
                 <div class="patient-details">
                     <!-- Symptoms Detail Field -->
                     <div class="symp-details">
