@@ -3,7 +3,7 @@
 $(document).ready(function () {
     // **** Fetching regions from regions table ****
     $.ajax({
-        url: "/admin-account-state",
+        url: "/admin-new",
         type: "GET",
         success: function (data) {
             data.forEach(function (region) {

@@ -25,7 +25,7 @@ class AdminProviderController extends Controller
     public function readProvidersInfo(AdminProviderService $adminProviderService)
     {
         try {
-            $providers = $adminProviderService->ProvidersList();
+            $providers = $adminProviderService->providersList();
             $onCallPhysicianIds = $providers['onCallPhysicianIds'];
             $providersData = $providers['providersData'];
             return view('/adminPage/provider/adminProvider', compact('providersData', 'onCallPhysicianIds'));

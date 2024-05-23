@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConfirmationNumber;
 use App\Http\Requests\CreatePatientRequest;
-use App\Services\PatientRequestSubmitService;
+use App\Mail\SendEmailAddress;
+use App\Models\Users;
+use App\Services\CreateNewUserService;
+use App\Services\EmailLogService;
+use App\Services\RequestClientService;
+use App\Services\RequestTableService;
+use App\Services\RequestWiseFileService;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * controller is responsible for display patient request page and creating the patient request
@@ -28,12 +36,38 @@ class PatientController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-
-    public function create(CreatePatientRequest $request, PatientRequestSubmitService $requestSubmitService)
+    public function create(CreatePatientRequest $request, CreateNewUserService $createNewUserService, RequestTableService $requestTableService, RequestClientService $requestClientService, EmailLogService $emailLogService, RequestWiseFileService $requestWiseFileService)
     {
-        $patientRequest = $requestSubmitService->storeRequest($request);
-        $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        // check if email already exists in users table
+        $isEmailStored = Users::where('email', $request->email)->first();
 
-        return redirect()->route('submit.request')->with('message', $redirectMsg);
+        $userId = $isEmailStored ? $isEmailStored->id : $createNewUserService->storeNewUser($request);
+
+        // Generate confirmation number
+        $confirmationNumber = ConfirmationNumber::generate($request);
+
+        $requestTable = $requestTableService->createEntry($request, $userId, $confirmationNumber);
+        // Store client details in RequestClient table
+        $requestClientService->createEntry($request, $requestTable->id);
+
+        // Store documents in request_wise_file table
+        if ($request->hasFile('docs')) {
+            $requestWiseFileService->storeDoc($request, $requestTable->id);
+        }
+        if (! $isEmailStored) {
+            // Send email to user
+            $emailAddress = $request->email;
+
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+
+            $emailLogService->createEntry($request, $requestTable->id, $confirmationNumber);
+
+            return redirect()->route('submit.request')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+        }
+        return redirect()->route('submit.request')->with('message', 'Request is Submitted');
     }
 }

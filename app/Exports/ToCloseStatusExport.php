@@ -33,34 +33,15 @@ class ToCloseStatusExport implements FromCollection, WithCustomCsvSettings, With
         $adminToCloseData = $this->data->get();
 
         return collect($adminToCloseData)->map(function ($adminToClose) {
-            $patientName = null;
-            $patientLastName = null;
-            $dateOfBirth = null;
-            $street = null;
-            $city = null;
-            $state = null;
-            $providerFirstName = null;
-            $providerLastName = null;
-
-            if (isset($adminToClose) && $adminToClose->requestClient) {
-                $patientName = $adminToClose->requestClient->first_name;
-                $patientLastName = $adminToClose->requestClient->last_name;
-                $dateOfBirth = $adminToClose->requestClient->date_of_birth;
-                $street = $adminToClose->requestClient->street;
-                $city = $adminToClose->requestClient->city;
-                $state = $adminToClose->requestClient->state;
-            }
-            if (isset($adminToClose) && $adminToClose->provider) {
-                $providerFirstName = $adminToClose->provider->first_name;
-                $providerLastName = $adminToClose->requestClient->last_name;
-            }
+            $patient = $adminToClose->requestClient ?? [];
+            $provider = $adminToClose->provider ?? [];
 
             return [
-                'PatientName' => $patientName . ' ' . $patientLastName,
-                'Date of Birth' => $dateOfBirth,
-                'PhysicianName' => $providerFirstName . ' ' . $providerLastName,
-                'Address' => $street . ',' . $city . ',' . $state,
-                'Notes' => $adminToClose->requestClient->notes,
+                'PatientName' => ($patient['first_name'] ?? '') . ' ' . ($patient['last_name'] ?? ''),
+                'Date of Birth' => ($patient['date_of_birth'] ?? ''),
+                'PhysicianName' => ($provider['first_name'] ?? '') . ' ' . ($provider['last_name'] ?? ''),
+                'Address' => ($patient['street'] ?? '') . ',' . ($patient['city'] ?? '') . ',' . ($patient['state'] ?? ''),
+                'Notes' => ($patient['notes'] ?? ''),
             ];
         });
     }

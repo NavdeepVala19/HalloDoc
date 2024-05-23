@@ -395,12 +395,8 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::post('admin-new-request-support', [AdminController::class, 'sendRequestSupport'])->name('send.request_support');
 
-    route::post('/admin-new-exportNew', [AdminController::class, 'exportNew'])->name('export.new_data');
-    route::post('/admin-pending-exportPending', [AdminController::class, 'exportPending'])->name('export.pending_data');
-    route::post('/admin-active-exportActive', [AdminController::class, 'exportActive'])->name('export.active_data');
-    route::post('/admin-conclude-exportConclude', [AdminController::class, 'exportConclude'])->name('export.conclude_data');
-    route::post('/admin-toclose-exportToClose', [AdminController::class, 'exportToClose'])->name('export.toclose_data');
-    route::post('/admin-unpaid-exportUnPaid', [AdminController::class, 'exportUnpaid'])->name('export.unpaid_data');
+    route::post('/admin-export-data', [AdminController::class, 'exportData'])->name('export.listing.data');
+
     route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('export.all_data');
 
     route::get('/admin-submit-requests', [AdminDashboardController::class, 'createNewRequest'])->name('submit.patient.request.view');
@@ -408,12 +404,7 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
-    route::post('/filter-new', [AdminController::class, 'filterPatientNew'])->name('filter.region_new');
-    route::post('/filter-pending', [AdminController::class, 'filterPatientPending'])->name('filter.region_pending');
-    route::post('/filter-active', [AdminController::class, 'filterPatientActive'])->name('filter.region_active');
-    route::post('/filter-conclude', [AdminController::class, 'filterPatientConclude'])->name('filter.region_conclude');
-    route::post('/filter-toclose', [AdminController::class, 'filterPatientToClose'])->name('filter.region_toclose');
-    route::post('/filter-unpaid', [AdminController::class, 'filterPatientUnpaid'])->name('filter.region_unpaid');
+    route::post('/filter-new', [AdminController::class, 'filterPatient'])->name('filter.region_new');
 
     Route::get('/user-access', [AdminController::class, 'userAccess'])->name('admin.user.access');
     Route::get('/user-access-edit/{id?}', [AdminController::class, 'userAccessEdit'])->name('admin.user.accessEdit');
@@ -429,14 +420,11 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::get('/admin-create-new-admin', [AdminController::class, 'adminAccount'])->name('create.new.admin.view');
     route::post('/admin-new-account-created', [AdminController::class, 'createAdminAccount'])->name('new.admin.created');
-
-    route::get('/admin-account-state', [AdminController::class, 'fetchRegionsForState'])->name('fetch.state');
     route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetch.role');
 
     // Records Page
     Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
     Route::match(['get', 'post'], '/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
-
     route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('export.search.records.filtered_data');
     Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 

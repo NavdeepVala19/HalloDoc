@@ -40,7 +40,7 @@ class RequestClient extends Model
         return $this->belongs(RequestStatus::class, 'request_id', 'request_id');
     }
 
-    public function request_wise_file()
+    public function requestWiseFile()
     {
         return $this->belongsTo(RequestWiseFile::class, 'request_id', 'request_id');
     }

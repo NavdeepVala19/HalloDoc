@@ -174,7 +174,7 @@ $(document).ready(function () {
                 maxlength: 30,
                 state: true,
             },
-            zip: {
+            zipcode: {
                 zipcode: true,
             },
             room: {
@@ -216,7 +216,7 @@ $(document).ready(function () {
                 required: "Please enter a state",
                 state: "Please enter alpbabets in state name.",
             },
-            zip: {
+            zipcode: {
                 min: "Please enter 6 digits positive zipcode",
             },
             room: {

@@ -97,6 +97,44 @@ class AdminTest extends TestCase
         $response->assertStatus(Response::HTTP_FOUND);
     }
 
+    /**
+     * View Notes -> add note with no text entered
+     * @return void
+     */
+    public function test_view_note_add_note_with_empty_data()
+    {
+        $response = $this->postJson('/admin/view/notes/store', [
+            'admin_notes' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * View Notes -> add note with invalid data format
+     * @return void
+     */
+    public function test_view_note_add_note_with_invalid_data()
+    {
+        $response = $this->postJson('/admin/view/notes/store', [
+            'admin_notes' => '+_)*&(',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * View Notes -> add note with valid data format
+     * @return void
+     */
+    public function test_view_note_add_note_with_valid_data()
+    {
+        $response = $this->postJson('/admin/view/notes/store', [
+            'admin_notes' => 'New note added',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
 
     /**
      * Test successful block case form with valid data
@@ -152,7 +190,6 @@ class AdminTest extends TestCase
         $response->assertStatus(Response::HTTP_FOUND);
     }
 
-
     /**
      * Test successful close case form with invalid data
      * @return void
@@ -180,7 +217,6 @@ class AdminTest extends TestCase
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
-
 
     /**
      * Test successful add business form with valid data
@@ -286,7 +322,6 @@ class AdminTest extends TestCase
         $response->assertStatus(Response::HTTP_FOUND);
     }
 
-
     /**
      * Test successful cancel case form with valid data
      * @return void
@@ -294,7 +329,7 @@ class AdminTest extends TestCase
     public function test_cancel_case_with_valid_data()
     {
         $response = $this->postJson('/cancel-case-data', [
-            'case_tag'=>'cost_issue',
+            'case_tag' => 'cost_issue',
             'reason' => 'cancel this case',
         ]);
 
@@ -308,7 +343,7 @@ class AdminTest extends TestCase
     public function test_cancel_case_with_invalid_data()
     {
         $response = $this->postJson('/cancel-case-data', [
-            'case_tag'=>'',
+            'case_tag' => '',
             'reason' => '$#^%^$#%$^&',
         ]);
 
@@ -396,7 +431,7 @@ class AdminTest extends TestCase
     {
         $response = $this->postJson('/create-shift', [
             'role_name' => '1',
-            'menu_checkbox'=> '1'
+            'menu_checkbox' => '1'
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
@@ -411,12 +446,11 @@ class AdminTest extends TestCase
     {
         $response = $this->postJson('/create-shift', [
             'role_name' => '3',
-            'menu_checkbox'=> '40'
+            'menu_checkbox' => '40'
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
-
 
     /**
      * Test successful create role with valid data
@@ -426,10 +460,238 @@ class AdminTest extends TestCase
     {
         $response = $this->postJson('/create-shift', [
             'role_name' => '',
-            'menu_checkbox'=> ''
+            'menu_checkbox' => ''
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
 
+    /**
+     * Admin submit request with empty data
+     * @return void
+     */
+    public function test_admin_create_request_with_empty_data()
+    {
+        $response = $this->postJson('/admin-submit-requests', [
+            'first_name' => '',
+            'last_name' => '',
+            'phone_number' => '',
+            'email' => '',
+            'date_of_birth' => '',
+            'street' => '',
+            'city' => '',
+            'state' => '',
+            'zip' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin submit request with invalid data
+     * @return void
+     */
+    public function test_admin_create_request_with_invalid_data()
+    {
+        $response = $this->postJson('/admin-submit-requests', [
+            'first_name' => '123423',
+            'last_name' => '1234231',
+            'phone_number' => '-==1242',
+            'email' => 'asdf@fasd',
+            'date_of_birth' => '12/14/2025',
+            'street' => 'asdfa a1234 1234',
+            'city' => 'asfd =-1234',
+            'state' => '1234',
+            'zip' => 'asdf',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin submit request with valid data
+     * @return void
+     */
+    public function test_admin_create_request_with_valid_data()
+    {
+        $response = $this->postJson('/admin-submit-requests', [
+            'first_name' => 'newPatient',
+            'last_name' => 'newData',
+            'phone_number' => '1234567890',
+            'email' => 'asdf@fasd.cc',
+            'date_of_birth' => '12/08/1995',
+            'street' => 'newStreet',
+            'city' => 'asfd',
+            'state' => 'newState',
+            'zip' => '123456',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin transfer request with no data (i.e. no physician selected)
+     *
+     * @return void
+     */
+    public function test_admin_transfer_request_with_no_data()
+    {
+        $response = $this->postJson('/transfer-case-admin', [
+            'physician' => '',
+            'notes' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin transfer request with invalid data
+     *
+     * @return void
+     */
+    public function test_admin_transfer_request_with_invalid_data()
+    {
+        $response = $this->postJson('/transfer-case-admin', [
+            'physician' => '',
+            'notes' => '^*&^*)',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin transfer request with valid data
+     *
+     * @return void
+     */
+    public function test_admin_transfer_request_with_valid_data()
+    {
+        $response = $this->postJson('/transfer-case-admin', [
+            'physician' => 1,
+            'notes' => '^*&^*)',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin send order -> with no data
+     *
+     * @return void
+     */
+    public function test_admin_send_order_with_no_data()
+    {
+        $response = $this->postJson('/admin-send-order', [
+            'profession' => '',
+            'vendor_id' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin send order -> with invalid data
+     *
+     * @return void
+     */
+    public function test_admin_send_order_with_invalid_data()
+    {
+        $response = $this->postJson('/admin-send-order', [
+            'profession' => 1,
+            'vendor_id' => 1,
+            'prescription' => '&*(^^*(',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin send order -> with valid data
+     *
+     * @return void
+     */
+    public function test_admin_send_order_with_valid_data()
+    {
+        $response = $this->postJson('/admin-send-order', [
+            'profession' => 1,
+            'vendor_id' => 1,
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin encounter form (Medical Form) -> submit with no data
+     *
+     * @return void
+     */
+    public function test_admin_encounter_form_submit_with_no_data()
+    {
+        $response = $this->postJson('/admin-medical-form', [
+            'first_name' => '',
+            'last_name' => '',
+            'location' => '',
+            'date_of_birth' => '',
+            'service_date' => '',
+            'mobile' => '',
+            'allergies' => '',
+            'treatment_plan' => '',
+            'medication_dispensed' => '',
+            'procedure' => '',
+            'followUp' => '',
+            'email' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin encounter form (Medical Form) -> submit with invalid data
+     *
+     * @return void
+     */
+    public function test_admin_encounter_form_submit_with_invalid_data()
+    {
+        $response = $this->postJson('/admin-medical-form', [
+            'first_name' => '123421',
+            'last_name' => '41234123',
+            'location' => '12423',
+            'date_of_birth' => '12432',
+            'service_date' => '123',
+            'mobile' => '12342',
+            'allergies' => '1234',
+            'treatment_plan' => '(&',
+            'medication_dispensed' => '*^^',
+            'procedure' => '%$^%%',
+            'followUp' => '$^**&',
+            'email' => '*^&%',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Admin encounter form (Medical Form) -> submit with valid data
+     *
+     * @return void
+     */
+    public function test_admin_encounter_form_submit_with_valid_data()
+    {
+        $response = $this->postJson('/admin-medical-form', [
+            'first_name' => 'firstName',
+            'last_name' => 'lastName',
+            'location' => 'new building, near hospital',
+            'date_of_birth' => '10/12/1990',
+            'service_date' => '19/02/2024',
+            'mobile' => '1234567890',
+            'allergies' => 'dust',
+            'treatment_plan' => 'new plan for testing',
+            'medication_dispensed' => 'given',
+            'procedure' => 'completed',
+            'followUp' => 'no',
+            'email' => 'new@new.com',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
 }

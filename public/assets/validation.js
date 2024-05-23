@@ -233,7 +233,7 @@ $(document).ready(function () {
             last_name: nameRules("Last name"),
             phone_number: mobileRules(),
             email: emailRules(),
-            dob: {
+            date_of_birth: {
                 required: false,
                 dateRange: [new Date("1900-01-01").toDateString()],
             },
@@ -255,7 +255,7 @@ $(document).ready(function () {
                 maxlength: 30,
                 alphaSpace: true,
             },
-            zip: {
+            zipcode: {
                 required: false,
                 digits: true,
                 minlength: 6,
@@ -296,7 +296,7 @@ $(document).ready(function () {
                 minlength: "Minimum 5 characters are required",
                 maxlength: "Maximum 30 characters are allowed",
             },
-            zip: {
+            zipcode: {
                 min: "Please enter positive number with 6 digits",
                 minlength: "Zip code should have minimum 6 digits",
                 maxlength: "Zip code should have maximum 6 digits",

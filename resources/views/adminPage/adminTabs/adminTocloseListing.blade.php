@@ -125,14 +125,15 @@ pending state, providers need to send an agreement link to patients. --}}
                         Create Requests
                     </span>
                 </a>
-                <a href="{{ route('export.toclose_data') }}" class="primary-fill" id="filterExportBtnToClose">
+                <button type="button" class="primary-fill" id="filterExportBtnToClose">
                     <i class="bi bi-send-arrow-down"></i>
                     <span class="txt">
                         Export
                     </span>
-                </a>
-                <form action="{{ route('export.toclose_data') }}" method="POST" id="filterExport">
+                </button>
+                <form action="{{ route('export.listing.data') }}" method="POST" id="filterExport">
                     @csrf
+                    <input name="status" value="" hidden>
                     <input name="filter_search" value="" hidden>
                     <input name="filter_region" value="" hidden>
                     <input name="filter_category" value="" hidden>

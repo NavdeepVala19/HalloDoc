@@ -396,12 +396,6 @@ $(document).ready(function () {
         success: function (data) {
             data.forEach(function (region) {
                 $(".listing-region").append(
-                    // '<option value="' +
-                    // region.id +
-                    //     '">' +
-                    // region.region_name +
-                    // "</option>"
-
                     '<option value="' +
                         region.id +
                         '"' +
@@ -409,14 +403,6 @@ $(document).ready(function () {
                         ">" +
                         region.region_name +
                         "</option>"
-
-                    // '<option value="' + region.id + '"' + (region.region_name == selectedRegionName ? selected : "") + '>' + region.region_name + '</option>'
-
-                    // `<option value="${region.id}"  ${region.region_name} == ${selectedRegionName} ? 'selected' : ''>${region.region_name}</option>`
-
-                    // `<option value="${region.id}" ${region.region_name} == ${selectedRegionName} ? selected : ''>${region.region_name} ${selectedRegionName}</option>`
-
-                    // `<option value="${region.id}" ${region.id == selectedRegionId ? selected : ''}>${region.region_name}</option>`
                 );
             });
         },

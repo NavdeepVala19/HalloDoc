@@ -31,7 +31,7 @@ class AdminCreateRequest extends FormRequest
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'room' => 'gte:1|nullable|max_digits:4',
-            'zip' => 'digits:6|nullable|gte:1',
+            'zipcode' => 'digits:6|nullable|gte:1',
             'adminNote' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_.,()]+$/',
         ];
     }

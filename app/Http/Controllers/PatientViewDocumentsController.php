@@ -94,15 +94,12 @@ class PatientViewDocumentsController extends Controller
     public function downloadSelectedFiles(Request $request)
     {
         try {
-            if (!$request->input('selected_files')) {
-                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
-                if ($data->isEmpty()) {
-                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
-                }
-                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
-            } else {
-                $ids = $request->input('selected_files');
+            $data = RequestWiseFile::where('request_id', $request->requestId)->get();
+            if ($data->isEmpty()) {
+                return redirect()->back()->with('noRecordFound', 'There are no records to download!');
             }
+            $ids = $request->input('selected_files') ?? RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+
             $zip = new ZipArchive();
             $zipFile = 'documents.zip';
 

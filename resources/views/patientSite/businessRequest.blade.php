@@ -16,6 +16,7 @@
     </div>
     <form action="{{route('business.request.submit')}}" method="post" id="patientRequestForm">
         @csrf
+        <input type="hidden" name="request_type_id" value="4">
         <div class="patient-container">
             <!-- Business Information -->
             <div class="business-inputs">

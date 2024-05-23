@@ -45,8 +45,7 @@
     </div>
 @endsection
 @section('content')
-
-@include('loading')
+    @include('loading')
     <div class="container form-container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="heading">Submit Information</h1>
@@ -55,21 +54,22 @@
         <div class="section">
             <form action="{{ route('admin.submit.patient.request') }}" method="POST" id="adminCreateRequestForm">
                 @csrf
+                <input type="text" name="request_type_id" value="1" hidden>
                 <h3>Patient</h3>
                 <div class="mb-4 form-grid">
                     <input type="text" name="request_type" value="1" hidden>
                     <div class="form-floating">
                         <input type="text" name="first_name"
-                            class="form-control @error('first_name') is-invalid @enderror" id="floatingInput1" autocomplete="off"
-                            placeholder="First Name" value="{{ old('first_name') }}">
+                            class="form-control @error('first_name') is-invalid @enderror" id="floatingInput1"
+                            autocomplete="off" placeholder="First Name" value="{{ old('first_name') }}">
                         <label for="floatingInput1">First Name</label>
                         @error('first_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput2" placeholder="Last Name" value="{{ old('last_name') }}">
+                        <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput2" placeholder="Last Name" value="{{ old('last_name') }}">
                         <label for="floatingInput2">Last Name</label>
                         @error('last_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -78,64 +78,67 @@
                     <div>
                         <div class="form-floating" style="height: 58px;">
                             <input type="tel" name="phone_number"
-                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" autocomplete="off"
-                                placeholder="Phone Number" value="{{ old('phone_number') }}">
+                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone"
+                                autocomplete="off" placeholder="Phone Number" value="{{ old('phone_number') }}">
                         </div>
                         @error('phone_number')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput3" placeholder="name@example.com" value="{{ old('email') }}">
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput3" placeholder="name@example.com"
+                            value="{{ old('email') }}">
                         <label for="floatingInput3">Email address</label>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="date" class="form-control" id="floatingInput4" placeholder="date of birth" autocomplete="off"
-                            name="date_of_birth" value="{{ old('date_of_birth') }}">
+                        <input type="date" class="form-control" id="floatingInput4" placeholder="date of birth"
+                            autocomplete="off" name="date_of_birth" value="{{ old('date_of_birth') }}">
                         <label for="floatingInput4">Date Of Birth(Optional)</label>
                     </div>
                 </div>
                 <h3>Location</h3>
                 <div class="mb-4 form-grid">
                     <div class="form-floating">
-                        <input type="text" name="street" class="form-control @error('street') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput5" placeholder="Street" value="{{ old('street') }}"> 
+                        <input type="text" name="street" class="form-control @error('street') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput5" placeholder="Street" value="{{ old('street') }}">
                         <label for="floatingInput5">Street</label>
                         @error('street')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput6" placeholder="City" value="{{ old('city') }}">
+                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput6" placeholder="City" value="{{ old('city') }}">
                         <label for="floatingInput6">City</label>
                         @error('city')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="text" name="state" class="form-control @error('state') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput7" placeholder="State" value="{{ old('state') }}">
+                        <input type="text" name="state" class="form-control @error('state') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput7" placeholder="State" value="{{ old('state') }}">
                         <label for="floatingInput7">State</label>
                         @error('state')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="zip" class="form-control  @error('zip') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput8" placeholder="zip code" value="{{ old('zip') }}" min="0">
+                        <input type="number" name="zipcode" class="form-control  @error('zipcode') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput8" placeholder="zip code" value="{{ old('zipcode') }}"
+                            min="0">
                         <label for="floatingInput8">Zip Code (Optional)</label>
-                        @error('zip')
+                        @error('zipcode')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="room" class="form-control  @error('room') is-invalid @enderror" autocomplete="off"
-                            id="floatingInput9" placeholder="Room" value="{{ old('room') }}" min="1">
+                        <input type="number" name="room" class="form-control  @error('room') is-invalid @enderror"
+                            autocomplete="off" id="floatingInput9" placeholder="Room" value="{{ old('room') }}"
+                            min="1">
                         <label for="floatingInput9">Room # (Optional)</label>
                         @error('room')
                             <div class="text-danger">{{ $message }}</div>
@@ -145,8 +148,8 @@
                 <h3>Notes</h3>
                 <div class="mb-4">
                     <div class="form-floating">
-                        <textarea class="form-control note  @error('adminNote') is-invalid @enderror" name='adminNote' placeholder="notes" autocomplete="off"
-                            id="floatingTextarea2">{{ old('adminNote') }}</textarea>
+                        <textarea class="form-control note  @error('adminNote') is-invalid @enderror" name='adminNote' placeholder="notes"
+                            autocomplete="off" id="floatingTextarea2">{{ old('adminNote') }}</textarea>
                         <label for="floatingTextarea2">Admin Notes (optional)</label>
                         @error('adminNote')
                             <div class="text-danger">{{ $message }}</div>
@@ -161,7 +164,6 @@
         </div>
     </div>
 @endsection
-
 
 @section('script')
     <script defer src="{{ asset('assets/validation/jquery.validate.min.js') }}"></script>

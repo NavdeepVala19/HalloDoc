@@ -138,7 +138,7 @@ class AdminController extends Controller
      *
      * @return \illuminate\View\View
      */
-    public function cases(Request $request, $status = 'new', $category = 'all')
+    public function cases(Request $request, $status = 'new')
     {
         // $searchTerm = $request->search;
         // Use Session to filter by category and searchTerm
@@ -152,9 +152,7 @@ class AdminController extends Controller
 
         $cases = $query->orderByDesc('id')->paginate(10);
         $viewName = 'adminPage.adminTabs.admin' . ucfirst($status) . 'Listing';
-        // $viewName = 'adminPage.adminTabs.filter-' . ucfirst($status);
-        // $data = view($viewName, compact('cases', 'count', 'userData'))->render();
-        // return response()->json(['html' => $data]);
+
         return view($viewName, compact('cases', 'count', 'userData'));
     }
 
@@ -191,7 +189,7 @@ class AdminController extends Controller
         $request->session()->put('category', $category);
 
         if ($status === 'new' || $status === 'pending' || $status === 'active' || $status === 'conclude' || $status === 'toclose' || $status === 'unpaid' && $category === 'all' || $category === 'patient' || $category === 'family' || $category === 'business' || $category === 'concierge') {
-            return $this->cases($request, $status, $category);
+            return $this->cases($request, $status);
         }
         return view('errors.404');
     }
@@ -205,12 +203,12 @@ class AdminController extends Controller
      *
      * @return \illuminate\View\View
      */
-    public function search(Request $request, $status = 'new', $category = 'all')
+    public function search(Request $request, $status = 'new')
     {
         // store searchTerm in session
         $request->session()->put('searchTerm', $request->search);
 
-        return $this->cases($request, $status, $category);
+        return $this->cases($request, $status);
     }
 
     /*
@@ -228,7 +226,7 @@ class AdminController extends Controller
 
     // -------------------- 1. Send Link (sendMail) -------------------
     /**
-     * Send Mail to patient with link to create request page
+     * Send Mail and SMS to patient with an link to create request page
      *
      * @param Request $request
      *
@@ -236,15 +234,15 @@ class AdminController extends Controller
      */
     public function sendMail(Request $request)
     {
+        // Generate the link using route() helper (assuming route parameter is optional)
+        $link = route('submit.request');
+
         $request->validate([
             'first_name' => 'required|alpha|min:5|max:30',
             'last_name' => 'required|alpha|min:5|max:30',
             'phone_number' => 'required',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
         ]);
-
-        // Generate the link using route() helper (assuming route parameter is optional)
-        $link = route('submitRequest');
 
         try {
             Mail::to($request->email)->send(new SendLink($request->all()));
@@ -302,9 +300,86 @@ class AdminController extends Controller
         return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
     }
     // -------------------- 2. Create Request -------------------------
+    // Admin Create Request -> code written in Admin DashBoard Controller
+
     // -------------------- 3. Export ---------------------------------
+    /**
+     * it export data to excel in admin listing for all status
+     *
+     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportData(Request $request)
+    {
+        $status = $request->status;
+        $category = $request->filter_category;
+        $search = $request->filter_search;
+        $regionId = session('regionId');
+
+        $data = $this->buildQuery($status, $category, $search, $regionId);
+
+        if ($data->get()->isEmpty()) {
+            return back()->with('successMessage', 'no cases found to export in Excel');
+        }
+
+        $exportDataClasses = [
+            'new' => NewStatusExport::class,
+            'pending' => PendingStatusExport::class,
+            'active' => ActiveStatusExport::class,
+            'conclude' => ConcludeStatusExport::class,
+            'toclose' => ToCloseStatusExport::class,
+            'unpaid' => UnPaidStatusExport::class,
+        ];
+
+        $exportDataClass = $exportDataClasses[$status] ?? null;
+
+        $file = $status . 'Data.xls';
+        return Excel::download(new $exportDataClass($data), $file);
+    }
+
     // -------------------- 4. Export All -----------------------------
+    // Export All -> code written in ExcelController
+
     // -------------------- 5. Request DTY Support --------------------
+    /**
+     * send email to all unscheduled physician
+     *
+     * @param \Illuminate\Http\Request $request (message)
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function sendRequestSupport(Request $request)
+    {
+        $request->validate([
+            'contact_msg' => 'required|min:5|max:100',
+        ]);
+
+        $currentDate = now()->toDateString();
+        $currentTime = now()->format('H:i');
+
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+
+        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
+
+        $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->pluck('email')->toArray();
+
+        try {
+            if ($offDutyPhysicians) {
+                foreach ($offDutyPhysicians as $offDutyPhysician) {
+                    try {
+                        Mail::to($offDutyPhysician)->send(new RequestSupportMessage($request->contact_msg));
+                    } catch (\Throwable $th) {
+                        return view('errors.500');
+                    }
+                }
+                return redirect()->back()->with('message', 'message is sent');
+            }
+            return redirect()->back()->with('message', 'No unschedule physician available!');
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -330,11 +405,18 @@ class AdminController extends Controller
     */
 
     // -------------------- 1. Provider Location --------------------
+    // It's code is written in AdminProviderController
+
     // -------------------- 2. My Profile ---------------------------
+    // Admin profile -> it's code is written in AdminDashboardController
+
     // -------------------- 3. Providers ----------------------------
     // --------- 3.1 : Provider ----------
+    // It's code is written in AdminProviderController
+
     // --------- 3.2 : Scheduling --------
-    // Admin Scheduling -> Implementation and functionality is in Scheduling Controller
+    // It's code is written in Scheduling Controller
+
     // -------------------- 4. Partners -----------------------------
     /**
      * Display Partners/Vendors page
@@ -485,8 +567,111 @@ class AdminController extends Controller
     }
     // -------------------- 5. Access -------------------------------
     // --------- 5.1 : User Access --------
-    // --------- 5.2 : Account Access -----
+    /**
+     * listing of user access page
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function userAccess(UserAccessService $userAccessService)
+    {
+        $userAccessData = $userAccessService->userAccessList();
+        return view('adminPage.access.userAccess', compact('userAccessData'));
+    }
 
+    /**
+     *  route admin to edit account page as per accountType(admin/provider)
+     *
+     * @param mixed $id (id of user table)
+     *
+     * @return mixed|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function userAccessEdit($id)
+    {
+        try {
+            $id = Crypt::decrypt($id);
+            $userAccessRoleName = Roles::select('name')
+                ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
+                ->where('user_roles.user_id', $id)
+                ->get();
+
+            if ($userAccessRoleName->value('name') === 'admin') {
+                return redirect()->route('edit.admin.profile', ['id' => Crypt::encrypt($id)]);
+            }
+            if ($userAccessRoleName->value('name') === 'physician') {
+                $getProviderId = Provider::where('user_id', $id)->first()->id;
+                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId)]);
+            }
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
+    }
+
+    /**
+     * filtering listing in user access page through ajax
+     *
+     * @param \Illuminate\Http\Request $request (account type(all/admin/provider))
+     *
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function filterUserAccessAccountTypeWise(Request $request, UserAccessService $userAccessService)
+    {
+        $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
+        $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
+
+        return response()->json(['html' => $data]);
+    }
+
+    /**
+     * same as above in mobile view
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function filterUserAccessAccountTypeWiseMobileView(Request $request, UserAccessService $userAccessService)
+    {
+        $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
+        $data = view('adminPage.access.userAccessFilterMobileView')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
+
+        return response()->json(['html' => $data]);
+    }
+
+    /**
+     * displaying create admin account page
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function adminAccount()
+    {
+        $regions = Regions::get();
+        return view('adminPage.createAdminAccount', compact('regions'));
+    }
+
+    /**
+     * it stores data in admin ,users,allusers and make role_id '1' in user_roles
+     *
+     * @param \Illuminate\Http\Request
+     *
+     * @return mixed|\Illuminate\Http\RedirectResponse
+     */
+    public function createAdminAccount(AdminProfileForm $request, UserAccessService $userAccessService)
+    {
+        $userAccessService->createAdminAccount($request);
+        return redirect()->route('admin.user.access');
+    }
+
+    /**
+     * fetch roles for admin account create through ajax
+     *
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function fetchRolesForAdminAccountCreate()
+    {
+        $fetchedRoles = Role::select('id', 'name')->where('account_type', 'admin')->get();
+        return response()->json($fetchedRoles);
+    }
+
+    // --------- 5.2 : Account Access -----
     /**
      * Display the access page.
      *
@@ -627,161 +812,6 @@ class AdminController extends Controller
     }
     // -------------------- 6. Records -------------------------------
     // --------- 6.1 : Search Records -----
-    // --------- 6.2 : Email Logs ---------
-    /**
-     * Display EmailLogs pages with all the log data.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function emailRecordsView()
-    {
-        $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
-
-        return view('adminPage.records.emailLogs', compact('emails'));
-    }
-
-    /**
-     * Search/filter EmailLogs.
-     *
-     * @param  \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function searchEmail(Request $request)
-    {
-        $roleId = $request->get('role_id');
-        $receiverName = $request->get('receiver_name');
-        $email = $request->get('email');
-        $createdDate = $request->get('created_date');
-        $sentDate = $request->get('sent_date');
-
-        // Retrieve pagination parameters from the request
-        $page = $request->input('page', 1);
-        $perPage = $request->input('per_page', 10);
-
-        $emails = EmailLog::query();
-
-        // Filter based on role_id (if provided)
-        if ($roleId) {
-            $emails->where('role_id', $roleId);
-        }
-
-        // Filter based on receiver_name (like operator)
-        if ($receiverName) {
-            $emails->where('recipient_name', 'LIKE', "%{$receiverName}%");
-        }
-
-        // Filter based on email (like operator)
-        if ($email) {
-            $emails->where('email', 'LIKE', "%{$email}%");
-        }
-
-        // Filter based on created_date (exact match)
-        if ($createdDate) {
-            $emails->where('created_at', 'Like', "%{$createdDate}%");
-        }
-
-        // Filter based on sent_date (exact match)
-        if ($sentDate) {
-            $emails->where('sent_date', 'Like', "%{$sentDate}%");
-        }
-
-        // Paginate results (10 items per page)
-        $emails = $emails->paginate($perPage, ['*'], 'page', $page);
-        $emails->appends(request()->query());
-
-        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
-    }
-    // --------- 6.3 : SMS Logs -----------
-    // --------- 6.4 : Patient Records ----
-    /**
-     * Display the patient history page.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function patientHistoryView()
-    {
-        $patients = RequestClient::paginate(10);
-
-        return view('adminPage.records.patientHistory', compact('patients'));
-    }
-
-    /**
-     * Search patient data based on provided criteria.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function searchPatientData(Request $request)
-    {
-        $firstName = $request->first_name;
-        $lastName = $request->last_name;
-        $email = $request->email;
-        $phoneNumber = $request->phone_number;
-
-        $patients = RequestClient::query();
-
-        if ($firstName) {
-            $patients->where('first_name', 'LIKE', "%{$firstName}%");
-        }
-        if ($lastName) {
-            $patients->where('last_name', 'LIKE', "%{$lastName}%");
-        }
-        if ($email) {
-            $patients->where('email', 'LIKE', "%{$email}%");
-        }
-        if ($phoneNumber) {
-            $patients->where('phone_number', 'LIKE', "%{$phoneNumber}%");
-        }
-
-        $patients = $patients->paginate(10);
-
-        return view('adminPage.records.patientHistory', compact('patients', 'firstName', 'lastName', 'email', 'phoneNumber'));
-    }
-
-    /**
-     * Display patient records view.
-     *
-     * @param  string|null $id
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function patientRecordsView($id = null)
-    {
-        try {
-            $id = Crypt::decrypt($id);
-            $email = RequestClient::where('id', $id)->pluck('email')->first();
-            $data = RequestClient::with(['request'])->where('email', $email)->get();
-
-            $requestId = RequestClient::where('id', $id)->first()->request_id;
-            $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
-            $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
-
-            return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-
-    /**
-     * Display patient records page.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function patientViews()
-    {
-        return view('adminPage.records.patientRecords');
-    }
-
-    // --------- 6.5 : Blocked History ----
-
-    /**
-     * list of  search records
-     * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
-     * physician note,admin note,patient note
-     */
-
     /**
      * list of  search records
      * it list patient name,email,mobile,address,zip,date of service ,close case date,request type,request status,provider name,
@@ -885,6 +915,73 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'record is permanently delete');
     }
 
+    // --------- 6.2 : Email Logs ---------
+    /**
+     * Display EmailLogs pages with all the log data.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function emailRecordsView()
+    {
+        $emails = EmailLog::with(['roles'])->orderByDesc('id')->paginate(10);
+
+        return view('adminPage.records.emailLogs', compact('emails'));
+    }
+
+    /**
+     * Search/filter EmailLogs.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function searchEmail(Request $request)
+    {
+        $roleId = $request->get('role_id');
+        $receiverName = $request->get('receiver_name');
+        $email = $request->get('email');
+        $createdDate = $request->get('created_date');
+        $sentDate = $request->get('sent_date');
+
+        // Retrieve pagination parameters from the request
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 10);
+
+        $emails = EmailLog::query();
+
+        // Filter based on role_id (if provided)
+        if ($roleId) {
+            $emails->where('role_id', $roleId);
+        }
+
+        // Filter based on receiver_name (like operator)
+        if ($receiverName) {
+            $emails->where('recipient_name', 'LIKE', "%{$receiverName}%");
+        }
+
+        // Filter based on email (like operator)
+        if ($email) {
+            $emails->where('email', 'LIKE', "%{$email}%");
+        }
+
+        // Filter based on created_date (exact match)
+        if ($createdDate) {
+            $emails->where('created_at', 'Like', "%{$createdDate}%");
+        }
+
+        // Filter based on sent_date (exact match)
+        if ($sentDate) {
+            $emails->where('sent_date', 'Like', "%{$sentDate}%");
+        }
+
+        // Paginate results (10 items per page)
+        $emails = $emails->paginate($perPage, ['*'], 'page', $page);
+        $emails->appends(request()->query());
+
+        return view('adminPage.records.emailLogs', compact('emails', 'roleId', 'receiverName', 'email', 'createdDate', 'sentDate'));
+    }
+
+    // --------- 6.3 : SMS Logs -----------
     /**
      * list receipient name ,action,role_name,mobile,create_date,sent_date,confirmation_number,is_sent_sent_tries
      *
@@ -926,6 +1023,89 @@ class AdminController extends Controller
 
         return view('adminPage.records.smsLogs', compact('smsLogs'));
     }
+
+    // --------- 6.4 : Patient Records ----
+    /**
+     * Display the patient history page.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function patientHistoryView()
+    {
+        $patients = RequestClient::paginate(10);
+
+        return view('adminPage.records.patientHistory', compact('patients'));
+    }
+
+    /**
+     * Search patient data based on provided criteria.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function searchPatientData(Request $request)
+    {
+        $firstName = $request->first_name;
+        $lastName = $request->last_name;
+        $email = $request->email;
+        $phoneNumber = $request->phone_number;
+
+        $patients = RequestClient::query();
+
+        if ($firstName) {
+            $patients->where('first_name', 'LIKE', "%{$firstName}%");
+        }
+        if ($lastName) {
+            $patients->where('last_name', 'LIKE', "%{$lastName}%");
+        }
+        if ($email) {
+            $patients->where('email', 'LIKE', "%{$email}%");
+        }
+        if ($phoneNumber) {
+            $patients->where('phone_number', 'LIKE', "%{$phoneNumber}%");
+        }
+
+        $patients = $patients->paginate(10);
+
+        return view('adminPage.records.patientHistory', compact('patients', 'firstName', 'lastName', 'email', 'phoneNumber'));
+    }
+
+    /**
+     * Display patient records view.
+     *
+     * @param  string|null $id
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function patientRecordsView($id = null)
+    {
+        try {
+            $id = Crypt::decrypt($id);
+            $email = RequestClient::where('id', $id)->pluck('email')->first();
+            $data = RequestClient::with(['request'])->where('email', $email)->get();
+
+            $requestId = RequestClient::where('id', $id)->first()->request_id;
+            $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
+            $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
+
+            return view('adminPage.records.patientRecords', compact('data', 'documentCount', 'isFinalize'));
+        } catch (\Throwable $th) {
+            return view('errors.404');
+        }
+    }
+
+    /**
+     * Display patient records page.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function patientViews()
+    {
+        return view('adminPage.records.patientRecords');
+    }
+
+    // --------- 6.5 : Blocked History ----
 
     /**
      * List of block request
@@ -987,116 +1167,7 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'patient is unblock');
     }
 
-    /**
-     * listing of user access page
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function userAccess(UserAccessService $userAccessService)
-    {
-        $userAccessData = $userAccessService->userAccessList();
-        return view('adminPage.access.userAccess', compact('userAccessData'));
-    }
-
-    /**
-     *  route admin to edit account page as per accountType(admin/provider)
-     *
-     * @param mixed $id (id of user table)
-     *
-     * @return mixed|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
-     */
-    public function userAccessEdit($id)
-    {
-        try {
-            $id = Crypt::decrypt($id);
-            $userAccessRoleName = Roles::select('name')
-                ->leftJoin('user_roles', 'user_roles.role_id', 'roles.id')
-                ->where('user_roles.user_id', $id)
-                ->get();
-
-            if ($userAccessRoleName->value('name') === 'admin') {
-                return redirect()->route('edit.admin.profile', ['id' => Crypt::encrypt($id)]);
-            }
-            if ($userAccessRoleName->value('name') === 'physician') {
-                $getProviderId = Provider::where('user_id', $id)->first()->id;
-                return redirect()->route('admin.edit.providers', ['id' => Crypt::encrypt($getProviderId)]);
-            }
-        } catch (\Throwable $th) {
-            return view('errors.404');
-        }
-    }
-
-    /**
-     * filtering listing in user access page through ajax
-     *
-     * @param \Illuminate\Http\Request $request (account type(all/admin/provider))
-     *
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function filterUserAccessAccountTypeWise(Request $request, UserAccessService $userAccessService)
-    {
-        $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
-        $data = view('adminPage.access.userAccessFiltering')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
-
-        return response()->json(['html' => $data]);
-    }
-
-    /**
-     * same as above in mobile view
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function filterUserAccessAccountTypeWiseMobileView(Request $request, UserAccessService $userAccessService)
-    {
-        $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
-        $data = view('adminPage.access.userAccessFilterMobileView')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
-
-        return response()->json(['html' => $data]);
-    }
-
-    /**
-     * send email to all unscheduled physician
-     *
-     * @param \Illuminate\Http\Request $request (message)
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
-     */
-    public function sendRequestSupport(Request $request)
-    {
-        $request->validate([
-            'contact_msg' => 'required|min:5|max:100',
-        ]);
-
-        $currentDate = now()->toDateString();
-        $currentTime = now()->format('H:i');
-
-        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
-
-        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-
-        $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->pluck('email')->toArray();
-
-        $requestMessage = $request->contact_msg;
-
-        try {
-            if ($offDutyPhysicians) {
-                foreach ($offDutyPhysicians as $offDutyPhysician) {
-                    try {
-                        Mail::to($offDutyPhysician)->send(new RequestSupportMessage($requestMessage));
-                    } catch (\Throwable $th) {
-                        return view('errors.500');
-                    }
-                }
-                return redirect()->back()->with('message', 'message is sent');
-            }
-            return redirect()->back()->with('message', 'No unschedule physician available!');
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-    }
-
+    // ------------------------------------------------------------------
     /**
      * fetch region from region table and show in all region drop down button
      *
@@ -1106,98 +1177,6 @@ class AdminController extends Controller
     {
         $fetchedRegions = Regions::get();
         return response()->json($fetchedRegions);
-    }
-
-    /**
-     * displaying create admin account page
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function adminAccount()
-    {
-        $regions = Regions::get();
-        return view('adminPage.createAdminAccount', compact('regions'));
-    }
-
-    /**
-     * it stores data in admin ,users,allusers and make role_id '1' in user_roles
-     *
-     * @param \Illuminate\Http\Request
-     *
-     * @return mixed|\Illuminate\Http\RedirectResponse
-     */
-
-    public function createAdminAccount(AdminProfileForm $request, UserAccessService $userAccessService)
-    {
-        $userAccessService->createAdminAccount($request);
-        return redirect()->route('admin.user.access');
-    }
-
-    /**
-     * fetch state for admin account create through ajax
-     *
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-
-    public function fetchRegionsForState()
-    {
-        $fetchedRegions = Regions::get();
-        return response()->json($fetchedRegions);
-    }
-
-    /**
-     * fetch roles for admin account create through ajax
-     *
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function fetchRolesForAdminAccountCreate()
-    {
-        $fetchedRoles = Role::select('id', 'name')->where('account_type', 'admin')->get();
-        return response()->json($fetchedRoles);
-    }
-
-    /**
-     * common function for filtering and exporting data in admin listing
-     *
-     * @param mixed $status
-     * @param mixed $category
-     * @param mixed $searchTerm
-     * @param mixed $region
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-
-    public function filterAdminListing($status, $category, $searchTerm, $region)
-    {
-        if (is_array(Helper::getStatusId($status))) {
-            $query = RequestTable::with('requestClient')->whereIn('status', Helper::getStatusId($status));
-        } else {
-            $query = RequestTable::with('requestClient')->where('status', Helper::getStatusId($status));
-        }
-
-        // Filter by Category if not 'all'
-        if ($category !== 'all') {
-            $query->where('request_type_id', Helper::getCategoryId($category));
-        }
-
-        // Apply search condition
-        if ($searchTerm) {
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%")
-                    ->orWhereHas('requestClient', function ($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', "%{$searchTerm}%")->orWhere('last_name', 'like', "%{$searchTerm}%");
-                    });
-            });
-        }
-
-        // Filter Regions
-        if ($region) {
-            $query->whereHas('requestClient', function ($query) use ($region) {
-                $query->where('state', 'like', '%' . $region . '%');
-            });
-        }
-
-        return $query;
     }
 
     /**
@@ -1213,197 +1192,15 @@ class AdminController extends Controller
         $status = $request->status;
         $category = $request->category_value;
         $search = $request->session()->get('searchTerm', null);
-        // $regionId = $request->session()->get('regionId');
         $regionId = session('regionId');
 
-        if ($regionId === 'all_regions') {
-            $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $cases = $this->filterAdminListing($status, $category, $search, $regionName)->orderByDesc('id')->paginate(10);
-        }
+        $cases = $this->buildQuery($status, $category, $search, $regionId)->orderByDesc('id')->paginate(10);
 
         $bladeFileName = 'filter-' . $request->status;
         $bladeFilePath = 'adminPage.adminTabs.' . $bladeFileName;
 
-        // $data = view('adminPage.adminTabs.filter-new')->with('cases', $cases)->render();
         $data = view($bladeFilePath)->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
-    }
-
-    /**
-     * it export data to excel in admin new listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-
-    public function exportNew(Request $request)
-    {
-        $status = 'new';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportNewData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportNewData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportNewData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportNew = new NewStatusExport($exportNewData);
-        return Excel::download($exportNew, 'NewData.xls');
-    }
-
-    /**
-     * it export data to excel in admin pending listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportPending(Request $request)
-    {
-        $status = 'pending';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportPendingData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportPendingData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportPendingData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportPending = new PendingStatusExport($exportPendingData);
-        return Excel::download($exportPending, 'PendingData.xls');
-    }
-
-    /**
-     *  it export data to excel in admin active listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportActive(Request $request)
-    {
-        $status = 'active';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportActiveData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportActiveData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportActiveData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportActive = new ActiveStatusExport($exportActiveData);
-        return Excel::download($exportActive, 'ActiveData.xls');
-    }
-
-    /**
-     * it export data to excel in admin conclude listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportConclude(Request $request)
-    {
-        $status = 'conclude';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportConcludeData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportConcludeData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportConcludeData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportConclude = new ConcludeStatusExport($exportConcludeData);
-        return Excel::download($exportConclude, 'ConcludeData.xls');
-    }
-
-    /**
-     * it export data to excel in admin toclose listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportToClose(Request $request)
-    {
-        $status = 'toclose';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportToCloseData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportToCloseData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportToCloseData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportToClose = new ToCloseStatusExport($exportToCloseData);
-        return Excel::download($exportToClose, 'ToCloseData.xls');
-    }
-
-    /**
-     * it export data to excel in admin unpaid listing
-     *
-     * @param \Illuminate\Http\Request $request (region_id,category,search_value)
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportUnpaid(Request $request)
-    {
-        $status = 'unpaid';
-        $category = $request->filter_category;
-        $search = $request->filter_search;
-        $region = $request->filter_region;
-        $regionId = session('regionId');
-
-        if ($region === 'All Regions') {
-            $exportUnpaidData = $this->buildQuery($status, $category, $search, $regionId);
-        } else {
-            $regionName = Regions::where('id', $regionId)->pluck('region_name')->first();
-            $exportUnpaidData = $this->filterAdminListing($status, $category, $search, $regionName);
-        }
-
-        if ($exportUnpaidData->get()->isEmpty()) {
-            return back()->with('successMessage', 'no cases found to export in Excel');
-        }
-        $exportUnpaid = new UnPaidStatusExport($exportUnpaidData);
-        return Excel::download($exportUnpaid, 'UnPaidData.xls');
     }
 
     // REMOVED FROM SRS

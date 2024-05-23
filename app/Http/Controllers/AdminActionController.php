@@ -193,7 +193,7 @@ class AdminActionController extends Controller
     /**
      * View a case.
      *
-     * @param  string  $id
+     * @param string $id
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
@@ -212,7 +212,7 @@ class AdminActionController extends Controller
     /**
      * Edit case information.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -247,7 +247,7 @@ class AdminActionController extends Controller
     /**
      * View notes for a case.
      *
-     * @param  string $id
+     * @param string $id
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
@@ -271,7 +271,7 @@ class AdminActionController extends Controller
     /**
      * Store an admin note to display in the ViewNotes page.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -281,7 +281,7 @@ class AdminActionController extends Controller
             'admin_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
         $requestNote = RequestNotes::where('request_id', $request->requestId)->first();
-        // if (!empty($requestNote)) {
+
         if ($requestNote) {
             RequestNotes::where('request_id', $request->requestId)->update([
                 'admin_notes' => $request->admin_note,
@@ -293,8 +293,7 @@ class AdminActionController extends Controller
             ]);
         }
 
-        $id = $request->requestId;
-        $id = Crypt::encrypt($id);
+        $id = Crypt::encrypt($request->requestId);
 
         return redirect()->route('admin.view.note', compact('id'))->with('adminNoteAdded', 'Your Note Successfully Added');
     }
@@ -439,14 +438,7 @@ class AdminActionController extends Controller
     public function closeCaseData(Request $request)
     {
         if ($request->input('closeCaseBtn') === 'Save') {
-            $request->validate([
-                'phone_number' => 'required',
-                'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            ]);
-            RequestClient::where('request_id', $request->requestId)->update([
-                'phone_number' => $request->phone_number,
-                'email' => $request->email,
-            ]);
+            $this->closeCaseUpdateData($request);
         } elseif ($request->input('closeCaseBtn') === 'Close Case') {
             $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
             RequestTable::where('id', $request->requestId)->update(['status' => 9]);
@@ -463,6 +455,25 @@ class AdminActionController extends Controller
             return redirect()->route('admin.status', 'unpaid')->with('successMessage', 'Case Closed Successfully!');
         }
         return redirect()->back();
+    }
+
+    /**
+     * Close Case -> Update information as save button clicked.
+     *
+     * @param $request
+     *
+     * @return void
+     */
+    public function closeCaseUpdateData($request)
+    {
+        $request->validate([
+            'phone_number' => 'required',
+            'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+        ]);
+        RequestClient::where('request_id', $request->requestId)->update([
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+        ]);
     }
 
     /**
@@ -497,13 +508,16 @@ class AdminActionController extends Controller
         $request->validate([
             'profession' => 'required',
             'vendor_id' => 'required',
+            'prescription' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
 
         $createOrderService->createOrder($request);
 
         $status = RequestTable::where('id', $request->requestId)->first()->status;
 
-        return redirect()->route('admin.status', $status === 4 || $status === 5 ? 'active' : ($status === 6 ? 'conclude' : 'toclose'))->with('successMessage', 'Order Created Successfully!');
+        $redirectBack = ($status === 6 ? 'conclude' : 'toclose');
+
+        return redirect()->route('admin.status', $status === 4 || $status === 5 ? 'active' : $redirectBack)->with('successMessage', 'Order Created Successfully!');
     }
 
     /**

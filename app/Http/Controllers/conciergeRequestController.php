@@ -2,8 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConfirmationNumber;
 use App\Http\Requests\CreateConciergeRequest;
-use App\Services\ConciergeRequestSubmitService;
+use App\Mail\SendEmailAddress;
+use App\Models\Concierge;
+use App\Models\RequestConcierge;
+use App\Models\RequestTable;
+use App\Models\Users;
+use App\Services\CreateNewUserService;
+use App\Services\EmailLogService;
+use App\Services\RequestClientService;
+use Illuminate\Support\Facades\Mail;
 
 // this controller is responsible for creating/storing the concierge request
 class ConciergeRequestController extends Controller
@@ -26,11 +35,57 @@ class ConciergeRequestController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create(CreateConciergeRequest $request, ConciergeRequestSubmitService $conciergeRequestSubmitService)
+    public function create(CreateConciergeRequest $request, CreateNewUserService $createNewUserService, RequestClientService $requestClientService, EmailLogService $emailLogService)
     {
-        $conciergeRequest = $conciergeRequestSubmitService->storeConciergeRequest($request);
-        $redirectMsg = $conciergeRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        $isEmailStored = Users::where('email', $request->email)->first();
 
-        return redirect()->route('submit.request')->with('message', $redirectMsg);
+        $userId = $isEmailStored ? $isEmailStored->id : $createNewUserService->storeNewUser($request);
+
+        // Generate confirmation number
+        $confirmationNumber = ConfirmationNumber::generate($request);
+
+        $requestTable = RequestTable::create([
+            'user_id' => $userId,
+            'request_type_id' => $request->request_type_id,
+            'first_name' => $request->concierge_first_name,
+            'last_name' => $request->concierge_last_name,
+            'email' => $request->concierge_email,
+            'phone_number' => $request->concierge_mobile,
+            'status' => 1,
+        ]);
+
+        // Store client details in RequestClient table
+        $requestClientService->createEntry($request, $requestTable->id);
+
+        $concierge = Concierge::create([
+            'name' => $request->concierge_first_name,
+            'address' => $request->concierge_hotel_name,
+            'street' => $request->concierge_street,
+            'city' => $request->concierge_city,
+            'state' => $request->concierge_state,
+            'zipcode' => $request->concierge_zip_code,
+            'role_id' => 3,
+        ]);
+
+        RequestConcierge::create([
+            'request_id' => $requestTable->id,
+            'concierge_id' => $concierge->id,
+        ]);
+
+        if (! $isEmailStored) {
+            // Send email to user
+            $emailAddress = $request->email;
+
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+
+            $emailLogService->createEntry($request, $requestTable->id, $confirmationNumber);
+
+            return redirect()->route('submit.request')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+        }
+        return redirect()->route('submit.request')->with('message', 'Request is Submitted');
     }
 }

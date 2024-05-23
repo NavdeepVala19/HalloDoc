@@ -22,7 +22,7 @@ class AdminProviderService
      *
      * @return array
      */
-    public function ProvidersList()
+    public function providersList()
     {
         $currentDate = now()->toDateString();
         $currentTime = now()->format('H:i');

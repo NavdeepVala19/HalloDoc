@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PhysicianLocation;
-use App\Models\Provider;
 use App\Models\UserRoles;
 use App\Models\Users;
 use Illuminate\Http\Request;
@@ -48,31 +46,19 @@ class AdminLoginController extends Controller
             $userData = Auth::user();
             $userRole = UserRoles::where('user_id', $userData->id)->first();
 
-            if ($userRole->role_id === 2) {
-                $providersData = Provider::where('email', $userData->email)->first();
-                PhysicianLocation::create([
-                    'provider_id' => $providersData->id,
-                    'physician_name' => $providersData->first_name,
-                    'latitude' => $request->latitude,
-                    'longitude' => $request->longitude,
-                ]);
-            }
             if ($userRole->role_id === 1) {
                 return redirect()->route('admin.dashboard');
             }
             if ($userRole->role_id === 2) {
                 return redirect()->route('provider.dashboard');
             }
-            if ($userRole->role_id === 3) {
-                return back()->with('error', 'invalid credentials');
-            }
-        } else {
-            $user = Users::where('email', $request->email)->first();
-            if ($user === null) {
-                return back()->with('error', 'We could not find an account associated with that email address');
-            }
-            return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
+            return back()->with('error', 'invalid credentials');
         }
+        $user = Users::where('email', $request->email)->first();
+        if ($user === null) {
+            return back()->with('error', 'We could not find an account associated with that email address');
+        }
+        return back()->with('error', 'Incorrect Password , Please Enter Correct Password');
     }
 
     /**
@@ -179,13 +165,5 @@ class AdminLoginController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
-
-        // $userData = Auth::user();
-        // $userRolesData = UserRoles::where('user_id', $userData->id)->first();
-
-        // if ($userRolesData->role_id == 2) {
-        //     $providersData = Provider::where('email', $userData->email)->first();
-        //     PhysicianLocation::where('provider_id', $providersData->id)->forceDelete();
-        // }
     }
 }

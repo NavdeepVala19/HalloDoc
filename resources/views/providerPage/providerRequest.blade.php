@@ -68,7 +68,7 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" name="dob" class="form-control" id="floatingInput4"
+                        <input type="date" name="date_of_birth" class="form-control" id="floatingInput4"
                             placeholder="date of birth" value="{{ old('dob') }}">
                         <label for="floatingInput4">Date Of Birth(Optional)</label>
                     </div>
@@ -100,7 +100,7 @@
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <input type="number" name="zip" class="form-control" id="floatingInput8" placeholder="zip code"
+                        <input type="number" name="zipcode" class="form-control" id="floatingInput8" placeholder="zip code"
                             value="{{ old('zip') }}" min="0" max="999999">
                         <label for="floatingInput8">Zip Code (Optional)</label>
                     </div>
