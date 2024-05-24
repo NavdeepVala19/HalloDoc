@@ -43,11 +43,8 @@ class PatientLoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $patientCredentials = Auth::user();
-            $userRolesData = UserRoles::where('user_id', $patientCredentials->id)->first();
-            if ($userRolesData === null) {
-                return redirect()->route('patient.login.view')->with('error', 'submit request with registered email');
-            }
+            $userRolesData = UserRoles::where('user_id', Auth::user()->id)->first();
+
             if ($userRolesData->role_id === 3) {
                 return redirect()->route('patient.dashboard');
             }

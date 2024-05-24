@@ -347,7 +347,6 @@ class ProviderActionController extends Controller
     public function encounterFinalized($id)
     {
         $data = MedicalReport::where('request_id', $id)->first();
-        // if (empty($data)) {
         if (!$data) {
             return redirect()->back()->with('saveFormToFinalize', 'First Create and Save Form to Finalize it!')->withInput();
         }

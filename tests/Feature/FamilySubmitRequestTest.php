@@ -7,6 +7,12 @@ use Illuminate\Http\Response;
 
 class FamilySubmitRequestTest extends TestCase
 {
+    public function test_family_create_request_page_can_be_rendered()
+    {
+        $response = $this->get('/submit-requests/family');
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
     /**
      * Details entered are empty or not in proper valid format
      *
@@ -47,6 +53,7 @@ class FamilySubmitRequestTest extends TestCase
         $response = $this->postJson('/family-created', [
             'family_first_name' => 'Olivia',
             'family_last_name' => 'Oliver',
+            'request_type_id' => '2',
             'family_phone_number' => '1234567890',
             'family_email' => 'asdf@new.com',
             'family_relation' => 'cousin',
@@ -77,6 +84,7 @@ class FamilySubmitRequestTest extends TestCase
         $response = $this->postJson('/family-created', [
             'family_first_name' => 'Olivia',
             'family_last_name' => 'Oliver',
+            'request_type_id' => '2',
             'family_phone_number' => '1234567890',
             'family_email' => 'asdf@new.com',
             'family_relation' => 'cousin',

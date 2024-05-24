@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConfirmationNumber;
 use App\Http\Requests\CreatePatientRequest;
+use App\Mail\SendEmailAddress;
 use App\Models\RequestStatus;
 use App\Models\RequestTable;
 use App\Models\Users;
-use App\Services\PatientDashboardService;
+use App\Services\CreateNewUserService;
+use App\Services\EmailLogService;
+use App\Services\RequestClientService;
+use App\Services\RequestTableService;
+use App\Services\RequestWiseFileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PatientDashboardController extends Controller
 {
@@ -96,11 +103,8 @@ class PatientDashboardController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createNewPatient(Request $request, PatientDashboardService $patientDashboardService)
+    public function createNewPatient(Request $request, RequestTableService $requestTableService, RequestClientService $requestClientService, RequestWiseFileService $requestWiseFileService)
     {
-        $userData = Auth::user();
-        $email = $userData['email'];
-
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
@@ -115,7 +119,22 @@ class PatientDashboardController extends Controller
             'room' => 'gte:1|nullable|max:1000',
         ]);
 
-        $patientDashboardService->storeMeRequest($request, $email);
+        $email = Auth::user()->email;
+
+        $isEmailStored = Users::where('email', $email)->first();
+
+        // Generate confirmation number
+        $confirmationNumber = ConfirmationNumber::generate($request);
+
+        $requestTable = $requestTableService->createEntry($request, $isEmailStored->id, $confirmationNumber);
+        // Store client details in RequestClient table
+        $requestClientService->createEntry($request, $requestTable->id);
+
+        // Store documents in request_wise_file table
+        if ($request->hasFile('docs')) {
+            $requestWiseFileService->storeDoc($request, $requestTable->id);
+        }
+
         return redirect()->route('patient.dashboard')->with('message', 'Request is Submitted');
     }
 
@@ -137,13 +156,38 @@ class PatientDashboardController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-
-    public function createSomeOneElseRequest(CreatePatientRequest $request, PatientDashboardService $patientDashboardService)
+    public function createSomeOneElseRequest(CreatePatientRequest $request, CreateNewUserService $createNewUserService, RequestTableService $requestTableService, RequestClientService $requestClientService, EmailLogService $emailLogService, RequestWiseFileService $requestWiseFileService)
     {
-        $patientRequest = $patientDashboardService->storeSomeOneRequest($request);
-        $redirectMsg = $patientRequest ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
+        $isEmailStored = Users::where('email', $request->email)->first();
 
-        return redirect()->route('patient.dashboard')->with('message', $redirectMsg);
+        $userId = $isEmailStored ? $isEmailStored->id : $createNewUserService->storeNewUser($request);
+
+        // Generate confirmation number
+        $confirmationNumber = ConfirmationNumber::generate($request);
+
+        $requestTable = $requestTableService->createEntry($request, $userId, $confirmationNumber);
+        // Store client details in RequestClient table
+        $requestClientService->createEntry($request, $requestTable->id);
+
+        // Store documents in request_wise_file table
+        if ($request->hasFile('docs')) {
+            $requestWiseFileService->storeDoc($request, $requestTable->id);
+        }
+        if (!$isEmailStored) {
+            // Send email to user
+            $emailAddress = $request->email;
+
+            try {
+                Mail::to($request->email)->send(new SendEmailAddress($emailAddress));
+            } catch (\Throwable $th) {
+                return view('errors.500');
+            }
+
+            $emailLogService->createEntry($request, $requestTable->id, $confirmationNumber);
+
+            return redirect()->route('patient.dashboard')->with('message', 'Email for Create Account is Sent and Request is Submitted');
+        }
+        return redirect()->route('patient.dashboard')->with('message', 'Request is submitted');
     }
 
     /**

@@ -71,7 +71,7 @@
                             id="floatingSelect1" aria-label="Floating label select example">
                             <option selected disabled>Open this select menu</option>
                             @foreach ($types as $type)
-                                <option value="{{ $type->id }}" @if ($type->id == old('profession')) selected @endif>
+                                <option value="{{ $type->id }}" @if ($type->id == old('profession')) @endif>
                                     {{ $type->profession_name }}</option>
                             @endforeach
                         </select>

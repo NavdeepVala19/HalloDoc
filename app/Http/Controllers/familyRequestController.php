@@ -48,10 +48,10 @@ class FamilyRequestController extends Controller
             'user_id' => $userId,
             'request_type_id' => $request->request_type_id,
             'first_name' => $request->family_first_name,
-            'last_name' => $request->family_first_name,
-            'email' => $request->family_first_name,
-            'phone_number' => $request->family_first_name,
-            'relation_name' => $request->family_first_name,
+            'last_name' => $request->family_last_name,
+            'email' => $request->family_email,
+            'phone_number' => $request->family_phone_number,
+            'relation_name' => $request->family_relation,
             'confirmation_no' => $confirmationNumber,
             'status' => 1,
         ]);
@@ -62,7 +62,7 @@ class FamilyRequestController extends Controller
         if ($request->hasFile('docs')) {
             $requestWiseFileService->storeDoc($request, $requestTable->id);
         }
-        if (! $isEmailStored) {
+        if (!$isEmailStored) {
             // Send email to user
             $emailAddress = $request->email;
 

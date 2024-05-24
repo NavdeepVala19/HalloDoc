@@ -81,7 +81,6 @@ class RecordsService
             ->leftJoin('request_closed', 'request_closed.request_id', 'request_client.request_id')
             ->latest('id');
 
-        // if (!empty($request->patient_name)) {
         if ($request->patient_name) {
             $combinedData->where('request_client.first_name', 'like', "%{$request->patient_name}%");
         }

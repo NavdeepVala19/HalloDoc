@@ -4,11 +4,15 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PatientSubmitRequestTest extends TestCase
 {
+    public function test_patient_create_request_page_can_be_rendered()
+    {
+        $response = $this->get('/submit-requests/patient');
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
     /**
      * Details entered are empty or not in proper valid format
      *
@@ -44,6 +48,7 @@ class PatientSubmitRequestTest extends TestCase
         $response = $this->postJson('/patient-created', [
             'first_name' => 'new',
             'last_name' => 'user',
+            'request_type_id' => '1',
             'date_of_birth' => '2023-12-12',
             'email' => 'lejig@mailinator.com',
             'phone_number' => '1234567890',
@@ -69,6 +74,7 @@ class PatientSubmitRequestTest extends TestCase
         $response = $this->postJson('/patient-created', [
             'first_name' => 'new',
             'last_name' => 'user',
+            'request_type_id' => '1',
             'date_of_birth' => '2023-12-12',
             'email' => 'newPatientMail@mail.com',
             'phone_number' => '1234567890',

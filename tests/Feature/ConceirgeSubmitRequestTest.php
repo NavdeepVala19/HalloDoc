@@ -4,11 +4,15 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ConceirgeSubmitRequestTest extends TestCase
 {
+    public function test_concierge_create_request_page_can_be_rendered()
+    {
+        $response = $this->get('/submit-requests/concierge');
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
     /**
      * Details entered are empty or not in proper valid format
      *
@@ -49,6 +53,7 @@ class ConceirgeSubmitRequestTest extends TestCase
             'first_name' => 'Glenn',
             'last_name' => 'McGrath',
             'date_of_birth' => '1954-04-17',
+            'request_type_id' => '3',
             'email' => 'glenn@mail.com',
             'phone_number' => '5678901234',
             'concierge_first_name' => 'Ricky',
@@ -77,6 +82,7 @@ class ConceirgeSubmitRequestTest extends TestCase
         $response = $this->postJson('/concierge-created', [
             'first_name' => 'Glenn',
             'last_name' => 'McGrath',
+            'request_type_id' => '3',
             'date_of_birth' => '1954-04-17',
             'email' => 'glenn123@mail.com',
             'phone_number' => '5678901234',

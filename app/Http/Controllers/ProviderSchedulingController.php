@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
 use App\Models\Shift;
 use App\Models\ShiftDetail;
 use App\Models\ShiftDetailRegion;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use DatePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +45,7 @@ class ProviderSchedulingController extends Controller
     public function providerShiftData(Request $request)
     {
         $request->validate([
+            'region' => 'required|in:1,2,3,4,5',
             'shiftDate' => 'required',
             'shiftStartTime' => 'required',
             'shiftEndTime' => 'required|after:shiftStartTime',
@@ -79,12 +78,13 @@ class ProviderSchedulingController extends Controller
         } else {
             $weekDays = null;
         }
-        $request->validate(['region' => 'required|in:1,2,3,4,5']);
+
         if ($request['is_repeat'] === true) {
             $is_repeat = 1;
         } else {
             $is_repeat = 0;
         }
+
         $shift = Shift::create([
             'physician_id' => $request['providerId'],
             'start_date' => $request['shiftDate'],
@@ -109,51 +109,7 @@ class ProviderSchedulingController extends Controller
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
 
-        if ($is_repeat === 1) {
-            $startDate = Carbon::parse($request['shiftDate']);
-            $endDate = Carbon::parse($request['shiftDate']);
-
-            // Set the end date based on the value of repeatEnd
-            switch ($request['repeatEnd']) {
-                case 2:
-                    $endDate->addDays(14);
-                    break;
-                case 3:
-                    $endDate->addDays(21);
-                    break;
-                case 4:
-                    $endDate->addDays(28);
-                    break;
-                default:
-                    // Set the end date to the start date if repeatEnd is not 2, 3, or 4
-                    $endDate = $startDate;
-                    break;
-            }
-
-            // Create a DatePeriod object to generate a range of dates between the start and end dates
-            $interval = CarbonInterval::day();
-            $dateRange = new DatePeriod($startDate, $interval, $endDate);
-
-            // Loop through the range of dates and create a ShiftDetail record for each date that is selected
-            foreach ($dateRange as $date) {
-                if (in_array($date->format('w'), $request->checkbox)) {
-                    $shiftDetail = ShiftDetail::create([
-                        'shift_id' => $shift->id,
-                        'shift_date' => $date->format('Y-m-d'),
-                        'start_time' => $request['shiftStartTime'],
-                        'end_time' => $request['shiftEndTime'],
-                        'status' => 1,
-                    ]);
-
-                    $shiftDetailRegion = ShiftDetailRegion::create([
-                        'shift_detail_id' => $shiftDetail->id,
-                        'region_id' => $request['region'],
-                    ]);
-
-                    ShiftDetail::where('id', $shiftDetail->id)->update(['region_id' => $shiftDetailRegion->id]);
-                }
-            }
-        }
+        Helper::storeRepeatedShifts($request, $is_repeat, $shift, 2);
 
         return redirect()->back()->with('shiftAdded', 'Shift Added Successfully');
     }
@@ -172,22 +128,7 @@ class ProviderSchedulingController extends Controller
         })->get();
 
         $formattedShift = $shiftDetails->map(function ($event) {
-            return [
-                'shiftId' => $event->getShiftData->id,
-                'shiftDetailId' => $event->id,
-                'title' => $event->getShiftData->provider->first_name . ' ' . $event->getShiftData->provider->last_name,
-                'shiftDate' => $event->shift_date,
-                'startTime' => $event->start_time,
-                'endTime' => $event->end_time,
-                'resourceId' => $event->getShiftData->physician_id,
-                'physician_id' => $event->getShiftData->physician_id,
-                'region_id' => $event->shiftDetailRegion->region_id,
-                'region_name' => $event->shiftDetailRegion->region->region_name,
-                'is_repeat' => $event->getShiftData->is_repeat,
-                'week_days' => explode(',', $event->getShiftData->week_days),
-                'repeat_upto' => $event->getShiftData->repeat_upto,
-                'status' => $event->status,
-            ];
+            return Helper::formattedShiftData($event);
         });
 
         return response()->json($formattedShift->toArray());

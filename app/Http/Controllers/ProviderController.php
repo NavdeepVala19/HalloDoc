@@ -5,17 +5,14 @@ namespace App\Http\Controllers;
 use App\Helpers\ConfirmationNumber;
 use App\Helpers\Helper;
 use App\Http\Requests\ProviderCreateRequest;
-use App\Http\Requests\SendMailRequest;
 use App\Mail\ProviderRequest;
 use App\Mail\SendEmailAddress;
-use App\Mail\SendMail;
 use App\Models\Admin;
 use App\Models\EmailLog;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
 use App\Models\Regions;
 use App\Models\requestTable;
-use App\Models\SMSLogs;
 use App\Models\User;
 use App\Models\Users;
 use App\Services\CreateNewUserService;
@@ -28,7 +25,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Twilio\Rest\Client;
 
 class ProviderController extends Controller
 {
@@ -228,7 +224,7 @@ class ProviderController extends Controller
         // Store notes in RequestNotes table
         $requestNotesService->createEntry($request, $requestTable->id);
 
-        if (! $isEmailStored) {
+        if (!$isEmailStored) {
             // Send email to user
             $emailAddress = $request->email;
 
@@ -315,80 +311,5 @@ class ProviderController extends Controller
         }
 
         return redirect()->back()->with('mailSentToAdmin', 'Email Sent to Admin - to make requested changes!');
-    }
-
-    /**
-     * Send Mail to patient with link to create request page
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\RedirectResponse redirect back with success message
-     */
-    public function sendMail(SendMailRequest $request)
-    {
-        // Generate the link using route() helper (assuming route parameter is optional)
-        $link = route('submit.request');
-
-        try {
-            // send SMS Logic
-            $sid = config('api.twilio_sid');
-            $token = config('api.twilio_auth_token');
-            $senderNumber = config('api.sender_number');
-
-            $twilio = new Client($sid, $token);
-
-            $twilio->messages
-                ->create(
-                    '+91 99780 71802', // to
-                    [
-                        'body' => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
-                        'from' => $senderNumber,
-                    ]
-                );
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-
-        $user = Auth::user();
-        $providerId = Provider::where('user_id', $user->id)->first()->id;
-
-        $name = $request->first_name . ' ' . $request->last_name;
-
-        SMSLogs::create(
-            [
-                'sms_template' => 'Hii ,Click on the below link to create request',
-                'mobile_number' => $request->phone_number,
-                'recipient_name' => $name,
-                'provider_id' => $providerId,
-                'created_date' => now(),
-                'sent_date' => now(),
-                'role_id' => 2,
-                'is_sms_sent' => 1,
-                'sent_tries' => 1,
-                'action' => 1,
-            ]
-        );
-
-        // Send Email Logic
-        try {
-            Mail::to($request->email)->send(new SendMail($request->all()));
-        } catch (\Throwable $th) {
-            return view('errors.500');
-        }
-        EmailLog::create([
-            'role_id' => 2,
-            'provider_id' => $providerId,
-            'recipient_name' => $name,
-            'email_template' => 'mail.blade.php',
-            'subject_name' => 'Create Request Link',
-            'email' => $request->email,
-            'create_date' => now(),
-            'sent_date' => now(),
-            'is_email_sent' => true,
-            'sent_tries' => 1,
-            'action' => 1,
-        ]);
-
-        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
     }
 }

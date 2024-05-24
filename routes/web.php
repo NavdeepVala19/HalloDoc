@@ -1,16 +1,17 @@
 <?php
 
+use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AdminActionController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\BusinessRequestController;
 use App\Http\Controllers\CommonOperationController;
 use App\Http\Controllers\ConciergeRequestController;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\FamilyRequestController;
+use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\PatientAccountController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientDashboardController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\PatientViewDocumentsController;
 use App\Http\Controllers\ProviderActionController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProviderSchedulingController;
+use App\Http\Controllers\RecordsController;
 use App\Http\Controllers\SchedulingController;
 use Illuminate\Support\Facades\Route;
 
@@ -141,9 +143,6 @@ Route::middleware('CheckProviderLogin')->group(function () {
     // Data from Create request page for Provider
     Route::post('/provider-request', [ProviderController::class, 'createRequest'])->name('provider.request.data');
 
-    // Send Email for creating request through provider
-    Route::post('/provider-send-mail', [ProviderController::class, 'sendMail'])->name('provider.send.mail');
-
     // Provider Profile page (MyProfile)
     Route::get('/profile', [ProviderController::class, 'providerProfile'])->name('provider.profile');
     // Provider Reset Password (MyProfile)
@@ -237,9 +236,6 @@ Route::middleware('CheckAdminLogin')->group(function () {
     // Route::post('admin/search/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
     Route::post('admin/{status?}/{category?}', [AdminController::class, 'search'])->name('searching');
 
-    // Send Link
-    Route::post('/admin/send/mail/patient', [AdminController::class, 'sendMail'])->name('admin.send.mail');
-
     // Assign Case pop-up, populate select menu with all physician regions (AJAX)
     Route::get('/physician-regions', [AdminActionController::class, 'physicianRegions'])->name('physician.regions');
     // Get particular physicians as per the region selected from dropdown
@@ -300,46 +296,46 @@ Route::middleware('CheckAdminLogin')->group(function () {
     Route::post('/admin-send-order', [AdminActionController::class, 'sendOrder'])->name('admin.send.order');
 
     // Partners Page in Admin
-    Route::get('/partners/{id?}', [AdminController::class, 'viewPartners'])->name('admin.partners');
+    Route::get('/partners/{id?}', [PartnersController::class, 'viewPartners'])->name('admin.partners');
     // Search Vendors/Partners
-    Route::get('/search-partners', [AdminController::class, 'searchPartners'])->name('search.partners');
+    Route::get('/search-partners', [PartnersController::class, 'searchPartners'])->name('search.partners');
 
     // Add Business Page
-    Route::get('/add-business', [AdminController::class, 'addBusinessView'])->name('add.business.view');
+    Route::get('/add-business', [PartnersController::class, 'addBusinessView'])->name('add.business.view');
     // add a new business from addBusiness page
-    Route::post('/add-business', [AdminController::class, 'addBusiness'])->name('add.business');
+    Route::post('/add-business', [PartnersController::class, 'addBusiness'])->name('add.business');
     // Update Business Page
-    Route::get('/update-business/{id}', [AdminController::class, 'updateBusinessView'])->name('update.business.view');
+    Route::get('/update-business/{id}', [PartnersController::class, 'updateBusinessView'])->name('update.business.view');
     // Update already existing business details
-    Route::post('/update-business', [AdminController::class, 'updateBusiness'])->name('update.business');
+    Route::post('/update-business', [PartnersController::class, 'updateBusiness'])->name('update.business');
     // Delete already existing business
-    Route::get('/delete-business/{id}', [AdminController::class, 'deleteBusiness'])->name('delete.business');
+    Route::get('/delete-business/{id}', [PartnersController::class, 'deleteBusiness'])->name('delete.business');
 
     // Account Access Page
-    Route::get('/access', [AdminController::class, 'accessView'])->name('admin.access.view');
+    Route::get('/access', [AccessController::class, 'accessView'])->name('admin.access.view');
     // Create a new role page
-    Route::get('/create-role', [AdminController::class, 'createRoleView'])->name('admin.create.role.view');
+    Route::get('/create-role', [AccessController::class, 'createRoleView'])->name('admin.create.role.view');
     // fetch all roles to show in the dropdown as per the account type
-    Route::get('/fetch-roles/{id}', [AdminController::class, 'fetchRoles'])->name('fetch.roles');
+    Route::get('/fetch-roles/{id}', [AccessController::class, 'fetchRoles'])->name('fetch.roles');
     // create a new access, and store that data
-    Route::post('/create-access', [AdminController::class, 'createAccess'])->name('admin.create.access');
+    Route::post('/create-access', [AccessController::class, 'createAccess'])->name('admin.create.access');
     // Delete already existing access
-    Route::get('/delete-access/{id}', [AdminController::class, 'deleteAccess'])->name('admin.access.delete');
+    Route::get('/delete-access/{id}', [AccessController::class, 'deleteAccess'])->name('admin.access.delete');
     // Display Edit access page
-    Route::get('/edit-access/{id}', [AdminController::class, 'editAccess'])->name('admin.edit.access');
+    Route::get('/edit-access/{id}', [AccessController::class, 'editAccess'])->name('admin.edit.access');
     // Edit an already existing access
-    Route::post('/edit-access-data', [AdminController::class, 'editAccessData'])->name('admin.edit.access.data');
+    Route::post('/edit-access-data', [AccessController::class, 'editAccessData'])->name('admin.edit.access.data');
 
     // Email Logs Page
-    Route::get('/email-logs', [AdminController::class, 'emailRecordsView'])->name('admin.email.records.view');
+    Route::get('/email-logs', [RecordsController::class, 'emailRecordsView'])->name('admin.email.records.view');
     // Search and filter email logs page
-    Route::get('/search-email-logs', [AdminController::class, 'searchEmail'])->name('search.filter.email');
+    Route::get('/search-email-logs', [RecordsController::class, 'searchEmail'])->name('search.filter.email');
     // Patient History Page
-    Route::get('/patient-history', [AdminController::class, 'patientHistoryView'])->name('admin.patient.records.view');
+    Route::get('/patient-history', [RecordsController::class, 'patientHistoryView'])->name('admin.patient.records.view');
     // searching and filtering of Patient Records Page
-    Route::get('/search-patient-data', [AdminController::class, 'searchPatientData'])->name('admin.search.patient');
+    Route::get('/search-patient-data', [RecordsController::class, 'searchPatientData'])->name('admin.search.patient');
     // Display Patient Records Page
-    Route::get('/patient-records/{id}', [AdminController::class, 'patientRecordsView'])->name('patient.records');
+    Route::get('/patient-records/{id}', [RecordsController::class, 'patientRecordsView'])->name('patient.records');
 
     // ---------------------------- SCHEDULING ----------------------------
     // Admin Scheduling
@@ -397,44 +393,44 @@ Route::middleware('CheckAdminLogin')->group(function () {
 
     route::post('/admin-export-data', [AdminController::class, 'exportData'])->name('export.listing.data');
 
-    route::get('/admin-new-exportAll', [ExcelController::class, 'exportAll'])->name('export.all_data');
+    route::get('/admin-new-exportAll', [AdminController::class, 'exportAll'])->name('export.all_data');
 
-    route::get('/admin-submit-requests', [AdminDashboardController::class, 'createNewRequest'])->name('submit.patient.request.view');
-    route::post('/admin-submitted-requests', [AdminDashboardController::class, 'createAdminPatientRequest'])->name('admin.submit.patient.request');
+    route::get('/admin-submit-requests', [AdminController::class, 'createNewRequest'])->name('submit.patient.request.view');
+    route::post('/admin-submitted-requests', [AdminController::class, 'createAdminPatientRequest'])->name('admin.submit.patient.request');
 
     route::get('/admin-new', [AdminController::class, 'fetchRegions']);
 
     route::post('/filter-new', [AdminController::class, 'filterPatient'])->name('filter.region_new');
 
-    Route::get('/user-access', [AdminController::class, 'userAccess'])->name('admin.user.access');
-    Route::get('/user-access-edit/{id?}', [AdminController::class, 'userAccessEdit'])->name('admin.user.accessEdit');
-    route::post('/user-access/filter', [AdminController::class, 'filterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
-    route::post('/user-access-mobile-filter', [AdminController::class, 'filterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
+    Route::get('/user-access', [AccessController::class, 'userAccess'])->name('admin.user.access');
+    Route::get('/user-access-edit/{id?}', [AccessController::class, 'userAccessEdit'])->name('admin.user.accessEdit');
+    route::post('/user-access/filter', [AccessController::class, 'filterUserAccessAccountTypeWise'])->name('filter.user.access.account_wise');
+    route::post('/user-access-mobile-filter', [AccessController::class, 'filterUserAccessAccountTypeWiseMobileView'])->name('filter.user.access.account_wise_mobile');
 
-    route::get('/admin-profile-edit', [AdminDashboardController::class, 'adminProfilePage'])->name('admin.profile.editing');
-    route::get('/admin-profile-update/{id}', [AdminDashboardController::class, 'adminProfile'])->name('edit.admin.profile');
+    route::get('/admin-profile-edit', [AdminProfileController::class, 'adminProfilePage'])->name('admin.profile.editing');
+    route::get('/admin-profile-update/{id}', [AdminProfileController::class, 'adminProfile'])->name('edit.admin.profile');
 
-    route::post('/admin-update-password/{id}', [AdminDashboardController::class, 'adminChangePassword'])->name('admin.password.update');
-    route::post('/admin-info-updates/{id}', [AdminDashboardController::class, 'adminInfoUpdate'])->name('admin.info.update');
-    route::post('/admin-mail-updates/{id}', [AdminDashboardController::class, 'adminMailInfoUpdate'])->name('admin.mail.info.update');
+    route::post('/admin-update-password/{id}', [AdminProfileController::class, 'adminChangePassword'])->name('admin.password.update');
+    route::post('/admin-info-updates/{id}', [AdminProfileController::class, 'adminInfoUpdate'])->name('admin.info.update');
+    route::post('/admin-mail-updates/{id}', [AdminProfileController::class, 'adminMailInfoUpdate'])->name('admin.mail.info.update');
 
-    route::get('/admin-create-new-admin', [AdminController::class, 'adminAccount'])->name('create.new.admin.view');
-    route::post('/admin-new-account-created', [AdminController::class, 'createAdminAccount'])->name('new.admin.created');
-    route::get('/admin-account-role', [AdminController::class, 'fetchRolesForAdminAccountCreate'])->name('fetch.role');
+    route::get('/admin-create-new-admin', [AccessController::class, 'adminAccount'])->name('create.new.admin.view');
+    route::post('/admin-new-account-created', [AccessController::class, 'createAdminAccount'])->name('new.admin.created');
+    route::get('/admin-account-role', [AccessController::class, 'fetchRolesForAdminAccountCreate'])->name('fetch.role');
 
     // Records Page
-    Route::get('/search-records', [AdminController::class, 'searchRecordsView'])->name('admin.search.records.view');
-    Route::match(['get', 'post'], '/search-records/search', [AdminController::class, 'searchRecordSearching'])->name('admin.search.records');
-    route::post('/search-records/export', [AdminController::class, 'downloadFilteredData'])->name('export.search.records.filtered_data');
-    Route::get('/search-records/delete/{id}', [AdminController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
+    Route::get('/search-records', [RecordsController::class, 'searchRecordsView'])->name('admin.search.records.view');
+    Route::match(['get', 'post'], '/search-records/search', [RecordsController::class, 'searchRecordSearching'])->name('admin.search.records');
+    route::post('/search-records/export', [RecordsController::class, 'downloadFilteredData'])->name('export.search.records.filtered_data');
+    Route::get('/search-records/delete/{id}', [RecordsController::class, 'deleteSearchRecordData'])->name('admin.search.records.delete');
 
-    Route::get('/sms-logs', [AdminController::class, 'smsRecordsView'])->name('admin.sms.records.view');
-    Route::match(['get', 'post'], '/sms-logs/search', [AdminController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
+    Route::get('/sms-logs', [RecordsController::class, 'smsRecordsView'])->name('admin.sms.records.view');
+    Route::match(['get', 'post'], '/sms-logs/search', [RecordsController::class, 'searchSMSLogs'])->name('admin.sms.records.search');
 
-    Route::get('/block-history', [AdminController::class, 'blockHistoryView'])->name('admin.block.history.view');
-    Route::post('/block-history/search', [AdminController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
-    Route::post('/block-history/update', [AdminController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');
-    Route::get('/block-history/unblock/{id}', [AdminController::class, 'unBlockPatientInBlockHistoryPage'])->name('admin.block.history.unblock');
+    Route::get('/block-history', [RecordsController::class, 'blockHistoryView'])->name('admin.block.history.view');
+    Route::post('/block-history/search', [RecordsController::class, 'blockHistroySearchData'])->name('admin.block.history.search');
+    Route::post('/block-history/update', [RecordsController::class, 'updateBlockHistoryIsActive'])->name('admin.block.history.update');
+    Route::get('/block-history/unblock/{id}', [RecordsController::class, 'unBlockPatientInBlockHistoryPage'])->name('admin.block.history.unblock');
 });
 
 Route::middleware('CheckAdminOrProvider')->group(function () {
@@ -460,15 +456,10 @@ Route::middleware('CheckAdminOrProvider')->group(function () {
 
     // Dynamically fetch data of business based on selection in dropdown
     Route::get('/fetch-business-data/{id}', [CommonOperationController::class, 'fetchBusinessData'])->name('fetch.business.data');
-});
 
-// ---------------- REMOVED FROM SRS -----------------
-// Cancel History Page
-// These page is removed from SRS
-Route::get('/cancel-history', [AdminController::class, 'viewCancelHistory'])->name('admin.cancel.history.view');
-Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->name('cancel.case.search');
+    // Send Email for creating request through provider
+    Route::post('/provider-send-mail', [CommonOperationController::class, 'sendMail'])->name('provider.send.mail');
 
-// For Testing Purpose only
-Route::get('/test', function () {
-    return view('patientSite.agreementDone');
+    // Send Link
+    Route::post('/admin/send/mail/patient', [CommonOperationController::class, 'sendMail'])->name('admin.send.mail');
 });

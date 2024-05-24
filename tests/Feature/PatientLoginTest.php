@@ -4,10 +4,16 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class PatientLoginTest extends TestCase
 {
+    public function test_patient_login_page_can_be_rendered()
+    {
+        $response = $this->get('/patient/login');
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+    
     /**
      * Email and password entered is either empty or is not in proper format
      *
@@ -28,26 +34,26 @@ class PatientLoginTest extends TestCase
      *
      * @return void
      */
-    public function test_no_user_with_entered_credentials_for_patient_login(): void
+    public function test_no_user_with_entered_credentials_exists_for_patient_login(): void
     {
         $response = $this->postJson('/patient/logged-in', [
             'email' => 'lejifasg@mailinator.com',
-            'password' => 'lejig@mailinator.com',
+            'password' => 'passwordTest',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'Invalid credentials');
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'We could not find an account associated with that email address');
     }
 
     /**
-     * Either Email or password entered is wrong.
+     * Either admin or provider is trying to login on patient page
      *
      * @return void
      */
     public function test_invalid_credentials_entered_for_patient_login(): void
     {
         $response = $this->postJson('/patient/logged-in', [
-            'email' => 'lejig@mailinator.com',
-            'password' => 'lejig12@mailinator.com',
+            'email' => 'admin@mail.com',
+            'password' => 'admin12345',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'Invalid credentials');

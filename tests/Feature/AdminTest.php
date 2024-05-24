@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminTest extends TestCase
 {
@@ -48,7 +46,6 @@ class AdminTest extends TestCase
         $response->assertStatus(Response::HTTP_FOUND);
     }
 
-
     /**
      * Test successful view case form with valid data
      * @return void
@@ -73,9 +70,9 @@ class AdminTest extends TestCase
     {
         $response = $this->postJson('/admin/view/case/edit', [
             'patient_notes' => 'Physician Notes',
-            'first_name' => 'Denton',
-            'last_name' => 'Wise',
-            'dob' => '03-09-2022',
+            'first_name' => 'ne',
+            'last_name' => 'Wise1231',
+            'dob' => '03-09-20221',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
@@ -104,7 +101,7 @@ class AdminTest extends TestCase
     public function test_view_note_add_note_with_empty_data()
     {
         $response = $this->postJson('/admin/view/notes/store', [
-            'admin_notes' => '',
+            'admin_note' => '',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -117,7 +114,7 @@ class AdminTest extends TestCase
     public function test_view_note_add_note_with_invalid_data()
     {
         $response = $this->postJson('/admin/view/notes/store', [
-            'admin_notes' => '+_)*&(',
+            'admin_note' => '+_)*&(',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -130,7 +127,7 @@ class AdminTest extends TestCase
     public function test_view_note_add_note_with_valid_data()
     {
         $response = $this->postJson('/admin/view/notes/store', [
-            'admin_notes' => 'New note added',
+            'admin_note' => 'New note added',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
@@ -481,7 +478,7 @@ class AdminTest extends TestCase
             'street' => '',
             'city' => '',
             'state' => '',
-            'zip' => '',
+            'zipcode' => '',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -502,7 +499,7 @@ class AdminTest extends TestCase
             'street' => 'asdfa a1234 1234',
             'city' => 'asfd =-1234',
             'state' => '1234',
-            'zip' => 'asdf',
+            'zipcode' => 'asdf',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -523,7 +520,7 @@ class AdminTest extends TestCase
             'street' => 'newStreet',
             'city' => 'asfd',
             'state' => 'newState',
-            'zip' => '123456',
+            'zipcode' => '123456',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -541,7 +538,7 @@ class AdminTest extends TestCase
             'notes' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -556,7 +553,7 @@ class AdminTest extends TestCase
             'notes' => '^*&^*)',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**

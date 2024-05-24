@@ -7,6 +7,12 @@ use Illuminate\Http\Response;
 
 class BusinessSubmitRequestTest extends TestCase
 {
+    public function test_business_create_request_page_can_be_rendered()
+    {
+        $response = $this->get('/submit-requests/business');
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
     /**
      * Details entered are empty or not in proper valid format
      *
@@ -47,6 +53,7 @@ class BusinessSubmitRequestTest extends TestCase
         $response = $this->postJson('/business-created', [
             'first_name' => 'Steve',
             'last_name' => 'Smith',
+            'request_type_id' => '4',
             'date_of_birth' => '1994-03-12',
             'email' => 'smith@mail.com',
             'phone_number' => '2345678901',
@@ -64,7 +71,7 @@ class BusinessSubmitRequestTest extends TestCase
             'room' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.re quest')->assertSessionHas('message', 'Request is Submitted');
+        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
     }
 
     /**
@@ -77,6 +84,7 @@ class BusinessSubmitRequestTest extends TestCase
         $response = $this->postJson('/business-created', [
             'first_name' => 'Steve',
             'last_name' => 'Smith',
+            'request_type_id' => '4',
             'date_of_birth' => '1994-03-12',
             'email' => 'smith123@mail.com',
             'phone_number' => '2345678901',

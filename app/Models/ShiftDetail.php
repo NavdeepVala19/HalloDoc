@@ -13,6 +13,8 @@ class ShiftDetail extends Model
 
     protected $table = 'shift_detail';
 
+    protected $guarded = [];
+
     public function shiftDetailRegion()
     {
         return $this->hasOne(ShiftDetailRegion::class, 'id', 'region_id');

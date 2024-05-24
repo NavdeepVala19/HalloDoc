@@ -180,11 +180,9 @@ class AdminProviderController extends Controller
             $getProviderData->role_id = $request->role;
             $getProviderData->save();
 
-            $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
-            if ($updateProviderDataAllUsers) {
-                $updateProviderDataAllUsers->status = $request->status_type;
-                $updateProviderDataAllUsers->save();
-            }
+            AllUsers::where('user_id', $getUserIdFromProvider)->update([
+                'status' => $request->status_type,
+            ]);
         }
 
         return back()->with('message', 'account information is updated');
@@ -320,8 +318,6 @@ class AdminProviderController extends Controller
      */
     public function providerLocations()
     {
-        // $providers = Provider::get();
-        // return view('adminPage/provider/providerLocation', compact("providers"));
         return view('adminPage/provider/providerLocation');
     }
 

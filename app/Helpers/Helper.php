@@ -2,6 +2,13 @@
 
 namespace App\Helpers;
 
+use App\Models\Provider;
+use App\Models\ShiftDetail;
+use App\Models\ShiftDetailRegion;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
+use DatePeriod;
+
 class Helper
 {
     public const CATEGORY_PATIENT = 1;
@@ -52,5 +59,85 @@ class Helper
             'unpaid' => self::STATUS_UNPAID,
         ];
         return $statusMapping[$status];
+    }
+
+    public static function getPhysicianDutyStatus()
+    {
+        $currentDate = now()->toDateString();
+        $currentTime = now()->format('H:i');
+
+        $onCallShifts = ShiftDetail::with('getShiftData')->where('shift_date', $currentDate)
+            ->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
+
+        $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
+        $onCallPhysicians = Provider::whereIn('id', $onCallPhysicianIds)->get();
+
+        $offDutyPhysicians = Provider::whereNotIn('id', $onCallPhysicianIds)->get();
+
+        return [
+            'onCallPhysicians' => $onCallPhysicians,
+            'offDutyPhysicians' => $offDutyPhysicians,
+        ];
+    }
+
+    public static function formattedShiftData($event)
+    {
+        return [
+            'shiftId' => $event->getShiftData->id,
+            'shiftDetailId' => $event->id,
+            'title' => $event->getShiftData->provider->first_name . ' ' . $event->getShiftData->provider->last_name,
+            'shiftDate' => $event->shift_date,
+            'startTime' => $event->start_time,
+            'endTime' => $event->end_time,
+            'resourceId' => $event->getShiftData->physician_id,
+            'physician_id' => $event->getShiftData->physician_id,
+            'region_id' => $event->shiftDetailRegion->region_id,
+            'region_name' => $event->shiftDetailRegion->region->region_name,
+            'is_repeat' => $event->getShiftData->is_repeat,
+            'week_days' => explode(',', $event->getShiftData->week_days),
+            'repeat_upto' => $event->getShiftData->repeat_upto,
+            'status' => $event->status,
+        ];
+    }
+
+    public static function storeRepeatedShifts($request, $is_repeat, $shift, $status)
+    {
+        if ($is_repeat === 1) {
+            $startDate = Carbon::parse($request->shiftDate);
+            $endDate = Carbon::parse($request->shiftDate);
+
+            $repeatingDays = [
+                2 => 14,
+                3 => 21,
+                4 => 28,
+            ];
+
+            $days = $repeatingDays[$request->repeatEnd];
+            $endDate->addDays($days);
+
+            // Create a DatePeriod object to generate a range of dates between the start and end dates
+            $interval = CarbonInterval::day();
+            $dateRange = new DatePeriod($startDate, $interval, $endDate);
+
+            // Loop through the range of dates and create a ShiftDetail record for each date that is selected
+            foreach ($dateRange as $date) {
+                if (in_array($date->format('w'), $request->checkbox)) {
+                    $shiftDetail = ShiftDetail::create([
+                        'shift_id' => $shift->id,
+                        'shift_date' => $date->format('Y-m-d'),
+                        'start_time' => $request->shiftStartTime,
+                        'end_time' => $request->shiftEndTime,
+                        'status' => $status,
+                    ]);
+
+                    $shiftDetailRegion = ShiftDetailRegion::create([
+                        'shift_detail_id' => $shiftDetail->id,
+                        'region_id' => $request->region,
+                    ]);
+
+                    ShiftDetail::where('id', $shiftDetail->id)->update(['region_id' => $shiftDetailRegion->id]);
+                }
+            }
+        }
     }
 }

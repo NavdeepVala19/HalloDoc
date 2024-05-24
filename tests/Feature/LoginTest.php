@@ -4,11 +4,20 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LoginTest extends TestCase
 {
+    /**
+     * Test admin and provider login with valid credentials
+     *
+     * @return void
+     */
+    public function test_admin_login_page_page_can_be_rendered(): void
+    {
+        $response = $this->get('/login');
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
     /**
      * Test admin and provider login with valid credentials
      *

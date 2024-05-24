@@ -7,6 +7,13 @@ use Illuminate\Http\Response;
 
 class ResetPasswordTest extends TestCase
 {
+    public function test_admin_reset_password_page_can_be_rendered()
+    {
+        $response = $this->get('/reset-password');
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
     /**
      * No email entered, then return back and show error
      *

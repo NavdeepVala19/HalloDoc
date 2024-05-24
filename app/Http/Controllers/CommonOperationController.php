@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendMailRequest;
 use App\Mail\DocsAttachmentMail;
 use App\Mail\SendAgreement;
+use App\Mail\SendLink;
 use App\Mail\SendMailPatient;
 use App\Models\Admin;
 use App\Models\EmailLog;
@@ -69,11 +71,10 @@ class CommonOperationController extends Controller
     public function operations(Request $request)
     {
         $email = RequestClient::where('request_id', $request->requestId)->first()->email;
+        $data = RequestWiseFile::where('request_id', $request->requestId)->get();
         // Delete All Documents or Delete the selected documents
         if ($request->input('operation') === 'delete_all') {
-            // if (empty($request->input('selected'))) {
             if (!$request->selected) {
-                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to Delete!');
                 }
@@ -85,11 +86,10 @@ class CommonOperationController extends Controller
 
             return redirect()->back();
         }
+
         if ($request->input('operation') === 'download_all') {
             // Download All Documents or Download the selected documents
-            // if (empty($request->input('selected'))) {
             if (!$request->selected) {
-                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
                 if ($data->isEmpty()) {
                     return redirect()->back()->with('noRecordFound', 'There are no records to download!');
                 }
@@ -112,9 +112,9 @@ class CommonOperationController extends Controller
             }
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
         }
+
         if ($request->input('operation') === 'send_mail') {
             // Send Mail of Selected Documents as attachment
-            $data = RequestWiseFile::where('request_id', $request->requestId)->get();
             if ($data->isEmpty()) {
                 return redirect()->back()->with('noRecordFound', 'There are no records to Send Mail!');
             }
@@ -220,6 +220,34 @@ class CommonOperationController extends Controller
     }
 
     /**
+     * Get userData as per the logged in user
+     *
+     * @return array return array with roleId and userId
+     */
+    public function getUserRoleAndId()
+    {
+        $user = Auth::user();
+        $provider = Provider::where('user_id', $user->id)->first();
+
+        $providerId = null;
+        $adminId = null;
+
+        if ($provider) {
+            $roleId = 2;
+            $providerId = Provider::where('user_id', $user->id)->first()->id;
+        } else {
+            $roleId = 1;
+            $adminId = Admin::where('user_id', $user->id)->first()->id;
+        }
+
+        return [
+            $roleId,
+            $providerId,
+            $adminId,
+        ];
+    }
+
+    /**
      * Provider/Admin Send Agreement Link to Patient from Pending State
      *
      * @param Request $request
@@ -234,21 +262,10 @@ class CommonOperationController extends Controller
         ]);
         $clientData = RequestTable::with('requestClient')->where('id', $request->request_id)->first();
 
-        $user = Auth::user();
-        $provider = Provider::where('user_id', $user->id)->first();
+        $roleId = $this->getUserRoleAndId()[0];
+        $providerId = $this->getUserRoleAndId()[1];
+        $adminId = $this->getUserRoleAndId()[2];
 
-        $providerId = DB::raw('NULL');
-        $adminId = DB::raw('NULL');
-
-        if ($provider) {
-            $roleId = 2;
-            $providerId = Provider::where('user_id', $user->id)->first()->id;
-        } else {
-            $roleId = 1;
-            $adminId = Admin::where('user_id', $user->id)->first()->id;
-        }
-
-        $id = $request->request_id;
         EmailLog::create([
             'role_id' => $roleId,
             'request_id' => $request->request_id,
@@ -302,7 +319,7 @@ class CommonOperationController extends Controller
                 ->create(
                     '+91 99780 71802', // to
                     [
-                        'body' => 'Hii ' .  $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $id),
+                        'body' => 'Hii ' .  $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $request->request_id),
                         'from' => $senderNumber,
                     ]
                 );
@@ -338,5 +355,81 @@ class CommonOperationController extends Controller
     {
         $businessData = HealthProfessional::where('id', $id)->first();
         return response()->json($businessData);
+    }
+
+    /**
+     * Send Mail and SMS to patient with an link to create request page (from both admin and provider side)
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse redirect back with success message
+     */
+    public function sendMail(SendMailRequest $request)
+    {
+        // Generate the link using route() helper (assuming route parameter is optional)
+        $link = route('submit.request');
+
+        $roleId = $this->getUserRoleAndId()[0];
+        $providerId = $this->getUserRoleAndId()[1];
+        $adminId = $this->getUserRoleAndId()[2];
+
+        try {
+            Mail::to($request->email)->send(new SendLink($request->all()));
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
+
+        EmailLog::create([
+            'role_id' => $roleId,
+            'admin_id' => $adminId,
+            'provider_id' => $providerId,
+            'is_email_sent' => true,
+            'sent_tries' => 1,
+            'create_date' => now(),
+            'sent_date' => now(),
+            'email_template' => 'mail.blade.php',
+            'subject_name' => 'Create Request Link',
+            'email' => $request->email,
+            'recipient_name' => $request->first_name . ' ' . $request->last_name,
+            'action' => 1,
+        ]);
+
+        try {
+            // send SMS
+            $sid = config('api.twilio_sid');
+            $token = config('api.twilio_auth_token');
+            $senderNumber = config('api.sender_number');
+
+            $twilio = new Client($sid, $token);
+
+            $twilio->messages
+                ->create(
+                    '+91 99780 71802', // to
+                    [
+                        'body' => "Hii {$request->first_name} {$request->last_name}, Click on the this link to create request:{$link}",
+                        'from' => $senderNumber,
+                    ]
+                );
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
+
+        SMSLogs::create(
+            [
+                'role_id' => $roleId,
+                'admin_id' => $adminId,
+                'provider_id' => $providerId,
+                'mobile_number' => $request->phone_number,
+                'created_date' => now(),
+                'sent_date' => now(),
+                'recipient_name' => $request->first_name  . ' ' . $request->last_name,
+                'sent_tries' => 1,
+                'is_sms_sent' => 1,
+                'action' => 1,
+                'sms_template' => 'Hii, Click on the below link to create request',
+            ]
+        );
+
+        return redirect()->back()->with('successMessage', 'Link Sent Successfully!');
     }
 }
