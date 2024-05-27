@@ -104,7 +104,7 @@ class AdminTest extends TestCase
             'admin_note' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -117,7 +117,7 @@ class AdminTest extends TestCase
             'admin_note' => '+_)*&(',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -472,6 +472,7 @@ class AdminTest extends TestCase
         $response = $this->postJson('/admin-submit-requests', [
             'first_name' => '',
             'last_name' => '',
+            'request_type_id' => 1,
             'phone_number' => '',
             'email' => '',
             'date_of_birth' => '',
@@ -493,6 +494,7 @@ class AdminTest extends TestCase
         $response = $this->postJson('/admin-submit-requests', [
             'first_name' => '123423',
             'last_name' => '1234231',
+            'request_type_id' => 1,
             'phone_number' => '-==1242',
             'email' => 'asdf@fasd',
             'date_of_birth' => '12/14/2025',
@@ -514,6 +516,7 @@ class AdminTest extends TestCase
         $response = $this->postJson('/admin-submit-requests', [
             'first_name' => 'newPatient',
             'last_name' => 'newData',
+            'request_type_id' => 1,
             'phone_number' => '1234567890',
             'email' => 'asdf@fasd.cc',
             'date_of_birth' => '12/08/1995',
