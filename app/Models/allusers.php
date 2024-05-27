@@ -12,20 +12,7 @@ class AllUsers extends Model
     use SoftDeletes;
     protected $table = 'allusers';
 
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'mobile',
-        'zipcode',
-        'street',
-        'city',
-        'state',
-        'status',
-        'region_id',
-        'user_id',
-        'date_of_birth',
-    ];
+    protected $guarded = [];
 
     public function users()
     {

@@ -88,29 +88,33 @@ class CommonOperationController extends Controller
         }
 
         if ($request->input('operation') === 'download_all') {
-            // Download All Documents or Download the selected documents
-            if (!$request->selected) {
-                if ($data->isEmpty()) {
-                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+            try {
+                // Download All Documents or Download the selected documents
+                if (!$request->selected) {
+                    if ($data->isEmpty()) {
+                        return redirect()->back()->with('noRecordFound', 'There are no records to download!');
+                    }
+                    $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
+                } else {
+                    $ids = $request->input('selected');
                 }
-                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
-            } else {
-                $ids = $request->input('selected');
-            }
 
-            $zip = new ZipArchive();
-            $zipFile = uniqid() . '-documents.zip';
+                $zip = new ZipArchive();
+                $zipFile = uniqid() . '-documents.zip';
 
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
-                foreach ($ids as $id) {
-                    $file = RequestWiseFile::where('id', $id)->first();
-                    $path = public_path() . '/storage/' . $file->file_name;
+                if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
+                    foreach ($ids as $id) {
+                        $file = RequestWiseFile::where('id', $id)->first();
+                        $path = public_path() . '/storage/' . $file->file_name;
 
-                    $zip->addFile($path, $file->file_name);
+                        $zip->addFile($path, $file->file_name);
+                    }
+                    $zip->close();
                 }
-                $zip->close();
+                return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
+            } catch (\Throwable $th) {
+                return view('errors.500');
             }
-            return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
         }
 
         if ($request->input('operation') === 'send_mail') {

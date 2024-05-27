@@ -86,7 +86,7 @@ class BusinessSubmitRequestTest extends TestCase
             'last_name' => 'Smith',
             'request_type_id' => '4',
             'date_of_birth' => '1994-03-12',
-            'email' => 'smith123@mail.com',
+            'email' => fake()->unique()->email(),
             'phone_number' => '2345678901',
             'street' => 'new street',
             'city' => 'city',

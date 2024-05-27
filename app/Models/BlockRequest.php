@@ -11,17 +11,7 @@ class BlockRequest extends Model
 
     protected $table = 'block_request';
 
-    protected $fillable = [
-        'request_id',
-        'reason',
-        'email',
-        'phone_number',
-        'is_active',
-    ];
-
-    protected $guarded = [
-        'request_id ',
-    ];
+    protected $guarded = [];
 
     public function requestStatus()
     {

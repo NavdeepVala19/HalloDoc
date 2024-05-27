@@ -53,7 +53,7 @@ class SchedulingController extends Controller
     public function shiftFilter($id)
     {
         // If no region selected, return all the shifts
-        if ($id === 0) {
+        if ($id === '0') {
             $shiftDetails = ShiftDetail::with(['getShiftData', 'shiftDetailRegion'])->get();
         } else {
             $shiftDetailIds = ShiftDetailRegion::where('region_id', $id)->pluck('shift_detail_id')->toArray();
@@ -98,10 +98,9 @@ class SchedulingController extends Controller
             ->where('start_time', '<=', $currentTime)->where('end_time', '>=', $currentTime)->get();
 
         $onCallPhysicianIds = $onCallShifts->whereNotNull('getShiftData.physician_id')->pluck('getShiftData.physician_id')->unique()->toArray();
-        // $offDutyPhysicianIds = Shift::whereNotIn('physician_id', $onCallPhysicianIds)->pluck('physician_id')->unique()->toArray();
 
         // If all regions selected display all the physicians
-        if ($id === 0) {
+        if ($id === '0') {
             $onDutyFilterPhysicianIds = PhysicianRegion::whereIn('provider_id', $onCallPhysicianIds)->pluck('provider_id')->unique()->toArray();
             $onCallPhysicians = Provider::whereIn('id', $onDutyFilterPhysicianIds)->get();
 
@@ -334,7 +333,7 @@ class SchedulingController extends Controller
         $allShifts = ShiftDetailRegion::where('region_id', $request->regionId)->pluck('shift_detail_id')->toArray();
         $shiftDetails = ShiftDetail::whereHas('getShiftData')->whereIn('id', $allShifts)->where('status', 'pending')->paginate(10);
 
-        if ($request->regionId === 0) {
+        if ($request->regionId === '0') {
             $shiftDetails = ShiftDetail::whereHas('getShiftData')->where('status', 'pending')->paginate(10);
         }
 

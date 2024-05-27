@@ -13,15 +13,5 @@ class PhysicianLocation extends Model
 
     protected $table = 'physician_location';
 
-    protected $fillable = [
-        'id',
-        'provider_id',
-        'latitude',
-        'longitude',
-        'physician_name',
-        'address',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $guarded = [];
 }

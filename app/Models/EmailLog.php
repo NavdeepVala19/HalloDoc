@@ -11,22 +11,7 @@ class EmailLog extends Model
 
     protected $table = 'email_log';
 
-    protected $fillable = [
-        'recipient_name',
-        'role_id ',
-        'request_id',
-        'admin_id ',
-        'provider_id',
-        'email_template',
-        'subject_name',
-        'email',
-        'confirmation_number',
-        'create_date',
-        'sent_date',
-        'is_email_sent',
-        'sent_tries',
-        'action',
-    ];
+    protected $guarded = [];
 
     public function roles()
     {

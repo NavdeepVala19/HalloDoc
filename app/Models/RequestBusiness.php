@@ -10,8 +10,5 @@ class RequestBusiness extends Model
     use HasFactory;
     protected $table = 'request_business';
 
-    protected $fillable = [
-        'request_id',
-        'business_id',
-    ];
+    protected $guarded = [];
 }

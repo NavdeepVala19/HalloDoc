@@ -76,7 +76,7 @@ class PatientSubmitRequestTest extends TestCase
             'last_name' => 'user',
             'request_type_id' => '1',
             'date_of_birth' => '2023-12-12',
-            'email' => 'newPatientMail@mail.com',
+            'email' => fake()->unique()->email(),
             'phone_number' => '1234567890',
             'street' => '21, new street',
             'city' => 'new city',

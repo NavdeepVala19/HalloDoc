@@ -307,7 +307,7 @@ Route::middleware('CheckAdminLogin')->group(function () {
     // Update Business Page
     Route::get('/update-business/{id}', [PartnersController::class, 'updateBusinessView'])->name('update.business.view');
     // Update already existing business details
-    Route::post('/update-business', [PartnersController::class, 'updateBusiness'])->name('update.business');
+    Route::post('/update-businesses', [PartnersController::class, 'updateBusiness'])->name('update.business');
     // Delete already existing business
     Route::get('/delete-business/{id}', [PartnersController::class, 'deleteBusiness'])->name('delete.business');
 

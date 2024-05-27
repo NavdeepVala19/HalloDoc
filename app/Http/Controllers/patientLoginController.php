@@ -82,7 +82,7 @@ class PatientLoginController extends Controller
 
         $user = Users::where('email', $request->email)->first();
 
-        // check user and userRoles is exist or not
+        // check user and userRoles exists or not
         if ($user) {
             $patientRole = UserRoles::where('user_id', $user->id)->first();
         }

@@ -65,7 +65,7 @@ class ConceirgeSubmitRequestTest extends TestCase
             'concierge_state' => 'states',
             'concierge_city' => 'city',
             'concierge_zip_code' => '234567',
-            'symptoms' => '',
+            'symptoms' => 'Symptoms test',
             'room' => '',
         ]);
 
@@ -84,7 +84,7 @@ class ConceirgeSubmitRequestTest extends TestCase
             'last_name' => 'McGrath',
             'request_type_id' => '3',
             'date_of_birth' => '1954-04-17',
-            'email' => 'glenn123@mail.com',
+            'email' => fake()->unique()->email(),
             'phone_number' => '5678901234',
             'concierge_first_name' => 'Ricky',
             'concierge_last_name' => 'Ponting',
@@ -95,7 +95,7 @@ class ConceirgeSubmitRequestTest extends TestCase
             'concierge_state' => 'states',
             'concierge_city' => 'city',
             'concierge_zip_code' => '234567',
-            'symptoms' => '',
+            'symptoms' => 'Symptoms test',
             'room' => '',
         ]);
 

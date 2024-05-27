@@ -11,15 +11,7 @@ class RequestStatus extends Model
 
     protected $table = 'request_status';
 
-    protected $fillable = [
-        'request_id',
-        'status',
-        'physician_id',
-        'admin_id',
-        'TransToPhysicianId',
-        'TransToAdmin',
-        'notes',
-    ];
+    protected $guarded = [];
 
     public function request()
     {

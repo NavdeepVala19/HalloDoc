@@ -11,10 +11,5 @@ class RequestClosed extends Model
 
     protected $table = 'request_closed';
 
-    protected $fillable = [
-        'phy_notes',
-        'client_notes ',
-        'request_id',
-        'request_status_id',
-    ];
+    protected $guarded = [];
 }

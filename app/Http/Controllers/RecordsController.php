@@ -97,15 +97,15 @@ class RecordsController extends Controller
      */
     public function deleteSearchRecordData($id)
     {
-        $getRequestId = RequestClient::select('request_id')->where('id', $id)->first()->request_id;
+        $getRequestId = RequestClient::where('id', $id)->value('request_id');
 
         RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
         RequestStatus::where('request_id', $getRequestId)->forceDelete();
         RequestBusiness::where('request_id', $getRequestId)->forceDelete();
         RequestConcierge::where('request_id', $getRequestId)->forceDelete();
         BlockRequest::where('request_id', $getRequestId)->forceDelete();
-        RequestTable::where('id', $getRequestId)->forceDelete();
         RequestClient::where('id', $id)->forceDelete();
+        RequestTable::where('id', $getRequestId)->forceDelete();
 
         return redirect()->back()->with('message', 'record is permanently delete');
     }

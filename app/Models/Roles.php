@@ -11,7 +11,5 @@ class Roles extends Model
 
     protected $table = 'roles';
 
-    protected $guarded = [
-        'name',
-    ];
+    protected $guarded = [];
 }

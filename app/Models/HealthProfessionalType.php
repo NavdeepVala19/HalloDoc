@@ -10,9 +10,7 @@ class HealthProfessionalType extends Model
     use HasFactory;
     protected $table = 'health_professional_type';
 
-    protected $guarded = [
-        'profession_name',
-    ];
+    protected $guarded = [];
 
     public function healthProfessional()
     {

@@ -17,13 +17,13 @@ class PatientDashboardService
      */
     public function patientProfileUpdate($request, $userData)
     {
-        $updateInUserTable = [
+        Users::where('email', $userData['email'])->update([
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),
             'username' => $request->input('first_name') . $request->input('last_name'),
-        ];
+        ]);
 
-        $updateInAllUserTable = [
+        AllUsers::where('email', $userData['email'])->update([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
@@ -33,10 +33,7 @@ class PatientDashboardService
             'state' => $request->input('state'),
             'street' => $request->input('street'),
             'zipcode' => $request->input('zipcode'),
-        ];
-
-        Users::where('email', $userData['email'])->update($updateInUserTable);
-        AllUsers::where('email', $userData['email'])->update($updateInAllUserTable);
+        ]);
 
         return true;
     }

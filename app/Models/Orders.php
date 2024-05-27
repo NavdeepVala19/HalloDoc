@@ -11,11 +11,5 @@ class Orders extends Model
 
     protected $table = 'orders';
 
-    protected $fillable = [
-        'fax_number',
-        'email',
-        'business_contact',
-        'prescription',
-        'no_of_refill',
-    ];
+    protected $guarded = [];
 }

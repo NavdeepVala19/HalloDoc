@@ -11,8 +11,5 @@ class RequestConcierge extends Model
 
     protected $table = 'request_concierge';
 
-    protected $fillable = [
-        'request_id',
-        'concierge_id',
-    ];
+    protected $guarded = [];
 }

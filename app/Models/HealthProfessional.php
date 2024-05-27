@@ -15,6 +15,7 @@ class HealthProfessional extends Model
 
     protected $fillable = [
         'vendor_name',
+        'profession',
         'fax_number',
         'address',
         'city',

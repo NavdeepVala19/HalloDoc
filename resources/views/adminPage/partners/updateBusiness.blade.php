@@ -68,7 +68,7 @@
         <div class="section">
             <h4>Submit Information</h4>
 
-            <form action="{{ route('update.business') }}" method="POST" id="updateBusinessForm">
+            <form action="{{ route('update.business') }}" method="post" id="updateBusinessForm">
                 @csrf
                 <input type="text" value="{{ $vendor->id }}" name="vendor_id" hidden>
                 <div class="grid-2">

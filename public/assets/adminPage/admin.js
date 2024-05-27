@@ -410,6 +410,24 @@ $(document).ready(function () {
             console.error(error);
         },
     });
+
+    // ----------------- AJAX Form Submission ------------------
+    $("#adminAssignCase").submit(function (event) {
+        event.preventDefault();
+        console.log("Assigned case through ajax");
+
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"),
+            data: $(this).serialize(),
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        });
+    });
 });
 
 // Display different roles checkboxes as per the roles selected

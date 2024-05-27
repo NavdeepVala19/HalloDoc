@@ -6,12 +6,12 @@ use App\Helpers\ConfirmationNumber;
 use App\Http\Requests\CreateConciergeRequest;
 use App\Mail\SendEmailAddress;
 use App\Models\Concierge;
+use App\Models\RequestClient;
 use App\Models\RequestConcierge;
 use App\Models\RequestTable;
 use App\Models\Users;
 use App\Services\CreateNewUserService;
 use App\Services\EmailLogService;
-use App\Services\RequestClientService;
 use Illuminate\Support\Facades\Mail;
 
 // this controller is responsible for creating/storing the concierge request
@@ -35,7 +35,7 @@ class ConciergeRequestController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create(CreateConciergeRequest $request, CreateNewUserService $createNewUserService, RequestClientService $requestClientService, EmailLogService $emailLogService)
+    public function create(CreateConciergeRequest $request, CreateNewUserService $createNewUserService, EmailLogService $emailLogService)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
 
@@ -55,7 +55,21 @@ class ConciergeRequestController extends Controller
         ]);
 
         // Store client details in RequestClient table
-        $requestClientService->createEntry($request, $requestTable->id);
+        RequestClient::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'date_of_birth' => $request->date_of_birth,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'room' => $request->room,
+            'request_id' => $requestTable->id,
+            'notes' => $request->symptoms,
+            'street' => $request->concierge_street,
+            'city' => $request->concierge_city,
+            'state' => $request->concierge_state,
+            'zipcode' => $request->concierge_zip_code,
+            'location' => $request->concierge_hotel_name,
+        ]);
 
         $concierge = Concierge::create([
             'name' => $request->concierge_first_name,

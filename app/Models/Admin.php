@@ -11,18 +11,7 @@ class Admin extends Model
 
     protected $table = 'admin';
 
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'mobile',
-        'address1',
-        'address2',
-        'zip',
-        'alt_phone',
-        'status',
-        'alt_phone',
-    ];
+    protected $guarded = [];
 
     public function users()
     {

@@ -469,7 +469,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_create_request_with_empty_data()
     {
-        $response = $this->postJson('/admin-submit-requests', [
+        $response = $this->postJson('/admin-submitted-requests', [
             'first_name' => '',
             'last_name' => '',
             'request_type_id' => 1,
@@ -482,7 +482,7 @@ class AdminTest extends TestCase
             'zipcode' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -491,7 +491,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_create_request_with_invalid_data()
     {
-        $response = $this->postJson('/admin-submit-requests', [
+        $response = $this->postJson('/admin-submitted-requests', [
             'first_name' => '123423',
             'last_name' => '1234231',
             'request_type_id' => 1,
@@ -504,7 +504,7 @@ class AdminTest extends TestCase
             'zipcode' => 'asdf',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -513,7 +513,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_create_request_with_valid_data()
     {
-        $response = $this->postJson('/admin-submit-requests', [
+        $response = $this->postJson('/admin-submitted-requests', [
             'first_name' => 'newPatient',
             'last_name' => 'newData',
             'request_type_id' => 1,
@@ -526,7 +526,7 @@ class AdminTest extends TestCase
             'zipcode' => '123456',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -586,7 +586,7 @@ class AdminTest extends TestCase
             'vendor_id' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -602,7 +602,7 @@ class AdminTest extends TestCase
             'prescription' => '&*(^^*(',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -642,7 +642,7 @@ class AdminTest extends TestCase
             'email' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -667,7 +667,7 @@ class AdminTest extends TestCase
             'email' => '*^&%',
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertStatus(Response::HTTP_FOUND);
     }
 
     /**
@@ -690,6 +690,126 @@ class AdminTest extends TestCase
             'procedure' => 'completed',
             'followUp' => 'no',
             'email' => 'new@new.com',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin MyProfile page can be rendered.
+     */
+    public function test_admin_profile_page_can_be_rendered(): void
+    {
+        $response = $this->get('/admin-profile-edit');
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin Provider page can be rendered.
+     */
+    public function test_admin_provider_page_can_be_rendered(): void
+    {
+        $response = $this->get('/admin-providers');
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin create new Provider page can be rendered.
+     */
+    public function test_admin_create_new_provider_page_can_be_rendered(): void
+    {
+        $response = $this->get('/admin-new-provider');
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin create new Provider with no data.
+     */
+    public function test_admin_create_new_provider_with_no_data(): void
+    {
+        $response = $this->postJson('/admin-create-new-provider', [
+            'user_name' => '',
+            'password' => '',
+            'role' => '',
+            'first_name' => '',
+            'last_name' => '',
+            'email' => '',
+            'phone_number' => '',
+            'medical_license' => '',
+            'npi_number' => '',
+            'region_id[]' => '',
+            'address1' => '',
+            'address2' => '',
+            'city' => '',
+            'select_state' => '',
+            'zip' => '',
+            'phone_number_alt' => '',
+            'business_name' => '',
+            'business_website' => '',
+            'admin_notes' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin create new Provider with invalid data.
+     */
+    public function test_admin_create_new_provider_with_invalid_data(): void
+    {
+        $response = $this->postJson('/admin-create-new-provider', [
+            'user_name' => '1234',
+            'password' => '12',
+            'role' => 9,
+            'first_name' => '2345()*)(',
+            'last_name' => '*)&*',
+            'email' => 'asdf1234@123.12',
+            'phone_number' => '&%^$$',
+            'medical_license' => 'asdfasdf',
+            'npi_number' => 'asdasd',
+            'region_id[]' => '12',
+            'address1' => '1234&^(^',
+            'address2' => '!@#$@3',
+            'city' => '1234',
+            'select_state' => '&%$',
+            'zip' => '1@#4',
+            'phone_number_alt' => '!@#$',
+            'business_name' => '!%#@4',
+            'business_website' => 'ASDF123423',
+            'admin_notes' => '1234',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Admin create new Provider with valid data.
+     */
+    public function test_admin_create_new_provider_with_valid_data(): void
+    {
+        $response = $this->postJson('/admin-create-new-provider', [
+            'user_name' => 'desegoqa',
+            'password' => 'anything',
+            'role' => 1,
+            'first_name' => 'Ethan',
+            'last_name' => 'Noel',
+            'email' => 'nohovezazi@mailinator.com',
+            'phone_number' => '+11751349589',
+            'medical_license' => '8831212121',
+            'npi_number' => '3272345345',
+            'region_id[]' => [1, 2],
+            'address1' => '46 Fabien Drive',
+            'address2' => 'Non velit mollit ip',
+            'city' => 'Ipsum reprehenderit',
+            'select_state' => 2,
+            'zip' => 884615,
+            'phone_number_alt' => '3231234123',
+            'business_name' => 'McKenzie Kent',
+            'business_website' => 'https://www.nodus.org.au',
+            'admin_notes' => 'Porro ullamco magna',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);

@@ -11,7 +11,5 @@ class Status extends Model
 
     protected $table = 'status';
 
-    protected $fillable = [
-        'status_type',
-    ];
+    protected $guarded = [];
 }

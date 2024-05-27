@@ -11,18 +11,7 @@ class SMSLogs extends Model
 
     protected $table = 'sms_log';
 
-    protected $fillable = [
-        'recipient_name',
-        'sms_template',
-        'mobile_number',
-        'confirmation_number',
-        'created_date',
-        'sent_date',
-        'is_sms_sent',
-        'sent_tries',
-        'action',
-        'role_id',
-    ];
+    protected $guarded = [];
 
     public function provider()
     {

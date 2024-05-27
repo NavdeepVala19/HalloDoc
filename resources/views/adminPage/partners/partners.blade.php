@@ -87,7 +87,7 @@
                 </div>
             </div>
             <div class="table-responsive table-view">
-                <table class="table ">
+                <table class="table">
                     <thead class="table-secondary">
                         <td>Profession</td>
                         <td>Business Name</td>

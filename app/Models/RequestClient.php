@@ -14,21 +14,7 @@ class RequestClient extends Model
     // request_client table is use to create only the patient records
     protected $table = 'request_client';
 
-    protected $fillable = [
-        'request_id',
-        'notes',
-        'first_name',
-        'last_name',
-        'phone_number',
-        'address',
-        'email',
-        'street',
-        'city',
-        'state',
-        'zipcode',
-        'date_of_birth',
-        'room',
-    ];
+    protected $guarded = [];
 
     public function request()
     {
