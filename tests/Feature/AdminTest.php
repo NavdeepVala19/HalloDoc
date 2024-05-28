@@ -3,6 +3,9 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\UserRoles;
+use App\Models\RequestTable;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminTest extends TestCase
@@ -13,9 +16,18 @@ class AdminTest extends TestCase
      */
     public function test_assign_case_with_valid_data()
     {
-        $response = $this->postJson('/assign-case', [
-            'assign_note' => 'Physician Notes',
-        ]);
+        $adminId = UserRoles::where('role_id', 1)->first()->user_id;
+        $admin = User::where('id', $adminId)->first();
+
+        $requestId =  RequestTable::where('status', 1)->first()->id;
+
+        $response = $this->actingAs($admin)
+            ->postJson('/assign-case', [
+                'requestId' => $requestId,
+                'region' => 1,
+                'physician' => 1,
+                'assign_note' => 'Physician Notes',
+            ]);
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
