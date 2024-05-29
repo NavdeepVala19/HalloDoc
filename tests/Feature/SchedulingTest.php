@@ -40,9 +40,9 @@ class SchedulingTest extends TestCase
     }
 
     /**
-     * Admin create single shift.
+     * Admin create single shift with valid data.
      */
-    public function test_admin_create_single_shift(): void
+    public function test_admin_create_single_shift_with_valid_data(): void
     {
         $startTime = date('H:i:00');
         $dateTime = Carbon::parse($startTime);
@@ -59,6 +59,13 @@ class SchedulingTest extends TestCase
 
         $response->assertStatus(Response::HTTP_FOUND);
     }
+    /**
+     * Admin create single shift with invalid data.
+     */
+
+    /**
+     * Admin create single shift with empty data.
+     */
 
     /**
      * Admin create repeating shifts.

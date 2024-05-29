@@ -221,25 +221,27 @@ class AdminActionController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'dob' => 'required',
+            'dob' => 'required|date|before:tomorrow|after:Jan 01 1900',
+            'patient_notes' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
         ]);
 
         $firstName = $request->first_name;
         $lastName = $request->last_name;
-        $dateOfBirth = $request->dob;
-        $patientNotes = $request->patient_notes;
 
-        RequestTable::where('id', $request->requestId)->where('request_type_id', 1)->update([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-        ]);
+        RequestTable::where('id', $request->requestId)
+            ->where('request_type_id', 1)
+            ->update([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+            ]);
 
-        RequestClient::where('request_id', $request->requestId)->update([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'date_of_birth' => $dateOfBirth,
-            'notes' => $patientNotes,
-        ]);
+        RequestClient::where('request_id', $request->requestId)
+            ->update([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'date_of_birth' => $request->dob,
+                'notes' => $request->patient_notes,
+            ]);
 
         return redirect()->back()->with('caseEdited', 'Information updated successfully!');
     }
@@ -439,6 +441,7 @@ class AdminActionController extends Controller
     {
         if ($request->input('closeCaseBtn') === 'Save') {
             $this->closeCaseUpdateData($request);
+            return redirect()->back()->with('successMessage', 'Information updated Successfully!');
         } elseif ($request->input('closeCaseBtn') === 'Close Case') {
             $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
             RequestTable::where('id', $request->requestId)->update(['status' => 9]);

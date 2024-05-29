@@ -24,7 +24,8 @@ class AdminCreateRequest extends FormRequest
         return [
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'before:today',
+            'request_type_id' => 'required',
+            'date_of_birth' => 'nullable|before:tomorrow|after:Jan 01 1900',
             'phone_number' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'street' => 'required|min:2|max:50',
@@ -54,7 +55,10 @@ class AdminCreateRequest extends FormRequest
             'last_name.max' => $max_message . ' 15 Alphabets',
             'last_name.alpha' => $only_alphabets . ' in Last name',
 
-            'date_of_birth.before' => $enter . ' Date of Birth Before Today',
+            'request_type_id.required' => 'Request Type Id is required',
+
+            'date_of_birth.before' => $enter . ' Date of Birth not greater than today',
+            'date_of_birth.after' => $enter . ' Date of Birth not less than Jan 01 1900',
 
             'email.required' => $enter . ' Email',
             'email.max' => $max_message . ' 40 characters in Email',

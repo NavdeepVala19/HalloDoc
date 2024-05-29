@@ -22,15 +22,16 @@ class BusinessRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'business_name' => 'required',
+            'business_name' => 'required|alpha|min:5|max:20',
             'profession' => 'required|numeric',
-            'fax_number' => 'required|numeric',
+            'fax_number' => 'required|numeric|min_digits:4|max_digits:8',
             'mobile' => 'required',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'business_contact' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'zip' => 'required',
+            'business_contact' => 'required|min_digits:10|max_digits:10',
+            'street' => 'required|min:3|max:25',
+            'city' => 'required|min:3|max:25|alpha',
+            'state' => 'required|min:3|max:25|alpha',
+            'zip' => 'required|min_digits:6|max_digits:6',
         ];
     }
 }

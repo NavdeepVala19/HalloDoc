@@ -49,6 +49,7 @@ $(document).ready(function () {
         },
         "Please enter a date between {0} and {1}."
     );
+
     // Notes (Text-area) validations
     $.validator.addMethod(
         "notes",
@@ -933,7 +934,8 @@ $(document).ready(function () {
                 required: "Select Profession to get Business/Vendors option",
             },
             vendor_id: {
-                required: "Select Particular Business/Vendor to have it's details",
+                required:
+                    "Select Particular Business/Vendor to have it's details",
             },
             business_contact: {
                 required: "Enter Business Contact to send Order",

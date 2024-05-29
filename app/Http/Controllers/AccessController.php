@@ -173,10 +173,11 @@ class AccessController extends Controller
     public function createAccess(Request $request)
     {
         $request->validate([
-            'role_name' => 'required',
-            'role' => 'required',
+            'role' => 'required|min:3|max:20',
+            'role_name' => 'required|in:1,2',
             'menu_checkbox' => 'required',
         ]);
+
         if ($request->role_name === '1') {
             $roleId = Role::insertGetId(['name' => $request->role, 'account_type' => 'admin']);
         } elseif ($request->role_name === '2') {

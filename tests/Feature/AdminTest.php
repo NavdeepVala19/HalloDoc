@@ -4,683 +4,1023 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Provider;
 use App\Models\UserRoles;
 use App\Models\RequestTable;
+use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminTest extends TestCase
 {
+    public function admin()
+    {
+        $adminId = UserRoles::where('role_id', 1)->first()->user_id;
+        return User::where('id', $adminId)->first();
+    }
     /**
      * Test successful assign case form with valid data
      * @return void
      */
-    public function test_assign_case_with_valid_data()
-    {
-        $adminId = UserRoles::where('role_id', 1)->first()->user_id;
-        $admin = User::where('id', $adminId)->first();
+    // public function test_assign_case_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $requestId =  RequestTable::where('status', 1)->first()->id;
+    //     $requestId =  RequestTable::where('status', 1)->first()->id;
 
-        $response = $this->actingAs($admin)
-            ->postJson('/assign-case', [
-                'requestId' => $requestId,
-                'region' => 1,
-                'physician' => 1,
-                'assign_note' => 'Physician Notes',
-            ]);
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/assign-case', [
+    //             'requestId' => $requestId,
+    //             'region' => 1,
+    //             'physician' => 1,
+    //             'assign_note' => 'Physician Notes',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $physician = Provider::where('id', 1)->first();
+    //     $physicianName = $physician->first_name . ' ' . $physician->last_name;
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', "Case Assigned Successfully to physician - {$physicianName}");
+    // }
 
     /**
      * Test successful assign case form with invalid data
      * @return void
      */
-    public function test_assign_case_with_invalid_data()
-    {
-        $response = $this->postJson('/assign-case', [
-            'assign_note' => '$#%$^',
-        ]);
+    // public function test_assign_case_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/assign-case', [
+    //             'assign_note' => '$#%$^',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'assign_note' => 'The assign note field format is invalid.'
+    //         ]);
+    // }
 
     /**
      * Test successful assign case form with empty data
      * @return void
      */
-    public function test_assign_case_with_empty_data()
-    {
-        $response = $this->postJson('/assign-case', [
-            'assign_note' => '',
-        ]);
+    // public function test_assign_case_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/assign-case', [
+    //             'physician' => '',
+    //             'assign_note' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'physician' => 'The physician field is required.',
+    //             'assign_note' => 'The assign note field is required.'
+    //         ]);
+    // }
+
+    /**
+     * View case form page can be rendered
+     * @return void
+     */
+    // public function test_view_case_page_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
+
+    //     $requestId = RequestTable::first()->id;
+    //     $id = Crypt::encrypt($requestId);
+
+    //     $response = $this->actingAs($admin)
+    //         ->get('admin/view/case/{' . $id . '}');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Test successful view case form with valid data
      * @return void
      */
-    public function test_view_case_with_valid_data()
-    {
-        $response = $this->postJson('/admin/view/case/edit', [
-            'patient_notes' => 'Physician Notes',
-            'first_name' => 'Denton',
-            'last_name' => 'Wise',
-            'dob' => '03-09-2022',
-        ]);
+    // public function test_view_case_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::first()->id;
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin/view/case/edit', [
+    //             'requestId' => $requestId,
+    //             'patient_notes' => 'Physician Notes',
+    //             'first_name' => 'Denton',
+    //             'last_name' => 'Wise',
+    //             'dob' => '2022-03-09',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('caseEdited', 'Information updated successfully!');
+    // }
 
     /**
      * Test successful view case form with invalid data
      * @return void
      */
-    public function test_view_case_with_invalid_data()
-    {
-        $response = $this->postJson('/admin/view/case/edit', [
-            'patient_notes' => 'Physician Notes',
-            'first_name' => 'ne',
-            'last_name' => 'Wise1231',
-            'dob' => '03-09-20221',
-        ]);
+    // public function test_view_case_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin/view/case/edit', [
+    //             'first_name' => 'ne',
+    //             'last_name' => 'Wise1231',
+    //             'dob' => '1885-05-23',
+    //             'patient_notes' => 'Physician Notes *^&)&^$',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'first_name' => "The first name field must be at least 3 characters.",
+    //             'last_name' => "The last name field must only contain letters.",
+    //             'dob' => "The dob field must be a date after Jan 01 1900.",
+    //             'patient_notes' => "The patient notes field format is invalid.",
+    //         ]);
+    // }
 
     /**
      * Test successful view case form with empty data
      * @return void
      */
-    public function test_view_case_with_empty_data()
-    {
-        $response = $this->postJson('/admin/view/case/edit', [
-            'patient_notes' => '',
-            'first_name' => '',
-            'last_name' => '',
-            'dob' => '',
-        ]);
+    // public function test_view_case_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin/view/case/edit', [
+    //             'first_name' => '',
+    //             'last_name' => '',
+    //             'dob' => '',
+    //             'patient_notes' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //     ->assertJsonValidationErrors([
+    //         'first_name' => "The first name field is required." ,
+    //         'last_name' => "The last name field is required.",
+    //         'dob' => "The dob field is required.",
+    //     ]);
+    // }
+
+    /**
+     * View Notes page can be rendered
+     * @return void
+     */
+    // public function test_view_note_page_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
+
+    //     $requestId = RequestTable::first()->id;
+    //     $id = Crypt::encrypt($requestId);
+
+    //     $response = $this->actingAs($admin)->get('admin/view/notes/{' . $id . '}');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * View Notes -> add note with no text entered
      * @return void
      */
-    public function test_view_note_add_note_with_empty_data()
-    {
-        $response = $this->postJson('/admin/view/notes/store', [
-            'admin_note' => '',
-        ]);
+    // public function test_view_note_add_note_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin/view/notes/store', [
+    //             'admin_note' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'admin_note' => "The admin note field is required."
+    //     ]);
+    // }
 
     /**
      * View Notes -> add note with invalid data format
      * @return void
      */
-    public function test_view_note_add_note_with_invalid_data()
-    {
-        $response = $this->postJson('/admin/view/notes/store', [
-            'admin_note' => '+_)*&(',
-        ]);
+    // public function test_view_note_add_note_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin/view/notes/store', [
+    //             'admin_note' => '+_)*&(',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'admin_note' => "The admin note field format is invalid.",
+    //     ]);
+    // }
 
     /**
      * View Notes -> add note with valid data format
      * @return void
      */
-    public function test_view_note_add_note_with_valid_data()
-    {
-        $response = $this->postJson('/admin/view/notes/store', [
-            'admin_note' => 'New note added',
-        ]);
+    // public function test_view_note_add_note_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::first()->id;
 
-    /**
-     * Test successful block case form with valid data
-     * @return void
-     */
-    public function test_block_case_with_valid_data()
-    {
-        $response = $this->postJson('/block-case', [
-            'block_reason' => 'confirm block',
-        ]);
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin/view/notes/store', [
+    //             'requestId' => $requestId,
+    //             'admin_note' => 'New note added',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('adminNoteAdded', 'Your Note Successfully Added');
+    // }
 
     /**
      * Test successful block case form with valid data
      * @return void
      */
-    public function test_block_case_with_invalid_data()
-    {
-        $response = $this->postJson('/block-case', [
-            'block_reason' => '%$^%$#@',
-        ]);
+    // public function test_block_case_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::where('status', 1)->first()->id;
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/block-case', [
+    //             'requestId' => $requestId,
+    //             'block_reason' => 'confirm block',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', 'Case Blocked Successfully!');
+    // }
+
+    /**
+     * Test successful block case form with valid data
+     * @return void
+     */
+    // public function test_block_case_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/block-case', [
+    //             'block_reason' => '%$^%$#@',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'block_reason' => 'The block reason field format is invalid.',
+    //     ]);
+    // }
 
     /**
      * Test successful block case form with empty data
      * @return void
      */
-    public function test_block_case_with_empty_data()
-    {
-        $response = $this->postJson('/block-case', [
-            'block_reason' => '',
-        ]);
+    // public function test_block_case_with_empty_data()
+    // {
+    //     $admin = $this->admin();
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/block-case', [
+    //             'block_reason' => '',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'block_reason' => 'The block reason field is required.',
+    //     ]);
+    // }
 
 
     /**
      * Test successful close case form with valid data
      * @return void
      */
-    public function test_close_case_with_valid_data()
-    {
-        $response = $this->postJson('/close-case', [
-            'phone_number' => '1478523690',
-            'email' => 'fehaw@mailinator.com',
-        ]);
+    // public function test_close_case_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::whereIn('status', [2, 7, 11])->first()->id;
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/close-case', [
+    //             'closeCaseBtn' => 'Close Case',
+    //             'requestId' => $requestId,
+    //             'phone_number' => '1478523690',
+    //             'email' => 'fehaw@mailinator.com',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', 'Case Closed Successfully!');
+    // }
+
+    // Close case (update data without closing case)
+    // public function test_close_case_update_information_with_valid_data()
+    // {
+    //     $admin = $this->admin();
+
+    //     $requestId = RequestTable::whereIn('status', [2, 7, 11])->first()->id;
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/close-case', [
+    //             'closeCaseBtn' => 'Save',
+    //             'requestId' => $requestId,
+    //             'phone_number' => '1478523690',
+    //             'email' => 'new123@mailinator.com',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', 'Information updated Successfully!');
+    // }
 
     /**
      * Test successful close case form with invalid data
      * @return void
      */
-    public function test_close_case_with_invalid_data()
-    {
-        $response = $this->postJson('/close-case', [
-            'phone_number' => '1478323523690',
-            'email' => 'fehaw@2432mailinator.com',
-        ]);
+    // public function test_close_case_update_information_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/close-case', [
+    //             'closeCaseBtn' => 'Save',
+    //             'phone_number' => '1478323523',
+    //             'email' => 'fehaw@2432mailinator.com',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'email' => 'The email field format is invalid.',
+    //         ]);
+    // }
 
     /**
      * Test successful close case form with empty data
      * @return void
      */
-    public function test_close_case_with_empty_data()
-    {
-        $response = $this->postJson('/close-case', [
-            'phone_number' => '',
-            'email' => '',
-        ]);
+    // public function test_close_case_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)->postJson('/close-case', [
+    //         'closeCaseBtn' => 'Save',
+    //         'phone_number' => '',
+    //         'email' => '',
+    //     ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'email' => 'The email field is required.',
+    //             'phone_number' => 'The phone number field is required.',
+    //         ]);
+    // }
+
+    // Partners page can be rendered
+    // public function test_partners_page_can_be_rendered(){
+    //     $admin = $this->admin();
+
+    //     $response = $this->actingAs($admin)->get('add-business');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Test successful add business form with valid data
      * @return void
      */
-    public function test_add_business_with_valid_data()
-    {
-        $response = $this->postJson('/add-business', [
-            'business_name' => 'Garrison',
-            'fax_number' => '4610',
-            'mobile' => '+1 776-977-4023',
-            'email' => 'refe@mailinator.com',
-            'business_contact' => '3315698752',
-            'street' => 'Culpa ullam error qu',
-            'city' => 'Et autem et aperiam ',
-            'state' => 'Dolor architecto off',
-            'zip' => '529430',
-        ]);
+    // public function test_add_business_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/add-business', [
+    //             'business_name' => 'Garrison',
+    //             'profession' => 1,
+    //             'fax_number' => '4610',
+    //             'mobile' => '+1 776-977-4023',
+    //             'email' => 'refe@mailinator.com',
+    //             'business_contact' => '3315698752',
+    //             'street' => 'Culpa ullam error qu',
+    //             'city' => 'Et autem et aperiam ',
+    //             'state' => 'Dolor architecto off',
+    //             'zip' => '529430',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('businessAdded', 'Business Added Successfully!');
+    // }
 
     /**
      * Test successful add business form with invalid data
      * @return void
      */
-    public function test_add_business_with_invalid_data()
-    {
-        $response = $this->postJson('/add-business', [
-            'business_name' => 'Garrison 44',
-            'fax_number' => '4610454455454',
-            'mobile' => '+1 776-977-402345',
-            'email' => 'refe@mailinato45r.com',
-            'business_contact' => '3314545698752',
-            'street' => 'Culp#$%#$%345a ullam error qu',
-            'city' => 'Et aut#%$%#$em et aperiam ',
-            'state' => 'Dolor #$%$%#545architecto off',
-            'zip' => '529434540',
-        ]);
+    // public function test_add_business_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/add-business', [
+    //             'business_name' => 'Garrison 44',
+    //             'profession' => 50,
+    //             'fax_number' => '4610454455454',
+    //             'mobile' => '+1 776-977-402345',
+    //             'email' => 'refe@mailinato45r.com',
+    //             'business_contact' => '3314545698752',
+    //             'street' => 'Culp#$%#$%345a ullam error qu',
+    //             'city' => 'Et aut#%$%#$em et aperiam ',
+    //             'state' => 'Dolor #$%$%#545architecto off',
+    //             'zip' => '529434540',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'business_name' => 'The business name field must only contain letters.',
+    //         'fax_number' => 'The fax number field must not have more than 8 digits.',
+    //         'email' => 'The email field format is invalid.',
+    //         'business_contact' => 'The business contact field must not have more than 10 digits.',
+    //         'street' => 'The street field must not be greater than 25 characters.',
+    //         'city' => 'The city field must only contain letters.',
+    //         'state' => 'The state field must only contain letters.',
+    //         'zip' => 'The zip field must not have more than 6 digits.',
+    //     ]);
+    // }
 
     /**
      * Test successful add business form with empty data
      * @return void
      */
-    public function test_add_business_with_empty_data()
-    {
-        $response = $this->postJson('/add-business', [
-            'business_name' => '',
-            'fax_number' => '',
-            'mobile' => '',
-            'email' => '',
-            'business_contact' => '',
-            'street' => '',
-            'city' => '',
-            'state' => '',
-            'zip' => '',
-        ]);
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
-
+    // public function test_add_business_with_empty_data()
+    // {
+    //     $admin = $this->admin();
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/add-business', [
+    //             'business_name' => '',
+    //             'fax_number' => '',
+    //             'mobile' => '',
+    //             'email' => '',
+    //             'business_contact' => '',
+    //             'street' => '',
+    //             'city' => '',
+    //             'state' => '',
+    //             'zip' => '',
+    //         ]);
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'business_name' => 'The business name field is required.',
+    //             'fax_number' => 'The fax number field is required.',
+    //             'mobile' => 'The mobile field is required.',
+    //             'email' => 'The email field is required.',
+    //             'business_contact' => 'The business contact field is required.',
+    //             'street' => 'The street field is required.',
+    //             'city' => 'The city field is required.',
+    //             'state' => 'The state field is required.',
+    //             'zip' => 'The zip field is required.',
+    //         ]);
+    // }
 
     /**
-     * Test successful send mail form with valid data
+     * Test successful send mail to patient form with valid data
      * @return void
      */
-    public function test_send_mail_with_valid_data()
-    {
-        $response = $this->postJson('/send-mail', [
-            'message' => 'Garrison',
-        ]);
+    // public function test_send_mail_to_patient_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::first()->id;
+
+    //     $response = $this->actingAs($admin)->postJson('/send-mail', [
+    //         'requestId' => $requestId,
+    //         'message' => 'Test mail sent through unit test case',
+    //     ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', 'Mail sent to patient successfully!');
+    // }
 
     /**
      * Test successful send mail form with invalid data
      * @return void
      */
-    public function test_send_mail_with_invalid_data()
-    {
-        $response = $this->postJson('/send-mail', [
-            'message' => '$#%$%#%$#^%^',
-        ]);
+    // public function test_send_mail_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/send-mail', [
+    //             'message' => '$#%$%#%$#^%^',
+    //         ]);
 
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'message' => 'The message field format is invalid.'
+    //         ]);
+    // }
 
     /**
      * Test successful send mail form with empty data
      * @return void
      */
-    public function test_send_mail_with_empty_data()
-    {
-        $response = $this->postJson('/send-mail', [
-            'message' => '',
-        ]);
+    // public function test_send_mail_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/send-mail', [
+    //             'message' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'message' => 'The message field is required.',
+    //     ]);
+    // }
 
     /**
      * Test successful cancel case form with valid data
      * @return void
      */
-    public function test_cancel_case_with_valid_data()
-    {
-        $response = $this->postJson('/cancel-case-data', [
-            'case_tag' => 'cost_issue',
-            'reason' => 'cancel this case',
-        ]);
+    // public function test_cancel_case_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::where('status', 1)->first()->id;
+
+    //     $response = $this->actingAs($admin)->postJson('/cancel-case-data', [
+    //         'requestId' => $requestId,
+    //         'case_tag' => 1,
+    //         'reason' => 'canceled this case through test case',
+    //     ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', 'Case Cancelled (Moved to ToClose State)');
+    // }
 
     /**
      * Test successful cancel case form with invalid data
      * @return void
      */
-    public function test_cancel_case_with_invalid_data()
-    {
-        $response = $this->postJson('/cancel-case-data', [
-            'case_tag' => '',
-            'reason' => '$#^%^$#%$^&',
-        ]);
+    // public function test_cancel_case_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/cancel-case-data', [
+    //             'case_tag' => '12',
+    //             'reason' => '$#^%^$#%$^&',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'case_tag' => 'The selected case tag is invalid.',
+    //         'reason' => 'The reason field format is invalid.',
+    //     ]);
+    // }
 
     /**
      * Test successful cancel case form with empty data
      * @return void
      */
-    public function test_cancel_case_with_empty_data()
-    {
-        $response = $this->postJson('/cancel-case-data', [
-            'case_tag' => '',
-            'reason' => '',
-        ]);
+    // public function test_cancel_case_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/cancel-case-data', [
+    //             'case_tag' => '',
+    //         ]);
 
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'case_tag' => 'The case tag field is required.',
+    //     ]);
+    // }
 
-    /**
-     * Test successful schedule shift with valid data
-     * @return void
-     */
-    public function test_scheduled_shift_with_valid_data()
-    {
-        $response = $this->postJson('/create-shift', [
-            'region' => 'somnath',
-            'physician' => 'doctor_don',
-            'shiftDate' => '20-05-2024',
-            'shiftStartTime' => '10:00',
-            'shiftEndTime' => '11:00',
-            'checkbox' => '1',
-            'repeatEnd' => '2',
-        ]);
+    // Account access page can be rendered
+    // public function test_account_access_page_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)->get('/access');
 
-    /**
-     * Test successful schedule shift with invalid data
-     * @return void
-     */
-    public function test_scheduled_shift_with_invalid_data()
-    {
-        $response = $this->postJson('/create-shift', [
-            'region' => 'somnath',
-            'physician' => 'doctor_don',
-            'shiftDate' => '1-05-2024',
-            'shiftStartTime' => '10:00',
-            'shiftEndTime' => '9:00',
-            'checkbox' => '1',
-            'repeatEnd' => '2',
-        ]);
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    // Create role page can be rendered
+    // public function test_create_role_page_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
 
-    /**
-     * Test successful schedule shift with valid data
-     * @return void
-     */
-    public function test_scheduled_shift_with_empty_data()
-    {
-        $response = $this->postJson('/create-shift', [
-            'region' => '',
-            'physician' => '',
-            'shiftDate' => '',
-            'shiftStartTime' => '',
-            'shiftEndTime' => '',
-            'checkbox' => '',
-            'repeatEnd' => '',
-        ]);
+    //     $response = $this->actingAs($admin)->get('/create-role');
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Test successful create role with valid data
      * @return void
      */
-    public function test_create_role_with_valid_data()
-    {
-        $response = $this->postJson('/create-shift', [
-            'role_name' => '1',
-            'menu_checkbox' => '1'
-        ]);
+    // public function test_create_role_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)->postJson('/create-access', [
+    //         'role_name' => '1',
+    //         'role' => 'newAccount',
+    //         'menu_checkbox' => [1, 2, 3, 4],
+    //     ]);
 
-
-    /**
-     * Test successful create role with valid data
-     * @return void
-     */
-    public function test_create_role_with_invalid_data()
-    {
-        $response = $this->postJson('/create-shift', [
-            'role_name' => '3',
-            'menu_checkbox' => '40'
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertRedirectToRoute('admin.access.view')
+    //         ->assertSessionHas('accessOperation', 'New access created successfully!');
+    // }
 
     /**
      * Test successful create role with valid data
      * @return void
      */
-    public function test_create_role_with_empty_data()
-    {
-        $response = $this->postJson('/create-shift', [
-            'role_name' => '',
-            'menu_checkbox' => ''
-        ]);
+    // public function test_create_role_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/create-access', [
+    //             'role' => 'test account name new created',
+    //             'role_name' => '3',
+    //             'menu_checkbox' => [40, 41]
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertJsonValidationErrors([
+    //         'role' => 'The role field must not be greater than 20 characters.',
+    //         'role_name' => 'The selected role name is invalid.',
+    //     ]);
+    // }
+
+    /**
+     * Test successful create role with valid data
+     * @return void
+     */
+    // public function test_create_role_with_empty_data()
+    // {
+    //     $admin = $this->admin();
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/create-access', [
+    //             'role' => '',
+    //             'role_name' => '',
+    //             'menu_checkbox' => ''
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'role' => 'The role field is required.',
+    //         'role_name' => 'The role name field is required.',
+    //         'menu_checkbox' => 'The menu checkbox field is required.',
+    //     ]);
+    // }
+
+    // Admin Create request page can be rendered
+    // public function test_admin_create_request_page_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
+
+    //     $response = $this->actingAs($admin)->get('/admin-submit-requests');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Admin submit request with empty data
      * @return void
      */
-    public function test_admin_create_request_with_empty_data()
-    {
-        $response = $this->postJson('/admin-submitted-requests', [
-            'first_name' => '',
-            'last_name' => '',
-            'request_type_id' => 1,
-            'phone_number' => '',
-            'email' => '',
-            'date_of_birth' => '',
-            'street' => '',
-            'city' => '',
-            'state' => '',
-            'zipcode' => '',
-        ]);
+    // public function test_admin_create_request_with_empty_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-submitted-requests', [
+    //             'first_name' => '',
+    //             'last_name' => '',
+    //             'request_type_id' => '',
+    //             'phone_number' => '',
+    //             'email' => '',
+    //             'date_of_birth' => '',
+    //             'street' => '',
+    //             'city' => '',
+    //             'state' => '',
+    //             'zipcode' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'first_name' => 'Please enter First Name',
+    //         'last_name' => 'Please enter Last Name',
+    //         'request_type_id' => 'Request Type Id is required',
+    //         'phone_number' => 'Please enter Phone Number',
+    //         'email' => 'Please enter Email',
+    //         'street' => 'Please enter a street',
+    //         'city' => 'Please enter a city',
+    //         'state' => 'Please enter a state',
+    //     ]);
+    // }
 
     /**
      * Admin submit request with invalid data
      * @return void
      */
-    public function test_admin_create_request_with_invalid_data()
-    {
-        $response = $this->postJson('/admin-submitted-requests', [
-            'first_name' => '123423',
-            'last_name' => '1234231',
-            'request_type_id' => 1,
-            'phone_number' => '-==1242',
-            'email' => 'asdf@fasd',
-            'date_of_birth' => '12/14/2025',
-            'street' => 'asdfa a1234 1234',
-            'city' => 'asfd =-1234',
-            'state' => '1234',
-            'zipcode' => 'asdf',
-        ]);
+    // public function test_admin_create_request_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-submitted-requests', [
+    //             'first_name' => '123423',
+    //             'last_name' => '1234231',
+    //             'email' => 'asdf@fasd',
+    //             'date_of_birth' => '12/14/2025',
+    //             'city' => 'asfd =-1234',
+    //             'state' => '1234',
+    //             'zipcode' => '123',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'first_name' => 'Please enter only Alphabets in First name',
+    //         'last_name' => 'Please enter only Alphabets in Last name',
+    //         'email' => 'Please enter a valid email (format: alphanum@alpha.domain).',
+    //         'date_of_birth' => 'Please enter Date of Birth not greater than today',
+    //         'city' => 'Please enter alpbabets in city name.',
+    //         'state' => 'Please enter alpbabets in state name.',
+    //         'zipcode' => 'The zipcode field must be 6 digits.',
+    //     ]);
+    // }
 
     /**
-     * Admin submit request with valid data
+     * Admin submit request with valid data and existing email
      * @return void
      */
-    public function test_admin_create_request_with_valid_data()
-    {
-        $response = $this->postJson('/admin-submitted-requests', [
-            'first_name' => 'newPatient',
-            'last_name' => 'newData',
-            'request_type_id' => 1,
-            'phone_number' => '1234567890',
-            'email' => 'asdf@fasd.cc',
-            'date_of_birth' => '12/08/1995',
-            'street' => 'newStreet',
-            'city' => 'asfd',
-            'state' => 'newState',
-            'zipcode' => '123456',
-        ]);
+    // public function test_admin_create_request_with_valid_data_and_existing_email()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-submitted-requests', [
+    //             'first_name' => 'newPatient',
+    //             'last_name' => 'newData',
+    //             'request_type_id' => 1,
+    //             'phone_number' => '1234567890',
+    //             'email' => 'pusib@mailinator.com',
+    //             'date_of_birth' => '1995-08-12',
+    //             'street' => 'newStreet',
+    //             'city' => 'asfd',
+    //             'state' => 'newState',
+    //             'zipcode' => '123456',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertRedirectToRoute('admin.status', 'new')
+    //         ->assertSessionHas('successMessage', 'Request Created Successfully!');
+    // }
+
+    /**
+     * Admin submit request with valid data and new email
+     * @return void
+     */
+    // public function test_admin_create_request_with_valid_data_and_new_email()
+    // {
+    //     $admin = $this->admin();
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-submitted-requests', [
+    //             'first_name' => 'newPatient',
+    //             'last_name' => 'newData',
+    //             'request_type_id' => 1,
+    //             'phone_number' => '1234567890',
+    //             'email' => fake()->unique()->email(),
+    //             'date_of_birth' => '1995-08-12',
+    //             'street' => 'newStreet',
+    //             'city' => 'asfd',
+    //             'state' => 'newState',
+    //             'zipcode' => '123456',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertRedirectToRoute('admin.status', 'new')
+    //         ->assertSessionHas('successMessage', 'Email for create account is sent & request created successfully!');
+    // }
 
     /**
      * Admin transfer request with no data (i.e. no physician selected)
      *
      * @return void
      */
-    public function test_admin_transfer_request_with_no_data()
-    {
-        $response = $this->postJson('/transfer-case-admin', [
-            'physician' => '',
-            'notes' => '',
-        ]);
+    // public function test_admin_transfer_request_with_no_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/transfer-case-admin', [
+    //             'physician' => '',
+    //             'notes' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'physician' => 'The physician field is required.',
+    //             'notes' => 'The notes field is required.',
+    //         ]);
+    // }
 
     /**
      * Admin transfer request with invalid data
      *
      * @return void
      */
-    public function test_admin_transfer_request_with_invalid_data()
-    {
-        $response = $this->postJson('/transfer-case-admin', [
-            'physician' => '',
-            'notes' => '^*&^*)',
-        ]);
+    // public function test_admin_transfer_request_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/transfer-case-admin', [
+    //             'physician' => 'asd',
+    //             'notes' => '^*&^*)',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'physician' => 'The physician field must be a number.',
+    //         'notes' => 'The notes field format is invalid.',
+    //     ]);
+    // }
 
     /**
      * Admin transfer request with valid data
      *
      * @return void
      */
-    public function test_admin_transfer_request_with_valid_data()
-    {
-        $response = $this->postJson('/transfer-case-admin', [
-            'physician' => 1,
-            'notes' => '^*&^*)',
-        ]);
+    // public function test_admin_transfer_request_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::where('status', 3)->first()->id;
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/transfer-case-admin', [
+    //             'requestId' => $requestId,
+    //             'physician' => 1,
+    //             'notes' => 'Transfered case from admin through unit test case',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertSessionHas('successMessage', 'Case Transferred to Another Physician');
+    // }
 
     /**
      * Admin send order -> with no data
      *
      * @return void
      */
-    public function test_admin_send_order_with_no_data()
-    {
-        $response = $this->postJson('/admin-send-order', [
-            'profession' => '',
-            'vendor_id' => '',
-        ]);
+    // public function test_admin_send_order_with_no_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-send-order', [
+    //             'profession' => '',
+    //             'vendor_id' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'profession' => 'The profession field is required.',
+    //         'vendor_id' => 'The vendor id field is required.',
+    //     ]);
+    // }
 
     /**
      * Admin send order -> with invalid data
      *
      * @return void
      */
-    public function test_admin_send_order_with_invalid_data()
-    {
-        $response = $this->postJson('/admin-send-order', [
-            'profession' => 1,
-            'vendor_id' => 1,
-            'prescription' => '&*(^^*(',
-        ]);
+    // public function test_admin_send_order_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-send-order', [
+    //             'profession' => 10,
+    //             'vendor_id' => 20,
+    //             'prescription' => '&*(^^*(',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'prescription' => 'The prescription field format is invalid.'
+    //         ]);
+    // }
 
     /**
      * Admin send order -> with valid data
      *
      * @return void
      */
-    public function test_admin_send_order_with_valid_data()
-    {
-        $response = $this->postJson('/admin-send-order', [
-            'profession' => 1,
-            'vendor_id' => 1,
-        ]);
+    // public function test_admin_send_order_with_valid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $requestId = RequestTable::whereIn('status', [2, 4, 5, 6, 7, 11])->first()->id;
+
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-send-order', [
+    //             'requestId' => $requestId,
+    //             'profession' => 1,
+    //             'vendor_id' => 1,
+    //             'prescription' => 'Prescription added through unit test case.'
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertSessionHas('successMessage', 'Order Created Successfully!');
+    // }
+
+    // Admin encounter form can be rendered
+    // public function test_admin_encounter_form_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
+
+    //     $id = RequestTable::whereIn('status', [2, 4, 5, 6, 7, 11])->first()->id;
+
+    //     $requestId = Crypt::encrypt($id);
+
+    //     $response = $this->actingAs($admin)->get('/admin-encounter-form/{' . $requestId . '}');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Admin encounter form (Medical Form) -> submit with no data
      *
      * @return void
      */
-    public function test_admin_encounter_form_submit_with_no_data()
-    {
-        $response = $this->postJson('/admin-medical-form', [
-            'first_name' => '',
-            'last_name' => '',
-            'location' => '',
-            'date_of_birth' => '',
-            'service_date' => '',
-            'mobile' => '',
-            'allergies' => '',
-            'treatment_plan' => '',
-            'medication_dispensed' => '',
-            'procedure' => '',
-            'followUp' => '',
-            'email' => '',
-        ]);
+    // public function test_admin_encounter_form_submit_with_no_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-medical-form', [
+    //             'first_name' => '',
+    //             'last_name' => '',
+    //             'location' => '',
+    //             'date_of_birth' => '',
+    //             'service_date' => '',
+    //             'mobile' => '',
+    //             'allergies' => '',
+    //             'treatment_plan' => '',
+    //             'medication_dispensed' => '',
+    //             'procedure' => '',
+    //             'followUp' => '',
+    //             'email' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'first_name' => 'The first name field is required.',
+    //         'last_name' => 'The last name field is required.',
+    //         'location' => 'The location field is required.',
+    //         'date_of_birth' => 'The date of birth field is required.',
+    //         'service_date' => 'The service date field is required.',
+    //         'mobile' => 'The mobile field is required.',
+    //         'allergies' => 'The allergies field is required.',
+    //         'treatment_plan' => 'The treatment plan field is required.',
+    //         'medication_dispensed' => 'The medication dispensed field is required.',
+    //         'procedure' => 'The procedure field is required.',
+    //         'followUp' => 'The follow up field is required.',
+    //         'email' => 'The email field is required.',
+    //     ]);
+    // }
 
     /**
      * Admin encounter form (Medical Form) -> submit with invalid data
      *
      * @return void
      */
-    public function test_admin_encounter_form_submit_with_invalid_data()
-    {
-        $response = $this->postJson('/admin-medical-form', [
-            'first_name' => '123421',
-            'last_name' => '41234123',
-            'location' => '12423',
-            'date_of_birth' => '12432',
-            'service_date' => '123',
-            'mobile' => '12342',
-            'allergies' => '1234',
-            'treatment_plan' => '(&',
-            'medication_dispensed' => '*^^',
-            'procedure' => '%$^%%',
-            'followUp' => '$^**&',
-            'email' => '*^&%',
-        ]);
+    // public function test_admin_encounter_form_submit_with_invalid_data()
+    // {
+    //     $admin = $this->admin();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/admin-medical-form', [
+    //             'first_name' => '123421',
+    //             'last_name' => '41234123',
+    //             'location' => '1242',
+    //             'date_of_birth' => '12432',
+    //             'service_date' => '123',
+    //             'mobile' => '12342',
+    //             'allergies' => 'asd',
+    //             'treatment_plan' => '(&%$$$&',
+    //             'medication_dispensed' => '*^^',
+    //             'procedure' => '%$^%%',
+    //             'followUp' => '$^**&',
+    //             'email' => '*^&%',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'first_name' => 'The first name field must only contain letters.',
+    //         'last_name' => 'The last name field must only contain letters.',
+    //         'location' => 'The location field must be at least 5 characters.',
+    //         'date_of_birth' => 'The date of birth field must be a valid date.',
+    //         'service_date' => 'The service date field must be a valid date.',
+    //         'allergies' => 'The allergies field must be at least 5 characters.',
+    //         'treatment_plan' => 'The treatment plan field format is invalid.',
+    //         'medication_dispensed' => 'The medication dispensed field must be at least 5 characters.',
+    //         'procedure' => 'The procedure field format is invalid.',
+    //         'followUp' => 'The follow up field format is invalid.',
+    //         'email' => 'The email field must be a valid email address.',
+    //     ]);
+    // }
 
     /**
      * Admin encounter form (Medical Form) -> submit with valid data
