@@ -12,4 +12,6 @@ class Role extends Model
     use SoftDeletes;
 
     protected $table = 'role';
+
+    protected $guarded = [];
 }

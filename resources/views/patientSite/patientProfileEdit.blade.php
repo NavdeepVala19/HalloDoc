@@ -102,7 +102,7 @@
                     </div>
                     <div class="d-flex gap-4 align-items-center">
                         <div class="form-floating w-100">
-                            <input type="text" name="zipcode" class="form-control zipcode" id="floatingInput8"
+                            <input type="number" name="zipcode" class="form-control zipcode" id="floatingInput8"
                                 placeholder="Zipcode" value="{{ $getPatientData->zipcode }}" min="0">
                             <label for="floatingInput8">Zipcode</label>
                             @error('zipcode')

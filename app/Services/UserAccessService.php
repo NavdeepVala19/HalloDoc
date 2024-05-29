@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Models\Admin;
 use App\Models\AdminRegion;
 use App\Models\AllUsers;
-use App\Models\Users;
 use App\Models\UserRoles;
+use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
 
 class UserAccessService
@@ -34,7 +34,7 @@ class UserAccessService
      */
     public function filterAccountWise($request)
     {
-        $accountType = $request->selectedAccount === "all" ? '' : $request->selectedAccount;
+        $accountType = $request->selectedAccount === 'all' ? '' : $request->selectedAccount;
         $userAccessDataFiltering = AllUsers::select('roles.name', 'allusers.first_name', 'allusers.mobile', 'allusers.status', 'allusers.user_id')
             ->leftJoin('user_roles', 'user_roles.user_id', '=', 'allusers.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
@@ -45,7 +45,6 @@ class UserAccessService
         }
         return $userAccessDataFiltering->paginate(10);
     }
-
 
     /**
      * create new admin and store data of admin in users,admin,user_roles,all_users

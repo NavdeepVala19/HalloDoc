@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Mail;
 
 class FamilyRequestController extends Controller
 {
-  /**
-  * display family/friend request page
-  *
-  * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-  */
+    /**
+     * display family/friend request page
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function familyRequests()
     {
         return view('patientSite/familyRequest');
@@ -33,20 +33,18 @@ class FamilyRequestController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create(CreatePatientRequest $request , CreateFamilyRequest $createFamilyRequest, CreateNewUserService $createNewUserService, FamilyRequestSubmitService $familyRequestSubmitService, CreateEmailLogService $createEmailLogService)
+    public function create(CreateFamilyRequest $request, CreateNewUserService $createNewUserService, FamilyRequestSubmitService $familyRequestSubmitService, CreateEmailLogService $createEmailLogService)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
+        $requestId = $familyRequestSubmitService->storeRequest($request);
         if ($isEmailStored === null) {
             $createNewUserService->storeNewUsers($request);
             try {
                 Mail::to($request->email)->send(new SendEmailAddress($request->email));
+                $createEmailLogService->storeEmailLogs($request, $requestId);
             } catch (\Throwable $th) {
                 return view('errors.500');
             }
-        }
-        $requestId = $familyRequestSubmitService->storeRequest($createFamilyRequest);
-        if ($isEmailStored === null) {
-            $createEmailLogService->storeEmailLogs($request, $requestId);
         }
         $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
         return redirect()->route('submit.request')->with('message', $redirectMsg);

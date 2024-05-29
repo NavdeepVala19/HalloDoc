@@ -11,6 +11,8 @@ class PhysicianRegion extends Model
 
     protected $table = 'physician_region';
 
+    protected $guarded = [];
+
     public function regions()
     {
         return $this->hasOne(Regions::class, 'id', 'region_id');

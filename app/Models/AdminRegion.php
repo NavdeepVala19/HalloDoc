@@ -14,9 +14,4 @@ class AdminRegion extends Model
         'admin_id',
         'region_id',
     ];
-
-    protected $guarded = [
-        'admin_id',
-        'region_id',
-    ];
 }

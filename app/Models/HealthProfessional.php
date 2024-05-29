@@ -13,19 +13,7 @@ class HealthProfessional extends Model
 
     protected $table = 'health_professional';
 
-    protected $fillable = [
-        'vendor_name',
-        'fax_number',
-        'address',
-        'city',
-        'state',
-        'zip',
-        'phone_number',
-        'email',
-        'business_contact',
-        'profession',
-    ];
-
+    protected $guarded = [];
 
     public function healthProfessionalType()
     {

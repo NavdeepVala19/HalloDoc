@@ -2,6 +2,12 @@
 
 
 
+.logout-link {
+    display: block;
+}
+
+
+
 /********************* Header CSS End***********************/
 /* File Input Styling */
 .custom-file-input {

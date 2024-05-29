@@ -26,8 +26,8 @@
             <input type="hidden" name="request_type" value="1">
             <div class="container main-content">
                 <p>Patient Name</p>
-                <p class="user-name">{{ $documents->first()->first_name }} <span class="confirmation-no"
-                        style="color: gray;">{{ $documents->first()->confirmation_no }} </span> </p>
+                <p class="user-name">{{ $documents->first()->request->first_name }} <span class="confirmation-no"
+                        style="color: gray;">{{ $documents->first()->request->confirmation_no }} </span> </p>
                 <p>Check Here for any files that you or doctors of your subsequents requestors have attached for you to
                     review.</p>
 
@@ -71,7 +71,7 @@
                             <td><input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault"
                                     name="selected_files[]" value="{{ $document->id }}"></td>
                             <td><i class="bi bi-filetype-doc"></i>{{ substr($document->file_name, 14) }}</td>
-                            <td>{{ $document->first_name }}</td>
+                            <td>{{ $document->request->first_name }}</td>
                             <td>{{ date_format(date_create($document->created_date), 'd-m-Y') }}</td>
                             <td> <a href="{{ route('patient.download.one.document', Crypt::encrypt($document->id)) }}"
                                     class="primary-empty cloud-down"> <i class="bi bi-cloud-download "></i> </a> </td>
@@ -87,8 +87,8 @@
                             <input class="form-check-input child-checkbox" type="checkbox" id="flexCheckDefault" name="selected_files[]" value="{{ $document->id }}">
                             <p>{{ substr($document->file_name, 14) }}</p>
                         </div>
-                        <div class="mb-3">{{ $document->first_name }}</div>
-                        <p>{{ $document->created_at }}</p>
+                        <div class="mb-3">{{ $document->request->first_name }}</div>
+                        <p>{{ date_format(date_create($document->created_date), 'd-m-Y') }}</p>
                         <a href="{{ route('patient.download.one.document', Crypt::encrypt($document->id)) }}"
                             class="primary-empty cloud-down" type="button"> <i class="bi bi-cloud-download "></i>
                         </a>

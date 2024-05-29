@@ -37,7 +37,7 @@ class ProviderForm extends FormRequest
             'phone_number_alt' => 'required',
             'select_state' => 'required',
             'region_id' => 'required',
-            'role'=>'required',
+            'role' => 'required',
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'business_website' => 'required|url|max:40|min:10',
             'admin_notes' => 'required|min:5|max:200|regex: /^[a-zA-Z0-9 \-_.,\/]+$/',
@@ -49,7 +49,8 @@ class ProviderForm extends FormRequest
         ];
     }
 
-    public function messages(){
+    public function messages()
+    {
         $enter = 'Please enter';
         $min_message = 'Please enter more than';
         $max_message = 'Please enter less than';
@@ -88,8 +89,8 @@ class ProviderForm extends FormRequest
             'region_id.required' => 'Please select atleast one Region',
 
             'address1.required' => $enter . ' a address1',
-            'address1.min' => $min_message . " 2 alphabets in address1",
-            'address1.max' => $max_message . " 50 alphabets in address1",
+            'address1.min' => $min_message . ' 2 alphabets in address1',
+            'address1.max' => $max_message . ' 50 alphabets in address1',
             'address1.regex' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in address1.',
 
             'city.required' => $enter . ' a city',

@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendEmailAddress;
-use App\Models\Users;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
-use App\Models\RequestStatus;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
-use App\Services\CreateNewUserService;
-use App\Services\CreateEmailLogService;
-use App\Services\PatientDashboardService;
 use App\Http\Requests\CreatePatientRequest;
+use App\Mail\SendEmailAddress;
+use App\Models\RequestStatus;
+use App\Models\RequestTable;
+use App\Models\Users;
+use App\Services\CreateEmailLogService;
+use App\Services\CreateNewUserService;
+use App\Services\PatientDashboardService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PatientDashboardController extends Controller
 {
@@ -29,9 +29,7 @@ class PatientDashboardController extends Controller
             if ($clientData->status >= 4) {
                 return view('patientSite.agreementDone')->with(['caseStatus' => $clientData->status]);
             }
-            if ($clientData) {
-                return view('patientSite/patientAgreement', compact('clientData'));
-            }
+            return view('patientSite/patientAgreement', compact('clientData'));
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -40,11 +38,11 @@ class PatientDashboardController extends Controller
     // Agreement Agreed by Patient
     public function agreeAgreement(Request $request)
     {
-        $caseStatus = RequestTable::where('id', $request->requestId)->first()->status;
+        $caseStatus = RequestTable::where('id', $request->requestId)->value('status');
         if ($caseStatus === 4 || $caseStatus === 11) {
             return view('patientSite.agreementDone')->with('caseStatus', $caseStatus);
         }
-        $physicianId = RequestTable::where('id', $request->requestId)->first()->physician_id;
+        $physicianId = RequestTable::where('id', $request->requestId)->value('physician_id');
 
         RequestTable::where('id', $request->requestId)->update([
             'status' => 4,
@@ -100,7 +98,7 @@ class PatientDashboardController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createNewPatient(Request $request,PatientDashboardService $patientDashboardService)
+    public function createNewPatient(Request $request, PatientDashboardService $patientDashboardService)
     {
         $userData = Auth::user();
         $email = $userData['email'];
@@ -133,7 +131,6 @@ class PatientDashboardController extends Controller
         return view('patientSite/patientSomeoneRequest');
     }
 
-
     /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
@@ -143,26 +140,23 @@ class PatientDashboardController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
 
-    public function createSomeOneElseRequest(CreatePatientRequest $request , PatientDashboardService $patientDashboardService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
+    public function createSomeOneElseRequest(CreatePatientRequest $request, PatientDashboardService $patientDashboardService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
+        $requestId = $patientDashboardService->storeSomeOneRequest($request);
         if ($isEmailStored === null) {
             $createNewUserService->storeNewUsers($request);
             try {
                 Mail::to($request->email)->send(new SendEmailAddress($request->email));
+                $createEmailLogService->storeEmailLogs($request, $requestId);
             } catch (\Throwable $th) {
                 return view('errors.500');
             }
-        }
-        $requestId = $patientDashboardService->storeSomeOneRequest($request);
-        if ($isEmailStored === null) {
-            $createEmailLogService->storeEmailLogs($request, $requestId);
         }
         $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 
         return redirect()->route('patient.dashboard')->with('message', $redirectMsg);
     }
-
 
     /**
      * when patient login after creating account he/she will land to dashboard page,
@@ -174,9 +168,7 @@ class PatientDashboardController extends Controller
     {
         $userData = Auth::user();
         $email = $userData['email'];
-
-        $userId = Users::select('id')->where('email', $email)->value('id');
-        $data = RequestTable::with('requestWiseFile')->where('user_id', $userId)->latest('id')->paginate(10);
+        $data = RequestTable::with('requestWiseFile')->where('email', $email)->latest('id')->paginate(10);
 
         return view('patientSite/patientDashboard', compact('data', 'userData'));
     }

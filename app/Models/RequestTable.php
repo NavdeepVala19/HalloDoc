@@ -15,26 +15,7 @@ class RequestTable extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'request_type_id',
-        'user_id',
-        'first_name',
-        'last_name',
-        'date_of_birth',
-        'phone_number',
-        'email',
-        'status',
-        'physician_id',
-        'confirmation_no',
-        'call_type',
-        'completed_by_physician',
-        'last_reservation_date',
-        'relation_name',
-        'case_number',
-        'case_tag_physician',
-        'created_user_id',
-    ];
-
+    protected $guarded = [];
 
     public function allusers()
     {

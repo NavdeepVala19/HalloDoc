@@ -148,14 +148,14 @@
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
-                        <input type="text" name="medical_license" class="form-control provider-license @error('medical_license') is-invalid @enderror" autocomplete="off" id="floatingInput6" value="{{ $getProviderData->medical_license }}" placeholder="Medical License" disabled min="0">
+                        <input type="number" name="medical_license" class="form-control provider-license @error('medical_license') is-invalid @enderror" autocomplete="off" id="floatingInput6" value="{{ $getProviderData->medical_license }}" placeholder="Medical License" disabled min="0">
                         <label for="floatingInput6">Medical license # </label>
                         @error('medical_license')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">
-                        <input type="text" name="npi_number" class="form-control provider-npi @error('npi_number') is-invalid @enderror" id="floatingInput7" autocomplete="off" value="{{ $getProviderData->npi_number }}" placeholder="NPI Number" disabled min="0">
+                        <input type="number" name="npi_number" class="form-control provider-npi @error('npi_number') is-invalid @enderror" id="floatingInput7" autocomplete="off" value="{{ $getProviderData->npi_number }}" placeholder="NPI Number" disabled min="0">
                         <label for="floatingInput7">NPI Number</label>
                         @error('npi_number')
                         <div class="text-danger">{{ $message }}</div>

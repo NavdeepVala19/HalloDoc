@@ -2,20 +2,31 @@
 
 namespace App\Services;
 
-use App\Models\Users;
+use App\Helpers\ConfirmationNumber;
+use App\Models\RequestClient;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use App\Models\RequestClient;
-use App\Helpers\ConfirmationNumber;
+use App\Models\Users;
 
 class ProviderCreateRequestService
 {
+    public function storeRequest($request, $providerId)
+    {
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
+        $isEmailStored = Users::where('email', $request->email)->first();
+
+        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber, $providerId);
+        $this->storeInRequestClientTable($request, $requestId);
+        $this->storeAdminNotesInRequestNotesTable($request, $requestId);
+
+        return $requestId;
+    }
     private function storeInRequestTable($request, $isEmailStored, $confirmationNumber, $providerId)
     {
         $requestData = new RequestTable();
         $requestData->request_type_id = 1;
         $requestData->status = 3;
-        $requestData->user_id =  $isEmailStored->id;
+        $requestData->user_id = $isEmailStored->id;
         $requestData->physician_id = $providerId;
         $requestData->confirmation_no = $confirmationNumber;
         $requestData->fill($request->only([
@@ -58,16 +69,4 @@ class ProviderCreateRequestService
         $requestNotes->created_by = 'physician';
         $requestNotes->save();
     }
-    public function storeRequest($request, $providerId){
-
-        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
-        $isEmailStored = Users::where('email', $request->email)->first();
-
-        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber, $providerId);
-        $this->storeInRequestClientTable($request, $requestId);
-        $this->storeAdminNotesInRequestNotesTable($request, $requestId);
-
-        return $requestId;
-    }
-
 }

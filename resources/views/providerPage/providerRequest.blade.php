@@ -67,8 +67,8 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" name="dob" class="form-control" id="floatingInput4"
-                            placeholder="date of birth" value="{{ old('dob') }}">
+                        <input type="date" name="date_of_birth" class="form-control" id="floatingInput4"
+                            placeholder="date of birth" value="{{ old('date_of_birth') }}">
                         <label for="floatingInput4">Date Of Birth(Optional)</label>
                     </div>
                 </div>

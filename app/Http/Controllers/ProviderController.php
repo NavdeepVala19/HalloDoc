@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendEmailAddress;
-use App\Models\User;
-use App\Models\Admin;
-use App\Models\Users;
-use App\Models\Regions;
-use App\Models\EmailLog;
-use App\Models\Provider;
-use App\Models\RequestTable;
-use Illuminate\Http\Request;
+use App\Http\Requests\ProviderCreateRequest;
 use App\Mail\ProviderRequest;
+use App\Mail\SendEmailAddress;
+use App\Models\Admin;
+use App\Models\EmailLog;
 use App\Models\PhysicianRegion;
+use App\Models\Provider;
+use App\Models\Regions;
+use App\Models\RequestTable;
+use App\Models\User;
+use App\Models\Users;
+use App\Services\CreateEmailLogService;
+use App\Services\CreateNewUserService;
+use App\Services\ProviderCreateRequestService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Services\CreateNewUserService;
-use App\Services\CreateEmailLogService;
 use Illuminate\Support\Facades\Session;
-use App\Http\Requests\ProviderCreateRequest;
-use App\Services\ProviderCreateRequestService;
 
 class ProviderController extends Controller
 {
@@ -44,42 +44,6 @@ class ProviderController extends Controller
     public const STATUS_PENDING = 3;
     public const STATUS_ACTIVE = [4, 5];
     public const STATUS_CONCLUDE = 6;
-
-    /**
-     * Get category id from the name of category
-     *
-     * @param string $category different category names.
-     *
-     * @return int different types of request_type_id.
-     */
-    private function getCategoryId($category)
-    {
-        // mapping of category names to request_type_id
-        $categoryMapping = [
-            'patient' => self::CATEGORY_PATIENT,
-            'family' => self::CATEGORY_FAMILY,
-            'concierge' => self::CATEGORY_CONCIERGE,
-            'business' => self::CATEGORY_BUSINESS,
-        ];
-        return $categoryMapping[$category] ?? null;
-    }
-    /**
-     * Get status id from the name of status
-     *
-     * @param string $status different status names.
-     *
-     * @return int status in Id.
-     */
-    private function getStatusId($status)
-    {
-        $statusMapping = [
-            'new' => self::STATUS_NEW,
-            'pending' => self::STATUS_PENDING,
-            'active' => self::STATUS_ACTIVE,
-            'conclude' => self::STATUS_CONCLUDE,
-        ];
-        return $statusMapping[$status];
-    }
 
     // For Provider redirect to new State(By Default)
     public function providerDashboard()
@@ -247,23 +211,19 @@ class ProviderController extends Controller
     public function createRequest(ProviderCreateRequest $request, ProviderCreateRequestService $providerCreateRequestService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
     {
         $providerId = Provider::where('user_id', Auth::user()->id)->value('id');
-
         $isEmailStored = Users::where('email', $request->email)->first();
+        $requestId = $providerCreateRequestService->storeRequest($request, $providerId);
         if ($isEmailStored === null) {
             $createNewUserService->storeNewUsers($request);
             try {
                 Mail::to($request->email)->send(new SendEmailAddress($request->email));
+                $createEmailLogService->storeEmailLogs($request, $requestId, $providerId);
             } catch (\Throwable $th) {
                 return view('errors.500');
             }
         }
-        $requestId = $providerCreateRequestService->storeRequest($request, $providerId);
-        if ($isEmailStored === null) {
-            $createEmailLogService->storeEmailLogs($request, $requestId, $providerId);
-        }
-
         $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
-        return redirect()->route("provider.status", 'pending')->with('successMessage', $redirectMsg);
+        return redirect()->route('provider.status', 'pending')->with('successMessage', $redirectMsg);
     }
 
     /**
@@ -337,4 +297,39 @@ class ProviderController extends Controller
         return redirect()->back()->with('mailSentToAdmin', 'Email Sent to Admin - to make requested changes!');
     }
 
+    /**
+     * Get category id from the name of category
+     *
+     * @param string $category different category names.
+     *
+     * @return int different types of request_type_id.
+     */
+    private function getCategoryId($category)
+    {
+        // mapping of category names to request_type_id
+        $categoryMapping = [
+            'patient' => self::CATEGORY_PATIENT,
+            'family' => self::CATEGORY_FAMILY,
+            'concierge' => self::CATEGORY_CONCIERGE,
+            'business' => self::CATEGORY_BUSINESS,
+        ];
+        return $categoryMapping[$category] ?? null;
+    }
+    /**
+     * Get status id from the name of status
+     *
+     * @param string $status different status names.
+     *
+     * @return int status in Id.
+     */
+    private function getStatusId($status)
+    {
+        $statusMapping = [
+            'new' => self::STATUS_NEW,
+            'pending' => self::STATUS_PENDING,
+            'active' => self::STATUS_ACTIVE,
+            'conclude' => self::STATUS_CONCLUDE,
+        ];
+        return $statusMapping[$status];
+    }
 }

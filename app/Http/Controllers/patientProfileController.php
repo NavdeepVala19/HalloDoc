@@ -21,10 +21,8 @@ class PatientProfileController extends Controller
         $email = $userData['email'];
 
         $getEmailData = AllUsers::where('email', $email)->first();
-        return view("patientSite/patientProfile", compact('getEmailData'));
+        return view('patientSite/patientProfile', compact('getEmailData'));
     }
-
-
 
     /**
      * the page through which patient can edit their profile
@@ -46,7 +44,6 @@ class PatientProfileController extends Controller
         }
     }
 
-
     /**
      * patient update their data in users, allusers table
      *
@@ -56,13 +53,11 @@ class PatientProfileController extends Controller
      */
     public function patientUpdate(CreatePatientRequest $request, PatientDashboardService $patientDashboardService)
     {
-        $userData = Auth::user();
-        // Update data in users table
 
-        $patientDashboardService->patientProfileUpdate($request, $userData);
+
+        $patientDashboardService->patientProfileUpdate($request);
         return redirect()->route('patient.dashboard')->with('message', 'profile is updated successfully');
     }
-
 
     /**
      * patient can see their location on google map

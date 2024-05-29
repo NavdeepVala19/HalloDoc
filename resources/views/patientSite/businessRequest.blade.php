@@ -79,10 +79,13 @@
 
                     <div class="area-text">
                         <div class="form-floating" id="form-floating"> 
-                            <textarea class="form-control text-area-box" placeholder="Leave a comment here" name="symptoms" id="floatingTextarea3"  autocomplete="off" style="height: 150px" >{{ old('symptoms') }}</textarea>
+                            <textarea class="form-control text-area-box @error('symptoms') is-invalid @enderror" placeholder="Leave a comment here" name="symptoms" id="floatingTextarea3"  autocomplete="off" style="height: 150px" >{{ old('symptoms') }}</textarea>
                             <label for="floatingTextarea2" class="floatingTextarea2 symptoms-notes-label">Enter Brief Details of
                                 Symptoms(optional)</label>
                         </div>
+                        @error('symptoms')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 

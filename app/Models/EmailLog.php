@@ -28,6 +28,7 @@ class EmailLog extends Model
         'action',
     ];
 
+    protected $guarded = [];
 
     public function roles()
     {

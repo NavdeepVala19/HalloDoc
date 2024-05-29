@@ -36,8 +36,9 @@ class CreateConciergeRequest extends FormRequest
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required|before:today',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'phone_number' => 'required',
+            'phone_number' => 'required|min_digits:10|max_digits:10',
             'room' => 'gte:1|nullable|max:1000',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
         ];
     }
 
@@ -50,7 +51,7 @@ class CreateConciergeRequest extends FormRequest
 
         return [
             'concierge_first_name.required' => $enter . ' First Name',
-            'concierge_first_name.min' =>  $min_message . ' 3 Alphabets',
+            'concierge_first_name.min' => $min_message . ' 3 Alphabets',
             'concierge_first_name.max' => $max_message . ' 15 Alphabets',
             'concierge_first_name.alpha' => $only_alphabets . ' in First name',
 
@@ -59,14 +60,14 @@ class CreateConciergeRequest extends FormRequest
             'concierge_last_name.max' => $max_message . ' 15 Alphabets',
             'concierge_last_name.alpha' => $only_alphabets . ' in Last name',
 
-            'concierge_email.required' =>  $enter . ' Email',
-            'concierge_email.max' =>  $max_message . ' 40 characters Email',
-            'concierge_email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
+            'concierge_email.required' => $enter . ' Email',
+            'concierge_email.max' => $max_message . ' 40 characters Email',
+            'concierge_email.regex' => $enter . ' a valid email (format: alphanum@alpha.domain).',
 
             'concierge_mobile.required' => $enter . ' Phone Number',
 
             'concierge_street.required' => $enter . ' a street',
-            'concierge_street.max' => $max_message . " 50 alphabets in street",
+            'concierge_street.max' => $max_message . ' 50 alphabets in street',
             'concierge_street.regex' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in street name.',
 
             'concierge_city.required' => $enter . ' a city',
@@ -84,7 +85,7 @@ class CreateConciergeRequest extends FormRequest
             'concierge_hotel_name.max' => $max_message . ' 50 character',
             'concierge_hotel_name.regex' => 'Please enter alphabets,number,dash,underscore,ampersand,fullstop,comma in hotel/property name.',
             'first_name.required' => $enter . ' First Name',
-            'first_name.min' =>  $min_message . ' 3 Alphabets',
+            'first_name.min' => $min_message . ' 3 Alphabets',
             'first_name.max' => $max_message . ' 15 Alphabets',
             'first_name.alpha' => $only_alphabets . ' in First name',
 
@@ -93,16 +94,20 @@ class CreateConciergeRequest extends FormRequest
             'last_name.max' => $max_message . ' 15 Alphabets',
             'last_name.alpha' => $only_alphabets . ' in Last name',
 
-            'date_of_birth.required' =>  $enter . ' Date of Birth',
-            'date_of_birth.before' =>  $enter . ' Date of Birth Before Today',
+            'date_of_birth.required' => $enter . ' Date of Birth',
+            'date_of_birth.before' => $enter . ' Date of Birth Before Today',
 
-            'email.required' =>  $enter . ' Email',
-            'email.max' =>  $max_message . ' 40 characters in Email',
-            'email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
+            'email.required' => $enter . ' Email',
+            'email.max' => $max_message . ' 40 characters in Email',
+            'email.regex' => $enter . ' a valid email (format: alphanum@alpha.domain).',
 
             'phone_number.required' => $enter . ' Phone Number',
             'room.max' => $max_message . ' a number less than 1000',
             'room.gte' => 'Please enter room number greater than 0',
+
+            'symptoms.min' => $min_message . ' 5 character',
+            'symptoms.max' => $max_message . ' 200 character',
+            'symptoms.regex' => 'Please enter valid symptoms. Symptoms should only contain alphabets,comma,dash,underscore,parentheses,fullstop and numbers.',
         ];
     }
 }

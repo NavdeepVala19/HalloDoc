@@ -8,11 +8,24 @@ use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\Users;
 
-class StorePatientRequestService{
+class StorePatientRequestService
+{
+    public function storeRequest($request)
+    {
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
 
-    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber){
+        $userId = Users::where('email', $request->email)->value('id');
+
+        $requestId = $this->storeInRequestTable($request, $userId, $confirmationNumber);
+        $this->storeInRequestClientTable($request, $requestId);
+        $this->storeImageInRequestWiseFile($request, $requestId);
+
+        return $requestId;
+    }
+    private function storeInRequestTable($request, $userId, $confirmationNumber)
+    {
         $requestData = new RequestTable();
-        $requestData->user_id =  $isEmailStored->id;
+        $requestData->user_id = $userId;
         $requestData->request_type_id = 1;
         $requestData->status = 1;
         $requestData->confirmation_no = $confirmationNumber;
@@ -27,7 +40,8 @@ class StorePatientRequestService{
         return $requestData->id;
     }
 
-    private function storeInRequestClientTable($request, $requestId){
+    private function storeInRequestClientTable($request, $requestId)
+    {
         $patientRequest = new RequestClient();
         $patientRequest->request_id = $requestId;
         $patientRequest->notes = $request->symptoms;
@@ -46,7 +60,8 @@ class StorePatientRequestService{
         $patientRequest->save();
     }
 
-    private function storeImageInRequestWiseFile($request, $requestId){
+    private function storeImageInRequestWiseFile($request, $requestId)
+    {
         if ($request->hasFile('docs')) {
             $requestFile = new RequestWiseFile();
             $requestFile->request_id = $requestId;
@@ -55,17 +70,4 @@ class StorePatientRequestService{
             $requestFile->save();
         }
     }
-
-    public function storeRequest($request){
-        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
-
-        $isEmailStored = Users::where('email', $request->email)->first();
-
-        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
-        $this->storeInRequestClientTable($request, $requestId);
-        $this->storeImageInRequestWiseFile($request, $requestId);
-
-        return $requestId;
-    }
-
 }

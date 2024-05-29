@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\CarbonInterval;
-use Carbon\Carbon;
-use DatePeriod;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
 use App\Models\Regions;
 use App\Models\Shift;
 use App\Models\ShiftDetail;
 use App\Models\ShiftDetailRegion;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
+use DatePeriod;
 use Illuminate\Http\Request;
 
 class SchedulingController extends Controller
@@ -225,7 +225,7 @@ class SchedulingController extends Controller
             $is_repeat = 0;
         }
 
-        $shift =  Shift::create([
+        $shift = Shift::create([
             'physician_id' => $request['physician'],
             'start_date' => $request['shiftDate'],
             'is_repeat' => $is_repeat,
@@ -296,7 +296,6 @@ class SchedulingController extends Controller
 
         return redirect()->back()->with('shiftAdded', 'Shift Added Successfully');
     }
-
 
     /**
      * Get all shifts from the database and convert them into JSON format for FullCalendar.

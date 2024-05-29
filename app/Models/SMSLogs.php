@@ -24,6 +24,8 @@ class SMSLogs extends Model
         'role_id',
     ];
 
+    protected $guarded = [];
+
     public function provider()
     {
         return $this->belongsTo(Provider::class);

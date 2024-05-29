@@ -26,8 +26,11 @@
                             <h4>Patient Information</h4>
                         </div>
                         <div class="form-floating" id="form-floating">
-                            <textarea class="form-control note" name='symptoms' placeholder="notes" id="floatingTextarea2" style="height: 150px">{{ old('symptoms') }}</textarea>
+                            <textarea class="form-control note @error('symptoms') is-invalid @enderror" name='symptoms' placeholder="notes" id="floatingTextarea2" style="height: 150px">{{ old('symptoms') }}</textarea>
                             <label for="floatingTextarea2" class="symptoms-notes-label">Enter Brief Details of Symptoms(optional)</label>
+                            @error('symptoms')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <!--  Patient FirstName, LastName ,DOB Field  -->

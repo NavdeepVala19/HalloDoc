@@ -12,6 +12,8 @@ class Shift extends Model
     use SoftDeletes;
     protected $table = 'shift';
 
+    protected $guarded = [];
+
     public function shiftDetail()
     {
         return $this->hasOne(ShiftDetail::class, 'shift_id', 'id');

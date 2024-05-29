@@ -15,4 +15,5 @@ class Status extends Model
         'status_type',
     ];
 
+    protected $guarded = [];
 }

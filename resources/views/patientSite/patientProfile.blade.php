@@ -98,7 +98,7 @@
                 </div>
                 <div class="d-flex gap-4 align-items-center">
                     <div class="form-floating w-100">
-                        <input type="text" name="zipcode" class="form-control zipcode" disabled id="floatingInput8" autocomplete="off"
+                        <input type="number" name="zipcode" class="form-control zipcode" disabled id="floatingInput8" autocomplete="off"
                             placeholder="Zipcode" value="{{ $getEmailData->zipcode ? $getEmailData->zipcode : ' ' }}"
                             min="0">
                         <label for="floatingInput8">Zipcode</label>

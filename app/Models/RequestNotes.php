@@ -11,13 +11,5 @@ class RequestNotes extends Model
 
     protected $table = 'request_notes';
 
-    protected $fillable = [
-        'request_id',
-        'patient_notes',
-        'physician_notes',
-        'admin_notes',
-        'AdministrativeNotes',
-    ];
-
-
+    protected $guarded = [];
 }

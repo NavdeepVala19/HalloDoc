@@ -6,18 +6,18 @@ use App\Mail\DocsAttachmentMail;
 use App\Mail\SendAgreement;
 use App\Mail\SendMailPatient;
 use App\Models\Admin;
-use App\Models\HealthProfessional;
 use App\Models\EmailLog;
+use App\Models\HealthProfessional;
 use App\Models\Provider;
 use App\Models\RequestClient;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Models\SMSLogs;
+use App\Services\SendLinkToPatientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Services\SendLinkToPatientService;
 use Twilio\Rest\Client;
 use ZipArchive;
 
@@ -58,7 +58,6 @@ class CommonOperationController extends Controller
         RequestWiseFile::where('id', $id)->delete();
         return redirect()->back();
     }
-
 
     /**
      * Perform different operations as per the operation selected (Delete All, Download All, Send Mail)
@@ -133,7 +132,7 @@ class CommonOperationController extends Controller
             $ids = $request->input('selected');
 
             $zip = new ZipArchive();
-            $zipFile =  uniqid() . $email . '.zip';
+            $zipFile = uniqid() . $email . '.zip';
 
             if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
                 foreach ($ids as $id) {
@@ -308,7 +307,7 @@ class CommonOperationController extends Controller
                     '+91 99780 71802', // to
                     [
                         'body' => 'Hii ' . $clientData->requestClient->first_name . ' ' . $clientData->requestClient->last_name . ', Click on the this link to open Agreement:' . url('/patient-agreement/' . $id),
-                        'from' =>  $senderNumber,
+                        'from' => $senderNumber,
                     ]
                 );
         } catch (\Throwable $th) {

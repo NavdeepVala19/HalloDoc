@@ -9,15 +9,7 @@ class RequestStatus extends Model
 {
     use HasFactory;
     protected $table = 'request_status';
-    protected $fillable = [
-        'request_id',
-        'status',
-        'physician_id',
-        'admin_id',
-        'TransToPhysicianId',
-        'TransToAdmin',
-        'notes',
-    ];
+    protected $guarded = [];
 
     public function request()
     {
@@ -31,7 +23,8 @@ class RequestStatus extends Model
     {
         return $this->hasOne(Provider::class, 'id', 'physician_id');
     }
-    public function transferedPhysician(){
+    public function transferedPhysician()
+    {
         return $this->hasOne(Provider::class, 'id', 'TransToPhysicianId');
     }
     public function requestClient()

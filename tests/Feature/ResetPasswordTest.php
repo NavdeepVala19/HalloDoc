@@ -7,6 +7,9 @@ use Illuminate\Http\Response;
 
 class ResetPasswordTest extends TestCase
 {
+
+    /** admin and provider reset password */
+
     /**
      * No email entered, then return back and show error
      *
@@ -19,20 +22,26 @@ class ResetPasswordTest extends TestCase
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'email' => 'The email field is required.',
+        ]);
     }
 
     /**
-     * Invalid email entered (which is not in database, or which is not admin or provider)
+     * Invalid email entered (email format is not valid)
      *
      * @return void
      */
     public function test_invalid_email_entered_for_reset_password(): void
     {
         $response = $this->postJson('/reset-password-link', [
-            'email' => 'invalid@mails.com',
+            'email' => 'admin@343mail.com',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error');
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'email' => 'The email field format is invalid.',
+        ]);
     }
 
     /**
@@ -46,6 +55,21 @@ class ResetPasswordTest extends TestCase
             'email' => 'admin@mail.com',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('login')->assertSessionHas('message');
+        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('login')->assertSessionHas('message', 'E-mail is sent for password reset');
+    }
+
+
+    /**
+     * valid email entered (patient email)
+     *
+     * @return void
+     */
+    public function test_patient_valid_email_entered_for_reset_password(): void
+    {
+        $response = $this->postJson('/reset-password-link', [
+            'email' => 'shivesh@mail.com',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'no such email is registered');
     }
 }

@@ -12,8 +12,8 @@ use App\Models\Role;
 use App\Models\Users;
 use App\Services\AdminProviderService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class AdminProviderController extends Controller
 {
@@ -34,7 +34,6 @@ class AdminProviderController extends Controller
         }
     }
 
-
     /**
      * filtering of physician by region through ajax and it lists providersname,status,role,call status
      *
@@ -43,7 +42,7 @@ class AdminProviderController extends Controller
      * @return mixed|\Illuminate\Http\JsonResponse
      */
 
-    public function filterPhysicianThroughRegions(Request $request,AdminProviderService $adminProviderService)
+    public function filterPhysicianThroughRegions(Request $request, AdminProviderService $adminProviderService)
     {
         $providers = $adminProviderService->filterProviderList($request);
         $onCallPhysicianIds = $providers['onCallPhysicianIds'];
@@ -53,7 +52,6 @@ class AdminProviderController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
     /**
      * perform filtering of physician by region through ajax and it lists providername,status,role,call status in mobile view
      *
@@ -61,7 +59,7 @@ class AdminProviderController extends Controller
      *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function filterPhysicianThroughRegionsMobileView(Request $request,AdminProviderService $adminProviderService)
+    public function filterPhysicianThroughRegionsMobileView(Request $request, AdminProviderService $adminProviderService)
     {
         $providers = $adminProviderService->filterProviderList($request);
         $onCallPhysicianIds = $providers['onCallPhysicianIds'];
@@ -71,7 +69,6 @@ class AdminProviderController extends Controller
         return response()->json(['html' => $data]);
     }
 
-
     /**
      * this function perform send email and sms to provider
      *
@@ -80,7 +77,7 @@ class AdminProviderController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function sendMailToContactProvider(Request $request, $id,AdminProviderService $adminProviderService)
+    public function sendMailToContactProvider(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'contact_msg' => 'required|min:2|max:100',
@@ -124,7 +121,7 @@ class AdminProviderController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function adminCreateNewProvider(ProviderForm $request,AdminProviderService $adminProviderService)
+    public function adminCreateNewProvider(ProviderForm $request, AdminProviderService $adminProviderService)
     {
         $adminProviderService->createNewProvider($request);
         return redirect()->route('admin.providers.list')->with('message', 'account is created');
@@ -158,7 +155,7 @@ class AdminProviderController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateProviderAccountInfo(Request $request, $id)
+    public function updateProviderAccountInfo(Request $request, $id, AdminProviderService $adminProviderService)
     {
         // update data of providers in users table
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->value('user_id');
@@ -173,25 +170,10 @@ class AdminProviderController extends Controller
             $request->validate([
                 'user_name' => 'required|alpha|min:3|max:40',
             ]);
-
-            $updateProviderInfoUsers->username = $request->user_name;
-            $updateProviderInfoUsers->save();
-
-            $getProviderData = Provider::where('id', $id)->first();
-            $getProviderData->status = $request->status_type;
-            $getProviderData->role_id = $request->role;
-            $getProviderData->save();
-
-            $updateProviderDataAllUsers = AllUsers::where('user_id', $getUserIdFromProvider)->first();
-            if ($updateProviderDataAllUsers) {
-                $updateProviderDataAllUsers->status = $request->status_type;
-                $updateProviderDataAllUsers->save();
-            }
+            $adminProviderService->updateAccountInformation($request, $id, $getUserIdFromProvider);
         }
-
         return back()->with('message', 'account information is updated');
     }
-
 
     /**
      * update firstname,lastname,email,mobile,medical license and npi number in provider table
@@ -203,7 +185,7 @@ class AdminProviderController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function providerInfoUpdate(Request $request, $id,AdminProviderService $adminProviderService)
+    public function providerInfoUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
@@ -218,7 +200,6 @@ class AdminProviderController extends Controller
         return back()->with('message', 'Physician information is updated');
     }
 
-
     /**
      * update address1,address2,city,zipcode,state,alternate phone number in provider table
      * update address1,city,zipcode in allusers table
@@ -229,7 +210,7 @@ class AdminProviderController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function providerMailInfoUpdate(Request $request, $id,AdminProviderService $adminProviderService)
+    public function providerMailInfoUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'address1' => 'required|min:2|max:50',
@@ -251,7 +232,7 @@ class AdminProviderController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function providerProfileUpdate(Request $request, $id,AdminProviderService $adminProviderService)
+    public function providerProfileUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
@@ -263,7 +244,6 @@ class AdminProviderController extends Controller
         $adminProviderService->updateProviderProfile($request, $id);
         return back()->with('message', 'Provider Profile information is updated');
     }
-
 
     /**
      * update onboarding document in local storage
@@ -317,7 +297,6 @@ class AdminProviderController extends Controller
         $fetchRoleName = Role::select('id', 'name')->where('account_type', 'physician')->get();
         return response()->json($fetchRoleName);
     }
-
 
     /**
      * Show Provider Location

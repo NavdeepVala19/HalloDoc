@@ -10,4 +10,6 @@ class RequestType extends Model
     use HasFactory;
 
     protected $table = 'request_type';
+
+    protected $guarded = [];
 }

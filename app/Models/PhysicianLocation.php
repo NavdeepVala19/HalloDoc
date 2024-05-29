@@ -23,4 +23,6 @@ class PhysicianLocation extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    protected $guarded = [];
 }

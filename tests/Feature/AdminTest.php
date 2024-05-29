@@ -3,23 +3,38 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\User;
+use App\Models\Provider;
+use App\Models\UserRoles;
+use App\Models\RequestTable;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminTest extends TestCase
 {
+    private function adminLoggedIn()
+    {
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
+        return $admin;
+    }
     /**
      * Test successful assign case form with valid data
      * @return void
      */
     public function test_assign_case_with_valid_data()
     {
-        $response = $this->postJson('/assign-case', [
+        $admin = $this->adminLoggedIn();
+        $requestId = RequestTable::where('status', 1)->value('id');
+        $response = $this->actingAs($admin)->postJson('/assign-case', [
+            'region' => '1',
+            'physician' => '1',
             'assign_note' => 'Physician Notes',
+            'requestId' => $requestId,
         ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
+  
+        $physician = Provider::where('id', 1)->first();
+        $physicianName = $physician->first_name . ' ' . $physician->last_name;
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', "Case Assigned Successfully to physician - {$physicianName}");
     }
 
     /**
@@ -28,11 +43,17 @@ class AdminTest extends TestCase
      */
     public function test_assign_case_with_invalid_data()
     {
-        $response = $this->postJson('/assign-case', [
+        $admin = $this->adminLoggedIn();
+        $response = $this->actingAs($admin)->postJson('/assign-case', [
+            'region' => '2',
+            'physician' => '1',
             'assign_note' => '$#%',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'assign_note' => 'The assign note field format is invalid.',
+        ]);
     }
 
     /**
@@ -41,11 +62,19 @@ class AdminTest extends TestCase
      */
     public function test_assign_case_with_empty_data()
     {
-        $response = $this->postJson('/assign-case', [
-            'assign_note' => ' ',
+        $admin = $this->adminLoggedIn();
+        $response = $this->actingAs($admin)->postJson('/assign-case', [
+            'region' => '',
+            'physician' => '',
+            'assign_note' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'region' => 'The region field is required.',
+            'physician' => 'The physician field is required.',
+            'assign_note' => 'The assign note field is required.',
+        ]);
     }
 
 
@@ -55,7 +84,8 @@ class AdminTest extends TestCase
      */
     public function test_view_case_with_valid_data()
     {
-        $response = $this->postJson('/admin/view/case/edit', [
+        $admin = $this->adminLoggedIn();
+        $response = $this->actingAs($admin)->postJson('/admin/view/case/edit', [
             'patient_notes' => 'Physician Notes',
             'first_name' => 'Denton',
             'last_name' => 'Wise',
@@ -71,14 +101,21 @@ class AdminTest extends TestCase
      */
     public function test_view_case_with_invalid_data()
     {
-        $response = $this->postJson('/admin/view/case/edit', [
-            'patient_notes' => 'Physician Notes',
-            'first_name' => 'Denton',
-            'last_name' => 'Wise',
-            'dob' => '03-09-2022',
+        $admin = $this->adminLoggedIn();
+        $response = $this->actingAs($admin)->postJson('/admin/view/case/edit', [
+            'patient_notes' => 'Physician N%#$^%^%otes',
+            'first_name' => 'Denton43566',
+            'last_name' => 'Wise5465',
+            'dob' => '03-09-2035',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'first_name' => 'The first name field must only contain letters.',
+            'last_name' => 'The last name field must only contain letters.',
+            'dob' => 'The dob field must be a date before tomorrow.',
+            'patient_notes' => 'The patient notes field format is invalid.',
+        ]);
     }
 
     /**
@@ -87,14 +124,20 @@ class AdminTest extends TestCase
      */
     public function test_view_case_with_empty_data()
     {
-        $response = $this->postJson('/admin/view/case/edit', [
+        $admin = $this->adminLoggedIn();
+        $response = $this->actingAs($admin)->postJson('/admin/view/case/edit', [
             'patient_notes' => '',
             'first_name' => '',
             'last_name' => '',
             'dob' => '',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'first_name' => 'The first name field is required.',
+            'last_name' => 'The last name field is required.',
+            'dob' => 'The dob field is required.',
+        ]);
     }
 
 
@@ -294,7 +337,7 @@ class AdminTest extends TestCase
     public function test_cancel_case_with_valid_data()
     {
         $response = $this->postJson('/cancel-case-data', [
-            'case_tag'=>'cost_issue',
+            'case_tag'=>'1',
             'reason' => 'cancel this case',
         ]);
 
@@ -337,7 +380,7 @@ class AdminTest extends TestCase
     public function test_scheduled_shift_with_valid_data()
     {
         $response = $this->postJson('/create-shift', [
-            'region' => 'somnath',
+            'region' => '1',
             'physician' => 'doctor_don',
             'shiftDate' => '20-05-2024',
             'shiftStartTime' => '10:00',
@@ -356,7 +399,7 @@ class AdminTest extends TestCase
     public function test_scheduled_shift_with_invalid_data()
     {
         $response = $this->postJson('/create-shift', [
-            'region' => 'somnath',
+            'region' => '1',
             'physician' => 'doctor_don',
             'shiftDate' => '1-05-2024',
             'shiftStartTime' => '10:00',
@@ -427,6 +470,78 @@ class AdminTest extends TestCase
         $response = $this->postJson('/create-shift', [
             'role_name' => '',
             'menu_checkbox'=> ''
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * admin submit request with valid data
+     * @return void
+     */
+    public function test_admin_submit_request_with_valid_data(): void
+    {
+        $response = $this->postJson('/admin-submitted-requests', [
+            'first_name' => 'otto',
+            'last_name' => 'garrate',
+            'date_of_birth' => '2004-12-12',
+            'email' => fake()->unique()->email(),
+            'phone_number' => '1234567880',
+            'street' => 'billionaires row',
+            'city' => 'manhattan',
+            'state' => 'new york',
+            'zip' => '345678',
+            'room' => '1',
+            'adminNote' => 'efgijhfnj',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * admin submit request with invalid data
+     * @return void
+     */
+    public function test_admin_submit_request_with_invalid_data(): void
+    {
+        $response = $this->postJson('/admin-submitted-requests', [
+            'first_name' => 'ot454to',
+            'last_name' => 'garrate43534',
+            'date_of_birth' => '2030-12-12',
+            'email' => 'otto@657new.com',
+            'phone_number' => '123455hgf67880',
+            'street' => 'billionaires#%$ row',
+            'city' => 'manha434ttan',
+            'state' => 'new york34',
+            'zip' => '3456784',
+            'room' => '1cd',
+            'adminNote' => 'efgijhf43534nj',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * admin submit request with empty data
+     * @return void
+     */
+    public function test_admin_submit_request_with_empty_data(): void
+    {
+        $response = $this->postJson('/admin-submitted-requests', [
+            'first_name' => '',
+            'last_name' => '',
+            'date_of_birth' => '',
+            'email' => '',
+            'phone_number' => '',
+            'street' => '',
+            'city' => '',
+            'state' => '',
+            'zip' => '',
+            'room' => '',
+            'adminNote' => '',
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND);

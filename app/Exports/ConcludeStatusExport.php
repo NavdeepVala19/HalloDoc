@@ -44,7 +44,7 @@ class ConcludeStatusExport implements
         return collect($adminConcludeData)->map(function ($adminConclude) {
             if (isset($adminConclude) && $adminConclude->requestClient) {
                 return [
-                    'PatientName' =>  $adminConclude->requestClient->first_name . ' ' .  $adminConclude->requestClient->last_name,
+                    'PatientName' => $adminConclude->requestClient->first_name . ' ' .  $adminConclude->requestClient->last_name,
                     'Date of Birth' => $adminConclude->requestClient->date_of_birth,
                     'PhysicianName' => $adminConclude->provider->first_name . ' ' . $adminConclude->provider->last_name,
                     'RequestedDate' => $adminConclude->created_at,

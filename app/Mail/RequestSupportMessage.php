@@ -23,12 +23,10 @@ class RequestSupportMessage extends Mailable
         $this->requestSupportMessage = $message;
     }
 
-
     public function build()
     {
         return $this->view('email.requestSupport')->with(['requestSupportMessage' => $this->requestSupportMessage]);
     }
-
 
     /**
      * Get the message envelope.

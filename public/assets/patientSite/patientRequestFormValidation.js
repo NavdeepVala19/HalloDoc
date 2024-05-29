@@ -104,7 +104,7 @@ $(document).ready(function () {
     // Date Validation (params array will hold minimum and maximum date)
     $.validator.addMethod(
         "dateRange",
-        function (value, element, params) {
+        function (value, params) {
             if (!value) {
                 // Check if the field is empty
                 return true; // Allow empty field

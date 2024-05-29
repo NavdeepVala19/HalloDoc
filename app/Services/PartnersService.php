@@ -6,7 +6,15 @@ use App\Models\HealthProfessional;
 
 class PartnersService
 {
-    public function createBusiness($request){
+    /**
+     * it create new business in partners page
+     *
+     * @param mixed $request
+     *
+     * @return bool
+     */
+    public function createBusiness($request)
+    {
         HealthProfessional::create([
             'vendor_name' => $request->business_name,
             'profession' => $request->profession,
@@ -23,7 +31,16 @@ class PartnersService
         return true;
     }
 
-    public function updateBusiness($request){
+    /**
+     * it update existing business information in partners page
+     *
+     * @param mixed $request
+     *
+     * @return bool
+     */
+
+    public function updateBusiness($request)
+    {
         HealthProfessional::where('id', $request->vendor_id)->update([
             'vendor_name' => $request->business_name,
             'profession' => $request->profession,

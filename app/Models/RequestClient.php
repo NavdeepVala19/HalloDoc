@@ -30,6 +30,7 @@ class RequestClient extends Model
         'room',
     ];
 
+    protected $guarded = [];
 
     public function request()
     {

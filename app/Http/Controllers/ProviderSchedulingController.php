@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use DatePeriod;
 use App\Models\PhysicianRegion;
 use App\Models\Provider;
 use App\Models\Shift;
 use App\Models\ShiftDetail;
 use App\Models\ShiftDetailRegion;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
+use DatePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -85,7 +85,7 @@ class ProviderSchedulingController extends Controller
         } else {
             $is_repeat = 0;
         }
-        $shift =  Shift::create([
+        $shift = Shift::create([
             'physician_id' => $request['providerId'],
             'start_date' => $request['shiftDate'],
             'is_repeat' => $is_repeat,

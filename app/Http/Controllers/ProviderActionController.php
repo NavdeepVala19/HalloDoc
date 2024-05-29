@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\EncounterFormRequest;
 use App\Models\HealthProfessionalType;
-use App\Services\MedicalFormDataService;
 use App\Models\MedicalReport;
 use App\Models\Provider;
 use App\Models\RequestNotes;
@@ -13,6 +11,8 @@ use App\Models\RequestStatus;
 use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Services\CreateOrderService;
+use App\Services\MedicalFormDataService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -145,7 +145,7 @@ class ProviderActionController extends Controller
         try {
             $requestId = Crypt::decrypt($id);
 
-            $data  = requestTable::where('id', $requestId)->first();
+            $data = requestTable::where('id', $requestId)->first();
             $documents = RequestWiseFile::where('request_id', $requestId)->latest()->paginate(10);
 
             return view('providerPage.pages.viewUploads', compact('data', 'documents'));

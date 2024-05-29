@@ -13,8 +13,5 @@ class CaseTag extends Model
 
     protected $table = 'case_tag';
 
-    protected $guarded = [
-        'case_name',
-    ];
-
+    protected $guarded = [];
 }

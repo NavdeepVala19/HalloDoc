@@ -21,24 +21,28 @@ class Admin extends Model
         'zip',
         'alt_phone',
         'status',
-        'alt_phone',
+        'region_id',
+        'role_id',
+        'user_id',
     ];
-
 
     public function users()
     {
         return $this->belongsTo(Users::class, 'user_id', 'id');
     }
 
-    public function roleMenu(){
+    public function roleMenu()
+    {
         return $this->belongs(RoleMenu::class, 'role_id', 'role_id');
     }
 
-    public function role(){
+    public function role()
+    {
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
 
-    public function region(){
-        return $this->belongsTo(Regions::class, 'regions_id', 'id');
+    public function region()
+    {
+        return $this->belongsTo(Regions::class, 'region_id', 'id');
     }
 }

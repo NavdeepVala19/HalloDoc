@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendEmailAddress;
 use App\Http\Requests\CreateConciergeRequest;
+use App\Mail\SendEmailAddress;
 use App\Models\Users;
 use App\Services\ConciergeRequestSubmitService;
 use App\Services\CreateEmailLogService;
@@ -31,20 +31,18 @@ class ConciergeRequestController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create(CreateConciergeRequest $request ,ConciergeRequestSubmitService $conciergeRequestSubmitService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
+    public function create(CreateConciergeRequest $request, ConciergeRequestSubmitService $conciergeRequestSubmitService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
     {
         $isEmailStored = Users::where('email', $request->email)->first();
+        $requestId = $conciergeRequestSubmitService->storeConciergeRequest($request);
         if ($isEmailStored === null) {
             $createNewUserService->storeNewUsers($request);
             try {
                 Mail::to($request->email)->send(new SendEmailAddress($request->email));
+                $createEmailLogService->storeEmailLogs($request, $requestId);
             } catch (\Throwable $th) {
                 return view('errors.500');
             }
-        }
-        $requestId = $conciergeRequestSubmitService->storeConciergeRequest($request);
-        if ($isEmailStored === null) {
-            $createEmailLogService->storeEmailLogs($request, $requestId);
         }
         $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
 

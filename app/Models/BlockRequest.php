@@ -10,22 +10,10 @@ class BlockRequest extends Model
     use HasFactory;
     protected $table = 'block_request';
 
-    protected $fillable = [
-        'request_id',
-        'reason',
-        'email',
-        'phone_number',
-        'is_active',
-    ];
+    protected $guarded = [];
 
-    protected $guarded = [
-        'request_id ',
-    ];
-
-
-    public function requestClient(){
+    public function requestClient()
+    {
         return $this->hasOne(RequestClient::class, 'request_id', 'request_id');
     }
-
-
 }

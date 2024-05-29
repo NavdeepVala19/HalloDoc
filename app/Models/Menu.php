@@ -11,8 +11,5 @@ class Menu extends Model
 
     protected $table = 'menu';
 
-    protected $guarded = [
-        'name',
-        'account_type',
-    ];
+    protected $guarded = [];
 }

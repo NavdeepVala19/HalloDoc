@@ -10,7 +10,15 @@ use Twilio\Rest\Client;
 
 class SendLinkToPatientService
 {
-    public function sendLink($request){
+    /**
+     * send link(email and SMS) to patient for create new request
+     *
+     * @param mixed $request
+     *
+     * @return bool|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function sendLink($request)
+    {
         $firstname = $request->first_name;
         $lastname = $request->last_name;
 

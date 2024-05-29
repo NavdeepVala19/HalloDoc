@@ -23,7 +23,6 @@ class SendEmailAddress extends Mailable
         $this->emailAddress = $email;
     }
 
-
     public function build()
     {
         return view('email.sendEmailAddress')->with(['emailAddress']);

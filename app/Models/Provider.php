@@ -38,6 +38,8 @@ class Provider extends Model
         'is_notifications',
     ];
 
+    protected $guarded = [];
+
     public function users()
     {
         return $this->belongsTo(Users::class, 'user_id');

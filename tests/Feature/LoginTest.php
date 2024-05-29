@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LoginTest extends TestCase
 {
@@ -18,10 +16,9 @@ class LoginTest extends TestCase
     {
         $response = $this->postJson('/admin-logged-in', [
             'email' => 'admin@mail.com',
-            'password' => 'admin12345',
+            'password' => 'admin@mail.com',
         ]);
-        $response->assertStatus(Response::HTTP_FOUND)
-            ->assertRedirectToRoute('admin.dashboard');
+        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('admin.dashboard');
     }
 
     /**
@@ -32,11 +29,10 @@ class LoginTest extends TestCase
     public function test_provider_login_with_valid_credentials(): void
     {
         $response = $this->postJson('/admin-logged-in', [
-            'email' => 'physician1@mail.com',
-            'password' => 'physician1',
+            'email' => 'doctor@gmail.com',
+            'password' => 'doctor@gmail.com',
         ]);
-        $response->assertStatus(Response::HTTP_FOUND)
-            ->assertRedirectToRoute('provider.dashboard');
+        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('provider.dashboard');
     }
 
     /**
@@ -47,12 +43,15 @@ class LoginTest extends TestCase
     public function test_admin_and_provider_login_with_invalid_credentials(): void
     {
         $response = $this->postJson('/admin-logged-in', [
-            'email' => 'invalid@newmail.co',
-            'password' => '1234323',
+            'email' => 'invalid@new343mail.co',
+            'password' => '12343fdhgd23',
         ]);
 
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error');
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'email' => 'The email field format is invalid.',
+        ]);
     }
 
     /**
@@ -68,5 +67,81 @@ class LoginTest extends TestCase
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'email' => 'The email field is required.',
+            'password' => 'The password field is required.',
+        ]);
+    }
+
+    /**
+     * Test admin login with invalid email credentials
+     *
+     * @return void
+     */
+    public function test_admin_login_with_invalid_email_credentials(): void
+    {
+        $response = $this->postJson('/admin-logged-in', [
+            'email' => 'admi45544n@mail.com',
+            'password' => 'admin@mail.com',
+        ]);
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'We could not find an account associated with that email address.');
+    }
+
+
+    /**
+     * Test admin login with invalid password credentials
+     *
+     * @return void
+     */
+    public function test_admin_login_with_invalid_password_credentials(): void
+    {
+        $response = $this->postJson('/admin-logged-in', [
+            'email' => 'admin@mail.com',
+            'password' => 'a443sgffgdmin12345',
+        ]);
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'Incorrect Password, Please Enter Correct Password.');
+    }
+
+
+    /**
+     * Test provider login with invalid email credentials
+     *
+     * @return void
+     */
+    public function test_provider_login_with_invalid_email_credentials(): void
+    {
+        $response = $this->postJson('/admin-logged-in', [
+            'email' => 'doctoeffgr@gmail.com',
+            'password' => 'doctor@gmail.com',
+        ]);
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'We could not find an account associated with that email address.');
+    }
+
+    /**
+     * Test provider login with invalid password credentials
+     *
+     * @return void
+     */
+    public function test_provider_login_with_invalid_password_credentials(): void
+    {
+        $response = $this->postJson('/admin-logged-in', [
+            'email' => 'doctor@gmail.com',
+            'password' => 'dgnegnwiotniogto',
+        ]);
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'Incorrect Password, Please Enter Correct Password.');
+    }
+
+    /**
+     * Test patient login with valid credentials
+     *
+     * @return void
+     */
+    public function test_patient_login_with_valid_credentials(): void
+    {
+        $response = $this->postJson('/admin-logged-in', [
+            'email' => 'shivesh@mail.com',
+            'password' => 'shivesh@mail.com',
+        ]);
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'Invalid Credentials');
     }
 }

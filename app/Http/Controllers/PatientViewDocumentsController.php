@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\RequestWiseFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use ZipArchive;
 
 class PatientViewDocumentsController extends Controller
@@ -21,18 +20,7 @@ class PatientViewDocumentsController extends Controller
     {
         try {
             $id = Crypt::decrypt($id);
-            $documents = RequestWiseFile::select(
-                'request.first_name',
-                'request.confirmation_no',
-                'request_wise_file.file_name',
-                'request_wise_file.id',
-                'request_wise_file.request_id',
-                DB::raw('DATE(request_wise_file.created_at) as created_date'),
-            )
-                ->leftJoin('request', 'request.id', 'request_wise_file.request_id')
-                ->where('request_id', $id)
-                ->paginate(10);
-
+            $documents = $this->getDocumentsByRequestId($id);
             return view('patientSite/patientViewDocument', compact('documents'));
         } catch (\Throwable $th) {
             return view('errors.404');
@@ -48,19 +36,12 @@ class PatientViewDocumentsController extends Controller
      */
     public function uploadDocs(Request $request)
     {
-        $request->validate([
-            'document' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
-        ]);
-        $requestWiseData = RequestWiseFile::where('request_id', $request->request_wise_file_id)->first();
-        if ($request->document) {
-            // store documents in request_wise_file table
-            $requestFile = new RequestWiseFile();
-            $requestFile->request_id = $requestWiseData->request_id;
-            $requestFile->file_name = uniqid() . '_' . $request->file('document')->getClientOriginalName();
-            $request->file('document')->storeAs('public', $requestFile->file_name);
-            $requestFile->save();
-            return back();
-        }
+        $this->validateDocument($request);
+        $requestWiseData = $this->getRequestWiseFileData($request->request_wise_file_id);
+
+        $this->storeDocument($request, $requestWiseData->request_id);
+
+        return back();
     }
 
     /**
@@ -74,14 +55,12 @@ class PatientViewDocumentsController extends Controller
     {
         try {
             $id = Crypt::decrypt($id);
-            $file = RequestWiseFile::where('id', $id)->first();
-            $path = public_path() . '/storage/' . $file->file_name;
-            return response()->download($path);
+            $file = $this->getFileById($id);
+            return $this->downloadFile($file->file_name);
         } catch (\Throwable $th) {
             return view('errors.500');
         }
     }
-
 
     /**
      *  download multiple documents
@@ -93,29 +72,74 @@ class PatientViewDocumentsController extends Controller
     public function downloadSelectedFiles(Request $request)
     {
         try {
-            if (! $request->input('selected_files')) {
-                $data = RequestWiseFile::where('request_id', $request->requestId)->get();
-                if ($data->isEmpty()) {
-                    return redirect()->back()->with('noRecordFound', 'There are no records to download!');
-                }
-                $ids = RequestWiseFile::where('request_id', $request->requestId)->get()->pluck('id')->toArray();
-            } else {
-                $ids = $request->input('selected_files');
-            }
-            $zip = new ZipArchive();
-            $zipFile = 'documents.zip';
-
-            if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
-                foreach ($ids as $id) {
-                    $file = RequestWiseFile::where('id', $id)->first();
-                    $path = public_path() . '/storage/' . $file->file_name;
-                    $zip->addFile($path, $file->file_name);
-                }
-                $zip->close();
-            }
+            $ids = $this->getSelectedFileIds($request);
+            $zipFile = $this->createZipFile($ids);
             return response()->download(public_path($zipFile))->deleteFileAfterSend(true);
         } catch (\Throwable $th) {
             return view('errors.500');
         }
+    }
+
+    // Helper methods
+
+    private function getDocumentsByRequestId($id)
+    {
+        return RequestWiseFile::with('request')->where('request_id', $id)->paginate(10);
+    }
+
+    private function validateDocument(Request $request)
+    {
+        $request->validate([
+            'document' => 'required|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
+        ]);
+    }
+
+    private function getRequestWiseFileData($requestId)
+    {
+        return RequestWiseFile::where('request_id', $requestId)->first();
+    }
+
+    private function storeDocument(Request $request, $requestId)
+    {
+        $fileName = uniqid() . '_' . $request->file('document')->getClientOriginalName();
+        $request->file('document')->storeAs('public', $fileName);
+
+        $requestFile = new RequestWiseFile();
+        $requestFile->request_id = $requestId;
+        $requestFile->file_name = $fileName;
+        $requestFile->save();
+    }
+
+    private function getFileById($id)
+    {
+        return RequestWiseFile::where('id', $id)->first();
+    }
+
+    private function downloadFile($fileName)
+    {
+        $path = public_path() . '/storage/' . $fileName;
+        return response()->download($path);
+    }
+
+    private function getSelectedFileIds(Request $request)
+    {
+        return $request->selected_files ?: RequestWiseFile::where('request_id', $request->requestId)->pluck('id')->toArray();
+    }
+
+    private function createZipFile($ids)
+    {
+        $zip = new ZipArchive();
+        $zipFile = 'documents.zip';
+
+        if ($zip->open(public_path($zipFile), ZipArchive::CREATE) === true) {
+            foreach ($ids as $id) {
+                $file = $this->getFileById($id);
+                $path = public_path() . '/storage/' . $file->file_name;
+                $zip->addFile($path, $file->file_name);
+            }
+            $zip->close();
+        }
+
+        return $zipFile;
     }
 }

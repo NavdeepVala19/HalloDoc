@@ -2,62 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use App\Models\Users;
-use Illuminate\Http\Request;
-use App\Mail\SendEmailAddress;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Crypt;
-use App\Services\CreateNewUserService;
-use App\Services\CreateEmailLogService;
-use App\Http\Requests\AdminCreateRequest;
 use App\Services\AdminCreateRequestService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
-class AdminDashboardController extends Controller
+class AdminProfileController extends Controller
 {
-    /**
-     * shows admin request page(form) from this page admin can create request on behalf of patient
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-
-    public function createNewRequest()
-    {
-        return view('adminPage/adminRequest');
-    }
-
-    /**
-     * it stores request in request_client and request table and if user is new it stores details in all_user,users, make role_id 3 in user_roles table
-     * and send email to create account using same email
-     *
-     * @param \Illuminate\Http\Request $request  (the input which is enter by user)
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
-     */
-
-    public function createAdminPatientRequest(AdminCreateRequest $request, AdminCreateRequestService $adminCreateRequestService, CreateNewUserService $createNewUserService, CreateEmailLogService $createEmailLogService)
-    {
-        $adminId = Admin::where('user_id', Auth::user()->id)->value('id');
-        $isEmailStored = Users::where('email', $request->email)->first();
-        if ($isEmailStored === null) {
-            $createNewUserService->storeNewUsers($request);
-            try {
-                Mail::to($request->email)->send(new SendEmailAddress($request->email));
-            } catch (\Throwable $th) {
-                return view('errors.500');
-            }
-        }
-        $requestId = $adminCreateRequestService->storeRequest($request);
-        if ($isEmailStored === null) {
-            $createEmailLogService->storeEmailLogs($request, $requestId, null, $adminId);
-        }
-        $redirectMsg = $isEmailStored ? 'Request is Submitted' : 'Email for Create Account is Sent and Request is Submitted';
-
-        return redirect()->route('admin.status', 'new')->with('successMessage', $redirectMsg);
-    }
-
     /**
      * this page will show when admin edit their profile through user access page
      *
@@ -88,7 +41,6 @@ class AdminDashboardController extends Controller
         return view('adminPage/adminProfile', compact('adminProfileData'));
     }
 
-
     /**
      * it will update password in users table
      *
@@ -102,16 +54,11 @@ class AdminDashboardController extends Controller
         $request->validate([
             'password' => 'required|min:8|max:30',
         ]);
+        $updatePassword = Users::where('id', $id)->first();
+        $updatePassword->password = Hash::make($request->password);
 
-        // Update data in users table
-        $updateUserData = [
-            'password' => Hash::make($request->password),
-        ];
-
-        Users::where('id', $id)->first()->update($updateUserData);
         return back()->with('message', 'Your password is updated successfully');
     }
-
 
     /**
      * it will update firstname,lastname,email,mobile in allusers and admin table

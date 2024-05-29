@@ -32,31 +32,15 @@ class AdminLoginController extends Controller
      */
     public function userLogin(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'password' => 'required|min:8|max:30',
-        ]);
+        $this->validateLogin($request);
 
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
+        $credentials = $this->getCredentials($request);
 
         if (Auth::attempt($credentials)) {
-            $userRole = UserRoles::where('user_id', Auth::user()->id)->first();
-            if ($userRole->role_id === 1) {
-                return redirect()->route('admin.dashboard');
-            }
-            if ($userRole->role_id === 2) {
-                return redirect()->route('provider.dashboard');
-            }
-            return back()->with('error', 'Invalid Credentials');
+            return $this->handleUserRoleRedirect();
         }
-        $isUserExist = Users::where('email', $request->email)->first();
-        if ($isUserExist === null) {
-            return back()->with('error', 'We could not find an account associated with that email address. ');
-        }
-        return back()->with('error', 'Incorrect Password , Please Enter Correct Password. ');
+
+        return $this->handleLoginFailure($request);
     }
 
     /**
@@ -78,29 +62,17 @@ class AdminLoginController extends Controller
      */
     public function submitForgetPasswordForm(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
+        $this->validateEmail($request);
 
-        $user = Users::where('email', $request->email)->first();
+        $user = $this->getUserByEmail($request->email);
 
-        // check user and userRoles is exist or not
-        if ($user) {
-            $userRolesData = UserRoles::where('user_id', $user->id)->first();
-        }
-
-        if ($user === null || $userRolesData->role_id === 3) {
+        if ($this->isInvalidUser($user)) {
             return back()->with('error', 'no such email is registered');
         }
 
-        $token = Str::random(64);
-        $user->token = $token;
-        $user->save();
+        $token = $this->generateTokenForUser($user);
 
-        Mail::send('email.adminforgetPassword', ['token' => $token], function ($message) use ($request) {
-            $message->to($request->email);
-            $message->subject('Reset Password');
-        });
+        $this->sendPasswordResetEmail($request->email, $token);
 
         return redirect()->route('login')->with('message', 'E-mail is sent for password reset');
     }
@@ -116,7 +88,7 @@ class AdminLoginController extends Controller
     {
         try {
             $tokenValue = Crypt::decrypt($token);
-            $userData = users::where('token', $tokenValue)->first();
+            $userData = $this->getUserByToken($tokenValue);
             if ($userData) {
                 return view('admin/adminPasswordUpdate', ['token' => $tokenValue]);
             }
@@ -135,21 +107,14 @@ class AdminLoginController extends Controller
      */
     public function submitUpdatePasswordForm(Request $request)
     {
-        $request->validate([
-            'confirm_password' => 'required|min:8|max:20',
-            'new_password' => 'required|same:confirm_password|min:8|max:20',
-        ]);
+        $this->validatePasswordUpdate($request);
 
-        $updatePassword = Users::where('token', $request->token)->first();
+        $updatePassword = $this->getUserByToken($request->token);
         if (! $updatePassword) {
             return back()->with('error', 'Invalid token!');
         }
 
-        Users::where([
-            'token' => $request->token,
-        ])->update(['password' => Hash::make($request->new_password)]);
-
-        Users::where(['token' => $request->token])->update(['token' => '']);
+        $this->updateUserPassword($request->token, $request->new_password);
 
         return redirect()->route('login')->with('message', 'Your password has been changed!');
     }
@@ -163,5 +128,95 @@ class AdminLoginController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
+    }
+
+    // Helper methods
+
+    private function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+            'password' => 'required|min:8|max:30',
+        ]);
+    }
+
+    private function getCredentials(Request $request)
+    {
+        return [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+    }
+
+    private function handleUserRoleRedirect()
+    {
+        $userRoleId = UserRoles::where('user_id', Auth::user()->id)->value('role_id');
+        if ($userRoleId === 1) {
+            return redirect()->route('admin.dashboard');
+        }
+        if ($userRoleId === 2) {
+            return redirect()->route('provider.dashboard');
+        }
+        return back()->with('error', 'Invalid Credentials');
+    }
+
+    private function handleLoginFailure(Request $request)
+    {
+        $isUserExist = Users::where('email', $request->email)->first();
+        if ($isUserExist === null) {
+            return back()->with('error', 'We could not find an account associated with that email address.');
+        }
+        return back()->with('error', 'Incorrect Password, Please Enter Correct Password.');
+    }
+
+    private function validateEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
+        ]);
+    }
+
+    private function getUserByEmail($email)
+    {
+        return Users::where('email', $email)->first();
+    }
+
+    private function isInvalidUser($user)
+    {
+        return $user === null || UserRoles::where('user_id', $user->id)->value('role_id') === 3;
+    }
+
+    private function generateTokenForUser($user)
+    {
+        $token = Str::random(64);
+        $user->token = $token;
+        $user->save();
+        return $token;
+    }
+
+    private function sendPasswordResetEmail($email, $token)
+    {
+        Mail::send('email.adminforgetPassword', ['token' => $token], function ($message) use ($email) {
+            $message->to($email);
+            $message->subject('Reset Password');
+        });
+    }
+
+    private function getUserByToken($token)
+    {
+        return Users::where('token', $token)->first();
+    }
+
+    private function validatePasswordUpdate(Request $request)
+    {
+        $request->validate([
+            'confirm_password' => 'required|min:8|max:20',
+            'new_password' => 'required|same:confirm_password|min:8|max:20',
+        ]);
+    }
+
+    private function updateUserPassword($token, $newPassword)
+    {
+        Users::where(['token' => $token])->update(['password' => Hash::make($newPassword), 'token' => '']);
     }
 }

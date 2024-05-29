@@ -18,8 +18,8 @@ use App\Models\RequestTable;
 use App\Models\RequestWiseFile;
 use App\Services\CreateOrderService;
 use App\Services\MedicalFormDataService;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminActionController extends Controller
 {
@@ -74,6 +74,7 @@ class AdminActionController extends Controller
     public function assignCase(Request $request)
     {
         $request->validate([
+            'region' => 'required',
             'physician' => 'required|numeric',
             'assign_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
@@ -221,7 +222,7 @@ class AdminActionController extends Controller
         $request->validate([
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'dob' => 'required',
+            'dob' => 'required|before:tomorrow|after:Jan 01 1900',
             'patient_notes' => 'nullable|min:5|max:200|regex: /^[a-zA-Z0-9 ,_-]+?$/',
         ]);
 
@@ -311,7 +312,7 @@ class AdminActionController extends Controller
     {
         try {
             $requestId = Crypt::decrypt($id);
-            $data  = requestTable::where('id', $requestId)->first();
+            $data = requestTable::where('id', $requestId)->first();
             $documents = RequestWiseFile::where('request_id', $requestId)->orderByDesc('id')->paginate(10);
             return view('adminPage.pages.viewUploads', compact('data', 'documents'));
         } catch (\Throwable $th) {
@@ -429,7 +430,6 @@ class AdminActionController extends Controller
             return view('errors.404');
         }
     }
-
 
     /**
      * Close Case -> particular case will move from toClose state to unpaid state.

@@ -4,26 +4,45 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class PatientForgotPasswordTest extends TestCase
 {
     /**
-     * Email not entered or not in proper format.
+     * email is empty.
      *
      * @return void
      */
-    public function test_email_not_entered_or_not_in_proper_format(): void
+    public function test_email_not_entered_is_empty(): void
     {
         $response = $this->postJson('/patient/forgot-password-link', [
             'email' => '',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'email' => 'The email field is required.',
+        ]);
     }
 
     /**
-     * Email entered is not of an registered patient
+     * email format is invalid.
+     *
+     * @return void
+     */
+    public function test_email_not_in_proper_format(): void
+    {
+        $response = $this->postJson('/patient/forgot-password-link', [
+            'email' => 'shivesh@ma45il.com',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'email' => 'The email field format is invalid.',
+        ]);
+    }
+
+    /**
+     * Email entered is not of an registered patient or admin/provider
      *
      * @return void
      */
@@ -33,7 +52,7 @@ class PatientForgotPasswordTest extends TestCase
             'email' => 'admin@mail.com',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'no such email is registered');
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error', 'No such email is registered');
     }
 
     /**

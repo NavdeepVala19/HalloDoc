@@ -48,16 +48,16 @@ class CreatePartners extends FormRequest
 
         return [
             'business_name.required' => $enter . ' First Name',
-            'business_name.min' =>  $min_message . ' 5 Alphabets',
+            'business_name.min' => $min_message . ' 5 Alphabets',
             'business_name.max' => $max_message . ' 20 Alphabets',
             'business_name.alpha' => $only_alphabets . ' in First name',
 
-            'profession.required' =>  $enter . ' Profession',
-            'fax_number.required' =>  $enter . ' Fax numbers',
-            'fax_number.numeric' =>  $enter . ' only numbers',
+            'profession.required' => $enter . ' Profession',
+            'fax_number.required' => $enter . ' Fax numbers',
+            'fax_number.numeric' => $enter . ' only numbers',
 
-            'email.required' =>  $enter . ' Email',
-            'email.regex' =>  $enter . ' a valid email (format: alphanum@alpha.domain).',
+            'email.required' => $enter . ' Email',
+            'email.regex' => $enter . ' a valid email (format: alphanum@alpha.domain).',
 
             'mobile.required' => $enter . ' Phone Number',
 
@@ -66,8 +66,8 @@ class CreatePartners extends FormRequest
             'business_contact.max_digits' => $enter . ' exactly 10 digits',
 
             'street.required' => $enter . ' a street',
-            'street.min' => $min_message . " 3 characters in street",
-            'street.max' => $max_message . " 25 characters in street",
+            'street.min' => $min_message . ' 3 characters in street',
+            'street.max' => $max_message . ' 25 characters in street',
             'street.regex' => 'Only alphabets, Numbers and ,_-. allowed.',
 
             'city.required' => $enter . ' a city',

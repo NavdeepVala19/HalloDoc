@@ -2,19 +2,40 @@
 
 namespace App\Services;
 
-use App\Models\Users;
-use App\Models\Business;
-use App\Models\RequestTable;
-use App\Models\RequestClient;
-use App\Models\RequestBusiness;
 use App\Helpers\ConfirmationNumber;
+use App\Models\Business;
+use App\Models\RequestBusiness;
+use App\Models\RequestClient;
+use App\Models\RequestTable;
+use App\Models\Users;
 
 class BusinessRequestSubmitService
 {
-    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber)
+    /**
+     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
+     * and send email to create account using same email
+     *
+     * @param mixed $request (input enter by user)
+     *
+     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
+     */
+
+    public function storeBusinessRequest($request)
+    {
+        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
+        $userId = Users::where('email', $request->email)->value('id');
+
+        $requestId = $this->storeInRequestTable($request, $userId, $confirmationNumber);
+        $this->storeInRequestClientTable($request, $requestId);
+        $businessId = $this->storeInBusinessTable($request);
+        $this->storeInRequestBusiness($requestId, $businessId);
+
+        return $requestId;
+    }
+    private function storeInRequestTable($request, $userId, $confirmationNumber)
     {
         $requestData = RequestTable::create([
-            'user_id' => $isEmailStored->id,
+            'user_id' => $userId,
             'request_type_id' => 4,
             'status' => 1,
             'first_name' => $request->business_first_name,
@@ -31,7 +52,7 @@ class BusinessRequestSubmitService
     private function storeInRequestClientTable($request, $requestId)
     {
         RequestClient::create([
-            'request_id' =>  $requestId,
+            'request_id' => $requestId,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'date_of_birth' => $request->date_of_birth,
@@ -45,7 +66,8 @@ class BusinessRequestSubmitService
         ]);
     }
 
-    private function storeInBusinessTable($request){
+    private function storeInBusinessTable($request)
+    {
         $business = Business::create([
             'phone_number' => $request->business_mobile,
             'address1' => $request->street,
@@ -57,34 +79,11 @@ class BusinessRequestSubmitService
         return $business->id;
     }
 
-
-    private function storeInRequestBusiness($requestId, $businessId){
+    private function storeInRequestBusiness($requestId, $businessId)
+    {
         RequestBusiness::create([
             'request_id' => $requestId,
             'business_id' => $businessId,
         ]);
-    }
-
-
-    /**
-     * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
-     * and send email to create account using same email
-     *
-     * @param mixed $request (input enter by user)
-     *
-     * @return object|Users|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Database\Eloquent\Model|null
-     */
-
-    public function storeBusinessRequest($request)
-    {
-        $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
-        $isEmailStored = Users::where('email', $request->email)->first();
-
-        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
-        $this->storeInRequestClientTable($request, $requestId);
-        $businessId = $this->storeInBusinessTable($request);
-        $this->storeInRequestBusiness($requestId, $businessId);
-
-        return $requestId;
     }
 }

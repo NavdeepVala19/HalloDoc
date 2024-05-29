@@ -11,7 +11,6 @@ use App\Models\Users;
 
 class ConciergeRequestSubmitService
 {
-
     /**
      * it stores request in request_client and request table and if user(patient) is new it stores details in all_user,users, make role_id 3 in user_roles table
      * and send email to create account using same email
@@ -23,19 +22,19 @@ class ConciergeRequestSubmitService
     public function storeConciergeRequest($request)
     {
         $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
-        $isEmailStored = Users::where('email', $request->email)->first();
+        $userId = Users::where('email', $request->email)->value('id');
 
-        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
+        $requestId = $this->storeInRequestTable($request, $userId, $confirmationNumber);
         $this->storeInRequestClientTable($request, $requestId);
         $conciergeId = $this->storeInConciergeTable($request);
         $this->storeInRequestConcierge($requestId, $conciergeId);
 
         return $requestId;
     }
-    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber)
+    private function storeInRequestTable($request, $userId, $confirmationNumber)
     {
         $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored->id;
+        $requestData->user_id = $userId;
         $requestData->request_type_id = 3;
         $requestData->status = 1;
         $requestData->confirmation_no = $confirmationNumber;

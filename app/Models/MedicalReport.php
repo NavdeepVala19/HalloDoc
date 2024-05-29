@@ -46,4 +46,5 @@ class MedicalReport extends Model
         'is_finalize',
     ];
 
+    protected $guarded = [];
 }

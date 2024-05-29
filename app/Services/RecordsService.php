@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class RecordsService
 {
-
     /**
      * it list the records of patient and it fetch data from request_client,request,request_notes,provider,request_closed table
      *
@@ -85,16 +84,16 @@ class RecordsService
             $combinedData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if ($request->email) {
-            $combinedData->where('request_client.email', "like", "%" . $request->email . "%");
+            $combinedData->where('request_client.email', 'like', '%' . $request->email . '%');
         }
         if ($request->phone_number) {
-            $combinedData->where('request_client.phone_number', "like", "%" . $request->phone_number . "%");
+            $combinedData->where('request_client.phone_number', 'like', '%' . $request->phone_number . '%');
         }
         if ($request->request_type) {
             $combinedData->where('request.request_type_id', $request->request_type);
         }
         if ($request->provider_name) {
-            $combinedData->where('provider.first_name', "like", "%" . $request->provider_name . "%");
+            $combinedData->where('provider.first_name', 'like', '%' . $request->provider_name . '%');
         }
         if ($request->request_status) {
             $combinedData->where('request.status', $request->request_status);
@@ -103,10 +102,10 @@ class RecordsService
             $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $todayDate]);
         }
         if ($request->to_date_of_service) {
-            $combinedData->where('request_client.created_at', "<", $request->to_date_of_service);
+            $combinedData->where('request_client.created_at', '<', $request->to_date_of_service);
         }
         if ($request->from_date_of_service && $request->to_date_of_service) {
-            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service,]);
+            $combinedData->whereBetween('request_client.created_at', [$request->from_date_of_service, $request->to_date_of_service]);
         }
         return $combinedData;
     }
@@ -139,7 +138,6 @@ class RecordsService
         return $this->filterSearchRecords($request);
     }
 
-
     /**
      * filter SMS logs as per input
      *
@@ -158,16 +156,16 @@ class RecordsService
             $sms->where('sms_log.recipient_name', 'like', '%' . $request->receiver_name . '%');
         }
         if ($request->phone_number) {
-            $sms->where('sms_log.mobile_number', "like", "%" . $request->phone_number . "%");
+            $sms->where('sms_log.mobile_number', 'like', '%' . $request->phone_number . '%');
         }
         if ($request->created_date) {
-            $sms->where('sms_log.created_date', "like", "%" . $request->created_date . "%");
+            $sms->where('sms_log.created_date', 'like', '%' . $request->created_date . '%');
         }
         if ($request->sent_date) {
-            $sms->where('sms_log.sent_date', "like", "%" . $request->sent_date . "%");
+            $sms->where('sms_log.sent_date', 'like', '%' . $request->sent_date . '%');
         }
         if ($request->role_type) {
-            $sms->where('sms_log.role_id', "like", "%" . $request->role_type . "%");
+            $sms->where('sms_log.role_id', 'like', '%' . $request->role_type . '%');
         }
         return $sms->paginate($perPage, ['*'], 'page', $page);
     }
@@ -177,8 +175,8 @@ class RecordsService
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function blockHistory(){
-
+    public function blockHistory()
+    {
         return BlockRequest::with('requestClient')->latest()->paginate(10);
     }
 
@@ -189,8 +187,8 @@ class RecordsService
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function filterBlockHistoryData($request){
-
+    public function filterBlockHistoryData($request)
+    {
         $blockData = BlockRequest::select(
             'request_client.first_name as patient_name',
             'block_request.id',
@@ -201,18 +199,18 @@ class RecordsService
             'block_request.request_id',
             DB::raw('DATE(block_request.created_at) as created_date'),
         )
-        ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
+            ->leftJoin('request_client', 'block_request.request_id', 'request_client.request_id');
         if ($request->patient_name) {
             $blockData->where('request_client.first_name', 'like', '%' . $request->patient_name . '%');
         }
         if ($request->email) {
-            $blockData->where('block_request.email', "like", "%" . $request->email . "%");
+            $blockData->where('block_request.email', 'like', '%' . $request->email . '%');
         }
         if ($request->phone_number) {
-            $blockData->where('block_request.phone_number', "like", "%" . $request->phone_number . "%");
+            $blockData->where('block_request.phone_number', 'like', '%' . $request->phone_number . '%');
         }
         if ($request->date) {
-            $blockData->where('block_request.created_at', "like", "%" . $request->date . "%");
+            $blockData->where('block_request.created_at', 'like', '%' . $request->date . '%');
         }
         return $blockData->paginate(10);
     }

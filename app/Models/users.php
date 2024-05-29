@@ -21,6 +21,7 @@ class Users extends Model
         'phone_number',
     ];
 
+    protected $guarded = [];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -30,7 +31,6 @@ class Users extends Model
         'password',
         'token',
     ];
-
 
     public function allusers()
     {

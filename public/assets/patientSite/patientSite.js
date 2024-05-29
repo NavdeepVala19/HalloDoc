@@ -42,7 +42,7 @@ $(document).ready(function () {
 
     $(".continue-btn").click(function () {
         if ($(".btn-me").hasClass("btn-active")) {
-            $(window).attr("location", "/patient/submit-requests");
+            $(window).attr("location", "/patient/submit-me-requests");
         } else if ($(".btn-someone").hasClass("btn-active")) {
             console.log("btn someone");
             $(window).attr("location", "/patient/submit-someone-requests");

@@ -116,13 +116,16 @@
                 <input type="hidden" name="requestId" value="{{ $data->id }}">
 
                 <div class="form-floating h-25">
-                    <textarea name="patient_notes" class="form-control patientNotes" placeholder="injury" id="floatingTextarea2" disabled>{{ $data->requestClient->notes }}</textarea>
+                    <textarea name="patient_notes" class="form-control patientNotes  @error('patient_notes') is-invalid @enderror" placeholder="injury" id="floatingTextarea2" disabled>{{ $data->requestClient->notes }}</textarea>
                     <label for="floatingTextarea2">Patient Notes</label>
+                    @error('patient_notes')
+                        <div class="alert text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="grid-2">
                     <div class="form-floating ">
-                        <input type="text" name="first_name" class="form-control firstName" id="floatingInput1"
+                        <input type="text" name="first_name" class="form-control firstName @error('first_name') is-invalid @enderror" id="floatingInput1"
                             placeholder="First Name" value="{{ $data->requestClient->first_name }}" disabled>
                         <label for="floatingInput1">First Name</label>
                         @error('first_name')
@@ -131,22 +134,25 @@
                     </div>
                     <div class="form-floating ">
                         <input type="text" name="last_name" value="{{ $data->requestClient->last_name }}"
-                            class="form-control lastName" id="floatingInput2" placeholder="Last Name" disabled>
+                            class="form-control lastName @error('last_name') is-invalid @enderror" id="floatingInput2" placeholder="Last Name" disabled>
                         <label for="floatingInput2">Last Name</label>
                         @error('last_name')
                             <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="date" name="dob" class="form-control dob"
+                        <input type="date" name="dob" class="form-control dob @error('dob') is-invalid @enderror"
                             value="{{ $data->requestClient->date_of_birth }}" id="floatingInput3"
                             placeholder="date of birth" disabled>
                         <label for="floatingInput3">Date Of Birth</label>
+                        @error('dob')
+                            <div class="alert text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-floating">
                         <div class="d-flex align-items-center gap-2">
                             <input type="tel" name="phone_number" value="{{ $data->requestClient->phone_number }}"
-                                class="form-control phone" id="telephone" disabled>
+                                class="form-control phone @error('phone_number') is-invalid @enderror" id="telephone" disabled>
                             @error('phone_number')
                                 <div class="alert text-danger">{{ $message }}</div>
                             @enderror
