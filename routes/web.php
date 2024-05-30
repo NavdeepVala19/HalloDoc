@@ -185,7 +185,7 @@ Route::middleware('CheckProviderLogin')->group(function () {
     Route::get('/provider-housecall-encounter/{requestId}', [ProviderActionController::class, 'encounterHouseCall'])->name('provider.houseCall.encounter');
 
     // ENCOUNTER FORM
-    // Display Encounter Form page when clicked on Encounter from Conclude State
+    // Display Encounter Form page when clicked on Encounter
     Route::get(
         '/encounter-form/{id?}',
         [ProviderActionController::class, 'encounterFormView']

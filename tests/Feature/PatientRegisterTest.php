@@ -15,7 +15,7 @@ class PatientRegisterTest extends TestCase
     {
         $response = $this->get('/patient-register');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     /**

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ConfirmationNumber;
-use App\Http\Requests\CreatePatientRequest;
-use App\Mail\SendEmailAddress;
-use App\Models\RequestTable;
 use App\Models\Users;
-use App\Services\CreateNewUserService;
+use App\Models\RequestTable;
+use App\Mail\SendEmailAddress;
 use App\Services\EmailLogService;
+use App\Helpers\ConfirmationNumber;
+use Illuminate\Support\Facades\Mail;
+use App\Services\CreateNewUserService;
 use App\Services\RequestClientService;
 use App\Services\RequestWiseFileService;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\CreateFamilyRequest;
+use App\Http\Requests\CreatePatientRequest;
 
 // this controller is responsible for creating/storing the family request
 class FamilyRequestController extends Controller
@@ -34,7 +35,7 @@ class FamilyRequestController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create(CreatePatientRequest $request, CreateNewUserService $createNewUserService, RequestClientService $requestClientService, EmailLogService $emailLogService, RequestWiseFileService $requestWiseFileService)
+    public function create(CreateFamilyRequest $request, CreateNewUserService $createNewUserService, RequestClientService $requestClientService, EmailLogService $emailLogService, RequestWiseFileService $requestWiseFileService)
     {
         // check if email already exists in users table
         $isEmailStored = Users::where('email', $request->email)->first();

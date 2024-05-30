@@ -54,8 +54,9 @@ class ProviderActionController extends Controller
     public function transferCase(Request $request)
     {
         $request->validate([
-            'notes' => 'required|min:5|max:200',
+            'notes' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
+
         // Retrieve provider ID from RequestTable based on the request ID
         $providerId = RequestTable::where('id', $request->requestId)->first()->physician_id;
         // Create a new record in RequestStatus for the transferred case

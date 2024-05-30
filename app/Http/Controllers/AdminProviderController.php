@@ -158,10 +158,10 @@ class AdminProviderController extends Controller
     public function updateProviderAccountInfo(Request $request, $id)
     {
         // update data of providers in users table
-        $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->value('user_id');
+        $getUserIdFromProvider = Provider::where('id', $id)->value('user_id');
         $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider)->first();
 
-        if ($request->password) {
+        if ($request->has('password')) {
             $request->validate([
                 'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             ]);

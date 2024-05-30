@@ -26,12 +26,15 @@ class ProviderCreateRequest extends FormRequest
         return [
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
+            'date_of_birth' => 'nullable|date|before:tomorrow|after:Jan 01 1900',
             'phone_number' => 'required',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'street' => 'required|min:3|max:30',
-            'city' => 'required|min:5|max:30',
-            'state' => 'required|min:5|max:30',
-            'zipcode' => 'digits:6',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'zipcode' => 'nullable|min_digits:6|max_digits:6',
+            'room' => 'nullable|gte:1|max:1000',
+            'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
         ];
     }
 
