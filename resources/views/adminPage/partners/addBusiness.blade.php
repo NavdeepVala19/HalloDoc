@@ -65,7 +65,7 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="text" name="business_name"
-                            class="form-control @error('business_name') is-invalid @enderror" id="floatingInput1"
+                            class="form-control @error('business_name') is-invalid @enderror" id="floatingInput1" value="{{old('business_name')}}"
                             placeholder="Business Name">
                         <label for="floatingInput1">Business Name</label>
                         @error('business_name')
@@ -73,7 +73,7 @@
                         @enderror
                     </div>
                     <div class="form-floating">
-                        <select id="floatingSelect" name="profession"
+                        <select id="floatingSelect" name="profession" value="{{old('profession')}}"
                             class="form-select @error('profession') is-invalid @enderror">
                             <option selected disabled>Select Profession</option>
                             @foreach ($types as $type)
@@ -86,7 +86,7 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="number" name="fax_number"
+                        <input type="number" name="fax_number" value="{{old('fax_number')}}"
                             class="form-control @error('fax_number') is-invalid @enderror" id="floatingInput2"
                             placeholder="Fax Number" min="0">
                         <label for="floatingInput2">Fax Number</label>
@@ -96,7 +96,7 @@
                     </div>
                     <div>
                         <div class="form-floating">
-                            <input type="tel" name="mobile"
+                            <input type="tel" name="mobile" value="{{old('mobile')}}"
                                 class="form-control phone @error('mobile') is-invalid @enderror" id="telephone"
                                 placeholder="mobile">
                         </div>
@@ -105,7 +105,7 @@
                         @enderror
                     </div>
                     <div class="form-floating ">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}"
                             id="floatingInput3" placeholder="name@example.com">
                         <label for="floatingInput3">Email</label>
                         @error('email')
@@ -115,7 +115,7 @@
 
                     <div class="form-floating ">
                         <input type="number" name="business_contact"
-                            class="form-control @error('business_contact') is-invalid @enderror" id="floatingInput4"
+                            class="form-control @error('business_contact') is-invalid @enderror" id="floatingInput4" value="{{old('business_contact')}}"
                             placeholder="Business Contact">
                         <label for="floatingInput4">Business Contact</label>
                         @error('business_contact')
@@ -124,7 +124,7 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="street" class="form-control @error('street') is-invalid @enderror"
+                        <input type="text" name="street" class="form-control @error('street') is-invalid @enderror" value="{{old('street')}}"
                             id="floatingInput5" placeholder="Street">
                         <label for="floatingInput5">Street</label>
                         @error('street')
@@ -133,7 +133,7 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
+                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" value="{{old('city')}}"
                             id="floatingInput6" placeholder="City">
                         <label for="floatingInput6">City</label>
                         @error('city')
@@ -142,7 +142,7 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="text" name="state" class="form-control @error('state') is-invalid @enderror"
+                        <input type="text" name="state" class="form-control @error('state') is-invalid @enderror" value="{{old('state')}}"
                             id="floatingInput7" placeholder="State">
                         <label for="floatingInput7">State</label>
                         @error('state')
@@ -151,7 +151,7 @@
                     </div>
 
                     <div class="form-floating ">
-                        <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror"
+                        <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror" value="{{old('zip')}}"
                             id="floatingInput8" placeholder="Zip/postal" min="0">
                         <label for="floatingInput8">Zip/postal</label>
                         @error('zip')

@@ -19,9 +19,9 @@ class AdminCreateRequestService
     public function storeRequest($request)
     {
         $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
-        $isEmailStored = Users::where('email', $request->email)->first();
+        $userId = Users::where('email', $request->email)->value('id');
 
-        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber);
+        $requestId = $this->storeInRequestTable($request, $userId, $confirmationNumber);
         $this->storeInRequestClientTable($request, $requestId);
         $this->storeAdminNotesInRequestNotesTable($request, $requestId);
 
@@ -109,10 +109,10 @@ class AdminCreateRequestService
         $updateAdminInfoAllUsers->save();
     }
 
-    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber)
+    private function storeInRequestTable($request, $userId, $confirmationNumber)
     {
         $requestData = new RequestTable();
-        $requestData->user_id = $isEmailStored->id;
+        $requestData->user_id = $userId;
         $requestData->request_type_id = 1;
         $requestData->status = 1;
         $requestData->confirmation_no = $confirmationNumber;

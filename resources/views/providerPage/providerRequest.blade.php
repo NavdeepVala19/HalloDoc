@@ -117,9 +117,13 @@
                 <h3>Notes</h3>
                 <div class="mb-4">
                     <div class="form-floating">
-                        <textarea class="form-control note" name='note' placeholder="notes" id="floatingTextarea2">{{ old('note') }}</textarea>
+                        <textarea class="form-control note @error('note') is-invalid @enderror" name='note' placeholder="notes"
+                            id="floatingTextarea2">{{ old('note') }}</textarea>
                         <label for="floatingTextarea2">Physician Notes (optional)</label>
                     </div>
+                    @error('note')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-4 d-flex justify-content-end gap-3 ">

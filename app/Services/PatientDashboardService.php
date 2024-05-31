@@ -75,6 +75,7 @@ class PatientDashboardService
     public function patientProfileUpdate($request)
     {
         $userData = Auth::user();
+  
         $updateInUserTable = [
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),

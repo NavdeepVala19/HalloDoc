@@ -18,12 +18,12 @@ class PatientProfileTest extends TestCase
     {
         $userId = UserRoles::where('role_id', 3)->value('user_id');
         $patient = User::where('id', $userId)->first();
-
+   
         $response = $this->actingAs($patient)->postJson('/patient/profile-updated', [
-            'first_name' => 'otto',
-            'last_name' => 'garrate',
+            'first_name' => 'shivesh',
+            'last_name' => 'surani',
             'date_of_birth' => '2004-12-12',
-            'email' => fake()->unique()->email(),
+            'email' => $patient->email,
             'phone_number' => '1234567880',
             'street' => 'billionaires row',
             'city' => 'manhattan',

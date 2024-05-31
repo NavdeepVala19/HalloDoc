@@ -250,7 +250,7 @@ class ProviderController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:5',
+            'password' => 'required|min:8|max:100',
         ]);
 
         $userId = Provider::where('id', $request->providerId)->value('user_id');
@@ -271,6 +271,10 @@ class ProviderController extends Controller
      */
     public function editProfileMessage(Request $request)
     {
+        $request->validate([
+            'message' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
+        ]);
+        
         $admin = Admin::where('id', 1)->first();
         $provider = Provider::where('id', $request->providerId)->first();
 

@@ -51,8 +51,12 @@
             <p class="ms-3 mt-3">Need to send message to edit</p>
             <div class="ps-3 pe-3  d-flex align-items-center justify-content-center ">
                 <div class="form-floating">
-                    <textarea class="form-control request-message" name="message" placeholder="editProfile" id="floatingTextarea2"></textarea>
+                    <textarea class="form-control request-message @error('message')is-invalid  @enderror"" name="message"
+                        placeholder="editProfile" id="floatingTextarea2"></textarea>
                     <label for="floatingTextarea2">Message</label>
+                    @error('message')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <div class="p-2 d-flex align-items-center justify-content-end gap-2">
@@ -91,7 +95,7 @@
                             id="floatingInput2" placeholder="password">
                         <label for="floatingInput2">Password</label>
                         @error('password')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>

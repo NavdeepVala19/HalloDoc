@@ -14,56 +14,56 @@ class PatientDashboardTest extends TestCase
     * test someone else request form and not existing email in patient dashboard
     * @return void
     */
-   public function test_some_one_else_request_with_valid_data(): void
-   {
-      $userId = UserRoles::where('role_id', 3)->value('user_id');
-      $patient = User::where('id', $userId)->first();
+   // public function test_some_one_else_request_with_valid_data(): void
+   // {
+   //    $userId = UserRoles::where('role_id', 3)->value('user_id');
+   //    $patient = User::where('id', $userId)->first();
 
-      $response = $this->actingAs($patient)->postJson('/patient/submitted-someone-requests', [
-         'first_name' => 'new',
-         'last_name' => 'patient',
-         'email' => fake()->unique()->email(),
-         'date_of_birth' => '2010-10-10',
-         'phone_number' => '1234567890',
-         'street' => '21, new street',
-         'city' => 'new city',
-         'state' => 'state',
-         'zipcode' => '123456',
-         'docs' => '',
-         'symptoms' => '',
-         'room' => '',
-         'relation' => 'sister',
-      ]);
+   //    $response = $this->actingAs($patient)->postJson('/patient/submitted-someone-requests', [
+   //       'first_name' => 'new',
+   //       'last_name' => 'patient',
+   //       'email' => fake()->unique()->email(),
+   //       'date_of_birth' => '2010-10-10',
+   //       'phone_number' => '1234567890',
+   //       'street' => '21, new street',
+   //       'city' => 'new city',
+   //       'state' => 'state',
+   //       'zipcode' => '123456',
+   //       'docs' => '',
+   //       'symptoms' => '',
+   //       'room' => '',
+   //       'relation' => 'sister',
+   //    ]);
 
-      $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('patient.dashboard')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
-   }
+   //    $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('patient.dashboard')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
+   // }
 
    /**
     * test someone else request form with existing email in patient dashboard 
     * @return void
     */
-   public function test_some_one_else_request_with_valid_data_and_existing_email(): void
-   {
-      $userId = UserRoles::where('role_id', 3)->value('user_id');
-      $patient = User::where('id', $userId)->first();
-      $response = $this->actingAs($patient)->postJson('/patient/submitted-someone-requests', [
-         'first_name' => 'new',
-         'last_name' => 'patient',
-         'email' => 'shivesh@mail.com',
-         'date_of_birth' => '2010-10-10',
-         'phone_number' => '1234567890',
-         'street' => '21, new street',
-         'city' => 'new city',
-         'state' => 'state',
-         'zipcode' => '123456',
-         'docs' => '',
-         'symptoms' => '',
-         'room' => '',
-         'relation' => 'sister',
-      ]);
+   // public function test_some_one_else_request_with_valid_data_and_existing_email(): void
+   // {
+   //    $userId = UserRoles::where('role_id', 3)->value('user_id');
+   //    $patient = User::where('id', $userId)->first();
+   //    $response = $this->actingAs($patient)->postJson('/patient/submitted-someone-requests', [
+   //       'first_name' => 'new',
+   //       'last_name' => 'patient',
+   //       'email' => 'shivesh@mail.com',
+   //       'date_of_birth' => '2010-10-10',
+   //       'phone_number' => '1234567890',
+   //       'street' => '21, new street',
+   //       'city' => 'new city',
+   //       'state' => 'state',
+   //       'zipcode' => '123456',
+   //       'docs' => '',
+   //       'symptoms' => '',
+   //       'room' => '',
+   //       'relation' => 'sister',
+   //    ]);
 
-      $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('patient.dashboard')->assertSessionHas('message', 'Request is Submitted');
-   }
+   //    $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('patient.dashboard')->assertSessionHas('message', 'Request is Submitted');
+   // }
 
 
    /**

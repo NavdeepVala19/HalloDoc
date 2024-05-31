@@ -24,8 +24,11 @@
                  @enderror
              </div>
              <div class="form-floating">
-                 <textarea class="form-control" name="reason" placeholder="notes" id="floatingTextarea2"></textarea>
+                 <textarea class="form-control  @error('reason') is-invalid @enderror" name="reason" placeholder="notes" id="floatingTextarea2"></textarea>
                  <label for="floatingTextarea2">Provide Additional Notes</label>
+                @error('reason')
+                     <div class="text-danger">{{ $message }}</div>
+                 @enderror
              </div>
          </div>
          <div class="p-2 d-flex align-items-center justify-content-end gap-2">

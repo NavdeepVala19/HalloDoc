@@ -56,6 +56,7 @@ class AdminProfileController extends Controller
         ]);
         $updatePassword = Users::where('id', $id)->first();
         $updatePassword->password = Hash::make($request->password);
+        $updatePassword->save();
 
         return back()->with('message', 'Your password is updated successfully');
     }
@@ -71,8 +72,8 @@ class AdminProfileController extends Controller
     public function adminInfoUpdate(Request $request, $id, AdminCreateRequestService $adminCreateRequestService)
     {
         $request->validate([
-            'first_name' => 'required|min:2|max:30',
-            'last_name' => 'required|min:2|max:30',
+            'first_name' => 'required|min:2|max:30|alpha',
+            'last_name' => 'required|min:2|max:30|alpha',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'confirm_email' => 'required|min:2|max:40|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'phone_number' => 'required',
@@ -93,7 +94,7 @@ class AdminProfileController extends Controller
     public function adminMailInfoUpdate(Request $request, $id, AdminCreateRequestService $adminCreateRequestService)
     {
         $request->validate([
-            'address1' => 'required|min:2|max:50',
+            'address1' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
             'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',

@@ -1345,7 +1345,7 @@ $(document).ready(function () {
         },
         messages: {
             password: {
-                minlength: "Minimum 5 characters are required",
+                minlength: "Minimum 8 characters are required",
                 maxlength: "Maximum 100 characters are allowed",
             },
         },

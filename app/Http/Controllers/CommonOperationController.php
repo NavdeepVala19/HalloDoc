@@ -179,6 +179,9 @@ class CommonOperationController extends Controller
      */
     public function sendMailPatient(Request $request)
     {
+        $request->validate([
+            'message' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/'
+        ]);
         $requestClient = RequestClient::where('request_id', $request->requestId)->first();
         try {
             $user = Auth::user();

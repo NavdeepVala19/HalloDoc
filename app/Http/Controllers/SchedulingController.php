@@ -190,7 +190,7 @@ class SchedulingController extends Controller
         $request->validate([
             'region' => 'required|in:1,2,3,4,5',
             'physician' => 'required',
-            'shiftDate' => 'required',
+            'shiftDate' => 'required|after:yesterday',
             'shiftStartTime' => 'required',
             'shiftEndTime' => 'required|after:shiftStartTime',
         ]);

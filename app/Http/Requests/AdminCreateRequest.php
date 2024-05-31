@@ -24,10 +24,10 @@ class AdminCreateRequest extends FormRequest
         return [
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'before:today',
+            'date_of_birth' => 'nullable|after:Jan 01 1900|before:tomorrow',
             'phone_number' => 'required',
             'email' => 'required|email|min:2|max:40|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
-            'street' => 'required|min:2|max:50',
+            'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
             'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'room' => 'gte:1|nullable|max_digits:4',

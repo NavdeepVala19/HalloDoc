@@ -182,7 +182,7 @@
                     <div class="form-floating errorMsg">
                         <select class="form-select admin_state" id="listing_state_admin_account" aria-label="Floating label select example" disabled name="select_state" autocomplete="off">
                             <option value="">Select State</option>
-                            <option selected value="{{$adminProfileData->region->id }}">{{ $adminProfileData->region->region_name }}</option>
+                            <option selected value="{{$adminProfileData->region->id ?? " " }}">{{ $adminProfileData->region->region_name ?? "" }}</option>
                         </select>
                         <label for="floatingSelect">State</label>
                     </div>

@@ -91,9 +91,9 @@
                     </div>
                     <div class="form-floating role-select provider-edit-form">
                         <select class="form-select @error('role') is-invalid @enderror" id="provider_role" name="role" disabled>
-                            <option value="">Select Role</option>
-                            <option selected value="{{ $getProviderData->role->id ?? " " }}">
-                                {{ $getProviderData->role->name ?? " "}}
+                            <option value="0">Select Role</option>
+                            <option selected value="{{ $getProviderData->role->id ?? "0" }}">
+                                {{ $getProviderData->role->name ?? "Select Role"}}
                             </option>
                         </select>
                         @error('role')
@@ -213,7 +213,7 @@
                     <div class="form-floating provider-edit-form">
                         <input type="number" name="zip" class="form-control provider-bill-zip @error('zip') is-invalid @enderror" id="floatingInput11" autocomplete="off" placeholder="zip" value="{{ $getProviderData->zip }}" disabled min="0">
                         <label for="floatingInput11">Zip</label>
-                        @error('user_name')
+                        @error('zip')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -244,7 +244,7 @@
                         <input type="text" name="business_name" class="form-control business-name @error('business_name') is-invalid @enderror" id="floatingInput12" autocomplete="off" disabled value="{{ $getProviderData->business_name }}" placeholder="Business Name">
                         <label for="floatingInput12">Business Name</label>
                         @error('business_name')
-                        <div class="text-dangerr">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-floating provider-edit-form">

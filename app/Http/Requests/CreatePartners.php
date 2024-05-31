@@ -47,7 +47,7 @@ class CreatePartners extends FormRequest
         $only_alphabets = 'Please enter only Alphabets';
 
         return [
-            'business_name.required' => $enter . ' First Name',
+            'business_name.required' => $enter . ' Business Name',
             'business_name.min' => $min_message . ' 5 Alphabets',
             'business_name.max' => $max_message . ' 20 Alphabets',
             'business_name.alpha' => $only_alphabets . ' in First name',

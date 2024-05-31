@@ -160,7 +160,7 @@ class AdminProviderController extends Controller
         // update data of providers in users table
         $getUserIdFromProvider = Provider::select('user_id')->where('id', $id)->value('user_id');
         $updateProviderInfoUsers = Users::where('id', $getUserIdFromProvider)->first();
-        if ($request->password) {
+        if ($request->has('password')) {
             $request->validate([
                 'password' => 'required|min:8|max:50|regex:/^\S(.*\S)?$/',
             ]);
@@ -169,6 +169,8 @@ class AdminProviderController extends Controller
         } else {
             $request->validate([
                 'user_name' => 'required|alpha|min:3|max:40',
+                'status_type' => 'required',
+                'role' => 'required',
             ]);
             $adminProviderService->updateAccountInformation($request, $id, $getUserIdFromProvider);
         }
@@ -213,10 +215,11 @@ class AdminProviderController extends Controller
     public function providerMailInfoUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
-            'address1' => 'required|min:2|max:50',
-            'address2' => 'required|min:2|max:30',
+            'address1' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+            'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
+            'regions' => 'required',
             'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);
 
@@ -237,8 +240,8 @@ class AdminProviderController extends Controller
         $request->validate([
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'provider_photo' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc|max:2048',
-            'business_website' => 'nullable|url|max:40|min:10',
-            'admin_notes' => 'nullable|min:5|max:200|',
+            'business_website' => 'required|url|max:40|min:10',
+            'admin_notes' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_.,\/]+$/',
         ]);
 
         $adminProviderService->updateProviderProfile($request, $id);

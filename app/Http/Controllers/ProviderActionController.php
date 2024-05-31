@@ -235,6 +235,7 @@ class ProviderActionController extends Controller
         $request->validate([
             'profession' => 'required',
             'vendor_id' => 'required',
+            'prescription' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
 
         $createOrderService->createOrder($request);

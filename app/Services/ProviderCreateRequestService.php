@@ -13,20 +13,20 @@ class ProviderCreateRequestService
     public function storeRequest($request, $providerId)
     {
         $confirmationNumber = ConfirmationNumber::generateConfirmationNumber($request);
-        $isEmailStored = Users::where('email', $request->email)->first();
+        $userId = Users::where('email', $request->email)->value('id');
 
-        $requestId = $this->storeInRequestTable($request, $isEmailStored, $confirmationNumber, $providerId);
+        $requestId = $this->storeInRequestTable($request, $userId, $confirmationNumber, $providerId);
         $this->storeInRequestClientTable($request, $requestId);
         $this->storeAdminNotesInRequestNotesTable($request, $requestId);
 
         return $requestId;
     }
-    private function storeInRequestTable($request, $isEmailStored, $confirmationNumber, $providerId)
+    private function storeInRequestTable($request, $userId, $confirmationNumber, $providerId)
     {
         $requestData = new RequestTable();
         $requestData->request_type_id = 1;
         $requestData->status = 3;
-        $requestData->user_id = $isEmailStored->id;
+        $requestData->user_id = $userId;
         $requestData->physician_id = $providerId;
         $requestData->confirmation_no = $confirmationNumber;
         $requestData->fill($request->only([

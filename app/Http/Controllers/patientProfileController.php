@@ -53,8 +53,6 @@ class PatientProfileController extends Controller
      */
     public function patientUpdate(CreatePatientRequest $request, PatientDashboardService $patientDashboardService)
     {
-
-
         $patientDashboardService->patientProfileUpdate($request);
         return redirect()->route('patient.dashboard')->with('message', 'profile is updated successfully');
     }

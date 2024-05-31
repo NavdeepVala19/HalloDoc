@@ -37,7 +37,7 @@ class ProviderForm extends FormRequest
             'phone_number_alt' => 'required',
             'select_state' => 'required',
             'region_id' => 'required',
-            'role' => 'required',
+            'role' => 'required|not_in:0',
             'business_name' => 'required|min:3|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'business_website' => 'required|url|max:40|min:10',
             'admin_notes' => 'required|min:5|max:200|regex: /^[a-zA-Z0-9 \-_.,\/]+$/',
@@ -86,6 +86,7 @@ class ProviderForm extends FormRequest
 
             'select_state.required' => 'Please select state',
             'role.required' => 'Please select a Role',
+            'role.not_in' => 'Please select a Role',
             'region_id.required' => 'Please select atleast one Region',
 
             'address1.required' => $enter . ' a address1',

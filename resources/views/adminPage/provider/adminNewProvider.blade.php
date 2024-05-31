@@ -71,7 +71,7 @@
                 </div>
                 <div class="form-floating role-select provider-form">
                     <select class="form-select @error('role') is-invalid @enderror" id="provider_role" name="role" value="{{ old('role') }}">
-                        <option selected value="">Select Role</option>
+                        <option selected value="0">Select Role</option>
                     </select>
                     @error('role')
                     <div class="text-danger">{{ $message }}</div>
