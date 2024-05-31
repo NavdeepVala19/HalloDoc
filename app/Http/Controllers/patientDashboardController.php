@@ -106,14 +106,15 @@ class PatientDashboardController extends Controller
     public function createNewPatient(Request $request, RequestTableService $requestTableService, RequestClientService $requestClientService, RequestWiseFileService $requestWiseFileService)
     {
         $request->validate([
+            'request_type_id' => 'required|in:1,2,3,4',
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
-            'date_of_birth' => 'required|before:today',
+            'date_of_birth' => 'required|before:today|after:Jan 01 1900',
             'phone_number' => 'required',
             'street' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
-            'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'state' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
-            'zipcode' => 'digits:6|gte:1',
+            'city' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'state' => 'required|min:2|max:30|regex:/^[a-zA-Z ]+?$/',
+            'zipcode' => 'required|digits:6|gte:1',
             'docs' => 'nullable|file|mimes:jpg,png,jpeg,pdf,doc,docx|max:2048',
             'symptoms' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 \-_,()]+$/',
             'room' => 'gte:1|nullable|max:1000',

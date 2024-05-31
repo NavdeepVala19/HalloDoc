@@ -22,6 +22,7 @@ class CreatePatientRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'request_type_id' => 'required|in:1,2,3,4',
             'first_name' => 'required|min:3|max:15|alpha',
             'last_name' => 'required|min:3|max:15|alpha',
             'date_of_birth' => 'required|date|before:tomorrow|after:Jan 01 1900',

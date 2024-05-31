@@ -15,7 +15,7 @@ class ConceirgeSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are empty or not in proper valid format
+     * create concierge request with no data
      *
      * @return void
      */
@@ -104,7 +104,7 @@ class ConceirgeSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an existing email
+     * create concierge request with valid data and existing email
      *
      * @return void
      */
@@ -134,7 +134,7 @@ class ConceirgeSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an new email
+     * create concierge request with valid data and new email
      *
      * @return void
      */

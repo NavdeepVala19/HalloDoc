@@ -144,16 +144,17 @@ class SchedulingController extends Controller
         $request->validate([
             'region' => 'required|in:1,2,3,4,5',
             'physician' => 'required',
-            'shiftDate' => 'required',
+            'shiftDate' => 'required|after:yesterday',
             'shiftStartTime' => 'required',
             'shiftEndTime' => 'required|after:shiftStartTime',
         ]);
+
         // Check whether the shift created for provider is already having shift for that time period
         $shifts = Shift::with('shiftDetail')->get();
         $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
         // check for each shifts, whether it have the same time period or in-between time period
         foreach ($currentShifts as $currentShift) {
-            if ($currentShift->physician_id === $request->physician) {
+            if ($currentShift->physician_id == $request->physician) {
                 // for the currentShift if the physician_id matches requested physician check for the time period
                 $shiftStartTimeCurrent = $currentShift->shiftDetail->start_time;
                 $shiftEndTimeCurrent = $currentShift->shiftDetail->end_time;
@@ -202,7 +203,7 @@ class SchedulingController extends Controller
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
 
-        Helper::storeRepeatedShifts($request, $is_repeat, $shift, 1);
+        Helper::storeRepeatedShifts($request, $is_repeat, $shift, 2);
 
         return redirect()->back()->with('shiftAdded', 'Shift Added Successfully');
     }

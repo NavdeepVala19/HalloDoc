@@ -15,7 +15,7 @@ class FamilySubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are empty or not in proper valid format
+     * create family request with no data
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class FamilySubmitRequestTest extends TestCase
     // }
 
     /**
-     * family request with invalid data
+     * create family request with invalid data
      *
      * @return void
      */
@@ -106,7 +106,7 @@ class FamilySubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an existing email
+     * create family request with valid data and existing email
      *
      * @return void
      */
@@ -137,7 +137,7 @@ class FamilySubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an new email
+     * create family request with valid data and new email
      *
      * @return void
      */

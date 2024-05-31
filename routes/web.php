@@ -72,7 +72,7 @@ route::prefix('patient')->middleware('CheckPatientLogin')->group(function () {
     route::get('/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient.dashboard');
 
     //* Edit profile of patient
-    route::get('/patient/profile', [PatientProfileController::class, 'patientEdit'])->name('patient.profile.view');
+    route::get('/profile', [PatientProfileController::class, 'patientEdit'])->name('patient.profile.view');
     route::get('/profile-edit/{id}', [PatientProfileController::class, 'patientprofileEdit'])->name('patient.profile.edit.view');
     route::post('/profile-updated', [PatientProfileController::class, 'patientUpdate'])->name('patient.profile.edited');
     route::get('/map-location', [PatientProfileController::class, 'patientMapLocation'])->name('patient.location.on.map');

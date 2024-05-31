@@ -108,7 +108,7 @@ class BusinessSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an existing email
+     * create business request with valid data and existing email
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class BusinessSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an new email
+     * create business request with valid data and new email
      *
      * @return void
      */

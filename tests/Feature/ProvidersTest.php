@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Provider;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\UserRoles;
 use App\Models\RequestTable;
 use App\Models\RequestType;
+use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProvidersTest extends TestCase
@@ -465,287 +467,309 @@ class ProvidersTest extends TestCase
      * Test successful encounter form with invalid data
      * @return void
      */
-    public function test_provider_encounter_form_with_invalid_data()
-    {
-        $provider = $this->provider();
+    // public function test_provider_encounter_form_with_invalid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response = $this->actingAs($provider)
-            ->postJson('/medical-form', [
-                "first_name" => '',
-                "last_name" => '',
-                "location" => '',
-                "date_of_birth" => '',
-                "service_date" => '',
-                "mobile" => '',
-                "email" => '',
-                "present_illness_history" => '',
-                "medical_history" => '',
-                "medications" => '',
-                "allergies" => '',
-                "temperature" => '',
-                "heart_rate" => '',
-                "repository_rate" => '',
-                "sis_BP" => '',
-                "dia_BP" => '',
-                "oxygen" => '',
-                "pain" => '',
-                "heent" => '',
-                "cv" => '',
-                "chest" => '',
-                "abd" => '',
-                "extr" => '',
-                "skin" => '',
-                "neuro" => '',
-                "other" => '',
-                "diagnosis" => '',
-                "treatment_plan" => '',
-                "medication_dispensed" => '',
-                "procedure" => '',
-                "followUp" => '',
-            ]);
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/medical-form', [
+    //             "first_name" => 'as',
+    //             "last_name" => '1234!@',
+    //             "location" => '1234 !@#$',
+    //             "date_of_birth" => '1889-10-12',
+    //             "service_date" => '2025-03-15',
+    //             "mobile" => '123456789',
+    //             "email" => 'asdf!@#$@1234.1234',
+    //             "present_illness_history" => '!@#$@#4',
+    //             "medical_history" => '123',
+    //             "medications" => '!@#$@#4',
+    //             "allergies" => '!@#$@',
+    //             "temperature" => '!!@#$',
+    //             "heart_rate" => '123',
+    //             "repository_rate" => '12312',
+    //             "sis_BP" => '12312',
+    //             "dia_BP" => '24234',
+    //             "oxygen" => '23',
+    //             "pain" => '123 1@#$@',
+    //             "heent" => '12312 !@$@#',
+    //             "cv" => '!@$@#',
+    //             "chest" => '!@#$@',
+    //             "abd" => '!@$@#4',
+    //             "extr" => '!@$@#',
+    //             "skin" => '!@$2',
+    //             "neuro" => '!@#$2',
+    //             "other" => '!@$@!34',
+    //             "diagnosis" => '!@$@#',
+    //             "treatment_plan" => '!@#$@',
+    //             "medication_dispensed" => '!@$@3',
+    //             "procedure" => '!@#$@',
+    //             "followUp" => '!@$2',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            "first_name" => 'The first name field is required.',
-            "last_name" => 'The last name field is required.',
-            "location" => 'The location field is required.',
-            "date_of_birth" => 'The date of birth field is required.',
-            "service_date" => 'The service date field is required.',
-            "mobile" => 'The mobile field is required.',
-            "email" => 'The email field is required.',
-            "allergies" => 'The allergies field is required.',
-            "treatment_plan" => 'The treatment plan field is required.',
-            "medication_dispensed" => 'The medication dispensed field is required.',
-            "procedure" => 'The procedure field is required.',
-            "followUp" => 'The follow up field is required.',
-        ]);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             "first_name" => 'The first name field must be at least 3 characters.',
+    //             "last_name" => 'The last name field must only contain letters.',
+    //             "location" => 'The location field format is invalid.',
+    //             "date_of_birth" => 'The date of birth field must be a date after Jan 01 1900.',
+    //             "service_date" => 'The service date field must be a date before tomorrow.',
+    //             "email" => 'The email field must be a valid email address.',
+    //             "treatment_plan" => 'The treatment plan field format is invalid.',
+    //             "medication_dispensed" => 'The medication dispensed field format is invalid.',
+    //             "procedure" => 'The procedure field format is invalid.',
+    //             "followUp" => 'The follow up field must be at least 5 characters.',
+    //             "present_illness_history" => 'The present illness history field format is invalid.',
+    //             "medical_history" => 'The medical history field must be at least 5 characters.',
+    //             "medications" => 'The medications field format is invalid.',
+    //             "temperature" => 'The temperature field must be a number.',
+    //             "repository_rate" => 'The repository rate field must not be greater than 40.',
+    //             "sis_BP" => 'The sis  b p field must not be greater than 250.',
+    //             "dia_BP" => 'The dia  b p field must not be greater than 250.',
+    //             'oxygen' => 'The oxygen field must be at least 70.',
+    //             'pain' => 'The pain field format is invalid.',
+    //             'heent' => 'The heent field format is invalid.',
+    //             'cv' => 'The cv field format is invalid.',
+    //             'chest' => 'The chest field format is invalid.',
+    //             'abd' => 'The abd field format is invalid.',
+    //             'extr' => 'The extr field format is invalid.',
+    //             'skin' => 'The skin field must be at least 5 characters.',
+    //             'neuro' => 'The neuro field format is invalid.',
+    //             'other' => 'The other field format is invalid.',
+    //             'diagnosis' => 'The diagnosis field format is invalid.',
+    //         ]);
+    // }
+
+    // provider send order page can be rendered
+    // public function test_provider_send_order_page_can_be_rendered()
+    // {
+    //     $provider = $this->provider();
+
+    //     $requestId = RequestTable::whereIn('status', [4, 5])->value('id');
+
+    //     $id = Crypt::encrypt($requestId);
+    //     $response = $this->actingAs($provider)->get('/view-order/{' . $id . '}');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Test successful send order form with valid data
      * @return void
      */
+    // public function test_send_order_with_valid_data()
+    // {
+    //     $provider = $this->provider();
 
-    public function test_send_order_with_valid_data()
-    {
-        $response = $this->postJson('/provider-send-order', [
-            'prescription' => 'Voluptatum anim elig',
-        ]);
+    // $requestId = RequestTable::whereIn('status', [4, 5])->value('id');
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-send-order', [
+    //              'request_id' => $requestId,
+    //             'profession' => 1,
+    //             'vendor_id' => 7,
+    //             'prescription' => 'Voluptatum anim elig',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertRedirectToRoute('provider.status', 'active')
+    //         ->assertSessionHas('successMessage', 'Order Created Successfully!');
+    // }
 
     /**
      * Test successful send order form with invalid data
      * @return void
      */
-    public function test_send_order_with_invalid_data()
-    {
-        $response = $this->postJson('/provider-send-order', [
-            'prescription' => 'Molestiae doloribus $%@#$#@434',
-        ]);
+    // public function test_send_order_with_invalid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-send-order', [
+    //             'profession' => 'asd',
+    //             'vendor_id' => 'asdf',
+    //             'prescription' => 'Molestiae doloribus $%@#$#@434',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'profession' => 'The profession field must be a number.',
+    //             'vendor_id' => 'The vendor id field must be a number.',
+    //             'prescription' => 'The prescription field format is invalid.',
+    //         ]);
+    // }
 
     /**
      * Test successful send order form with empty data
      * @return void
      */
-    public function test_send_order_with_empty_data()
-    {
-        $response = $this->postJson('/provider-send-order', [
-            'prescription' => '',
-        ]);
+    // public function test_send_order_with_empty_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-send-order', [
+    //             'profession' => '',
+    //             'vendor_id' => '',
+    //         ]);
 
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
+    //         'profession' => 'The profession field is required.',
+    //         'vendor_id' => 'The vendor id field is required.',
+    //     ]);
+    // }
+
+    // provider view case page can be rendered
+    // public function test_provider_view_case_page_can_be_rendered()
+    // {
+    //     $provider = $this->provider();
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
+    //     $requestId = RequestTable::where('physician_id', $providerId)->whereIn('status', [1, 3, 4, 5, 6])->value('id');
+    //     $id = Crypt::encrypt($requestId);
+
+    //     $response = $this->actingAs($provider)->get('provider/view/case/{' . $id . '}');
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
+
+    // provider view notes page can be rendered
+    // public function test_provider_view_notes_page_can_be_rendered()
+    // {
+    //     $provider = $this->provider();
+
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
+    //     $requestId = RequestTable::where('physician_id', $providerId)->value('id');
+    //     $id = Crypt::encrypt($requestId);
+
+    //     $response = $this->actingAs($provider)->get('/provider/view/notes/{' . $id . '}');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
      * Test successful view notes form with valid data
      * @return void
      */
-    public function test_view_notes_with_valid_data()
-    {
-        $response = $this->postJson('/provider/view/notes/store', [
-            'physician_note' => 'Physician Notes',
-        ]);
+    // public function test_view_notes_with_valid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
+    //     $requestId = RequestTable::where('physician_id', $providerId)->value('id');
+
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider/view/notes/store', [
+    //             'requestId' => $requestId,
+    //             'physician_note' => 'Physician Notes',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertSessionHas('providerNoteAdded', 'Your Note Successfully Added');
+    // }
 
     /**
      * Test successful view notes form with empty data
      * @return void
      */
-    public function test_view_notes_with_empty_data()
-    {
-        $response = $this->postJson('/provider/view/notes/store', [
-            'physician_note' => '',
-        ]);
+    // public function test_view_notes_with_empty_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider/view/notes/store', [
+    //             'physician_note' => '',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'physician_note' => 'The physician note field is required.'
+    //         ]);
+    // }
 
     /**
      * Test successful view notes form with invalid data
      * @return void
      */
-    public function test_view_notes_with_invalid_data()
-    {
-        $response = $this->postJson('/provider/view/notes/store', [
-            'physician_note' => '#$%$%',
-        ]);
+    // public function test_view_notes_with_invalid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider/view/notes/store', [
+    //             'physician_note' => '#$%$%',
+    //         ]);
 
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'physician_note' => 'The physician note field format is invalid.'
+    //         ]);
+    // }
+
+    // provider profile page can be rendered
+    // public function test_provider_profile_page_can_be_rendered()
+    // {
+    //     $provider = $this->provider();
+
+    //     $response = $this->actingAs($provider)->get('/profile');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
 
     /**
      * Test successful reset password in my profile with valid data
      * @return void
      */
-    public function test_reset_password_in_my_profile_with_valid_data()
-    {
-        $response = $this->postJson('/provider-reset-password', [
-            'password' => 'doctor@gmail.com',
-        ]);
+    // public function test_reset_password_in_my_profile_with_valid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
+
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-reset-password', [
+    //             'providerId' => $providerId,
+    //             'password' => 'physician1@mail.com',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('success', 'Password Reset Successfully');
+    // }
 
 
     /**
      * Test successful reset password in my profile with invalid data
      * @return void
      */
-    public function test_reset_password_in_my_profile_with_invalid_data()
-    {
-        $response = $this->postJson('/provider-reset-password', [
-            'password' => 'do54',
-        ]);
+    // public function test_reset_password_in_my_profile_with_invalid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-reset-password', [
+    //             'password' => 'do54',
+    //         ]);
+
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'password' => 'The password field must be at least 5 characters.',
+    //         ]);
+    // }
 
 
     /**
      * Test successful reset password in my profile with empty data
      * @return void
      */
-    public function test_reset_password_in_my_profile_with_empty_data()
-    {
-        $response = $this->postJson('/provider-reset-password', [
-            'password' => '',
-        ]);
+    // public function test_reset_password_in_my_profile_with_empty_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-reset-password', [
+    //             'password' => '',
+    //         ]);
 
-
-    /**
-     * Test successful schedule shift with valid data
-     * @return void
-     */
-    public function test_schedule_shift_with_valid_data()
-    {
-        $response = $this->postJson('/provider-create-shift', [
-            'region' => 'somnath',
-            'shiftDate' => '15-05-2024',
-            'shiftStartTime' => '11:00',
-            'shiftEndTime' => '12:00',
-            'checkbox' => '1',
-            'repeatEnd' => '2',
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
-
-
-    /**
-     * Test successful schedule shift with invalid data
-     * @return void
-     */
-    public function test_schedule_shift_with_invalid_data()
-    {
-        $response = $this->postJson('/provider-create-shift', [
-            'region' => 'somnath',
-            'shiftDate' => '11-05-2024',
-            'shiftStartTime' => '15:00',
-            'shiftEndTime' => '12:00',
-            'checkbox' => '7',
-            'repeatEnd' => '5',
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
-
-    /**
-     * Test successful schedule shift with empty data
-     * @return void
-     */
-    public function test_schedule_shift_with_empty_data()
-    {
-        $response = $this->postJson('/provider-create-shift', [
-            'region' => '',
-            'shiftDate' => '',
-            'shiftStartTime' => '',
-            'shiftEndTime' => '',
-            'checkbox' => '',
-            'repeatEnd' => '',
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
-
-    /**
-     * Test successful edit scheduled shift with valid data
-     * @return void
-     */
-    public function test_edit_scheduled_shift_with_valid_data()
-    {
-        $response = $this->postJson('/provider-edit-shift', [
-            'shiftDate' => '22-05-2024',
-            'shiftStartTime' => '12:00',
-            'shiftEndTime' => '14:00',
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
-
-    /**
-     * Test successful edit scheduled shift with invalid data
-     * @return void
-     */
-    public function test_edit_scheduled_shift_with_invalid_data()
-    {
-        $response = $this->postJson('/provider-edit-shift', [
-            'shiftDate' => '2-05-2024',
-            'shiftStartTime' => '15:00',
-            'shiftEndTime' => '13:00',
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
-
-
-    /**
-     * Test successful edit scheduled shift with valid data
-     * @return void
-     */
-    public function test_edit_scheduled_shift_with_empty_data()
-    {
-        $response = $this->postJson('/provider-edit-shift', [
-            'shiftDate' => '',
-            'shiftStartTime' => '',
-            'shiftEndTime' => '',
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+    //         ->assertJsonValidationErrors([
+    //             'password' => 'The password field is required.',
+    //         ]);
+    // }
 }

@@ -15,7 +15,7 @@ class PatientSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are empty or not in proper valid format
+     * create patient request with no data
      *
      * @return void
      */
@@ -84,7 +84,7 @@ class PatientSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an existing email
+     * create patient request with valid data and existing email
      *
      * @return void
      */
@@ -110,7 +110,7 @@ class PatientSubmitRequestTest extends TestCase
     // }
 
     /**
-     * Details entered are correct and new request is created with an new email
+     * create patient request with valid data and new email
      *
      * @return void
      */

@@ -266,7 +266,7 @@ class ProviderController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:5',
+            'password' => 'required|min:5|max:100',
         ]);
 
         $userId = Provider::where('id', $request->providerId)->first()->user_id;

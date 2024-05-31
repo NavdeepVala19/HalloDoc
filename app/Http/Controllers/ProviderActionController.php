@@ -109,7 +109,7 @@ class ProviderActionController extends Controller
     public function storeNote(Request $request)
     {
         $request->validate([
-            'physician_note' => 'required|min:5|max:200',
+            'physician_note' => 'required|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
 
         // Check if a note already exists for the request
@@ -234,8 +234,9 @@ class ProviderActionController extends Controller
     public function sendOrder(Request $request, CreateOrderService $createOrderService)
     {
         $request->validate([
-            'profession' => 'required',
-            'vendor_id' => 'required',
+            'profession' => 'required|numeric',
+            'vendor_id' => 'required|numeric',
+            'prescription' => 'nullable|min:5|max:200|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
         ]);
 
         $createOrderService->createOrder($request);

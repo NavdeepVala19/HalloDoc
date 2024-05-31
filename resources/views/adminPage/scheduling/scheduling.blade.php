@@ -139,8 +139,9 @@
                     @enderror
                 </div>
                 <div class="form-floating ">
-                    <input type="date" name="shiftDate" class="form-control shiftDate @error('shiftDate') is-invalid @enderror"
-                        id="floatingInput5" placeholder="Created Date" value="{{ old('shiftDate') }}">
+                    <input type="date" name="shiftDate"
+                        class="form-control shiftDate @error('shiftDate') is-invalid @enderror" id="floatingInput5"
+                        placeholder="Created Date" value="{{ old('shiftDate') }}">
                     <label for="floatingInput5">Shift Date</label>
                     @error('shiftDate')
                         <div class="text-danger">{{ $message }}</div>
@@ -149,8 +150,8 @@
                 <div class="grid-2">
                     <div class="form-floating ">
                         <input type="time" name="shiftStartTime"
-                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror" id="floatingInput2"
-                            placeholder="Created Date" value="{{ old('shiftStartTime') }}">
+                            class="form-control shiftStartTime @error('shiftStartTime') is-invalid @enderror"
+                            id="floatingInput2" placeholder="Created Date" value="{{ old('shiftStartTime') }}">
                         <label for="floatingInput2">Start</label>
                         @error('shiftStartTime')
                             <div class="text-danger">{{ $message }}</div>
@@ -283,7 +284,8 @@
                 <button type="submit" name="action" value="return" class="primary-fill">Return</button>
                 {{-- Change status from pending to approved and vice-versa --}}
                 <button type="button" class="primary-fill edit-btn">Edit</button>
-                <button type="submit" name="action" value="save" class="primary-fill save-btn" id="saveAdminEditShiftBtn">Save</button>
+                <button type="submit" name="action" value="save" class="primary-fill save-btn"
+                    id="saveAdminEditShiftBtn">Save</button>
                 <button type="submit" name="action" value="delete" class="delete-selected-btn">Delete</button>
             </div>
         </form>

@@ -18,7 +18,7 @@ class AdminTest extends TestCase
         return User::where('id', $adminId)->first();
     }
     /**
-     * Test successful assign case form with valid data
+     * assign case form with valid data
      * @return void
      */
     // public function test_assign_case_with_valid_data()
@@ -42,7 +42,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful assign case form with invalid data
+     * assign case form with invalid data
      * @return void
      */
     // public function test_assign_case_with_invalid_data()
@@ -61,7 +61,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful assign case form with empty data
+     * assign case form with empty data
      * @return void
      */
     // public function test_assign_case_with_empty_data()
@@ -82,7 +82,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * View case form page can be rendered
+     * View case page can be rendered
      * @return void
      */
     // public function test_view_case_page_can_be_rendered()
@@ -99,7 +99,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful view case form with valid data
+     * view case form with valid data
      * @return void
      */
     // public function test_view_case_with_valid_data()
@@ -121,7 +121,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful view case form with invalid data
+     * view case form with invalid data
      * @return void
      */
     // public function test_view_case_with_invalid_data()
@@ -146,7 +146,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful view case form with empty data
+     * view case form with empty data
      * @return void
      */
     // public function test_view_case_with_empty_data()
@@ -170,7 +170,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * View Notes page can be rendered
+     * View Note page can be rendered
      * @return void
      */
     // public function test_view_note_page_can_be_rendered()
@@ -186,7 +186,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * View Notes -> add note with no text entered
+     * View Note add note with empty data
      * @return void
      */
     // public function test_view_note_add_note_with_empty_data()
@@ -204,7 +204,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * View Notes -> add note with invalid data format
+     * View Note add note with invalid data 
      * @return void
      */
     // public function test_view_note_add_note_with_invalid_data()
@@ -222,7 +222,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * View Notes -> add note with valid data format
+     * View Note add note with valid data
      * @return void
      */
     // public function test_view_note_add_note_with_valid_data()
@@ -241,7 +241,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful block case form with valid data
+     * block case with valid data
      * @return void
      */
     // public function test_block_case_with_valid_data()
@@ -260,7 +260,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful block case form with valid data
+     * block case with invalid data
      * @return void
      */
     // public function test_block_case_with_invalid_data()
@@ -278,7 +278,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful block case form with empty data
+     * block case with empty data
      * @return void
      */
     // public function test_block_case_with_empty_data()
@@ -294,9 +294,25 @@ class AdminTest extends TestCase
     //     ]);
     // }
 
+    /**
+     * close case page can be rendered
+     * @return void
+     */
+    // public function test_close_case_page_can_be_rendered()
+    // {
+    //     $admin = $this->admin();
+
+    //     $requestId = RequestTable::whereIn('status', [2, 7, 11])->first()->id;
+
+    //     $id = Crypt::encrypt($requestId);
+
+    //     $response = $this->actingAs($admin)->get('/close-case/{' . $id . '}');
+
+    //     $response->assertStatus(Response::HTTP_OK);
+    // }
 
     /**
-     * Test successful close case form with valid data
+     * close case form with valid data
      * @return void
      */
     // public function test_close_case_with_valid_data()
@@ -335,7 +351,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful close case form with invalid data
+     * close case form with invalid data
      * @return void
      */
     // public function test_close_case_update_information_with_invalid_data()
@@ -385,7 +401,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful add business form with valid data
+     * add business form with valid data
      * @return void
      */
     // public function test_add_business_with_valid_data()
@@ -410,7 +426,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful add business form with invalid data
+     * add business form with invalid data
      * @return void
      */
     // public function test_add_business_with_invalid_data()
@@ -444,7 +460,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful add business form with empty data
+     * add business form with empty data
      * @return void
      */
     // public function test_add_business_with_empty_data()
@@ -477,7 +493,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful send mail to patient form with valid data
+     * send mail to patient with valid data
      * @return void
      */
     // public function test_send_mail_to_patient_with_valid_data()
@@ -495,7 +511,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful send mail form with invalid data
+     * send mail form with invalid data
      * @return void
      */
     // public function test_send_mail_with_invalid_data()
@@ -532,7 +548,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful cancel case form with valid data
+     * cancel case form with valid data
      * @return void
      */
     // public function test_cancel_case_with_valid_data()
@@ -608,7 +624,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful create role with valid data
+     * create role with valid data
      * @return void
      */
     // public function test_create_role_with_valid_data()
@@ -627,7 +643,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful create role with valid data
+     * create role with invalid data
      * @return void
      */
     // public function test_create_role_with_invalid_data()
@@ -648,7 +664,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Test successful create role with valid data
+     * create role with empty data
      * @return void
      */
     // public function test_create_role_with_empty_data()
@@ -680,7 +696,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Admin submit request with empty data
+     * Admin create request with empty data
      * @return void
      */
     // public function test_admin_create_request_with_empty_data()
@@ -743,7 +759,7 @@ class AdminTest extends TestCase
     // }
 
     /**
-     * Admin submit request with valid data and existing email
+     * Admin create request with valid data and existing email
      * @return void
      */
     // public function test_admin_create_request_with_valid_data_and_existing_email()

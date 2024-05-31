@@ -46,7 +46,7 @@ class ProviderSchedulingController extends Controller
     {
         $request->validate([
             'region' => 'required|in:1,2,3,4,5',
-            'shiftDate' => 'required',
+            'shiftDate' => 'required|after:yesterday',
             'shiftStartTime' => 'required',
             'shiftEndTime' => 'required|after:shiftStartTime',
         ]);
@@ -79,7 +79,7 @@ class ProviderSchedulingController extends Controller
             $weekDays = null;
         }
 
-        if ($request['is_repeat'] === true) {
+        if ($request['is_repeat'] === 'on') {
             $is_repeat = 1;
         } else {
             $is_repeat = 0;
@@ -109,7 +109,7 @@ class ProviderSchedulingController extends Controller
 
         ShiftDetail::where('shift_id', $shift->id)->update(['region_id' => $shiftDetailRegion->id]);
 
-        Helper::storeRepeatedShifts($request, $is_repeat, $shift, 2);
+        Helper::storeRepeatedShifts($request, $is_repeat, $shift, 1);
 
         return redirect()->back()->with('shiftAdded', 'Shift Added Successfully');
     }
@@ -144,6 +144,13 @@ class ProviderSchedulingController extends Controller
     public function providerEditShift(Request $request)
     {
         if ($request['action'] === 'save') {
+
+            $request->validate([
+                'shiftDate' => 'required|after:yesterday',
+                'shiftTimeStart' => 'required',
+                'shiftTimeEnd' => 'required|after:shiftTimeStart',
+            ]);
+
             // Check whether the shift created for provider is already having shift for that time period
             $shifts = Shift::with('shiftDetail')->get();
             $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
