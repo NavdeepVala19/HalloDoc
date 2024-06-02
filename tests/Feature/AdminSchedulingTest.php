@@ -22,168 +22,168 @@ class AdminSchedulingTest extends TestCase
     /**
      * Admin providers-on-call page can be rendered.
      */
-    // public function test_admin_providers_on_call_page_can_be_rendered(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_providers_on_call_page_can_be_rendered(): void
+    {
+        $admin = $this->admin();
 
-    //     $response = $this->actingAs($admin)->get('/providers-on-call');
+        $response = $this->actingAs($admin)->get('/providers-on-call');
 
-    //     $response->assertStatus(Response::HTTP_OK);
-    // }
+        $response->assertStatus(Response::HTTP_OK);
+    }
 
     /**
      * Admin shifts for review page can be rendered.
      */
-    // public function test_admin_shifts_for_review_page_can_be_rendered(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_shifts_for_review_page_can_be_rendered(): void
+    {
+        $admin = $this->admin();
 
-    //     $response = $this->actingAs($admin)
-    //         ->get('/shifts-review');
+        $response = $this->actingAs($admin)
+            ->get('/shifts-review');
 
-    //     $response->assertStatus(Response::HTTP_OK);
-    // }
+        $response->assertStatus(Response::HTTP_OK);
+    }
 
     /**
      * Admin Scheduling page can be rendered.
      */
-    // public function test_admin_scheduling_page_can_be_rendered(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_scheduling_page_can_be_rendered(): void
+    {
+        $admin = $this->admin();
 
-    //     $response = $this->actingAs($admin)->get('/scheduling');
+        $response = $this->actingAs($admin)->get('/scheduling');
 
-    //     $response->assertStatus(Response::HTTP_OK);
-    // }
+        $response->assertStatus(Response::HTTP_OK);
+    }
 
     /**
      * Admin create single shift with valid data.
      */
-    // public function test_admin_create_single_shift_with_valid_data(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_create_single_shift_with_valid_data(): void
+    {
+        $admin = $this->admin();
 
-    //     $startTime = date('H:i:00');
-    //     $dateTime = Carbon::parse($startTime);
-    //     $endTime = $dateTime->addMinutes(30);
-    //     $endTimeString = $endTime->format('H:i:00');
+        $startTime = date('H:i:00');
+        $dateTime = Carbon::parse($startTime);
+        $endTime = $dateTime->addMinutes(30);
+        $endTimeString = $endTime->format('H:i:00');
 
 
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/create-shift', [
-    //             'region' => 1,
-    //             'physician' => 1,
-    //             'shiftDate' => date('Y-m-d'),
-    //             'shiftStartTime' => $startTime,
-    //             'shiftEndTime' => $endTimeString,
-    //         ]);
+        $response = $this->actingAs($admin)
+            ->postJson('/create-shift', [
+                'region' => 1,
+                'physician' => 1,
+                'shiftDate' => date('Y-m-d'),
+                'shiftStartTime' => $startTime,
+                'shiftEndTime' => $endTimeString,
+            ]);
 
-    //     $response->assertStatus(Response::HTTP_FOUND)
-    //         ->assertSessionHas('shiftAdded', 'Shift Added Successfully');
-    // }
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas('shiftAdded', 'Shift Added Successfully');
+    }
 
     /**
      * Admin create single shift with invalid data.
      */
-    // public function test_admin_create_single_shift_with_invalid_data(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_create_single_shift_with_invalid_data(): void
+    {
+        $admin = $this->admin();
 
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/create-shift', [
-    //             'region' => 7,
-    //             'physician' => '',
-    //             'shiftDate' => '2024-01-01',
-    //             'shiftStartTime' => '12:00:00',
-    //             'shiftEndTime' => '11:00:00',
-    //         ]);
+        $response = $this->actingAs($admin)
+            ->postJson('/create-shift', [
+                'region' => 7,
+                'physician' => '',
+                'shiftDate' => '2024-01-01',
+                'shiftStartTime' => '12:00:00',
+                'shiftEndTime' => '11:00:00',
+            ]);
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-    //         ->assertJsonValidationErrors([
-    //             'region' => 'The selected region is invalid.',
-    //             'physician' => 'The physician field is required.',
-    //             'shiftDate' => 'The shift date field must be a date after yesterday.',
-    //             'shiftEndTime' => 'The shift end time field must be a date after shift start time.'
-    //         ]);
-    // }
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'region' => 'The selected region is invalid.',
+                'physician' => 'The physician field is required.',
+                'shiftDate' => 'The shift date field must be a date after yesterday.',
+                'shiftEndTime' => 'The shift end time field must be a date after shift start time.'
+            ]);
+    }
 
     /**
      * Admin create single shift with empty data.
      */
-    // public function test_admin_create_single_shift_with_no_data(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_create_single_shift_with_no_data(): void
+    {
+        $admin = $this->admin();
 
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/create-shift', [
-    //             'region' => '',
-    //             'physician' => '',
-    //             'shiftDate' => '',
-    //             'shiftStartTime' => '',
-    //             'shiftEndTime' => '',
-    //         ]);
+        $response = $this->actingAs($admin)
+            ->postJson('/create-shift', [
+                'region' => '',
+                'physician' => '',
+                'shiftDate' => '',
+                'shiftStartTime' => '',
+                'shiftEndTime' => '',
+            ]);
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-    //         ->assertJsonValidationErrors([
-    //             'region' => 'The region field is required.',
-    //             'physician' => 'The physician field is required.',
-    //             'shiftDate' => 'The shift date field is required.',
-    //             'shiftStartTime' => 'The shift start time field is required.',
-    //             'shiftEndTime' => 'The shift end time field is required.'
-    //         ]);
-    // }
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'region' => 'The region field is required.',
+                'physician' => 'The physician field is required.',
+                'shiftDate' => 'The shift date field is required.',
+                'shiftStartTime' => 'The shift start time field is required.',
+                'shiftEndTime' => 'The shift end time field is required.'
+            ]);
+    }
 
     /**
      * Admin create repeating shifts.
      */
-    // public function test_admin_create_repeating_shifts(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_create_repeating_shifts(): void
+    {
+        $admin = $this->admin();
 
-    //     $startTime = Carbon::parse(date('H:i:00'))->addMinutes(30);
-    //     $dateTime = Carbon::parse($startTime);
-    //     $endTime = $dateTime->addMinutes(30);
-    //     $endTimeString = $endTime->format('H:i:00');
+        $startTime = Carbon::parse(date('H:i:00'))->addMinutes(30);
+        $dateTime = Carbon::parse($startTime);
+        $endTime = $dateTime->addMinutes(30);
+        $endTimeString = $endTime->format('H:i:00');
 
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/create-shift', [
-    //             'region' => '1',
-    //             'physician' => '1',
-    //             'shiftDate' => date('Y-m-d'),
-    //             'shiftStartTime' => $startTime->toTimeString(),
-    //             'shiftEndTime' => $endTimeString,
-    //             'is_repeat' => 'on',
-    //             'checkbox' => [2, 3],
-    //             'repeatEnd' => '2',
-    //         ]);
+        $response = $this->actingAs($admin)
+            ->postJson('/create-shift', [
+                'region' => '1',
+                'physician' => '1',
+                'shiftDate' => date('Y-m-d'),
+                'shiftStartTime' => $startTime->toTimeString(),
+                'shiftEndTime' => $endTimeString,
+                'is_repeat' => 'on',
+                'checkbox' => [2, 3],
+                'repeatEnd' => '2',
+            ]);
 
-    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftAdded', 'Shift Added Successfully');
-    // }
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftAdded', 'Shift Added Successfully');
+    }
 
     /**
      * Admin create overlapping shift.
      */
-    // public function test_admin_create_overlapping_shift(): void
-    // {
-    //     $admin = $this->admin();
+    public function test_admin_create_overlapping_shift(): void
+    {
+        $admin = $this->admin();
 
-    //     $startTime = date('H:i:00');
-    //     $dateTime = Carbon::parse($startTime);
-    //     $endTime = $dateTime->addMinutes(30);
-    //     $endTimeString = $endTime->format('H:i:00');
+        $startTime = date('H:i:00');
+        $dateTime = Carbon::parse($startTime);
+        $endTime = $dateTime->addMinutes(30);
+        $endTimeString = $endTime->format('H:i:00');
 
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/create-shift', [
-    //             'region' => '1',
-    //             'physician' => '1',
-    //             'shiftDate' => date('Y-m-d'),
-    //             'shiftStartTime' => $startTime,
-    //             'shiftEndTime' => $endTimeString,
-    //         ]);
+        $response = $this->actingAs($admin)
+            ->postJson('/create-shift', [
+                'region' => '1',
+                'physician' => '1',
+                'shiftDate' => date('Y-m-d'),
+                'shiftStartTime' => $startTime,
+                'shiftEndTime' => $endTimeString,
+            ]);
 
-    //     $response->assertStatus(Response::HTTP_FOUND)
-    //         ->assertSessionHas('shiftOverlap', 'Provider you selected have an shift during the time period you provided');
-    // }
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas('shiftOverlap', 'Provider you selected have an shift during the time period you provided');
+    }
 
     // admin edit shift with valid data
     public function test_admin_edit_shift_with_valid_data()
