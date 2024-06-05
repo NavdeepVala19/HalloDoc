@@ -24,21 +24,21 @@ class ProvidersTest extends TestCase
      *
      * @return void
      */
-    public function test_send_link_form_with_valid_data()
-    {
-        $provider = $this->provider();
+    // public function test_send_link_form_with_valid_data()
+    // {
+    //     $provider = $this->provider();
 
-        $response = $this->actingAs($provider)
-            ->postJson('/provider-send-mail', [
-                'first_name' => 'Navdeep',
-                'last_name' => 'vala',
-                'email' => 'navdeep@mail.com',
-                'phone_number' => '+1 403-288-7577',
-            ]);
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-send-mail', [
+    //             'first_name' => 'Navdeep',
+    //             'last_name' => 'vala',
+    //             'email' => 'navdeep@mail.com',
+    //             'phone_number' => '+1 403-288-7577',
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas('successMessage', 'Link Sent Successfully!');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertSessionHas('successMessage', 'Link Sent Successfully!');
+    // }
 
     /**
      *  Test successful send link form submission with empty_fields

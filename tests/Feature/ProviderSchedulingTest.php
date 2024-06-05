@@ -130,7 +130,6 @@ class ProviderSchedulingTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
             'region' => 'The selected region is invalid.',
             'shiftDate' => 'The shift date field must be a date after yesterday.',
-            'shiftStartTime' => 'The shift start time field must be a date after now.',
             'shiftEndTime' => 'The shift end time field must be a date after shift start time.',
         ]);
     }

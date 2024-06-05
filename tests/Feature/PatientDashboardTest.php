@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\UserRoles;
 use Illuminate\Http\Response;
+use Illuminate\Support\Benchmark;
 
 class PatientDashboardTest extends TestCase
 {

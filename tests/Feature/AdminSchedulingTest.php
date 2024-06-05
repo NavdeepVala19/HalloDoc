@@ -28,6 +28,24 @@ class AdminSchedulingTest extends TestCase
 
         $response = $this->actingAs($admin)->get('/providers-on-call');
 
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.scheduling.providerOnCall')
+            ->assertViewHasAll([
+                'regions', 'onCallPhysicians', 'offDutyPhysicians'
+            ]);
+    }
+
+    /**
+     * filter providers on call based on region
+     */
+    public function test_filter_providers_on_call_based_on_region(): void
+    {
+        $admin = $this->admin();
+
+        $id = '1';
+
+        $response = $this->actingAs($admin)->get("/filterProvidersByRegion/{$id}");
+
         $response->assertStatus(Response::HTTP_OK);
     }
 
@@ -201,5 +219,36 @@ class AdminSchedulingTest extends TestCase
         ]);
 
         $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftEdited', 'Shift Edited Successfully!');
+    }
+
+    // admin delete shift
+    public function test_admin_delete_shift()
+    {
+        $shiftId = Shift::first()->id;
+        $shiftDetailId = ShiftDetail::where('shift_id', $shiftId)->value('id');
+
+        $admin = $this->admin();
+        $response = $this->actingAs($admin)->postJson('/admin-edit-shift', [
+            'shiftId' => $shiftId,
+            'shiftDetailId' => $shiftDetailId,
+            'action' => 'delete',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftDeleted', 'Shift Deleted Successfully!');
+    }
+
+    // admin change shift status
+    public function test_admin_change_shift_status()
+    {
+        $shiftDetailId = ShiftDetail::where('status', 1)->value('id');
+
+        $admin = $this->admin();
+        $response = $this->actingAs($admin)->postJson('/admin-edit-shift', [
+            'shiftDetailId' => $shiftDetailId,
+            'action' => 'return',
+        ]);
+
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas('shiftApproved', 'Shift Status changed from Pending to Approved');
     }
 }

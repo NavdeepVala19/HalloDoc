@@ -90,12 +90,12 @@ class AdminProfileForm extends FormRequest
             'address1.regex' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in address1.',
 
             'city.required' => $enter . ' a city',
-            'city.regex' => 'Please enter alpbabets in city.',
+            'city.regex' => 'Please enter alphabets in city.',
             'city.max' => $max_message . ' 30 alphabets in city',
             'city.min' => $min_message . ' 2 alphabets in city',
 
             'address2.required' => $enter . ' a address2',
-            'address2.regex' => 'Please enter alpbabets in address2 name.',
+            'address2.regex' => 'Please enter alphabets in address2 name.',
             'address2.max' => $max_message . ' 30 alphabets in address2',
             'address2.min' => $min_message . ' 2 alphabets in address2',
 

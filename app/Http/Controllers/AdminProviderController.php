@@ -28,7 +28,7 @@ class AdminProviderController extends Controller
             $providers = $adminProviderService->providersList();
             $onCallPhysicianIds = $providers['onCallPhysicianIds'];
             $providersData = $providers['providersData'];
-            return view('/adminPage/provider/adminProvider', compact('providersData', 'onCallPhysicianIds'));
+            return view('adminPage.provider.adminProvider', compact('providersData', 'onCallPhysicianIds'));
         } catch (\Throwable $th) {
             return view('errors.500');
         }
@@ -111,7 +111,7 @@ class AdminProviderController extends Controller
     public function newProvider()
     {
         $regions = Regions::get();
-        return view('/adminPage/provider/adminNewProvider', compact('regions'));
+        return view('adminPage.provider.adminNewProvider', compact('regions'));
     }
 
     /**
@@ -139,7 +139,7 @@ class AdminProviderController extends Controller
         try {
             $id = Crypt::decrypt($id);
             $getProviderData = Provider::with('users', 'role', 'Regions')->where('id', $id)->first();
-            return view('/adminPage/provider/adminEditProvider', compact('getProviderData'));
+            return view('adminPage.provider.adminEditProvider', compact('getProviderData'));
         } catch (\Throwable $th) {
             return view('errors.404');
         }
@@ -170,6 +170,8 @@ class AdminProviderController extends Controller
         } else {
             $request->validate([
                 'user_name' => 'required|alpha|min:3|max:40',
+                'status_type' => 'required',
+                'role' => 'required',
             ]);
 
             $updateProviderInfoUsers->username = $request->user_name;
@@ -226,10 +228,11 @@ class AdminProviderController extends Controller
     public function providerMailInfoUpdate(Request $request, $id, AdminProviderService $adminProviderService)
     {
         $request->validate([
-            'address1' => 'required|min:2|max:50',
-            'address2' => 'required|min:2|max:30',
+            'address1' => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s,_-]+?$/',
+            'address2' => 'required|min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
+            'regions' => 'required',
             'alt_phone_number' => 'required|regex:/^(\+\d{1,3}[ \.-]?)?(\(?\d{2,5}\)?[ \.-]?){1,2}\d{4,10}$/',
         ]);
 

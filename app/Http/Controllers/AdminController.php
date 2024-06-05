@@ -23,6 +23,7 @@ use App\Services\CreateNewUserService;
 use App\Services\EmailLogService;
 use App\Services\RequestClientService;
 use App\Services\RequestTableService;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -154,6 +155,7 @@ class AdminController extends Controller
      */
     public function status(Request $request, $status = 'new')
     {
+
         // Forget from session whenever a new status is opened
         Session::forget(['searchTerm', 'category', 'regionId']);
         if ($status === 'new' || $status === 'pending' || $status === 'active' || $status === 'conclude' || $status === 'toclose' || $status === 'unpaid') {
@@ -259,7 +261,7 @@ class AdminController extends Controller
             'request_id' => $requestTable->id,
         ]);
 
-        if (! $isEmailStored) {
+        if (!$isEmailStored) {
             // Send email to user
             $emailAddress = $request->email;
 

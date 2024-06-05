@@ -7,6 +7,7 @@ use App\Models\BlockRequest;
 use App\Models\EmailLog;
 use App\Models\RequestBusiness;
 use App\Models\RequestClient;
+use App\Models\RequestClosed;
 use App\Models\RequestConcierge;
 use App\Models\RequestNotes;
 use App\Models\RequestStatus;
@@ -101,6 +102,7 @@ class RecordsController extends Controller
         $getRequestId = RequestClient::where('id', $id)->value('request_id');
 
         RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
+        RequestClosed::where('request_id', $getRequestId)->forceDelete();
         RequestStatus::where('request_id', $getRequestId)->forceDelete();
         RequestBusiness::where('request_id', $getRequestId)->forceDelete();
         RequestConcierge::where('request_id', $getRequestId)->forceDelete();

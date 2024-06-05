@@ -28,9 +28,9 @@ class BusinessRequest extends FormRequest
             'mobile' => 'required',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'business_contact' => 'required|min_digits:10|max_digits:10',
-            'street' => 'required|min:3|max:25',
-            'city' => 'required|min:3|max:25|alpha',
-            'state' => 'required|min:3|max:25|alpha',
+            'street' => 'required|min:3|max:25|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
+            'city' => 'required|min:3|max:25|regex:/^[a-zA-Z ]+?$/',
+            'state' => 'required|min:3|max:25|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'required|min_digits:6|max_digits:6',
         ];
     }

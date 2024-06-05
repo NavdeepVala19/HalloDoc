@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Provider;
 use App\Models\UserRoles;
 use App\Models\RequestTable;
+use App\Models\RequestClient;
 use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -92,10 +93,31 @@ class AdminTest extends TestCase
         $requestId = RequestTable::first()->id;
         $id = Crypt::encrypt($requestId);
 
+
         $response = $this->actingAs($admin)
             ->get('admin/view/case/{' . $id . '}');
 
-        $response->assertStatus(Response::HTTP_OK);
+        $request = $response->getOriginalContent()->getData()['data']->getAttributes();
+        $requestClient = $response->getOriginalContent()->getData()['data']->getRelations()['requestClient']->getAttributes();
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.pages.viewCase')
+            ->assertViewHas('data');
+
+        $this->assertTrue(array_key_exists('request_type_id', $request));
+        $this->assertTrue(array_key_exists('status', $request));
+        $this->assertTrue(array_key_exists('confirmation_no', $request));
+        $this->assertTrue(array_key_exists('id', $request));
+        $this->assertTrue(array_key_exists('notes', $requestClient));
+        $this->assertTrue(array_key_exists('first_name', $requestClient));
+        $this->assertTrue(array_key_exists('last_name', $requestClient));
+        $this->assertTrue(array_key_exists('date_of_birth', $requestClient));
+        $this->assertTrue(array_key_exists('phone_number', $requestClient));
+        $this->assertTrue(array_key_exists('email', $requestClient));
+        $this->assertTrue(array_key_exists('state', $requestClient));
+        $this->assertTrue(array_key_exists('street', $requestClient));
+        $this->assertTrue(array_key_exists('city', $requestClient));
+        $this->assertTrue(array_key_exists('room', $requestClient));
     }
 
     /**
@@ -182,7 +204,26 @@ class AdminTest extends TestCase
 
         $response = $this->actingAs($admin)->get('admin/view/notes/{' . $id . '}');
 
-        $response->assertStatus(Response::HTTP_OK);
+        $data = $response->getOriginalContent()->getData()['data']->getAttributes();
+        $note = $response->getOriginalContent()->getData()['note']->getAttributes();
+        $adminAssignedCase = $response->getOriginalContent()->getData()['adminAssignedCase']->getAttributes();
+        $providerTransferedCase = $response->getOriginalContent()->getData()['providerTransferedCase']->getAttributes();
+        $adminTransferedCase = $response->getOriginalContent()->getData()['adminTransferedCase']->getAttributes();
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.pages.viewNotes')->assertViewHasAll([
+                'requestId', 'note', 'adminAssignedCase', 'providerTransferedCase', 'adminTransferedCase', 'data'
+            ]);
+
+        $this->assertTrue(array_key_exists('status', $data));
+        $this->assertTrue(array_key_exists('created_at', $adminAssignedCase));
+        $this->assertTrue(array_key_exists('notes', $adminAssignedCase));
+        $this->assertTrue(array_key_exists('created_at', $providerTransferedCase));
+        $this->assertTrue(array_key_exists('notes', $providerTransferedCase));
+        $this->assertTrue(array_key_exists('created_at', $adminTransferedCase));
+        $this->assertTrue(array_key_exists('notes', $adminTransferedCase));
+        $this->assertTrue(array_key_exists('physician_notes', $note));
+        $this->assertTrue(array_key_exists('admin_notes', $note));
     }
 
     /**
@@ -289,9 +330,10 @@ class AdminTest extends TestCase
                 'block_reason' => '',
             ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            'block_reason' => 'The block reason field is required.',
-        ]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'block_reason' => 'The block reason field is required.',
+            ]);
     }
 
     /**
@@ -308,7 +350,20 @@ class AdminTest extends TestCase
 
         $response = $this->actingAs($admin)->get('/close-case/{' . $id . '}');
 
-        $response->assertStatus(Response::HTTP_OK);
+        $data = $response->getOriginalContent()->getData()['data']->getAttributes();
+        $requestClient = $response->getOriginalContent()->getData()['data']->getRelations()['requestClient']->getAttributes();
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.pages.closeCase')
+            ->assertViewHasAll(['data', 'files']);
+
+        $this->assertTrue(array_key_exists('id', $data));
+        $this->assertTrue(array_key_exists('confirmation_no', $data));
+        $this->assertTrue(array_key_exists('first_name', $requestClient));
+        $this->assertTrue(array_key_exists('last_name', $requestClient));
+        $this->assertTrue(array_key_exists('date_of_birth', $requestClient));
+        $this->assertTrue(array_key_exists('phone_number', $requestClient));
+        $this->assertTrue(array_key_exists('email', $requestClient));
     }
 
     /**
@@ -391,107 +446,7 @@ class AdminTest extends TestCase
             ]);
     }
 
-    // Partners page can be rendered
-    public function test_partners_page_can_be_rendered()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->get('add-business');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    /**
-     * add business form with valid data
-     * @return void
-     */
-    public function test_add_business_with_valid_data()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/add-business', [
-                'business_name' => 'Garrison',
-                'profession' => 1,
-                'fax_number' => '4610',
-                'mobile' => '+1 776-977-4023',
-                'email' => 'refe@mailinator.com',
-                'business_contact' => '3315698752',
-                'street' => 'Culpa ullam error qu',
-                'city' => 'Et autem et aperiam ',
-                'state' => 'Dolor architecto off',
-                'zip' => '529430',
-            ]);
-
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('businessAdded', 'Business Added Successfully!');
-    }
-
-    /**
-     * add business form with invalid data
-     * @return void
-     */
-    public function test_add_business_with_invalid_data()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/add-business', [
-                'business_name' => 'Garrison 44',
-                'profession' => 50,
-                'fax_number' => '4610454455454',
-                'mobile' => '+1 776-977-402345',
-                'email' => 'refe@mailinato45r.com',
-                'business_contact' => '3314545698752',
-                'street' => 'Culp#$%#$%345a ullam error qu',
-                'city' => 'Et aut#%$%#$em et aperiam ',
-                'state' => 'Dolor #$%$%#545architecto off',
-                'zip' => '529434540',
-            ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            'business_name' => 'The business name field must only contain letters.',
-            'fax_number' => 'The fax number field must not have more than 8 digits.',
-            'email' => 'The email field format is invalid.',
-            'business_contact' => 'The business contact field must not have more than 10 digits.',
-            'street' => 'The street field must not be greater than 25 characters.',
-            'city' => 'The city field must only contain letters.',
-            'state' => 'The state field must only contain letters.',
-            'zip' => 'The zip field must not have more than 6 digits.',
-        ]);
-    }
-
-    /**
-     * add business form with empty data
-     * @return void
-     */
-    public function test_add_business_with_empty_data()
-    {
-        $admin = $this->admin();
-        $response = $this->actingAs($admin)
-            ->postJson('/add-business', [
-                'business_name' => '',
-                'fax_number' => '',
-                'mobile' => '',
-                'email' => '',
-                'business_contact' => '',
-                'street' => '',
-                'city' => '',
-                'state' => '',
-                'zip' => '',
-            ]);
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonValidationErrors([
-                'business_name' => 'The business name field is required.',
-                'fax_number' => 'The fax number field is required.',
-                'mobile' => 'The mobile field is required.',
-                'email' => 'The email field is required.',
-                'business_contact' => 'The business contact field is required.',
-                'street' => 'The street field is required.',
-                'city' => 'The city field is required.',
-                'state' => 'The state field is required.',
-                'zip' => 'The zip field is required.',
-            ]);
-    }
+    
 
     /**
      * send mail to patient with valid data
@@ -604,87 +559,6 @@ class AdminTest extends TestCase
         ]);
     }
 
-    // Account access page can be rendered
-    public function test_account_access_page_can_be_rendered()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->get('/access');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    // Create role page can be rendered
-    public function test_create_role_page_can_be_rendered()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->get('/create-role');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    /**
-     * create role with valid data
-     * @return void
-     */
-    public function test_create_role_with_valid_data()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->postJson('/create-access', [
-            'role_name' => '1',
-            'role' => 'newAccount',
-            'menu_checkbox' => [1, 2, 3, 4],
-        ]);
-
-        $response->assertStatus(Response::HTTP_FOUND)
-            ->assertRedirectToRoute('admin.access.view')
-            ->assertSessionHas('accessOperation', 'New access created successfully!');
-    }
-
-    /**
-     * create role with invalid data
-     * @return void
-     */
-    public function test_create_role_with_invalid_data()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/create-access', [
-                'role' => 'test account name new created',
-                'role_name' => '3',
-                'menu_checkbox' => [40, 41]
-            ]);
-
-        $response->assertStatus(Response::HTTP_FOUND)->assertJsonValidationErrors([
-            'role' => 'The role field must not be greater than 20 characters.',
-            'role_name' => 'The selected role name is invalid.',
-        ]);
-    }
-
-    /**
-     * create role with empty data
-     * @return void
-     */
-    public function test_create_role_with_empty_data()
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/create-access', [
-                'role' => '',
-                'role_name' => '',
-                'menu_checkbox' => ''
-            ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            'role' => 'The role field is required.',
-            'role_name' => 'The role name field is required.',
-            'menu_checkbox' => 'The menu checkbox field is required.',
-        ]);
-    }
 
     // Admin Create request page can be rendered
     public function test_admin_create_request_page_can_be_rendered()
@@ -1069,337 +943,4 @@ class AdminTest extends TestCase
 
         $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('encounterChangesSaved', 'Your changes have been Successfully Saved');
     }
-
-    /**
-     * Admin MyProfile page can be rendered.
-     */
-    public function test_admin_profile_page_can_be_rendered(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->get('/admin-profile-edit');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    /**
-     * Admin Provider page can be rendered.
-     */
-    public function test_admin_provider_page_can_be_rendered(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->get('/admin-providers');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    /**
-     * Admin create new Provider page can be rendered.
-     */
-    public function test_admin_create_new_provider_page_can_be_rendered(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)->get('/admin-new-provider');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    /**
-     * Admin create new Provider with no data.
-     */
-    public function test_admin_create_new_provider_with_no_data(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/admin-create-new-provider', [
-                'user_name' => '',
-                'password' => '',
-                'role' => '',
-                'first_name' => '',
-                'last_name' => '',
-                'email' => '',
-                'phone_number' => '',
-                'medical_license' => '',
-                'npi_number' => '',
-                'region_id' => '',
-                'address1' => '',
-                'address2' => '',
-                'city' => '',
-                'select_state' => '',
-                'zip' => '',
-                'phone_number_alt' => '',
-                'business_name' => '',
-                'business_website' => '',
-                'admin_notes' => '',
-            ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            'user_name' => 'Please enter User Name',
-            'password' => 'Please enter Password',
-            'first_name' => 'Please enter First Name',
-            'last_name' => 'Please enter Last Name',
-            'role' => 'Please select a Role',
-            'email' => 'Please enter Email',
-            'phone_number' => 'Please enter Phone Number',
-            'medical_license' => 'Please enter medical license',
-            'npi_number' => 'Please enter NPI number',
-            'region_id' => 'Please select atleast one Region',
-            'address1' => 'Please enter a address1',
-            'address2' => 'Please enter a address2',
-            'city' => 'Please enter a city',
-            'select_state' => 'Please select state',
-            'zip' => 'Please enter 6 digits zipcode',
-            'phone_number_alt' => 'Please enter Alternate Phone Number',
-            'business_name' => 'Please enter Business Name',
-            'business_website' => 'Please enter Business Website Url',
-            'admin_notes' => 'Please enter Admin Notes',
-        ]);
-    }
-
-    /**
-     * Admin create new Provider with invalid data.
-     */
-    public function test_admin_create_new_provider_with_invalid_data(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/admin-create-new-provider', [
-                'user_name' => '1234',
-                'password' => '12',
-                'role' => 9,
-                'first_name' => '2345()*)(',
-                'last_name' => '*)&*',
-                'email' => 'asdf1234@123.12',
-                'phone_number' => '&%^$$',
-                'medical_license' => 'asdfasdf',
-                'npi_number' => 'asdasd',
-                'region_id[]' => '12',
-                'address1' => '1234&^(^',
-                'address2' => '!@#$@3',
-                'city' => '1234',
-                'select_state' => '&%$',
-                'zip' => '1@#4',
-                'phone_number_alt' => '!@#$',
-                'business_name' => '!%#@4',
-                'business_website' => 'ASDF123423',
-                'admin_notes' => '1234',
-            ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            'user_name' => 'Please enter only Alphabets in User name',
-            'password' => 'Please enter more than 8 characters',
-            'first_name' => 'Please enter only Alphabets in First name',
-            'last_name' => 'Please enter only Alphabets in Last name',
-            'email' => 'Please enter a valid email (format: alphanum@alpha.domain).',
-            'medical_license' => 'Please enter only numbers',
-            'npi_number' => 'Please enter only numbers',
-            'address1' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in address1.',
-            'address2' => 'Please enter alphabets in address2 name.',
-            'city' => 'Please enter alphabets in city.',
-            'zip' => 'Please enter 6 digits zipcode',
-            'business_name' => 'Please enter alphabets in business name.',
-            'business_website' => 'Please enter a valid business website URL starting with https://www.',
-            'admin_notes' => 'Please enter more than 5 character',
-        ]);
-    }
-
-    /**
-     * Admin create new Provider with valid data and existing email.
-     */
-    public function test_admin_create_new_provider_with_valid_data_and_existing_email(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/admin-create-new-provider', [
-                'user_name' => 'desegoqa',
-                'password' => 'anything',
-                'role' => 1,
-                'first_name' => 'Ethan',
-                'last_name' => 'Noel',
-                'email' => 'nohovezazi@mailinator.com',
-                'phone_number' => '+11751349589',
-                'medical_license' => '8831212111',
-                'npi_number' => '3272345345',
-                'region_id' => [1, 2],
-                'address1' => '46 Fabien Drive',
-                'address2' => 'Non velit mollit ip',
-                'city' => 'Ipsum reprehenderit',
-                'select_state' => 2,
-                'zip' => 884615,
-                'phone_number_alt' => '3231234123',
-                'business_name' => 'McKenzie Kent',
-                'business_website' => 'https://www.nodus.org.au',
-                'admin_notes' => 'Porro ullamco magna',
-            ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors([
-            'email' => 'The email has already been taken.'
-        ]);
-    }
-
-    /**
-     * Admin create new Provider with valid data and new email.
-     */
-    public function test_admin_create_new_provider_with_valid_data_and_new_email(): void
-    {
-        $admin = $this->admin();
-
-        $response = $this->actingAs($admin)
-            ->postJson('/admin-create-new-provider', [
-                'user_name' => 'desegoqa',
-                'password' => 'anything',
-                'role' => 16,
-                'first_name' => 'Ethan',
-                'last_name' => 'Noel',
-                'email' => fake()->unique()->email(),
-                'phone_number' => '+11751349589',
-                'medical_license' => '8831212111',
-                'npi_number' => '3272345345',
-                'region_id' => [1, 2],
-                'address1' => '46 Fabien Drive',
-                'address2' => 'Non velit mollit ip',
-                'city' => 'Ipsum reprehenderit',
-                'select_state' => 2,
-                'zip' => 884615,
-                'phone_number_alt' => '3231234123',
-                'business_name' => 'McKenzie Kent',
-                'business_website' => 'https://www.nodus.org.au',
-                'admin_notes' => 'Porro ullamco magna',
-            ]);
-
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('message', 'account is created');
-    }
-
-    // Admin edit provider page can be rendered
-    public function test_admin_edit_proivder_page_can_be_rendered()
-    {
-        $admin = $this->admin();
-
-        $providerId = Provider::orderBy('id', 'desc')->first()->id;
-
-        $id = Crypt::encrypt($providerId);
-
-        $response = $this->actingAs($admin)->get('/admin-edit-provider/{' . $id . '}');
-
-        $response->assertStatus(Response::HTTP_OK);
-    }
-
-    // // Admin edit proivders password with no data
-    public function test_admin_edit_providers_password_with_no_data()
-    {
-        $admin = $this->admin();
-
-        $providerId = Provider::orderBy('id', 'desc')->first()->id;
-
-        $id = Crypt::encrypt($providerId);
-
-        $response = $this->actingAs($admin)->postJson('/admin-provider-updated-accounts/{' . $id . '}', [
-            'password' => '',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonValidationErrors([
-                'password' => 'The password field is required.',
-            ]);
-    }
-
-    // Admin edit proivders password with invalid data
-    public function test_admin_edit_providers_password_with_invalid_data()
-    {
-        $admin = $this->admin();
-
-        $providerId = Provider::orderBy('id', 'desc')->first()->id;
-
-        $id = Crypt::encrypt($providerId);
-
-        $response = $this->actingAs($admin)->postJson('/admin-provider-updated-accounts/{' . $id . '}', [
-            'password' => 'asdfas',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonValidationErrors([
-                'password' => 'The password field must be at least 8 characters.',
-            ]);
-    }
-
-    // ------------------------------ (Not Working) ---------------------------------
-    // Admin edit proivders password with valid data 
-    // public function test_admin_edit_providers_password_with_valid_data()
-    // {
-    //     $admin = $this->admin();
-
-    //     $providerId = Provider::orderBy('id', 'desc')->first()->id;
-
-    //     $id = Crypt::encrypt($providerId);
-
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/admin-provider-updated-accounts/{' . $id . '}', [
-    //             'password' => 'newPassword',
-    //         ]);
-
-    //     $response->assertStatus(Response::HTTP_FOUND)
-    //         ->assertSessionHas('message', 'account information is updated');
-    // }
-    // ----------------------------------------------------------------------------------
-
-    // // Admin edit proivders username with no data
-    public function test_admin_edit_providers_username_with_no_data()
-    {
-        $admin = $this->admin();
-
-        $providerId = Provider::orderBy('id', 'desc')->first()->id;
-
-        $id = Crypt::encrypt($providerId);
-
-        $response = $this->actingAs($admin)->postJson('/admin-provider-updated-accounts/{' . $id . '}', [
-            'user_name' => '',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonValidationErrors([
-                'user_name' => 'The user name field is required.',
-            ]);
-    }
-
-    // Admin edit proivders username with invalid data
-    public function test_admin_edit_providers_username_with_invalid_data()
-    {
-        $admin = $this->admin();
-
-        $providerId = Provider::orderBy('id', 'desc')->first()->id;
-
-        $id = Crypt::encrypt($providerId);
-
-        $response = $this->actingAs($admin)->postJson('/admin-provider-updated-accounts/{' . $id . '}', [
-            'user_name' => '*^^(*',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonValidationErrors([
-                'user_name' => 'The user name field must only contain letters.',
-            ]);
-    }
-
-    // ------------------------------ (Not Working) ---------------------------------
-    // Admin edit proivders username with valid data
-    // public function test_admin_edit_providers_username_with_valid_data()
-    // {
-    //     $admin = $this->admin();
-
-    //     $id = Provider::orderBy('id', 'desc')->first()->id;
-
-    //     $response = $this->actingAs($admin)
-    //         ->postJson('/admin-provider-updated-accounts/{' . $id . '}', [
-    //             'user_name' => 'newName',
-    //         ]);
-
-    //     $response->assertStatus(Response::HTTP_FOUND)
-    //         ->assertSessionHas('message', 'account information is updated');
-    // }
-    // --------------------------------------------------------------------------------
 }

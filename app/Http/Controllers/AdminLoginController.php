@@ -50,6 +50,7 @@ class AdminLoginController extends Controller
                 return redirect()->route('admin.dashboard');
             }
             if ($userRole->role_id === 2) {
+
                 return redirect()->route('provider.dashboard');
             }
             return back()->with('error', 'invalid credentials');
