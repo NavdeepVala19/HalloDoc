@@ -133,7 +133,6 @@ class AccessController extends Controller
     public function editAccessData(Request $request)
     {
         $request->validate([
-            'role_name' => 'required',
             'role' => 'required',
             'menu_checkbox' => 'required',
         ]);
@@ -214,6 +213,7 @@ class AccessController extends Controller
      */
     public function filterUserAccessAccountTypeWiseMobileView(Request $request, UserAccessService $userAccessService)
     {
+
         $userAccessDataFiltering = $userAccessService->filterAccountWise($request);
         $data = view('adminPage.access.userAccessFilterMobileView')->with('userAccessDataFiltering', $userAccessDataFiltering)->render();
 

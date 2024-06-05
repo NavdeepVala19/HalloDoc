@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\SearchRecordExport;
-use App\Models\BlockRequest;
-use App\Models\EmailLog;
-use App\Models\RequestBusiness;
-use App\Models\RequestClient;
-use App\Models\RequestConcierge;
-use App\Models\RequestNotes;
-use App\Models\RequestStatus;
-use App\Models\RequestTable;
-use App\Models\RequestWiseFile;
 use App\Models\SMSLogs;
-use App\Services\RecordsService;
+use App\Models\EmailLog;
+use App\Models\BlockRequest;
+use App\Models\RequestNotes;
+use App\Models\RequestTable;
 use Illuminate\Http\Request;
+use App\Models\RequestClient;
+use App\Models\RequestClosed;
+use App\Models\RequestStatus;
+use App\Models\RequestBusiness;
+use App\Models\RequestWiseFile;
+use App\Models\RequestConcierge;
+use App\Services\RecordsService;
+use App\Exports\SearchRecordExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
-use Maatwebsite\Excel\Facades\Excel;
 
 class RecordsController extends Controller
 {
@@ -147,7 +148,7 @@ class RecordsController extends Controller
             $email = RequestClient::where('id', $id)->pluck('email')->first();
             $data = RequestClient::with(['request'])->where('email', $email)->get();
 
-            $requestId = RequestClient::where('id', $id)->first()->request_id;
+            $requestId = RequestClient::where('id', $id)->value('request_id');
             $documentCount = RequestWiseFile::where('request_id', $requestId)->get()->count();
             $isFinalize = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->first();
 
@@ -157,15 +158,6 @@ class RecordsController extends Controller
         }
     }
 
-    /**
-     * Display patient records page.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function patientViews()
-    {
-        return view('adminPage.records.patientRecords');
-    }
 
     // --------- 6.5 : Blocked History ----
 
@@ -267,6 +259,7 @@ class RecordsController extends Controller
     {
         $getRequestId = RequestClient::where('id', $id)->value('request_id');
         RequestWiseFile::where('request_id', $getRequestId)->forceDelete();
+        RequestClosed::where('request_id', $getRequestId)->forceDelete();
         RequestStatus::where('request_id', $getRequestId)->forceDelete();
         RequestBusiness::where('request_id', $getRequestId)->forceDelete();
         RequestConcierge::where('request_id', $getRequestId)->forceDelete();

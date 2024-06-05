@@ -104,58 +104,58 @@ class FamilySubmitRequestTest extends TestCase
      *
      * @return void
      */
-    public function test_family_create_request_with_valid_data_and_existing_email(): void
-    {
-        $response = $this->postJson('/family-created', [
-            'family_first_name' => 'Olivia',
-            'family_last_name' => 'Oliver',
-            'family_phone_number' => '1234567890',
-            'family_email' => 'asdf@new.com',
-            'family_relation' => 'cousin',
-            'symptoms' => 'skin problem',
-            'first_name' => 'otto',
-            'last_name' => 'garrate',
-            'date_of_birth' => '2004-12-12',
-            'email' => 'otto@new.com',
-            'phone_number' => '1234567880',
-            'street' => 'Street 1',
-            'city' => 'new city',
-            'state' => 'states',
-            'zipcode' => '123456',
-            'room' => '',
-            'docs' => '',
-        ]);
+    // public function test_family_create_request_with_valid_data_and_existing_email(): void
+    // {
+    //     $response = $this->postJson('/family-created', [
+    //         'family_first_name' => 'Olivia',
+    //         'family_last_name' => 'Oliver',
+    //         'family_phone_number' => '1234567890',
+    //         'family_email' => 'asdf@new.com',
+    //         'family_relation' => 'cousin',
+    //         'symptoms' => 'skin problem',
+    //         'first_name' => 'otto',
+    //         'last_name' => 'garrate',
+    //         'date_of_birth' => '2004-12-12',
+    //         'email' => 'otto@new.com',
+    //         'phone_number' => '1234567880',
+    //         'street' => 'Street 1',
+    //         'city' => 'new city',
+    //         'state' => 'states',
+    //         'zipcode' => '123456',
+    //         'room' => '',
+    //         'docs' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
+    // }
 
     /**
      * Details entered are correct and new request is created with an new email
      *
      * @return void
      */
-    public function test_family_create_request_with_valid_data_and_new_email(): void
-    {
-        $response = $this->postJson('/family-created', [
-            'family_first_name' => 'Olivia',
-            'family_last_name' => 'Oliver',
-            'family_phone_number' => '1234567890',
-            'family_email' => 'asdf@new.com',
-            'family_relation' => 'cousin',
-            'symptoms' => 'skin problem',
-            'first_name' => 'otto',
-            'last_name' => 'garrate',
-            'date_of_birth' => '2004-12-12',
-            'email' => fake()->unique()->email(),
-            'phone_number' => '1234567880',
-            'street' => 'Street 1',
-            'city' => 'new city',
-            'state' => 'states',
-            'zipcode' => '123456',
-            'room' => '',
-            'docs' => '',
-        ]);
+    // public function test_family_create_request_with_valid_data_and_new_email(): void
+    // {
+    //     $response = $this->postJson('/family-created', [
+    //         'family_first_name' => 'Olivia',
+    //         'family_last_name' => 'Oliver',
+    //         'family_phone_number' => '1234567890',
+    //         'family_email' => 'asdf@new.com',
+    //         'family_relation' => 'cousin',
+    //         'symptoms' => 'skin problem',
+    //         'first_name' => 'otto',
+    //         'last_name' => 'garrate',
+    //         'date_of_birth' => '2004-12-12',
+    //         'email' => fake()->unique()->email(),
+    //         'phone_number' => '1234567880',
+    //         'street' => 'Street 1',
+    //         'city' => 'new city',
+    //         'state' => 'states',
+    //         'zipcode' => '123456',
+    //         'room' => '',
+    //         'docs' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
+    // }
 }

@@ -91,7 +91,6 @@
                     </div>
                     <div class="form-floating role-select provider-edit-form">
                         <select class="form-select @error('role') is-invalid @enderror" id="provider_role" name="role" disabled>
-                            <option value="0">Select Role</option>
                             <option selected value="{{ $getProviderData->role->id ?? "0" }}">
                                 {{ $getProviderData->role->name ?? "Select Role"}}
                             </option>

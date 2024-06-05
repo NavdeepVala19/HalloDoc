@@ -34,21 +34,21 @@ class AdminProfileTest extends TestCase
      *
      * @return void
      */
-    // public function test_update_admin_profile_password_with_empty_data(): void
-    // {
-    //     $userId = UserRoles::where('role_id', 1)->value('user_id');
-    //     $admin = User::where('id', $userId)->first();
-    //     $userId = User::first()->id;
+    public function test_update_admin_profile_password_with_empty_data(): void
+    {
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
+        $userId = User::first()->id;
 
-    //     $response = $this->actingAs($admin)->postJson("/admin-update-password/$userId", [
-    //         'password' => '',
-    //     ]);
+        $response = $this->actingAs($admin)->postJson("/admin-update-password/$userId", [
+            'password' => '',
+        ]);
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonValidationErrors([
-    //         'password' => 'The password field is required.'
-    //     ]);
-    // }
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'password' => 'The password field is required.'
+        ]);
+    }
 
 
     /**
@@ -149,6 +149,7 @@ class AdminProfileTest extends TestCase
     //         'address2' => 'manhattan',
     //         'city' => 'new york',
     //         'zip' => '147852',
+    //         'select_state' => '5',
     //         'alt_mobile' => '9513572584',
     //     ]);
 
@@ -212,5 +213,42 @@ class AdminProfileTest extends TestCase
             'zip' => 'The zip field must be 6 digits.',
             'alt_mobile' => 'The alt mobile field is required.',
         ]);
+    }
+
+
+    /**
+     * test successfull of admin profile page
+     * @return void
+     */
+    public function test_view_admin_profile_page():void
+    {
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
+
+        $response = $this->actingAs($admin)->get("/admin-profile-edit");
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $admin = $response->getOriginalContent()->getData()['adminProfileData']->getAttributes();
+        $role = $response->getOriginalContent()->getData()['adminProfileData']->getRelations()['role']->getAttributes();
+        $users = $response->getOriginalContent()->getData()['adminProfileData']->getRelations()['users']->getAttributes();
+        $region = $response->getOriginalContent()->getData()['adminProfileData']->getRelations()['region']->getAttributes();
+
+        $this->assertTrue(array_key_exists('first_name', $admin));
+        $this->assertTrue(array_key_exists('last_name', $admin));
+        $this->assertTrue(array_key_exists('status', $admin));
+        $this->assertTrue(array_key_exists('email', $admin));
+        $this->assertTrue(array_key_exists('mobile', $admin));
+        $this->assertTrue(array_key_exists('address1', $admin));
+        $this->assertTrue(array_key_exists('address2', $admin));
+        $this->assertTrue(array_key_exists('city', $admin));
+        $this->assertTrue(array_key_exists('zip', $admin));
+        $this->assertTrue(array_key_exists('region_id', $admin));
+        $this->assertTrue(array_key_exists('role_id', $admin));
+        $this->assertTrue(array_key_exists('alt_phone', $admin));
+        $this->assertTrue(array_key_exists('username', $users));
+        $this->assertTrue(array_key_exists('password', $users));
+        $this->assertTrue(array_key_exists('name', $role));
+        $this->assertTrue(array_key_exists('region_name', $region));
     }
 }

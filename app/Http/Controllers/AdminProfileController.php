@@ -98,6 +98,7 @@ class AdminProfileController extends Controller
             'address2' => 'min:2|max:30|regex:/^[a-zA-Z ,_-]+?$/',
             'city' => 'min:2|max:30|regex:/^[a-zA-Z ]+?$/',
             'zip' => 'digits:6',
+            'select_state' => 'required',
             'alt_mobile' => 'required|min_digits:10|max_digits:10',
         ]);
 

@@ -127,9 +127,9 @@ class AdminProviderService
 
     public function updateAccountInformation($request, $id, $userId)
     {
-        $this->updateAccountInfoInUsers($request, $userId);
         $this->updateAccountInProvider($request, $id);
         $this->updateAccountInAllUsers($request, $userId);
+        $this->updateAccountInfoInUsers($request, $userId);
 
         return true;
     }
@@ -222,11 +222,12 @@ class AdminProviderService
      *
      * @return void
      */
-    private function updateAccountInfoInUsers($userId, $request)
+    private function updateAccountInfoInUsers($request, $userId)
     {
         $updateProviderInfoUsers = Users::where('id', $userId)->first();
         $updateProviderInfoUsers->username = $request->user_name;
         $updateProviderInfoUsers->save();
+
     }
 
     /**

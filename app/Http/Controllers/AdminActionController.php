@@ -513,13 +513,18 @@ class AdminActionController extends Controller
      *
      * @param  int  $requestId
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     *  @return mixed|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
+
     public function downloadEncounterForm($requestId)
     {
-        $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->value('file_name');
+        try {
+            $encounterFile = RequestWiseFile::where('request_id', $requestId)->where('is_finalize', true)->value('file_name');
+            $path = storage_path() . '/app/encounterForm/' . $encounterFile;
 
-        $path = storage_path() . '/app/encounterForm/' . $encounterFile;
-        return response()->download($path);
+            return response()->download($path);
+        } catch (\Throwable $th) {
+            return view('errors.500');
+        }
     }
 }

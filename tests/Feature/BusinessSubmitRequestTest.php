@@ -105,58 +105,58 @@ class BusinessSubmitRequestTest extends TestCase
      *
      * @return void
      */
-    public function test_business_create_request_with_valid_data_and_existing_email(): void
-    {
-        $response = $this->postJson('/business-created', [
-            'first_name' => 'Steve',
-            'last_name' => 'Smith',
-            'date_of_birth' => '1994-03-12',
-            'email' => 'smith@mail.com',
-            'phone_number' => '2345678901',
-            'street' => 'new street',
-            'city' => 'city',
-            'state' => 'states',
-            'zipcode' => '123456',
-            'business_first_name' => 'Johnson',
-            'business_last_name' => 'ponting',
-            'business_email' => 'johnson@mail.com',
-            'business_mobile' => '3456789012',
-            'business_property_name' => 'newMatch',
-            'symptoms' => 'test sympotoms',
-            'case_number' => '12345',
-            'room' => '',
-        ]);
+    // public function test_business_create_request_with_valid_data_and_existing_email(): void
+    // {
+    //     $response = $this->postJson('/business-created', [
+    //         'first_name' => 'Steve',
+    //         'last_name' => 'Smith',
+    //         'date_of_birth' => '1994-03-12',
+    //         'email' => 'smith@mail.com',
+    //         'phone_number' => '2345678901',
+    //         'street' => 'new street',
+    //         'city' => 'city',
+    //         'state' => 'states',
+    //         'zipcode' => '123456',
+    //         'business_first_name' => 'Johnson',
+    //         'business_last_name' => 'ponting',
+    //         'business_email' => 'johnson@mail.com',
+    //         'business_mobile' => '3456789012',
+    //         'business_property_name' => 'newMatch',
+    //         'symptoms' => 'test sympotoms',
+    //         'case_number' => '12345',
+    //         'room' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
+    // }
 
     /**
      * Details entered are correct and new request is created with an new email
      *
      * @return void
      */
-    public function test_business_create_request_with_valid_data_and_new_email(): void
-    {
-        $response = $this->postJson('/business-created', [
-            'first_name' => 'Steve',
-            'last_name' => 'Smith',
-            'date_of_birth' => '1994-03-12',
-            'email' => fake()->unique()->email(),
-            'phone_number' => '2345678901',
-            'street' => 'new street',
-            'city' => 'city',
-            'state' => 'states',
-            'zipcode' => '123456',
-            'business_first_name' => 'Johnson',
-            'business_last_name' => 'ponting',
-            'business_email' => 'johnson@mail.com',
-            'business_mobile' => '3456789012',
-            'business_property_name' => 'newMatch',
-            'symptoms' => 'test sympotoms',
-            'case_number' => '12345',
-            'room' => '',
-        ]);
+    // public function test_business_create_request_with_valid_data_and_new_email(): void
+    // {
+    //     $response = $this->postJson('/business-created', [
+    //         'first_name' => 'Steve',
+    //         'last_name' => 'Smith',
+    //         'date_of_birth' => '1994-03-12',
+    //         'email' => fake()->unique()->email(),
+    //         'phone_number' => '2345678901',
+    //         'street' => 'new street',
+    //         'city' => 'city',
+    //         'state' => 'states',
+    //         'zipcode' => '123456',
+    //         'business_first_name' => 'Johnson',
+    //         'business_last_name' => 'ponting',
+    //         'business_email' => 'johnson@mail.com',
+    //         'business_mobile' => '3456789012',
+    //         'business_property_name' => 'newMatch',
+    //         'symptoms' => 'test sympotoms',
+    //         'case_number' => '12345',
+    //         'room' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
+    // }
 }

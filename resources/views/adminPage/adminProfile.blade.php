@@ -88,7 +88,7 @@
 
                 <div class="form-floating role-select">
                     <select class="form-select" id="listing_role_admin_Account" disabled>
-                        <option selected>{{$adminProfileData->role->name}}</option>
+                        <option selected>{{$adminProfileData->role->name ?? 'Admin'}}</option>
                     </select>
                 </div>
             </div>

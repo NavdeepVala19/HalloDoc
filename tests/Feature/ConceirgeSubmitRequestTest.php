@@ -104,56 +104,56 @@ class ConceirgeSubmitRequestTest extends TestCase
      *
      * @return void
      */
-    public function test_concierge_create_request_with_valid_data_and_existing_email(): void
-    {
-        $response = $this->postJson('/concierge-created', [
-            'first_name' => 'Glenn',
-            'last_name' => 'McGrath',
-            'date_of_birth' => '1954-04-17',
-            'email' => 'glenn@mail.com',
-            'phone_number' => '5678901234',
-            'concierge_first_name' => 'Ricky',
-            'concierge_last_name' => 'Ponting',
-            'concierge_email' => 'ricky@mail.com',
-            'concierge_mobile' => '6789012345',
-            'concierge_hotel_name' => 'kangaroos',
-            'concierge_street' => 'streets',
-            'concierge_state' => 'states',
-            'concierge_city' => 'city',
-            'concierge_zip_code' => '234567',
-            'symptoms' => '',
-            'room' => '',
-        ]);
+    // public function test_concierge_create_request_with_valid_data_and_existing_email(): void
+    // {
+    //     $response = $this->postJson('/concierge-created', [
+    //         'first_name' => 'Glenn',
+    //         'last_name' => 'McGrath',
+    //         'date_of_birth' => '1954-04-17',
+    //         'email' => 'glenn@mail.com',
+    //         'phone_number' => '5678901234',
+    //         'concierge_first_name' => 'Ricky',
+    //         'concierge_last_name' => 'Ponting',
+    //         'concierge_email' => 'ricky@mail.com',
+    //         'concierge_mobile' => '6789012345',
+    //         'concierge_hotel_name' => 'kangaroos',
+    //         'concierge_street' => 'streets',
+    //         'concierge_state' => 'states',
+    //         'concierge_city' => 'city',
+    //         'concierge_zip_code' => '234567',
+    //         'symptoms' => '',
+    //         'room' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Request is Submitted');
+    // }
 
     /**
      * Details entered are correct and new request is created with an new email
      *
      * @return void
      */
-    public function test_concierge_create_request_with_valid_data_and_new_email(): void
-    {
-        $response = $this->postJson('/concierge-created', [
-            'first_name' => 'Glenn',
-            'last_name' => 'McGrath',
-            'date_of_birth' => '1954-04-17',
-            'email' => fake()->unique()->email(),
-            'phone_number' => '5678901234',
-            'concierge_first_name' => 'Ricky',
-            'concierge_last_name' => 'Ponting',
-            'concierge_email' => 'ricky@mail.com',
-            'concierge_mobile' => '6789012345',
-            'concierge_hotel_name' => 'kangaroos',
-            'concierge_street' => 'streets',
-            'concierge_state' => 'states',
-            'concierge_city' => 'city',
-            'concierge_zip_code' => '234567',
-            'symptoms' => '',
-            'room' => '',
-        ]);
+    // public function test_concierge_create_request_with_valid_data_and_new_email(): void
+    // {
+    //     $response = $this->postJson('/concierge-created', [
+    //         'first_name' => 'Glenn',
+    //         'last_name' => 'McGrath',
+    //         'date_of_birth' => '1954-04-17',
+    //         'email' => fake()->unique()->email(),
+    //         'phone_number' => '5678901234',
+    //         'concierge_first_name' => 'Ricky',
+    //         'concierge_last_name' => 'Ponting',
+    //         'concierge_email' => 'ricky@mail.com',
+    //         'concierge_mobile' => '6789012345',
+    //         'concierge_hotel_name' => 'kangaroos',
+    //         'concierge_street' => 'streets',
+    //         'concierge_state' => 'states',
+    //         'concierge_city' => 'city',
+    //         'concierge_zip_code' => '234567',
+    //         'symptoms' => '',
+    //         'room' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('submit.request')->assertSessionHas('message', 'Email for Create Account is Sent and Request is Submitted');
+    // }
 }

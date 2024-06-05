@@ -79,9 +79,9 @@ class CreatePartners extends FormRequest
             'state.regex' => 'Please enter alpbabets in state name. ',
             'state.min' => $min_message . ' 3 alphabets in state',
             'state.max' => $max_message . ' 25 alphabets in state',
-
-            'zipcode.digits' => 'Please enter 6 digits zipcode',
-            'zipcode.gte' => 'Please enter a 6 digit positive number in zipcode.',
+            
+            'zip.digits' => 'Please enter 6 digits zipcode',
+            'zip.gte' => 'Please enter a 6 digit positive number in zipcode.',
         ];
     }
 }

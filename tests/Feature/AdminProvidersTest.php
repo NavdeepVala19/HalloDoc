@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Provider;
 use App\Models\UserRoles;
+use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminProvidersTest extends TestCase
@@ -15,10 +16,12 @@ class AdminProvidersTest extends TestCase
      * @return void
      */
 
-     private function adminLoggedIn(){
+    private function adminLoggedIn()
+    {
         $userId = UserRoles::where('role_id', 1)->value('user_id');
         $admin = User::where('id', $userId)->first();
-     }
+        return $admin;
+    }
 
 
     // public function test_admin_create_new_provider_with_valid_data(): void
@@ -29,7 +32,6 @@ class AdminProvidersTest extends TestCase
     //     $response = $this->actingAs($admin)->postJson('/admin-create-new-provider', [
     //         'user_name' => fake()->unique()->firstName(),
     //         'password' => 'cugody123',
-    //         'role' => fake()->unique()->numberBetween(1,4),
     //         'first_name' => fake()->unique()->firstName(),
     //         'last_name' => fake()->unique()->lastName(),
     //         'email' => fake()->unique()->email(),
@@ -61,41 +63,41 @@ class AdminProvidersTest extends TestCase
      * admin create new Provider with valid data and existing email
      * @return void
      */
-    // public function test_admin_create_new_provider_with_valid_data_and_existing_email(): void
-    // {
-    //     $userId = UserRoles::where('role_id', 1)->value('user_id');
-    //     $admin = User::where('id', $userId)->first();
+    public function test_admin_create_new_provider_with_valid_data_and_existing_email(): void
+    {
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
 
-    //     $response = $this->actingAs($admin)->postJson('/admin-create-new-provider', [
-    //         'user_name' => 'cugody',
-    //         'password' => 'cuggfhody',
-    //         'role' => '3',
-    //         'first_name' => 'Chaney',
-    //         'last_name' => 'French',
-    //         'email' => 'doctor@gmail.com',
-    //         'phone_number' => '+1 811-534-4639',
-    //         'medical_license' => '2635463557',
-    //         'npi_number' => '9493758979',
-    //         'region_id' => [2,4,5],
-    //         'address1' => '10 Green First Parkway',
-    //         'address2' => 'Obcaecati veniam Na',
-    //         'city' => 'Eum libero sed exerc',
-    //         'select_state' => '3',
-    //         'zip' => '311662',
-    //         'phone_number_alt' => '2932364769',
-    //         'business_name' => 'Caryn Moore',
-    //         'business_website' => 'https://www.xutureguty.com',
-    //         'admin_notes' => 'Fugiat aute archite',
-    //         'provider_photo' => '',
-    //         'independent_contractor' => '',
-    //         'background_doc' => '',
-    //         'hipaa_docs' => '',
-    //         'non_disclosure_doc' => '',
-    //     ]);
+        $response = $this->actingAs($admin)->postJson('/admin-create-new-provider', [
+            'user_name' => 'cugody',
+            'password' => 'cuggfhody',
+            'role' => '3',
+            'first_name' => 'Chaney',
+            'last_name' => 'French',
+            'email' => 'doctor@gmail.com',
+            'phone_number' => '+1 811-534-4639',
+            'medical_license' => '2635463557',
+            'npi_number' => '9493758979',
+            'region_id' => [2,4,5],
+            'address1' => '10 Green First Parkway',
+            'address2' => 'Obcaecati veniam Na',
+            'city' => 'Eum libero sed exerc',
+            'select_state' => '3',
+            'zip' => '311662',
+            'phone_number_alt' => '2932364769',
+            'business_name' => 'Caryn Moore',
+            'business_website' => 'https://www.xutureguty.com',
+            'admin_notes' => 'Fugiat aute archite',
+            'provider_photo' => '',
+            'independent_contractor' => '',
+            'background_doc' => '',
+            'hipaa_docs' => '',
+            'non_disclosure_doc' => '',
+        ]);
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonValidationErrors(['email'=> 'The email has already been taken.']);
-    // }
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['email'=> 'The email has already been taken.']);
+    }
 
     /**
      * admin create new Provider with invalid data
@@ -308,6 +310,7 @@ class AdminProvidersTest extends TestCase
     //         'address2' => 'manhattan',
     //         'city' => 'new york',
     //         'zip' => '147852',
+    //         'regions' => '5',
     //         'alt_phone_number' => '1234567890',
     //     ]);
 
@@ -329,6 +332,7 @@ class AdminProvidersTest extends TestCase
             'address1' => 'billionaires r%$$%3ow',
             'address2' => 'manha4354ttan',
             'city' => 'new yor435k',
+            'regions' => '5',
             'zip' => '14785452',
         ]);
 
@@ -437,4 +441,106 @@ class AdminProvidersTest extends TestCase
             'business_website' => 'The business website field is required.',
         ]);
     }
+
+
+    /**
+     * test successful of providers listing
+     * @return void
+     */
+
+    public function test_view_admin_providers_listing()
+    {
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
+
+        $response = $this->actingAs($admin)->get("/admin-providers");
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $providers = $response->getOriginalContent()->getData()['providersData'][0]->getAttributes();
+        $role = $response->getOriginalContent()->getData()['providersData'][0]->getRelations()['role']->getAttributes();
+
+        $this->assertTrue(array_key_exists('first_name', $providers));
+        $this->assertTrue(array_key_exists('last_name', $providers));
+        $this->assertTrue(array_key_exists('status', $providers));
+        $this->assertTrue(array_key_exists('is_notifications', $providers));
+        $this->assertTrue(array_key_exists('name', $role));
+
+    }
+
+    /**
+     * test case successfull of view create new provider account page
+     * @return void
+     */
+    public function test_view_create_new_provider_account_page(){
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
+
+        $response = $this->actingAs($admin)->get("/admin-new-provider");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+
+    /**
+     * view providers edit page
+     * @return void
+     */
+    public function test_view_edit_provider_page(){
+        $userId = UserRoles::where('role_id', 1)->value('user_id');
+        $admin = User::where('id', $userId)->first();
+
+        $providerId = Crypt::encrypt(Provider::first()->id);
+        $response = $this->actingAs($admin)->get("/admin-edit-provider/$providerId");
+
+        $response->assertStatus(Response::HTTP_OK);
+        
+        $providers = $response->getOriginalContent()->getData()['getProviderData']->getAttributes();
+        $role = $response->getOriginalContent()->getData()['getProviderData']->getRelations()['role']->getAttributes();
+        $users = $response->getOriginalContent()->getData()['getProviderData']->getRelations()['users']->getAttributes();
+        $region = $response->getOriginalContent()->getData()['getProviderData']->getRelations()['Regions']->getAttributes();
+
+        $this->assertTrue(array_key_exists('first_name', $providers));
+        $this->assertTrue(array_key_exists('last_name', $providers));
+        $this->assertTrue(array_key_exists('status', $providers));
+        $this->assertTrue(array_key_exists('email', $providers));
+        $this->assertTrue(array_key_exists('mobile', $providers));
+        $this->assertTrue(array_key_exists('medical_license', $providers));
+        $this->assertTrue(array_key_exists('address1', $providers));
+        $this->assertTrue(array_key_exists('address2', $providers));
+        $this->assertTrue(array_key_exists('city', $providers));
+        $this->assertTrue(array_key_exists('zip', $providers));
+        $this->assertTrue(array_key_exists('regions_id', $providers));
+        $this->assertTrue(array_key_exists('role_id', $providers));
+        $this->assertTrue(array_key_exists('photo', $providers));
+        $this->assertTrue(array_key_exists('npi_number', $providers));
+        $this->assertTrue(array_key_exists('admin_notes', $providers));
+        $this->assertTrue(array_key_exists('alt_phone', $providers));
+        $this->assertTrue(array_key_exists('business_name', $providers));
+        $this->assertTrue(array_key_exists('business_website', $providers));
+        $this->assertTrue(array_key_exists('IsAgreementDoc', $providers));
+        $this->assertTrue(array_key_exists('IsBackgroundDoc', $providers));
+        $this->assertTrue(array_key_exists('IsTrainingDoc', $providers));
+        $this->assertTrue(array_key_exists('IsNonDisclosureDoc', $providers));
+        $this->assertTrue(array_key_exists('photo', $providers));
+        $this->assertTrue(array_key_exists('username', $users));
+        $this->assertTrue(array_key_exists('password', $users));
+        $this->assertTrue(array_key_exists('name', $role));
+        $this->assertTrue(array_key_exists('region_name', $region));
+    }
+
+
+    /**
+     * test successful of provider account delete
+     * @return void
+     */
+    // public function test_delete_provider_account(){
+    //     $userId = UserRoles::where('role_id', 1)->value('user_id');
+    //     $admin = User::where('id', $userId)->first();
+
+    //     $providerId = Provider::select('id')->latest()->value('id');
+    //     $response = $this->actingAs($admin)->get("/admin-providers-delete-details/$providerId");
+
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertRedirectToRoute('admin.providers.list')->assertSessionHas('message', 'account is deleted');
+    // }
 }
