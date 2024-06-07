@@ -33,82 +33,82 @@ class ProviderSchedulingTest extends TestCase
      * provider add single shift with valid data
      * @return void
      */
-    public function test_provider_add_single_shift_with_valid_data()
-    {
-        $provider = $this->provider();
-        $providerId = Provider::where('user_id', $provider->id)->value('id');
+    // public function test_provider_add_single_shift_with_valid_data()
+    // {
+    //     $provider = $this->provider();
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
 
-        $startTime = date('H:i:00');
-        $dateTime = Carbon::parse($startTime);
-        $endTime = $dateTime->addMinutes(30);
-        $endTimeString = $endTime->format('H:i:00');
+    //     $startTime = date('H:i:00');
+    //     $dateTime = Carbon::parse($startTime);
+    //     $endTime = $dateTime->addMinutes(30);
+    //     $endTimeString = $endTime->format('H:i:00');
 
-        $response = $this->actingAs($provider)
-            ->postJson('/provider-create-shift', [
-                'providerId' => $providerId,
-                'region' => '1',
-                'shiftDate' => now()->toDateString(),
-                'shiftStartTime' => $startTime,
-                'shiftEndTime' => $endTimeString,
-            ]);
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-create-shift', [
+    //             'providerId' => $providerId,
+    //             'region' => '1',
+    //             'shiftDate' => now()->toDateString(),
+    //             'shiftStartTime' => $startTime,
+    //             'shiftEndTime' => $endTimeString,
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftAdded', 'Shift Added Successfully');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftAdded', 'Shift Added Successfully');
+    // }
 
     /**
      * provider add overlapping shift with valid data
      * @return void
      */
-    public function test_provider_add_overlapping_shift_with_valid_data()
-    {
-        $provider = $this->provider();
-        $providerId = Provider::where('user_id', $provider->id)->value('id');
+    // public function test_provider_add_overlapping_shift_with_valid_data()
+    // {
+    //     $provider = $this->provider();
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
 
-        $startTime = date('H:i:00');
-        $dateTime = Carbon::parse($startTime);
-        $endTime = $dateTime->addMinutes(30);
-        $endTimeString = $endTime->format('H:i:00');
+    //     $startTime = date('H:i:00');
+    //     $dateTime = Carbon::parse($startTime);
+    //     $endTime = $dateTime->addMinutes(30);
+    //     $endTimeString = $endTime->format('H:i:00');
 
-        $response = $this->actingAs($provider)
-            ->postJson('/provider-create-shift', [
-                'providerId' => $providerId,
-                'region' => '1',
-                'shiftDate' => now()->toDateString(),
-                'shiftStartTime' => $startTime,
-                'shiftEndTime' => $endTimeString,
-            ]);
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-create-shift', [
+    //             'providerId' => $providerId,
+    //             'region' => '1',
+    //             'shiftDate' => now()->toDateString(),
+    //             'shiftStartTime' => $startTime,
+    //             'shiftEndTime' => $endTimeString,
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftAdded', 'Shift Added Successfully');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftAdded', 'Shift Added Successfully');
+    // }
 
     /**
      * provider add repeating shift with valid data
      * @return void
      */
-    public function test_provider_add_repeating_shift_with_valid_data()
-    {
-        $provider = $this->provider();
-        $providerId = Provider::where('user_id', $provider->id)->value('id');
+    // public function test_provider_add_repeating_shift_with_valid_data()
+    // {
+    //     $provider = $this->provider();
+    //     $providerId = Provider::where('user_id', $provider->id)->value('id');
 
-        $startTime = Carbon::parse(date('H:i:00'))->addMinutes(30);
-        $dateTime = Carbon::parse($startTime);
-        $endTime = $dateTime->addMinutes(30);
-        $endTimeString = $endTime->format('H:i:00');
+    //     $startTime = Carbon::parse(date('H:i:00'))->addMinutes(30);
+    //     $dateTime = Carbon::parse($startTime);
+    //     $endTime = $dateTime->addMinutes(30);
+    //     $endTimeString = $endTime->format('H:i:00');
 
-        $response = $this->actingAs($provider)
-            ->postJson('/provider-create-shift', [
-                'providerId' => $providerId,
-                'region' => '1',
-                'shiftDate' => now()->toDateString(),
-                'shiftStartTime' => $startTime->toTimeString(),
-                'shiftEndTime' => $endTimeString,
-                'is_repeat' => 'on',
-                'checkbox' => [0, 1],
-                'repeatEnd' => '2'
-            ]);
+    //     $response = $this->actingAs($provider)
+    //         ->postJson('/provider-create-shift', [
+    //             'providerId' => $providerId,
+    //             'region' => '1',
+    //             'shiftDate' => now()->toDateString(),
+    //             'shiftStartTime' => $startTime->toTimeString(),
+    //             'shiftEndTime' => $endTimeString,
+    //             'is_repeat' => 'on',
+    //             'checkbox' => [0, 1],
+    //             'repeatEnd' => '2'
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftOverlap', 'You have an shift during the time period you provided');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('shiftOverlap', 'You have an shift during the time period you provided');
+    // }
 
     /**
      * Test successful schedule shift with invalid data

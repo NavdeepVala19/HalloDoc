@@ -463,3 +463,6 @@ Route::middleware('CheckAdminOrProvider')->group(function () {
     // Send Link
     Route::post('/admin/send/mail/patient', [CommonOperationController::class, 'sendMail'])->name('admin.send.mail');
 });
+
+
+Route::get('/get-requests', [AdminController::class, 'getRequests'])->name('get.requests');

@@ -722,7 +722,7 @@ class ProvidersTest extends TestCase
     {
         $provider = $this->provider();
 
-        $providerId = Provider::where('user_id', $provider->id)->value('id');
+        $providerId = Provider::orderBy('id', 'desc')->first()->id;
 
         $response = $this->actingAs($provider)
             ->postJson('/provider-reset-password', [

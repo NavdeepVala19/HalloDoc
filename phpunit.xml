@@ -11,7 +11,20 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        <testsuite name="exclude-navdeep-folder">
+            
+        </testsuite>
     </testsuites>
+    <source>
+        <exclude>
+            <directory>Shivesh</directory>
+        </exclude>
+    </source>
+    <source>
+        <exclude>
+            <directory>Navdeep</directory>
+        </exclude>
+    </source>
     <source>
         <include>
             <directory>app</directory>

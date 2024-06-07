@@ -72,4 +72,14 @@ class RequestTable extends Model
     {
         return $this->hasOne(RequestNotes::class, 'request_id');
     }
+
+    public function usersData()
+    {
+        return $this->hasOne(Users::class, 'id', 'user_id');
+    }
+
+    public function providerUsersData()
+    {
+        return $this->hasManyThrough(Users::class, Provider::class,);
+    }
 }

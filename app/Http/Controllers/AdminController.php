@@ -2,34 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ActiveStatusExport;
-use App\Exports\ConcludeStatusExport;
-use App\Exports\NewStatusExport;
-use App\Exports\PendingStatusExport;
-use App\Exports\ToCloseStatusExport;
-use App\Exports\UnPaidStatusExport;
-use App\Exports\UsersExport;
-use App\Helpers\ConfirmationNumber;
+use App\Models\Users;
 use App\Helpers\Helper;
-use App\Http\Requests\AdminCreateRequest;
-use App\Mail\RequestSupportMessage;
-use App\Mail\SendEmailAddress;
 use App\Models\Regions;
-use App\Models\RequestClient;
+use App\Models\RequestType;
+use App\Exports\UsersExport;
 use App\Models\RequestNotes;
 use App\Models\RequestTable;
-use App\Models\Users;
-use App\Services\CreateNewUserService;
-use App\Services\EmailLogService;
-use App\Services\RequestClientService;
-use App\Services\RequestTableService;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\RequestClient;
+use Illuminate\Http\Response;
+use App\Mail\SendEmailAddress;
+use App\Exports\NewStatusExport;
+use App\Services\EmailLogService;
 use Illuminate\Support\Facades\DB;
+use App\Exports\ActiveStatusExport;
+use App\Exports\UnPaidStatusExport;
+use App\Helpers\ConfirmationNumber;
+use App\Mail\RequestSupportMessage;
+use App\Exports\PendingStatusExport;
+use App\Exports\ToCloseStatusExport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ConcludeStatusExport;
+use App\Services\RequestTableService;
+use App\Services\CreateNewUserService;
+use App\Services\RequestClientService;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\Session;
+use App\Http\Requests\AdminCreateRequest;
+use App\Http\Resources\RequestTableResource;
 
 class AdminController extends Controller
 {
@@ -404,5 +407,14 @@ class AdminController extends Controller
 
         $data = view($bladeFilePath)->with('cases', $cases)->render();
         return response()->json(['html' => $data]);
+    }
+
+    public function getRequests()
+    {
+        return response()->json([
+            'success_message' => 'RequestTable data retrieved successfully.',
+            'error' => '',
+            'data' => RequestTableResource::collection(RequestTable::get()),
+        ]);
     }
 }

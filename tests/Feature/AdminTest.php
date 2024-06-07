@@ -18,6 +18,204 @@ class AdminTest extends TestCase
         $adminId = UserRoles::where('role_id', 1)->first()->user_id;
         return User::where('id', $adminId)->first();
     }
+
+    // admin listing new state page can be rendered
+    public function test_admin_listing_new_state_page_can_be_rendered()
+    {
+        $admin = $this->admin();
+
+        $response = $this->actingAs($admin)->get('/admin/new');
+
+        $count = $response->getOriginalContent()->getData()['count'];
+        $cases = $response->getOriginalContent()->getData()['cases'][0]->getAttributes();
+        $userData = $response->getOriginalContent()->getData()['userData']->getAttributes();
+
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.adminTabs.adminNewListing')
+            ->assertViewHasAll([
+                'cases', 'count', 'userData'
+            ]);
+
+        $this->assertTrue(array_key_exists('newCase', $count));
+        $this->assertTrue(array_key_exists('pendingCase', $count));
+        $this->assertTrue(array_key_exists('activeCase', $count));
+        $this->assertTrue(array_key_exists('concludeCase', $count));
+        $this->assertTrue(array_key_exists('tocloseCase', $count));
+        $this->assertTrue(array_key_exists('unpaidCase', $count));
+        $this->assertTrue(array_key_exists('username', $userData));
+        $this->assertTrue(array_key_exists('request_type_id', $cases));
+        $this->assertTrue(array_key_exists('first_name', $cases));
+        $this->assertTrue(array_key_exists('last_name', $cases));
+        $this->assertTrue(array_key_exists('id', $cases));
+        $this->assertTrue(array_key_exists('created_at', $cases));
+        $this->assertTrue(array_key_exists('phone_number', $cases));
+    }
+
+    // admin listing pending state page can be rendered
+    public function test_admin_listing_pending_state_page_can_be_rendered()
+    {
+        $admin = $this->admin();
+
+        $response = $this->actingAs($admin)->get('/admin/pending');
+
+        $count = $response->getOriginalContent()->getData()['count'];
+        $cases = $response->getOriginalContent()->getData()['cases'][0]->getAttributes();
+        $userData = $response->getOriginalContent()->getData()['userData']->getAttributes();
+
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.adminTabs.adminPendingListing')
+            ->assertViewHasAll([
+                'cases', 'count', 'userData'
+            ]);
+
+        $this->assertTrue(array_key_exists('newCase', $count));
+        $this->assertTrue(array_key_exists('pendingCase', $count));
+        $this->assertTrue(array_key_exists('activeCase', $count));
+        $this->assertTrue(array_key_exists('concludeCase', $count));
+        $this->assertTrue(array_key_exists('tocloseCase', $count));
+        $this->assertTrue(array_key_exists('unpaidCase', $count));
+        $this->assertTrue(array_key_exists('username', $userData));
+        $this->assertTrue(array_key_exists('request_type_id', $cases));
+        $this->assertTrue(array_key_exists('first_name', $cases));
+        $this->assertTrue(array_key_exists('last_name', $cases));
+        $this->assertTrue(array_key_exists('id', $cases));
+        $this->assertTrue(array_key_exists('created_at', $cases));
+        $this->assertTrue(array_key_exists('phone_number', $cases));
+    }
+
+    // admin listing active state page can be rendered
+    public function test_admin_listing_active_state_page_can_be_rendered()
+    {
+        $admin = $this->admin();
+
+        $response = $this->actingAs($admin)->get('/admin/active');
+
+        $count = $response->getOriginalContent()->getData()['count'];
+        $cases = $response->getOriginalContent()->getData()['cases'][0]->getAttributes();
+        $userData = $response->getOriginalContent()->getData()['userData']->getAttributes();
+
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.adminTabs.adminActiveListing')
+            ->assertViewHasAll([
+                'cases', 'count', 'userData'
+            ]);
+
+        $this->assertTrue(array_key_exists('newCase', $count));
+        $this->assertTrue(array_key_exists('pendingCase', $count));
+        $this->assertTrue(array_key_exists('activeCase', $count));
+        $this->assertTrue(array_key_exists('concludeCase', $count));
+        $this->assertTrue(array_key_exists('tocloseCase', $count));
+        $this->assertTrue(array_key_exists('unpaidCase', $count));
+        $this->assertTrue(array_key_exists('username', $userData));
+        $this->assertTrue(array_key_exists('request_type_id', $cases));
+        $this->assertTrue(array_key_exists('first_name', $cases));
+        $this->assertTrue(array_key_exists('last_name', $cases));
+        $this->assertTrue(array_key_exists('id', $cases));
+        $this->assertTrue(array_key_exists('created_at', $cases));
+        $this->assertTrue(array_key_exists('phone_number', $cases));
+    }
+
+    // admin listing conclude state page can be rendered
+    public function test_admin_listing_conclude_state_page_can_be_rendered()
+    {
+        $admin = $this->admin();
+
+        $response = $this->actingAs($admin)->get('/admin/conclude');
+
+        $count = $response->getOriginalContent()->getData()['count'];
+        $cases = $response->getOriginalContent()->getData()['cases'][0]->getAttributes();
+        $userData = $response->getOriginalContent()->getData()['userData']->getAttributes();
+
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.adminTabs.adminConcludeListing')
+            ->assertViewHasAll([
+                'cases', 'count', 'userData'
+            ]);
+
+        $this->assertTrue(array_key_exists('newCase', $count));
+        $this->assertTrue(array_key_exists('pendingCase', $count));
+        $this->assertTrue(array_key_exists('activeCase', $count));
+        $this->assertTrue(array_key_exists('concludeCase', $count));
+        $this->assertTrue(array_key_exists('tocloseCase', $count));
+        $this->assertTrue(array_key_exists('unpaidCase', $count));
+        $this->assertTrue(array_key_exists('username', $userData));
+        $this->assertTrue(array_key_exists('request_type_id', $cases));
+        $this->assertTrue(array_key_exists('first_name', $cases));
+        $this->assertTrue(array_key_exists('last_name', $cases));
+        $this->assertTrue(array_key_exists('id', $cases));
+        $this->assertTrue(array_key_exists('created_at', $cases));
+        $this->assertTrue(array_key_exists('phone_number', $cases));
+    }
+
+    // admin listing toclose state page can be rendered
+    public function test_admin_listing_toclose_state_page_can_be_rendered()
+    {
+        $admin = $this->admin();
+
+        $response = $this->actingAs($admin)->get('/admin/toclose');
+
+        $count = $response->getOriginalContent()->getData()['count'];
+        $cases = $response->getOriginalContent()->getData()['cases'][0]->getAttributes();
+        $userData = $response->getOriginalContent()->getData()['userData']->getAttributes();
+
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.adminTabs.adminTocloseListing')
+            ->assertViewHasAll([
+                'cases', 'count', 'userData'
+            ]);
+
+        $this->assertTrue(array_key_exists('newCase', $count));
+        $this->assertTrue(array_key_exists('pendingCase', $count));
+        $this->assertTrue(array_key_exists('activeCase', $count));
+        $this->assertTrue(array_key_exists('concludeCase', $count));
+        $this->assertTrue(array_key_exists('tocloseCase', $count));
+        $this->assertTrue(array_key_exists('unpaidCase', $count));
+        $this->assertTrue(array_key_exists('username', $userData));
+        $this->assertTrue(array_key_exists('request_type_id', $cases));
+        $this->assertTrue(array_key_exists('first_name', $cases));
+        $this->assertTrue(array_key_exists('last_name', $cases));
+        $this->assertTrue(array_key_exists('id', $cases));
+        $this->assertTrue(array_key_exists('created_at', $cases));
+        $this->assertTrue(array_key_exists('phone_number', $cases));
+    }
+
+    // admin listing unpaid state page can be rendered
+    public function test_admin_listing_unpaid_state_page_can_be_rendered()
+    {
+        $admin = $this->admin();
+
+        $response = $this->actingAs($admin)->get('/admin/unpaid');
+
+        $count = $response->getOriginalContent()->getData()['count'];
+        $cases = $response->getOriginalContent()->getData()['cases'][0]->getAttributes();
+        $userData = $response->getOriginalContent()->getData()['userData']->getAttributes();
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('adminPage.adminTabs.adminUnpaidListing')
+            ->assertViewHasAll([
+                'cases', 'count', 'userData'
+            ]);
+
+        $this->assertTrue(array_key_exists('newCase', $count));
+        $this->assertTrue(array_key_exists('pendingCase', $count));
+        $this->assertTrue(array_key_exists('activeCase', $count));
+        $this->assertTrue(array_key_exists('concludeCase', $count));
+        $this->assertTrue(array_key_exists('tocloseCase', $count));
+        $this->assertTrue(array_key_exists('unpaidCase', $count));
+        $this->assertTrue(array_key_exists('username', $userData));
+        $this->assertTrue(array_key_exists('request_type_id', $cases));
+        $this->assertTrue(array_key_exists('first_name', $cases));
+        $this->assertTrue(array_key_exists('last_name', $cases));
+        $this->assertTrue(array_key_exists('id', $cases));
+        $this->assertTrue(array_key_exists('created_at', $cases));
+        $this->assertTrue(array_key_exists('phone_number', $cases));
+    }
+
     /**
      * assign case form with valid data
      * @return void
@@ -290,7 +488,6 @@ class AdminTest extends TestCase
         $admin = $this->admin();
 
         $requestId = RequestTable::where('status', 1)->first()->id;
-
         $response = $this->actingAs($admin)
             ->postJson('/block-case', [
                 'requestId' => $requestId,
@@ -446,10 +643,8 @@ class AdminTest extends TestCase
             ]);
     }
 
-    
-
     /**
-     * send mail to patient with valid data
+     * send mail to patient with valid data (case wise mail)
      * @return void
      */
     public function test_send_mail_to_patient_with_valid_data()
@@ -463,7 +658,8 @@ class AdminTest extends TestCase
             'message' => 'Test mail sent through unit test case',
         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('successMessage', 'Mail sent to patient successfully!');
+        $response->assertStatus(Response::HTTP_FOUND)
+            ->assertSessionHas('successMessage', 'Mail sent to patient successfully!');
     }
 
     /**

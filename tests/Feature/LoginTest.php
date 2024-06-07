@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Provider;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Http\Response;
 
@@ -59,7 +61,6 @@ class LoginTest extends TestCase
             'email' => 'invalid@newmail.co',
             'password' => '1234323',
         ]);
-
 
         $response->assertStatus(Response::HTTP_FOUND)->assertSessionHas('error');
     }

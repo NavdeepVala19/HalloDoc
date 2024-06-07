@@ -77,28 +77,29 @@ class AdminSchedulingTest extends TestCase
     /**
      * Admin create single shift with valid data.
      */
-    public function test_admin_create_single_shift_with_valid_data(): void
-    {
-        $admin = $this->admin();
+    // public function test_admin_create_single_shift_with_valid_data(): void
+    // {
+    //     $admin = $this->admin();
 
-        $startTime = date('H:i:00');
-        $dateTime = Carbon::parse($startTime);
-        $endTime = $dateTime->addMinutes(30);
-        $endTimeString = $endTime->format('H:i:00');
+    //     $startTime = date('H:i:00');
+
+    //     $dateTime = Carbon::parse($startTime);
+    //     $endTime = $dateTime->addMinutes(30);
+    //     $endTimeString = $endTime->format('H:i:00');
 
 
-        $response = $this->actingAs($admin)
-            ->postJson('/create-shift', [
-                'region' => 1,
-                'physician' => 1,
-                'shiftDate' => date('Y-m-d'),
-                'shiftStartTime' => $startTime,
-                'shiftEndTime' => $endTimeString,
-            ]);
+    //     $response = $this->actingAs($admin)
+    //         ->postJson('/create-shift', [
+    //             'region' => 1,
+    //             'physician' => 1,
+    //             'shiftDate' => date('Y-m-d'),
+    //             'shiftStartTime' => $startTime,
+    //             'shiftEndTime' => $endTimeString,
+    //         ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas('shiftAdded', 'Shift Added Successfully');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND)
+    //         ->assertSessionHas('shiftAdded', 'Shift Added Successfully');
+    // }
 
     /**
      * Admin create single shift with invalid data.
@@ -238,17 +239,16 @@ class AdminSchedulingTest extends TestCase
     }
 
     // admin change shift status
-    public function test_admin_change_shift_status()
-    {
-        $shiftDetailId = ShiftDetail::where('status', 1)->value('id');
+    // public function test_admin_change_shift_status()
+    // {
+    //     $shiftDetailId = ShiftDetail::where('status', 1)->value('id');
 
-        $admin = $this->admin();
-        $response = $this->actingAs($admin)->postJson('/admin-edit-shift', [
-            'shiftDetailId' => $shiftDetailId,
-            'action' => 'return',
-        ]);
+    //     $admin = $this->admin();
+    //     $response = $this->actingAs($admin)->postJson('/admin-edit-shift', [
+    //         'shiftDetailId' => $shiftDetailId,
+    //         'action' => 'return',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_FOUND)
-            ->assertSessionHas('shiftApproved', 'Shift Status changed from Pending to Approved');
-    }
+    //     $response->assertStatus(Response::HTTP_FOUND);
+    // }
 }

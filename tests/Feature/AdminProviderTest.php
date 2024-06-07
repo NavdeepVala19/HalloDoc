@@ -273,7 +273,7 @@ class AdminProviderTest extends TestCase
     {
         $admin = $this->admin();
 
-        $id = Provider::orderBy('id', 'desc')->first()->id;
+        $id = Provider::orderBy('user_id', 'desc')->first()->id;
 
         $response = $this->actingAs($admin)
             ->postJson("/admin-provider-updated-accounts/$id", [

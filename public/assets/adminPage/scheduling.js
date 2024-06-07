@@ -150,6 +150,7 @@ $(document).ready(function () {
                     "</option>"
             );
 
+            $(".physicianId").val(info.event.extendedProps.physicianId);
             $(".shiftId").val(info.event.extendedProps.shiftId);
             $(".shiftDetailId").val(info.event.extendedProps.shiftDetailId);
             $(".shiftDate").val(shiftDate);

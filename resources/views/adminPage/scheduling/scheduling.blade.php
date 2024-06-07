@@ -259,6 +259,7 @@
                 <div class="form-floating">
                     <select class="form-select physician-view-shift" name="physician" id="floatingSelect"
                         aria-label="Floating label select example" disabled> </select>
+                        <input type="hidden" name="physicianId" class="physicianId">
                     <label for="floatingSelect">Physician</label>
                 </div>
                 <div class="form-floating ">
