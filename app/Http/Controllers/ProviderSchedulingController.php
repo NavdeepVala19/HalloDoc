@@ -211,8 +211,9 @@ class ProviderSchedulingController extends Controller
         
         if ($request['action'] === 'save') {
             // Check whether the shift created for provider is already having shift for that time period
-            $shifts = Shift::with('shiftDetail')->get();
-            $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
+            // $shifts = Shift::with('shiftDetail')->get();
+            // $currentShifts = $shifts->whereIn('start_date', $request->shiftDate);
+            $currentShifts = ShiftDetail->whereIn('start_date', $request->shiftDate)->get();
 
             $userId = Auth::user()->id;
             $providerId = Provider::where('user_id', $userId)->value('id');

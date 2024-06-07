@@ -472,3 +472,9 @@ Route::post('/cancel-history', [AdminController::class, 'searchCancelCase'])->na
 Route::get('/test', function () {
     return view('patientSite.agreementDone');
 });
+
+
+
+// Api making
+
+Route::get('/request',[Controller::class,'getRequestData'])->name('getRequestApi');

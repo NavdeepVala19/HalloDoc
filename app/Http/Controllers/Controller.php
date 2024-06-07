@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Models\RequestTable;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
@@ -20,5 +21,10 @@ class Controller extends BaseController
     public function submitScreen()
     {
         return view('patientSite.submitScreen');
+    }
+
+
+    public function getRequestData(){
+        $requestData = RequestTable::get();
     }
 }

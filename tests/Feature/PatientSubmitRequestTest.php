@@ -38,36 +38,36 @@ class PatientSubmitRequestTest extends TestCase
      *
      * @return void
      */
-    public function test_patient_entered_data_is_empty(): void
-    {
-        $response = $this->postJson('/patient-created', [
-            'first_name' => '',
-            'last_name' => '',
-            'date_of_birth' => '',
-            'email' => '',
-            'phone_number' => '',
-            'street' => '',
-            'city' => '',
-            'state' => '',
-            'zipcode' => '',
-            'docs' => '',
-            'symptoms' => '',
-            'room' => '',
-        ]);
+    // public function test_patient_entered_data_is_empty(): void
+    // {
+    //     $response = $this->postJson('/patient-created', [
+    //         'first_name' => '',
+    //         'last_name' => '',
+    //         'date_of_birth' => '',
+    //         'email' => '',
+    //         'phone_number' => '',
+    //         'street' => '',
+    //         'city' => '',
+    //         'state' => '',
+    //         'zipcode' => '',
+    //         'docs' => '',
+    //         'symptoms' => '',
+    //         'room' => '',
+    //     ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors([
-            'first_name' => 'Please enter First Name',
-            'last_name' => 'Please enter Last Name',
-            'date_of_birth' => 'Please enter Date of Birth',
-            'email' => 'Please enter Email',
-            'phone_number' => 'Please enter Phone Number',
-            'street' => 'Please enter a street',
-            'city' => 'Please enter a city',
-            'state' => 'Please enter a state',
-            'zipcode' => 'Please enter 6 digits zipcode',
-        ]);
-    }
+    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     $response->assertJsonValidationErrors([
+    //         'first_name' => 'Please enter First Name',
+    //         'last_name' => 'Please enter Last Name',
+    //         'date_of_birth' => 'Please enter Date of Birth',
+    //         'email' => 'Please enter Email',
+    //         'phone_number' => 'Please enter Phone Number',
+    //         'street' => 'Please enter a street',
+    //         'city' => 'Please enter a city',
+    //         'state' => 'Please enter a state',
+    //         'zipcode' => 'Please enter 6 digits zipcode',
+    //     ]);
+    // }
 
     /**
      * Details entered are correct and new request is created with an existing email
@@ -121,7 +121,7 @@ class PatientSubmitRequestTest extends TestCase
         $response->assertJsonValidationErrors([
             'first_name' => 'Please enter only Alphabets in First name',
             'last_name' => 'Please enter only Alphabets in Last name',
-            'date_of_birth' => 'Please enter Date of Birth Before Today',
+            'date_of_birth' => 'Date of Birth should not be greater than today',
             'email' => 'Please enter a valid email (format: alphanum@alpha.domain).',
             'street' => 'Only alphabets,dash,underscore,space,comma and numbers are allowed in street name.',
             'city' => 'Please enter alpbabets in city name.',

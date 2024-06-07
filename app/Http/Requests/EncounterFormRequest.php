@@ -26,7 +26,7 @@ class EncounterFormRequest extends FormRequest
             'last_name' => 'required|min:3|max:15|alpha',
             'location' => 'required|min:5|max:100|regex:/^[a-zA-Z0-9 ,_.-]+?$/',
             'date_of_birth' => 'required|before:today|after:Jan 01 1900',
-            'service_date' => 'required|before:tommorow|after:date_of_birth',
+            'service_date' => 'required|before:tomorrow|after:date_of_birth',
             'mobile' => 'required',
             'email' => 'required|email|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,})$/',
             'temperature' => 'nullable|min:-50|max:50|numeric',

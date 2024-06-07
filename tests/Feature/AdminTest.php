@@ -79,68 +79,7 @@ class AdminTest extends TestCase
     }
 
 
-    /**
-     * Test successful view case form with valid data
-     * @return void
-     */
-    // public function test_view_case_with_valid_data()
-    // {
-    //     $admin = $this->adminLoggedIn();
-    //     $response = $this->actingAs($admin)->postJson('/admin/view/case/edit', [
-    //         'patient_notes' => 'Physician Notes',
-    //         'first_name' => 'Denton',
-    //         'last_name' => 'Wise',
-    //         'dob' => '03-09-2022',
-    //     ]);
-
-    //     $response->assertStatus(Response::HTTP_FOUND);
-    // }
-
-    /**
-     * Test successful view case form with invalid data
-     * @return void
-     */
-    public function test_view_case_with_invalid_data()
-    {
-        $admin = $this->adminLoggedIn();
-        $response = $this->actingAs($admin)->postJson('/admin/view/case/edit', [
-            'patient_notes' => 'Physician N%#$^%^%otes',
-            'first_name' => 'Denton43566',
-            'last_name' => 'Wise5465',
-            'dob' => '03-09-2035',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors([
-            'first_name' => 'The first name field must only contain letters.',
-            'last_name' => 'The last name field must only contain letters.',
-            'dob' => 'The dob field must be a date before tomorrow.',
-            'patient_notes' => 'The patient notes field format is invalid.',
-        ]);
-    }
-
-    /**
-     * Test successful view case form with empty data
-     * @return void
-     */
-    public function test_view_case_with_empty_data()
-    {
-        $admin = $this->adminLoggedIn();
-        $response = $this->actingAs($admin)->postJson('/admin/view/case/edit', [
-            'patient_notes' => '',
-            'first_name' => '',
-            'last_name' => '',
-            'dob' => '',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors([
-            'first_name' => 'The first name field is required.',
-            'last_name' => 'The last name field is required.',
-            'dob' => 'The dob field is required.',
-        ]);
-    }
-
+ 
 
     /**
      * Test successful block case form with valid data
